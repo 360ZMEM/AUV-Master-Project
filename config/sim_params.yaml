@@ -1,0 +1,141 @@
+stage:
+  name: auv_project_new_stack
+
+simulation:
+  world: Dam
+  package_name: Ocean
+  agent_name: auv0
+  show_viewport: false
+  verbose: false
+  ticks_per_sec: 30
+  frames_per_sec: false
+  dt: 0.0333333333
+  max_steps: 1500
+
+agent:
+  type: TorpedoAUV
+  control_scheme: 0
+  location: [0.0, 0.0, -10.0]
+  rotation: [0.0, 0.0, 0.0]
+  sensors:
+    - sensor_type: PoseSensor
+    - sensor_type: DepthSensor
+    - sensor_type: IMUSensor
+    - sensor_type: DVLSensor
+
+limits:
+  fin_deg_max: 30.0
+  thrust_min: -100.0
+  thrust_max: 100.0
+  env_min: [-45.0, -45.0, -35.0]
+  env_max: [45.0, 45.0, -4.0]
+  safety_margin_xy: 3.0
+  safety_margin_z: 1.5
+
+control:
+  target_u: 1.1
+  u0: 1.0
+  u_min: 0.6
+  feedforward_trim_deg: -1.5
+  depth:
+    kp: 0.30
+    ki: 0.01
+    kd: 0.0
+    integral_limit: 4.0
+    target_pitch_deg_max: 15.0
+    target_pitch_rate_limit_deg_s: 8.0
+  pitch:
+    kp: 6.5
+    ki: 0.15
+    kd: 2.2
+    integral_limit: 45.0
+  yaw:
+    kp: 9.0
+    ki: 0.12
+    kd: 1.4
+    integral_limit: 45.0
+  speed:
+    kp: 28.0
+    ki: 1.4
+    kd: 3.0
+    integral_limit: 55.0
+    feedforward:
+      a: 2.497183
+      b: 27.729751
+      c: 0.546851
+
+guidance:
+  lookahead_distance: 3.5
+  nearest_search_window: 220
+  cross_track_gain: 0.7
+
+trajectory:
+  kind: cable_like_3d
+  duration: 40.0
+  dt: 0.1
+  start: [0.0, 0.0, -12.0]
+  surge_speed: 1.1
+  length: 36.0
+  lateral_amplitude: 1.2
+  lateral_wavenumber: 0.08
+  depth_base: -12.0
+  depth_amplitude: 0.35
+  depth_wavenumber: 0.05
+  min_turn_radius: 6.0
+
+debug:
+  print_every_n_steps: 15
+  event_print: true
+
+evaluation:
+  rms_threshold_m: 2.5
+  axis_ratio_threshold: 0.02
+  sat_ratio_warn_threshold: 0.3
+
+plot:
+  save_main_plot: stage2_main_plot.png
+  save_sysid_plot: stage2_sysid_plot.png
+  dpi: 140
+  interactive: false
+  3d: true
+  interactive_dpi: 80
+
+es_ekf_experiment:
+  world: SimpleUnderwater
+  max_steps: 900
+  print_every_n_steps: 20
+  plot_every_n_steps: 3
+  save_plot: es_ekf_xy_map.png
+  save_results: es_ekf_results.npz
+  initial_location: [0.0, 0.0, -0.2]
+  initial_rotation: [0.0, 0.0, 0.0]
+  gps_depth_gate: 0.25
+  gravity: 9.81
+  sigma_acc: 0.08
+  sigma_gyro: 0.01
+  sigma_ba: 0.001
+  sigma_bg: 0.0005
+  sigma_dvl: 0.03
+  sigma_depth: 0.05
+  sigma_gps_xy: 0.5
+  imu_acc_is_linear: true
+  dvl_frame: world
+  imu_sigma:
+    accel: 0.01
+    gyro: 0.001
+    accel_bias: 0.0001
+    gyro_bias: 0.00005
+  dvl_sigma:
+    vel: 0.02
+    range: 0.02
+  depth_sigma:
+    sigma: 0.03
+  gps_sigma:
+    sigma: 0.5
+    depth_sigma: 0.02
+  target_u: 1.0
+  waypoints:
+    - { t: 0.0, xyz: [0.0, 0.0, -0.4] }
+    - { t: 6.0, xyz: [8.0, 0.0, -2.0] }
+    - { t: 15.0, xyz: [18.0, 4.0, -3.0] }
+  init_P_diag: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]

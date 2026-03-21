@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# ROS and workspace build outputs
+install/
+log/
+build/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Local Python virtualenvs
+venv/
+env/
+/.venv/
+
+# Pytest cache
+.pytest_cache/
+
+# JetBrains
+.idea/

@@ -1,0 +1,64 @@
+# Unified parameters for bridge/localization/controller/decision.
+
+bridge:
+  downlink_cmd_key: rt/auv/control/cmd_vel
+  imu_key: rt/auv/sensors/imu
+  dvl_key: rt/auv/sensors/dvl
+  depth_key: rt/auv/sensors/depth
+
+controller:
+  control_rate_hz: 20.0
+
+limits:
+  fin_deg_max: 30.0
+  thrust_min: -100.0
+  thrust_max: 100.0
+
+control:
+  target_u: 1.1
+  u0: 1.0
+  u_min: 0.6
+  feedforward_trim_deg: -1.5
+  depth:
+    kp: 0.30
+    ki: 0.01
+    kd: 0.0
+    integral_limit: 4.0
+    target_pitch_deg_max: 15.0
+    target_pitch_rate_limit_deg_s: 8.0
+  pitch:
+    kp: 6.5
+    ki: 0.15
+    kd: 2.2
+    integral_limit: 45.0
+  yaw:
+    kp: 9.0
+    ki: 0.12
+    kd: 1.4
+    integral_limit: 45.0
+  speed:
+    kp: 28.0
+    ki: 1.4
+    kd: 3.0
+    integral_limit: 55.0
+    feedforward:
+      a: 2.497183
+      b: 27.729751
+      c: 0.546851
+
+ekf:
+  gravity: 9.81
+  sigma_acc: 0.08
+  sigma_gyro: 0.01
+  sigma_ba: 0.001
+  sigma_bg: 0.0005
+  sigma_dvl: 0.03
+  sigma_depth: 0.05
+  sigma_gps_xy: 0.5
+  imu_acc_is_linear: true
+  init_pos: [0.0, 0.0, 0.0]
+  init_vel: [0.0, 0.0, 0.0]
+  init_quat_wxyz: [1.0, 0.0, 0.0, 0.0]
+  init_ba: [0.0, 0.0, 0.0]
+  init_bg: [0.0, 0.0, 0.0]
+  init_P_diag: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]

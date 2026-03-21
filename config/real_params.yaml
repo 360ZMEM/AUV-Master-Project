@@ -1,0 +1,13 @@
+# Real-AUV override parameters (placeholder shell)
+# 后续接入 Jetson/ROS2 实机时，在这里覆盖 sim_params 对应字段。
+
+simulation:
+  show_viewport: false
+
+agent:
+  control_scheme: 0
+
+# 实机调参建议：可在此覆盖 control/guidance/limits
+# control:
+# guidance:
+# limits:

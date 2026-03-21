@@ -1,0 +1,274 @@
+{
+  "globalVariables": {},
+  "userNamespace": "default",
+  "playbackConfig": {
+    "speed": 1
+  },
+  "panels": [
+    {
+      "id": "3D",
+      "name": "3D",
+      "type": "3D",
+      "config": {
+        "cameraState": {
+          "distance": 30,
+          "phi": 1.0471975511965976,
+          "target": [0, 0, -5],
+          "targetOffset": [0, 0, 0],
+          "theta": 0.7853981633974483,
+          "focalLength": 603.9313359731442,
+          "near": 0.1,
+          "far": 5000
+        },
+        "followMode": "follow",
+        "upAxis": "z",
+        "topics": [
+          {
+            "name": "/auv/pose",
+            "color": "#00ff00",
+            "visible": true
+          }
+        ],
+        "layers": [
+          {
+            "name": "Grid",
+            "visible": true
+          }
+        ],
+        "grid": {
+          "color": "#444444",
+          "divisions": 10,
+          "size": 50,
+          "visible": true
+        },
+        "settings": {
+          "cameraState": {
+            "distance": 30,
+            "phi": 1.0471975511965976,
+            "target": [0, 0, -5],
+            "targetOffset": [0, 0, 0],
+            "theta": 0.7853981633974483
+          }
+        },
+        "modifiedFields": {
+          "topics": [
+            {
+              "name": "/auv/pose",
+              "color": "#00ff00",
+              "visible": true
+            }
+          ]
+        },
+        "useTransaction": false,
+        "renderSettings": {
+          "depthPacking": "rgba"
+        },
+        "expandedKeys": {
+          "/auv/pose": ["marker"]
+        }
+      }
+    },
+    {
+      "id": "Depth",
+      "name": "深度",
+      "type": "plot",
+      "config": {
+        "title": "AUV深度",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "深度 (m)",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/depth",
+            "value": "data",
+            "color": "#00ff00"
+          }
+        ],
+        "sidebarDimension": 240,
+        " minY": -5,
+        "maxY": 105,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "Temperature",
+      "name": "温度",
+      "type": "plot",
+      "config": {
+        "title": "水温",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "温度 (°C)",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/temperature",
+            "value": "temperature",
+            "color": "#ff6600"
+          }
+        ],
+        "sidebarDimension": 240,
+        "minY": 15,
+        "maxY": 25,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "Pressure",
+      "name": "压力",
+      "type": "plot",
+      "config": {
+        "title": "流体压力",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "压力 (Pa)",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/pressure",
+            "value": "fluid_pressure",
+            "color": "#0066ff"
+          }
+        ],
+        "sidebarDimension": 240,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "GPS",
+      "name": "GPS",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/gps",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "GPS位置信息"
+      }
+    },
+    {
+      "id": "IMU",
+      "name": "IMU",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/imu",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "IMU传感器数据"
+      }
+    },
+    {
+      "id": "Status",
+      "name": "状态",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/status",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "AUV运行状态"
+      }
+    },
+    {
+      "id": "Twist",
+      "name": "速度",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/twist",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "AUV速度信息"
+      }
+    }
+  ],
+  "savedProps": {
+    "3D": {
+      "config": {
+        "cameraState": {
+          "distance": 30,
+          "phi": 1.0471975511965976,
+          "target": [0, 0, -5],
+          "targetOffset": [0, 0, 0],
+          "theta": 0.7853981633974483
+        },
+        "followMode": "follow",
+        "topics": [
+          {
+            "name": "/auv/pose",
+            "color": "#00ff00",
+            "visible": true
+          }
+        ]
+      }
+    }
+  },
+  "layout": {
+    "direction": "row",
+    "first": {
+      "direction": "row",
+      "first": "3D",
+      "second": {
+        "direction": "column",
+        "first": "Depth",
+        "second": "Temperature",
+        "splitPercentage": 50
+      },
+      "splitPercentage": 55
+    },
+    "second": {
+      "direction": "column",
+      "first": {
+        "direction": "row",
+        "first": "Pressure",
+        "second": {
+          "direction": "column",
+          "first": "GPS",
+          "second": "Status",
+          "splitPercentage": 50
+        },
+        "splitPercentage": 50
+      },
+      "second": {
+        "direction": "row",
+        "first": "IMU",
+        "second": "Twist",
+        "splitPercentage": 50
+      },
+      "splitPercentage": 50
+    },
+    "splitPercentage": 60
+  },
+  "dataSources": [
+    {
+      "id": "ros2-bridge",
+      "name": "ROS2 Bridge",
+      "type": "ros2-bridge",
+      "wsUrl": ""
+    }
+  ],
+  "name": "AUV数据可视化",
+  "description": "AUV传感器数据实时监控面板",
+  "id": "auv-data-visualization"
+}
