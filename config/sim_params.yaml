@@ -1,22 +1,37 @@
+# 仿真总配置：用于 stage、动力学、控制律、轨迹和实验评估。
 stage:
+  # 当前 stage 名称，通常用于区分不同实验入口或联调场景。
   name: auv_project_new_stack
 
 simulation:
+  # 仿真环境与主循环参数。
+  # world/package_name/agent_name 与 HoloOcean 场景和载具实例绑定。
   world: Dam
   package_name: Ocean
   agent_name: auv0
+  # 是否显示仿真视窗；联调时通常保持 false，减少图形开销。
   show_viewport: false
+  # 是否输出更详细的仿真日志。
   verbose: false
+  # 每秒仿真 tick 数，决定仿真主循环频率。
   ticks_per_sec: 30
+  # 是否额外输出帧率信息；false 表示不启用。
   frames_per_sec: false
+  # 仿真步长，通常与 ticks_per_sec 互相对应。
   dt: 0.0333333333
+  # 最大仿真步数；1500 表示跑到上限后自动结束。
   max_steps: 1500
 
 agent:
+  # AUV 本体与挂载传感器设置。
   type: TorpedoAUV
+  # 控制模式编号，由仿真器/控制器约定解释。
   control_scheme: 0
-  location: [0.0, 0.0, -10.0]
+  # 初始位置，采用世界坐标，z 为负值表示水下深度。
+  location: [0.0, 0.0, -12.0]
+  # 初始姿态，单位为角度或欧拉量，按仿真器约定解释。
   rotation: [0.0, 0.0, 0.0]
+  # 本体传感器列表：姿态、深度、IMU、DVL。
   sensors:
     - sensor_type: PoseSensor
     - sensor_type: DepthSensor
@@ -24,75 +39,96 @@ agent:
     - sensor_type: DVLSensor
 
 limits:
+  # 约束与安全边界，主要用于控制输出限幅和场景边界判断。
   fin_deg_max: 30.0
   thrust_min: -100.0
   thrust_max: 100.0
+  # 环境边界：仿真中允许活动的空间范围。
   env_min: [-45.0, -45.0, -35.0]
   env_max: [45.0, 45.0, -4.0]
+  # 安全余量：用于接近环境边界时提前告警或减速。
   safety_margin_xy: 3.0
   safety_margin_z: 1.5
 
 control:
+  # 控制器主参数：目标航速、前馈、深度/姿态/航向/速度环增益。
   target_u: 1.1
   u0: 1.0
   u_min: 0.6
+  # 俯仰前馈补偿，用于抵消稳态偏差。
   feedforward_trim_deg: -1.5
   depth:
+    # 深度环 PID 参数。
     kp: 0.30
     ki: 0.01
     kd: 0.0
     integral_limit: 4.0
+    # 深度目标对应的最大俯仰角约束。
     target_pitch_deg_max: 15.0
+    # 俯仰变化率限制，避免动作过猛。
     target_pitch_rate_limit_deg_s: 8.0
   pitch:
+    # 俯仰环 PID 参数。
     kp: 6.5
     ki: 0.15
     kd: 2.2
     integral_limit: 45.0
   yaw:
+    # 航向环 PID 参数。
     kp: 9.0
     ki: 0.12
     kd: 1.4
     integral_limit: 45.0
   speed:
+    # 速度环 PID 参数。
     kp: 28.0
     ki: 1.4
     kd: 3.0
     integral_limit: 55.0
+    # 航速前馈拟合系数，通常用于把目标速度映射为推力参考。
     feedforward:
       a: 2.497183
       b: 27.729751
       c: 0.546851
 
 guidance:
+  # 导引层参数：用于轨迹跟踪、最近点搜索和横向误差修正。
   lookahead_distance: 3.5
   nearest_search_window: 220
   cross_track_gain: 0.7
 
 trajectory:
+  # 轨迹发生器配置：这里是 cable_like_3d，表示“类电缆”三维曲线路径。
   kind: cable_like_3d
   duration: 40.0
   dt: 0.1
+  # 轨迹起点，通常与场景初始位置相匹配。
   start: [0.0, 0.0, -12.0]
+  # 沿轨迹前进的纵向速度。
   surge_speed: 1.1
+  # 轨迹长度与横向/深度扰动参数。
   length: 36.0
   lateral_amplitude: 1.2
   lateral_wavenumber: 0.08
   depth_base: -12.0
   depth_amplitude: 0.35
   depth_wavenumber: 0.05
+  # 最小转弯半径约束，避免轨迹过于尖锐。
   min_turn_radius: 6.0
 
 debug:
+  # 调试输出：按步打印状态、事件告警开关。
   print_every_n_steps: 15
   event_print: true
 
 evaluation:
+  # 联调/实验评估阈值，用于自动判断结果是否达标。
   rms_threshold_m: 2.5
   axis_ratio_threshold: 0.02
   sat_ratio_warn_threshold: 0.3
 
 plot:
+  # 绘图与结果落盘设置。
   save_main_plot: stage2_main_plot.png
   save_sysid_plot: stage2_sysid_plot.png
   dpi: 140
@@ -101,15 +137,19 @@ plot:
   interactive_dpi: 80
 
 es_ekf_experiment:
+  # ES-EKF 独立实验参数，主要用于定位/惯导融合算法验证。
   world: SimpleUnderwater
   max_steps: 900
   print_every_n_steps: 20
   plot_every_n_steps: 3
   save_plot: es_ekf_xy_map.png
   save_results: es_ekf_results.npz
+  # 初始位姿，用于滤波器初值设置。
   initial_location: [0.0, 0.0, -0.2]
   initial_rotation: [0.0, 0.0, 0.0]
+  # GPS 深度门限，超过该深度时触发相应逻辑。
   gps_depth_gate: 0.25
+  # 物理常量与传感器噪声参数。
   gravity: 9.81
   sigma_acc: 0.08
   sigma_gyro: 0.01
@@ -118,7 +158,9 @@ es_ekf_experiment:
   sigma_dvl: 0.03
   sigma_depth: 0.05
   sigma_gps_xy: 0.5
+  # IMU 是否以线加速度形式输入。
   imu_acc_is_linear: true
+  # DVL 所在坐标系，world 表示直接使用世界系速度。
   dvl_frame: world
   imu_sigma:
     accel: 0.01
@@ -133,9 +175,11 @@ es_ekf_experiment:
   gps_sigma:
     sigma: 0.5
     depth_sigma: 0.02
+  # 目标速度与离散航点序列，用于实验轨迹驱动。
   target_u: 1.0
   waypoints:
     - { t: 0.0, xyz: [0.0, 0.0, -0.4] }
     - { t: 6.0, xyz: [8.0, 0.0, -2.0] }
     - { t: 15.0, xyz: [18.0, 4.0, -3.0] }
+  # ES-EKF 初始协方差对角项，描述状态初始不确定性。
   init_P_diag: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]

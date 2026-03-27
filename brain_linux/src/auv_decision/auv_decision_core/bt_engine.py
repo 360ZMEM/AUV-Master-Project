@@ -23,6 +23,7 @@ from .behaviors import (
     ZigZagSearch,
 )
 from .decorators import AnomalySpeedLimiter
+from .decorators import SeabedSafetyLimiter
 from .models import SensorStatusData
 
 
@@ -48,9 +49,10 @@ class DecisionTreeEngine:
         ├── 紧急自救(Sequence): EmergencyCondition -> EmergencySurface
         └── 主任务流(Sequence)
             ├── DiveToDepth
-            └── 路由锁定(Selector)
-                ├── 精准巡检(Sequence): ConfidenceAboveThreshold -> AnomalySpeedLimiter(ParallelTracking)
-                └── ZigZagSearch
+            └── 海底安全包装(Decorator)
+                └── 路由锁定(Selector)
+                    ├── 精准巡检(Sequence): ConfidenceAboveThreshold -> AnomalySpeedLimiter(ParallelTracking)
+                    └── ZigZagSearch
         """
         emergency_sequence = py_trees.composites.Sequence(name='EmergencySequence', memory=False)
         emergency_sequence.add_children([
@@ -70,10 +72,12 @@ class DecisionTreeEngine:
             ZigZagSearch(),
         ])
 
+        seabed_safe_route = SeabedSafetyLimiter(routing_selector, slow_down_factor=0.5)
+
         main_sequence = py_trees.composites.Sequence(name='MainMissionSequence', memory=False)
         main_sequence.add_children([
             DiveToDepth(target_depth_m=4.0),
-            routing_selector,
+            seabed_safe_route,
         ])
 
         root = py_trees.composites.Selector(name='RootSelector', memory=False)

@@ -16,6 +16,10 @@ def sensor_msg_to_core(msg: SensorStatus) -> SensorStatusData:
         anomaly_detected=bool(msg.anomaly_detected),
         depth_m=float(msg.depth_m),
         speed_mps=float(msg.speed_mps),
+        seabed_depth_m=float(msg.seabed_depth_m),
+        seabed_clearance_m=float(msg.seabed_clearance_m),
+        seabed_proximity_warning=bool(msg.seabed_proximity_warning),
+        seabed_penetration_warning=bool(msg.seabed_penetration_warning),
     )
 
 

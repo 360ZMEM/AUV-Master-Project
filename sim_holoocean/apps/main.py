@@ -6,6 +6,7 @@
 
 import argparse
 import os
+import signal
 import sys
 from pathlib import Path
 
@@ -59,4 +60,23 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     config = load_merged_config(args.config, args.real_config)
-    run_main(config, args.config, args.enable_plot, args.interactive)
+    interrupted = {"sigint": False}
+
+    def _mark_interrupted(signum, frame):
+        interrupted["sigint"] = True
+
+    signal.signal(signal.SIGINT, _mark_interrupted)
+    signal.signal(signal.SIGTERM, _mark_interrupted)
+
+    if os.environ.get("AUV_HOLOOCEAN_UUID"):
+        print(f"[AUV] using HoloOcean UUID={os.environ['AUV_HOLOOCEAN_UUID']}")
+    try:
+        run_main(config, args.config, args.enable_plot, args.interactive)
+    except KeyboardInterrupt:
+        interrupted["sigint"] = True
+        print("[AUV] simulation terminated by user (SIGINT)")
+    except Exception:
+        if interrupted["sigint"]:
+            print("[AUV] simulation terminated by user (SIGINT)")
+        else:
+            raise

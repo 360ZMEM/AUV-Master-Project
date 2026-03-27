@@ -1,22 +1,29 @@
+# 仿真桥接配置：负责将 HoloOcean 仿真数据映射到 Zenoh topic，并接收控制命令。
 stage:
+  # 当前 stage 名称，用于区分桥接运行模式。
   name: auv_zenoh_bridge
 
 simulation:
+  # 仿真循环参数，桥接模式通常更偏向实时数据输出。
   world: Dam
   package_name: Ocean
   agent_name: auv0
   show_viewport: false
   verbose: false
+  # 桥接侧建议更高采样率，保证感知/控制消息更平滑。
   ticks_per_sec: 50
   frames_per_sec: false
   dt: 0.02
+  # 0 表示不主动限制步数，交由外部停止。
   max_steps: 0
 
 agent:
+  # 载具本体配置，与 sim_params 保持一致，便于联调时共用同一模型。
   type: TorpedoAUV
   control_scheme: 0
-  location: [0.0, 0.0, -10.0]
+  location: [0.0, 0.0, -12.0]
   rotation: [0.0, 0.0, 0.0]
+  # 桥接模式重点依赖姿态/惯导/速度/深度传感器。
   sensors:
     - sensor_type: PoseSensor
     - sensor_type: IMUSensor
@@ -24,6 +31,7 @@ agent:
     - sensor_type: DepthSensor
 
 limits:
+  # 物理/场景安全限制，防止桥接输出控制指令超出载具能力。
   fin_deg_max: 30.0
   thrust_min: -100.0
   thrust_max: 100.0
@@ -33,18 +41,27 @@ limits:
   safety_margin_z: 1.5
 
 bridge:
+  # 桥接层运行参数：消息频率、命令超时、默认命令和输出限幅。
   rate_hz: 50.0
+  # 若一段时间内未收到控制指令，则认为上游链路超时。
   cmd_timeout_s: 0.5
+  # 是否必须先收到第一条控制指令才开始工作。
   require_first_cmd: false
+  # 默认控制量顺序应与桥接代码中的映射一致。
   default_command: [0.0, 0.0, 0.0, 0.0, 0.0]
+  # 舵面与推力的输出限幅，防止非法值进入仿真器。
   fin_abs_max: 30.0
   thrust_min: -100.0
   thrust_max: 100.0
+  # 桥接最大步数；0 表示无限运行。
   max_steps: 0
 
 zenoh:
+  # Zenoh 通信相关配置：session 可留空采用默认连接参数。
   session: {}
+  # 下行命令 key：ROS2 /cmd_vel 经过桥接后发布到该 Zenoh topic。
   downlink_cmd_key: rt/auv/control/cmd_vel
+  # 上行传感器 topic key：仿真数据发布到 Zenoh，再由 ROS2 订阅。
   uplink_keys:
     ground_truth: rt/auv/sensors/ground_truth
     imu: rt/auv/sensors/imu
@@ -52,8 +69,34 @@ zenoh:
     depth: rt/auv/sensors/depth
     magnetic: rt/auv/sensors/magnetic
     sonar: rt/auv/sensors/sonar
+    seabed_cloud: rt/auv/visual/seabed_cloud
+    cable_marker: rt/auv/visual/cable_marker
+    truth_pose: rt/auv/visual/truth_pose
+    history_trail: rt/auv/visual/history_trail
+    view_range: rt/auv/visual/view_range
+
+digital_twin:
+  # 数字孪生可视化层参数：尽量保持配置化，避免写死关键地形与 cable 数值。
+  enabled: true
+  terrain_extent_m: 50.0
+  terrain_resolution_m: 1.0
+  terrain_noise_amplitude_m: 0.08
+  terrain_noise_scale_m: 8.0
+  terrain_noise_octaves: 3
+  terrain_seed: 7
+  seabed_z_m: 15.0
+  cable_suspension_height_m: 1.0
+  cable_origin_ned: [0.0, 0.0, 14.0]
+  cable_direction_ned: [1.0, 0.0, 0.0]
+  cable_length_m: 60.0
+  cable_step_m: 1.0
+  view_radius_m: 3.0
+  view_height_m: 0.1
+  terrain_publish_hz: 3.0
+  trail_limit: 800
 
 cable_path:
+  # 电缆/巡检路径点，采用 NED 表达，供感知或任务逻辑参考。
   points_ned:
     - [0.0, 0.0, 12.0]
     - [10.0, 2.0, 12.5]
@@ -61,12 +104,14 @@ cable_path:
     - [30.0, 8.0, 13.5]
 
 perception:
+  # 传感器感知模型与噪声参数，用于模拟巡检任务中的观测误差。
   hvdc_current_amp: 500.0
   noise:
     magnetic_sigma: [1.0e-8, 1.0e-8, 1.0e-8]
     dvl_sigma: [0.02, 0.02, 0.02]
     depth_sigma: 0.03
   sonar:
+    # 声呐离散采样参数：bin 数、最大探测距离、基础噪声和峰值形状。
     n_bins: 256
     max_range_m: 30.0
     base_noise_sigma: 0.01

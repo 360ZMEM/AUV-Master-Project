@@ -14,6 +14,8 @@
 - docs/字段真值表.md: topic 与字段的一览表
 - docs/联调调试记录_2026-03-21.md: 系统 Python 全栈联调记录
 - docs/联调验收摘要_2026-03-21.md: 联调验收结论与检查项
+- docs/foxglove/布局生成器调试上下文_2026-03-25.md: Foxglove 布局 schema 排障记录
+- foxglove_layout_project: Foxglove 布局生成器、topic 配置与导入产物
 
 ## 仿真侧快速启动（Linux）
 ```bash
@@ -69,3 +71,30 @@ bash start_lin_brain.sh stack
 - `auv_localization`: ES-EKF 过滤节点
 - `auv_controller`: Setpoint + FilteredState -> /cmd_vel
 - `auv_decision_ros`: 行为树发布 `/auv/control/setpoint`
+
+## Foxglove 布局生成
+```bash
+cd foxglove_layout_project
+/usr/bin/python3 -m foxglove_layout_project.generator.build_layout --pretty
+```
+
+如果要同时生成 mock topic 快照，使用：
+
+```bash
+/usr/bin/python3 -m foxglove_layout_project.generator.build_layout --with-mock-topics --pretty
+```
+
+一键联动启动：
+```bash
+cd scripts
+bash start_foxglove_holoocean_ros.sh
+```
+
+独立脚本：
+- `scripts/start_foxglove_layout.sh`：只生成 Foxglove 布局
+- `scripts/start_holoocean_sim.sh`：只启动 HoloOcean / Zenoh
+- `scripts/start_ros_brain.sh`：只启动 ROS2 脑端
+
+生成结果默认输出到：
+- `foxglove_layout_project/output/auv_layout.generated.<unix>.json`
+- `foxglove_layout_project/output/auv_layout.generated.<unix>.meta.json`

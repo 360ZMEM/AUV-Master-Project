@@ -1,4 +1,6 @@
 import argparse
+import os
+import signal
 import sys
 from pathlib import Path
 
@@ -37,6 +39,16 @@ def parse_args():
 def main():
     args = parse_args()
     cfg = load_config(args.config)
+    interrupted = {"sigint": False}
+
+    def _mark_interrupted(signum, frame):
+        interrupted["sigint"] = True
+
+    signal.signal(signal.SIGINT, _mark_interrupted)
+    signal.signal(signal.SIGTERM, _mark_interrupted)
+
+    if os.environ.get("AUV_HOLOOCEAN_UUID"):
+        print(f"[AUV] using HoloOcean UUID={os.environ['AUV_HOLOOCEAN_UUID']}")
 
     guard = CommandGuard(cfg["bridge"])
     bridge = HoloOceanPhysicsZenohBridge(cfg, guard)
@@ -45,7 +57,13 @@ def main():
         bridge.open()
         bridge.run_forever()
     except KeyboardInterrupt:
-        print("bridge interrupted by user")
+        interrupted["sigint"] = True
+        print("[AUV] bridge terminated by user (SIGINT)")
+    except Exception as exc:
+        if interrupted["sigint"] and exc.__class__.__name__ == "BusyError" and "Semaphore is busy" in str(exc):
+            print("[AUV] bridge terminated by user (SIGINT)")
+        else:
+            raise
     finally:
         bridge.close()
 

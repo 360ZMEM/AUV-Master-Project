@@ -33,6 +33,16 @@ def generate_launch_description() -> LaunchDescription:
         default_value='95.0',
         description='低电压阈值 (V)，低于该值将标记 battery_low=True',
     )
+    seabed_depth_arg = DeclareLaunchArgument(
+        'seabed_depth_m',
+        default_value='15.0',
+        description='海底参考深度 (m)，用于近底/穿底告警',
+    )
+    seabed_proximity_margin_arg = DeclareLaunchArgument(
+        'seabed_proximity_margin_m',
+        default_value='1.5',
+        description='近底告警余量 (m)，接近海底时提前减速',
+    )
     confidence_threshold_arg = DeclareLaunchArgument(
         'confidence_threshold',
         default_value='0.7',
@@ -59,6 +69,8 @@ def generate_launch_description() -> LaunchDescription:
                 'log_file': LaunchConfiguration('log_file'),
                 'publish_hz': LaunchConfiguration('publish_hz'),
                 'battery_low_voltage_threshold': LaunchConfiguration('battery_low_voltage_threshold'),
+                'seabed_depth_m': LaunchConfiguration('seabed_depth_m'),
+                'seabed_proximity_margin_m': LaunchConfiguration('seabed_proximity_margin_m'),
             }
         ],
     )
@@ -82,6 +94,8 @@ def generate_launch_description() -> LaunchDescription:
             log_file_arg,
             publish_hz_arg,
             voltage_threshold_arg,
+            seabed_depth_arg,
+            seabed_proximity_margin_arg,
             confidence_threshold_arg,
             tree_print_period_arg,
             summary_log_period_arg,

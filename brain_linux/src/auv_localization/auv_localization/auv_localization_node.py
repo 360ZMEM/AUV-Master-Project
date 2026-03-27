@@ -9,6 +9,8 @@ Inputs:
 Outputs:
 - /auv/state/filtered (nav_msgs/Odometry)
 - /auv/state/covariance (std_msgs/Float32MultiArray)
+- /tf (world -> auv/base_link)
+- /tf_static (auv/base_link -> sensor links)
 """
 
 from __future__ import annotations
@@ -22,10 +24,13 @@ import os
 import numpy as np
 import rclpy
 from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32, Float32MultiArray
+from tf2_ros import StaticTransformBroadcaster, TransformBroadcaster
+from auv_interfaces.msg import SensorStatus
 import yaml
 
 def _resolve_project_root() -> Path:
@@ -66,6 +71,17 @@ def _load_es_ekf_class():
 ES_EKF = _load_es_ekf_class()
 
 
+def _parse_xyz(value: object) -> tuple[float, float, float]:
+    """Parse a 3D offset parameter from a string or sequence."""
+    if isinstance(value, (list, tuple)) and len(value) >= 3:
+        return float(value[0]), float(value[1]), float(value[2])
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.split(',') if part.strip()]
+        if len(parts) >= 3:
+            return float(parts[0]), float(parts[1]), float(parts[2])
+    return 0.0, 0.0, 0.0
+
+
 class AUVLocalizationNode(Node):
     def __init__(self) -> None:
         super().__init__('auv_localization_node')
@@ -73,9 +89,53 @@ class AUVLocalizationNode(Node):
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
         self.declare_parameter('params_file', default_params)
         self.declare_parameter('filter_rate_hz', 20.0)
+        self.declare_parameter('world_frame_id', 'world')
+        self.declare_parameter('base_frame_id', 'auv/base_link')
+        self.declare_parameter('imu_frame_id', 'auv/imu_link')
+        self.declare_parameter('dvl_frame_id', 'auv/dvl_link')
+        self.declare_parameter('depth_frame_id', 'auv/depth_link')
+        self.declare_parameter('camera_frame_id', 'auv/camera_link')
+        self.declare_parameter('sonar_frame_id', 'auv/sonar_link')
+        self.declare_parameter('imu_frame_offset_xyz', '0.0,0.0,0.0')
+        self.declare_parameter('dvl_frame_offset_xyz', '0.0,0.0,0.0')
+        self.declare_parameter('depth_frame_offset_xyz', '0.0,0.0,0.0')
+        self.declare_parameter('camera_frame_offset_xyz', '0.0,0.0,0.0')
+        self.declare_parameter('sonar_frame_offset_xyz', '0.0,0.0,0.0')
+        self.declare_parameter('publish_imu_tf', True)
+        self.declare_parameter('publish_dvl_tf', True)
+        self.declare_parameter('publish_depth_tf', True)
+        self.declare_parameter('publish_camera_tf', False)
+        self.declare_parameter('publish_sonar_tf', False)
+        self.declare_parameter('publish_tf', True)
+        self.declare_parameter('publish_static_tf', True)
+        self.declare_parameter('publish_sensor_status', True)
+        self.declare_parameter('seabed_depth_m', 15.0)
+        self.declare_parameter('seabed_proximity_margin_m', 1.5)
 
         self.params_file = str(self.get_parameter('params_file').value)
         self.filter_rate_hz = float(self.get_parameter('filter_rate_hz').value)
+        self.world_frame_id = str(self.get_parameter('world_frame_id').value)
+        self.base_frame_id = str(self.get_parameter('base_frame_id').value)
+        self.imu_frame_id = str(self.get_parameter('imu_frame_id').value)
+        self.dvl_frame_id = str(self.get_parameter('dvl_frame_id').value)
+        self.depth_frame_id = str(self.get_parameter('depth_frame_id').value)
+        self.camera_frame_id = str(self.get_parameter('camera_frame_id').value)
+        self.sonar_frame_id = str(self.get_parameter('sonar_frame_id').value)
+        self.imu_frame_offset_xyz = _parse_xyz(self.get_parameter('imu_frame_offset_xyz').value)
+        self.dvl_frame_offset_xyz = _parse_xyz(self.get_parameter('dvl_frame_offset_xyz').value)
+        self.depth_frame_offset_xyz = _parse_xyz(self.get_parameter('depth_frame_offset_xyz').value)
+        self.camera_frame_offset_xyz = _parse_xyz(self.get_parameter('camera_frame_offset_xyz').value)
+        self.sonar_frame_offset_xyz = _parse_xyz(self.get_parameter('sonar_frame_offset_xyz').value)
+        self.publish_imu_tf = bool(self.get_parameter('publish_imu_tf').value)
+        self.publish_dvl_tf = bool(self.get_parameter('publish_dvl_tf').value)
+        self.publish_depth_tf = bool(self.get_parameter('publish_depth_tf').value)
+        self.publish_camera_tf = bool(self.get_parameter('publish_camera_tf').value)
+        self.publish_sonar_tf = bool(self.get_parameter('publish_sonar_tf').value)
+        self.publish_tf = bool(self.get_parameter('publish_tf').value)
+        self.publish_static_tf = bool(self.get_parameter('publish_static_tf').value)
+        self.publish_sensor_status = bool(self.get_parameter('publish_sensor_status').value)
+        self.seabed_depth_m = float(self.get_parameter('seabed_depth_m').value)
+        self.seabed_proximity_margin_m = float(self.get_parameter('seabed_proximity_margin_m').value)
 
         cfg = self._load_config(self.params_file)
         ekf_cfg = cfg.get('ekf', {})
@@ -93,10 +153,16 @@ class AUVLocalizationNode(Node):
 
         self.odom_pub = self.create_publisher(Odometry, '/auv/state/filtered', 10)
         self.cov_pub = self.create_publisher(Float32MultiArray, '/auv/state/covariance', 10)
+        self.status_pub = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
+        self.tf_broadcaster = TransformBroadcaster(self)
+        self.static_tf_broadcaster = StaticTransformBroadcaster(self)
 
         self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
         self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 20)
         self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 20)
+
+        if self.publish_static_tf:
+            self._publish_static_transforms()
 
         self.create_timer(1.0 / max(self.filter_rate_hz, 1e-3), self._on_timer)
 
@@ -105,6 +171,26 @@ class AUVLocalizationNode(Node):
         self.create_timer(2.0, self._log_latency)
 
         self.get_logger().info('auv_localization_node started')
+        self.get_logger().info(
+            'TF config: '
+            f'world_frame_id={self.world_frame_id}, '
+            f'base_frame_id={self.base_frame_id}, '
+            f'imu_frame_id={self.imu_frame_id}, '
+            f'dvl_frame_id={self.dvl_frame_id}, '
+            f'depth_frame_id={self.depth_frame_id}, '
+            f'camera_frame_id={self.camera_frame_id}, '
+            f'sonar_frame_id={self.sonar_frame_id}, '
+            f'publish_tf={self.publish_tf}, '
+            f'publish_static_tf={self.publish_static_tf}, '
+            f'publish_imu_tf={self.publish_imu_tf}, '
+            f'publish_dvl_tf={self.publish_dvl_tf}, '
+            f'publish_depth_tf={self.publish_depth_tf}, '
+            f'publish_camera_tf={self.publish_camera_tf}, '
+            f'publish_sonar_tf={self.publish_sonar_tf}, '
+            f'publish_sensor_status={self.publish_sensor_status}, '
+            f'seabed_depth_m={self.seabed_depth_m}, '
+            f'seabed_proximity_margin_m={self.seabed_proximity_margin_m}'
+        )
 
     @staticmethod
     def _load_config(path: str) -> dict:
@@ -140,6 +226,67 @@ class AUVLocalizationNode(Node):
         self._last_depth = float(msg.data)
         self._last_depth_ts = time.time()
 
+    def _build_sensor_status(self, state: dict) -> SensorStatus:
+        """Build a minimal live SensorStatus message from the filtered state.
+
+        The localization node is the best live source for the status window in
+        the integrated stack because it already fuses depth, velocity, and the
+        covariance estimate. The decision layer can then consume the same topic
+        in both replay and live modes.
+        """
+        msg = SensorStatus()
+        msg.depth_m = float(abs(state['p'][2]))
+        msg.speed_mps = float(np.linalg.norm(state['v']))
+        msg.seabed_depth_m = float(self.seabed_depth_m)
+        msg.seabed_clearance_m = float(self.seabed_depth_m - msg.depth_m)
+        msg.seabed_proximity_warning = bool(
+            msg.seabed_clearance_m <= float(self.seabed_proximity_margin_m)
+        )
+        msg.seabed_penetration_warning = bool(msg.seabed_clearance_m < 0.0)
+
+        pos_cov = np.asarray(self.filter.P[:3, :3], dtype=float)
+        pos_var = float(max(np.trace(pos_cov), 0.0) / 3.0)
+        pos_sigma = float(np.sqrt(pos_var))
+        confidence = 1.0 / (1.0 + pos_sigma)
+        msg.confidence = float(np.clip(confidence, 0.05, 0.99))
+
+        msg.leak_level = SensorStatus.LEAK_NONE
+        msg.battery_low = False
+        msg.anomaly_detected = bool(np.linalg.norm(state['v']) < 1e-6 and self._last_depth is None)
+        return msg
+
+    def _publish_static_transforms(self) -> None:
+        """Publish static sensor frames under the AUV base frame.
+
+        The zero-offset defaults keep the TF chain valid today while leaving a
+        single place to attach real sensor mounting offsets later.
+        """
+        static_transforms: list[TransformStamped] = []
+
+        def _make_static(child_frame_id: str, xyz: tuple[float, float, float]) -> TransformStamped:
+            transform = TransformStamped()
+            transform.header.stamp = self.get_clock().now().to_msg()
+            transform.header.frame_id = self.base_frame_id
+            transform.child_frame_id = child_frame_id
+            transform.transform.translation.x = float(xyz[0])
+            transform.transform.translation.y = float(xyz[1])
+            transform.transform.translation.z = float(xyz[2])
+            transform.transform.rotation.w = 1.0
+            return transform
+
+        if self.publish_imu_tf:
+            static_transforms.append(_make_static(self.imu_frame_id, self.imu_frame_offset_xyz))
+        if self.publish_dvl_tf:
+            static_transforms.append(_make_static(self.dvl_frame_id, self.dvl_frame_offset_xyz))
+        if self.publish_depth_tf:
+            static_transforms.append(_make_static(self.depth_frame_id, self.depth_frame_offset_xyz))
+        if self.publish_camera_tf:
+            static_transforms.append(_make_static(self.camera_frame_id, self.camera_frame_offset_xyz))
+        if self.publish_sonar_tf:
+            static_transforms.append(_make_static(self.sonar_frame_id, self.sonar_frame_offset_xyz))
+
+        self.static_tf_broadcaster.sendTransform(static_transforms)
+
     def _on_timer(self) -> None:
         now = time.time()
         dt = max(1e-3, min(0.2, now - self._last_loop_ts))
@@ -156,8 +303,8 @@ class AUVLocalizationNode(Node):
 
         odom = Odometry()
         odom.header.stamp = self.get_clock().now().to_msg()
-        odom.header.frame_id = 'world'
-        odom.child_frame_id = 'auv/base_link'
+        odom.header.frame_id = self.world_frame_id
+        odom.child_frame_id = self.base_frame_id
         odom.pose.pose.position.x = float(state['p'][0])
         odom.pose.pose.position.y = float(state['p'][1])
         odom.pose.pose.position.z = float(state['p'][2])
@@ -170,9 +317,26 @@ class AUVLocalizationNode(Node):
         odom.twist.twist.linear.z = float(state['v'][2])
         self.odom_pub.publish(odom)
 
+        if self.publish_tf:
+            transform = TransformStamped()
+            transform.header.stamp = odom.header.stamp
+            transform.header.frame_id = self.world_frame_id
+            transform.child_frame_id = self.base_frame_id
+            transform.transform.translation.x = float(state['p'][0])
+            transform.transform.translation.y = float(state['p'][1])
+            transform.transform.translation.z = float(state['p'][2])
+            transform.transform.rotation.w = float(state['q'][0])
+            transform.transform.rotation.x = float(state['q'][1])
+            transform.transform.rotation.y = float(state['q'][2])
+            transform.transform.rotation.z = float(state['q'][3])
+            self.tf_broadcaster.sendTransform(transform)
+
         cov_msg = Float32MultiArray()
         cov_msg.data = self.filter.P.reshape(-1).astype(float).tolist()
         self.cov_pub.publish(cov_msg)
+
+        if self.publish_sensor_status:
+            self.status_pub.publish(self._build_sensor_status(state))
 
         latest_sensor_ts = max(self._last_imu_ts, self._last_dvl_ts, self._last_depth_ts)
         if latest_sensor_ts > 0.0:

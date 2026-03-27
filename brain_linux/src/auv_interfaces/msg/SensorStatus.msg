@@ -29,3 +29,15 @@ float32 depth_m
 
 # 当前航速（米/秒）
 float32 speed_mps
+
+# 海底参考深度（米）
+float32 seabed_depth_m
+
+# 到海底的剩余净空（米），小于等于 0 表示已穿底
+float32 seabed_clearance_m
+
+# 接近海底告警（保留提前减速语义）
+bool seabed_proximity_warning
+
+# 穿过海底告警（保留紧急上浮语义）
+bool seabed_penetration_warning

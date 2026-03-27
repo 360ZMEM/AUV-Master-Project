@@ -20,6 +20,10 @@ class SensorStatusData:
         anomaly_detected: 是否检测到异常（用于装饰器降速语义）。
         depth_m: 当前深度（米）。
         speed_mps: 当前速度（米/秒）。
+        seabed_depth_m: 海底参考深度（米）。
+        seabed_clearance_m: 到海底的剩余净空（米）。
+        seabed_proximity_warning: 是否接近海底（用于保守减速）。
+        seabed_penetration_warning: 是否已穿底（用于紧急上浮）。
     """
 
     confidence: float = 0.5
@@ -28,10 +32,22 @@ class SensorStatusData:
     anomaly_detected: bool = False
     depth_m: float = 0.0
     speed_mps: float = 0.0
+    seabed_depth_m: float = 15.0
+    seabed_clearance_m: float = 15.0
+    seabed_proximity_warning: bool = False
+    seabed_penetration_warning: bool = False
 
     def is_leaking(self) -> bool:
         """是否漏水（任意漏水等级 > 0 即认为漏水）。"""
         return self.leak_level > 0
+
+    def is_seabed_risky(self) -> bool:
+        """是否存在海底接近或穿底风险。"""
+        return self.seabed_proximity_warning or self.seabed_penetration_warning
+
+    def is_seabed_penetrated(self) -> bool:
+        """是否已穿过海底。"""
+        return self.seabed_penetration_warning
 
 
 @dataclass

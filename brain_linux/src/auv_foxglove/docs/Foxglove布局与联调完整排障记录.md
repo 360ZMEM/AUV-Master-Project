@@ -116,6 +116,34 @@
 3. `configById` 里按 key 提供对应 panel config
 4. 通过 `--no-map` 保留无地图版本，降低兼容风险
 
+### 4.2.1 新一轮布局修复记录（2026-03-27）
+
+这次联调中，曾出现两个新的界面问题：
+
+1. 图表没有标题
+2. RawMessages 面板显示 `No message path entered`
+
+进一步对比当前工程的 README、历史可导入布局以及 Console 工作区的生成器后，确认问题更接近于生成器输出结构偏离了当前仓库约定，而不是话题本身丢失：
+
+- `AUV_Master_Project/foxglove_layout_project/README.md` 明确要求使用 `configById + layout`
+- 旧版可用输出也是 `configById` 根结构，而不是 `panels + savedProps`
+- `configById` 的叶子必须与 `layout` 中的 `PanelType!slug` 保持一致
+
+修复动作：
+
+1. 将生成器从 `panels + savedProps` 回退到 `configById + layout`
+2. 将叶子引用恢复为 `3D!auv3d`、`Plot!depth`、`RawMessages!imu` 这类形式
+3. 保留现有 topic 配置与 mock topic 链路，只修正布局导出 schema
+
+修复后的导出结果已重新生成到：
+
+- `foxglove_layout_project/output/auv_layout.generated.1774575691.json`
+
+当前结论：
+
+- `Unknown panel type`、图表无标题、`No message path entered` 这一组现象，本质上都属于布局导出结构不稳定引起的面板绑定问题
+- 对 AUV 这条链路，当前应以 `configById + layout` 作为唯一基线，不再沿用 `panels + savedProps`
+
 ---
 
 ### 4.2 后台脚本 `set -u` 兼容修复

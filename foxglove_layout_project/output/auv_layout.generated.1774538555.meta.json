@@ -1,0 +1,7 @@
+{
+  "name": "AUV Foxglove Layout",
+  "description": "Parameterised Foxglove layout for the AUV stack",
+  "generatedBy": "foxglove_layout_project/generator/build_layout.py",
+  "topicPrefix": "",
+  "layoutFile": "/home/gwxie/master_work-tmp/AUV_Master_Project/foxglove_layout_project/output/auv_layout.generated.1774538555.json"
+}

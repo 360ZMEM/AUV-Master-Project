@@ -40,6 +40,8 @@ class MockSensorInputNode(Node):
         self.declare_parameter('log_file', str(default_log))
         self.declare_parameter('publish_hz', 10.0)
         self.declare_parameter('battery_low_voltage_threshold', 95.0)
+        self.declare_parameter('seabed_depth_m', 15.0)
+        self.declare_parameter('seabed_proximity_margin_m', 1.5)
         self.declare_parameter('status_log_period', 2.0)
 
         self.log_file = Path(self.get_parameter('log_file').get_parameter_value().string_value)
@@ -48,6 +50,10 @@ class MockSensorInputNode(Node):
         )
         self.battery_low_voltage_threshold = float(
             self.get_parameter('battery_low_voltage_threshold').get_parameter_value().double_value
+        )
+        self.seabed_depth_m = float(self.get_parameter('seabed_depth_m').get_parameter_value().double_value)
+        self.seabed_proximity_margin_m = float(
+            self.get_parameter('seabed_proximity_margin_m').get_parameter_value().double_value
         )
         self.status_log_period = float(
             self.get_parameter('status_log_period').get_parameter_value().double_value
@@ -69,6 +75,10 @@ class MockSensorInputNode(Node):
         self.get_logger().info(
             f'低电压阈值: {self.battery_low_voltage_threshold:.1f}V '
             '(total_voltage 低于该值视作 battery_low=True)'
+        )
+        self.get_logger().info(
+            f'海底参考深度: {self.seabed_depth_m:.1f}m, '
+            f'近底告警余量: {self.seabed_proximity_margin_m:.1f}m'
         )
         self.get_logger().info(f'状态摘要周期: {self.status_log_period:.1f}s')
         self.get_logger().info('发布话题: /auv/sensors/status')
@@ -164,7 +174,13 @@ class MockSensorInputNode(Node):
         gps_speed_knots = struct.unpack('>H', packet[80:82])[0] * 0.1
         msg.speed_mps = gps_speed_knots * 0.514444
 
-        # 6) anomaly_detected：优先依据报警字节，辅以小概率扰动便于演示装饰器生效。
+        # 6) seabed warning：由当前深度与配置化海底深度计算。
+        msg.seabed_depth_m = self.seabed_depth_m
+        msg.seabed_clearance_m = self.seabed_depth_m - msg.depth_m
+        msg.seabed_proximity_warning = msg.seabed_clearance_m <= self.seabed_proximity_margin_m
+        msg.seabed_penetration_warning = msg.seabed_clearance_m < 0.0
+
+        # 7) anomaly_detected：优先依据报警字节，辅以小概率扰动便于演示装饰器生效。
         # depth_alarm(byte128) / bottom_alarm(byte129) 任一非零即视为异常。
         depth_alarm = packet[128]
         bottom_alarm = packet[129]
@@ -277,7 +293,10 @@ class MockSensorInputNode(Node):
             f'index={self.current_index + 1}/{len(self.parsed_lines)} | '
             f'confidence={msg.confidence:.2f} | leak_level={msg.leak_level} | '
             f'battery_low={msg.battery_low} | anomaly={msg.anomaly_detected} | '
-            f'depth={msg.depth_m:.2f}m | speed={msg.speed_mps:.2f}m/s'
+            f'depth={msg.depth_m:.2f}m | speed={msg.speed_mps:.2f}m/s | '
+            f'seabed_clearance={msg.seabed_clearance_m:.2f}m | '
+            f'seabed_warn={msg.seabed_proximity_warning} | '
+            f'seabed_penetration={msg.seabed_penetration_warning}'
         )
 
 

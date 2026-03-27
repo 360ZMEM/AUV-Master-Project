@@ -25,6 +25,11 @@ SIM_DEFAULT_MAX_RUDDER_DEG: float = 30.0
 # This constant is for validation/reporting, not a hard control law.
 BURIED_DEPTH_ERROR_LIMIT_M: float = 0.2
 
+# Digital twin visualization defaults.
+# Unit: meters.
+SEA_BOTTOM_Z: float = 15.0
+CABLE_SUSPENSION_HEIGHT: float = 1.0
+
 
 def clamp(value: float, low: float, high: float) -> float:
     """Clamp value to [low, high]."""

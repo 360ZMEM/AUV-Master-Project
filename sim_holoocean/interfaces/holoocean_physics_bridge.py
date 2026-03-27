@@ -23,6 +23,11 @@ from common.protocol import (
     KEY_VEL_NED,
     enrich_meta,
     validate_sensor_payload,
+    Z_PATH_CABLE_MARKER,
+    Z_PATH_HISTORY_TRAIL,
+    Z_PATH_SEABED_CLOUD,
+    Z_PATH_TRUTH_POSE,
+    Z_PATH_VIEW_RANGE,
 )
 
 from frame_transform import body_vector_ue_to_ned, pose_matrix_ue_to_ned
@@ -32,6 +37,7 @@ from perception_engine import (
     inject_gaussian_noise,
     inject_sonar_cable_peak,
 )
+from synthetic_sensors import VirtualEnvironment
 from sim_wrapper import (
     HoloOceanSimWrapper,
     build_scenario,
@@ -53,6 +59,11 @@ class HoloOceanPhysicsZenohBridge:
 
         cable_points = config["cable_path"]["points_ned"]
         self.cable = CablePath(cable_points)
+
+        digital_twin_cfg = config.get("digital_twin", {})
+        self.virtual_env = VirtualEnvironment(digital_twin_cfg)
+        self.terrain_publish_hz = float(digital_twin_cfg.get("terrain_publish_hz", 3.0))
+        self._last_terrain_publish_ts = -1e9
 
         self.wrapper = None
         self.zbridge = None
@@ -151,6 +162,22 @@ class HoloOceanPhysicsZenohBridge:
                 KEY_SONAR_BINS: sonar.tolist(),
             },
         }
+
+        visual_payloads = self.virtual_env.build_visual_payloads(
+            position_ned=pos_ned,
+            rpy_ned=tf["rpy_ned"],
+            publish_terrain=(sim_time - self._last_terrain_publish_ts) >= max(1.0 / max(self.terrain_publish_hz, 1e-6), self.dt),
+        )
+        if Z_PATH_SEABED_CLOUD in visual_payloads:
+            self._last_terrain_publish_ts = sim_time
+        if Z_PATH_SEABED_CLOUD in visual_payloads:
+            packets["seabed_cloud"] = {**base, **visual_payloads[Z_PATH_SEABED_CLOUD]}
+        packets.update({
+            "cable_marker": {**base, **visual_payloads[Z_PATH_CABLE_MARKER]},
+            "truth_pose": {**base, **visual_payloads[Z_PATH_TRUTH_POSE]},
+            "history_trail": {**base, **visual_payloads[Z_PATH_HISTORY_TRAIL]},
+            "view_range": {**base, **visual_payloads[Z_PATH_VIEW_RANGE]},
+        })
         return packets
 
     def run_forever(self):

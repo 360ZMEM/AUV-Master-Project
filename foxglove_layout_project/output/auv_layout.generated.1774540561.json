@@ -1,0 +1,460 @@
+{
+  "globalVariables": {},
+  "userNamespace": "default",
+  "playbackConfig": {
+    "speed": 1
+  },
+  "panels": [
+    {
+      "id": "3D",
+      "name": "3D",
+      "type": "3D",
+      "config": {
+        "cameraState": {
+          "distance": 30,
+          "phi": 1.0471975511965976,
+          "target": [
+            0,
+            0,
+            -5
+          ],
+          "targetOffset": [
+            0,
+            0,
+            0
+          ],
+          "theta": 0.7853981633974483,
+          "focalLength": 603.9313359731442,
+          "near": 0.1,
+          "far": 5000
+        },
+        "followMode": "follow",
+        "upAxis": "z",
+        "topics": [
+          {
+            "name": "/auv/state/filtered",
+            "color": "#00ff88",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/truth_pose",
+            "color": "#00b7ff",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/seabed_cloud",
+            "color": "#2bb673",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/cable_marker",
+            "color": "#f6d64a",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/history_trail",
+            "color": "#4f9cff",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/view_range",
+            "color": "#ff4d4d",
+            "visible": true
+          }
+        ],
+        "layers": [
+          {
+            "name": "Grid",
+            "visible": true
+          }
+        ],
+        "grid": {
+          "color": "#444444",
+          "divisions": 10,
+          "size": 50,
+          "visible": true
+        },
+        "settings": {
+          "cameraState": {
+            "distance": 30,
+            "phi": 1.0471975511965976,
+            "target": [
+              0,
+              0,
+              -5
+            ],
+            "targetOffset": [
+              0,
+              0,
+              0
+            ],
+            "theta": 0.7853981633974483
+          }
+        },
+        "modifiedFields": {
+          "topics": [
+            {
+              "name": "/auv/state/filtered",
+              "color": "#00ff88",
+              "visible": true
+            },
+            {
+              "name": "/auv/visual/truth_pose",
+              "color": "#00b7ff",
+              "visible": true
+            },
+            {
+              "name": "/auv/visual/seabed_cloud",
+              "color": "#2bb673",
+              "visible": true
+            },
+            {
+              "name": "/auv/visual/cable_marker",
+              "color": "#f6d64a",
+              "visible": true
+            },
+            {
+              "name": "/auv/visual/history_trail",
+              "color": "#4f9cff",
+              "visible": true
+            },
+            {
+              "name": "/auv/visual/view_range",
+              "color": "#ff4d4d",
+              "visible": true
+            }
+          ]
+        },
+        "useTransaction": false,
+        "renderSettings": {
+          "depthPacking": "rgba"
+        },
+        "expandedKeys": {
+          "/auv/state/filtered": [
+            "marker"
+          ]
+        }
+      }
+    },
+    {
+      "id": "Depth",
+      "name": "深度",
+      "type": "plot",
+      "config": {
+        "title": "AUV深度",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "深度 (m)",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/sensors/depth",
+            "value": "data",
+            "color": "#00ff00"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/control/setpoint",
+            "value": "target_depth_m",
+            "color": "#66cc66"
+          }
+        ],
+        "sidebarDimension": 240,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "Speed",
+      "name": "速度",
+      "type": "plot",
+      "config": {
+        "title": "AUV速度",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "速度 (m/s)",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/sensors/dvl",
+            "value": "twist.linear.x",
+            "color": "#0066ff"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/auv/control/setpoint",
+            "value": "target_speed_mps",
+            "color": "#66aaff"
+          }
+        ],
+        "sidebarDimension": 240,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "Control",
+      "name": "控制量",
+      "type": "plot",
+      "config": {
+        "title": "Twist 指令",
+        "legendDisplay": "floating",
+        "showLegend": true,
+        "xAxisLabel": "时间",
+        "yAxisLabel": "Twist 指令",
+        "paths": [
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/cmd_vel",
+            "value": "linear.x",
+            "color": "#9933ff"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/cmd_vel",
+            "value": "angular.x",
+            "color": "#ff6600"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/cmd_vel",
+            "value": "angular.y",
+            "color": "#ff9900"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/cmd_vel",
+            "value": "angular.z",
+            "color": "#cc5500"
+          },
+          {
+            "timestampMethod": "receiveTime",
+            "topic": "/cmd_vel",
+            "value": "linear.z",
+            "color": "#aa3300"
+          }
+        ],
+        "sidebarDimension": 240,
+        "lineWidth": 2,
+        "showXAxisLabels": true,
+        "showYAxisLabels": true,
+        "showPlotValuesInLegend": true
+      },
+      "overlayInfo": {}
+    },
+    {
+      "id": "IMU",
+      "name": "IMU",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/sensors/imu",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "IMU传感器数据"
+      }
+    },
+    {
+      "id": "DVL",
+      "name": "DVL",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/sensors/dvl",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "DVL速度信息"
+      }
+    },
+    {
+      "id": "State",
+      "name": "状态",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/state/filtered",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "滤波后状态"
+      }
+    },
+    {
+      "id": "Setpoint",
+      "name": "目标",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/control/setpoint",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "控制目标"
+      }
+    },
+    {
+      "id": "CmdVel",
+      "name": "CmdVel",
+      "type": "raw",
+      "config": {
+        "topicPath": "/cmd_vel",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "速度指令"
+      }
+    },
+    {
+      "id": "Status",
+      "name": "状态摘要",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/sensors/status",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "传感器状态摘要"
+      }
+    },
+    {
+      "id": "MockScene",
+      "name": "MockScene",
+      "type": "raw",
+      "config": {
+        "topicPath": "/auv/mock/scene",
+        "diffEnabled": false,
+        "showFullMessageForDiff": true,
+        "showFullMessageForDiffOnly": false,
+        "expandedPath": [],
+        "description": "mock场景摘要"
+      }
+    }
+  ],
+  "savedProps": {
+    "3D": {
+      "config": {
+        "cameraState": {
+          "distance": 30,
+          "phi": 1.0471975511965976,
+          "target": [
+            0,
+            0,
+            -5
+          ],
+          "targetOffset": [
+            0,
+            0,
+            0
+          ],
+          "theta": 0.7853981633974483,
+          "focalLength": 603.9313359731442,
+          "near": 0.1,
+          "far": 5000
+        },
+        "followMode": "follow",
+        "upAxis": "z",
+        "topics": [
+          {
+            "name": "/auv/state/filtered",
+            "color": "#00ff88",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/truth_pose",
+            "color": "#00b7ff",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/seabed_cloud",
+            "color": "#2bb673",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/cable_marker",
+            "color": "#f6d64a",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/history_trail",
+            "color": "#4f9cff",
+            "visible": true
+          },
+          {
+            "name": "/auv/visual/view_range",
+            "color": "#ff4d4d",
+            "visible": true
+          }
+        ],
+        "grid": {
+          "color": "#444444",
+          "divisions": 10,
+          "size": 50,
+          "visible": true
+        }
+      }
+    }
+  },
+  "layout": {
+    "direction": "row",
+    "first": {
+      "direction": "row",
+      "first": "3D",
+      "second": {
+        "direction": "column",
+        "first": "Depth",
+        "second": "Speed",
+        "splitPercentage": 50
+      },
+      "splitPercentage": 55
+    },
+    "second": {
+      "direction": "column",
+      "first": {
+        "direction": "row",
+        "first": "Control",
+        "second": {
+          "direction": "column",
+          "first": "IMU",
+          "second": "DVL",
+          "splitPercentage": 50
+        },
+        "splitPercentage": 50
+      },
+      "second": {
+        "direction": "row",
+        "first": {
+          "direction": "column",
+          "first": "State",
+          "second": "Setpoint",
+          "splitPercentage": 50
+        },
+        "second": {
+          "direction": "column",
+          "first": "CmdVel",
+          "second": {
+            "direction": "column",
+            "first": "Status",
+            "second": "MockScene",
+            "splitPercentage": 50
+          },
+          "splitPercentage": 50
+        },
+        "splitPercentage": 50
+      },
+      "splitPercentage": 50
+    },
+    "splitPercentage": 55
+  }
+}

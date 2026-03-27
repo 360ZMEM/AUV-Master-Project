@@ -17,8 +17,20 @@ if [[ "$#" -gt 0 ]]; then
   shift
 fi
 
+handle_sigint() {
+  echo "[AUV] received SIGINT, treating as manual termination."
+  exit 0
+}
+
+handle_sigterm() {
+  echo "[AUV] received SIGTERM, treating as manual termination."
+  exit 0
+}
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BRAIN_DIR="$ROOT_DIR/brain_linux"
+WORKSPACE_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
+FOXGLOVE_SDK_ROS_DIR="${FOXGLOVE_SDK_ROS_DIR:-$WORKSPACE_ROOT/foxglove-sdk/ros}"
 
 if [[ ! -d "$BRAIN_DIR/src" ]]; then
   echo "[AUV][ERROR] brain_linux/src not found"
@@ -53,6 +65,12 @@ if [[ -f "$BRAIN_DIR/install/setup.bash" ]]; then
   set -u
 fi
 
+if [[ -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
+  set +u
+  source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+  set -u
+fi
+
 discover_packages() {
   find "$BRAIN_DIR/src" -name package.xml -type f | sort | while read -r xml; do
     sed -n 's:.*<name>\(.*\)</name>.*:\1:p' "$xml" | head -n 1
@@ -60,6 +78,8 @@ discover_packages() {
 }
 
 cd "$BRAIN_DIR"
+trap handle_sigint INT
+trap handle_sigterm TERM
 mapfile -t PKGS < <(discover_packages)
 if [[ "${#PKGS[@]}" -eq 0 ]]; then
   echo "[AUV][ERROR] no ROS2 packages found in $BRAIN_DIR/src"

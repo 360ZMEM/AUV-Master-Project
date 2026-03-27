@@ -20,8 +20,8 @@
 因此，最终方案改为：
 
 1. **数据发布器发布平滑运动状态**
-2. **发布 `map -> auv_base_link` 动态 TF**
-3. **发布 `auv_base_link -> imu_link/gps/pressure_sensor/temp_sensor` 静态 TF**
+2. **发布 `world -> auv/base_link` 动态 TF**
+3. **发布 `auv/base_link -> auv/imu_link、auv/dvl_link、auv/depth_link` 静态 TF**
 4. **Foxglove 3D 面板内使用 Map layer 展示地图，而不再使用独立 `Map` 面板**
 
 这样既避免了 `Map` 面板类型兼容风险，又保留地图能力和 TF 可视化能力。
@@ -33,22 +33,20 @@
 推荐 TF 树如下：
 
 ```text
-map
-└── auv_base_link
-    ├── imu_link
-    ├── gps
-    ├── pressure_sensor
-    └── temp_sensor
+world
+└── auv/base_link
+  ├── auv/imu_link
+  ├── auv/dvl_link
+  └── auv/depth_link
 ```
 
 ### 含义说明
 
-- `map`：全局地图坐标系
-- `auv_base_link`：AUV 本体基准坐标系
-- `imu_link`：IMU 传感器安装位姿
-- `gps`：GPS 接收器安装位姿
-- `pressure_sensor`：压力传感器安装位姿
-- `temp_sensor`：温度传感器安装位姿
+- `world`：全局惯性坐标系，作为动态 TF 的根节点
+- `auv/base_link`：AUV 本体基准坐标系
+- `auv/imu_link`：IMU 传感器安装位姿
+- `auv/dvl_link`：DVL 传感器安装位姿
+- `auv/depth_link`：深度传感器安装位姿
 
 ### 这套结构的好处
 
@@ -107,10 +105,28 @@ map
 
 建议在 3D 面板中配置：
 
-- `fixedFrame = map`
-- `followTf = auv_base_link`
+- `fixedFrame = world`
+- `followTf = auv/base_link`
 - `scene.transforms.visible = true`
 - `layers.map = { type: satellite, enabled: true, opacity: 1 }`
+
+### TF 参数化扩展
+
+当前 TF 链路已经参数化，后续可以通过 launch 参数调整：
+
+- `world_frame_id`：动态 TF 的根节点，默认 `world`
+- `base_frame_id`：AUV 本体基准坐标系，默认 `auv/base_link`
+- `imu_frame_id`、`dvl_frame_id`、`depth_frame_id`：现有静态传感器 frame
+- `camera_frame_id`、`sonar_frame_id`：预留的未来扩展 frame，占位但默认不发布
+- `*_frame_offset_xyz`：各 frame 的安装偏移，默认 `0.0,0.0,0.0`
+- `publish_imu_tf`、`publish_dvl_tf`、`publish_depth_tf`：现有静态 frame 开关
+- `publish_camera_tf`、`publish_sonar_tf`：未来扩展 frame 开关，默认关闭
+
+这样做的好处是：
+
+- 新增相机/声呐时，不需要改 TF 发布框架
+- 只需要在 launch 层打开对应 frame 并填外参
+- Foxglove 3D 的绑定关系和 ROS2 TF 树保持一致
 
 ### 图表与原始消息面板
 
@@ -141,6 +157,16 @@ ros2 topic echo /auv/depth --once
 ros2 topic echo /tf --once
 ```
 
+### 7.1.1 运行隔离说明
+
+当前仿真侧会为每次启动自动生成独立的 HoloOcean UUID，用来隔离 POSIX semaphore，避免上一次异常退出留下的句柄影响下一次联调。
+
+这意味着：
+
+- 正常重启不需要手工清理 semaphore
+- 旧的 HoloOcean 进程残留不会再和新进程抢同一组 sem
+- 如果你要做多实例测试，可以继续通过不同启动进程隔离运行
+
 ### 7.2 再确认 Foxglove Bridge
 
 ```bash
@@ -154,9 +180,16 @@ ss -ltnp | grep ':8765'
 
 ### 7.4 最后确认 3D 视图
 
-- 能看到 `/auv/pose`
+- 能看到 `/auv/state/filtered`
 - 能看到地图底图
-- 能看到 TF 关系与随时间连续运动轨迹
+- 能看到 `world -> auv/base_link` 的 TF 关系与随时间连续运动轨迹
+
+### 7.5 调参时的建议顺序
+
+1. 先确认 `world_frame_id` 和 `base_frame_id` 正确
+2. 再确认 IMU/DVL/Depth 的静态 frame 是否按默认发布
+3. 如果需要扩展相机或声呐，再启用 `publish_camera_tf` / `publish_sonar_tf`
+4. 最后再调各 frame 的 `*_frame_offset_xyz`
 
 ---
 

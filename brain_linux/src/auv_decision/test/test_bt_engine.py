@@ -53,6 +53,52 @@ def test_emergency_has_higher_priority():
     assert goal['high_priority'] is True
 
 
+def test_seabed_penetration_triggers_emergency_surface():
+    engine = DecisionTreeEngine(confidence_threshold=0.7)
+    engine.set_sensor_status(
+        SensorStatusData(
+            confidence=0.9,
+            leak_level=0,
+            battery_low=False,
+            anomaly_detected=False,
+            depth_m=15.8,
+            seabed_depth_m=15.0,
+            seabed_clearance_m=-0.8,
+            seabed_proximity_warning=True,
+            seabed_penetration_warning=True,
+        )
+    )
+    engine.tick()
+    goal = engine.get_target_motion_state()
+    assert goal is not None
+    assert goal['mode'] == 'EMERGENCY_SURFACE'
+    assert goal['high_priority'] is True
+    assert '穿底' in goal['note']
+
+
+def test_seabed_proximity_slows_down_goal():
+    engine = DecisionTreeEngine(confidence_threshold=0.7)
+    engine.set_sensor_status(
+        SensorStatusData(
+            confidence=0.9,
+            leak_level=0,
+            battery_low=False,
+            anomaly_detected=False,
+            depth_m=14.4,
+            seabed_depth_m=15.0,
+            seabed_clearance_m=0.6,
+            seabed_proximity_warning=True,
+            seabed_penetration_warning=False,
+        )
+    )
+    engine.tick()
+    goal = engine.get_target_motion_state()
+    assert goal is not None
+    assert goal['mode'] == 'PARALLEL_TRACKING'
+    assert goal['target_speed_mps'] < 0.6
+    assert '近底' in goal['note']
+
+
 def test_anomaly_decorator_slow_down_parallel_speed():
     engine = DecisionTreeEngine(confidence_threshold=0.7)
     engine.set_sensor_status(

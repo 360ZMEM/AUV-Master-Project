@@ -53,3 +53,46 @@ class AnomalySpeedLimiter(py_trees.decorators.Decorator):
             self.blackboard.set(TARGET_MOTION_STATE_KEY, target)
 
         return child_status
+
+
+class SeabedSafetyLimiter(py_trees.decorators.Decorator):
+    """海底安全限速装饰器。
+
+    行为：
+    1) 子节点先正常产出当前任务目标；
+    2) 若检测到接近海底或穿底，则将目标速度按保守系数下调；
+    3) 仅叠加安全语义，不改变子节点返回状态。
+    """
+
+    def __init__(self, child: py_trees.behaviour.Behaviour, slow_down_factor: float = 0.5) -> None:
+        super().__init__(name='SeabedSafetyLimiter', child=child)
+        self.slow_down_factor = slow_down_factor
+        self.blackboard = py_trees.blackboard.Client(name='SeabedSafetyLimiter')
+        self.blackboard.register_key(key=SENSOR_STATUS_KEY, access=py_trees.common.Access.READ)
+        self.blackboard.register_key(key=TARGET_MOTION_STATE_KEY, access=py_trees.common.Access.WRITE)
+
+    def update(self) -> py_trees.common.Status:
+        child_status = self.decorated.status
+        if child_status != py_trees.common.Status.SUCCESS:
+            return child_status
+
+        sensor: SensorStatusData | None = self.blackboard.get(SENSOR_STATUS_KEY)
+        target: Dict[str, Any] | None = self.blackboard.get(TARGET_MOTION_STATE_KEY)
+
+        if not isinstance(sensor, SensorStatusData) or not isinstance(target, dict):
+            return child_status
+
+        if sensor.seabed_proximity_warning or sensor.seabed_penetration_warning:
+            raw_speed = float(target.get('target_speed_mps', 0.0))
+            if sensor.seabed_penetration_warning:
+                target['target_speed_mps'] = min(raw_speed, 0.2)
+                suffix = ' 海底穿越警告：速度收敛至最低安全值。'
+            else:
+                target['target_speed_mps'] = raw_speed * self.slow_down_factor
+                suffix = f' 近底警告：速度降为{self.slow_down_factor:.2f}倍。'
+
+            note = str(target.get('note', ''))
+            target['note'] = (note + suffix).strip()
+            self.blackboard.set(TARGET_MOTION_STATE_KEY, target)
+
+        return child_status

@@ -13,6 +13,23 @@ SIM_APPS_DIR="$ROOT_DIR/sim_holoocean/apps"
 SIM_CFG="$ROOT_DIR/config/sim_params.yaml"
 BRIDGE_CFG="$ROOT_DIR/config/bridge_params.yaml"
 
+make_uuid() {
+  /usr/bin/python3 - <<'PY'
+import uuid
+print(uuid.uuid4())
+PY
+}
+
+handle_sigint() {
+  echo "[AUV] received SIGINT, treating as manual termination."
+  exit 0
+}
+
+handle_sigterm() {
+  echo "[AUV] received SIGTERM, treating as manual termination."
+  exit 0
+}
+
 if [[ ! -d "$SIM_APPS_DIR" ]]; then
   echo "[AUV][ERROR] sim_holoocean/apps not found: $SIM_APPS_DIR"
   exit 1
@@ -35,15 +52,19 @@ if [[ -n "${AUV_CONDA_ENV:-}" ]] && command -v conda >/dev/null 2>&1; then
 fi
 
 cd "$SIM_APPS_DIR"
+trap handle_sigint INT
+trap handle_sigterm TERM
 
 run_sim() {
+  local runtime_uuid="${AUV_HOLOOCEAN_UUID:-$(make_uuid)}"
   echo "[AUV] Starting main simulation..."
-  python main.py --config "$SIM_CFG"
+  AUV_HOLOOCEAN_UUID="$runtime_uuid" /usr/bin/python3 main.py --config "$SIM_CFG"
 }
 
 run_bridge() {
+  local runtime_uuid="${AUV_HOLOOCEAN_UUID:-$(make_uuid)}"
   echo "[AUV] Starting Zenoh bridge..."
-  python run_zenoh_bridge.py --config "$BRIDGE_CFG"
+  AUV_HOLOOCEAN_UUID="$runtime_uuid" /usr/bin/python3 run_zenoh_bridge.py --config "$BRIDGE_CFG"
 }
 
 case "$MODE" in
@@ -55,10 +76,12 @@ case "$MODE" in
     ;;
   both)
     # Keep bridge in background so simulation remains attached to current shell.
-    run_bridge &
+    AUV_HOLOOCEAN_UUID="$(make_uuid)" run_bridge &
     BRIDGE_PID=$!
-    trap 'echo "[AUV] stopping bridge ($BRIDGE_PID)"; kill "$BRIDGE_PID" 2>/dev/null || true' EXIT INT TERM
-    run_sim
+    trap 'echo "[AUV] stopping bridge ($BRIDGE_PID)"; kill "$BRIDGE_PID" 2>/dev/null || true' EXIT
+    trap 'echo "[AUV] received SIGINT, treating as manual termination."; kill "$BRIDGE_PID" 2>/dev/null || true; exit 0' INT
+    trap 'echo "[AUV] received SIGTERM, treating as manual termination."; kill "$BRIDGE_PID" 2>/dev/null || true; exit 0' TERM
+    AUV_HOLOOCEAN_UUID="$(make_uuid)" run_sim
     ;;
   *)
     echo "[AUV][ERROR] invalid mode: $MODE"

@@ -44,13 +44,13 @@ class _BaseBehavior(py_trees.behaviour.Behaviour):
 
 
 class EmergencyCondition(_BaseBehavior):
-    """紧急条件：漏水 OR 低电。"""
+    """紧急条件：漏水 OR 低电 OR 穿底。"""
 
     def update(self) -> py_trees.common.Status:
         status = self._get_sensor_status()
         return (
             py_trees.common.Status.SUCCESS
-            if (status.is_leaking() or status.battery_low)
+            if (status.is_leaking() or status.battery_low or status.is_seabed_penetrated())
             else py_trees.common.Status.FAILURE
         )
 
@@ -81,13 +81,20 @@ class EmergencySurface(_BaseBehavior):
         super().__init__(name='EmergencySurface')
 
     def update(self) -> py_trees.common.Status:
+        status = self._get_sensor_status()
+        if status.is_seabed_penetrated():
+            note = '检测到穿底风险，执行紧急上浮。'
+        elif status.is_leaking() or status.battery_low:
+            note = '检测到漏水或低电，执行紧急上浮。'
+        else:
+            note = '执行紧急上浮。'
         self._write_goal(
             MotionGoal(
                 mode='EMERGENCY_SURFACE',
                 target_depth_m=0.0,
                 target_speed_mps=0.8,
                 high_priority=True,
-                note='检测到漏水或低电，执行紧急上浮。',
+                note=note,
             )
         )
         return py_trees.common.Status.SUCCESS

@@ -24,6 +24,12 @@ Z_PATH_DEPTH = "rt/auv/sensors/depth"
 Z_PATH_MAGNETIC = "rt/auv/sensors/magnetic"
 Z_PATH_SONAR = "rt/auv/sensors/sonar"
 
+Z_PATH_SEABED_CLOUD = "rt/auv/visual/seabed_cloud"
+Z_PATH_CABLE_MARKER = "rt/auv/visual/cable_marker"
+Z_PATH_TRUTH_POSE = "rt/auv/visual/truth_pose"
+Z_PATH_HISTORY_TRAIL = "rt/auv/visual/history_trail"
+Z_PATH_VIEW_RANGE = "rt/auv/visual/view_range"
+
 # -----------------------------------------------------------------------------
 # Common metadata keys
 # -----------------------------------------------------------------------------
@@ -52,6 +58,11 @@ KEY_B_NED = "B_ned"
 KEY_B_NORM = "B_norm"
 
 KEY_SONAR_BINS = "bins"
+KEY_POINTS_NED = "points_ned"
+KEY_TRAIL_NED = "trail_ned"
+KEY_CENTER_NED = "center_ned"
+KEY_RADIUS_M = "radius_m"
+KEY_HEIGHT_M = "height_m"
 
 # Control command keys
 KEY_COMMAND = "command"
@@ -70,6 +81,11 @@ REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_DEPTH: (KEY_DEPTH_M,),
     Z_PATH_MAGNETIC: (KEY_B_NED, KEY_B_NORM),
     Z_PATH_SONAR: (KEY_SONAR_BINS,),
+    Z_PATH_SEABED_CLOUD: (KEY_POINTS_NED,),
+    Z_PATH_CABLE_MARKER: (KEY_POINTS_NED,),
+    Z_PATH_TRUTH_POSE: (KEY_POSITION_NED, KEY_RPY_NED),
+    Z_PATH_HISTORY_TRAIL: (KEY_TRAIL_NED,),
+    Z_PATH_VIEW_RANGE: (KEY_CENTER_NED, KEY_RADIUS_M, KEY_HEIGHT_M),
 }
 
 
@@ -83,6 +99,12 @@ def _is_number_list(value: Any, *, length: int | None = None) -> bool:
     if length is not None and len(value) != length:
         return False
     return all(_is_number(v) for v in value)
+
+
+def _is_point_list(value: Any) -> bool:
+    if not isinstance(value, list):
+        return False
+    return all(_is_number_list(point, length=3) for point in value)
 
 
 def _missing_keys(payload: dict[str, Any], required: Iterable[str]) -> list[str]:
@@ -149,6 +171,32 @@ def validate_sensor_payload(topic: str, payload: Any) -> tuple[bool, list[str]]:
     elif topic == Z_PATH_SONAR:
         if KEY_SONAR_BINS in payload and not _is_number_list(payload[KEY_SONAR_BINS]):
             errors.append("bins must be list of numbers")
+
+    elif topic == Z_PATH_SEABED_CLOUD:
+        if KEY_POINTS_NED in payload and not _is_point_list(payload[KEY_POINTS_NED]):
+            errors.append("points_ned must be list[list[3] of numbers]")
+
+    elif topic == Z_PATH_CABLE_MARKER:
+        if KEY_POINTS_NED in payload and not _is_point_list(payload[KEY_POINTS_NED]):
+            errors.append("points_ned must be list[list[3] of numbers]")
+
+    elif topic == Z_PATH_TRUTH_POSE:
+        if KEY_POSITION_NED in payload and not _is_number_list(payload[KEY_POSITION_NED], length=3):
+            errors.append("position_ned must be list[3] of numbers")
+        if KEY_RPY_NED in payload and not _is_number_list(payload[KEY_RPY_NED], length=3):
+            errors.append("rpy_ned must be list[3] of numbers")
+
+    elif topic == Z_PATH_HISTORY_TRAIL:
+        if KEY_TRAIL_NED in payload and not _is_point_list(payload[KEY_TRAIL_NED]):
+            errors.append("trail_ned must be list[list[3] of numbers]")
+
+    elif topic == Z_PATH_VIEW_RANGE:
+        if KEY_CENTER_NED in payload and not _is_number_list(payload[KEY_CENTER_NED], length=3):
+            errors.append("center_ned must be list[3] of numbers")
+        if KEY_RADIUS_M in payload and not _is_number(payload[KEY_RADIUS_M]):
+            errors.append("radius_m must be a number")
+        if KEY_HEIGHT_M in payload and not _is_number(payload[KEY_HEIGHT_M]):
+            errors.append("height_m must be a number")
 
     if KEY_STEP in payload and not isinstance(payload[KEY_STEP], int):
         errors.append("step must be int")

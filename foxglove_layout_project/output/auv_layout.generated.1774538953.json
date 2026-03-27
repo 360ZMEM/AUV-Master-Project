@@ -1,0 +1,282 @@
+{
+  "configById": {
+    "3D!auv3d": {
+      "cameraState": {
+        "distance": 30,
+        "perspective": true,
+        "phi": 52,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "auv/base_link",
+      "fixedFrame": "world",
+      "scene": {
+        "syncCamera": false,
+        "transforms": {
+          "editable": false,
+          "showLabel": true,
+          "enablePreloading": true,
+          "visible": true
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "visible": true,
+        "size": 80,
+        "divisions": 16,
+        "color": "#5c6066"
+      },
+      "layers": {},
+      "topics": {
+        "/auv/state/filtered": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.5,
+          "color": "#00ff88"
+        },
+        "/auv/visual/truth_pose": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.8,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/seabed_cloud": {
+          "visible": true,
+          "type": "pointCloud",
+          "axisScale": 1.0,
+          "color": "#2bb673"
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "cylinder",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        }
+      }
+    },
+    "Plot!depth": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/depth.data",
+          "enabled": true,
+          "color": "#00ff00"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_depth_m",
+          "enabled": true,
+          "color": "#66cc66"
+        }
+      ],
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "深度 (m)",
+      "sidebarDimension": 240,
+      "timeWindowMode": "automatic",
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!speed": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/dvl.twist.linear.x",
+          "enabled": true,
+          "color": "#0066ff"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_speed_mps",
+          "enabled": true,
+          "color": "#66aaff"
+        }
+      ],
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "速度 (m/s)",
+      "sidebarDimension": 240,
+      "timeWindowMode": "automatic",
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!control": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/cmd_vel.linear.x",
+          "enabled": true,
+          "color": "#9933ff"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/cmd_vel.angular.x",
+          "enabled": true,
+          "color": "#ff6600"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/cmd_vel.angular.y",
+          "enabled": true,
+          "color": "#ff9900"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/cmd_vel.angular.z",
+          "enabled": true,
+          "color": "#cc5500"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/cmd_vel.linear.z",
+          "enabled": true,
+          "color": "#aa3300"
+        }
+      ],
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "Twist 指令",
+      "sidebarDimension": 240,
+      "timeWindowMode": "automatic",
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "RawMessages!imu": {
+      "topicPath": "/auv/sensors/imu",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!dvl": {
+      "topicPath": "/auv/sensors/dvl",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!state": {
+      "topicPath": "/auv/state/filtered",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!setpoint": {
+      "topicPath": "/auv/control/setpoint",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!cmdvel": {
+      "topicPath": "/cmd_vel",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!status": {
+      "topicPath": "/auv/sensors/status",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!mockscene": {
+      "topicPath": "/auv/mock/scene",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": {
+      "direction": "column",
+      "first": "3D!auv3d",
+      "second": "Plot!depth",
+      "splitPercentage": 55
+    },
+    "second": {
+      "direction": "column",
+      "first": "Plot!speed",
+      "second": {
+        "direction": "column",
+        "first": "Plot!control",
+        "second": {
+          "direction": "row",
+          "first": {
+            "direction": "column",
+            "first": "RawMessages!imu",
+            "second": {
+              "direction": "column",
+              "first": "RawMessages!dvl",
+              "second": "RawMessages!state",
+              "splitPercentage": 50
+            },
+            "splitPercentage": 50
+          },
+          "second": {
+            "direction": "column",
+            "first": "RawMessages!setpoint",
+            "second": {
+              "direction": "column",
+              "first": "RawMessages!cmdvel",
+              "second": {
+                "direction": "column",
+                "first": "RawMessages!status",
+                "second": "RawMessages!mockscene",
+                "splitPercentage": 50
+              },
+              "splitPercentage": 50
+            },
+            "splitPercentage": 50
+          },
+          "splitPercentage": 60
+        },
+        "splitPercentage": 35
+      },
+      "splitPercentage": 50
+    },
+    "splitPercentage": 58
+  }
+}
