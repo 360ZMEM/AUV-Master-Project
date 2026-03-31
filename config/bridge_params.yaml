@@ -80,7 +80,7 @@ digital_twin:
   enabled: true
   terrain_extent_m: 50.0
   terrain_resolution_m: 1.0
-  terrain_noise_amplitude_m: 0.08
+  terrain_noise_amplitude_m: 1.0
   terrain_noise_scale_m: 8.0
   terrain_noise_octaves: 3
   terrain_seed: 7

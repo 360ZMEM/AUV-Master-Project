@@ -1,0 +1,348 @@
+{
+  "configById": {
+    "3D!main": {
+      "cameraState": {
+        "distance": 34,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          -5
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 38,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "auv_base_link",
+      "fixedFrame": "map",
+      "scene": {
+        "syncCamera": false,
+        "backgroundColor": "#07131d",
+        "transforms": {
+          "editable": false,
+          "showLabel": false,
+          "enablePreloading": true,
+          "visible": true,
+          "axisSize": 0.18,
+          "labelSize": 12,
+          "lineWidth": 1,
+          "lineColor": "#345362",
+          "drawBehind": true
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "color": "#1f3542",
+        "divisions": 12,
+        "size": 60,
+        "visible": true
+      },
+      "topics": {
+        "/auv/state/filtered": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.5,
+          "color": "#00ff88"
+        },
+        "/auv/visual/auv_body": {
+          "visible": true,
+          "type": "cylinder",
+          "axisScale": 1.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/truth_marker": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.8,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/seabed_mesh": {
+          "visible": true,
+          "color": "#d2b48c",
+          "showOutlines": true
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        }
+      },
+      "layers": {}
+    },
+    "Markdown!mode": {
+      "renderMode": "message",
+      "messagePath": "/auv/control/setpoint.mode",
+      "fontSize": 30
+    },
+    "Gauge!confidence": {
+      "title": "定位置信度",
+      "path": "/auv/sensors/status.confidence",
+      "style": "bar",
+      "minValue": 0.0,
+      "maxValue": 1.0,
+      "colorMode": "colormap",
+      "colorMap": "red-yellow-green",
+      "reverse": false
+    },
+    "Markdown!confidence_text": {
+      "renderMode": "message",
+      "messagePath": "/auv/display/confidence_text.data",
+      "fontSize": 26
+    },
+    "Indicator!leak": {
+      "title": "渗漏风险",
+      "path": "/auv/sensors/status.leak_level",
+      "style": "background",
+      "rules": [
+        {
+          "rawValue": 0,
+          "operator": "=",
+          "color": "#2ecc71",
+          "label": "LEAK NONE"
+        },
+        {
+          "rawValue": 1,
+          "operator": "=",
+          "color": "#f39c12",
+          "label": "LEAK WATCH"
+        },
+        {
+          "rawValue": 2,
+          "operator": "=",
+          "color": "#e74c3c",
+          "label": "LEAK ALERT"
+        },
+        {
+          "rawValue": 3,
+          "operator": "=",
+          "color": "#c0392b",
+          "label": "LEAK CRITICAL"
+        }
+      ],
+      "fallbackColor": "#6c7a89",
+      "fallbackLabel": "UNKNOWN"
+    },
+    "Markdown!power": {
+      "renderMode": "message",
+      "messagePath": "/auv/display/power_text.data",
+      "fontSize": 24
+    },
+    "3D!topview": {
+      "cameraState": {
+        "distance": 90,
+        "perspective": false,
+        "phi": 0,
+        "target": [
+          0,
+          0,
+          -5
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 0,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "auv_base_link",
+      "fixedFrame": "map",
+      "scene": {
+        "syncCamera": false,
+        "backgroundColor": "#07131d",
+        "transforms": {
+          "editable": false,
+          "showLabel": false,
+          "enablePreloading": true,
+          "visible": false
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "color": "#1f3542",
+        "divisions": 12,
+        "size": 80,
+        "visible": true
+      },
+      "topics": {
+        "/auv/visual/auv_body": {
+          "visible": true,
+          "type": "cylinder",
+          "axisScale": 1.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/truth_marker": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.6,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        }
+      },
+      "layers": {}
+    },
+    "Plot!tracking_error": {
+      "title": "Tracking Error",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "误差 (m)",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/metrics/depth_error.data",
+          "enabled": true,
+          "color": "#ff6b6b"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/state/filtered.pose.pose.position.y",
+          "enabled": true,
+          "color": "#ffd166"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!speed_control": {
+      "title": "速度闭环",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "速度 (m/s)",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/dvl.twist.linear.x",
+          "enabled": true,
+          "color": "#0066ff"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_speed_mps",
+          "enabled": true,
+          "color": "#66aaff"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "minYValue": 0.0,
+      "maxYValue": 1.0,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": "3D!main",
+    "second": {
+      "direction": "column",
+      "first": {
+        "direction": "column",
+        "first": "Markdown!mode",
+        "second": {
+          "direction": "row",
+          "first": {
+            "direction": "column",
+            "first": "Markdown!confidence_text",
+            "second": "Gauge!confidence",
+            "splitPercentage": 34
+          },
+          "second": {
+            "direction": "column",
+            "first": "Indicator!leak",
+            "second": "Markdown!power",
+            "splitPercentage": 50
+          },
+          "splitPercentage": 48
+        },
+        "splitPercentage": 30
+      },
+      "second": {
+        "direction": "row",
+        "first": {
+          "direction": "column",
+          "first": "Plot!tracking_error",
+          "second": "Plot!speed_control",
+          "splitPercentage": 54
+        },
+        "second": "3D!topview",
+        "splitPercentage": 60
+      },
+      "splitPercentage": 36
+    },
+    "splitPercentage": 68
+  }
+}

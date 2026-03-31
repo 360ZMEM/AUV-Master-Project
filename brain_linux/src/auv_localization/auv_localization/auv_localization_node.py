@@ -28,10 +28,20 @@ from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
-from std_msgs.msg import Float32, Float32MultiArray
+from std_msgs.msg import Float32, Float32MultiArray, String
 from tf2_ros import StaticTransformBroadcaster, TransformBroadcaster
-from auv_interfaces.msg import SensorStatus
+from auv_interfaces.msg import SensorStatus, Setpoint
 import yaml
+
+
+def _format_confidence_markdown(confidence: float) -> str:
+    return f'## {confidence:.2f}'
+
+
+def _format_power_markdown(voltage_v: float, threshold_v: float) -> str:
+    if voltage_v < threshold_v:
+        return f'## LOW POWER: {voltage_v:.2f}V'
+    return f'## POWER: {voltage_v:.2f}V'
 
 def _resolve_project_root() -> Path:
     env_root = Path(str(os.environ.get('AUV_PROJECT_ROOT', ''))).expanduser() if os.environ.get('AUV_PROJECT_ROOT') else None
@@ -111,6 +121,8 @@ class AUVLocalizationNode(Node):
         self.declare_parameter('publish_sensor_status', True)
         self.declare_parameter('seabed_depth_m', 15.0)
         self.declare_parameter('seabed_proximity_margin_m', 1.5)
+        self.declare_parameter('battery_low_voltage_threshold', 44.8)
+        self.declare_parameter('nominal_voltage_v', 48.0)
 
         self.params_file = str(self.get_parameter('params_file').value)
         self.filter_rate_hz = float(self.get_parameter('filter_rate_hz').value)
@@ -136,6 +148,8 @@ class AUVLocalizationNode(Node):
         self.publish_sensor_status = bool(self.get_parameter('publish_sensor_status').value)
         self.seabed_depth_m = float(self.get_parameter('seabed_depth_m').value)
         self.seabed_proximity_margin_m = float(self.get_parameter('seabed_proximity_margin_m').value)
+        self.battery_low_voltage_threshold = float(self.get_parameter('battery_low_voltage_threshold').value)
+        self.nominal_voltage_v = float(self.get_parameter('nominal_voltage_v').value)
 
         cfg = self._load_config(self.params_file)
         ekf_cfg = cfg.get('ekf', {})
@@ -150,16 +164,21 @@ class AUVLocalizationNode(Node):
         self._last_dvl_ts = 0.0
         self._last_depth_ts = 0.0
         self._last_loop_ts = time.time()
+        self._latest_setpoint_depth_m: float | None = None
 
         self.odom_pub = self.create_publisher(Odometry, '/auv/state/filtered', 10)
         self.cov_pub = self.create_publisher(Float32MultiArray, '/auv/state/covariance', 10)
         self.status_pub = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
+        self.depth_error_pub = self.create_publisher(Float32, '/auv/metrics/depth_error', 10)
+        self.confidence_text_pub = self.create_publisher(String, '/auv/display/confidence_text', 10)
+        self.power_text_pub = self.create_publisher(String, '/auv/display/power_text', 10)
         self.tf_broadcaster = TransformBroadcaster(self)
         self.static_tf_broadcaster = StaticTransformBroadcaster(self)
 
         self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
         self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 20)
         self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 20)
+        self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
 
         if self.publish_static_tf:
             self._publish_static_transforms()
@@ -189,7 +208,9 @@ class AUVLocalizationNode(Node):
             f'publish_sonar_tf={self.publish_sonar_tf}, '
             f'publish_sensor_status={self.publish_sensor_status}, '
             f'seabed_depth_m={self.seabed_depth_m}, '
-            f'seabed_proximity_margin_m={self.seabed_proximity_margin_m}'
+            f'seabed_proximity_margin_m={self.seabed_proximity_margin_m}, '
+            f'battery_low_voltage_threshold={self.battery_low_voltage_threshold}, '
+            f'nominal_voltage_v={self.nominal_voltage_v}'
         )
 
     @staticmethod
@@ -226,6 +247,9 @@ class AUVLocalizationNode(Node):
         self._last_depth = float(msg.data)
         self._last_depth_ts = time.time()
 
+    def _on_setpoint(self, msg: Setpoint) -> None:
+        self._latest_setpoint_depth_m = float(msg.target_depth_m)
+
     def _build_sensor_status(self, state: dict) -> SensorStatus:
         """Build a minimal live SensorStatus message from the filtered state.
 
@@ -251,9 +275,24 @@ class AUVLocalizationNode(Node):
         msg.confidence = float(np.clip(confidence, 0.05, 0.99))
 
         msg.leak_level = SensorStatus.LEAK_NONE
-        msg.battery_low = False
+        msg.total_voltage_v = float(self.nominal_voltage_v)
+        msg.battery_low = bool(msg.total_voltage_v < self.battery_low_voltage_threshold)
         msg.anomaly_detected = bool(np.linalg.norm(state['v']) < 1e-6 and self._last_depth is None)
         return msg
+
+    def _publish_display_topics(self, *, status_msg: SensorStatus) -> None:
+        current_depth = float(status_msg.depth_m)
+        target_depth = float(self._latest_setpoint_depth_m) if self._latest_setpoint_depth_m is not None else current_depth
+        self.depth_error_pub.publish(Float32(data=current_depth - target_depth))
+        self.confidence_text_pub.publish(String(data=_format_confidence_markdown(float(status_msg.confidence))))
+        self.power_text_pub.publish(
+            String(
+                data=_format_power_markdown(
+                    float(status_msg.total_voltage_v),
+                    float(self.battery_low_voltage_threshold),
+                )
+            )
+        )
 
     def _publish_static_transforms(self) -> None:
         """Publish static sensor frames under the AUV base frame.
@@ -336,7 +375,9 @@ class AUVLocalizationNode(Node):
         self.cov_pub.publish(cov_msg)
 
         if self.publish_sensor_status:
-            self.status_pub.publish(self._build_sensor_status(state))
+            status_msg = self._build_sensor_status(state)
+            self.status_pub.publish(status_msg)
+            self._publish_display_topics(status_msg=status_msg)
 
         latest_sensor_ts = max(self._last_imu_ts, self._last_dvl_ts, self._last_depth_ts)
         if latest_sensor_ts > 0.0:

@@ -21,6 +21,9 @@ uint8 LEAK_BOTH=3
 # 电池低电告警（由上层估算或直接输入）
 bool battery_low
 
+# 当前总电压（V）
+float32 total_voltage_v
+
 # 异常检测标志（如磁异常/姿态异常/执行器异常）
 bool anomaly_detected
 

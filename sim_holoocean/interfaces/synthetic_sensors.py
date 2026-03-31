@@ -33,7 +33,7 @@ from common.protocol import (
 class VirtualEnvironmentConfig:
     terrain_extent_m: float = 50.0
     terrain_resolution_m: float = 1.0
-    terrain_noise_amplitude_m: float = 0.08
+    terrain_noise_amplitude_m: float = 1.0
     terrain_noise_scale_m: float = 8.0
     terrain_noise_octaves: int = 3
     terrain_seed: int = 7
@@ -114,7 +114,7 @@ class VirtualEnvironment:
         self.config = VirtualEnvironmentConfig(
             terrain_extent_m=float(cfg.get("terrain_extent_m", 50.0)),
             terrain_resolution_m=float(cfg.get("terrain_resolution_m", 1.0)),
-            terrain_noise_amplitude_m=float(cfg.get("terrain_noise_amplitude_m", 0.08)),
+            terrain_noise_amplitude_m=float(cfg.get("terrain_noise_amplitude_m", 1.0)),
             terrain_noise_scale_m=float(cfg.get("terrain_noise_scale_m", 8.0)),
             terrain_noise_octaves=int(cfg.get("terrain_noise_octaves", 3)),
             terrain_seed=int(cfg.get("terrain_seed", 7)),

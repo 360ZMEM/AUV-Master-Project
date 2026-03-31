@@ -1,0 +1,311 @@
+{
+  "configById": {
+    "3D!main": {
+      "cameraState": {
+        "distance": 34,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          -5
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 38,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "auv_base_link",
+      "fixedFrame": "map",
+      "scene": {
+        "syncCamera": false,
+        "backgroundColor": "#07131d",
+        "transforms": {
+          "editable": false,
+          "showLabel": false,
+          "enablePreloading": true,
+          "visible": true,
+          "axisSize": 0.18,
+          "labelSize": 12,
+          "lineWidth": 1,
+          "lineColor": "#345362",
+          "drawBehind": true
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "color": "#1f3542",
+        "divisions": 12,
+        "size": 60,
+        "visible": true
+      },
+      "topics": {
+        "/auv/state/filtered": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.5,
+          "color": "#00ff88"
+        },
+        "/auv/visual/truth_pose": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.8,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/seabed_cloud": {
+          "visible": true,
+          "type": "pointCloud",
+          "axisScale": 1.0,
+          "color": "#2bb673"
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "cylinder",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        }
+      },
+      "layers": {}
+    },
+    "Indicator!mode": {
+      "title": "自主模式",
+      "path": "/auv/control/setpoint.mode",
+      "style": "background",
+      "fontSize": 32,
+      "rules": [
+        {
+          "rawValue": "ZIGZAG_SEARCH",
+          "operator": "=",
+          "color": "#1abc9c",
+          "label": "SEARCHING"
+        },
+        {
+          "rawValue": "PARALLEL_TRACKING",
+          "operator": "=",
+          "color": "#2980b9",
+          "label": "TRACKING"
+        },
+        {
+          "rawValue": "EMERGENCY_SURFACE",
+          "operator": "=",
+          "color": "#c0392b",
+          "label": "EMERGENCY"
+        },
+        {
+          "rawValue": "DIVING",
+          "operator": "=",
+          "color": "#16a085",
+          "label": "DIVING"
+        },
+        {
+          "rawValue": "IDLE",
+          "operator": "=",
+          "color": "#7f8c8d",
+          "label": "IDLE"
+        }
+      ],
+      "fallbackColor": "#6c7a89",
+      "fallbackLabel": "UNKNOWN"
+    },
+    "Gauge!confidence": {
+      "title": "定位置信度",
+      "path": "/auv/sensors/status.confidence",
+      "style": "bar",
+      "minValue": 0.0,
+      "maxValue": 1.0,
+      "colorMode": "colormap",
+      "colorMap": "red-yellow-green",
+      "reverse": false
+    },
+    "Indicator!leak": {
+      "title": "渗漏风险",
+      "path": "/auv/sensors/status.leak_level",
+      "style": "background",
+      "rules": [
+        {
+          "rawValue": 0,
+          "operator": "=",
+          "color": "#2ecc71",
+          "label": "LEAK NONE"
+        },
+        {
+          "rawValue": 1,
+          "operator": "=",
+          "color": "#f39c12",
+          "label": "LEAK WATCH"
+        },
+        {
+          "rawValue": 2,
+          "operator": "=",
+          "color": "#e74c3c",
+          "label": "LEAK ALERT"
+        },
+        {
+          "rawValue": 3,
+          "operator": "=",
+          "color": "#c0392b",
+          "label": "LEAK CRITICAL"
+        }
+      ],
+      "fallbackColor": "#6c7a89",
+      "fallbackLabel": "UNKNOWN"
+    },
+    "Indicator!battery": {
+      "title": "供电健康",
+      "path": "/auv/sensors/status.battery_low",
+      "style": "background",
+      "rules": [
+        {
+          "rawValue": false,
+          "operator": "=",
+          "color": "#2ecc71",
+          "label": "POWER OK"
+        },
+        {
+          "rawValue": true,
+          "operator": "=",
+          "color": "#f39c12",
+          "label": "BATTERY LOW"
+        }
+      ],
+      "fallbackColor": "#6c7a89",
+      "fallbackLabel": "UNKNOWN"
+    },
+    "Plot!vertical_tracking": {
+      "title": "垂向跟踪",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "深度 (m)",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/depth.data",
+          "enabled": true,
+          "color": "#00ff00"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_depth_m",
+          "enabled": true,
+          "color": "#66cc66"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "minYValue": 0.0,
+      "maxYValue": 15.0,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!speed_control": {
+      "title": "速度闭环",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "速度 (m/s)",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/dvl.twist.linear.x",
+          "enabled": true,
+          "color": "#0066ff"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_speed_mps",
+          "enabled": true,
+          "color": "#66aaff"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "minYValue": 0.0,
+      "maxYValue": 1.0,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "RawMessages!setpoint": {
+      "title": "控制目标",
+      "topicPath": "/auv/control/setpoint",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": "3D!main",
+    "second": {
+      "direction": "column",
+      "first": {
+        "direction": "column",
+        "first": "Indicator!mode",
+        "second": {
+          "direction": "row",
+          "first": "Gauge!confidence",
+          "second": {
+            "direction": "column",
+            "first": "Indicator!leak",
+            "second": "Indicator!battery",
+            "splitPercentage": 50
+          },
+          "splitPercentage": 58
+        },
+        "splitPercentage": 32
+      },
+      "second": {
+        "direction": "column",
+        "first": "Plot!vertical_tracking",
+        "second": {
+          "direction": "column",
+          "first": "Plot!speed_control",
+          "second": "RawMessages!setpoint",
+          "splitPercentage": 72
+        },
+        "splitPercentage": 38
+      },
+      "splitPercentage": 34
+    },
+    "splitPercentage": 68
+  }
+}

@@ -71,14 +71,38 @@ def _normalize_quaternion(qx: float, qy: float, qz: float, qw: float) -> tuple[f
     return qx / norm, qy / norm, qz / norm, qw / norm
 
 
+def _multiply_quaternions(
+    first: tuple[float, float, float, float],
+    second: tuple[float, float, float, float],
+) -> tuple[float, float, float, float]:
+    x1, y1, z1, w1 = first
+    x2, y2, z2, w2 = second
+    return (
+        w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+        w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
+        w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
+        w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+    )
+
+
 def _rpy_to_quaternion(rpy_ned: list[float] | tuple[float, float, float]) -> Quaternion:
     qx, qy, qz, qw = euler_to_quaternion(float(rpy_ned[0]), float(rpy_ned[1]), float(rpy_ned[2]))
     qx, qy, qz, qw = _normalize_quaternion(qx, qy, qz, qw)
     return Quaternion(x=qx, y=qy, z=qz, w=qw)
 
 
+def _rpy_to_quaternion_tuple(rpy_ned: list[float] | tuple[float, float, float]) -> tuple[float, float, float, float]:
+    quat = _rpy_to_quaternion(rpy_ned)
+    return quat.x, quat.y, quat.z, quat.w
+
+
+def _ned_to_display_xyz(value: list[float] | tuple[float, float, float]) -> tuple[float, float, float]:
+    return float(value[0]), float(value[1]), float(-value[2])
+
+
 def _as_point(value: list[float] | tuple[float, float, float]) -> Point:
-    return Point(x=float(value[0]), y=float(value[1]), z=float(value[2]))
+    x_value, y_value, z_value = _ned_to_display_xyz(value)
+    return Point(x=x_value, y=y_value, z=z_value)
 
 
 def _pointcloud2_from_points(points: list[list[float]], frame_id: str, stamp) -> PointCloud2:
@@ -96,7 +120,7 @@ def _pointcloud2_from_points(points: list[list[float]], frame_id: str, stamp) ->
     ]
     msg.point_step = 12
     msg.row_step = msg.point_step * msg.width
-    msg.data = b''.join(struct.pack('<fff', float(p[0]), float(p[1]), float(p[2])) for p in points)
+    msg.data = b''.join(struct.pack('<fff', *_ned_to_display_xyz(p)) for p in points)
     return msg
 
 
@@ -122,19 +146,76 @@ def _make_line_strip(points: list[list[float]], *, frame_id: str, stamp, ns: str
     return marker
 
 
+def _make_terrain_mesh(points: list[list[float]], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+    marker = _make_marker_base(marker_id, ns, Marker.TRIANGLE_LIST, frame_id, stamp)
+    marker.scale = Vector3(x=1.0, y=1.0, z=1.0)
+    marker.color = ColorRGBA(r=0.82, g=0.71, b=0.55, a=0.34)
+
+    if len(points) < 4:
+        return marker
+
+    unique_x = sorted({round(float(point[0]), 6) for point in points})
+    unique_y = sorted({round(float(point[1]), 6) for point in points})
+    if len(unique_x) < 2 or len(unique_y) < 2:
+        return marker
+
+    width = len(unique_y)
+    height = len(unique_x)
+    if width * height != len(points):
+        return marker
+
+    display_points = [_as_point(point) for point in points]
+    triangles: list[Point] = []
+    for ix in range(height - 1):
+        for iy in range(width - 1):
+            p00 = display_points[ix * width + iy]
+            p01 = display_points[ix * width + iy + 1]
+            p10 = display_points[(ix + 1) * width + iy]
+            p11 = display_points[(ix + 1) * width + iy + 1]
+            triangles.extend([p00, p10, p11, p00, p11, p01])
+
+    marker.points = triangles
+    return marker
+
+
 def _make_arrow_marker(position_ned: list[float], rpy_ned: list[float], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
     marker = _make_marker_base(marker_id, ns, Marker.ARROW, frame_id, stamp)
     marker.pose = Pose(position=_as_point(position_ned), orientation=_rpy_to_quaternion(rpy_ned))
-    marker.scale = Vector3(x=2.2, y=0.35, z=0.35)
+    marker.scale = Vector3(x=2.8, y=0.18, z=0.18)
     marker.color = ColorRGBA(r=0.1, g=0.7, b=1.0, a=1.0)
     return marker
 
 
-def _make_cylinder(center_ned: list[float], radius_m: float, height_m: float, *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+def _make_auv_body_marker(position_ned: list[float], rpy_ned: list[float], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
     marker = _make_marker_base(marker_id, ns, Marker.CYLINDER, frame_id, stamp)
-    marker.pose.position = _as_point(center_ned)
-    marker.scale = Vector3(x=float(radius_m * 2.0), y=float(radius_m * 2.0), z=float(height_m))
-    marker.color = ColorRGBA(r=1.0, g=0.0, b=0.0, a=0.35)
+    body_quat = _rpy_to_quaternion_tuple(rpy_ned)
+    offset_quat = _rpy_to_quaternion_tuple((0.0, math.pi / 2.0, 0.0))
+    qx, qy, qz, qw = _normalize_quaternion(*_multiply_quaternions(body_quat, offset_quat))
+    marker.pose = Pose(
+        position=_as_point(position_ned),
+        orientation=Quaternion(x=qx, y=qy, z=qz, w=qw),
+    )
+    marker.scale = Vector3(x=0.45, y=0.45, z=2.4)
+    marker.color = ColorRGBA(r=0.35, g=0.65, b=1.0, a=0.92)
+    return marker
+
+
+def _make_range_ring(center_ned: list[float], radius_m: float, *, frame_id: str, stamp, ns: str, marker_id: int, samples: int = 48) -> Marker:
+    marker = _make_marker_base(marker_id, ns, Marker.LINE_STRIP, frame_id, stamp)
+    marker.scale.x = 0.06
+    marker.color = ColorRGBA(r=1.0, g=0.25, b=0.25, a=0.55)
+    z_value = float(center_ned[2]) + 0.02
+    points: list[list[float]] = []
+    for index in range(samples + 1):
+        theta = 2.0 * math.pi * index / samples
+        points.append(
+            [
+                float(center_ned[0]) + radius_m * math.cos(theta),
+                float(center_ned[1]) + radius_m * math.sin(theta),
+                z_value,
+            ]
+        )
+    marker.points = [_as_point(point) for point in points]
     return marker
 
 
@@ -179,7 +260,9 @@ class ZenohVizBridgeNode(Node):
         self._mock_tick = 0
 
         self.cloud_pub = self.create_publisher(PointCloud2, '/auv/visual/seabed_cloud', 10)
+        self.mesh_pub = self.create_publisher(Marker, '/auv/visual/seabed_mesh', 10)
         self.cable_pub = self.create_publisher(Marker, '/auv/visual/cable_marker', 10)
+        self.body_pub = self.create_publisher(Marker, '/auv/visual/auv_body', 10)
         self.truth_pub = self.create_publisher(Marker, '/auv/visual/truth_marker', 10)
         self.trail_pub = self.create_publisher(Marker, '/auv/visual/history_trail', 10)
         self.range_pub = self.create_publisher(Marker, '/auv/visual/view_range', 10)
@@ -258,6 +341,7 @@ class ZenohVizBridgeNode(Node):
             points = terrain[KEY_POINTS_NED]
             if isinstance(points, list) and points:
                 self.cloud_pub.publish(_pointcloud2_from_points(points, frame_id, now))
+                self.mesh_pub.publish(_make_terrain_mesh(points, frame_id=frame_id, stamp=now, ns='seabed_mesh', marker_id=10))
 
         if KEY_POINTS_NED in cable:
             points = cable[KEY_POINTS_NED]
@@ -268,6 +352,7 @@ class ZenohVizBridgeNode(Node):
         position = truth.get(KEY_POSITION_NED, [0.0, 0.0, 0.0])
         rpy = truth.get(KEY_RPY_NED, [0.0, 0.0, 0.0])
         if isinstance(position, list) and isinstance(rpy, list):
+            self.body_pub.publish(_make_auv_body_marker(position, rpy, frame_id=frame_id, stamp=now, ns='auv_body', marker_id=20))
             truth_marker = _make_arrow_marker(position, rpy, frame_id=frame_id, stamp=now, ns='truth', marker_id=2)
             self.truth_pub.publish(truth_marker)
 
@@ -277,7 +362,7 @@ class ZenohVizBridgeNode(Node):
             transform.child_frame_id = self.truth_frame_id
             transform.transform.translation.x = float(position[0])
             transform.transform.translation.y = float(position[1])
-            transform.transform.translation.z = float(position[2])
+            transform.transform.translation.z = float(-position[2])
             quat = _rpy_to_quaternion(rpy)
             transform.transform.rotation = quat
             self.tf_broadcaster.sendTransform(transform)
@@ -295,9 +380,8 @@ class ZenohVizBridgeNode(Node):
 
         center = view_range.get(KEY_CENTER_NED, [0.0, 0.0, 0.0])
         radius = float(view_range.get(KEY_RADIUS_M, 3.0))
-        height = float(view_range.get(KEY_HEIGHT_M, 0.1))
         if isinstance(center, list):
-            self.range_pub.publish(_make_cylinder(center, radius, height, frame_id=frame_id, stamp=now, ns='view_range', marker_id=4))
+            self.range_pub.publish(_make_range_ring(center, radius, frame_id=frame_id, stamp=now, ns='view_range', marker_id=4))
 
     def _publish_mock_scene_summary(self, *, sample_index: int, position_ned: list[float], rpy_ned: list[float], mode: str) -> None:
         snapshot = build_mock_topics_snapshot(

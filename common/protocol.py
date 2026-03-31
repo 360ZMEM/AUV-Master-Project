@@ -6,8 +6,10 @@ simulation-side and ROS2-side code without introducing runtime coupling.
 
 from __future__ import annotations
 
+import struct
 import time
-from typing import Any, Iterable
+from dataclasses import dataclass
+from typing import Any, Iterable, Sequence
 
 from .physics import clamp_rudder_deg, clamp_thrust_percent
 
@@ -73,6 +75,87 @@ KEY_BOTTOM = "bottom"
 KEY_THRUST = "thrust"
 
 CONTROL_KEYS = (KEY_RIGHT, KEY_TOP, KEY_LEFT, KEY_BOTTOM, KEY_THRUST)
+
+# -----------------------------------------------------------------------------
+# Binary AUV protocol constants
+# -----------------------------------------------------------------------------
+
+PROTOCOL_DOWNLINK_HEADER = b"$CKTH"
+PROTOCOL_UPLINK_HEADER = bytes((0x24, 0x41, 0x55, 0x56, 0x91))
+PROTOCOL_FRAME_TAIL = bytes((0xFF, 0xFF))
+
+PROTOCOL_DOWNLINK_SIZE = 72
+PROTOCOL_UPLINK_SIZE = 145
+
+PROTOCOL_DOWNLINK_CHECKSUM_INDEX = 69
+PROTOCOL_UPLINK_CHECKSUM_INDEX = 142
+
+DEFAULT_MAIN_MOTOR_RPM_SCALE = 15.0
+DEFAULT_SIDE_MOTOR_RPM_SCALE = 1.0
+
+
+@dataclass(frozen=True)
+class ProtocolDownlinkState:
+    """Decoded $CKTH downlink state in engineering units."""
+
+    frame_number: int
+    obj_address: int
+    control_mode_byte: int
+    work_instruction: int
+    right_fin_deg: float
+    top_fin_deg: float
+    left_fin_deg: float
+    bottom_fin_deg: float
+    thrust_percent: float
+    main_motor_rpm: int
+    side_motor_rpm: int
+    orientation_deg: float
+    depth_protect_params: tuple[int, int]
+    bottom_protect_params: tuple[int, int]
+    preset_time_tenths_min: int
+    spare_params: tuple[int, int]
+    parameters: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class ProtocolUplinkTelemetry:
+    """Decoded $AUV telemetry in engineering units."""
+
+    frame_number: int
+    auv_address: int
+    control_mode_byte: int
+    work_instruction: int
+    main_motor_rpm: int
+    side_motor_rpm: int
+    right_fin_deg: float
+    top_fin_deg: float
+    left_fin_deg: float
+    bottom_fin_deg: float
+    orientation_deg: float
+    internal_pressure_psi: float
+    internal_temp_c: int
+    depth_m: float
+    heading_deg: float
+    pitch_deg: float
+    roll_deg: float
+    gps_heading_deg: float
+    gps_speed_mps: float
+    dvl_speed_mps: float
+    altitude_m: float
+    dead_reckoning_lon_deg: float
+    dead_reckoning_lat_deg: float
+    gps_lon_deg: float
+    gps_lat_deg: float
+    total_voltage_v: float
+    total_current_a: float
+    soc: int
+    soh: int
+    device_power_status: int
+    operation_feedback: int
+    task_status: int
+    system_alarm: int
+    depth_alarm: int
+    bottom_alarm: int
 
 REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_GROUND_TRUTH: (KEY_POSITION_NED, KEY_RPY_NED, KEY_CABLE_CLOSEST_NED, KEY_CABLE_DISTANCE_M),
@@ -259,3 +342,321 @@ def validate_control_payload(payload: Any) -> tuple[bool, list[str]]:
     except Exception as exc:  # broad by design to keep caller lightweight
         return False, [str(exc)]
     return True, []
+
+
+def calculate_byte_sum_checksum(data: bytes | bytearray) -> int:
+    """Return the protocol checksum as low 8 bits of the byte sum."""
+    return sum(data) & 0xFF
+
+
+def _clamp_int(value: int, low: int, high: int) -> int:
+    return max(low, min(high, int(value)))
+
+
+def _coerce_pair(values: Sequence[int] | None, *, low: int, high: int) -> tuple[int, int]:
+    if values is None:
+        return 0, 0
+    if len(values) != 2:
+        raise ValueError("expected exactly 2 values")
+    return (_clamp_int(values[0], low, high), _clamp_int(values[1], low, high))
+
+
+def _coerce_parameters(values: Sequence[int] | None) -> tuple[int, ...]:
+    if values is None:
+        return (0,) * 12
+    if len(values) != 12:
+        raise ValueError("expected exactly 12 parameter values")
+    packed = [
+        _clamp_int(values[0], -2147483648, 2147483647),
+        _clamp_int(values[1], -2147483648, 2147483647),
+        _clamp_int(values[2], -2147483648, 2147483647),
+        _clamp_int(values[3], -2147483648, 2147483647),
+    ]
+    packed.extend(_clamp_int(value, -32768, 32767) for value in values[4:])
+    return tuple(packed)
+
+
+def _validate_frame(packet: bytes | bytearray, *, expected_size: int, header: bytes, checksum_index: int) -> None:
+    if len(packet) != expected_size:
+        raise ValueError(f"packet length must be {expected_size}, got {len(packet)}")
+    if bytes(packet[: len(header)]) != header:
+        raise ValueError("packet header mismatch")
+    if bytes(packet[-2:]) != PROTOCOL_FRAME_TAIL:
+        raise ValueError("packet tail mismatch")
+    checksum = calculate_byte_sum_checksum(packet[:checksum_index])
+    if int(packet[checksum_index]) != checksum:
+        raise ValueError(
+            f"checksum mismatch: expected 0x{checksum:02X}, got 0x{int(packet[checksum_index]):02X}"
+        )
+
+
+def build_downlink_packet(
+    command_payload: Any,
+    *,
+    frame_counter: int = 0,
+    obj_address: int = 1,
+    control_mode_byte: int = 0x01,
+    work_instruction: int = 0x00,
+    orientation_deg: float = 0.0,
+    depth_protect_params: Sequence[int] | None = None,
+    bottom_protect_params: Sequence[int] | None = None,
+    preset_time_tenths_min: int = 0,
+    spare_params: Sequence[int] | None = None,
+    parameter_values: Sequence[int] | None = None,
+    main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
+    side_motor_rpm: int = 0,
+) -> bytes:
+    """Build a 72-byte $CKTH command frame from canonical control payload."""
+    normalized = normalize_control_command(command_payload)
+    depth_pair = _coerce_pair(depth_protect_params, low=0, high=65535)
+    bottom_pair = _coerce_pair(bottom_protect_params, low=0, high=65535)
+    spare_pair = _coerce_pair(spare_params, low=-32768, high=32767)
+    parameters = _coerce_parameters(parameter_values)
+
+    packet = bytearray(PROTOCOL_DOWNLINK_SIZE)
+    packet[0:5] = PROTOCOL_DOWNLINK_HEADER
+    packet[5] = frame_counter & 0xFF
+    packet[6] = obj_address & 0xFF
+    packet[7] = control_mode_byte & 0xFF
+
+    struct.pack_into(">H", packet, 8, depth_pair[0])
+    struct.pack_into(">H", packet, 10, depth_pair[1])
+    struct.pack_into(">H", packet, 12, bottom_pair[0])
+    struct.pack_into(">H", packet, 14, bottom_pair[1])
+    struct.pack_into(">H", packet, 16, _clamp_int(preset_time_tenths_min, 0, 65535))
+    struct.pack_into(">h", packet, 18, spare_pair[0])
+    struct.pack_into(">h", packet, 20, spare_pair[1])
+    packet[22] = work_instruction & 0xFF
+
+    main_motor_rpm = _clamp_int(round(normalized[KEY_THRUST] * main_motor_rpm_scale), -32768, 32767)
+    struct.pack_into(">h", packet, 23, main_motor_rpm)
+    struct.pack_into(">h", packet, 25, _clamp_int(side_motor_rpm, -32768, 32767))
+    struct.pack_into(">h", packet, 27, _clamp_int(round(normalized[KEY_LEFT] * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 29, _clamp_int(round(normalized[KEY_RIGHT] * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 31, _clamp_int(round(normalized[KEY_TOP] * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 33, _clamp_int(round(normalized[KEY_BOTTOM] * 10.0), -32768, 32767))
+    struct.pack_into(">H", packet, 35, _clamp_int(round(orientation_deg * 10.0), 0, 65535))
+
+    struct.pack_into(">i", packet, 37, parameters[0])
+    struct.pack_into(">i", packet, 41, parameters[1])
+    struct.pack_into(">i", packet, 45, parameters[2])
+    struct.pack_into(">i", packet, 49, parameters[3])
+    struct.pack_into(">h", packet, 53, parameters[4])
+    struct.pack_into(">h", packet, 55, parameters[5])
+    struct.pack_into(">h", packet, 57, parameters[6])
+    struct.pack_into(">h", packet, 59, parameters[7])
+    struct.pack_into(">h", packet, 61, parameters[8])
+    struct.pack_into(">h", packet, 63, parameters[9])
+    struct.pack_into(">h", packet, 65, parameters[10])
+    struct.pack_into(">h", packet, 67, parameters[11])
+
+    packet[PROTOCOL_DOWNLINK_CHECKSUM_INDEX] = calculate_byte_sum_checksum(packet[:PROTOCOL_DOWNLINK_CHECKSUM_INDEX])
+    packet[-2:] = PROTOCOL_FRAME_TAIL
+    return bytes(packet)
+
+
+def parse_downlink_packet(
+    packet: bytes,
+    *,
+    main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
+) -> ProtocolDownlinkState:
+    """Decode a 72-byte $CKTH frame into engineering units."""
+    _validate_frame(
+        packet,
+        expected_size=PROTOCOL_DOWNLINK_SIZE,
+        header=PROTOCOL_DOWNLINK_HEADER,
+        checksum_index=PROTOCOL_DOWNLINK_CHECKSUM_INDEX,
+    )
+
+    main_motor_rpm = struct.unpack(">h", packet[23:25])[0]
+    return ProtocolDownlinkState(
+        frame_number=int(packet[5]),
+        obj_address=int(packet[6]),
+        control_mode_byte=int(packet[7]),
+        work_instruction=int(packet[22]),
+        right_fin_deg=struct.unpack(">h", packet[29:31])[0] * 0.1,
+        top_fin_deg=struct.unpack(">h", packet[31:33])[0] * 0.1,
+        left_fin_deg=struct.unpack(">h", packet[27:29])[0] * 0.1,
+        bottom_fin_deg=struct.unpack(">h", packet[33:35])[0] * 0.1,
+        thrust_percent=(main_motor_rpm / main_motor_rpm_scale) if main_motor_rpm_scale else 0.0,
+        main_motor_rpm=main_motor_rpm,
+        side_motor_rpm=struct.unpack(">h", packet[25:27])[0],
+        orientation_deg=struct.unpack(">H", packet[35:37])[0] * 0.1,
+        depth_protect_params=(struct.unpack(">H", packet[8:10])[0], struct.unpack(">H", packet[10:12])[0]),
+        bottom_protect_params=(struct.unpack(">H", packet[12:14])[0], struct.unpack(">H", packet[14:16])[0]),
+        preset_time_tenths_min=struct.unpack(">H", packet[16:18])[0],
+        spare_params=(struct.unpack(">h", packet[18:20])[0], struct.unpack(">h", packet[20:22])[0]),
+        parameters=(
+            struct.unpack(">i", packet[37:41])[0],
+            struct.unpack(">i", packet[41:45])[0],
+            struct.unpack(">i", packet[45:49])[0],
+            struct.unpack(">i", packet[49:53])[0],
+            struct.unpack(">h", packet[53:55])[0],
+            struct.unpack(">h", packet[55:57])[0],
+            struct.unpack(">h", packet[57:59])[0],
+            struct.unpack(">h", packet[59:61])[0],
+            struct.unpack(">h", packet[61:63])[0],
+            struct.unpack(">h", packet[63:65])[0],
+            struct.unpack(">h", packet[65:67])[0],
+            struct.unpack(">h", packet[67:69])[0],
+        ),
+    )
+
+
+def build_uplink_packet(
+    *,
+    frame_counter: int = 0,
+    auv_address: int = 1,
+    control_mode_byte: int = 0x01,
+    work_instruction: int = 0x00,
+    main_motor_rpm: int = 0,
+    side_motor_rpm: int = 0,
+    left_fin_deg: float = 0.0,
+    right_fin_deg: float = 0.0,
+    top_fin_deg: float = 0.0,
+    bottom_fin_deg: float = 0.0,
+    orientation_deg: float = 0.0,
+    depth_m: float = 0.0,
+    heading_deg: float = 0.0,
+    pitch_deg: float = 0.0,
+    roll_deg: float = 0.0,
+    gps_heading_deg: float = 0.0,
+    gps_speed_mps: float = 0.0,
+    dvl_speed_mps: float = 0.0,
+    altitude_m: float = 0.0,
+    dead_reckoning_lon_deg: float = 0.0,
+    dead_reckoning_lat_deg: float = 0.0,
+    gps_lon_deg: float = 0.0,
+    gps_lat_deg: float = 0.0,
+    total_voltage_v: float = 48.0,
+    total_current_a: float = 0.0,
+    soc: int = 100,
+    soh: int = 100,
+    internal_pressure_psi: float = 0.0,
+    internal_temp_c: int = 20,
+    device_power_status: int = 0,
+    operation_feedback: int = 0,
+    task_status: int = 0,
+    system_alarm: int = 0,
+    depth_alarm: int = 0,
+    bottom_alarm: int = 0,
+    parameter_values: Sequence[int] | None = None,
+) -> bytes:
+    """Build a 145-byte $AUV telemetry frame."""
+    parameters = _coerce_parameters(parameter_values)
+    packet = bytearray(PROTOCOL_UPLINK_SIZE)
+    packet[0:5] = PROTOCOL_UPLINK_HEADER
+    packet[5] = frame_counter & 0xFF
+    packet[6] = auv_address & 0xFF
+    packet[7] = control_mode_byte & 0xFF
+
+    struct.pack_into(">H", packet, 8, 0)
+    struct.pack_into(">H", packet, 10, 0)
+    struct.pack_into(">H", packet, 12, 0)
+    struct.pack_into(">H", packet, 14, 0)
+    struct.pack_into(">H", packet, 16, 0)
+    struct.pack_into(">h", packet, 18, 0)
+    struct.pack_into(">h", packet, 20, 0)
+    packet[22] = work_instruction & 0xFF
+
+    struct.pack_into(">h", packet, 23, _clamp_int(main_motor_rpm, -32768, 32767))
+    struct.pack_into(">h", packet, 25, _clamp_int(side_motor_rpm, -32768, 32767))
+    struct.pack_into(">h", packet, 27, _clamp_int(round(left_fin_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 29, _clamp_int(round(right_fin_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 31, _clamp_int(round(top_fin_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 33, _clamp_int(round(bottom_fin_deg * 10.0), -32768, 32767))
+    struct.pack_into(">H", packet, 35, _clamp_int(round(orientation_deg * 10.0), 0, 65535))
+
+    struct.pack_into(">i", packet, 40, parameters[0])
+    struct.pack_into(">i", packet, 44, parameters[1])
+    struct.pack_into(">i", packet, 48, parameters[2])
+    struct.pack_into(">i", packet, 52, parameters[3])
+    struct.pack_into(">h", packet, 56, parameters[4])
+    struct.pack_into(">h", packet, 58, parameters[5])
+    struct.pack_into(">h", packet, 60, parameters[6])
+    struct.pack_into(">h", packet, 62, parameters[7])
+    struct.pack_into(">h", packet, 64, parameters[8])
+    struct.pack_into(">h", packet, 66, parameters[9])
+    struct.pack_into(">h", packet, 68, parameters[10])
+    struct.pack_into(">h", packet, 70, parameters[11])
+
+    struct.pack_into(">h", packet, 35, _clamp_int(round(internal_pressure_psi * 1000.0), -32768, 32767))
+    packet[37] = _clamp_int(internal_temp_c, -128, 127) & 0xFF
+    struct.pack_into(">H", packet, 38, _clamp_int(round(depth_m * 10.0), 0, 65535))
+    struct.pack_into(">h", packet, 72, _clamp_int(round(heading_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 74, _clamp_int(round(pitch_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 76, _clamp_int(round(roll_deg * 10.0), -32768, 32767))
+    struct.pack_into(">H", packet, 78, _clamp_int(round(gps_heading_deg * 10.0), 0, 65535))
+    struct.pack_into(">H", packet, 80, _clamp_int(round(gps_speed_mps * 10.0), 0, 65535))
+    struct.pack_into(">h", packet, 82, _clamp_int(round(dvl_speed_mps * 10.0), -32768, 32767))
+    struct.pack_into(">H", packet, 84, _clamp_int(round(altitude_m * 10.0), 0, 65535))
+    struct.pack_into(">i", packet, 86, _clamp_int(round(dead_reckoning_lon_deg * 1_000_000.0), -2147483648, 2147483647))
+    struct.pack_into(">i", packet, 90, _clamp_int(round(dead_reckoning_lat_deg * 1_000_000.0), -2147483648, 2147483647))
+    struct.pack_into(">i", packet, 94, _clamp_int(round(gps_lon_deg * 1_000_000.0), -2147483648, 2147483647))
+    struct.pack_into(">i", packet, 98, _clamp_int(round(gps_lat_deg * 1_000_000.0), -2147483648, 2147483647))
+    struct.pack_into(">H", packet, 102, _clamp_int(round(total_voltage_v * 10.0), 0, 65535))
+    struct.pack_into(">H", packet, 104, _clamp_int(round(total_current_a * 10.0), 0, 65535))
+    packet[106] = _clamp_int(soc, 0, 100) & 0xFF
+    packet[107] = _clamp_int(soh, 0, 100) & 0xFF
+    struct.pack_into(">H", packet, 108, 0)
+    struct.pack_into(">H", packet, 110, 0)
+    packet[112] = 0
+    packet[113] = 0
+    struct.pack_into(">I", packet, 114, _clamp_int(device_power_status, 0, 0xFFFFFFFF))
+    struct.pack_into(">I", packet, 118, _clamp_int(operation_feedback, 0, 0xFFFFFFFF))
+    struct.pack_into(">I", packet, 122, _clamp_int(task_status, 0, 0xFFFFFFFF))
+    packet[127] = system_alarm & 0xFF
+    packet[128] = depth_alarm & 0xFF
+    packet[129] = bottom_alarm & 0xFF
+
+    packet[PROTOCOL_UPLINK_CHECKSUM_INDEX] = calculate_byte_sum_checksum(packet[:PROTOCOL_UPLINK_CHECKSUM_INDEX])
+    packet[-2:] = PROTOCOL_FRAME_TAIL
+    return bytes(packet)
+
+
+def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
+    """Decode a 145-byte $AUV telemetry frame."""
+    _validate_frame(
+        packet,
+        expected_size=PROTOCOL_UPLINK_SIZE,
+        header=PROTOCOL_UPLINK_HEADER,
+        checksum_index=PROTOCOL_UPLINK_CHECKSUM_INDEX,
+    )
+
+    return ProtocolUplinkTelemetry(
+        frame_number=int(packet[5]),
+        auv_address=int(packet[6]),
+        control_mode_byte=int(packet[7]),
+        work_instruction=int(packet[22]),
+        main_motor_rpm=struct.unpack(">h", packet[23:25])[0],
+        side_motor_rpm=struct.unpack(">h", packet[25:27])[0],
+        right_fin_deg=struct.unpack(">h", packet[29:31])[0] * 0.1,
+        top_fin_deg=struct.unpack(">h", packet[31:33])[0] * 0.1,
+        left_fin_deg=struct.unpack(">h", packet[27:29])[0] * 0.1,
+        bottom_fin_deg=struct.unpack(">h", packet[33:35])[0] * 0.1,
+        orientation_deg=struct.unpack(">H", packet[35:37])[0] * 0.1,
+        internal_pressure_psi=struct.unpack(">h", packet[35:37])[0] * 0.001,
+        internal_temp_c=struct.unpack("b", bytes((packet[37],)))[0],
+        depth_m=struct.unpack(">H", packet[38:40])[0] * 0.1,
+        heading_deg=struct.unpack(">h", packet[72:74])[0] * 0.1,
+        pitch_deg=struct.unpack(">h", packet[74:76])[0] * 0.1,
+        roll_deg=struct.unpack(">h", packet[76:78])[0] * 0.1,
+        gps_heading_deg=struct.unpack(">H", packet[78:80])[0] * 0.1,
+        gps_speed_mps=struct.unpack(">H", packet[80:82])[0] * 0.1,
+        dvl_speed_mps=struct.unpack(">h", packet[82:84])[0] * 0.1,
+        altitude_m=struct.unpack(">H", packet[84:86])[0] * 0.1,
+        dead_reckoning_lon_deg=struct.unpack(">i", packet[86:90])[0] * 1.0e-6,
+        dead_reckoning_lat_deg=struct.unpack(">i", packet[90:94])[0] * 1.0e-6,
+        gps_lon_deg=struct.unpack(">i", packet[94:98])[0] * 1.0e-6,
+        gps_lat_deg=struct.unpack(">i", packet[98:102])[0] * 1.0e-6,
+        total_voltage_v=struct.unpack(">H", packet[102:104])[0] * 0.1,
+        total_current_a=struct.unpack(">H", packet[104:106])[0] * 0.1,
+        soc=int(packet[106]),
+        soh=int(packet[107]),
+        device_power_status=struct.unpack(">I", packet[114:118])[0],
+        operation_feedback=struct.unpack(">I", packet[118:122])[0],
+        task_status=struct.unpack(">I", packet[122:126])[0],
+        system_alarm=int(packet[127]),
+        depth_alarm=int(packet[128]),
+        bottom_alarm=int(packet[129]),
+    )

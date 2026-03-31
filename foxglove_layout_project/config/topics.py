@@ -21,14 +21,19 @@ class TopicConfig:
     dvl: str = "/auv/sensors/dvl"
     depth: str = "/auv/sensors/depth"
     status: str = "/auv/sensors/status"
+    depth_error: str = "/auv/metrics/depth_error"
+    confidence_text: str = "/auv/display/confidence_text"
+    power_text: str = "/auv/display/power_text"
 
     ground_truth: str = "/auv/sensors/ground_truth"
     magnetic: str = "/auv/sensors/magnetic"
     sonar: str = "/auv/sensors/sonar"
 
     seabed_cloud: str = "/auv/visual/seabed_cloud"
+    seabed_mesh: str = "/auv/visual/seabed_mesh"
     cable_marker: str = "/auv/visual/cable_marker"
-    truth_pose: str = "/auv/visual/truth_pose"
+    auv_body: str = "/auv/visual/auv_body"
+    truth_pose: str = "/auv/visual/truth_marker"
     history_trail: str = "/auv/visual/history_trail"
     view_range: str = "/auv/visual/view_range"
     mock_scene: str = "/auv/mock/scene"
@@ -47,6 +52,20 @@ class PlotFieldConfig:
     cmd_left: str = "angular.z"
     cmd_bottom: str = "linear.z"
     cmd_thrust: str = "linear.x"
+    odom_lateral_y: str = "pose.pose.position.y"
+    scalar_data: str = "data"
+
+
+@dataclass(frozen=True)
+class DisplayFieldConfig:
+    """Field paths used by mentor-demo status panels."""
+
+    setpoint_mode: str = "mode"
+    status_confidence: str = "confidence"
+    status_leak_level: str = "leak_level"
+    status_battery_low: str = "battery_low"
+    status_total_voltage_v: str = "total_voltage_v"
+    string_data: str = "data"
 
 
 @dataclass(frozen=True)
@@ -54,14 +73,17 @@ class ColorConfig:
     """Panel colors used to keep plots visually stable across generations."""
 
     state_3d: str = "#00ff88"
-    terrain_3d: str = "#2bb673"
+    terrain_3d: str = "#d2b48c"
     cable_3d: str = "#f6d64a"
+    auv_body_3d: str = "#58a6ff"
     truth_3d: str = "#00b7ff"
     trail_3d: str = "#4f9cff"
     range_3d: str = "#ff4d4d"
     mock_scene: str = "#f08c00"
     depth_actual: str = "#00ff00"
     depth_target: str = "#66cc66"
+    depth_error: str = "#ff6b6b"
+    lateral_error: str = "#ffd166"
     speed_actual: str = "#0066ff"
     speed_target: str = "#66aaff"
     cmd_right: str = "#ff6600"
@@ -69,6 +91,20 @@ class ColorConfig:
     cmd_left: str = "#cc5500"
     cmd_bottom: str = "#aa3300"
     cmd_thrust: str = "#9933ff"
+    scene_background: str = "#07131d"
+    scene_grid: str = "#1f3542"
+    transform_line: str = "#345362"
+    confidence_low: str = "#c0392b"
+    confidence_high: str = "#2ecc71"
+    status_ok: str = "#2ecc71"
+    status_warn: str = "#f39c12"
+    status_error: str = "#e74c3c"
+    status_idle: str = "#6c7a89"
+    mode_searching: str = "#1abc9c"
+    mode_tracking: str = "#2980b9"
+    mode_diving: str = "#16a085"
+    mode_emergency: str = "#c0392b"
+    mode_idle: str = "#7f8c8d"
 
 
 def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
@@ -97,11 +133,16 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         dvl=_join(config.dvl),
         depth=_join(config.depth),
         status=_join(config.status),
+        depth_error=_join(config.depth_error),
+        confidence_text=_join(config.confidence_text),
+        power_text=_join(config.power_text),
         ground_truth=_join(config.ground_truth),
         magnetic=_join(config.magnetic),
         sonar=_join(config.sonar),
         seabed_cloud=_join(config.seabed_cloud),
+        seabed_mesh=_join(config.seabed_mesh),
         cable_marker=_join(config.cable_marker),
+        auv_body=_join(config.auv_body),
         truth_pose=_join(config.truth_pose),
         history_trail=_join(config.history_trail),
         view_range=_join(config.view_range),
@@ -111,4 +152,5 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
 
 TOPICS = TopicConfig()
 PLOT_FIELDS = PlotFieldConfig()
+DISPLAY_FIELDS = DisplayFieldConfig()
 COLORS = ColorConfig()

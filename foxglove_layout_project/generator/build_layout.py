@@ -50,6 +50,12 @@ def parse_args() -> argparse.Namespace:
         help="Layout description stored in the meta file",
     )
     parser.add_argument(
+        "--profile",
+        default="mentor-demo",
+        choices=("mentor-demo", "probe", "classic"),
+        help="Layout profile to export",
+    )
+    parser.add_argument(
         "--with-map",
         action="store_true",
         help="Include the 3D map layer in the layout configuration",
@@ -87,6 +93,7 @@ def main() -> None:
         layout_name=args.name,
         layout_description=args.description,
         layout_id="auv-data-visualization",
+        profile=args.profile,
     )
     layout_text = json.dumps(layout, ensure_ascii=False, separators=(",", ":"))
 
@@ -106,6 +113,7 @@ def main() -> None:
     meta = {
         "name": args.name,
         "description": args.description,
+        "profile": args.profile,
         "generatedBy": "foxglove_layout_project/generator/build_layout.py",
         "topicPrefix": args.topic_prefix,
         "layoutFile": str(output_path),
@@ -122,6 +130,7 @@ def main() -> None:
                 {
                     "name": "AUV Mock Foxglove Topics",
                     "description": "Deterministic mock topics used to make Foxglove layers visible without live data",
+                    "profile": args.profile,
                     "generatedBy": "foxglove_layout_project/generator/mock_topics.py",
                     "topicPrefix": args.topic_prefix,
                     "layoutFile": str(output_path),

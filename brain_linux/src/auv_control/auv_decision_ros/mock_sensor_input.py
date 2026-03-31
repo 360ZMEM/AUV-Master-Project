@@ -22,8 +22,19 @@ from typing import List
 
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Float32, String
 
-from auv_interfaces.msg import SensorStatus
+from auv_interfaces.msg import SensorStatus, Setpoint
+
+
+def _format_confidence_markdown(confidence: float) -> str:
+    return f'## {confidence:.2f}'
+
+
+def _format_power_markdown(voltage_v: float, threshold_v: float) -> str:
+    if voltage_v < threshold_v:
+        return f'## LOW POWER: {voltage_v:.2f}V'
+    return f'## POWER: {voltage_v:.2f}V'
 
 
 class MockSensorInputNode(Node):
@@ -39,7 +50,7 @@ class MockSensorInputNode(Node):
 
         self.declare_parameter('log_file', str(default_log))
         self.declare_parameter('publish_hz', 10.0)
-        self.declare_parameter('battery_low_voltage_threshold', 95.0)
+        self.declare_parameter('battery_low_voltage_threshold', 44.8)
         self.declare_parameter('seabed_depth_m', 15.0)
         self.declare_parameter('seabed_proximity_margin_m', 1.5)
         self.declare_parameter('status_log_period', 2.0)
@@ -61,6 +72,11 @@ class MockSensorInputNode(Node):
 
         # 发布器：将解析后的传感状态发布到行为树输入话题。
         self.publisher = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
+        self.depth_error_pub = self.create_publisher(Float32, '/auv/metrics/depth_error', 10)
+        self.confidence_text_pub = self.create_publisher(String, '/auv/display/confidence_text', 10)
+        self.power_text_pub = self.create_publisher(String, '/auv/display/power_text', 10)
+        self.latest_setpoint_depth_m: float | None = None
+        self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 10)
 
         # 读取日志并预解析：仅缓存每条 $AUV 行的数字序列。
         self.parsed_lines: List[List[int]] = self._load_auv_numeric_lines(self.log_file)
@@ -82,6 +98,9 @@ class MockSensorInputNode(Node):
         )
         self.get_logger().info(f'状态摘要周期: {self.status_log_period:.1f}s')
         self.get_logger().info('发布话题: /auv/sensors/status')
+
+    def _on_setpoint(self, msg: Setpoint) -> None:
+        self.latest_setpoint_depth_m = float(msg.target_depth_m)
 
     def _guess_default_log_file(self) -> Path:
         """自动猜测默认日志文件路径。
@@ -164,6 +183,7 @@ class MockSensorInputNode(Node):
 
         # 3) battery_low：从总电压字段读取（bytes 102-103，×0.1V）。
         total_voltage_v = struct.unpack('>H', packet[102:104])[0] * 0.1
+        msg.total_voltage_v = float(total_voltage_v)
         msg.battery_low = total_voltage_v < self.battery_low_voltage_threshold
 
         # 4) depth_m：从深度字段读取（bytes 38-39）。
@@ -187,6 +207,19 @@ class MockSensorInputNode(Node):
         msg.anomaly_detected = bool(depth_alarm != 0 or bottom_alarm != 0 or random.random() < 0.05)
 
         return msg
+
+    def _publish_display_topics(self, msg: SensorStatus) -> None:
+        target_depth = self.latest_setpoint_depth_m if self.latest_setpoint_depth_m is not None else float(msg.depth_m)
+        self.depth_error_pub.publish(Float32(data=float(msg.depth_m) - float(target_depth)))
+        self.confidence_text_pub.publish(String(data=_format_confidence_markdown(float(msg.confidence))))
+        self.power_text_pub.publish(
+            String(
+                data=_format_power_markdown(
+                    float(msg.total_voltage_v),
+                    float(self.battery_low_voltage_threshold),
+                )
+            )
+        )
 
     def _tokens_to_binary_packet(self, tokens: List[int]) -> bytes:
         """将文本数字序列恢复为近似145字节二进制帧。
@@ -276,6 +309,7 @@ class MockSensorInputNode(Node):
         tokens = self.parsed_lines[self.current_index]
         msg = self._map_tokens_to_sensor_status(tokens)
         self.publisher.publish(msg)
+        self._publish_display_topics(msg)
 
         self._log_readable_progress(msg)
 
