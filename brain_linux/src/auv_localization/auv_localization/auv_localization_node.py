@@ -170,6 +170,7 @@ class AUVLocalizationNode(Node):
         self.cov_pub = self.create_publisher(Float32MultiArray, '/auv/state/covariance', 10)
         self.status_pub = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
         self.depth_error_pub = self.create_publisher(Float32, '/auv/metrics/depth_error', 10)
+        self.lateral_error_pub = self.create_publisher(Float32, '/auv/metrics/lateral_error', 10)
         self.confidence_text_pub = self.create_publisher(String, '/auv/display/confidence_text', 10)
         self.power_text_pub = self.create_publisher(String, '/auv/display/power_text', 10)
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -280,10 +281,11 @@ class AUVLocalizationNode(Node):
         msg.anomaly_detected = bool(np.linalg.norm(state['v']) < 1e-6 and self._last_depth is None)
         return msg
 
-    def _publish_display_topics(self, *, status_msg: SensorStatus) -> None:
+    def _publish_display_topics(self, *, status_msg: SensorStatus, lateral_error_m: float) -> None:
         current_depth = float(status_msg.depth_m)
         target_depth = float(self._latest_setpoint_depth_m) if self._latest_setpoint_depth_m is not None else current_depth
         self.depth_error_pub.publish(Float32(data=current_depth - target_depth))
+        self.lateral_error_pub.publish(Float32(data=float(lateral_error_m)))
         self.confidence_text_pub.publish(String(data=_format_confidence_markdown(float(status_msg.confidence))))
         self.power_text_pub.publish(
             String(
@@ -377,7 +379,10 @@ class AUVLocalizationNode(Node):
         if self.publish_sensor_status:
             status_msg = self._build_sensor_status(state)
             self.status_pub.publish(status_msg)
-            self._publish_display_topics(status_msg=status_msg)
+            self._publish_display_topics(
+                status_msg=status_msg,
+                lateral_error_m=float(state['p'][1]),
+            )
 
         latest_sensor_ts = max(self._last_imu_ts, self._last_dvl_ts, self._last_depth_ts)
         if latest_sensor_ts > 0.0:

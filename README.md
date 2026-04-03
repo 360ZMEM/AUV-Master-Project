@@ -14,6 +14,8 @@
 - docs/字段真值表.md: topic 与字段的一览表
 - docs/联调调试记录_2026-03-21.md: 系统 Python 全栈联调记录
 - docs/联调验收摘要_2026-03-21.md: 联调验收结论与检查项
+- docs/protocol_udp联调复现与模式切换_2026-04-01.md: 新旧桥接模式切换与复现步骤
+- docs/控制回路问题定位与修复建议_2026-04-01.md: 当前控制问题、关联参数与修复方向
 - docs/foxglove/布局生成器调试上下文_2026-03-25.md: Foxglove 布局 schema 排障记录
 - foxglove_layout_project: Foxglove 布局生成器、topic 配置与导入产物
 
@@ -64,6 +66,7 @@ bash start_lin_brain.sh decision
 bash start_lin_brain.sh example
 bash start_lin_brain.sh foxglove
 bash start_lin_brain.sh stack
+bash start_lin_brain.sh stack --backend protocol_udp --protocol-control-mode-byte 238
 ```
 
 ## Linux 端新桥接链路（进行中）
@@ -88,6 +91,7 @@ cd foxglove_layout_project
 ```bash
 cd scripts
 bash start_foxglove_holoocean_ros.sh
+bash start_foxglove_holoocean_ros.sh --bridge-backend protocol_udp --protocol-control-mode-byte 238
 ```
 
 独立脚本：

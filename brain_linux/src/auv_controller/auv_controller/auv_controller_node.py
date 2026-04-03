@@ -11,6 +11,7 @@ The node wraps existing PID control logic and outputs a fixed Twist mapping:
 
 from __future__ import annotations
 
+import json
 import math
 import time
 from pathlib import Path
@@ -23,6 +24,8 @@ from auv_interfaces.msg import Setpoint
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
+from sensor_msgs.msg import Imu
+from std_msgs.msg import String
 import yaml
 
 def _resolve_project_root() -> Path:
@@ -98,18 +101,24 @@ class AUVControllerNode(Node):
 
         self.latest_setpoint: Setpoint | None = None
         self.latest_state: Odometry | None = None
+        self.latest_imu_gyro: tuple[float, float, float] | None = None
         self.latest_setpoint_ts = 0.0
         self.latest_state_ts = 0.0
+        self.latest_imu_ts = 0.0
+        self.latest_debug_payload: dict | None = None
 
         self.setpoint_sub = self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
         self.state_sub = self.create_subscription(Odometry, '/auv/state/filtered', self._on_state, 20)
+        self.imu_sub = self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
+        self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
         self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
 
         self._lat_count = 0
         self._lat_sum = 0.0
         self.create_timer(2.0, self._log_latency)
+        self.create_timer(0.5, self._publish_debug)
 
         self.get_logger().info('auv_controller_node started')
 
@@ -132,6 +141,28 @@ class AUVControllerNode(Node):
         self.latest_state = msg
         self.latest_state_ts = time.time()
 
+    def _on_imu(self, msg: Imu) -> None:
+        self.latest_imu_gyro = (
+            float(msg.angular_velocity.x),
+            float(msg.angular_velocity.y),
+            float(msg.angular_velocity.z),
+        )
+        self.latest_imu_ts = time.time()
+
+    def _resolve_body_rates(self, st: Odometry) -> tuple[float, float, float, str]:
+        odom_rates = (
+            float(st.twist.twist.angular.x),
+            float(st.twist.twist.angular.y),
+            float(st.twist.twist.angular.z),
+        )
+        if any(abs(rate) > 1e-6 for rate in odom_rates):
+            return odom_rates[0], odom_rates[1], odom_rates[2], 'odom'
+
+        if self.latest_imu_gyro is not None and (time.time() - self.latest_imu_ts) <= 0.5:
+            return self.latest_imu_gyro[0], self.latest_imu_gyro[1], self.latest_imu_gyro[2], 'imu'
+
+        return odom_rates[0], odom_rates[1], odom_rates[2], 'odom'
+
     def _on_timer(self) -> None:
         if self.latest_setpoint is None or self.latest_state is None:
             return
@@ -141,6 +172,12 @@ class AUVControllerNode(Node):
 
         q = st.pose.pose.orientation
         roll, pitch, yaw = quat_to_euler(q.w, q.x, q.y, q.z)
+        p_rate, q_rate, r_rate, rate_source = self._resolve_body_rates(st)
+        depth_error = float(sp.target_depth_m) - float(-st.pose.pose.position.z)
+        yaw_error = math.atan2(
+            math.sin(float(sp.target_heading_rad) - yaw),
+            math.cos(float(sp.target_heading_rad) - yaw),
+        )
 
         state = {
             'roll': roll,
@@ -154,9 +191,9 @@ class AUVControllerNode(Node):
             'u': float(st.twist.twist.linear.x),
             'v': float(st.twist.twist.linear.y),
             'w': float(st.twist.twist.linear.z),
-            'p': float(st.twist.twist.angular.x),
-            'q': float(st.twist.twist.angular.y),
-            'r': float(st.twist.twist.angular.z),
+            'p': p_rate,
+            'q': q_rate,
+            'r': r_rate,
         }
 
         target = {
@@ -182,11 +219,43 @@ class AUVControllerNode(Node):
             self._lat_count += 1
             self._lat_sum += sensor_to_cmd
 
+        self.latest_debug_payload = {
+            'mode': str(sp.mode),
+            'rate_source': rate_source,
+            'attitude_guard_active': bool(_debug.get('attitude_guard_active', False)),
+            'current_roll_deg': round(float(_debug.get('current_roll_deg', 0.0)), 3),
+            'current_pitch_deg': round(float(_debug.get('current_pitch_deg', 0.0)), 3),
+            'depth_error_m': round(depth_error, 4),
+            'yaw_error_deg': round(math.degrees(yaw_error), 3),
+            'current_yaw_deg': round(math.degrees(yaw), 3),
+            'target_yaw_deg': round(math.degrees(float(sp.target_heading_rad)), 3),
+            'target_depth_m': round(float(sp.target_depth_m), 3),
+            'current_depth_m': round(float(-st.pose.pose.position.z), 3),
+            'target_speed_mps': round(float(sp.target_speed_mps), 3),
+            'current_speed_mps': round(float(st.twist.twist.linear.x), 3),
+            'pitch_saturated': bool(_debug.get('pitch_saturated', False)),
+            'yaw_saturated': bool(_debug.get('yaw_saturated', False)),
+            'thrust_saturated': bool(_debug.get('thrust_saturated', False)),
+            'target_pitch_deg': round(math.degrees(float(_debug.get('target_pitch_rad', 0.0))), 3),
+            'cmd': {
+                'right_deg': round(float(cmd[0]), 3),
+                'top_deg': round(float(cmd[1]), 3),
+                'left_deg': round(float(cmd[2]), 3),
+                'bottom_deg': round(float(cmd[3]), 3),
+                'thrust': round(float(cmd[4]), 3),
+            },
+        }
+
     def _log_latency(self) -> None:
         if self._lat_count == 0:
             return
         mean_ms = (self._lat_sum / self._lat_count) * 1000.0
         self.get_logger().info(f'[controller] mean state/setpoint->cmd latency: {mean_ms:.2f} ms over {self._lat_count} samples')
+
+    def _publish_debug(self) -> None:
+        if self.latest_debug_payload is None:
+            return
+        self.debug_pub.publish(String(data=json.dumps(self.latest_debug_payload, ensure_ascii=False)))
 
 
 def main(args=None) -> None:

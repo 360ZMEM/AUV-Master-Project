@@ -34,12 +34,6 @@ control:
   u0: 1.0
   u_min: 0.6
   feedforward_trim_deg: -1.5
-  attitude_guard:
-    enable: true
-    roll_deg_max: 120.0
-    pitch_deg_max: 45.0
-    recovery_target_pitch_deg: 0.0
-    recovery_thrust: 20.0
   depth:
     kp: 0.30
     ki: 0.01

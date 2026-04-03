@@ -22,6 +22,9 @@ class TopicConfig:
     depth: str = "/auv/sensors/depth"
     status: str = "/auv/sensors/status"
     depth_error: str = "/auv/metrics/depth_error"
+    lateral_error: str = "/auv/metrics/lateral_error"
+    bt_status: str = "/auv/bt_status"
+    diagnostics: str = "/auv/diagnostics"
     confidence_text: str = "/auv/display/confidence_text"
     power_text: str = "/auv/display/power_text"
 
@@ -54,6 +57,9 @@ class PlotFieldConfig:
     cmd_thrust: str = "linear.x"
     odom_lateral_y: str = "pose.pose.position.y"
     scalar_data: str = "data"
+    diagnostic_depth_error: str = "depth_error_m"
+    diagnostic_lateral_error: str = "lateral_error_m"
+    diagnostic_magnetic_magnitude: str = "magnetic_magnitude"
 
 
 @dataclass(frozen=True)
@@ -134,6 +140,9 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         depth=_join(config.depth),
         status=_join(config.status),
         depth_error=_join(config.depth_error),
+        lateral_error=_join(config.lateral_error),
+        bt_status=_join(config.bt_status),
+        diagnostics=_join(config.diagnostics),
         confidence_text=_join(config.confidence_text),
         power_text=_join(config.power_text),
         ground_truth=_join(config.ground_truth),

@@ -23,6 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             'zenoh_json_bridge_node = auv_bridge.zenoh_json_bridge_node:main',
+            'protocol_udp_bridge_node = auv_bridge.protocol_udp_bridge_node:main',
         ],
     },
 )

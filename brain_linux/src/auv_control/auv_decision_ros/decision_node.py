@@ -3,20 +3,31 @@
 
 设计说明：
 - 本节点只负责 ROS2 通信与调度；
-- 核心逻辑（行为树、装饰器、阈值判断）全部在 `auv_decision_core` 内；
-- 通过 10Hz 定时器驱动行为树 tick，并发布 `ControlGoal`。
+- 核心逻辑（行为树、装饰器、阈值判断、观测快照组装）全部在 `auv_decision_core` 内；
+- 通过 10Hz 定时器驱动行为树 tick，并发布控制目标、行为树状态和结构化诊断。
 """
 
 from __future__ import annotations
 
+import math
+
+from nav_msgs.msg import Odometry
 import rclpy
 from rclpy.node import Node
+from sensor_msgs.msg import MagneticField
+from std_msgs.msg import Float32, String
 
 from auv_decision_core.bt_engine import DecisionTreeEngine
 from auv_decision_core.models import SensorStatusData
-from auv_interfaces.msg import ControlGoal, SensorStatus, Setpoint
+from auv_decision_core.telemetry import DecisionTelemetrySnapshot, build_decision_telemetry_snapshot
+from auv_interfaces.msg import AuvDiagnostic, ControlGoal, SensorStatus, Setpoint
 
-from .mappers import motion_goal_dict_to_msg, motion_goal_dict_to_setpoint_msg, sensor_msg_to_core
+from .mappers import (
+    motion_goal_dict_to_msg,
+    motion_goal_dict_to_setpoint_msg,
+    sensor_msg_to_core,
+    telemetry_snapshot_to_msg,
+)
 
 
 class AUVDecisionNode(Node):
@@ -25,93 +36,183 @@ class AUVDecisionNode(Node):
     def __init__(self) -> None:
         super().__init__('auv_decision_node')
 
-        # 可配置参数：置信度阈值。后续可直接在 launch 或命令行覆盖。
         self.declare_parameter('confidence_threshold', 0.7)
+        self.declare_parameter('bt_status_publish_period', 0.5)
         self.declare_parameter('tree_print_period', 1.0)
         self.declare_parameter('summary_log_period', 1.0)
-        threshold = (
-            self.get_parameter('confidence_threshold').get_parameter_value().double_value
-        )
-        self.tree_print_period = float(
-            self.get_parameter('tree_print_period').get_parameter_value().double_value
-        )
-        self.summary_log_period = float(
-            self.get_parameter('summary_log_period').get_parameter_value().double_value
-        )
+        self.declare_parameter('bridge_backend', 'zenoh_json')
+        self.declare_parameter('protocol_control_mode_byte', 0xEE)
+        self.declare_parameter('guidance_lookahead_distance', 3.5)
+        self.declare_parameter('guidance_cross_track_gain', 0.7)
 
-        # 初始化核心决策引擎（纯 Python，不依赖 ROS2）。
-        self.engine = DecisionTreeEngine(confidence_threshold=float(threshold))
+        threshold = float(self.get_parameter('confidence_threshold').value)
+        self.bt_status_publish_period = float(self.get_parameter('bt_status_publish_period').value)
+        self.tree_print_period = float(self.get_parameter('tree_print_period').value)
+        self.summary_log_period = float(self.get_parameter('summary_log_period').value)
+        self.bridge_backend = str(self.get_parameter('bridge_backend').value)
+        self.protocol_control_mode_byte = int(self.get_parameter('protocol_control_mode_byte').value)
+        self.guidance_lookahead_distance = float(self.get_parameter('guidance_lookahead_distance').value)
+        self.guidance_cross_track_gain = float(self.get_parameter('guidance_cross_track_gain').value)
 
-        # 最近一次传感状态，用于日志摘要展示。
+        self.engine = DecisionTreeEngine(confidence_threshold=threshold)
+
         self.latest_sensor_status: SensorStatusData = SensorStatusData()
+        self.latest_depth_error_m: float | None = None
+        self.latest_lateral_error_m: float | None = None
+        self.latest_odom_lateral_y_m: float | None = None
+        self.latest_yaw_rad: float | None = None
+        self.latest_magnetic_magnitude: float | None = None
         self.last_goal_signature: str = ''
+        self.last_behavior_signature: str = ''
+        self.last_bt_status_text: str = ''
         self.last_tree_print_ns: int = 0
         self.last_summary_log_ns: int = 0
+        self.last_bt_status_ns: int = 0
 
-        # 订阅传感状态输入。
-        self.sub_sensor = self.create_subscription(
-            SensorStatus,
-            '/auv/sensors/status',
-            self._on_sensor_status,
-            10,
-        )
+        self.create_subscription(SensorStatus, '/auv/sensors/status', self._on_sensor_status, 10)
+        self.create_subscription(Float32, '/auv/metrics/depth_error', self._on_depth_error, 10)
+        self.create_subscription(Float32, '/auv/metrics/lateral_error', self._on_lateral_error, 10)
+        self.create_subscription(Odometry, '/auv/state/filtered', self._on_state_filtered, 10)
+        self.create_subscription(MagneticField, '/auv/sensors/magnetic', self._on_magnetic, 10)
 
-        # 发布控制目标输出。
         self.pub_goal = self.create_publisher(ControlGoal, '/auv/control/goal', 10)
-        # 发布控制语义输出（推荐新接口）。
         self.pub_setpoint = self.create_publisher(Setpoint, '/auv/control/setpoint', 10)
+        self.pub_bt_status = self.create_publisher(String, '/auv/bt_status', 10)
+        self.pub_diagnostic = self.create_publisher(AuvDiagnostic, '/auv/diagnostics', 10)
 
-        # 10Hz 驱动行为树。
         self.timer = self.create_timer(0.1, self._on_tick)
 
         self.get_logger().info('AUV 决策节点已启动。')
         self.get_logger().info(f'置信度阈值: {threshold:.2f}')
+        self.get_logger().info(f'行为树状态发布周期: {self.bt_status_publish_period:.1f}s')
         self.get_logger().info(f'行为树打印周期: {self.tree_print_period:.1f}s')
         self.get_logger().info(f'摘要日志周期: {self.summary_log_period:.1f}s')
+        self.get_logger().info(f'桥接后端: {self.bridge_backend}')
         self.get_logger().info('订阅: /auv/sensors/status (auv_interfaces/SensorStatus)')
+        self.get_logger().info('订阅: /auv/metrics/depth_error (std_msgs/Float32)')
+        self.get_logger().info('订阅: /auv/metrics/lateral_error (std_msgs/Float32)')
+        self.get_logger().info('订阅: /auv/state/filtered (nav_msgs/Odometry)')
+        self.get_logger().info('订阅: /auv/sensors/magnetic (sensor_msgs/MagneticField)')
         self.get_logger().info('发布: /auv/control/goal (auv_interfaces/ControlGoal)')
         self.get_logger().info('发布: /auv/control/setpoint (auv_interfaces/Setpoint)')
+        self.get_logger().info('发布: /auv/bt_status (std_msgs/String)')
+        self.get_logger().info('发布: /auv/diagnostics (auv_interfaces/AuvDiagnostic)')
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
-        """订阅回调：将 ROS 消息写入核心黑板输入。"""
         status = sensor_msg_to_core(msg)
         self.latest_sensor_status = status
         self.engine.set_sensor_status(status)
 
+    def _on_depth_error(self, msg: Float32) -> None:
+        self.latest_depth_error_m = float(msg.data)
+
+    def _on_lateral_error(self, msg: Float32) -> None:
+        self.latest_lateral_error_m = float(msg.data)
+
+    def _on_state_filtered(self, msg: Odometry) -> None:
+        self.latest_odom_lateral_y_m = float(msg.pose.pose.position.y)
+        q = msg.pose.pose.orientation
+        self.latest_yaw_rad = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+        )
+
+    def _on_magnetic(self, msg: MagneticField) -> None:
+        x = float(msg.magnetic_field.x)
+        y = float(msg.magnetic_field.y)
+        z = float(msg.magnetic_field.z)
+        self.latest_magnetic_magnitude = math.sqrt(x * x + y * y + z * z)
+
+    def _resolve_lateral_error(self) -> float | None:
+        if self.latest_lateral_error_m is not None:
+            return self.latest_lateral_error_m
+        return self.latest_odom_lateral_y_m
+
+    @staticmethod
+    def _wrap_angle(angle_rad: float) -> float:
+        return math.atan2(math.sin(angle_rad), math.cos(angle_rad))
+
+    def _resolve_target_heading(self, goal_dict: dict) -> float:
+        explicit_heading = goal_dict.get('target_heading_rad')
+        if explicit_heading is not None:
+            return self._wrap_angle(float(explicit_heading))
+
+        heading_target_rad = self.latest_yaw_rad if self.latest_yaw_rad is not None else 0.0
+
+        if bool(goal_dict.get('track_cable', False)):
+            lateral_error_m = self._resolve_lateral_error()
+            if lateral_error_m is not None and self.guidance_lookahead_distance > 1e-6:
+                heading_target_rad += -self.guidance_cross_track_gain * math.atan2(
+                    lateral_error_m,
+                    self.guidance_lookahead_distance,
+                )
+
+        return self._wrap_angle(heading_target_rad)
+
     def _on_tick(self) -> None:
-        """10Hz 定时调度：tick 行为树并发布结果。"""
         self.engine.tick()
 
         goal_dict = self.engine.get_target_motion_state()
         if goal_dict is None:
             return
 
-        goal_msg = motion_goal_dict_to_msg(goal_dict)
-        self.pub_goal.publish(goal_msg)
+        if goal_dict.get('mode') in {'PARALLEL_TRACKING', 'ZIGZAG_SEARCH'}:
+            goal_dict.setdefault('track_cable', True)
 
-        setpoint_msg = motion_goal_dict_to_setpoint_msg(
-            goal_dict,
-            stamp=self.get_clock().now().to_msg(),
+        goal_dict['target_heading_rad'] = self._resolve_target_heading(goal_dict)
+        goal_dict.setdefault('bridge_backend', self.bridge_backend)
+        if self.bridge_backend == 'protocol_udp':
+            goal_dict.setdefault('control_mode_byte', self.protocol_control_mode_byte)
+
+        stamp = self.get_clock().now().to_msg()
+        self.pub_goal.publish(motion_goal_dict_to_msg(goal_dict))
+        self.pub_setpoint.publish(motion_goal_dict_to_setpoint_msg(goal_dict, stamp=stamp))
+
+        telemetry = build_decision_telemetry_snapshot(
+            sensor_status=self.latest_sensor_status,
+            goal=goal_dict,
+            current_behavior=self.engine.current_behavior_name(),
+            active_path=self.engine.active_path(),
+            tree_snapshot=self.engine.unicode_tree(),
+            depth_error_m=self.latest_depth_error_m,
+            lateral_error_m=self._resolve_lateral_error(),
+            magnetic_magnitude=self.latest_magnetic_magnitude,
         )
-        self.pub_setpoint.publish(setpoint_msg)
+        self.pub_diagnostic.publish(telemetry_snapshot_to_msg(telemetry, stamp=stamp))
+        self._publish_bt_status(telemetry.bt_status_markdown)
+        self._log_readable_status(telemetry)
 
-        self._log_readable_status(goal_dict)
+    def _publish_bt_status(self, bt_status_markdown: str) -> None:
+        now_ns = self.get_clock().now().nanoseconds
+        should_publish = (
+            bt_status_markdown != self.last_bt_status_text
+            or now_ns - self.last_bt_status_ns >= int(self.bt_status_publish_period * 1e9)
+        )
+        if not should_publish:
+            return
 
-    def _log_readable_status(self, goal_dict: dict) -> None:
-        """输出更易读的状态摘要，并节流打印树图。
+        self.last_bt_status_text = bt_status_markdown
+        self.last_bt_status_ns = now_ns
+        self.pub_bt_status.publish(String(data=bt_status_markdown))
 
-        设计目标：
-        - 高频只输出一行摘要，方便快速扫日志；
-        - 低频打印一次 unicode_tree，保留结构可视化；
-        - 当行为模式发生变化时，立即补充一条摘要，便于定位切换时刻。
-        """
+    def _log_readable_status(self, telemetry: DecisionTelemetrySnapshot) -> None:
         now_ns = self.get_clock().now().nanoseconds
         goal_signature = (
-            f"{goal_dict.get('mode', 'IDLE')}|"
-            f"{goal_dict.get('target_speed_mps', 0.0):.3f}|"
-            f"{goal_dict.get('target_depth_m', 0.0):.2f}|"
-            f"{goal_dict.get('high_priority', False)}"
+            f'{telemetry.mode}|'
+            f'{telemetry.target_speed_mps:.3f}|'
+            f'{telemetry.target_depth_m:.2f}|'
+            f'{telemetry.high_priority}'
         )
+        behavior_signature = f'{telemetry.current_behavior}|{telemetry.mode}|{telemetry.active_path}'
+
+        if behavior_signature != self.last_behavior_signature:
+            self.last_behavior_signature = behavior_signature
+            self.get_logger().info(
+                '[行为树切换] '
+                f'behavior={telemetry.current_behavior} | '
+                f'mode={telemetry.mode} | '
+                f'path={telemetry.active_path}'
+            )
 
         should_log_summary = (
             goal_signature != self.last_goal_signature
@@ -120,30 +221,15 @@ class AUVDecisionNode(Node):
         if should_log_summary:
             self.last_goal_signature = goal_signature
             self.last_summary_log_ns = now_ns
-            self.get_logger().info(self._format_summary_line(goal_dict))
+            self.get_logger().info(telemetry.summary_line)
 
-        should_print_tree = now_ns - self.last_tree_print_ns >= int(self.tree_print_period * 1e9)
+        should_print_tree = (
+            self.tree_print_period > 0.0
+            and now_ns - self.last_tree_print_ns >= int(self.tree_print_period * 1e9)
+        )
         if should_print_tree:
             self.last_tree_print_ns = now_ns
-            self.get_logger().info('行为树快照:')
-            print(self.engine.unicode_tree())
-
-    def _format_summary_line(self, goal_dict: dict) -> str:
-        """格式化单行状态摘要，便于终端快速阅读。"""
-        status = self.latest_sensor_status
-        return (
-            '[状态摘要] '
-            f"mode={goal_dict.get('mode', 'IDLE')} | "
-            f"depth={status.depth_m:.2f}m | speed={status.speed_mps:.2f}m/s | "
-            f"confidence={status.confidence:.2f} | leak_level={status.leak_level} | "
-            f"battery_low={status.battery_low} | anomaly={status.anomaly_detected} | "
-            f"seabed_clearance={status.seabed_clearance_m:.2f}m | "
-            f"seabed_warn={status.seabed_proximity_warning} | "
-            f"seabed_penetration={status.seabed_penetration_warning} | "
-            f"goal_speed={float(goal_dict.get('target_speed_mps', 0.0)):.2f}m/s | "
-            f"goal_depth={float(goal_dict.get('target_depth_m', 0.0)):.2f}m | "
-            f"priority={bool(goal_dict.get('high_priority', False))}"
-        )
+            self.get_logger().info(f'行为树快照:\n{telemetry.tree_snapshot}')
 
 
 def main(args=None) -> None:
@@ -157,8 +243,6 @@ def main(args=None) -> None:
         pass
     finally:
         node.destroy_node()
-        # 说明：部分运行场景下 Ctrl+C 会触发系统先行 shutdown，
-        # 这里做幂等保护，避免重复 shutdown 抛 RCLError。
         if rclpy.ok():
             rclpy.shutdown()
 

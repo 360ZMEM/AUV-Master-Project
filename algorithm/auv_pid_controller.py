@@ -75,6 +75,15 @@ class AUVPIDController:
         self.speed_ff_b = float(speed_ff_cfg.get("b", 0.0))
         self.speed_ff_c = float(speed_ff_cfg.get("c", 0.0))
 
+        attitude_guard_cfg = control_cfg.get("attitude_guard", {})
+        self.attitude_guard_enable = bool(attitude_guard_cfg.get("enable", False))
+        self.attitude_guard_roll_deg_max = float(attitude_guard_cfg.get("roll_deg_max", 120.0))
+        self.attitude_guard_pitch_deg_max = float(attitude_guard_cfg.get("pitch_deg_max", 45.0))
+        self.attitude_guard_recovery_target_pitch_rad = np.deg2rad(
+            float(attitude_guard_cfg.get("recovery_target_pitch_deg", 0.0))
+        )
+        self.attitude_guard_recovery_thrust = float(attitude_guard_cfg.get("recovery_thrust", 20.0))
+
         self.prev_target_pitch = 0.0
 
     @staticmethod
@@ -94,6 +103,7 @@ class AUVPIDController:
         dt = float(target.get("dt", 0.0333333333))
 
         current_pitch = float(state["pitch"])
+        current_roll = float(state["roll"])
         current_yaw = float(state["yaw"])
         current_depth = float(state["depth"])
         u_forward = float(state["u"])
@@ -106,64 +116,92 @@ class AUVPIDController:
 
         gain_scale = self._gain_scale(u_forward)
         low_speed = abs(u_forward) < self.u_min
+        attitude_guard_active = self.attitude_guard_enable and (
+            abs(np.rad2deg(current_roll)) > self.attitude_guard_roll_deg_max
+            or abs(np.rad2deg(current_pitch)) > self.attitude_guard_pitch_deg_max
+        )
 
         depth_error = target_depth - current_depth
-        depth_outer_raw, _ = self.depth_pid.compute(
-            error=depth_error,
-            dt=dt,
-            d_feedback=0.0,
-            gain_scale=1.0,
-            output_limit=None,
-            integrate_enabled=not low_speed,
-        )
 
-        target_pitch_raw = float(np.clip(depth_outer_raw, -self.target_pitch_limit_rad, self.target_pitch_limit_rad))
-        max_pitch_delta = self.target_pitch_rate_limit * dt
-        target_pitch = float(
-            np.clip(
-                target_pitch_raw,
-                self.prev_target_pitch - max_pitch_delta,
-                self.prev_target_pitch + max_pitch_delta,
+        if attitude_guard_active:
+            self.depth_pid.reset_integral()
+            self.yaw_pid.reset_integral()
+            target_pitch = float(self.attitude_guard_recovery_target_pitch_rad)
+            pitch_error = current_pitch - target_pitch
+            elevator_cmd, pitch_sat = self.pitch_pid.compute(
+                error=pitch_error,
+                dt=dt,
+                d_feedback=gyro_y,
+                gain_scale=gain_scale,
+                output_limit=np.deg2rad(self.fin_deg_max),
+                integrate_enabled=False,
             )
-        )
-        self.prev_target_pitch = target_pitch
+            elevator_cmd = float(np.clip(elevator_cmd, -np.deg2rad(self.fin_deg_max), np.deg2rad(self.fin_deg_max)))
+            yaw_err = 0.0
+            rudder_cmd = 0.0
+            yaw_sat = False
+            speed_error = target_u - u_forward
+            thrust_feedforward = 0.0
+            thrust_feedback = 0.0
+            thrust_cmd = float(np.clip(self.attitude_guard_recovery_thrust, self.thrust_min, self.thrust_max))
+            thrust_sat = False
+        else:
+            depth_outer_raw, _ = self.depth_pid.compute(
+                error=depth_error,
+                dt=dt,
+                d_feedback=0.0,
+                gain_scale=1.0,
+                output_limit=None,
+                integrate_enabled=not low_speed,
+            )
 
-        pitch_error = current_pitch - target_pitch
-        elevator_cmd, pitch_sat = self.pitch_pid.compute(
-            error=pitch_error,
-            dt=dt,
-            d_feedback=gyro_y,
-            gain_scale=gain_scale,
-            output_limit=np.deg2rad(self.fin_deg_max),
-            integrate_enabled=not low_speed,
-        )
-        elevator_cmd += self.feedforward_trim
-        elevator_cmd = float(np.clip(elevator_cmd, -np.deg2rad(self.fin_deg_max), np.deg2rad(self.fin_deg_max)))
+            target_pitch_raw = float(np.clip(depth_outer_raw, -self.target_pitch_limit_rad, self.target_pitch_limit_rad))
+            max_pitch_delta = self.target_pitch_rate_limit * dt
+            target_pitch = float(
+                np.clip(
+                    target_pitch_raw,
+                    self.prev_target_pitch - max_pitch_delta,
+                    self.prev_target_pitch + max_pitch_delta,
+                )
+            )
+            self.prev_target_pitch = target_pitch
 
-        yaw_err = wrap_angle(target_yaw - current_yaw)
-        rudder_cmd, yaw_sat = self.yaw_pid.compute(
-            error=yaw_err,
-            dt=dt,
-            d_feedback=gyro_z,
-            gain_scale=gain_scale,
-            output_limit=np.deg2rad(self.fin_deg_max),
-            integrate_enabled=not low_speed,
-        )
+            pitch_error = current_pitch - target_pitch
+            elevator_cmd, pitch_sat = self.pitch_pid.compute(
+                error=pitch_error,
+                dt=dt,
+                d_feedback=gyro_y,
+                gain_scale=gain_scale,
+                output_limit=np.deg2rad(self.fin_deg_max),
+                integrate_enabled=not low_speed,
+            )
+            elevator_cmd += self.feedforward_trim
+            elevator_cmd = float(np.clip(elevator_cmd, -np.deg2rad(self.fin_deg_max), np.deg2rad(self.fin_deg_max)))
 
-        speed_error = target_u - u_forward
-        thrust_feedback, _ = self.speed_pid.compute(
-            error=speed_error,
-            dt=dt,
-            d_feedback=0.0,
-            gain_scale=1.0,
-            output_limit=None,
-            integrate_enabled=True,
-        )
+            yaw_err = wrap_angle(target_yaw - current_yaw)
+            rudder_cmd, yaw_sat = self.yaw_pid.compute(
+                error=yaw_err,
+                dt=dt,
+                d_feedback=gyro_z,
+                gain_scale=gain_scale,
+                output_limit=np.deg2rad(self.fin_deg_max),
+                integrate_enabled=not low_speed,
+            )
 
-        thrust_feedforward = self.speed_ff_a * (target_u ** 2) + self.speed_ff_b * target_u + self.speed_ff_c
-        thrust_cmd = thrust_feedforward + thrust_feedback
-        thrust_sat = (thrust_cmd < self.thrust_min) or (thrust_cmd > self.thrust_max)
-        thrust_cmd = float(np.clip(thrust_cmd, self.thrust_min, self.thrust_max))
+            speed_error = target_u - u_forward
+            thrust_feedback, _ = self.speed_pid.compute(
+                error=speed_error,
+                dt=dt,
+                d_feedback=0.0,
+                gain_scale=1.0,
+                output_limit=None,
+                integrate_enabled=True,
+            )
+
+            thrust_feedforward = self.speed_ff_a * (target_u ** 2) + self.speed_ff_b * target_u + self.speed_ff_c
+            thrust_cmd = thrust_feedforward + thrust_feedback
+            thrust_sat = (thrust_cmd < self.thrust_min) or (thrust_cmd > self.thrust_max)
+            thrust_cmd = float(np.clip(thrust_cmd, self.thrust_min, self.thrust_max))
 
         command = np.zeros(5, dtype=float)
         command[0] = -elevator_cmd
@@ -182,6 +220,9 @@ class AUVPIDController:
             self.yaw_pid.reset_integral()
 
         debug = {
+            "attitude_guard_active": bool(attitude_guard_active),
+            "current_roll_deg": float(np.rad2deg(current_roll)),
+            "current_pitch_deg": float(np.rad2deg(current_pitch)),
             "gain_scale": gain_scale,
             "low_speed": low_speed,
             "depth_error": depth_error,

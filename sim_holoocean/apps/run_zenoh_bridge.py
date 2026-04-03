@@ -23,6 +23,7 @@ for p in [
 
 from command_guard import CommandGuard
 from holoocean_physics_bridge import HoloOceanPhysicsZenohBridge
+from mock_amd_server import MockAmdUdpServer
 
 
 def load_config(path):
@@ -51,7 +52,11 @@ def main():
         print(f"[AUV] using HoloOcean UUID={os.environ['AUV_HOLOOCEAN_UUID']}")
 
     guard = CommandGuard(cfg["bridge"])
-    bridge = HoloOceanPhysicsZenohBridge(cfg, guard)
+    backend = str(cfg.get("bridge", {}).get("backend", "zenoh_json"))
+    if backend == "protocol_udp":
+        bridge = MockAmdUdpServer(cfg, guard)
+    else:
+        bridge = HoloOceanPhysicsZenohBridge(cfg, guard)
 
     try:
         bridge.open()

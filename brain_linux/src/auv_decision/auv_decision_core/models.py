@@ -17,6 +17,7 @@ class SensorStatusData:
         confidence: 目标跟踪/电缆识别置信度，范围 [0.0, 1.0]。
         leak_level: 漏水等级编码（0:无漏水,1:内部,2:外部,3:内外同时）。
         battery_low: 是否低电。
+        total_voltage_v: 当前总电压（V）。
         anomaly_detected: 是否检测到异常（用于装饰器降速语义）。
         depth_m: 当前深度（米）。
         speed_mps: 当前速度（米/秒）。
@@ -29,6 +30,7 @@ class SensorStatusData:
     confidence: float = 0.5
     leak_level: int = 0
     battery_low: bool = False
+    total_voltage_v: float = 48.0
     anomaly_detected: bool = False
     depth_m: float = 0.0
     speed_mps: float = 0.0

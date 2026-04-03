@@ -17,6 +17,7 @@ set -euo pipefail
 # Usage examples:
 #   ./start_foxglove_holoocean_ros.sh
 #   ./start_foxglove_holoocean_ros.sh --sim-mode both --brain-mode stack
+#   ./start_foxglove_holoocean_ros.sh --bridge-backend protocol_udp --protocol-control-mode-byte 238
 #   ./start_foxglove_holoocean_ros.sh --skip-layout
 #   ./start_foxglove_holoocean_ros.sh --topic-prefix /sim
 
@@ -30,6 +31,8 @@ SIM_MODE="both"
 BRAIN_MODE="stack"
 LAYOUT_ARGS=()
 VIZ_ARGS=()
+SIM_ARGS=()
+BRAIN_ARGS=()
 SKIP_LAYOUT=false
 SIM_DELAY_S="${SIM_DELAY_S:-10}"
 
@@ -41,6 +44,23 @@ while [[ $# -gt 0 ]]; do
       ;;
     --brain-mode)
       BRAIN_MODE="${2:?missing value for --brain-mode}"
+      shift 2
+      ;;
+    --bridge-backend)
+      SIM_ARGS+=("--backend" "${2:?missing value for --bridge-backend}")
+      BRAIN_ARGS+=("--backend" "${2:?missing value for --bridge-backend}")
+      shift 2
+      ;;
+    --bridge-cfg)
+      SIM_ARGS+=("--bridge-cfg" "${2:?missing value for --bridge-cfg}")
+      shift 2
+      ;;
+    --sim-cfg)
+      SIM_ARGS+=("--sim-cfg" "${2:?missing value for --sim-cfg}")
+      shift 2
+      ;;
+    --protocol-control-mode-byte)
+      BRAIN_ARGS+=("--protocol-control-mode-byte" "${2:?missing value for --protocol-control-mode-byte}")
       shift 2
       ;;
     --skip-layout)
@@ -91,6 +111,11 @@ Usage:
 Options:
   --sim-mode MODE            start_lin_sim.sh mode (default: both)
   --brain-mode MODE          start_lin_brain.sh mode (default: stack)
+  --bridge-backend BACKEND   switch both sim and brain to zenoh_json or protocol_udp
+  --bridge-cfg PATH          explicit simulation bridge config path
+  --sim-cfg PATH             explicit HoloOcean sim config path
+  --protocol-control-mode-byte N
+                             decision-side control mode byte for protocol_udp
   --skip-layout              skip Foxglove JSON generation
   --topic-prefix PREFIX      apply a namespace prefix to Foxglove topics
   --with-map                 include the Foxglove 3D map layer
@@ -151,8 +176,8 @@ else
   echo "[AUV] skipping Foxglove layout generation as requested"
 fi
 
-echo "[AUV] starting HoloOcean + Zenoh simulation via start_lin_sim.sh (${SIM_MODE})..."
-bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" &
+echo "[AUV] starting HoloOcean + bridge simulation via start_lin_sim.sh (${SIM_MODE})..."
+bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" "${SIM_ARGS[@]}" &
 SIM_PID=$!
 
 if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
@@ -174,4 +199,4 @@ echo "[AUV] waiting ${SIM_DELAY_S}s before starting ROS2 brain..."
 sleep "$SIM_DELAY_S"
 
 echo "[AUV] starting ROS2 brain via start_lin_brain.sh (${BRAIN_MODE})..."
-bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${VIZ_ARGS[@]}"
+bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}"

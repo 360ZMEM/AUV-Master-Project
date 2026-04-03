@@ -5,4 +5,4 @@ from .bridge_node import main as run_bridge_main
 
 
 def main(args=None) -> None:
-    run_bridge_main(args=args, preferred_backend='zenoh_json', node_name='zenoh_json_bridge_node')
+    run_bridge_main(args=args, preferred_backend='protocol_udp', node_name='protocol_udp_bridge_node')

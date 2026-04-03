@@ -102,6 +102,26 @@ class DecisionTreeEngine:
             return result
         return None
 
+    def current_behavior_name(self) -> str:
+        """Return the deepest active behaviour name after the last tick."""
+        tip = self.root.tip()
+        if tip is None:
+            return self.root.name
+        return tip.name
+
+    def active_path(self) -> str:
+        """Return the active branch path from root to tip."""
+        tip = self.root.tip()
+        if tip is None:
+            return self.root.name
+
+        names: list[str] = []
+        node = tip
+        while node is not None:
+            names.append(node.name)
+            node = node.parent
+        return ' > '.join(reversed(names))
+
     def unicode_tree(self) -> str:
         """返回行为树 Unicode 文本，便于终端打印。"""
         return py_trees.display.unicode_tree(root=self.root, show_status=True)

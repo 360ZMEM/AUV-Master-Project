@@ -73,6 +73,7 @@ class MockSensorInputNode(Node):
         # 发布器：将解析后的传感状态发布到行为树输入话题。
         self.publisher = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
         self.depth_error_pub = self.create_publisher(Float32, '/auv/metrics/depth_error', 10)
+        self.lateral_error_pub = self.create_publisher(Float32, '/auv/metrics/lateral_error', 10)
         self.confidence_text_pub = self.create_publisher(String, '/auv/display/confidence_text', 10)
         self.power_text_pub = self.create_publisher(String, '/auv/display/power_text', 10)
         self.latest_setpoint_depth_m: float | None = None
@@ -211,6 +212,7 @@ class MockSensorInputNode(Node):
     def _publish_display_topics(self, msg: SensorStatus) -> None:
         target_depth = self.latest_setpoint_depth_m if self.latest_setpoint_depth_m is not None else float(msg.depth_m)
         self.depth_error_pub.publish(Float32(data=float(msg.depth_m) - float(target_depth)))
+        self.lateral_error_pub.publish(Float32(data=0.0))
         self.confidence_text_pub.publish(String(data=_format_confidence_markdown(float(msg.confidence))))
         self.power_text_pub.publish(
             String(

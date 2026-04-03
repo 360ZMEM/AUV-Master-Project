@@ -419,6 +419,7 @@ def _build_probe_layout(*, topics: TopicConfig, include_map_layer: bool) -> dict
 def _build_mentor_demo_layout(*, topics: TopicConfig, include_map_layer: bool) -> dict[str, Any]:
     three_d_key = "3D!main"
     mode_key = "Markdown!mode"
+    bt_status_key = "Markdown!bt_status"
     confidence_key = "Gauge!confidence"
     confidence_text_key = "Markdown!confidence_text"
     leak_key = "Indicator!leak"
@@ -432,6 +433,10 @@ def _build_mentor_demo_layout(*, topics: TopicConfig, include_map_layer: bool) -
         mode_key: _build_markdown_config(
             message_path=_build_message_path(topic=topics.setpoint, field=DISPLAY_FIELDS.setpoint_mode),
             font_size=30,
+        ),
+        bt_status_key: _build_markdown_config(
+            message_path=_build_message_path(topic=topics.bt_status, field=DISPLAY_FIELDS.string_data),
+            font_size=14,
         ),
         confidence_key: _build_gauge_config(
             title="定位置信度",
@@ -466,8 +471,8 @@ def _build_mentor_demo_layout(*, topics: TopicConfig, include_map_layer: bool) -
             title="Tracking Error",
             y_axis_label="误差 (m)",
             series=[
-                _build_plot_series(topic=topics.depth_error, value=PLOT_FIELDS.scalar_data, color=COLORS.depth_error),
-                _build_plot_series(topic=topics.state_filtered, value=PLOT_FIELDS.odom_lateral_y, color=COLORS.lateral_error),
+                _build_plot_series(topic=topics.diagnostics, value=PLOT_FIELDS.diagnostic_depth_error, color=COLORS.depth_error),
+                _build_plot_series(topic=topics.diagnostics, value=PLOT_FIELDS.diagnostic_lateral_error, color=COLORS.lateral_error),
             ],
             following_view_width=90.0,
         ),
@@ -494,8 +499,8 @@ def _build_mentor_demo_layout(*, topics: TopicConfig, include_map_layer: bool) -
     lower_row = _split(
         "row",
         _split("column", error_key, speed_key, 54),
-        top_view_key,
-        60,
+        _split("column", top_view_key, bt_status_key, 52),
+        58,
     )
 
     right_column = _split(

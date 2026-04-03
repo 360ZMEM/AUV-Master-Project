@@ -41,7 +41,7 @@ limits:
   safety_margin_z: 1.5
 
 bridge:
-  backend: zenoh_json
+  backend: protocol_udp
   # 桥接层运行参数：消息频率、命令超时、默认命令和输出限幅。
   rate_hz: 50.0
   # 若一段时间内未收到控制指令，则认为上游链路超时。

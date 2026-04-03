@@ -103,6 +103,11 @@
       "messagePath": "/auv/control/setpoint.mode",
       "fontSize": 30
     },
+    "Markdown!bt_status": {
+      "renderMode": "message",
+      "messagePath": "/auv/bt_status.data",
+      "fontSize": 14
+    },
     "Gauge!confidence": {
       "title": "定位置信度",
       "path": "/auv/sensors/status.confidence",
@@ -247,13 +252,13 @@
       "paths": [
         {
           "timestampMethod": "receiveTime",
-          "value": "/auv/metrics/depth_error.data",
+          "value": "/auv/diagnostics.depth_error_m",
           "enabled": true,
           "color": "#ff6b6b"
         },
         {
           "timestampMethod": "receiveTime",
-          "value": "/auv/state/filtered.pose.pose.position.y",
+          "value": "/auv/diagnostics.lateral_error_m",
           "enabled": true,
           "color": "#ffd166"
         }
@@ -338,8 +343,13 @@
           "second": "Plot!speed_control",
           "splitPercentage": 54
         },
-        "second": "3D!topview",
-        "splitPercentage": 60
+        "second": {
+          "direction": "column",
+          "first": "3D!topview",
+          "second": "Markdown!bt_status",
+          "splitPercentage": 52
+        },
+        "splitPercentage": 58
       },
       "splitPercentage": 36
     },

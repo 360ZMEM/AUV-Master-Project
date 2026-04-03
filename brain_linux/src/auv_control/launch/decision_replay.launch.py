@@ -48,14 +48,19 @@ def generate_launch_description() -> LaunchDescription:
         default_value='0.7',
         description='行为树置信度阈值，大于该值走并行巡检分支',
     )
+    bt_status_publish_period_arg = DeclareLaunchArgument(
+        'bt_status_publish_period',
+        default_value='0.5',
+        description='行为树状态发布周期 (秒)',
+    )
     tree_print_period_arg = DeclareLaunchArgument(
         'tree_print_period',
-        default_value='1.0',
+        default_value='5.0',
         description='行为树 Unicode 树图打印周期 (秒)',
     )
     summary_log_period_arg = DeclareLaunchArgument(
         'summary_log_period',
-        default_value='1.0',
+        default_value='2.0',
         description='决策摘要日志打印周期 (秒)',
     )
 
@@ -83,6 +88,7 @@ def generate_launch_description() -> LaunchDescription:
         parameters=[
             {
                 'confidence_threshold': LaunchConfiguration('confidence_threshold'),
+                'bt_status_publish_period': LaunchConfiguration('bt_status_publish_period'),
                 'tree_print_period': LaunchConfiguration('tree_print_period'),
                 'summary_log_period': LaunchConfiguration('summary_log_period'),
             }
@@ -97,6 +103,7 @@ def generate_launch_description() -> LaunchDescription:
             seabed_depth_arg,
             seabed_proximity_margin_arg,
             confidence_threshold_arg,
+            bt_status_publish_period_arg,
             tree_print_period_arg,
             summary_log_period_arg,
             mock_node,

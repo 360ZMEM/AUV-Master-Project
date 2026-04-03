@@ -13,6 +13,9 @@
   <depend>py_trees</depend>
   <depend>auv_interfaces</depend>
   <depend>auv_decision_core</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
 
   <test_depend>python3-pytest</test_depend>
 

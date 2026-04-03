@@ -6,16 +6,76 @@ set -euo pipefail
 #   ./start_lin_brain.sh decision [launch args...]
 #   ./start_lin_brain.sh example
 #   ./start_lin_brain.sh foxglove
-#   ./start_lin_brain.sh stack [launch args...]
+#   ./start_lin_brain.sh stack [--backend protocol_udp] [--protocol-control-mode-byte 238] [launch args...]
 #
 # Note:
 #   If you usually work in conda, this script will try to `conda deactivate`
 #   twice before ROS build/launch to avoid Python dependency conflicts.
 
-MODE="${1:-bootstrap}"
-if [[ "$#" -gt 0 ]]; then
+MODE="bootstrap"
+if [[ $# -gt 0 && "$1" != -* ]]; then
+  MODE="$1"
   shift
 fi
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ./start_lin_brain.sh [bootstrap|decision|example|foxglove|stack] [options] [launch args...]
+
+Options:
+  --backend BACKEND                 bridge backend: zenoh_json or protocol_udp
+  --protocol-control-mode-byte N    control mode byte forwarded to decision/bridge launch args
+  -h, --help                        show this help
+EOF
+}
+
+CLI_BACKEND=""
+CLI_PROTOCOL_CONTROL_MODE_BYTE=""
+PASSTHROUGH_ARGS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --backend)
+      CLI_BACKEND="${2:?missing value for --backend}"
+      shift 2
+      ;;
+    --protocol-control-mode-byte)
+      CLI_PROTOCOL_CONTROL_MODE_BYTE="${2:?missing value for --protocol-control-mode-byte}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      PASSTHROUGH_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+set -- "${PASSTHROUGH_ARGS[@]}"
+
+resolve_bridge_backend() {
+  local backend="${AUV_BRIDGE_BACKEND:-zenoh_json}"
+  local arg
+  for arg in "$@"; do
+    if [[ "$arg" == bridge_backend:=* ]]; then
+      backend="${arg#bridge_backend:=}"
+    fi
+  done
+  echo "$backend"
+}
+
+has_launch_arg() {
+  local key="$1"
+  local arg
+  for arg in "$@"; do
+    if [[ "$arg" == "$key":=* ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
 handle_sigint() {
   echo "[AUV] received SIGINT, treating as manual termination."
@@ -127,7 +187,20 @@ case "$MODE" in
   stack)
     echo "[AUV] launching integrated stack (bridge -> localization -> controller -> decision)..."
     STACK_ARGS=()
-    if ! "$ROS_PYTHON" -c "import zenoh" >/dev/null 2>&1; then
+    if [[ -n "$CLI_BACKEND" ]] && ! has_launch_arg bridge_backend "$@"; then
+      STACK_ARGS+=("bridge_backend:=${CLI_BACKEND}")
+    fi
+    if [[ -n "${AUV_BRIDGE_BACKEND:-}" ]] && ! has_launch_arg bridge_backend "$@"; then
+      STACK_ARGS+=("bridge_backend:=${AUV_BRIDGE_BACKEND}")
+    fi
+    if [[ -n "$CLI_PROTOCOL_CONTROL_MODE_BYTE" ]] && ! has_launch_arg protocol_control_mode_byte "$@"; then
+      STACK_ARGS+=("protocol_control_mode_byte:=${CLI_PROTOCOL_CONTROL_MODE_BYTE}")
+    fi
+    if [[ -n "${AUV_PROTOCOL_CONTROL_MODE_BYTE:-}" ]] && ! has_launch_arg protocol_control_mode_byte "$@"; then
+      STACK_ARGS+=("protocol_control_mode_byte:=${AUV_PROTOCOL_CONTROL_MODE_BYTE}")
+    fi
+    BRIDGE_BACKEND="$(resolve_bridge_backend "${STACK_ARGS[@]}" "$@")"
+    if [[ "$BRIDGE_BACKEND" == "zenoh_json" ]] && ! "$ROS_PYTHON" -c "import zenoh" >/dev/null 2>&1; then
       echo "[AUV][WARN] python package 'zenoh' is missing, disable bridge node"
       STACK_ARGS+=("enable_bridge:=false")
     fi

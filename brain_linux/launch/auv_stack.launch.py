@@ -27,6 +27,12 @@ def generate_launch_description() -> LaunchDescription:
         description='Enable Zenoh JSON bridge node',
     )
 
+    bridge_backend_arg = DeclareLaunchArgument(
+        'bridge_backend',
+        default_value='zenoh_json',
+        description='Bridge backend: zenoh_json or protocol_udp',
+    )
+
     enable_localization_arg = DeclareLaunchArgument(
         'enable_localization',
         default_value='true',
@@ -43,6 +49,12 @@ def generate_launch_description() -> LaunchDescription:
         'enable_decision',
         default_value='true',
         description='Enable decision node',
+    )
+
+    protocol_control_mode_byte_arg = DeclareLaunchArgument(
+        'protocol_control_mode_byte',
+        default_value='238',
+        description='Ctrl_Mode byte used when protocol_udp backend is active',
     )
 
     enable_viz_bridge_arg = DeclareLaunchArgument(
@@ -191,7 +203,7 @@ def generate_launch_description() -> LaunchDescription:
         name='zenoh_json_bridge_node',
         condition=IfCondition(LaunchConfiguration('enable_bridge')),
         output='screen',
-        parameters=[{'params_file': params}],
+        parameters=[{'params_file': params}, {'bridge_backend': LaunchConfiguration('bridge_backend')}],
     )
 
     localization = Node(
@@ -243,8 +255,11 @@ def generate_launch_description() -> LaunchDescription:
         parameters=[
             {
                 'confidence_threshold': 0.7,
-                'tree_print_period': 1.0,
-                'summary_log_period': 1.0,
+                'bt_status_publish_period': 0.5,
+                'tree_print_period': 5.0,
+                'summary_log_period': 2.0,
+                'bridge_backend': LaunchConfiguration('bridge_backend'),
+                'protocol_control_mode_byte': LaunchConfiguration('protocol_control_mode_byte'),
             }
         ],
     )
@@ -269,9 +284,11 @@ def generate_launch_description() -> LaunchDescription:
             params_arg,
             start_ros2dds_arg,
             enable_bridge_arg,
+            bridge_backend_arg,
             enable_localization_arg,
             enable_controller_arg,
             enable_decision_arg,
+            protocol_control_mode_byte_arg,
             enable_viz_bridge_arg,
             viz_mock_mode_arg,
             viz_mock_fallback_timeout_arg,

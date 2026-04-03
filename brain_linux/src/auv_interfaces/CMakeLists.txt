@@ -13,6 +13,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SensorStatus.msg"
   "msg/ControlGoal.msg"
   "msg/Setpoint.msg"
+  "msg/AuvDiagnostic.msg"
   DEPENDENCIES std_msgs
 )
 

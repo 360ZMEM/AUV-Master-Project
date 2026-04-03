@@ -5,6 +5,12 @@
 # 行为模式名称（如 EMERGENCY_SURFACE / PARALLEL_TRACKING / ZIGZAG_SEARCH）
 string mode
 
+# 桥接后端选择（如 zenoh_json / protocol_udp）
+string bridge_backend
+
+# 协议控制模式字节（protocol_udp 模式下用于 Ctrl_Mode）
+uint8 control_mode_byte
+
 # 目标深度（米）
 float32 target_depth_m
 
