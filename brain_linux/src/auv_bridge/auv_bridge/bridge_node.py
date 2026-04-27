@@ -1,4 +1,28 @@
 #!/usr/bin/env python3
+'''
+本文件定义了 AUV 桥接节点的核心逻辑，包括 ROS2 话题订阅发布、仲裁器和守卫器的集成，以及与底层传输后端的接口适配。桥接节点负责把来自控制节点的命令转发到底层协议，同时把传感器数据和仲裁状态反馈给控制节点，并在被动模式下发布快照供调试使用。
+核心函数：
+- __init__(): 初始化节点参数、话题、仲裁器、守卫器和传输后端
+- _on_cmd_vel(): 接收控制命令并转成协议负载
+- _on_sensor_status(): 接收传感器状态并推动守卫器刷新
+- _on_mpc_cmd(): 接收 MPC 命令并通过仲裁器决定是否下发
+- _publish_command(): 统一的命令发布接口，负责协议转换和后端发送
+- _publish_shadow_snapshot(): 在被动模式下发布控制快照，便于调试和回放
+- _publish_shadow_telemetry(): 在被动模式下发布遥测快照
+- _on_parameters_changed(): 处理运行时参数更新，包括守卫阈值和心跳频率
+- _on_stats_timer(): 定期输出桥接状态统计信息
+- _reset_command_keepalive_timer(): 根据后端能力重建命令保活定时器
+- _create_transport(): 根据配置选择具体传输后端实现
+- _load_config(): 加载桥接配置文件，若不存在则返回空字典
+- _update_protocol_scale(): 同步更新协议后端的主电机 RPM 缩放系数
+- main(): 作为独立节点的入口函数，解析命令行参数并启动桥接主循环
+桥接节点通过订阅 /cmd_vel 和 /auv/control/setpoint 接收控制命令，通过订阅传感器状态和 MPC 命令参与仲裁决策，并通过后端接口把最终的控制命令发送到底层协议。同时，在被动模式下，桥接节点会发布控制快照和遥测快照，便于调试和回放。运行时参数支持动态调整心跳频率、命令超时、守卫阈值等关键配置。
+重点函数：针对于将控制指令转化为底层UDP,本文件的核心函数是 _on_cmd_vel() 和 _publish_command()，前者负责接收 ROS2 的 Twist 消息并转成协议负载，后者负责把负载转换成协议格式并通过后端发送出去。仲裁和守卫逻辑则通过 _on_sensor_status() 和 _on_mpc_cmd() 接入，分别更新守卫状态和仲裁决策，并在 _publish_command() 中根据当前状态决定是否发送命令。
+_publish_command() 函数是桥接的核心输出接口，它根据当前的仲裁决策和守卫状态，决定是否把控制命令发送到底层协议。如果当前处于被动模式或自动控制被拒绝，则会根据配置选择是否发送零命令（即所有控制值为零的命令），以确保在无法自动控制时 AUV 处于安全状态。同时，该函数还负责在被动模式下发布控制快照，便于调试和回放。仲裁和守卫的决策结果会通过日志输出，并且在被动模式下也会包含在快照中，帮助开发者理解当前控制权限的来源和原因。
+随后，_on_parameters_changed() 函数支持在运行时动态调整桥接的关键参数，如命令发布频率、命令超时时间、协议控制模式字节、守卫的电压和信心阈值等。这些参数的更新会立即生效，并且对于某些参数（如命令发布频率）会触发相关机制的重置（如保活定时器）。通过这个接口，开发者可以在不重启节点的情况下调整桥接行为，适应不同的测试场景和需求。
+最后，main() 函数作为独立节点的入口，解析命令行参数并启动桥接主循环。它调用 run_bridge_main() 函数，并传入首选后端和节点名称，以便在不同的部署环境下灵活选择后端实现。
+'''
+
 from __future__ import annotations
 
 import math
@@ -65,9 +89,14 @@ def _rpy_deg_to_quaternion(roll_deg: float, pitch_deg: float, yaw_deg: float) ->
 
 
 class AUVBridgeNode(Node):
-    """ROS2 bridge node with pluggable transport backend."""
+    """AUV 桥接节点。
+
+    该节点负责把 ROS2 话题与底层 Zenoh/UDP 后端连接起来，完成控制命令、
+    传感器遥测、仲裁状态和协议转换之间的中继工作。
+    """
 
     def __init__(self, *, node_name: str = 'auv_bridge_node', preferred_backend: str | None = None) -> None:
+        """初始化桥接配置、话题、守卫器和传输后端。"""
         super().__init__(node_name)
 
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
@@ -176,6 +205,7 @@ class AUVBridgeNode(Node):
 
     @staticmethod
     def _load_config(path: str) -> dict[str, Any]:
+        """加载桥接配置文件，若不存在则返回空字典。"""
         p = Path(path)
         if not p.exists():
             return {}
@@ -184,6 +214,7 @@ class AUVBridgeNode(Node):
         return data if isinstance(data, dict) else {}
 
     def _create_transport(self, backend: BridgeBackend) -> BaseBridgeBackend:
+        """根据配置选择具体传输后端实现。"""
         if backend == BridgeBackend.ZENOH_JSON:
             return TopicBridgeBackend(node=self, bridge_cfg=self.bridge_cfg)
         if backend == BridgeBackend.PROTOCOL_UDP:
@@ -191,6 +222,7 @@ class AUVBridgeNode(Node):
         raise RuntimeError(f'unsupported bridge backend: {backend.value}')
 
     def _reset_command_keepalive_timer(self) -> None:
+        """根据后端能力重建命令保活定时器。"""
         if self._command_keepalive_timer is not None:
             self._command_keepalive_timer.cancel()
             self._command_keepalive_timer = None
@@ -202,6 +234,7 @@ class AUVBridgeNode(Node):
             )
 
     def _on_parameters_changed(self, params) -> SetParametersResult:
+        """处理运行时参数更新，包括守卫阈值和心跳频率。"""
         for param in params:
             if param.name == 'passive_mode':
                 self.passive_mode = bool(param.value)
@@ -242,6 +275,7 @@ class AUVBridgeNode(Node):
         return SetParametersResult(successful=True)
 
     def _update_protocol_scale(self, new_scale: float) -> None:
+        """同步更新协议后端的主电机 RPM 缩放系数。"""
         protocol_transport = self.transport if isinstance(self.transport, ProtocolBridgeBackend) else None
         if protocol_transport is not None:
             protocol_transport.main_motor_rpm_scale = float(new_scale)
@@ -255,6 +289,7 @@ class AUVBridgeNode(Node):
         work_instruction: int,
         orientation_deg: float,
     ) -> None:
+        """在被动模式下发布控制快照，便于调试和回放。"""
         snapshot = {
             'kind': kind,
             'passive_mode': bool(self.passive_mode),
@@ -267,12 +302,15 @@ class AUVBridgeNode(Node):
         self.shadow_cmd_pub.publish(String(data=json.dumps(snapshot, ensure_ascii=False, sort_keys=True)))
 
     def _publish_shadow_telemetry(self, payload: dict[str, Any]) -> None:
+        """在被动模式下发布遥测快照。"""
         self.shadow_telemetry_pub.publish(String(data=json.dumps(payload, ensure_ascii=False, sort_keys=True)))
 
     def _on_setpoint(self, msg: Setpoint) -> None:
+        """缓存最新控制目标。"""
         self.latest_setpoint = msg
 
     def _on_cmd_vel(self, msg: Twist) -> None:
+        """接收控制节点输出并转成桥接统一负载。"""
         payload = {
             KEY_RIGHT: float(msg.angular.x),
             KEY_TOP: float(msg.angular.y),
@@ -287,6 +325,7 @@ class AUVBridgeNode(Node):
             self._publish_command(payload)
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
+        """缓存传感器状态摘要，并推动守卫器刷新。"""
         self.latest_sensor_status_payload = {
             KEY_CONFIDENCE: float(msg.confidence),
             KEY_LEAK_LEVEL: int(msg.leak_level),
@@ -294,6 +333,7 @@ class AUVBridgeNode(Node):
         self._refresh_guard_and_fallback(now=time.time())
 
     def _on_mpc_cmd(self, msg: MpcCmd) -> None:
+        """接收 MPC 命令并通过仲裁器决定是否下发。"""
         if not self.arbiter_enabled or self.command_arbiter is None:
             return
 
@@ -321,6 +361,7 @@ class AUVBridgeNode(Node):
             self._publish_arbiter_status(guard_decision=guard_decision)
 
     def handle_pc_raw_command(self, payload: dict[str, Any]) -> None:
+        """处理来自 PC 原始通道的控制命令并执行仲裁。"""
         if not self.arbiter_enabled or self.command_arbiter is None or self.autonomy_guard is None:
             return
 
@@ -348,6 +389,7 @@ class AUVBridgeNode(Node):
         self._publish_arbiter_decision(decision, guard_decision=guard_decision)
 
     def _on_command_keepalive(self) -> None:
+        """周期性发送心跳或零命令，避免下行通道超时。"""
         if self.arbiter_enabled and self.command_arbiter is not None:
             now = time.time()
             guard_decision = self._refresh_guard_and_fallback(now=now)
@@ -368,6 +410,7 @@ class AUVBridgeNode(Node):
         self._publish_command(payload)
 
     def _zero_command_payload(self) -> dict[str, float]:
+        """构造零控制输出，作为超时或空闲时的安全兜底。"""
         return {
             KEY_RIGHT: 0.0,
             KEY_TOP: 0.0,
@@ -378,6 +421,7 @@ class AUVBridgeNode(Node):
         }
 
     def _publish_command(self, payload: dict[str, float]) -> None:
+        """根据当前后端把控制命令发送出去。"""
         control_mode_byte = self._resolve_control_mode_byte()
         work_instruction = self.protocol_work_instruction
         orientation_deg = self._resolve_target_heading_deg()
@@ -404,6 +448,7 @@ class AUVBridgeNode(Node):
         *,
         guard_decision: GuardDecision | None = None,
     ) -> None:
+        """发布仲裁器最终决策，并在被动模式下只记录快照。"""
         payload = dict(decision.command_payload)
         control_mode_byte = int(payload.get(KEY_CONTROL_MODE_BYTE, int(ControlModeByte.REMOTE_CONTROL)))
         work_instruction = int(payload.get(KEY_WORK_INSTRUCTION, int(WorkInstruction.NONE)))
@@ -426,16 +471,19 @@ class AUVBridgeNode(Node):
         self._publish_arbiter_status(guard_decision=guard_decision)
 
     def _resolve_control_mode_byte(self) -> int:
+        """解析当前应下发的控制模式字节。"""
         if self.latest_setpoint is not None and int(self.latest_setpoint.control_mode_byte) != 0:
             return int(self.latest_setpoint.control_mode_byte)
         return self.protocol_control_mode_byte if self.backend == BridgeBackend.PROTOCOL_UDP else 0x01
 
     def _resolve_target_heading_deg(self) -> float:
+        """解析当前目标航向角（度）。"""
         if self.latest_setpoint is None:
             return 0.0
         return math.degrees(float(self.latest_setpoint.target_heading_rad))
 
     def _record_latency(self, payload: dict[str, Any]) -> None:
+        """统计控制命令从生成到发送的延迟。"""
         ts = payload.get('ts')
         if isinstance(ts, (int, float)):
             dt = time.time() - float(ts)
@@ -444,6 +492,7 @@ class AUVBridgeNode(Node):
                 self._lat_sum += dt
 
     def _refresh_guard_and_fallback(self, *, now: float) -> GuardDecision | None:
+        """刷新自治守卫状态，并在必要时回退到遥控模式。"""
         if not self.arbiter_enabled or self.autonomy_guard is None or self.command_arbiter is None:
             return None
 
@@ -469,6 +518,7 @@ class AUVBridgeNode(Node):
         return guard_decision
 
     def _current_telemetry_status(self, *, now: float) -> dict[str, Any]:
+        """组装当前可供守卫器使用的遥测状态字典。"""
         freshness_ms = float('inf')
         if self.latest_protocol_telemetry_ts > 0.0:
             freshness_ms = max(0.0, (now - self.latest_protocol_telemetry_ts) * 1000.0)
@@ -483,6 +533,7 @@ class AUVBridgeNode(Node):
         return status
 
     def _publish_arbiter_status(self, *, guard_decision: GuardDecision | None = None) -> None:
+        """发布当前仲裁状态到 ROS2 话题。"""
         if self.arbiter_status_pub is None:
             return
 
@@ -517,6 +568,7 @@ class AUVBridgeNode(Node):
 
     @staticmethod
     def _header_stamp_to_seconds(stamp) -> float:
+        """将 ROS 时间戳转换为秒级浮点数。"""
         if int(stamp.sec) == 0 and int(stamp.nanosec) == 0:
             return time.time()
         return float(stamp.sec) + float(stamp.nanosec) * 1.0e-9

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""
-ROS2 AUV data publisher.
+"""ROS2 AUV 模拟数据发布器。
 
-Publish simulated AUV sensor data for Foxglove visualization.
+该示例节点用于向 Foxglove 和其他订阅端发布一组连续变化的 AUV 模拟
+传感器数据，适合做话题联调、可视化联通和消息格式示例。
 """
 
 import random
@@ -17,9 +17,10 @@ from tf2_msgs.msg import TFMessage
 
 
 class AUVDataPublisher(Node):
-    """AUV data publisher."""
+    """AUV 模拟数据发布节点。"""
 
     def __init__(self):
+        """初始化发布话题、仿真状态和 TF 广播器。"""
         super().__init__('auv_data_publisher')
 
         # 配置QoS策略以确保可靠的通信
@@ -87,7 +88,7 @@ class AUVDataPublisher(Node):
 
     @staticmethod
     def _quat_from_yaw(yaw: float) -> Quaternion:
-        """Generate a quaternion from yaw."""
+        """仅根据航向角生成四元数。"""
         return Quaternion(
             x=0.0,
             y=0.0,
@@ -96,7 +97,7 @@ class AUVDataPublisher(Node):
         )
 
     def _publish_static_transforms(self):
-        """Publish static TF frames for the AUV body."""
+        """发布 AUV 本体相关的静态 TF 坐标系。"""
         static_tfs: list[TransformStamped] = []
 
         def _make_static(
@@ -122,7 +123,7 @@ class AUVDataPublisher(Node):
         self.static_tf_broadcaster.sendTransform(static_tfs)
 
     def timer_callback(self):
-        """Timer callback that publishes all sensor data."""
+        """定时回调：更新状态并发布所有模拟传感器数据。"""
         time_stamp = self.get_clock().now().to_msg()
 
         # 更新模拟状态
@@ -215,7 +216,7 @@ class AUVDataPublisher(Node):
         self.status_pub.publish(status_msg)
 
     def _update_simulation(self):
-        """Update the simulation state with a first-order smoothing model."""
+        """用一阶惯性模型更新深度、速度和航向状态。"""
         # 目标值缓慢随机游走（低频输入）
         self.depth_target = max(0.0, min(100.0, self.depth_target + random.uniform(-0.25, 0.25)))
         self.speed_target = max(0.2, min(4.0, self.speed_target + random.uniform(-0.06, 0.06)))
@@ -236,7 +237,7 @@ class AUVDataPublisher(Node):
 
 
 def main(args=None):
-    """Run the data publisher node."""
+    """运行示例数据发布节点。"""
     import rclpy
 
     rclpy.init(args=args)

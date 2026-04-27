@@ -32,7 +32,7 @@ class AnomalySpeedLimiter(py_trees.decorators.Decorator):
         self.blackboard.register_key(key=TARGET_MOTION_STATE_KEY, access=py_trees.common.Access.WRITE)
 
     def update(self) -> py_trees.common.Status:
-        """在子节点运行结束后执行速度修正。"""
+        """在子节点成功后，根据异常状态对目标速度进行下调。"""
         child_status = self.decorated.status
         if child_status != py_trees.common.Status.SUCCESS:
             return child_status
@@ -72,6 +72,7 @@ class SeabedSafetyLimiter(py_trees.decorators.Decorator):
         self.blackboard.register_key(key=TARGET_MOTION_STATE_KEY, access=py_trees.common.Access.WRITE)
 
     def update(self) -> py_trees.common.Status:
+        """在子节点成功后，根据近底或穿底状态执行保守限速。"""
         child_status = self.decorated.status
         if child_status != py_trees.common.Status.SUCCESS:
             return child_status

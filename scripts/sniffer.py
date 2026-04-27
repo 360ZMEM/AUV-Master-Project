@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Standalone UDP sniffer for the $CKTH/$AUV binary protocol."""
+"""$CKTH/$AUV 二进制协议的独立 UDP 嗅探器。
+
+用于在调试协议流量时快速查看 UDP 包内容，支持十六进制、ASCII 和
+紧凑原始输出三种格式。
+"""
 
 from __future__ import annotations
 
@@ -18,6 +22,7 @@ from common.protocol_debug import format_protocol_packet, format_protocol_packet
 
 
 def parse_args() -> argparse.Namespace:
+    """解析嗅探器命令行参数。"""
     parser = argparse.ArgumentParser(description="UDP sniffer for AUV binary protocol traffic")
     parser.add_argument("--bind-host", default="0.0.0.0", help="Local host to bind")
     parser.add_argument("--bind-port", type=int, default=52364, help="Local UDP port to bind")

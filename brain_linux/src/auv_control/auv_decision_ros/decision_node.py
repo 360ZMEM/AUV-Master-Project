@@ -33,9 +33,14 @@ from .mappers import (
 
 
 class AUVDecisionNode(Node):
-    """AUV 决策 ROS2 节点。"""
+    """AUV 决策 ROS2 节点的包装层。
+
+    该节点不实现业务决策本身，而是负责把 ROS2 话题输入转换成决策引擎可消费的
+    结构化状态，再把行为树输出的控制目标、诊断信息和状态摘要发布出去。
+    """
 
     def __init__(self) -> None:
+        """初始化 ROS2 参数、订阅/发布器、决策引擎和运行时缓存。"""
         super().__init__('auv_decision_node')
 
         self.declare_parameter('confidence_threshold', 0.7)
@@ -126,6 +131,7 @@ class AUVDecisionNode(Node):
         self.get_logger().info('发布: /auv/diagnostics (auv_interfaces/AuvDiagnostic)')
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
+        """接收传感器状态并注入决策引擎的黑板缓存。"""
         status = sensor_msg_to_core(msg)
         # 注入 debug_level（从 ROS2 参数覆盖）
         status.debug_level = self.debug_level
@@ -133,12 +139,15 @@ class AUVDecisionNode(Node):
         self.engine.set_sensor_status(status)
 
     def _on_depth_error(self, msg: Float32) -> None:
+        """缓存最新深度误差，供调试或控制分支使用。"""
         self.latest_depth_error_m = float(msg.data)
 
     def _on_lateral_error(self, msg: Float32) -> None:
+        """缓存最新横向误差，优先使用显式误差话题。"""
         self.latest_lateral_error_m = float(msg.data)
 
     def _on_state_filtered(self, msg: Odometry) -> None:
+        """从滤波后的位姿里提取横向位移与航向角。"""
         self.latest_odom_lateral_y_m = float(msg.pose.pose.position.y)
         q = msg.pose.pose.orientation
         self.latest_yaw_rad = math.atan2(
@@ -147,13 +156,14 @@ class AUVDecisionNode(Node):
         )
 
     def _on_magnetic(self, msg: MagneticField) -> None:
+        """缓存磁场模值，用于调试磁异常和巡检状态变化。"""
         x = float(msg.magnetic_field.x)
         y = float(msg.magnetic_field.y)
         z = float(msg.magnetic_field.z)
         self.latest_magnetic_magnitude = math.sqrt(x * x + y * y + z * z)
 
     def _on_mock_amd_time(self, msg: String) -> None:
-        """Mock AMD时间同步回调"""
+        """同步 Mock AMD 时间戳，供解析式轨迹行为按仿真时间采样。"""
         try:
             data = json.loads(msg.data)
             timestamp_us = int(data.get('timestamp_us', 0))
@@ -167,7 +177,7 @@ class AUVDecisionNode(Node):
             self.get_logger().warning(f"Failed to parse Mock AMD time: {e}")
 
     def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
-        """处理 WorkInstruction 0xA1/0xA2（仅在 debug_level=0 时生效）"""
+        """处理仲裁器下发的工作指令，并在自动模式下切换调试等级。"""
         # 仅在 AUTO 模式下响应 0xA1/0xA2
         if self.debug_level != 0:
             return
@@ -182,18 +192,21 @@ class AUVDecisionNode(Node):
             self.debug_level = 2
 
     def _resolve_lateral_error(self) -> float | None:
+        """优先返回显式横向误差，否则回退到滤波位姿中的横向偏移。"""
         if self.latest_lateral_error_m is not None:
             return self.latest_lateral_error_m
         return self.latest_odom_lateral_y_m
 
     @staticmethod
     def _wrap_angle(angle_rad: float) -> float:
+        """将角度归一化到 [-pi, pi]，避免跨周期跳变影响控制误差。"""
         return math.atan2(math.sin(angle_rad), math.cos(angle_rad))
 
     def _check_position_jump(self, current_setpoint: dict, prev_setpoint: dict | None) -> float:
-        """检查位置跳变，返回跳变距离（米）。
+        """检查目标位姿跳变并返回欧氏距离。
 
-        计算 (target_x_m, target_y_m, target_depth_m) 的欧氏距离。
+        该方法用于识别行为切换时的目标点突变，避免控制器在高置信度轨迹
+        与保持/搜索模式之间直接切换时产生过大的瞬时指令。
         """
         if prev_setpoint is None:
             return 0.0
@@ -207,10 +220,10 @@ class AUVDecisionNode(Node):
     def _apply_transition_smoothing(
         self, goal_dict: dict, now_ns: int
     ) -> dict:
-        """应用平滑过渡插值。
+        """对切换中的目标点执行平滑插值，降低行为模式切换带来的突变。
 
-        如果正在进行过渡（transition_start_time_ns > 0），则根据时间进度线性插值。
-        如果检测到跳变（mode 切换且位置跳变 > threshold），则启动过渡。
+        当解析式轨迹、保持姿态或其他模式之间发生切换时，本函数会根据过渡时长
+        线性插值位置、深度、速度和航向，避免控制目标出现不连续跳变。
         """
         current_mode = goal_dict.get('mode', '')
         prev_mode = self.prev_setpoint.get('mode', '') if self.prev_setpoint else ''

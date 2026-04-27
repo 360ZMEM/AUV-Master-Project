@@ -2,11 +2,26 @@ import numpy as np
 
 
 def wrap_angle(angle):
+    """将角度包裹到主值区间，用于航向误差连续化。"""
     return (angle + np.pi) % (2 * np.pi) - np.pi
 
 
 class PIDAxis:
+    """单轴 PID 调节器。
+
+    该类用于深度、俯仰、航向和速度四个控制通道，统一处理积分限幅、
+    导数反馈和输出饱和后的积分回退逻辑。
+    """
+
     def __init__(self, kp, ki, kd, integral_limit):
+        """初始化 PID 增益和积分限幅。
+
+        Args:
+            kp (float): 比例增益。
+            ki (float): 积分增益。
+            kd (float): 微分增益。
+            integral_limit (float): 积分状态绝对值上限。
+        """
         self.kp = float(kp)
         self.ki = float(ki)
         self.kd = float(kd)
@@ -14,6 +29,7 @@ class PIDAxis:
         self.integral = 0.0
 
     def reset_integral(self):
+        """清零积分项，用于失速、保护或模式切换后的恢复。"""
         self.integral = 0.0
 
     def compute(
@@ -25,6 +41,19 @@ class PIDAxis:
         output_limit=None,
         integrate_enabled=True,
     ):
+        """根据当前误差和反馈量计算 PID 输出。
+
+        Args:
+            error (float): 当前控制误差。
+            dt (float): 控制周期，单位秒。
+            d_feedback (float): 导数反馈量，通常是被控量变化率。
+            gain_scale (float): 速度相关的增益缩放因子。
+            output_limit (float | None): 输出限幅；为 None 时不饱和。
+            integrate_enabled (bool): 是否允许积分累积。
+
+        Returns:
+            tuple[float, bool]: 控制输出和是否发生饱和。
+        """
         proportional = self.kp * error
         derivative = -self.kd * d_feedback
 
@@ -52,7 +81,19 @@ class PIDAxis:
 
 
 class AUVPIDController:
+    """AUV 级联 PID 控制器。
+
+    控制链路按深度外环、俯仰内环、航向内环和速度环组织，输出五通道
+    舵面/推力指令，供仿真与 ROS2 控制节点共享。
+    """
+
     def __init__(self, control_cfg, limits_cfg):
+        """从控制参数和物理约束参数初始化控制器。
+
+        Args:
+            control_cfg (dict): 控制器配置，包含 depth/pitch/yaw/speed 等子项。
+            limits_cfg (dict): 舵面和推力物理上限配置。
+        """
         self.u0 = float(control_cfg["u0"])
         self.u_min = float(control_cfg["u_min"])
         self.target_u_default = float(control_cfg["target_u"])
@@ -88,6 +129,7 @@ class AUVPIDController:
 
     @staticmethod
     def _pid_cfg(cfg):
+        """提取单轴 PID 配置并转为标准字典。"""
         return {
             "kp": cfg["kp"],
             "ki": cfg["ki"],
@@ -96,10 +138,25 @@ class AUVPIDController:
         }
 
     def _gain_scale(self, u_forward):
+        """根据当前航速计算控制增益缩放因子。"""
         effective_u = max(float(abs(u_forward)), self.u_min)
         return (self.u0 / effective_u) ** 2
 
     def compute(self, state, target):
+        """根据当前状态和目标值生成舵面与推力指令。
+
+        Args:
+            state (dict): 当前姿态、速度和角速度状态，角度单位为弧度，
+                深度单位为米，速度单位为 m/s。
+            target (dict): 目标深度、目标航向和目标前进速度。
+
+        Returns:
+            tuple[np.ndarray, dict]: 五通道控制命令和调试信息。
+
+        Notes:
+            输出顺序为 [right, top, left, bottom, thrust]，其中前四项最终
+            会转换为角度制并做物理限幅。
+        """
         dt = float(target.get("dt", 0.0333333333))
 
         current_pitch = float(state["pitch"])

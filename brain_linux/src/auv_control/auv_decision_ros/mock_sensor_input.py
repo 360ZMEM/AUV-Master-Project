@@ -2,14 +2,21 @@
 """海试日志回放 -> SensorStatus 发布节点。
 
 功能目标：
-1) 读取海试文本日志（默认读取仓库内示例 txt）；
-2) 提取 `$AUV` 行并解析数字字段；
-3) 转换为 `auv_interfaces/SensorStatus` 后发布到 `/auv/sensors/status`；
-4) `confidence` 按当前需求默认随机生成，便于快速联调。
+  1) 读取海试文本日志（默认读取仓库内示例 txt）
+  2) 提取 `$AUV` 行并解析数字字段
+  3) 转换为 `auv_interfaces/SensorStatus` 后发布到 `/auv/sensors/status`
+  4) `confidence` 按当前需求默认随机生成，便于快速联调
+  5) 发布辅助显示话题（置信度文本、电压警告等）
 
+设计模式：
+  - 多候选日志路径自动探测，支持不同工作目录启动
+  - 文本日志数字恢复为近似145字节二进制帧进行协议级解析
+  - 漏水等级、电压、深度等关键字段通过协议字节位读取
+  - confidence 仍为随机值，后续可替换为算法结果
+  
 说明：
-- 当前版本优先“可运行与可回放”，字段映射采用启发式方案；
-- 后续若提供精确协议字段说明，可在 `_map_tokens_to_sensor_status()` 中替换。
+  - 当前版本优先"可运行与可回放"，字段映射采用启发式方案
+  - 后续若提供精确协议字段说明，可在 `_map_tokens_to_sensor_status()` 中替换
 """
 
 from __future__ import annotations
@@ -38,7 +45,21 @@ def _format_power_markdown(voltage_v: float, threshold_v: float) -> str:
 
 
 class MockSensorInputNode(Node):
-    """海试日志回放发布器。"""
+    """海试日志回放发布器。
+    
+    该节点模拟真实传感数据流，通过回放历史海试日志为决策引擎
+    提供一致的输入序列。常用于联调、验证与回归测试。
+    
+    订阅话题：
+      - /auv/control/setpoint: 控制目标（用于计算深度误差）
+      
+    发布话题：
+      - /auv/sensors/status: 传感器状态（主要输出）
+      - /auv/metrics/depth_error: 深度误差标量
+      - /auv/metrics/lateral_error: 横向误差标量
+      - /auv/display/confidence_text: 置信度Markdown文本
+      - /auv/display/power_text: 电压警告Markdown文本
+    """
 
     def __init__(self) -> None:
         super().__init__('mock_sensor_input')
@@ -101,15 +122,27 @@ class MockSensorInputNode(Node):
         self.get_logger().info('发布话题: /auv/sensors/status')
 
     def _on_setpoint(self, msg: Setpoint) -> None:
+        """订阅控制目标消息，记录当前设定深度用于误差计算。
+        
+        Args:
+            msg: 控制器发布的设定点消息
+        """
         self.latest_setpoint_depth_m = float(msg.target_depth_m)
 
     def _guess_default_log_file(self) -> Path:
         """自动猜测默认日志文件路径。
 
-        优先级：
-        1) 当前工作目录相对路径（适合在 ros2_ws 下运行）；
-        2) 安装脚本路径反推仓库根目录；
-        3) 用户主目录下常见项目路径。
+        搜索优先级：
+          1) 当前工作目录相对路径（适合在 ros2_ws 下运行）
+          2) 安装脚本路径反推仓库根目录
+          3) 用户主目录下常见项目路径
+          
+        Returns:
+            Path: 默认日志文件的完整路径
+            
+        说明：
+            若所有候选路径都不存在，仍返回第一候选以便日志
+            中显示期望的文件位置，便于用户调试。
         """
         # 仓库实际结构: AUV_Master_Project/ 与 Console上位机软件/ 并列
         workspace = Path(__file__).resolve()
@@ -140,7 +173,19 @@ class MockSensorInputNode(Node):
         return candidates[0].resolve()
 
     def _load_auv_numeric_lines(self, file_path: Path) -> List[List[int]]:
-        """读取日志文件并提取 `$AUV` 行中的数字序列。"""
+        """读取日志文件并提取 `$AUV` 行中的数字序列。
+        
+        Args:
+            file_path: 日志文件路径
+            
+        Returns:
+            List[List[int]]: 每行的整数序列列表
+            
+        说明：
+            - 忽略非 $AUV 行
+            - 使用正则表达式提取所有整数（包括负数）
+            - 若文件不存在，返回空列表并记录错误日志
+        """
         if not file_path.exists():
             self.get_logger().error(f'日志文件不存在: {file_path}')
             return []
@@ -165,16 +210,24 @@ class MockSensorInputNode(Node):
         """将数字字段映射为 SensorStatus。
 
         映射策略（本版）：
-        1) 先把文本数字序列恢复为“近似145字节二进制帧”；
-        2) 再按协议字节位读取关键字段，减少启发式误判：
-           - leak_level: 来自 system_alarm（byte 127）bit0/bit1；
-           - battery_low: 来自 total_voltage（bytes 102-103）阈值判断；
-           - depth_m: 来自 depth（bytes 38-39）；
-           - speed_mps: 来自 gps_speed（bytes 80-81）并从节转换为 m/s。
+          1) 先把文本数字序列恢复为"近似145字节二进制帧"
+          2) 再按协议字节位读取关键字段，减少启发式误判：
+             - leak_level: 来自 system_alarm（byte 127）bit0/bit1
+             - battery_low: 来自 total_voltage（bytes 102-103）阈值判断
+             - depth_m: 来自 depth（bytes 38-39）
+             - speed_mps: 来自 gps_speed（bytes 80-81）并从节转换为 m/s
+             - seabed_proximity: 由当前深度与配置海底深度计算
+             - anomaly_detected: 来自 depth_alarm/bottom_alarm，辅以小概率扰动
 
+        Args:
+            tokens: 从日志 $AUV 行解析的整数序列
+            
+        Returns:
+            SensorStatus: 完整的传感器状态消息
+            
         注意：
-        - confidence 仍按你的默认要求使用随机值，后续可替换为算法输出；
-        - 文本日志有零值压缩，本恢复算法是“最小可用”版本，聚焦决策所需字段。
+          - confidence 仍按默认要求使用随机值，后续可替换为算法输出
+          - 文本日志有零值压缩，本恢复算法是"最小可用"版本，聚焦决策所需字段
         """
         msg = SensorStatus()
         packet = self._tokens_to_binary_packet(tokens)
@@ -224,6 +277,17 @@ class MockSensorInputNode(Node):
         return msg
 
     def _publish_display_topics(self, msg: SensorStatus) -> None:
+        """发布用于显示的辅助话题（Markdown文本）。
+        
+        Args:
+            msg: 当前传感器状态消息
+            
+        说明：
+            - 置信度显示为H2标题
+            - 电压低于阈值时显示低电压告警
+            - 深度误差基于当前设定点计算
+            - 横向误差当前为占位值（后续集成磁力计）
+        """
         target_depth = self.latest_setpoint_depth_m if self.latest_setpoint_depth_m is not None else float(msg.depth_m)
         self.depth_error_pub.publish(Float32(data=float(msg.depth_m) - float(target_depth)))
         self.lateral_error_pub.publish(Float32(data=0.0))
@@ -240,12 +304,21 @@ class MockSensorInputNode(Node):
     def _tokens_to_binary_packet(self, tokens: List[int]) -> bytes:
         """将文本数字序列恢复为近似145字节二进制帧。
 
+        恢复策略：
+          - 文本日志并非逐字节直出，存在"零值压缩 + 关键字段保留"
+          - 通过值域扫描定位 GPS/深度/压力/舵角等关键字段并写入固定偏移
+          - 优先级：固定位置覆盖 > 值域扫描（提高稳定性）
+          
+        Args:
+            tokens: 从日志提取的整数序列
+            
+        Returns:
+            bytes: 145字节的接近真实格式的二进制帧
+            
         说明：
-        - 文本日志并非逐字节直出，存在“零值压缩 + 关键字段保留”；
-        - 这里复用项目既有文本工具的思路：
-          通过值域扫描定位 GPS/深度/压力/舵角等关键字段并写入固定偏移；
-        - 对本节点而言，目标是稳定提取 leak/depth/voltage/speed 等决策输入，
-          不是完整重建所有 145 字节语义。
+          - 目标是稳定提取 leak/depth/voltage/speed，不是完整重建所有语义
+          - 帧头 5 字节固定为 $AUV\x91
+          - 关键字段的字节偏移参考项目协议文档
         """
         packet = bytearray(145)
         packet[0:5] = b'\x24\x41\x55\x56\x91'

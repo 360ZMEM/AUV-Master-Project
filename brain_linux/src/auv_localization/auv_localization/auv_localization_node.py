@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""ES-EKF localization node.
+"""AUV 本地化节点。
+
+该节点负责融合 IMU、DVL、深度等传感器数据，输出滤波后的位姿与速度
+估计，供控制与决策模块消费。
+
+ES-EKF localization node.
 
 Inputs:
 - /auv/sensors/imu (sensor_msgs/Imu)
@@ -94,7 +99,14 @@ def _parse_xyz(value: object) -> tuple[float, float, float]:
 
 
 class AUVLocalizationNode(Node):
+    """AUV 本地化节点。
+
+    该节点融合 IMU、DVL、深度和控制目标信息，维护 ES-EKF 状态并发布
+    /auv/state/filtered、/auv/state/covariance、/auv/sensors/status 以及相关 TF。
+    """
+
     def __init__(self) -> None:
+        """初始化本地化参数、滤波器、话题订阅和输出发布器。"""
         super().__init__('auv_localization_node')
 
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
@@ -225,6 +237,7 @@ class AUVLocalizationNode(Node):
 
     @staticmethod
     def _load_config(path: str) -> dict:
+        """加载本地化参数 YAML，若不存在则返回空配置。"""
         p = Path(path)
         if not p.exists():
             return {}
@@ -233,6 +246,7 @@ class AUVLocalizationNode(Node):
         return data if isinstance(data, dict) else {}
 
     def _on_imu(self, msg: Imu) -> None:
+        """缓存最新 IMU 加速度和角速度。"""
         self._last_imu = np.array([
             msg.linear_acceleration.x,
             msg.linear_acceleration.y,
@@ -246,6 +260,7 @@ class AUVLocalizationNode(Node):
         self._last_imu_ts = time.time()
 
     def _on_dvl(self, msg: TwistStamped) -> None:
+        """缓存最新 DVL 速度测量。"""
         self._last_dvl = np.array([
             msg.twist.linear.x,
             msg.twist.linear.y,
@@ -254,13 +269,16 @@ class AUVLocalizationNode(Node):
         self._last_dvl_ts = time.time()
 
     def _on_depth(self, msg: Float32) -> None:
+        """缓存最新深度测量。"""
         self._last_depth = float(msg.data)
         self._last_depth_ts = time.time()
 
     def _on_setpoint(self, msg: Setpoint) -> None:
+        """缓存当前目标深度，用于显示深度误差。"""
         self._latest_setpoint_depth_m = float(msg.target_depth_m)
 
     def _on_parameters_changed(self, params) -> SetParametersResult:
+        """响应参数更新，支持动态调整发布开关和滤波频率。"""
         for param in params:
             if param.name == 'publish_raw_state':
                 self.publish_raw_state = bool(param.value)
@@ -285,12 +303,10 @@ class AUVLocalizationNode(Node):
         return SetParametersResult(successful=True)
 
     def _build_sensor_status(self, state: dict) -> SensorStatus:
-        """Build a minimal live SensorStatus message from the filtered state.
+        """从滤波状态构建最小化的 SensorStatus 消息。
 
-        The localization node is the best live source for the status window in
-        the integrated stack because it already fuses depth, velocity, and the
-        covariance estimate. The decision layer can then consume the same topic
-        in both replay and live modes.
+        本地化节点是联调栈里最合适的状态来源，因为它已经融合了深度、
+        速度和协方差信息，决策层可以在回放和实时模式下复用同一话题。
         """
         msg = SensorStatus()
         msg.depth_m = float(abs(state['p'][2]))
@@ -315,6 +331,7 @@ class AUVLocalizationNode(Node):
         return msg
 
     def _publish_display_topics(self, *, status_msg: SensorStatus, lateral_error_m: float) -> None:
+        """发布用于可视化面板的深度误差、横向误差和状态文本。"""
         current_depth = float(status_msg.depth_m)
         target_depth = float(self._latest_setpoint_depth_m) if self._latest_setpoint_depth_m is not None else current_depth
         self.depth_error_pub.publish(Float32(data=current_depth - target_depth))
@@ -330,10 +347,9 @@ class AUVLocalizationNode(Node):
         )
 
     def _publish_static_transforms(self) -> None:
-        """Publish static sensor frames under the AUV base frame.
+        """发布 AUV 基座下的静态传感器 TF 坐标系。
 
-        The zero-offset defaults keep the TF chain valid today while leaving a
-        single place to attach real sensor mounting offsets later.
+        默认零偏移可以先保证 TF 链完整，后续再统一填充真实传感器安装位姿。
         """
         static_transforms: list[TransformStamped] = []
 
@@ -393,6 +409,7 @@ class AUVLocalizationNode(Node):
             self.tf_broadcaster.sendTransform(transform)
 
     def _on_timer(self) -> None:
+        """滤波主循环：推进 ES-EKF、发布状态和调试话题。"""
         now = time.time()
         dt = max(1e-3, min(0.2, now - self._last_loop_ts))
         self._last_loop_ts = now
@@ -432,6 +449,7 @@ class AUVLocalizationNode(Node):
                 self._lat_sum += latency
 
     def _log_latency(self) -> None:
+        """打印本地化回路平均延迟统计。"""
         if self._lat_count == 0:
             return
         mean_ms = (self._lat_sum / self._lat_count) * 1000.0
@@ -439,6 +457,7 @@ class AUVLocalizationNode(Node):
 
 
 def main(args=None) -> None:
+    """节点入口。"""
     rclpy.init(args=args)
     node = AUVLocalizationNode()
     try:

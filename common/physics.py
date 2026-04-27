@@ -5,30 +5,28 @@ This module is standard-library only and intentionally middleware-agnostic.
 
 from __future__ import annotations
 
-# Cable magnetic baseline noise floor used by synthetic magnetometer generation.
+# 电缆磁噪声底限，基于 DLT 1278 相关测试数据。
 # Unit: nT
 CABLE_MAG_NOISE_FLOOR_NT: float = 0.05
 
-# Standard gravity acceleration.
+# 重力加速度常数，适用于地球表面附近的物理计算。
 # Unit: m/s^2
 GRAVITY_MPS2: float = 9.81
 
-# Underactuated AUV actuator limits.
+# 控制输入的物理限制常数。
 # Unit: percent and degree
 MAX_THRUST_PERCENT: float = 100.0
 MAX_RUDDER_DEG: float = 45.0
 
-# Backward-compatible simulation default (legacy stack often uses 30 deg).
+# 仿真环境中的默认物理限制，可能与实际系统不同。
 SIM_DEFAULT_MAX_RUDDER_DEG: float = 30.0
 
-# DLT 1278-related engineering check example: buried depth error bound.
-# This constant is for validation/reporting, not a hard control law.
+# AUV 在水下的最大安全深度，超过该深度可能导致结构损坏。
 BURIED_DEPTH_ERROR_LIMIT_M: float = 0.2
 
-# Digital twin visualization defaults.
-# Unit: meters.
+# 环境边界和安全距离常数，确保 AUV 在仿真环境中保持安全操作。
 SEA_BOTTOM_Z: float = 15.0
-CABLE_SUSPENSION_HEIGHT: float = 1.0
+CABLE_SUSPENSION_HEIGHT: float = 1.0 # 电缆悬挂高度，单位米
 
 
 def clamp(value: float, low: float, high: float) -> float:

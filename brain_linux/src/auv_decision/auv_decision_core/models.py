@@ -11,9 +11,12 @@ from dataclasses import dataclass
 
 @dataclass
 class SensorStatusData:
-    """行为树输入状态。
+    """行为树输入状态的核心数据结构。
 
-    Attributes:
+    该数据类承载决策树在每次 tick 时需要读取的所有传感与运行时上下文，
+    目标是把 ROS2、仿真和协议层的输入统一收敛成一个稳定的 Python 对象。
+
+    字段用途：
         confidence: 目标跟踪/电缆识别置信度，范围 [0.0, 1.0]。
         leak_level: 漏水等级编码（0:无漏水,1:内部,2:外部,3:内外同时）。
         battery_low: 是否低电。
@@ -46,23 +49,26 @@ class SensorStatusData:
     debug_level: int = 0
 
     def is_leaking(self) -> bool:
-        """是否漏水（任意漏水等级 > 0 即认为漏水）。"""
+        """判断当前是否存在漏水风险。"""
         return self.leak_level > 0
 
     def is_seabed_risky(self) -> bool:
-        """是否存在海底接近或穿底风险。"""
+        """判断当前是否存在近底或穿底风险。"""
         return self.seabed_proximity_warning or self.seabed_penetration_warning
 
     def is_seabed_penetrated(self) -> bool:
-        """是否已穿过海底。"""
+        """判断当前是否已经穿底。"""
         return self.seabed_penetration_warning
 
 
 @dataclass
 class MotionGoal:
-    """行为树输出目标。
+    """行为树输出目标的统一表示。
 
-    Attributes:
+    该数据类描述行为树最终想要驱动 AUV 达成的任务意图，供 ROS2 控制层、
+    调试可视化和协议转换层共同消费。
+
+    字段用途：
         mode: 当前目标行为模式。
         target_depth_m: 目标深度（米）。
         target_speed_mps: 目标速度（米/秒）。

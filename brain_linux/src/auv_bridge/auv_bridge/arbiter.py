@@ -1,3 +1,20 @@
+'''
+本文件定义了 AUV 桥接节点的命令仲裁核心，负责根据来自 PC 的原始控制命令和来自 Jetson 的 MPC 输出进行模式切换和命令选择，输出最终的控制指令供下游传输模块使用。
+具体来说核心步骤和过程：
+- 接收并规范化来自 PC 的原始控制命令，提取关键字段（如工作指令、控制模式字节等）以判断当前的控制模式和优先级。
+- 接收并规范化来自 Jetson 的 MPC 输出，检查其有效性和健康状态以决定是否可以作为自动控制的来源。
+- 根据当前模式（远程或自动）和命令来源的状态，进行仲裁决策：如果处于自动模式且MPC输出新鲜且有效，则使用MPC命令；如果MPC输出过期或无效，则使用安全回退命令；如果处于远程模式，则使用PC原始命令（如果存在）或默认远程命令。
+- 提供一个统一的决策结果数据类 ArbiterDecision，包含当前有效的控制模式、命令来源、最终的命令负载以及一些状态标志（如MPC命令是否有效、是否处于手动覆盖等），供下游模块消费。
+- 支持外部强制切换回远程模式的接口，以便在安全检查失败或手动接管时快速恢复到远程控制状态。
+- 内部实现细节包括命令规范化、过期检查、命令构建等，确保仲裁逻辑的清晰和健壮。
+其中，接收PC指令的条件：当接收到的命令包含有效的工作指令和控制模式字节时，且工作指令为任务取消或清除故障时，仲裁器将切换到远程模式。
+在代码逻辑上，即当 update_pc_raw_command() 方法被调用时，仲裁器会检查 payload 中的 KEY_WORK_INSTRUCTION 和 KEY_CONTROL_MODE_BYTE 字段：
+- 如果 KEY_WORK_INSTRUCTION 的值对应于 WorkInstruction.TASK_CANCEL 或 WorkInstruction.CLEAR_FAULT，则将 self._mode 设置为 ArbiterMode.REMOTE。
+- 否则，如果 KEY_CONTROL_MODE_BYTE 的值对应于 ControlModeByte.JETSON_PROTOCOL，则将 self._mode 设置为 ArbiterMode.AUTONOMOUS。
+- 否则，默认将 self._mode 设置为 ArbiterMode.REMOTE。
+因此，PC 指令中的特定工作指令（任务取消或清除故障）会直接触发仲裁器切换回远程模式，而控制模式字节则决定了是否进入自动模式。仲裁器的决策逻辑会根据当前模式和命令状态输出最终的控制指令负载。
+'''
+
 from __future__ import annotations
 
 import time
@@ -6,7 +23,7 @@ from typing import Any
 
 from common.enums import ArbiterMode, ArbiterSource, ControlModeByte, WorkInstruction
 from common.protocol import (
-    KEY_BOTTOM,
+    KEY_BOTTOM, # 下鳍指令值，范围 -100~100，表示下鳍的偏转程度（负值向左偏转，正值向右偏转）
     KEY_BOTTOM_PROTECT_PARAMS,
     KEY_CONTROL_MODE_BYTE,
     KEY_DEPTH_PROTECT_PARAMS,

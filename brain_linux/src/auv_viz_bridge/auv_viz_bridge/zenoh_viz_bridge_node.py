@@ -1,8 +1,25 @@
 #!/usr/bin/env python3
-"""Zenoh -> ROS2 digital twin visualization bridge.
+"""Zenoh -> ROS2 数字孪生可视化桥接节点。
 
-The node consumes synthetic scene payloads from Zenoh and converts them into
-Foxglove-friendly ROS2 visualization topics.
+核心功能：
+  1. 从Zenoh订阅合成场景有效载荷（海底地形、电缆路径、真值位姿等）
+  2. 转换为Foxglove友好的ROS2可视化话题
+  3. 发布PointCloud2（点云）、Marker（标记）、TransformStamped（坐标树）
+  4. 支持模式切换：实时/模拟/降级失败转移
+
+发布话题：
+  - /auv/visual/seabed_cloud: 海底点云
+  - /auv/visual/seabed_mesh: 海底网格三角形
+  - /auv/visual/cable_marker: 电缆路径线条
+  - /auv/visual/auv_body: AUV本体圆柱体
+  - /auv/visual/truth_marker: 真值位姿箭头
+  - /auv/visual/history_trail: 历史轨迹线条
+  - /auv/visual/view_range: 搜索范围环
+  - /auv/mock/scene: 模拟场景元数据摘要
+  
+坐标系约定：
+  - NED（北东地）输入 -> 显示坐标系转换（深度反号）
+  - 所有位置/速度保持NED标准
 """
 
 from __future__ import annotations
@@ -65,6 +82,18 @@ from synthetic_sensors import VirtualEnvironment, euler_to_quaternion
 
 
 def _normalize_quaternion(qx: float, qy: float, qz: float, qw: float) -> tuple[float, float, float, float]:
+    """归一化四元数。
+    
+    Args:
+        qx, qy, qz, qw: 四元数分量
+        
+    Returns:
+        tuple[float, float, float, float]: 归一化后的四元数
+        
+    说明：
+        若范数过小（< 1e-12）则返回单位四元数(0, 0, 0, 1)，
+        避免数值不稳定。
+    """
     norm = math.sqrt(qx * qx + qy * qy + qz * qz + qw * qw)
     if norm <= 1e-12:
         return 0.0, 0.0, 0.0, 1.0
@@ -75,6 +104,18 @@ def _multiply_quaternions(
     first: tuple[float, float, float, float],
     second: tuple[float, float, float, float],
 ) -> tuple[float, float, float, float]:
+    """四元数乘法（四元数旋转复合）。
+    
+    Args:
+        first: 第一个四元数
+        second: 第二个四元数
+        
+    Returns:
+        tuple[float, float, float, float]: 复合旋转后的四元数
+        
+    说明：
+        用于坐标系变换复合，例如body->NED旋转与pitch偏移的组合。
+    """
     x1, y1, z1, w1 = first
     x2, y2, z2, w2 = second
     return (
@@ -86,26 +127,81 @@ def _multiply_quaternions(
 
 
 def _rpy_to_quaternion(rpy_ned: list[float] | tuple[float, float, float]) -> Quaternion:
+    """将欧拉角（RPY）转换为四元数对象。
+    
+    Args:
+        rpy_ned: NED坐标系下的欧拉角 [roll, pitch, yaw]（弧度）
+        
+    Returns:
+        Quaternion: ROS2 Quaternion 消息对象
+        
+    说明：
+        - 自动归一化，防止数值误差
+        - 用于可视化标记的方向设置
+    """
     qx, qy, qz, qw = euler_to_quaternion(float(rpy_ned[0]), float(rpy_ned[1]), float(rpy_ned[2]))
     qx, qy, qz, qw = _normalize_quaternion(qx, qy, qz, qw)
     return Quaternion(x=qx, y=qy, z=qz, w=qw)
 
 
 def _rpy_to_quaternion_tuple(rpy_ned: list[float] | tuple[float, float, float]) -> tuple[float, float, float, float]:
+    """将欧拉角转换为四元数元组。
+    
+    Args:
+        rpy_ned: NED坐标系下的欧拉角
+        
+    Returns:
+        tuple[float, float, float, float]: 四元数元组 (x, y, z, w)
+    """
     quat = _rpy_to_quaternion(rpy_ned)
     return quat.x, quat.y, quat.z, quat.w
 
 
 def _ned_to_display_xyz(value: list[float] | tuple[float, float, float]) -> tuple[float, float, float]:
+    """将NED坐标转换为显示坐标系（深度反号）。
+    
+    Args:
+        value: NED坐标 [north, east, down]
+        
+    Returns:
+        tuple[float, float, float]: 显示坐标 (x, y, z)，其中z = -down
+        
+    说明：
+        Foxglove使用Z向上的坐标系，NED中"向下"为正，
+        因此需要反号以正确显示深度。
+    """
     return float(value[0]), float(value[1]), float(-value[2])
 
 
 def _as_point(value: list[float] | tuple[float, float, float]) -> Point:
+    """将NED坐标转换为ROS2 Point 消息。
+    
+    Args:
+        value: NED坐标
+        
+    Returns:
+        Point: ROS2 Point 对象
+    """
     x_value, y_value, z_value = _ned_to_display_xyz(value)
     return Point(x=x_value, y=y_value, z=z_value)
 
 
 def _pointcloud2_from_points(points: list[list[float]], frame_id: str, stamp) -> PointCloud2:
+    """将点列表转换为 PointCloud2 消息。
+    
+    Args:
+        points: 点坐标列表（NED格式）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        
+    Returns:
+        PointCloud2: 点云消息，用于Foxglove在线显示
+        
+    说明：
+        - 每个点为 float32 x 3（12字节）
+        - 使用小端序二进制编码
+        - 自动将NED转换为显示坐标
+    """
     msg = PointCloud2()
     msg.header.stamp = stamp
     msg.header.frame_id = frame_id
@@ -125,6 +221,22 @@ def _pointcloud2_from_points(points: list[list[float]], frame_id: str, stamp) ->
 
 
 def _make_marker_base(marker_id: int, ns: str, marker_type: int, frame_id: str, stamp) -> Marker:
+    """创建基础 Marker 对象。
+    
+    Args:
+        marker_id: 标记ID（命名空间内唯一）
+        ns: 标记命名空间
+        marker_type: 标记类型（ARROW、CYLINDER、LINE_STRIP等）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        
+    Returns:
+        Marker: 基础标记对象，可进一步设置颜色、尺度等
+        
+    说明：
+        - 默认添加模式（Marker.ADD）
+        - 无生命周期限制（持久显示）
+    """
     marker = Marker()
     marker.header.stamp = stamp
     marker.header.frame_id = frame_id
@@ -139,6 +251,23 @@ def _make_marker_base(marker_id: int, ns: str, marker_type: int, frame_id: str, 
 
 
 def _make_line_strip(points: list[list[float]], *, frame_id: str, stamp, ns: str, marker_id: int, color: tuple[float, float, float, float], width: float = 0.1) -> Marker:
+    """创建线条标记（用于电缆、轨迹等）。
+    
+    Args:
+        points: 点坐标列表（NED格式）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        ns: 命名空间
+        marker_id: 标记ID
+        color: RGBA颜色元组 (r, g, b, a)，范围[0, 1]
+        width: 线条宽度（默认0.1m）
+        
+    Returns:
+        Marker: LINE_STRIP类型标记
+        
+    说明：
+        按点的连接顺序形成线段，常用于电缆路径和历史轨迹。
+    """
     marker = _make_marker_base(marker_id, ns, Marker.LINE_STRIP, frame_id, stamp)
     marker.scale.x = float(width)
     marker.color = ColorRGBA(r=float(color[0]), g=float(color[1]), b=float(color[2]), a=float(color[3]))
@@ -147,6 +276,23 @@ def _make_line_strip(points: list[list[float]], *, frame_id: str, stamp, ns: str
 
 
 def _make_terrain_mesh(points: list[list[float]], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+    """创建海底地形网格标记。
+    
+    Args:
+        points: 点坐标列表（按行优先顺序排列的矩形网格）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        ns: 命名空间
+        marker_id: 标记ID
+        
+    Returns:
+        Marker: TRIANGLE_LIST 类型标记
+        
+    说明：
+        - 期望输入为矩形网格的点（width x height 排列）
+        - 自动生成三角形面片进行渲染
+        - 使用棕色（0.82, 0.71, 0.55）和半透明度(0.34)
+    """
     marker = _make_marker_base(marker_id, ns, Marker.TRIANGLE_LIST, frame_id, stamp)
     marker.scale = Vector3(x=1.0, y=1.0, z=1.0)
     marker.color = ColorRGBA(r=0.82, g=0.71, b=0.55, a=0.34)
@@ -179,6 +325,24 @@ def _make_terrain_mesh(points: list[list[float]], *, frame_id: str, stamp, ns: s
 
 
 def _make_arrow_marker(position_ned: list[float], rpy_ned: list[float], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+    """创建箭头标记（用于真值位姿）。
+    
+    Args:
+        position_ned: 箭头原点（NED坐标）
+        rpy_ned: 箭头方向（RPY欧拉角）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        ns: 命名空间
+        marker_id: 标记ID
+        
+    Returns:
+        Marker: ARROW 类型标记
+        
+    说明：
+        - 长度 2.8m，宽/高 0.18m
+        - 青蓝色(0.1, 0.7, 1.0)，完全不透明
+        - 常用于显示AUV当前姿态
+    """
     marker = _make_marker_base(marker_id, ns, Marker.ARROW, frame_id, stamp)
     marker.pose = Pose(position=_as_point(position_ned), orientation=_rpy_to_quaternion(rpy_ned))
     marker.scale = Vector3(x=2.8, y=0.18, z=0.18)
@@ -187,6 +351,24 @@ def _make_arrow_marker(position_ned: list[float], rpy_ned: list[float], *, frame
 
 
 def _make_auv_body_marker(position_ned: list[float], rpy_ned: list[float], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+    """创建AUV本体圆柱形标记。
+    
+    Args:
+        position_ned: AUV质心位置（NED坐标）
+        rpy_ned: AUV姿态（RPY欧拉角）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        ns: 命名空间
+        marker_id: 标记ID
+        
+    Returns:
+        Marker: CYLINDER 类型标记
+        
+    说明：
+        - 圆柱体长 2.4m（纵轴），直径 0.45m
+        - 应用 pitch +90° 偏移使圆柱沿前进方向
+        - 浅青蓝色(0.35, 0.65, 1.0)，透明度 0.92
+    """
     marker = _make_marker_base(marker_id, ns, Marker.CYLINDER, frame_id, stamp)
     body_quat = _rpy_to_quaternion_tuple(rpy_ned)
     offset_quat = _rpy_to_quaternion_tuple((0.0, math.pi / 2.0, 0.0))
@@ -201,6 +383,25 @@ def _make_auv_body_marker(position_ned: list[float], rpy_ned: list[float], *, fr
 
 
 def _make_range_ring(center_ned: list[float], radius_m: float, *, frame_id: str, stamp, ns: str, marker_id: int, samples: int = 48) -> Marker:
+    """创建搜索范围环标记。
+    
+    Args:
+        center_ned: 环心位置（NED坐标）
+        radius_m: 环半径（米）
+        frame_id: 参考坐标系ID
+        stamp: 时间戳
+        ns: 命名空间
+        marker_id: 标记ID
+        samples: 圆周采样点数（默认48，高精度圆形）
+        
+    Returns:
+        Marker: LINE_STRIP 类型闭合环
+        
+    说明：
+        - 红色（1.0, 0.25, 0.25），半透明(0.55)
+        - 线宽 0.06m
+        - 高度略高于中心(+0.02m)，视觉上浮于地面
+    """
     marker = _make_marker_base(marker_id, ns, Marker.LINE_STRIP, frame_id, stamp)
     marker.scale.x = 0.06
     marker.color = ColorRGBA(r=1.0, g=0.25, b=0.25, a=0.55)
@@ -220,6 +421,35 @@ def _make_range_ring(center_ned: list[float], radius_m: float, *, frame_id: str,
 
 
 class ZenohVizBridgeNode(Node):
+    """Zenoh -> ROS2 可视化桥接节点。
+    
+    订阅Zenoh话题并将合成场景（海底、电缆、真值）转换为
+    Foxglove可视化的ROS2消息流，同时支持模拟和实时两种模式。
+    
+    订阅话题（Zenoh）：
+      - Z_PATH_SEABED_CLOUD: 海底点云JSON
+      - Z_PATH_CABLE_MARKER: 电缆路径JSON
+      - Z_PATH_TRUTH_POSE: 真值位姿JSON
+      - Z_PATH_HISTORY_TRAIL: 历史轨迹JSON
+      - Z_PATH_VIEW_RANGE: 搜索范围JSON
+      
+    发布话题（ROS2）：
+      - /auv/visual/seabed_cloud: PointCloud2
+      - /auv/visual/seabed_mesh: Marker (TRIANGLE_LIST)
+      - /auv/visual/cable_marker: Marker (LINE_STRIP)
+      - /auv/visual/auv_body: Marker (CYLINDER)
+      - /auv/visual/truth_marker: Marker (ARROW)
+      - /auv/visual/history_trail: Marker (LINE_STRIP with colors)
+      - /auv/visual/view_range: Marker (LINE_STRIP 环)
+      - /tf: TransformStamped (真值坐标系)
+      - /auv/mock/scene: String (场景元数据摘要)
+      
+    模式：
+      - mock_mode=true: 使用VirtualEnvironment模拟轨迹
+      - mock_mode=false + Zenoh活跃: 实时来自仿真的数据
+      - Zenoh超时: 自动降低为模拟模式
+    """
+    
     def __init__(self) -> None:
         super().__init__('zenoh_viz_bridge_node')
 
@@ -275,6 +505,14 @@ class ZenohVizBridgeNode(Node):
 
     @staticmethod
     def _load_config(path: str) -> dict:
+        """从YAML文件加载配置。
+        
+        Args:
+            path: 配置文件路径
+            
+        Returns:
+            dict: 解析后的配置字典，若文件不存在返回空字典
+        """
         p = Path(path)
         if not p.exists():
             return {}
@@ -283,6 +521,10 @@ class ZenohVizBridgeNode(Node):
         return data if isinstance(data, dict) else {}
 
     def _open_zenoh(self) -> None:
+        """初始化 Zenoh 会话并订阅所有场景话题。
+        
+        若Zenoh不可用或连接失败，节点自动降级为模拟模式。
+        """
         try:
             import zenoh  # type: ignore
         except Exception:
@@ -307,6 +549,17 @@ class ZenohVizBridgeNode(Node):
         _sub(self.range_key, self._on_range)
 
     def _make_cb(self, handler):
+        """创建Zenoh订阅回调（JSON解析包装）。
+        
+        Args:
+            handler: 处理解析后JSON数据的函数
+            
+        Returns:
+            callable: Zenoh订阅回调函数
+            
+        说明：
+            自动记录接收时间戳用于超时检测，若JSON解析失败则静默忽略。
+        """
         def _cb(sample):
             payload = sample.payload.to_bytes() if hasattr(sample.payload, 'to_bytes') else bytes(sample.payload)
             try:
@@ -319,21 +572,42 @@ class ZenohVizBridgeNode(Node):
         return _cb
 
     def _on_terrain(self, data: dict[str, Any]) -> None:
+        """接收海底地形点云数据。"""
         self._live_terrain = data
 
     def _on_cable(self, data: dict[str, Any]) -> None:
+        """接收电缆路径点列数据。"""
         self._live_cable = data
 
     def _on_truth(self, data: dict[str, Any]) -> None:
+        """接收真值位姿数据（位置+RPY）。"""
         self._live_truth = data
 
     def _on_trail(self, data: dict[str, Any]) -> None:
+        """接收历史轨迹点列数据。"""
         self._live_trail = data
 
     def _on_range(self, data: dict[str, Any]) -> None:
+        """接收搜索范围配置（中心+半径）。"""
         self._live_range = data
 
     def _publish_scene(self, terrain: dict[str, Any], cable: dict[str, Any], truth: dict[str, Any], trail: dict[str, Any], view_range: dict[str, Any]) -> None:
+        """将场景数据转换为ROS2 Marker/PointCloud2并发布。
+        
+        Args:
+            terrain: 海底地形数据
+            cable: 电缆路径数据
+            truth: 真值位姿数据
+            trail: 历史轨迹数据
+            view_range: 搜索范围数据
+            
+        说明：
+            - 地形以点云+网格三角形形式渲染
+            - 电缆以线条形式渲染
+            - 真值以AUV圆柱体+方向箭头形式渲染
+            - 轨迹以彩色线条渲染（按时间渐变）
+            - 搜索范围以环形渲染
+        """
         now = self.get_clock().now().to_msg()
         frame_id = self.frame_id
 
@@ -384,6 +658,18 @@ class ZenohVizBridgeNode(Node):
             self.range_pub.publish(_make_range_ring(center, radius, frame_id=frame_id, stamp=now, ns='view_range', marker_id=4))
 
     def _publish_mock_scene_summary(self, *, sample_index: int, position_ned: list[float], rpy_ned: list[float], mode: str) -> None:
+        """发布场景元数据摘要（用于Foxglove仪表板）。
+        
+        Args:
+            sample_index: 采样索引（用于追踪回放进度）
+            position_ned: 当前位置（NED坐标）
+            rpy_ned: 当前姿态（欧拉角）
+            mode: 模式标签（"mock"或"live"）
+            
+        说明：
+            发布JSON格式的场景摘要到/auv/mock/scene话题，
+            包括可见图层、有效载荷大小等可视化统计信息。
+        """
         snapshot = build_mock_topics_snapshot(
             sample_index=sample_index,
             digital_twin_config=asdict(self.virtual_env.config),
@@ -400,6 +686,13 @@ class ZenohVizBridgeNode(Node):
         self.mock_scene_pub.publish(String(data=json.dumps(payload, ensure_ascii=False)))
 
     def _on_timer(self) -> None:
+        """定时发布场景（100ms周期）。
+        
+        逻辑：
+          1. 若在模拟模式或Zenoh超时，使用VirtualEnvironment模拟
+          2. 否则从_live_*缓存读取最新Zenoh数据并发布
+          3. 若Zenoh无真值数据，不发布任何内容
+        """
         now_ns = self.get_clock().now().nanoseconds
         have_live = self._last_live_rx_ns > 0 and (now_ns - self._last_live_rx_ns) < int(self.mock_fallback_timeout_s * 1e9)
 
@@ -437,6 +730,7 @@ class ZenohVizBridgeNode(Node):
         )
 
     def destroy_node(self):
+        """清理资源：关闭Zenoh会话和订阅。"""
         for sub in self._subscribers:
             try:
                 sub.undeclare()
@@ -455,6 +749,7 @@ class ZenohVizBridgeNode(Node):
 
 
 def main(args=None) -> None:
+    """Zenoh可视化桥接节点入口点。"""
     rclpy.init(args=args)
     node = ZenohVizBridgeNode()
     try:

@@ -1,3 +1,11 @@
+'''
+本文件包含了针对 AUV 桥接节点的 AutonomyGuard 类的单元测试，验证了在不同输入条件下自治权限检查逻辑的正确性和预期行为。测试覆盖了以下场景：
+- 所有检查通过时成功请求激活自动控制状态
+- 电压过低时拒绝自动控制请求
+- 遥测过旧时刷新后撤销自动控制状态
+- 锁定时标记为手动覆盖并拒绝自动控制
+每个测试函数都创建了一个 AutonomyGuard 实例，模拟输入状态并检查输出决策是否符合预期的自动状态、拒绝理由和自治允许标志。这些测试有助于确保 AutonomyGuard 的核心逻辑在各种边界条件下都能正确运行，为桥接节点的安全性和可靠性提供保障。
+'''
 from __future__ import annotations
 
 from auv_bridge.autonomy_guard import AutonomyGuard

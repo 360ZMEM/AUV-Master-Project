@@ -1,3 +1,6 @@
+'''
+本文件定义了 AUV 桥接节点的后端接口和两种实现：基于 Zenoh JSON 的主题后端和基于二进制协议的 UDP 后端。
+'''
 from __future__ import annotations
 
 import json
@@ -26,7 +29,11 @@ import time
 
 
 class BaseBridgeBackend(ABC):
-    """Transport backend interface used by the ROS2 bridge node."""
+    """桥接后端抽象接口。
+
+    该接口把不同传输实现统一成同一套生命周期和发送语义，便于桥接节点在
+    Zenoh JSON 和协议 UDP 之间切换，而不需要改变上层决策逻辑。
+    """
 
     backend_name = "base"
     requires_command_heartbeat = False
@@ -37,11 +44,11 @@ class BaseBridgeBackend(ABC):
 
     @abstractmethod
     def open(self) -> None:
-        """Open transport resources."""
+        """打开传输资源并准备收发通道。"""
 
     @abstractmethod
     def close(self) -> None:
-        """Release transport resources."""
+        """释放传输资源并注销所有句柄。"""
 
     @abstractmethod
     def send_command(
@@ -52,19 +59,20 @@ class BaseBridgeBackend(ABC):
         work_instruction: int,
         orientation_deg: float,
     ) -> None:
-        """Send one control command through the backend."""
+        """通过当前后端发送一条控制命令。"""
 
     def publish_bridge_telemetry(self, payload: dict[str, Any]) -> None:
-        """Publish bridge telemetry to any optional side channel."""
+        """向可选侧通道发布桥接遥测数据。"""
         _ = payload
 
 
 class TopicBridgeBackend(BaseBridgeBackend):
-    """Legacy Zenoh JSON backend preserved for compatibility."""
+    """兼容旧系统的 Zenoh JSON 后端。"""
 
     backend_name = "zenoh_json"
 
     def __init__(self, *, node, bridge_cfg: dict[str, Any]) -> None:
+        """初始化 Zenoh 发布/订阅主题和运行时缓存。"""
         super().__init__(node=node, bridge_cfg=bridge_cfg)
         self.cmd_key = str(bridge_cfg.get('downlink_cmd_key', 'rt/auv/control/cmd_vel'))
         self.imu_key = str(bridge_cfg.get('imu_key', 'rt/auv/sensors/imu'))
@@ -75,6 +83,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
         self._publishers: dict[str, Any] = {}
 
     def open(self) -> None:
+        """建立 Zenoh 会话并订阅仿真传感器主题。"""
         try:
             import zenoh  # type: ignore
         except Exception as exc:
@@ -90,6 +99,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
         self._subscribers.append(self._session.declare_subscriber(magnetic_key, self._make_cb(magnetic_key)))
 
     def close(self) -> None:
+        """关闭所有 Zenoh 订阅、发布器和会话。"""
         for sub in self._subscribers:
             try:
                 sub.undeclare()
@@ -112,6 +122,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
             self._session = None
 
     def _make_cb(self, keyexpr: str):
+        """构造收到 Zenoh 消息后的 JSON 解码回调。"""
         def _cb(sample) -> None:
             payload = sample.payload.to_bytes() if hasattr(sample.payload, 'to_bytes') else bytes(sample.payload)
             try:
@@ -130,6 +141,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
         work_instruction: int,
         orientation_deg: float,
     ) -> None:
+        """将控制命令写入 Zenoh 控制通道。"""
         _ = orientation_deg
         payload = dict(command_payload)
         payload['control_mode_byte'] = int(control_mode_byte)
@@ -138,12 +150,13 @@ class TopicBridgeBackend(BaseBridgeBackend):
 
 
 class ProtocolBridgeBackend(BaseBridgeBackend):
-    """Binary UDP backend compatible with the $CKTH/$AUV protocol."""
+    """兼容 $CKTH/$AUV 二进制协议的 UDP 后端。"""
 
     backend_name = "protocol_udp"
     requires_command_heartbeat = True
 
     def __init__(self, *, node, bridge_cfg: dict[str, Any]) -> None:
+        """初始化 UDP 套接字参数、协议参数和可选 Zenoh 侧通道。"""
         super().__init__(node=node, bridge_cfg=bridge_cfg)
         protocol_cfg = bridge_cfg.get('protocol_udp', {})
         self.local_host = str(protocol_cfg.get('local_host', '0.0.0.0'))
@@ -169,6 +182,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self._publishers: dict[str, Any] = {}
 
     def open(self) -> None:
+        """打开 UDP 套接字并启动接收线程。"""
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._socket.bind((self.local_host, self.local_port))
         self._socket.settimeout(self.socket_timeout_s)
@@ -179,6 +193,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
             self._open_side_channel()
 
     def close(self) -> None:
+        """停止接收线程并清理 UDP 和侧通道资源。"""
         self._stop_event.set()
         for sub in self._subscribers:
             try:
@@ -219,19 +234,20 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         work_instruction: int,
         orientation_deg: float,
     ) -> None:
+        """把控制命令编码为下行协议并通过 UDP 发出。"""
         if self._socket is None:
             raise RuntimeError('protocol udp backend is not open')
 
         payload = dict(command_payload)
-        payload[KEY_FRAME_NUMBER] = self._frame_counter
-        payload.setdefault(KEY_OBJ_ADDRESS, self.obj_address)
-        payload[KEY_CONTROL_MODE_BYTE] = int(control_mode_byte)
-        payload[KEY_WORK_INSTRUCTION] = int(work_instruction)
-        payload[KEY_ORIENTATION_DEG] = float(orientation_deg)
+        payload[KEY_FRAME_NUMBER] = self._frame_counter # 协议帧编号，0~255 循环，用于协议层检测丢包和重传
+        payload.setdefault(KEY_OBJ_ADDRESS, self.obj_address) # 协议对象地址，默认为 1，表示主控 AUV 对象
+        payload[KEY_CONTROL_MODE_BYTE] = int(control_mode_byte) # 协议控制模式字节，定义当前控制模式（如手动、自动、定深等），由上层决策逻辑设置
+        payload[KEY_WORK_INSTRUCTION] = int(work_instruction) # 协议工作指令，定义当前具体动作指令（如前进、后退、转向等），由上层决策逻辑设置
+        payload[KEY_ORIENTATION_DEG] = float(orientation_deg) # 协议航向角度，单位度，范围 0~360，由上层决策逻辑设置，表示当前期望的航向角度
 
-        # Embed current Unix microseconds in Para1 for Mock AMD clock synchronization
+        # 从 Para1 开始的参数字段，协议中预留了 12 个参数位置（Para1~Para12），供上层决策逻辑根据需要使用。这里我们把 Para1 用来携带一个 Mock AMD 时间戳（微秒级），以便协议侧的决策节点进行时钟同步和调试验证。其他参数位置暂时保留为 0。
         mock_amd_timestamp_us = int(time.time() * 1e6)
-        # Para1 is the first element of parameters tuple
+        # 确保 payload 中的 KEY_PARAMETERS 是一个长度至少为 1 的列表或元组，如果存在则更新第一个元素为 mock_amd_timestamp_us，否则创建一个新的列表并放入 payload 中。协议中 Para1~Para12 的位置由 KEY_PARAMETERS 定义，协议解析时会把它们映射到对应的参数字段。
         current_parameters = payload.get(KEY_PARAMETERS, [0] * 12)
         if isinstance(current_parameters, (list, tuple)) and len(current_parameters) >= 1:
             parameters_list = list(current_parameters)
@@ -240,11 +256,12 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         else:
             payload[KEY_PARAMETERS] = [mock_amd_timestamp_us] + [0] * 11
 
-        packet = build_downlink_packet_from_payload(payload, main_motor_rpm_scale=self.main_motor_rpm_scale)
+        packet = build_downlink_packet_from_payload(payload, main_motor_rpm_scale=self.main_motor_rpm_scale) # 根据协议定义把 payload 字典编码成二进制下行数据包，main_motor_rpm_scale 用于把协议中的 RPM 值转换为实际推力百分比（仅供调试使用，实际控制算法中不应依赖此转换）
         self._socket.sendto(packet, (self.remote_host, self.remote_port))
         self._frame_counter = (self._frame_counter + 1) & 0xFF
 
     def publish_bridge_telemetry(self, payload: dict[str, Any]) -> None:
+        """通过可选 Zenoh 侧通道发布桥接遥测。"""
         if not self._publishers:
             return
         encoded = json.dumps(payload, ensure_ascii=False)
@@ -255,6 +272,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
             publisher.put(encoded)
 
     def _open_side_channel(self) -> None:
+        """在 UDP 模式下额外打开 Zenoh 侧通道，用于调试与观测。"""
         try:
             import zenoh  # type: ignore
         except Exception as exc:
@@ -272,6 +290,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self._publishers[Z_PATH_MOCK_AMD_TIME] = self._session.declare_publisher(Z_PATH_MOCK_AMD_TIME)
 
     def _on_pc_raw_sample(self, sample) -> None:
+        """处理来自 PC 原始控制通道的输入并转发给桥接节点。"""
         payload_bytes = sample.payload.to_bytes() if hasattr(sample.payload, 'to_bytes') else bytes(sample.payload)
         data = self._decode_pc_raw_payload(payload_bytes)
         if data is None:
@@ -287,6 +306,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
                 publisher.put(json.dumps({KEY_MOCK_AMD_TIMESTAMP: int(mock_amd_timestamp_us)}))
 
     def _decode_pc_raw_payload(self, payload_bytes: bytes) -> dict[str, Any] | None:
+        """把原始 PC 控制负载解码为统一的字典格式。"""
         if len(payload_bytes) == PROTOCOL_DOWNLINK_SIZE:
             try:
                 return parse_downlink_packet_to_payload(payload_bytes, main_motor_rpm_scale=self.main_motor_rpm_scale)
@@ -300,6 +320,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         return decoded if isinstance(decoded, dict) else None
 
     def _recv_loop(self) -> None:
+        """后台 UDP 接收循环，解析上行遥测帧并交给节点处理。"""
         while not self._stop_event.is_set():
             if self._socket is None:
                 return

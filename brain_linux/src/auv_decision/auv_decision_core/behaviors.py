@@ -167,6 +167,7 @@ class HoldCurrentPoseBehavior(_BaseBehavior):
     """
 
     def __init__(self) -> None:
+        """初始化保持姿态行为，并预置抓取到的目标深度与航向。"""
         super().__init__(name='HoldCurrentPose')
         self.target_depth_m: float = 0.0
         self.target_heading_rad: float = 0.0
@@ -203,6 +204,11 @@ class TrackAnalyticalTrajectoryBehavior(_BaseBehavior):
     """
 
     def __init__(self, trajectory_kind: str = 'cable_like_3d') -> None:
+        """初始化解析式轨迹跟踪行为。
+
+        Args:
+            trajectory_kind (str): 轨迹类型名称，决定采样器生成哪一种参考轨迹。
+        """
         super().__init__(name='TrackAnalyticalTrajectory')
         self.trajectory_kind = trajectory_kind
         self.trajectory_generator = None

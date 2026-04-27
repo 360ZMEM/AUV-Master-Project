@@ -1,3 +1,13 @@
+'''
+本文件包含了针对 AUV 桥接节点的 CommandArbiter 类的单元测试，验证了在不同输入条件下仲裁逻辑的正确性和预期行为。测试覆盖了以下场景：
+- 远程模式下 PC 原始命令的正确传递
+- 自主模式下 MPC 命令对控制面和推力的覆盖
+- 手动覆盖时立即切换到远程模式
+- 自主模式下 MPC 超时后使用安全回退命令
+- 强制远程时将自主请求重写为远程控制命令
+每个测试函数都创建了一个 CommandArbiter 实例，模拟输入命令并检查输出决策是否符合预期的仲裁结果和命令内容。这些测试有助于确保 CommandArbiter 的核心逻辑在各种边界条件下都能正确运行，为桥接节点的稳定性和安全性提供保障。
+'''
+
 from __future__ import annotations
 
 from auv_bridge.arbiter import CommandArbiter

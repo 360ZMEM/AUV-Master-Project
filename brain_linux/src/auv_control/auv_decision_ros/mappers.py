@@ -1,4 +1,16 @@
-"""ROS 消息与 Core 数据模型转换工具。"""
+"""ROS 消息与 Core 数据模型转换工具。
+
+本模块提供 ROS2 消息与决策引擎核心数据结构之间的双向转换。
+功能：
+  1. 传感器消息（SensorStatus）-> 核心感知数据模型（SensorStatusData）
+  2. 控制目标（MotionGoal/dict）-> ROS2 消息（ControlGoal/Setpoint）
+  3. 诊断快照（DecisionTelemetrySnapshot）-> 诊断消息（AuvDiagnostic）
+
+设计原则：
+  - 消息转换是单向的，无回溯依赖
+  - 所有数值字段进行显式类型转换，避免隐式转换错误
+  - 缺失字段采用合理的默认值，便于向后兼容
+"""
 
 from __future__ import annotations
 
@@ -9,7 +21,18 @@ from auv_interfaces.msg import AuvDiagnostic, ControlGoal, SensorStatus, Setpoin
 
 
 def sensor_msg_to_core(msg: SensorStatus) -> SensorStatusData:
-    """将 ROS2 `SensorStatus` 消息转换为核心层 `SensorStatusData`。"""
+    """将 ROS2 `SensorStatus` 消息转换为核心层 `SensorStatusData`。
+    
+    Args:
+        msg: ROS2 SensorStatus 消息，包含实时传感器数据
+        
+    Returns:
+        SensorStatusData: 核心层感知状态对象，供决策引擎使用
+        
+    说明：
+        通过显式类型转换确保数值精度一致性，会自动处理
+        旧版本消息中缺失的字段（如heading_rad、mock_amd_timestamp_us）。
+    """
     return SensorStatusData(
         confidence=float(msg.confidence),
         leak_level=int(msg.leak_level),
@@ -29,7 +52,18 @@ def sensor_msg_to_core(msg: SensorStatus) -> SensorStatusData:
 
 
 def motion_goal_dict_to_msg(goal: dict) -> ControlGoal:
-    """将核心层输出 dict 转换为 ROS2 `ControlGoal` 消息。"""
+    """将核心层输出 dict 转换为 ROS2 `ControlGoal` 消息。
+    
+    Args:
+        goal: 核心层输出的目标字典，包含mode、target_depth_m等字段
+        
+    Returns:
+        ControlGoal: ROS2 控制目标消息
+        
+    说明：
+        该函数是决策引擎 -> ROS2 发送者的关键桥梁，处理所有
+        可选字段的默认值填充，保证消息完整性。
+    """
     msg = ControlGoal()
     msg.mode = str(goal.get('mode', 'IDLE'))
     msg.bridge_backend = str(goal.get('bridge_backend', ''))
@@ -44,7 +78,18 @@ def motion_goal_dict_to_msg(goal: dict) -> ControlGoal:
 
 
 def motion_goal_to_msg(goal: MotionGoal) -> ControlGoal:
-    """如后续直接传递 `MotionGoal` 对象，可复用该转换函数。"""
+    """如后续直接传递 `MotionGoal` 对象，可复用该转换函数。
+    
+    Args:
+        goal: 核心层 MotionGoal 对象
+        
+    Returns:
+        ControlGoal: ROS2 控制目标消息
+        
+    说明：
+        基于motion_goal_dict_to_msg()实现，提供MotionGoal对象的
+        直接转换接口，减少中间dict转换步骤。
+    """
     return motion_goal_dict_to_msg(
         {
             'mode': goal.mode,
@@ -61,7 +106,19 @@ def motion_goal_to_msg(goal: MotionGoal) -> ControlGoal:
 
 
 def motion_goal_dict_to_setpoint_msg(goal: dict, stamp: Time | None = None) -> Setpoint:
-    """Convert decision goal dict to controller setpoint message."""
+    """将决策目标 dict 转换为控制器设定点消息。
+    
+    Args:
+        goal: 决策层输出的目标字典
+        stamp: 可选的时间戳（ROS2 Time 对象），若无则不设置
+        
+    Returns:
+        Setpoint: 控制器订阅的设定点消息
+        
+    说明：
+        相比ControlGoal，Setpoint包含更丰富的控制参数
+        （target_heading_rad、track_cable、target_x_m/target_y_m）。
+    """
     msg = Setpoint()
     if stamp is not None:
         msg.header.stamp = stamp
@@ -86,7 +143,19 @@ def telemetry_snapshot_to_msg(
     *,
     stamp: Time | None = None,
 ) -> AuvDiagnostic:
-    """Convert a core telemetry snapshot to ROS2 `AuvDiagnostic`."""
+    """将核心层诊断快照转换为 ROS2 `AuvDiagnostic` 消息。
+    
+    Args:
+        snapshot: 核心层决策诊断快照对象
+        stamp: 可选的消息时间戳
+        
+    Returns:
+        AuvDiagnostic: ROS2 诊断消息，用于Foxglove可视化与监控
+        
+    说明：
+        该转换用于将决策引擎的实时诊断信息（行为、置信度、错误等）
+        发布到ROS2以供可视化与记录。
+    """
     msg = AuvDiagnostic()
     if stamp is not None:
         msg.header.stamp = stamp

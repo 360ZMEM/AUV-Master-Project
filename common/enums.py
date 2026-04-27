@@ -6,7 +6,11 @@ from enum import Enum, IntEnum
 
 
 class BehaviorMode(str, Enum):
-    """Unified behavior states across simulation and ROS2 domains."""
+    """统一行为模式标签，用于行为树、控制链路和可视化界面之间传递高层任务语义。
+
+    该枚举不承载算法细节，只定义系统对外暴露的稳定状态名，便于 ROS2、
+    仿真桥接和调试工具共享同一套行为标识。
+    """
 
     IDLE = "IDLE"
     DIVING = "DIVING"
@@ -18,14 +22,22 @@ class BehaviorMode(str, Enum):
 
 
 class BridgeBackend(str, Enum):
-    """Communication backends supported by the bridge layer."""
+    """桥接后端类型标签，用于选择 Zenoh JSON 或协议 UDP 等通信实现。
+
+    该枚举的作用是把“如何传输数据”从业务逻辑中剥离出来，避免控制和感知模块
+    直接依赖具体传输协议。
+    """
 
     ZENOH_JSON = "zenoh_json"
     PROTOCOL_UDP = "protocol_udp"
 
 
 class ControlModeByte(IntEnum):
-    """Byte-level control authority values used by the binary protocol."""
+    """控制模式字节值，映射底层二进制协议中的控制权限状态。
+
+    这些值用于仿真、桥接和实物协议之间保持一致的控制模式约定，例如遥控、
+    自动定点、自动定向以及返航等状态。
+    """
 
     SEND_ONLY = 0x00
     REMOTE_CONTROL = 0x01
@@ -36,7 +48,11 @@ class ControlModeByte(IntEnum):
 
 
 class WorkInstruction(IntEnum):
-    """Common work instruction bytes reused by bridge implementations."""
+    """工作指令字节值，用于桥接或仲裁器在二进制协议中表达操作命令。
+
+    这组枚举用于表达“开始任务”“切换模式”“进入保持”等较高层的控制意图，
+    适合跨进程、跨语言传输。
+    """
 
     NONE = 0x00
     TASK_START = 0x01

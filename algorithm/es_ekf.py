@@ -2,11 +2,13 @@ import numpy as np
 
 
 def _skew(v):
+    """构造三维向量的反对称矩阵，用于叉乘线性化。"""
     x, y, z = v
     return np.array([[0.0, -z, y], [z, 0.0, -x], [-y, x, 0.0]], dtype=float)
 
 
 def quat_normalize(q):
+    """将四元数归一化为单位长度。"""
     q = np.asarray(q, dtype=float)
     n = np.linalg.norm(q)
     if n < 1e-12:
@@ -15,6 +17,7 @@ def quat_normalize(q):
 
 
 def quat_multiply(q1, q2):
+    """计算两个四元数的乘积。"""
     w1, x1, y1, z1 = q1
     w2, x2, y2, z2 = q2
     return np.array([
@@ -26,6 +29,7 @@ def quat_multiply(q1, q2):
 
 
 def quat_to_rotmat(q):
+    """把四元数转换为方向余弦矩阵。"""
     w, x, y, z = quat_normalize(q)
     return np.array([
         [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
@@ -35,6 +39,7 @@ def quat_to_rotmat(q):
 
 
 def quat_from_rotmat(r):
+    """从旋转矩阵恢复四元数。"""
     tr = np.trace(r)
     if tr > 0:
         s = np.sqrt(tr + 1.0) * 2
@@ -64,6 +69,7 @@ def quat_from_rotmat(r):
 
 
 def small_angle_quat(dtheta):
+    """将小角度误差向量转换为四元数增量。"""
     angle = np.linalg.norm(dtheta)
     if angle < 1e-12:
         return np.array([1.0, 0.5 * dtheta[0], 0.5 * dtheta[1], 0.5 * dtheta[2]], dtype=float)
@@ -73,6 +79,7 @@ def small_angle_quat(dtheta):
 
 
 def quat_to_euler(q):
+    """将四元数转换为欧拉角，顺序为 roll、pitch、yaw。"""
     w, x, y, z = quat_normalize(q)
     sinr_cosp = 2 * (w * x + y * z)
     cosr_cosp = 1 - 2 * (x * x + y * y)
@@ -88,7 +95,14 @@ def quat_to_euler(q):
 
 
 class ES_EKF:
+    """扩展状态卡尔曼滤波器，用于 AUV 位姿与速度估计。
+
+    状态向量包含位置、速度、姿态四元数、加速度零偏和陀螺零偏，
+    支持 IMU 预测以及 DVL、深度、GPS 观测修正。
+    """
+
     def __init__(self, cfg):
+        """从滤波配置初始化状态、协方差和噪声参数。"""
         self.g = float(cfg.get("gravity", 9.81))
         self.g_n = np.array([0.0, 0.0, -self.g], dtype=float)
         self.imu_acc_is_linear = bool(cfg.get("imu_acc_is_linear", True))
@@ -110,9 +124,17 @@ class ES_EKF:
         self.P = np.diag(np.array(cfg.get("init_P_diag", [1.0] * 15), dtype=float))
 
     def get_state(self):
+        """返回当前滤波状态的拷贝，避免外部直接修改内部状态。"""
         return {"p": self.p.copy(), "v": self.v.copy(), "q": self.q.copy(), "b_a": self.b_a.copy(), "b_g": self.b_g.copy()}
 
     def predict(self, imu_acc_body, imu_gyro_body, dt):
+        """使用 IMU 预测状态并推进协方差。
+
+        Args:
+            imu_acc_body (array-like): 机体系加速度测量。
+            imu_gyro_body (array-like): 机体系角速度测量。
+            dt (float): 预测周期，单位秒。
+        """
         dt = float(dt)
         acc_m = np.asarray(imu_acc_body, dtype=float)
         gyr_m = np.asarray(imu_gyro_body, dtype=float)
@@ -145,6 +167,7 @@ class ES_EKF:
         self.P = phi @ self.P @ phi.T + qd
 
     def _inject(self, dx):
+        """将误差状态注入到名义状态中。"""
         self.p += dx[0:3]
         self.v += dx[3:6]
         self.q = quat_normalize(quat_multiply(small_angle_quat(dx[6:9]), self.q))
@@ -152,6 +175,14 @@ class ES_EKF:
         self.b_g += dx[12:15]
 
     def _correct(self, y, h, h_mat, r):
+        """执行 EKF 观测更新。
+
+        Args:
+            y (np.ndarray): 观测值。
+            h (np.ndarray): 预测观测值。
+            h_mat (np.ndarray): 观测雅可比。
+            r (np.ndarray): 观测噪声协方差。
+        """
         s = h_mat @ self.P @ h_mat.T + r
         k = self.P @ h_mat.T @ np.linalg.pinv(s)
         dx = k @ (y - h)
@@ -161,6 +192,7 @@ class ES_EKF:
         self.P = ikh @ self.P @ ikh.T + k @ r @ k.T
 
     def correct_dvl(self, dvl_vel_body):
+        """使用机体系 DVL 速度修正滤波状态。"""
         z = np.asarray(dvl_vel_body, dtype=float).reshape(3)
         r_nb = quat_to_rotmat(self.q)
         h = r_nb.T @ self.v
@@ -170,6 +202,7 @@ class ES_EKF:
         self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3))
 
     def correct_dvl_world(self, dvl_vel_world):
+        """使用世界系 DVL 速度修正滤波状态。"""
         z = np.asarray(dvl_vel_world, dtype=float).reshape(3)
         h = self.v.copy()
         h_mat = np.zeros((3, 15), dtype=float)
@@ -177,6 +210,7 @@ class ES_EKF:
         self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3))
 
     def correct_depth(self, depth_m):
+        """使用深度观测修正位置的 Z 轴分量。"""
         z = float(depth_m)
         h = -self.p[2]
         h_mat = np.zeros((1, 15), dtype=float)
@@ -184,6 +218,7 @@ class ES_EKF:
         self._correct(np.array([z], dtype=float), np.array([h], dtype=float), h_mat, np.array([[self.sigma_depth ** 2]], dtype=float))
 
     def correct_gps(self, gps_xy):
+        """使用 GPS 平面位置观测修正滤波状态。"""
         z = np.asarray(gps_xy, dtype=float).reshape(2)
         h = self.p[:2]
         h_mat = np.zeros((2, 15), dtype=float)

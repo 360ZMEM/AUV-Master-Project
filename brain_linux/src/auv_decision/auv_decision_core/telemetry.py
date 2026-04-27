@@ -11,7 +11,11 @@ from .models import SensorStatusData
 
 @dataclass(frozen=True)
 class DecisionTelemetrySnapshot:
-    """Structured decision snapshot consumed by ROS adapters."""
+    """供 ROS 适配层消费的结构化决策遥测快照。
+
+    该快照把行为树当前状态、传感器状态、目标指令和可视化文本统一打包，
+    便于在 /auv/bt_status、/auv/diagnostics 和控制日志之间复用同一份事实来源。
+    """
 
     current_behavior: str
     active_path: str
@@ -41,6 +45,7 @@ class DecisionTelemetrySnapshot:
 
 
 def _sanitize_optional_metric(value: float | None) -> tuple[bool, float]:
+    """把可选数值归一化为“是否存在 + 数值”二元组。"""
     if value is None:
         return False, 0.0
     numeric = float(value)
@@ -50,6 +55,7 @@ def _sanitize_optional_metric(value: float | None) -> tuple[bool, float]:
 
 
 def _goal_float(goal: dict[str, Any], key: str, default: float = 0.0) -> float:
+    """从目标字典中安全提取浮点字段。"""
     value = goal.get(key, default)
     try:
         return float(value)
@@ -58,6 +64,7 @@ def _goal_float(goal: dict[str, Any], key: str, default: float = 0.0) -> float:
 
 
 def _format_metric_line(label: str, value: float, unit: str, available: bool = True) -> str:
+    """格式化单行指标文本，供 Markdown 状态面板使用。"""
     if not available:
         return f'- {label}: N/A'
     return f'- {label}: {value:.2f}{unit}'
@@ -75,7 +82,7 @@ def build_bt_status_markdown(
     has_magnetic_magnitude: bool,
     magnetic_magnitude: float,
 ) -> str:
-    """Build Foxglove-friendly Markdown text for `/auv/bt_status`."""
+    """构建适合 Foxglove 展示的 Markdown 行为树状态文本。"""
     lines = [
         '## Behavior Tree',
         f'- Active: {current_behavior}',
@@ -93,7 +100,7 @@ def build_bt_status_markdown(
 
 
 def build_summary_line(snapshot: DecisionTelemetrySnapshot) -> str:
-    """Format a concise single-line runtime summary for console logs."""
+    """构建适合控制台日志输出的一行摘要文本。"""
     lateral_text = f'{snapshot.lateral_error_m:.2f}m' if snapshot.has_lateral_error else 'N/A'
     magnetic_text = f'{snapshot.magnetic_magnitude:.2f}uT' if snapshot.has_magnetic_magnitude else 'N/A'
     return (
@@ -129,7 +136,7 @@ def build_decision_telemetry_snapshot(
     lateral_error_m: float | None,
     magnetic_magnitude: float | None,
 ) -> DecisionTelemetrySnapshot:
-    """Assemble a stable core snapshot from status, goal, and runtime metrics."""
+    """把传感器状态、目标指令和运行时指标组装成稳定的遥测快照。"""
     goal = goal or {}
     _, depth_error_value = _sanitize_optional_metric(depth_error_m)
     has_lateral_error, lateral_error_value = _sanitize_optional_metric(lateral_error_m)

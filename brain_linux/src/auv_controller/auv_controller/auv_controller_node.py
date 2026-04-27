@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Controller node: setpoint + filtered state -> /cmd_vel.
+"""ROS2 控制节点：目标状态 + 滤波状态 -> /cmd_vel。
 
-The node wraps existing PID control logic and outputs a fixed Twist mapping:
-- linear.x: thrust
-- angular.x: right fin
-- angular.y: top fin
-- angular.z: left fin
-- linear.z: bottom fin
+该节点是决策层与底层控制器之间的桥梁，负责把 Setpoint 和状态估计
+转换为固定映射的 Twist 输出，避免上层逻辑直接依赖具体舵面/推力实现。
+
+输出映射约定：
+- linear.x: thrust（推力）
+- angular.x: right fin（右舵）
+- angular.y: top fin（上舵）
+- angular.z: left fin（左舵）
+- linear.z: bottom fin（下舵）
 """
 
 from __future__ import annotations
@@ -33,6 +36,7 @@ from common.enums import StateEstimateSource
 from common.protocol import KEY_STATE_SOURCE
 
 def _resolve_project_root() -> Path:
+    """解析工程根目录，优先使用环境变量和 ament 安装路径。"""
     env_root = Path(str(os.environ.get('AUV_PROJECT_ROOT', ''))).expanduser() if os.environ.get('AUV_PROJECT_ROOT') else None
     if env_root and (env_root / 'algorithm').exists():
         return env_root
@@ -58,6 +62,7 @@ def _resolve_project_root() -> Path:
 PROJECT_ROOT = _resolve_project_root()
 ALGO_DIR = PROJECT_ROOT / 'algorithm'
 def _load_pid_controller_class():
+    """按文件路径动态加载 PID 控制器类，避免运行时导入路径冲突。"""
     module_path = ALGO_DIR / 'auv_pid_controller.py'
     spec = importlib.util.spec_from_file_location('auv_algorithm_pid', str(module_path))
     if spec is None or spec.loader is None:
@@ -71,6 +76,7 @@ AUVPIDController = _load_pid_controller_class()
 
 
 def quat_to_euler(w: float, x: float, y: float, z: float) -> tuple[float, float, float]:
+    """将四元数转换为欧拉角，返回 roll、pitch、yaw（弧度）。"""
     sinr_cosp = 2.0 * (w * x + y * z)
     cosr_cosp = 1.0 - 2.0 * (x * x + y * y)
     roll = math.atan2(sinr_cosp, cosr_cosp)
@@ -88,7 +94,14 @@ def quat_to_euler(w: float, x: float, y: float, z: float) -> tuple[float, float,
 
 
 class AUVControllerNode(Node):
+    """AUV 控制节点主类。
+
+    该节点订阅控制目标、滤波状态和原始状态，周期性调用级联 PID 控制器，
+    并把五通道舵面/推力指令发布到 /cmd_vel。
+    """
+
     def __init__(self) -> None:
+        """初始化控制节点的参数、话题订阅、控制器实例和调试发布器。"""
         super().__init__('auv_controller_node')
 
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
@@ -139,6 +152,7 @@ class AUVControllerNode(Node):
 
     @staticmethod
     def _load_config(path: str) -> dict:
+        """加载控制参数 YAML，并确保配置结构是字典。"""
         p = Path(path)
         if not p.exists():
             raise FileNotFoundError(f'controller params file not found: {p}')
@@ -149,18 +163,22 @@ class AUVControllerNode(Node):
         return data
 
     def _on_setpoint(self, msg: Setpoint) -> None:
+        """缓存最新控制目标并记录时间戳。"""
         self.latest_setpoint = msg
         self.latest_setpoint_ts = time.time()
 
     def _on_filtered_state(self, msg: Odometry) -> None:
+        """缓存滤波后的状态估计。"""
         self.latest_filtered_state = msg
         self.latest_filtered_state_ts = time.time()
 
     def _on_raw_state(self, msg: Odometry) -> None:
+        """缓存原始死推进状态估计，供 bypass_ekf 模式使用。"""
         self.latest_raw_state = msg
         self.latest_raw_state_ts = time.time()
 
     def _on_imu(self, msg: Imu) -> None:
+        """缓存 IMU 角速度，用于补充或覆盖状态里的角速度来源。"""
         self.latest_imu_gyro = (
             float(msg.angular_velocity.x),
             float(msg.angular_velocity.y),
@@ -169,6 +187,7 @@ class AUVControllerNode(Node):
         self.latest_imu_ts = time.time()
 
     def _resolve_body_rates(self, st: Odometry) -> tuple[float, float, float, str]:
+        """优先从里程计获取体轴角速度，否则回退到最新 IMU。"""
         odom_rates = (
             float(st.twist.twist.angular.x),
             float(st.twist.twist.angular.y),
@@ -183,6 +202,7 @@ class AUVControllerNode(Node):
         return odom_rates[0], odom_rates[1], odom_rates[2], 'odom'
 
     def _select_state(self) -> tuple[Odometry | None, StateEstimateSource, bool, float]:
+        """选择当前控制周期应使用的状态源，并指示是否发生了降级回退。"""
         preferred_source = StateEstimateSource.RAW_DR if self.bypass_ekf else StateEstimateSource.FILTERED
         if preferred_source == StateEstimateSource.RAW_DR:
             if self.latest_raw_state is not None:
@@ -197,6 +217,7 @@ class AUVControllerNode(Node):
         return None, preferred_source, False, 0.0
 
     def _on_parameters_changed(self, params) -> SetParametersResult:
+        """响应运行时参数更新，支持切换状态源和控制频率。"""
         for param in params:
             if param.name == 'bypass_ekf':
                 self.bypass_ekf = bool(param.value)
@@ -211,6 +232,7 @@ class AUVControllerNode(Node):
         return SetParametersResult(successful=True)
 
     def _on_timer(self) -> None:
+        """控制周期主回调：读取状态、计算控制量并发布 Twist。"""
         if self.latest_setpoint is None:
             return
 
@@ -301,12 +323,14 @@ class AUVControllerNode(Node):
         }
 
     def _log_latency(self) -> None:
+        """周期性打印控制链路的平均延迟统计。"""
         if self._lat_count == 0:
             return
         mean_ms = (self._lat_sum / self._lat_count) * 1000.0
         self.get_logger().info(f'[controller] mean state/setpoint->cmd latency: {mean_ms:.2f} ms over {self._lat_count} samples')
 
     def _publish_debug(self) -> None:
+        """发布控制调试信息，供可视化和日志订阅。"""
         if self.latest_debug_payload is None:
             return
         self.debug_pub.publish(String(data=json.dumps(self.latest_debug_payload, ensure_ascii=False)))

@@ -1,4 +1,24 @@
-"""Shared protocol debug formatting helpers for CLI tools and mock AMD logs."""
+"""AUV 协议调试格式化助手 - 用于 CLI 工具和 Mock AMD 日志的包展示。
+
+本模块提供了将二进制协议包（$CKTH 下行、$AUV 上行）格式化为人类可读形式的函数。
+用途：
+  1. 实时包监控：在 sniffer.py 中展示网络通信的协议包
+  2. 日志记录：生成可查询的 CSV 和 ASCII 格式的包日志
+  3. 调试与诊断：快速识别包格式错误和校验和问题
+  4. 性能分析：提供紧凑的单行摘要便于统计分析
+
+设计特点：
+  • 支持多种输出格式（原始、ASCII 块、单行摘要）
+  • ANSI 颜色支持（自动检测终端能力）
+  • 机器友好的 CSV 格式（便于离线分析）
+  • 校验和和帧尾验证（自动检测格式错误）
+
+典型使用流程：
+  1. 通过 detect_protocol_direction() 判断包类型
+  2. 调用 parse_downlink_packet() 或 parse_uplink_packet() 解码
+  3. 选择合适的格式化函数输出（raw/ascii/compact）
+
+"""
 
 from __future__ import annotations
 
@@ -9,7 +29,7 @@ import time
 
 from .enums import ControlModeByte, WorkInstruction
 from .protocol import (
-    DEFAULT_MAIN_MOTOR_RPM_SCALE,
+    DEFAULT_MAIN_MOTOR_RPM_SCALE, # 主推进器 RPM 转换系数，用于将协议中的 RPM 值转换为实际转速
     PROTOCOL_DOWNLINK_CHECKSUM_INDEX,
     PROTOCOL_DOWNLINK_HEADER,
     PROTOCOL_DOWNLINK_SIZE,
@@ -23,16 +43,31 @@ from .protocol import (
 )
 
 _ANSI = {
-    "cyan": "\033[36m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "red": "\033[31m",
-    "reset": "\033[0m",
+    "cyan": "\033[36m",  # 青色 - 下行包通常用青色
+    "green": "\033[32m",  # 绿色 - 上行包（遥测）通常用绿色
+    "yellow": "\033[33m",  # 黄色 - 未知或错误包用黄色
+    "red": "\033[31m",  # 红色 - 解析错误时用红色
+    "reset": "\033[0m",  # 重置格式
 }
+"""ANSI 颜色代码映射 - 用于终端输出的视觉区分"""
 
 
 def supports_color(stream=None) -> bool:
-    """Return whether ANSI colors should be emitted for the given stream."""
+    """
+    @brief 检查给定的流是否支持 ANSI 颜色代码
+    
+    @param [in] stream 输出流（默认为 sys.stdout）
+    
+    @return bool，True 表示支持颜色，False 表示不支持或禁用
+    
+    @details
+    判断逻辑：
+      1. 检查 NO_COLOR 环境变量（若存在则禁用颜色）
+      2. 检查流是否为 TTY（交互式终端）
+    
+    此函数用于在输出时自动适应终端能力，避免在管道/文件重定向时
+    混入 ANSI 控制字符。
+    """
     target = sys.stdout if stream is None else stream
     if os.environ.get("NO_COLOR"):
         return False
@@ -40,14 +75,43 @@ def supports_color(stream=None) -> bool:
 
 
 def colorize(text: str, color: str, *, enabled: bool) -> str:
-    """Wrap text in ANSI colors when enabled and supported by the terminal."""
+    """
+    @brief 条件化为文本添加 ANSI 颜色代码
+    
+    @param [in] text 待着色的文本
+    @param [in] color 颜色名称 (cyan/green/yellow/red中的一种)
+    @param [in] enabled 是否启用着色
+    
+    @return str，如果启用且支持，返回着色的文本；否则返回原文本
+    
+    @details
+    着色规则：
+      1. 若 enabled=False 或颜色不支持，直接返回原文本
+      2. 若颜色代码有效，包装为 {ansi_code}{text}{reset_code}
+    
+    此函数用于日志输出中的视觉区分，避免过度着色和兼容性问题。
+    """
     if not enabled or color not in _ANSI:
         return text
     return f"{_ANSI[color]}{text}{_ANSI['reset']}"
 
 
 def detect_protocol_direction(packet: bytes) -> str:
-    """Classify protocol packets as downlink, uplink, or unknown."""
+    """
+    @brief 根据帧头识别协议包的方向（下行、上行或未知）
+    
+    @param [in] packet 原始数据包字节序列
+    
+    @return str，"downlink" / "uplink" / "unknown" 之一
+    
+    @details
+    分类规则（按优先级）：
+      1. 若帧头为 "$CKTH"（5 字节）→ 返回 "downlink"（PC → AUV 控制命令）
+      2. 若帧头为 "$AUV\\x91"（5 字节）→ 返回 "uplink"（AUV → PC 遥测）
+      3. 其他情况 → 返回 "unknown"（格式不支持）
+    
+    此函数是协议包处理的第一步，用于分发到不同的解析器。
+    """
     if bytes(packet[: len(PROTOCOL_DOWNLINK_HEADER)]) == PROTOCOL_DOWNLINK_HEADER:
         return "downlink"
     if bytes(packet[: len(PROTOCOL_UPLINK_HEADER)]) == PROTOCOL_UPLINK_HEADER:
@@ -56,7 +120,21 @@ def detect_protocol_direction(packet: bytes) -> str:
 
 
 def hex_preview(packet: bytes, *, max_bytes: int = 48) -> str:
-    """Return a trimmed hexadecimal preview suitable for single-line logs."""
+    """
+    @brief 生成适合单行日志的十六进制预览
+    
+    @param [in] packet 数据包字节序列
+    @param [in] max_bytes 最多显示的字节数（默认 48）
+    
+    @return str，十六进制预览（带空格分隔，若被截断则末尾加" ..."）
+    
+    @details
+    输出格式示例：
+      • "01 02 03 04 05" - 完整显示（少于 max_bytes）
+      • "01 02 03 ... " - 被截断（超过 max_bytes）
+    
+    用途：在日志尾部快速显示包内容，便于验证包格式。
+    """
     clipped = packet[: max(1, int(max_bytes))]
     preview = clipped.hex(" ")
     if len(packet) > len(clipped):
@@ -131,10 +209,31 @@ def format_protocol_packet_raw(
     max_hex_bytes: int = 48,
     main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
 ) -> str:
-    """Format packets as compact CSV-style raw lines.
-
-    The raw representation intentionally stays machine-friendly and mirrors the
-    documented CSV layout used by the protocol logging guide.
+    """
+    @brief 将协议包格式化为紧凑的 CSV 风格单行输出
+    
+    @param [in] packet 原始数据包
+    @param [in] label 日志标签（例如 "sim", "real"）
+    @param [in] source 来源标识（例如 "localhost:7447"）
+    @param [in] color 是否启用着色（此格式中着色有限）
+    @param [in] include_hex 是否在末尾附加十六进制预览
+    @param [in] max_hex_bytes 十六进制预览的最大字节数
+    @param [in] main_motor_rpm_scale RPM 转换系数
+    
+    @return str，CSV 格式的单行字符串
+    
+    @details
+    输出格式（机器友好）：
+      • 下行包 ($CKTH):
+        $CKTH,frame_num,obj_addr,mode_byte,instr,right,top,left,bottom,thrust,main_rpm,side_rpm,heading
+      
+      • 上行包 ($AUV):
+        $AUV,frame_num,auv_addr,mode_byte,instr,depth,heading,pitch,roll,lon,lat,voltage,current,main_rpm,right,top,left,bottom
+      
+      • 未知包:
+        UNKNOWN,len_bytes
+    
+    用途：离线数据分析、Excel 导入、脚本处理。
     """
     direction = detect_protocol_direction(packet)
 
@@ -195,7 +294,39 @@ def format_protocol_packet_ascii(
     color: bool = True,
     main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
 ) -> str:
-    """Format packets as a detailed multi-line diagnostic block."""
+    """
+    @brief 将协议包格式化为详细的多行诊断块（ASCII 格式）
+    
+    @param [in] packet 原始数据包
+    @param [in] label 日志标签
+    @param [in] source 来源标识
+    @param [in] include_timestamp 是否包含时间戳
+    @param [in] color 是否启用着色
+    @param [in] main_motor_rpm_scale RPM 转换系数
+    
+    @return str，格式化的多行 ASCII 块
+    
+    @details
+    输出结构（易于人工阅读）：
+      • 帧头信息：序号、地址、模式、指令
+      • 控制/遥测数据：按功能分组（舵叶、推进、姿态等）
+      • 帧完整性检查：校验和与帧尾验证结果
+    
+    示例输出（下行包）：
+      ==================================================
+      ASCII PROTOCOL PACKET - DOWNLINK ($CKTH)
+      --------------------------------------------------
+      Timestamp: 2026-04-27 15:30:45.123
+      Label: sim
+      Source: localhost
+      
+      HEADER INFO:
+        Frame Number: 42
+        ...
+      ==================================================
+    
+    用途：实时监控、问题调试、协议规范验证。
+    """
     direction = detect_protocol_direction(packet)
     timestamp = _format_timestamp(include_timestamp)
     lines: list[str] = []
@@ -308,7 +439,21 @@ def format_protocol_packet_ascii(
 
 
 def summarize_downlink_packet(packet: bytes, *, main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE) -> str:
-    """Return a compact one-line summary for a decoded $CKTH packet."""
+    """
+    @brief 为下行 ($CKTH) 包生成紧凑的单行摘要
+    
+    @param [in] packet 原始数据包（72 字节）
+    @param [in] main_motor_rpm_scale RPM 转换系数
+    
+    @return str，格式为 "frame=X obj=X mode=0xXX instr=0xXX cmd=(r,t,l,b,thrust) ..."
+    
+    @details
+    输出示例：
+      frame=42 obj=1 mode=0xEE instr=0x01 cmd=(5.0,10.0,-5.0,-10.0,50.0) \
+      main_rpm=750 side_rpm=100 heading=45.0deg
+    
+    用途：快速定位包的关键信息，便于日志过滤和问题追踪。
+    """
     state = parse_downlink_packet(packet, main_motor_rpm_scale=main_motor_rpm_scale)
     payload = downlink_state_to_payload(state)
     return (
@@ -322,7 +467,20 @@ def summarize_downlink_packet(packet: bytes, *, main_motor_rpm_scale: float = DE
 
 
 def summarize_uplink_packet(packet: bytes) -> str:
-    """Return a compact one-line summary for a decoded $AUV packet."""
+    """
+    @brief 为上行 ($AUV) 包生成紧凑的单行摘要
+    
+    @param [in] packet 原始数据包（145 字节）
+    
+    @return str，格式为 "frame=X auv=X mode=0xXX instr=0xXX depth=X.XXm heading=X.Xdeg ..."
+    
+    @details
+    输出示例：
+      frame=42 auv=1 mode=0x01 instr=0x00 depth=12.50m heading=45.0deg \
+      gps=(139.123456,35.654321) voltage=48.0V cmd=(5.0,10.0,-5.0,-10.0,750)
+    
+    用途：快速验证 AUV 状态，便于实时监控和性能分析。
+    """
     telemetry = parse_uplink_packet(packet)
     return (
         f"frame={telemetry.frame_number} auv={telemetry.auv_address} "
@@ -346,7 +504,31 @@ def format_protocol_packet(
     max_hex_bytes: int = 48,
     main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
 ) -> str:
-    """Format protocol packets into a consistent single-line log view."""
+    """
+    @brief 将协议包格式化为一致的单行日志视图（推荐用于日志输出）
+    
+    @param [in] packet 原始数据包
+    @param [in] label 日志标签
+    @param [in] source 来源标识
+    @param [in] color 是否启用 ANSI 着色
+    @param [in] include_hex 是否附加十六进制预览
+    @param [in] max_hex_bytes 十六进制预览的最大字节数
+    @param [in] main_motor_rpm_scale RPM 转换系数
+    
+    @return str，单行格式化输出
+    
+    @details
+    输出格式（着色 + 摘要）：
+      [protocol][CKTH][localhost:7447] frame=42 obj=1 ... hex=24 43 4B ...
+    
+    着色规则：
+      • [tag] 青色：下行包（下行命令）
+      • [tag] 绿色：上行包（遥测正常）
+      • [tag] 黄色：未知包（格式不支持）
+      • [tag] 红色：解析失败
+    
+    用途：日志轮转、实时监控、问题诊断。这是最常用的格式函数。
+    """
     direction = detect_protocol_direction(packet)
     tag_parts = [label]
 
