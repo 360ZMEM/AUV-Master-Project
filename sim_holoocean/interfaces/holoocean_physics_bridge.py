@@ -38,14 +38,7 @@ from perception_engine import (
     inject_sonar_cable_peak,
 )
 from synthetic_sensors import VirtualEnvironment
-from sim_wrapper import (
-    HoloOceanSimWrapper,
-    build_scenario,
-    extract_body_velocity,
-    extract_depth,
-    extract_gyro,
-    get_agent_state,
-)
+from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, extract_gyro, get_agent_state
 from zenoh_bridge import ZenohBridge
 
 
@@ -72,7 +65,8 @@ class HoloOceanPhysicsZenohBridge:
     def open(self):
         scenario = build_scenario(self.config)
         sim_cfg = self.config["simulation"]
-        self.wrapper = HoloOceanSimWrapper(
+        self.wrapper = create_sim_wrapper(
+            self.config,
             scenario_cfg=scenario,
             agent_name=self.agent_name,
             show_viewport=bool(sim_cfg.get("show_viewport", False)),

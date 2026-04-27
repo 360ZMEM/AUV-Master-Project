@@ -4,6 +4,7 @@ stage:
   name: auv_zenoh_bridge
 
 simulation:
+  backend: holoocean
   # 仿真循环参数，桥接模式通常更偏向实时数据输出。
   world: Dam
   package_name: Ocean
@@ -71,6 +72,44 @@ bridge:
     telemetry_total_current_a: 12.0
     telemetry_soc: 100
     telemetry_soh: 100
+    sniffer_mirror_host: 127.0.0.1
+    sniffer_mirror_port: 52366
+    log_packets: true
+    log_packet_hex: false
+    log_hex_bytes: 48
+    log_every_n: 1
+
+mock_amd:
+  # 传输延迟模拟，默认关闭。
+  transport_delay_ms: 0.0
+  transport_jitter_ms: 0.0
+  transport_max_queue: 64
+
+  # 传感器独立采样率，0 表示禁用缓存。
+  sensor_clocks:
+    imu_hz: 0.0
+    dvl_hz: 0.0
+    depth_hz: 0.0
+    mag_hz: 0.0
+
+  # 混沌注入总开关，默认关闭。
+  chaos:
+    enabled: false
+    packet_loss_pct: 0.0
+    reorder_enabled: false
+    reorder_buffer_ms: 50.0
+    dvl_freeze_enabled: false
+    dvl_freeze_after_s: 30.0
+    imu_drift_enabled: false
+    imu_drift_rate_deg_per_s: 0.5
+    depth_spike_enabled: false
+    depth_spike_m: 5.0
+    depth_spike_after_s: 60.0
+    mag_saturation_enabled: false
+    mag_saturation_threshold_t: 50000.0
+    uplink_dropout_enabled: false
+    uplink_dropout_on_pct: 0.8
+    uplink_dropout_period_s: 10.0
 
 zenoh:
   # Zenoh 通信相关配置：session 可留空采用默认连接参数。

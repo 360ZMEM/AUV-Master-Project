@@ -14,3 +14,7 @@ float32 sine_period_s
 
 bool high_priority
 string note
+
+# Analytical path target position (for L2 AnalyticalPath mode)
+float32 target_x_m
+float32 target_y_m

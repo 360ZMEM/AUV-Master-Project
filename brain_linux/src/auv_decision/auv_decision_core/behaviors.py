@@ -158,3 +158,144 @@ class ZigZagSearch(_BaseBehavior):
             )
         )
         return py_trees.common.Status.SUCCESS
+
+
+class HoldCurrentPoseBehavior(_BaseBehavior):
+    """L1 Hold 行为：定深定航稳定，用于验证 PID 控制稳定性。
+
+    在 initialize() 时抓取当前深度和航向作为目标，update() 持续发布零速度控制指令。
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name='HoldCurrentPose')
+        self.target_depth_m: float = 0.0
+        self.target_heading_rad: float = 0.0
+
+    def initialise(self) -> None:
+        """节点启动时抓取当前位姿作为目标。"""
+        status = self._get_sensor_status()
+        self.target_depth_m = float(status.depth_m)
+        self.target_heading_rad = float(status.heading_rad)
+        self.logger.info(
+            f'HoldCurrentPose 初始化: target_depth={self.target_depth_m:.2f}m, '
+            f'target_heading={self.target_heading_rad:.2f}rad'
+        )
+
+    def update(self) -> py_trees.common.Status:
+        """持续发布零速度控制指令，保持定深定航。"""
+        self._write_goal(
+            MotionGoal(
+                mode='STABILIZE_HOLD',
+                target_depth_m=self.target_depth_m,
+                target_speed_mps=0.0,
+                target_heading_rad=self.target_heading_rad,
+                high_priority=False,
+                note='L1 Hold 模式：定深定航稳定，验证 PID 控制稳定性。',
+            )
+        )
+        return py_trees.common.Status.RUNNING
+
+
+class TrackAnalyticalTrajectoryBehavior(_BaseBehavior):
+    """L2 AnalyticalPath 行为：跟踪解析式轨迹，用于验证 LOS 导引律。
+
+    基于解析式轨迹生成器（如 cable_like_3d），使用 Mock AMD 时钟进行时间索引采样。
+    """
+
+    def __init__(self, trajectory_kind: str = 'cable_like_3d') -> None:
+        super().__init__(name='TrackAnalyticalTrajectory')
+        self.trajectory_kind = trajectory_kind
+        self.trajectory_generator = None
+
+    def initialise(self) -> None:
+        """节点启动时创建轨迹生成器。"""
+        try:
+            from algorithm.trajectory_generator import TrajectoryGenerator
+
+            self.trajectory_generator = TrajectoryGenerator(kind=self.trajectory_kind)
+            self.logger.info(f'TrackAnalyticalTrajectory 初始化: trajectory_kind={self.trajectory_kind}')
+        except ImportError as e:
+            self.logger.error(f'无法导入 TrajectoryGenerator: {e}')
+            self.trajectory_generator = None
+
+    def update(self) -> py_trees.common.Status:
+        """基于 Mock AMD 时钟采样轨迹点，发布目标状态。"""
+        if self.trajectory_generator is None:
+            self.logger.warning('轨迹生成器未初始化，返回 FAILURE')
+            return py_trees.common.Status.FAILURE
+
+        status = self._get_sensor_status()
+        if status.mock_amd_timestamp_us <= 0:
+            self.logger.warning('Mock AMD 时间戳未同步，返回 FAILURE')
+            return py_trees.common.Status.FAILURE
+
+        # 将微秒转换为秒
+        t_s = status.mock_amd_timestamp_us / 1e6
+
+        # 采样轨迹点
+        try:
+            waypoint = self.trajectory_generator.get_waypoint(t_s)
+            if waypoint is None:
+                self.logger.warning(f'轨迹采样失败（t={t_s:.2f}s），返回 FAILURE')
+                return py_trees.common.Status.FAILURE
+
+            # 发布目标状态
+            self._write_goal(
+                MotionGoal(
+                    mode='ANALYTICAL_PATH',
+                    target_depth_m=float(waypoint.get('z', 4.0)),
+                    target_speed_mps=float(waypoint.get('speed', 0.6)),
+                    target_x_m=float(waypoint.get('x', 0.0)),
+                    target_y_m=float(waypoint.get('y', 0.0)),
+                    target_heading_rad=float(waypoint.get('yaw', 0.0)),
+                    high_priority=False,
+                    note=f'L2 AnalyticalPath 模式：跟踪解析式轨迹（t={t_s:.2f}s）',
+                )
+            )
+            return py_trees.common.Status.RUNNING
+        except Exception as e:
+            self.logger.error(f'轨迹采样异常: {e}')
+            return py_trees.common.Status.FAILURE
+
+
+class DebugLevelCondition(py_trees.behaviour.Behaviour):
+    """DebugLevel 条件节点：检查当前 debug_level 是否满足阈值。
+
+    用于控制 L1/L2 行为节点的激活条件。
+
+    Args:
+        required_level: 要求的 debug_level 阈值
+        exact_match: 如果为 True，则要求精确匹配；如果为 False，则要求 >= 阈值
+    """
+
+    def __init__(self, required_level: int = 1, exact_match: bool = False) -> None:
+        super().__init__(name=f'DebugLevel=={required_level}' if exact_match else f'DebugLevel>={required_level}')
+        self.required_level = required_level
+        self.exact_match = exact_match
+        self.blackboard = py_trees.blackboard.Client(name=f'DebugLevelCondition_{required_level}')
+        self.blackboard.register_key(key=SENSOR_STATUS_KEY, access=py_trees.common.Access.READ)
+
+    def update(self) -> py_trees.common.Status:
+        """检查 debug_level 是否满足条件。"""
+        status = self.blackboard.get(SENSOR_STATUS_KEY)
+        if not isinstance(status, SensorStatusData):
+            # 尚未初始化，默认返回 FAILURE
+            return py_trees.common.Status.FAILURE
+
+        # 从 sensor_status 读取 debug_level
+        current_level = getattr(status, 'debug_level', 0)
+
+        if self.exact_match:
+            # 精确匹配
+            return (
+                py_trees.common.Status.SUCCESS
+                if current_level == self.required_level
+                else py_trees.common.Status.FAILURE
+            )
+        else:
+            # 阈值匹配
+            return (
+                py_trees.common.Status.SUCCESS
+                if current_level >= self.required_level
+                else py_trees.common.Status.FAILURE
+            )

@@ -12,6 +12,7 @@ dist/
 install/
 log/
 build/
+docs_backup/
 
 # VS Code
 .vscode/
@@ -29,3 +30,9 @@ env/
 
 # JetBrains
 .idea/
+docs/
+docs_new/
+
+# foxglove
+# foxglove_layout_project/
+CLAUDE.*

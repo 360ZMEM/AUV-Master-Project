@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-ROS2 AUV数据发布节点
-发布模拟的AUV传感器数据供Foxglove可视化
+ROS2 AUV data publisher.
+
+Publish simulated AUV sensor data for Foxglove visualization.
 """
 
 import random
@@ -16,7 +17,7 @@ from tf2_msgs.msg import TFMessage
 
 
 class AUVDataPublisher(Node):
-    """AUV数据发布器类"""
+    """AUV data publisher."""
 
     def __init__(self):
         super().__init__('auv_data_publisher')
@@ -86,7 +87,7 @@ class AUVDataPublisher(Node):
 
     @staticmethod
     def _quat_from_yaw(yaw: float) -> Quaternion:
-        """由偏航角生成四元数。"""
+        """Generate a quaternion from yaw."""
         return Quaternion(
             x=0.0,
             y=0.0,
@@ -95,10 +96,14 @@ class AUVDataPublisher(Node):
         )
 
     def _publish_static_transforms(self):
-        """发布AUV本体相关静态TF。"""
+        """Publish static TF frames for the AUV body."""
         static_tfs: list[TransformStamped] = []
 
-        def _make_static(parent: str, child: str, xyz: tuple[float, float, float]) -> TransformStamped:
+        def _make_static(
+            parent: str,
+            child: str,
+            xyz: tuple[float, float, float],
+        ) -> TransformStamped:
             tf = TransformStamped()
             tf.header.stamp = self.get_clock().now().to_msg()
             tf.header.frame_id = parent
@@ -117,7 +122,7 @@ class AUVDataPublisher(Node):
         self.static_tf_broadcaster.sendTransform(static_tfs)
 
     def timer_callback(self):
-        """定时回调函数，发布所有传感器数据"""
+        """Timer callback that publishes all sensor data."""
         time_stamp = self.get_clock().now().to_msg()
 
         # 更新模拟状态
@@ -210,11 +215,14 @@ class AUVDataPublisher(Node):
         self.status_pub.publish(status_msg)
 
     def _update_simulation(self):
-        """使用一阶平滑积分模型更新模拟状态，避免白噪声跳变。"""
+        """Update the simulation state with a first-order smoothing model."""
         # 目标值缓慢随机游走（低频输入）
         self.depth_target = max(0.0, min(100.0, self.depth_target + random.uniform(-0.25, 0.25)))
         self.speed_target = max(0.2, min(4.0, self.speed_target + random.uniform(-0.06, 0.06)))
-        self.turn_rate_target = max(-0.12, min(0.12, self.turn_rate_target + random.uniform(-0.01, 0.01)))
+        self.turn_rate_target = max(
+            -0.12,
+            min(0.12, self.turn_rate_target + random.uniform(-0.01, 0.01)),
+        )
 
         # 一阶惯性环节：x += (u-x)/tau * dt
         self.depth += (self.depth_target - self.depth) * (self.dt / self.tau_depth)
@@ -228,7 +236,7 @@ class AUVDataPublisher(Node):
 
 
 def main(args=None):
-    """主函数"""
+    """Run the data publisher node."""
     import rclpy
 
     rclpy.init(args=args)

@@ -44,3 +44,16 @@ bool seabed_proximity_warning
 
 # 穿过海底告警（保留紧急上浮语义）
 bool seabed_penetration_warning
+
+# 当前航向（弧度，NED 坐标系）
+float32 heading_rad
+
+# Mock AMD 时钟时间戳（Unix 微秒），用于解析轨迹模式时间同步
+int64 mock_amd_timestamp_us
+
+# 算法透明度级别（0:AUTO, 1:HOLD, 2:PATH, 3:FULL）
+uint8 debug_level
+uint8 DEBUG_AUTO=0
+uint8 DEBUG_HOLD=1
+uint8 DEBUG_PATH=2
+uint8 DEBUG_FULL=3

@@ -26,7 +26,7 @@ from metrics import compute_metrics
 from plot_runtime import initialize_plot, render_plot, update_live_plot
 from safety_monitor import apply_safety
 from sim_wrapper import (
-    HoloOceanSimWrapper,
+    create_sim_wrapper,
     build_scenario,
     extract_body_velocity,
     extract_depth,
@@ -72,6 +72,7 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
     print("=" * 72)
     print("Phase 4: Main Simulation Loop (LOS + Cascaded PID)")
     print(f"config={config_path}")
+    print(f"simulation_backend={sim_cfg.get('backend', 'holoocean')}")
     print(f"control_scheme={cfg['agent']['control_scheme']} command=[right,top,left,bottom,thrust]")
     print(
         f"turn_radius_check: min_actual={radius_check['min_radius_actual']:.3f}, "
@@ -97,11 +98,19 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
     sim_done = threading.Event()
     sim_exception = [None]
     wall_start = time.time()
+    pvs_reference_mode = str(cfg.get("pvs", {}).get("control_mode", "stepInput")).strip().lower()
+    use_pvs_reference = str(sim_cfg.get("backend", "holoocean")).strip().lower() == "pvs" and pvs_reference_mode in {
+        "depthheadingautopilot",
+        "depth_heading_autopilot",
+        "autopilot",
+        "reference",
+    }
 
     def sim_loop():
         nonlocal history, nearest_idx
         try:
-            wrapper = HoloOceanSimWrapper(
+            wrapper = create_sim_wrapper(
+                cfg,
                 scenario_cfg=scenario,
                 agent_name=agent_name,
                 show_viewport=bool(sim_cfg["show_viewport"]),
@@ -167,9 +176,26 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
                     "target_u": float(ctrl_cfg["target_u"]),
                 }
 
-                command, debug = controller.compute(control_state, target)
-                command, safety_events = apply_safety(command, position, lim_cfg)
-                state_raw = wrapper.step(command)
+                if use_pvs_reference and hasattr(wrapper, "set_reference"):
+                    wrapper.set_reference(
+                        depth_m=float(target["target_depth"]),
+                        heading_rad=float(target["target_yaw"]),
+                        speed_mps=float(target["target_u"]),
+                    )
+                    command = np.zeros(5, dtype=float)
+                    debug = {
+                        "gain_scale": 1.0,
+                        "yaw_error": 0.0,
+                        "pitch_saturated": False,
+                        "yaw_saturated": False,
+                        "thrust_saturated": False,
+                    }
+                    safety_events = []
+                    state_raw = wrapper.step(command)
+                else:
+                    command, debug = controller.compute(control_state, target)
+                    command, safety_events = apply_safety(command, position, lim_cfg)
+                    state_raw = wrapper.step(command)
 
                 if safety_events:
                     history["safety_event_count"] += len(safety_events)

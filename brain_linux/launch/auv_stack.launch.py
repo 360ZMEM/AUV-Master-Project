@@ -27,6 +27,12 @@ def generate_launch_description() -> LaunchDescription:
         description='Enable Zenoh JSON bridge node',
     )
 
+    passive_mode_arg = DeclareLaunchArgument(
+        'passive_mode',
+        default_value='false',
+        description='Run bridge in passive shadow mode without sending downstream commands',
+    )
+
     bridge_backend_arg = DeclareLaunchArgument(
         'bridge_backend',
         default_value='zenoh_json',
@@ -55,6 +61,12 @@ def generate_launch_description() -> LaunchDescription:
         'protocol_control_mode_byte',
         default_value='238',
         description='Ctrl_Mode byte used when protocol_udp backend is active',
+    )
+
+    main_motor_rpm_scale_arg = DeclareLaunchArgument(
+        'main_motor_rpm_scale',
+        default_value='15.0',
+        description='Protocol scaling factor used for main motor rpm conversion',
     )
 
     enable_viz_bridge_arg = DeclareLaunchArgument(
@@ -183,6 +195,18 @@ def generate_launch_description() -> LaunchDescription:
         description='Publish live /auv/sensors/status from localization node',
     )
 
+    publish_raw_state_arg = DeclareLaunchArgument(
+        'publish_raw_state',
+        default_value='false',
+        description='Publish raw dead-reckoning odometry from localization node',
+    )
+
+    bypass_ekf_arg = DeclareLaunchArgument(
+        'bypass_ekf',
+        default_value='false',
+        description='Make controller consume /auv/state/raw_dr instead of filtered state',
+    )
+
     seabed_depth_arg = DeclareLaunchArgument(
         'seabed_depth_m',
         default_value='15.0',
@@ -195,6 +219,30 @@ def generate_launch_description() -> LaunchDescription:
         description='Near-bottom warning margin used for safety limiting',
     )
 
+    debug_level_arg = DeclareLaunchArgument(
+        'debug_level',
+        default_value='0',
+        description='Algorithm transparency level forwarded to decision_node',
+    )
+
+    transition_threshold_arg = DeclareLaunchArgument(
+        'transition_threshold_m',
+        default_value='2.0',
+        description='Jump threshold for decision-side transition smoothing',
+    )
+
+    transition_duration_arg = DeclareLaunchArgument(
+        'transition_duration_s',
+        default_value='3.0',
+        description='Smoothing duration for decision-side transition interpolation',
+    )
+
+    mock_amd_timeout_arg = DeclareLaunchArgument(
+        'mock_amd_timeout_s',
+        default_value='5.0',
+        description='Mock AMD time synchronization timeout for decision_node',
+    )
+
     params = LaunchConfiguration('params_file')
 
     bridge = Node(
@@ -203,7 +251,12 @@ def generate_launch_description() -> LaunchDescription:
         name='zenoh_json_bridge_node',
         condition=IfCondition(LaunchConfiguration('enable_bridge')),
         output='screen',
-        parameters=[{'params_file': params}, {'bridge_backend': LaunchConfiguration('bridge_backend')}],
+        parameters=[
+            {'params_file': params},
+            {'bridge_backend': LaunchConfiguration('bridge_backend')},
+            {'passive_mode': LaunchConfiguration('passive_mode')},
+            {'main_motor_rpm_scale': LaunchConfiguration('main_motor_rpm_scale')},
+        ],
     )
 
     localization = Node(
@@ -232,6 +285,7 @@ def generate_launch_description() -> LaunchDescription:
             {'publish_camera_tf': LaunchConfiguration('publish_camera_tf')},
             {'publish_sonar_tf': LaunchConfiguration('publish_sonar_tf')},
             {'publish_sensor_status': LaunchConfiguration('publish_sensor_status')},
+            {'publish_raw_state': LaunchConfiguration('publish_raw_state')},
             {'seabed_depth_m': LaunchConfiguration('seabed_depth_m')},
             {'seabed_proximity_margin_m': LaunchConfiguration('seabed_proximity_margin_m')},
         ],
@@ -243,7 +297,10 @@ def generate_launch_description() -> LaunchDescription:
         name='auv_controller_node',
         condition=IfCondition(LaunchConfiguration('enable_controller')),
         output='screen',
-        parameters=[{'params_file': params}],
+        parameters=[
+            {'params_file': params},
+            {'bypass_ekf': LaunchConfiguration('bypass_ekf')},
+        ],
     )
 
     decision = Node(
@@ -260,6 +317,10 @@ def generate_launch_description() -> LaunchDescription:
                 'summary_log_period': 2.0,
                 'bridge_backend': LaunchConfiguration('bridge_backend'),
                 'protocol_control_mode_byte': LaunchConfiguration('protocol_control_mode_byte'),
+                'debug_level': LaunchConfiguration('debug_level'),
+                'transition_threshold_m': LaunchConfiguration('transition_threshold_m'),
+                'transition_duration_s': LaunchConfiguration('transition_duration_s'),
+                'mock_amd_timeout_s': LaunchConfiguration('mock_amd_timeout_s'),
             }
         ],
     )
@@ -284,11 +345,13 @@ def generate_launch_description() -> LaunchDescription:
             params_arg,
             start_ros2dds_arg,
             enable_bridge_arg,
+            passive_mode_arg,
             bridge_backend_arg,
             enable_localization_arg,
             enable_controller_arg,
             enable_decision_arg,
             protocol_control_mode_byte_arg,
+            main_motor_rpm_scale_arg,
             enable_viz_bridge_arg,
             viz_mock_mode_arg,
             viz_mock_fallback_timeout_arg,
@@ -310,8 +373,14 @@ def generate_launch_description() -> LaunchDescription:
             publish_camera_tf_arg,
             publish_sonar_tf_arg,
             publish_sensor_status_arg,
+            publish_raw_state_arg,
+            bypass_ekf_arg,
             seabed_depth_arg,
             seabed_proximity_margin_arg,
+            debug_level_arg,
+            transition_threshold_arg,
+            transition_duration_arg,
+            mock_amd_timeout_arg,
             bridge,
             TimerAction(period=2.0, actions=[localization]),
             TimerAction(period=3.0, actions=[viz_bridge]),

@@ -22,6 +22,9 @@ def sensor_msg_to_core(msg: SensorStatus) -> SensorStatusData:
         seabed_clearance_m=float(msg.seabed_clearance_m),
         seabed_proximity_warning=bool(msg.seabed_proximity_warning),
         seabed_penetration_warning=bool(msg.seabed_penetration_warning),
+        heading_rad=float(msg.heading_rad) if hasattr(msg, 'heading_rad') else 0.0,
+        mock_amd_timestamp_us=int(msg.mock_amd_timestamp_us) if hasattr(msg, 'mock_amd_timestamp_us') else 0,
+        debug_level=int(msg.debug_level) if hasattr(msg, 'debug_level') else 0,
     )
 
 
@@ -73,6 +76,8 @@ def motion_goal_dict_to_setpoint_msg(goal: dict, stamp: Time | None = None) -> S
     msg.sine_period_s = float(goal.get('sine_period_s', 0.0))
     msg.high_priority = bool(goal.get('high_priority', False))
     msg.note = str(goal.get('note', ''))
+    msg.target_x_m = float(goal.get('target_x_m', 0.0))
+    msg.target_y_m = float(goal.get('target_y_m', 0.0))
     return msg
 
 

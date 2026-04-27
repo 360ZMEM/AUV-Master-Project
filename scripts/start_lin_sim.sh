@@ -5,6 +5,7 @@ set -euo pipefail
 # Usage:
 #   ./start_lin_sim.sh sim
 #   ./start_lin_sim.sh bridge --backend protocol_udp
+#   ./start_lin_sim.sh both --sim-backend pvs --backend protocol_udp
 #   ./start_lin_sim.sh both --bridge-cfg /abs/path/to/bridge_params.protocol_udp.yaml
 
 MODE="both"
@@ -15,8 +16,11 @@ fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SIM_APPS_DIR="$ROOT_DIR/sim_holoocean/apps"
-SIM_CFG="${AUV_SIM_CFG:-$ROOT_DIR/config/sim_params.yaml}"
+SIM_BACKEND="${AUV_SIM_BACKEND:-holoocean}"
+SIM_CFG_OVERRIDE="${AUV_SIM_CFG:-}"
+CLI_SIM_CFG_OVERRIDE=""
 BRIDGE_CFG_OVERRIDE="${AUV_BRIDGE_CFG:-}"
+CLI_BRIDGE_CFG_OVERRIDE=""
 BRIDGE_BACKEND="${AUV_BRIDGE_BACKEND:-}"
 
 usage() {
@@ -25,21 +29,59 @@ Usage:
   ./start_lin_sim.sh [sim|bridge|both] [options]
 
 Options:
+  --sim-backend BACKEND  simulation backend: holoocean or pvs
   --backend BACKEND     bridge backend: zenoh_json or protocol_udp
   --bridge-cfg PATH     explicit bridge config path
   --sim-cfg PATH        explicit sim config path
   -h, --help            show this help
 
 Notes:
-  - default backend remains zenoh_json
+  - default simulation backend remains holoocean
+  - when --sim-backend pvs is used, PVS-specific config defaults are preferred
   - when --backend protocol_udp is used and --bridge-cfg is omitted,
-    config/bridge_params.protocol_udp.yaml is preferred if present
+    config/bridge_params.protocol_udp.yaml or the PVS overlay is preferred if present
 EOF
 }
 
-resolve_default_bridge_cfg() {
+resolve_default_sim_cfg() {
   local backend="$1"
   case "$backend" in
+    pvs)
+      if [[ -f "$ROOT_DIR/config/sim_params.pvs.yaml" ]]; then
+        echo "$ROOT_DIR/config/sim_params.pvs.yaml"
+      else
+        echo "$ROOT_DIR/config/sim_params.yaml"
+      fi
+      ;;
+    *)
+      echo "$ROOT_DIR/config/sim_params.yaml"
+      ;;
+  esac
+}
+
+resolve_default_bridge_cfg() {
+  local sim_backend="$1"
+  local bridge_backend="$2"
+
+  if [[ "$sim_backend" == "pvs" && "$bridge_backend" == "protocol_udp" ]]; then
+    if [[ -f "$ROOT_DIR/config/bridge_params.protocol_udp.pvs.yaml" ]]; then
+      echo "$ROOT_DIR/config/bridge_params.protocol_udp.pvs.yaml"
+      return
+    fi
+    if [[ -f "$ROOT_DIR/config/bridge_params.protocol_udp.yaml" ]]; then
+      echo "$ROOT_DIR/config/bridge_params.protocol_udp.yaml"
+      return
+    fi
+  fi
+
+  if [[ "$sim_backend" == "pvs" ]]; then
+    if [[ -f "$ROOT_DIR/config/bridge_params.pvs.yaml" ]]; then
+      echo "$ROOT_DIR/config/bridge_params.pvs.yaml"
+      return
+    fi
+  fi
+
+  case "$bridge_backend" in
     protocol_udp)
       if [[ -f "$ROOT_DIR/config/bridge_params.protocol_udp.yaml" ]]; then
         echo "$ROOT_DIR/config/bridge_params.protocol_udp.yaml"
@@ -55,16 +97,20 @@ resolve_default_bridge_cfg() {
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --sim-backend)
+      SIM_BACKEND="${2:?missing value for --sim-backend}"
+      shift 2
+      ;;
     --backend)
       BRIDGE_BACKEND="${2:?missing value for --backend}"
       shift 2
       ;;
     --bridge-cfg)
-      BRIDGE_CFG_OVERRIDE="${2:?missing value for --bridge-cfg}"
+      CLI_BRIDGE_CFG_OVERRIDE="${2:?missing value for --bridge-cfg}"
       shift 2
       ;;
     --sim-cfg)
-      SIM_CFG="${2:?missing value for --sim-cfg}"
+      CLI_SIM_CFG_OVERRIDE="${2:?missing value for --sim-cfg}"
       shift 2
       ;;
     -h|--help)
@@ -79,10 +125,27 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -n "$BRIDGE_CFG_OVERRIDE" ]]; then
+if [[ -n "$CLI_SIM_CFG_OVERRIDE" ]]; then
+  SIM_CFG="$CLI_SIM_CFG_OVERRIDE"
+elif [[ -n "$SIM_CFG_OVERRIDE" ]]; then
+  SIM_CFG="$SIM_CFG_OVERRIDE"
+else
+  SIM_CFG="$(resolve_default_sim_cfg "$SIM_BACKEND")"
+fi
+
+if [[ -n "$CLI_BRIDGE_CFG_OVERRIDE" ]]; then
+  BRIDGE_CFG="$CLI_BRIDGE_CFG_OVERRIDE"
+elif [[ -n "$BRIDGE_CFG_OVERRIDE" ]]; then
   BRIDGE_CFG="$BRIDGE_CFG_OVERRIDE"
 else
-  BRIDGE_CFG="$(resolve_default_bridge_cfg "${BRIDGE_BACKEND:-zenoh_json}")"
+  BRIDGE_CFG="$(resolve_default_bridge_cfg "$SIM_BACKEND" "${BRIDGE_BACKEND:-zenoh_json}")"
+fi
+if [[ "$SIM_CFG" != /* ]]; then
+  SIM_CFG="$ROOT_DIR/$SIM_CFG"
+fi
+
+if [[ "$BRIDGE_CFG" != /* ]]; then
+  BRIDGE_CFG="$ROOT_DIR/$BRIDGE_CFG"
 fi
 
 make_uuid() {
@@ -119,6 +182,7 @@ fi
 
 echo "[AUV] sim config: $SIM_CFG"
 echo "[AUV] bridge config: $BRIDGE_CFG"
+echo "[AUV] requested simulation backend: $SIM_BACKEND"
 if [[ -n "$BRIDGE_BACKEND" ]]; then
   echo "[AUV] requested bridge backend: $BRIDGE_BACKEND"
 fi

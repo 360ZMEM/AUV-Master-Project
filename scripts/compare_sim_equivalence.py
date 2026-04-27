@@ -109,8 +109,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     legacy_cfg = (args.legacy_config.resolve() if args.legacy_config else (legacy_root / "config" / "sim_params.yaml"))
     unified_cfg = (args.unified_config.resolve() if args.unified_config else (project_root / "config" / "sim_params.yaml"))
 
-    legacy_cmd = ["python", "4_codes/main.py", "--config", str(legacy_cfg)]
-    unified_cmd = ["python", "main.py", "--config", str(unified_cfg)]
+    python_executable = sys.executable or "/usr/bin/python3"
+    legacy_cmd = [python_executable, "4_codes/main.py", "--config", str(legacy_cfg)]
+    unified_cmd = [python_executable, "main.py", "--config", str(unified_cfg)]
 
     print("[eq] legacy cwd:", legacy_root)
     print("[eq] unified cwd:", unified_apps)

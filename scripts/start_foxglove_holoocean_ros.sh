@@ -42,6 +42,10 @@ while [[ $# -gt 0 ]]; do
       SIM_MODE="${2:?missing value for --sim-mode}"
       shift 2
       ;;
+    --sim-backend)
+      SIM_ARGS+=("--sim-backend" "${2:?missing value for --sim-backend}")
+      shift 2
+      ;;
     --brain-mode)
       BRAIN_MODE="${2:?missing value for --brain-mode}"
       shift 2
@@ -62,6 +66,14 @@ while [[ $# -gt 0 ]]; do
     --protocol-control-mode-byte)
       BRAIN_ARGS+=("--protocol-control-mode-byte" "${2:?missing value for --protocol-control-mode-byte}")
       shift 2
+      ;;
+    --brain-arg)
+      BRAIN_ARGS+=("${2:?missing value for --brain-arg}")
+      shift 2
+      ;;
+    --arbiter-profile)
+      BRAIN_ARGS+=("--arbiter-profile")
+      shift
       ;;
     --skip-layout)
       SKIP_LAYOUT=true
@@ -110,12 +122,15 @@ Usage:
 
 Options:
   --sim-mode MODE            start_lin_sim.sh mode (default: both)
+  --sim-backend BACKEND      simulation backend: holoocean or pvs
   --brain-mode MODE          start_lin_brain.sh mode (default: stack)
   --bridge-backend BACKEND   switch both sim and brain to zenoh_json or protocol_udp
   --bridge-cfg PATH          explicit simulation bridge config path
   --sim-cfg PATH             explicit HoloOcean sim config path
   --protocol-control-mode-byte N
                              decision-side control mode byte for protocol_udp
+  --brain-arg ARG            append an extra launch argument forwarded to brain
+  --arbiter-profile          use protocol_udp arbiter params on the brain side
   --skip-layout              skip Foxglove JSON generation
   --topic-prefix PREFIX      apply a namespace prefix to Foxglove topics
   --with-map                 include the Foxglove 3D map layer

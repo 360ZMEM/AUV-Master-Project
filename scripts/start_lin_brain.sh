@@ -7,6 +7,7 @@ set -euo pipefail
 #   ./start_lin_brain.sh example
 #   ./start_lin_brain.sh foxglove
 #   ./start_lin_brain.sh stack [--backend protocol_udp] [--protocol-control-mode-byte 238] [launch args...]
+#   ./start_lin_brain.sh stack --arbiter-profile [launch args...]
 #
 # Note:
 #   If you usually work in conda, this script will try to `conda deactivate`
@@ -26,12 +27,14 @@ Usage:
 Options:
   --backend BACKEND                 bridge backend: zenoh_json or protocol_udp
   --protocol-control-mode-byte N    control mode byte forwarded to decision/bridge launch args
+  --arbiter-profile                 use params.protocol_udp_arbiter.yaml and force protocol_udp defaults
   -h, --help                        show this help
 EOF
 }
 
 CLI_BACKEND=""
 CLI_PROTOCOL_CONTROL_MODE_BYTE=""
+CLI_ARBITER_PROFILE="false"
 PASSTHROUGH_ARGS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -42,6 +45,10 @@ while [[ $# -gt 0 ]]; do
     --protocol-control-mode-byte)
       CLI_PROTOCOL_CONTROL_MODE_BYTE="${2:?missing value for --protocol-control-mode-byte}"
       shift 2
+      ;;
+    --arbiter-profile)
+      CLI_ARBITER_PROFILE="true"
+      shift
       ;;
     -h|--help)
       usage
@@ -187,6 +194,18 @@ case "$MODE" in
   stack)
     echo "[AUV] launching integrated stack (bridge -> localization -> controller -> decision)..."
     STACK_ARGS=()
+    if [[ "$CLI_ARBITER_PROFILE" == "true" ]]; then
+      ARBITER_PARAMS_FILE="$BRAIN_DIR/config/params.protocol_udp_arbiter.yaml"
+      if ! has_launch_arg params_file "$@"; then
+        STACK_ARGS+=("params_file:=${ARBITER_PARAMS_FILE}")
+      fi
+      if [[ -z "$CLI_BACKEND" ]] && ! has_launch_arg bridge_backend "$@"; then
+        STACK_ARGS+=("bridge_backend:=protocol_udp")
+      fi
+      if [[ -z "$CLI_PROTOCOL_CONTROL_MODE_BYTE" ]] && ! has_launch_arg protocol_control_mode_byte "$@"; then
+        STACK_ARGS+=("protocol_control_mode_byte:=238")
+      fi
+    fi
     if [[ -n "$CLI_BACKEND" ]] && ! has_launch_arg bridge_backend "$@"; then
       STACK_ARGS+=("bridge_backend:=${CLI_BACKEND}")
     fi

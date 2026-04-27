@@ -4,10 +4,14 @@
 1) mock_sensor_input：回放海试日志并发布 /auv/sensors/status
 2) decision_node：消费传感状态并发布 /auv/control/goal
 
-用法示例：
-ros2 launch auv_decision_ros decision_replay.launch.py \
-  log_file:=/home/zmem063/auv_console_python/auv_console_python/20020101103632.txt \
-  publish_hz:=10.0 confidence_threshold:=0.7
+用法示例（使用仓库内置样例日志）：
+  cd /home/gwxie/master_work-tmp/AUV_Master_Project
+  source brain_linux/install/setup.bash
+  ros2 launch auv_decision_ros decision_replay.launch.py \
+    log_file:=/home/gwxie/master_work-tmp/Console上位机软件/auv_console_python/20020101103632.txt \
+    publish_hz:=10.0 confidence_threshold:=0.7
+
+不传 log_file 时，mock_sensor_input 会自动在仓库内搜索样例日志。
 """
 
 from launch import LaunchDescription
@@ -20,8 +24,8 @@ def generate_launch_description() -> LaunchDescription:
     """生成 launch 描述。"""
     log_file_arg = DeclareLaunchArgument(
         'log_file',
-        default_value='/home/zmem063/auv_console_python/auv_console_python/20020101103632.txt',
-        description='海试文本日志路径',
+        default_value='/home/gwxie/master_work-tmp/Console上位机软件/auv_console_python/20020101103632.txt',
+        description='海试文本日志路径（$AUV 格式）。不传时 mock_sensor_input 自动搜索仓库内置样例。',
     )
     publish_hz_arg = DeclareLaunchArgument(
         'publish_hz',
@@ -63,6 +67,26 @@ def generate_launch_description() -> LaunchDescription:
         default_value='2.0',
         description='决策摘要日志打印周期 (秒)',
     )
+    debug_level_arg = DeclareLaunchArgument(
+        'debug_level',
+        default_value='0',
+        description='算法透明度级别 (0:AUTO, 1:HOLD, 2:PATH, 3:FULL)',
+    )
+    transition_threshold_arg = DeclareLaunchArgument(
+        'transition_threshold_m',
+        default_value='2.0',
+        description='触发平滑过渡的跳变阈值 (米)',
+    )
+    transition_duration_arg = DeclareLaunchArgument(
+        'transition_duration_s',
+        default_value='3.0',
+        description='平滑过渡持续时间 (秒)',
+    )
+    mock_amd_timeout_arg = DeclareLaunchArgument(
+        'mock_amd_timeout_s',
+        default_value='5.0',
+        description='Mock AMD 时间同步超时 (秒)',
+    )
 
     mock_node = Node(
         package='auv_decision_ros',
@@ -91,6 +115,10 @@ def generate_launch_description() -> LaunchDescription:
                 'bt_status_publish_period': LaunchConfiguration('bt_status_publish_period'),
                 'tree_print_period': LaunchConfiguration('tree_print_period'),
                 'summary_log_period': LaunchConfiguration('summary_log_period'),
+                'debug_level': LaunchConfiguration('debug_level'),
+                'transition_threshold_m': LaunchConfiguration('transition_threshold_m'),
+                'transition_duration_s': LaunchConfiguration('transition_duration_s'),
+                'mock_amd_timeout_s': LaunchConfiguration('mock_amd_timeout_s'),
             }
         ],
     )
@@ -106,6 +134,10 @@ def generate_launch_description() -> LaunchDescription:
             bt_status_publish_period_arg,
             tree_print_period_arg,
             summary_log_period_arg,
+            debug_level_arg,
+            transition_threshold_arg,
+            transition_duration_arg,
+            mock_amd_timeout_arg,
             mock_node,
             decision_node,
         ]

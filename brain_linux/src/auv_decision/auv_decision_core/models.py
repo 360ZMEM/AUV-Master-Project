@@ -25,6 +25,9 @@ class SensorStatusData:
         seabed_clearance_m: 到海底的剩余净空（米）。
         seabed_proximity_warning: 是否接近海底（用于保守减速）。
         seabed_penetration_warning: 是否已穿底（用于紧急上浮）。
+        heading_rad: 当前航向（弧度，NED 坐标系）。
+        mock_amd_timestamp_us: Mock AMD 时钟时间戳（Unix 微秒）。
+        debug_level: 算法透明度级别（0:AUTO, 1:HOLD, 2:PATH, 3:FULL）。
     """
 
     confidence: float = 0.5
@@ -38,6 +41,9 @@ class SensorStatusData:
     seabed_clearance_m: float = 15.0
     seabed_proximity_warning: bool = False
     seabed_penetration_warning: bool = False
+    heading_rad: float = 0.0
+    mock_amd_timestamp_us: int = 0
+    debug_level: int = 0
 
     def is_leaking(self) -> bool:
         """是否漏水（任意漏水等级 > 0 即认为漏水）。"""
@@ -64,6 +70,9 @@ class MotionGoal:
         sine_period_s: 正弦扰动周期（秒）。
         high_priority: 是否高优先级（紧急动作置 True）。
         note: 备注说明（便于调试与可视化）。
+        target_heading_rad: 目标航向（弧度，用于解析轨迹模式）。
+        target_x_m: 目标 x 坐标（米，用于解析轨迹模式）。
+        target_y_m: 目标 y 坐标（米，用于解析轨迹模式）。
     """
 
     mode: str = 'IDLE'
@@ -73,3 +82,6 @@ class MotionGoal:
     sine_period_s: float = 0.0
     high_priority: bool = False
     note: str = ''
+    target_heading_rad: float = 0.0
+    target_x_m: float = 0.0
+    target_y_m: float = 0.0

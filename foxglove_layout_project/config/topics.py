@@ -14,8 +14,12 @@ class TopicConfig:
     """Topic registry for the Foxglove layout generator."""
 
     state_filtered: str = "/auv/state/filtered"
+    state_raw_dr: str = "/auv/state/raw_dr"
     setpoint: str = "/auv/control/setpoint"
     cmd_vel: str = "/cmd_vel"
+
+    bridge_shadow_cmd: str = "/auv/bridge/shadow_cmd"
+    bridge_shadow_telemetry: str = "/auv/bridge/shadow_telemetry"
 
     imu: str = "/auv/sensors/imu"
     dvl: str = "/auv/sensors/dvl"
@@ -133,8 +137,11 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
 
     return TopicConfig(
         state_filtered=_join(config.state_filtered),
+        state_raw_dr=_join(config.state_raw_dr),
         setpoint=_join(config.setpoint),
         cmd_vel=_join(config.cmd_vel),
+        bridge_shadow_cmd=_join(config.bridge_shadow_cmd),
+        bridge_shadow_telemetry=_join(config.bridge_shadow_telemetry),
         imu=_join(config.imu),
         dvl=_join(config.dvl),
         depth=_join(config.depth),

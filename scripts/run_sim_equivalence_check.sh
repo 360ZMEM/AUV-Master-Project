@@ -14,4 +14,4 @@ if [[ -n "${AUV_CONDA_ENV:-}" ]] && command -v conda >/dev/null 2>&1; then
   conda activate "$AUV_CONDA_ENV"
 fi
 
-python "$SCRIPT" "$@"
+/usr/bin/python3 "$SCRIPT" "$@"

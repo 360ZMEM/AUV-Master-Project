@@ -26,6 +26,7 @@ import rclpy
 from geometry_msgs.msg import TwistStamped
 from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
+from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32, Float32MultiArray, String
@@ -119,6 +120,8 @@ class AUVLocalizationNode(Node):
         self.declare_parameter('publish_tf', True)
         self.declare_parameter('publish_static_tf', True)
         self.declare_parameter('publish_sensor_status', True)
+        self.declare_parameter('publish_raw_state', False)
+        self.declare_parameter('raw_state_topic', '/auv/state/raw_dr')
         self.declare_parameter('seabed_depth_m', 15.0)
         self.declare_parameter('seabed_proximity_margin_m', 1.5)
         self.declare_parameter('battery_low_voltage_threshold', 44.8)
@@ -146,6 +149,8 @@ class AUVLocalizationNode(Node):
         self.publish_tf = bool(self.get_parameter('publish_tf').value)
         self.publish_static_tf = bool(self.get_parameter('publish_static_tf').value)
         self.publish_sensor_status = bool(self.get_parameter('publish_sensor_status').value)
+        self.publish_raw_state = bool(self.get_parameter('publish_raw_state').value)
+        self.raw_state_topic = str(self.get_parameter('raw_state_topic').value or '/auv/state/raw_dr')
         self.seabed_depth_m = float(self.get_parameter('seabed_depth_m').value)
         self.seabed_proximity_margin_m = float(self.get_parameter('seabed_proximity_margin_m').value)
         self.battery_low_voltage_threshold = float(self.get_parameter('battery_low_voltage_threshold').value)
@@ -167,6 +172,7 @@ class AUVLocalizationNode(Node):
         self._latest_setpoint_depth_m: float | None = None
 
         self.odom_pub = self.create_publisher(Odometry, '/auv/state/filtered', 10)
+        self.raw_odom_pub = self.create_publisher(Odometry, self.raw_state_topic, 10)
         self.cov_pub = self.create_publisher(Float32MultiArray, '/auv/state/covariance', 10)
         self.status_pub = self.create_publisher(SensorStatus, '/auv/sensors/status', 10)
         self.depth_error_pub = self.create_publisher(Float32, '/auv/metrics/depth_error', 10)
@@ -184,7 +190,8 @@ class AUVLocalizationNode(Node):
         if self.publish_static_tf:
             self._publish_static_transforms()
 
-        self.create_timer(1.0 / max(self.filter_rate_hz, 1e-3), self._on_timer)
+        self._filter_timer = self.create_timer(1.0 / max(self.filter_rate_hz, 1e-3), self._on_timer)
+        self._param_callback = self.add_on_set_parameters_callback(self._on_parameters_changed)
 
         self._lat_count = 0
         self._lat_sum = 0.0
@@ -208,6 +215,8 @@ class AUVLocalizationNode(Node):
             f'publish_camera_tf={self.publish_camera_tf}, '
             f'publish_sonar_tf={self.publish_sonar_tf}, '
             f'publish_sensor_status={self.publish_sensor_status}, '
+            f'publish_raw_state={self.publish_raw_state}, '
+            f'raw_state_topic={self.raw_state_topic}, '
             f'seabed_depth_m={self.seabed_depth_m}, '
             f'seabed_proximity_margin_m={self.seabed_proximity_margin_m}, '
             f'battery_low_voltage_threshold={self.battery_low_voltage_threshold}, '
@@ -250,6 +259,30 @@ class AUVLocalizationNode(Node):
 
     def _on_setpoint(self, msg: Setpoint) -> None:
         self._latest_setpoint_depth_m = float(msg.target_depth_m)
+
+    def _on_parameters_changed(self, params) -> SetParametersResult:
+        for param in params:
+            if param.name == 'publish_raw_state':
+                self.publish_raw_state = bool(param.value)
+            elif param.name == 'publish_sensor_status':
+                self.publish_sensor_status = bool(param.value)
+            elif param.name == 'seabed_depth_m':
+                self.seabed_depth_m = float(param.value)
+            elif param.name == 'seabed_proximity_margin_m':
+                self.seabed_proximity_margin_m = float(param.value)
+            elif param.name == 'battery_low_voltage_threshold':
+                self.battery_low_voltage_threshold = float(param.value)
+            elif param.name == 'nominal_voltage_v':
+                self.nominal_voltage_v = float(param.value)
+            elif param.name == 'filter_rate_hz':
+                new_rate = float(param.value)
+                if new_rate <= 0.0:
+                    return SetParametersResult(successful=False, reason='filter_rate_hz must be positive')
+                if abs(new_rate - self.filter_rate_hz) > 1e-9:
+                    self.filter_rate_hz = new_rate
+                    self._filter_timer.cancel()
+                    self._filter_timer = self.create_timer(1.0 / max(self.filter_rate_hz, 1e-3), self._on_timer)
+        return SetParametersResult(successful=True)
 
     def _build_sensor_status(self, state: dict) -> SensorStatus:
         """Build a minimal live SensorStatus message from the filtered state.
@@ -328,20 +361,7 @@ class AUVLocalizationNode(Node):
 
         self.static_tf_broadcaster.sendTransform(static_transforms)
 
-    def _on_timer(self) -> None:
-        now = time.time()
-        dt = max(1e-3, min(0.2, now - self._last_loop_ts))
-        self._last_loop_ts = now
-
-        self.filter.predict(self._last_imu, self._last_gyro, dt)
-
-        if self._last_dvl is not None:
-            self.filter.correct_dvl_world(self._last_dvl)
-        if self._last_depth is not None:
-            self.filter.correct_depth(self._last_depth)
-
-        state = self.filter.get_state()
-
+    def _publish_state_odom(self, state: dict, publisher, *, publish_tf: bool) -> None:
         odom = Odometry()
         odom.header.stamp = self.get_clock().now().to_msg()
         odom.header.frame_id = self.world_frame_id
@@ -356,9 +376,9 @@ class AUVLocalizationNode(Node):
         odom.twist.twist.linear.x = float(state['v'][0])
         odom.twist.twist.linear.y = float(state['v'][1])
         odom.twist.twist.linear.z = float(state['v'][2])
-        self.odom_pub.publish(odom)
+        publisher.publish(odom)
 
-        if self.publish_tf:
+        if publish_tf:
             transform = TransformStamped()
             transform.header.stamp = odom.header.stamp
             transform.header.frame_id = self.world_frame_id
@@ -371,6 +391,26 @@ class AUVLocalizationNode(Node):
             transform.transform.rotation.y = float(state['q'][2])
             transform.transform.rotation.z = float(state['q'][3])
             self.tf_broadcaster.sendTransform(transform)
+
+    def _on_timer(self) -> None:
+        now = time.time()
+        dt = max(1e-3, min(0.2, now - self._last_loop_ts))
+        self._last_loop_ts = now
+
+        self.filter.predict(self._last_imu, self._last_gyro, dt)
+
+        raw_state = self.filter.get_state()
+        if self.publish_raw_state:
+            self._publish_state_odom(raw_state, self.raw_odom_pub, publish_tf=False)
+
+        if self._last_dvl is not None:
+            self.filter.correct_dvl_world(self._last_dvl)
+        if self._last_depth is not None:
+            self.filter.correct_depth(self._last_depth)
+
+        state = self.filter.get_state()
+
+        self._publish_state_odom(state, self.odom_pub, publish_tf=self.publish_tf)
 
         cov_msg = Float32MultiArray()
         cov_msg.data = self.filter.P.reshape(-1).astype(float).tolist()

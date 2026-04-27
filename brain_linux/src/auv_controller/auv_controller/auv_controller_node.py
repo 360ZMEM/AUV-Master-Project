@@ -23,10 +23,14 @@ import rclpy
 from auv_interfaces.msg import Setpoint
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
+from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
 from std_msgs.msg import String
 import yaml
+
+from common.enums import StateEstimateSource
+from common.protocol import KEY_STATE_SOURCE
 
 def _resolve_project_root() -> Path:
     env_root = Path(str(os.environ.get('AUV_PROJECT_ROOT', ''))).expanduser() if os.environ.get('AUV_PROJECT_ROOT') else None
@@ -89,36 +93,47 @@ class AUVControllerNode(Node):
 
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
         self.declare_parameter('params_file', default_params)
+        self.declare_parameter('filtered_state_topic', '/auv/state/filtered')
+        self.declare_parameter('raw_state_topic', '/auv/state/raw_dr')
+        self.declare_parameter('bypass_ekf', False)
+        self.declare_parameter('control_rate_hz', 20.0)
 
         params_file = str(self.get_parameter('params_file').value)
         cfg = self._load_config(params_file)
 
         ctrl_cfg = cfg.get('control', {})
         lim_cfg = cfg.get('limits', {})
-        self.control_rate_hz = float(cfg.get('controller', {}).get('control_rate_hz', 20.0))
+        self.control_rate_hz = float(self.get_parameter('control_rate_hz').value)
+        self.filtered_state_topic = str(self.get_parameter('filtered_state_topic').value)
+        self.raw_state_topic = str(self.get_parameter('raw_state_topic').value)
+        self.bypass_ekf = bool(self.get_parameter('bypass_ekf').value)
 
         self.controller = AUVPIDController(ctrl_cfg, lim_cfg)
 
         self.latest_setpoint: Setpoint | None = None
-        self.latest_state: Odometry | None = None
+        self.latest_filtered_state: Odometry | None = None
+        self.latest_raw_state: Odometry | None = None
         self.latest_imu_gyro: tuple[float, float, float] | None = None
         self.latest_setpoint_ts = 0.0
-        self.latest_state_ts = 0.0
+        self.latest_filtered_state_ts = 0.0
+        self.latest_raw_state_ts = 0.0
         self.latest_imu_ts = 0.0
         self.latest_debug_payload: dict | None = None
 
         self.setpoint_sub = self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
-        self.state_sub = self.create_subscription(Odometry, '/auv/state/filtered', self._on_state, 20)
+        self.filtered_state_sub = self.create_subscription(Odometry, self.filtered_state_topic, self._on_filtered_state, 20)
+        self.raw_state_sub = self.create_subscription(Odometry, self.raw_state_topic, self._on_raw_state, 20)
         self.imu_sub = self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
-        self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
+        self._control_timer = self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
 
         self._lat_count = 0
         self._lat_sum = 0.0
         self.create_timer(2.0, self._log_latency)
         self.create_timer(0.5, self._publish_debug)
+        self._param_callback = self.add_on_set_parameters_callback(self._on_parameters_changed)
 
         self.get_logger().info('auv_controller_node started')
 
@@ -137,9 +152,13 @@ class AUVControllerNode(Node):
         self.latest_setpoint = msg
         self.latest_setpoint_ts = time.time()
 
-    def _on_state(self, msg: Odometry) -> None:
-        self.latest_state = msg
-        self.latest_state_ts = time.time()
+    def _on_filtered_state(self, msg: Odometry) -> None:
+        self.latest_filtered_state = msg
+        self.latest_filtered_state_ts = time.time()
+
+    def _on_raw_state(self, msg: Odometry) -> None:
+        self.latest_raw_state = msg
+        self.latest_raw_state_ts = time.time()
 
     def _on_imu(self, msg: Imu) -> None:
         self.latest_imu_gyro = (
@@ -163,11 +182,42 @@ class AUVControllerNode(Node):
 
         return odom_rates[0], odom_rates[1], odom_rates[2], 'odom'
 
+    def _select_state(self) -> tuple[Odometry | None, StateEstimateSource, bool, float]:
+        preferred_source = StateEstimateSource.RAW_DR if self.bypass_ekf else StateEstimateSource.FILTERED
+        if preferred_source == StateEstimateSource.RAW_DR:
+            if self.latest_raw_state is not None:
+                return self.latest_raw_state, preferred_source, False, self.latest_raw_state_ts
+            if self.latest_filtered_state is not None:
+                return self.latest_filtered_state, StateEstimateSource.FILTERED, True, self.latest_filtered_state_ts
+        else:
+            if self.latest_filtered_state is not None:
+                return self.latest_filtered_state, preferred_source, False, self.latest_filtered_state_ts
+            if self.latest_raw_state is not None:
+                return self.latest_raw_state, StateEstimateSource.RAW_DR, True, self.latest_raw_state_ts
+        return None, preferred_source, False, 0.0
+
+    def _on_parameters_changed(self, params) -> SetParametersResult:
+        for param in params:
+            if param.name == 'bypass_ekf':
+                self.bypass_ekf = bool(param.value)
+            elif param.name == 'control_rate_hz':
+                new_rate = float(param.value)
+                if new_rate <= 0.0:
+                    return SetParametersResult(successful=False, reason='control_rate_hz must be positive')
+                if abs(new_rate - self.control_rate_hz) > 1e-9:
+                    self.control_rate_hz = new_rate
+                    self._control_timer.cancel()
+                    self._control_timer = self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
+        return SetParametersResult(successful=True)
+
     def _on_timer(self) -> None:
-        if self.latest_setpoint is None or self.latest_state is None:
+        if self.latest_setpoint is None:
             return
 
-        st = self.latest_state
+        st, state_source, state_source_fallback, state_ts = self._select_state()
+        if st is None:
+            return
+
         sp = self.latest_setpoint
 
         q = st.pose.pose.orientation
@@ -214,7 +264,7 @@ class AUVControllerNode(Node):
         self.cmd_pub.publish(tw)
 
         now = time.time()
-        sensor_to_cmd = now - max(self.latest_setpoint_ts, self.latest_state_ts)
+        sensor_to_cmd = now - max(self.latest_setpoint_ts, state_ts)
         if sensor_to_cmd >= 0:
             self._lat_count += 1
             self._lat_sum += sensor_to_cmd
@@ -222,6 +272,9 @@ class AUVControllerNode(Node):
         self.latest_debug_payload = {
             'mode': str(sp.mode),
             'rate_source': rate_source,
+            KEY_STATE_SOURCE: state_source.value,
+            'state_source_requested': StateEstimateSource.RAW_DR.value if self.bypass_ekf else StateEstimateSource.FILTERED.value,
+            'state_source_fallback': bool(state_source_fallback),
             'attitude_guard_active': bool(_debug.get('attitude_guard_active', False)),
             'current_roll_deg': round(float(_debug.get('current_roll_deg', 0.0)), 3),
             'current_pitch_deg': round(float(_debug.get('current_pitch_deg', 0.0)), 3),
@@ -237,6 +290,7 @@ class AUVControllerNode(Node):
             'yaw_saturated': bool(_debug.get('yaw_saturated', False)),
             'thrust_saturated': bool(_debug.get('thrust_saturated', False)),
             'target_pitch_deg': round(math.degrees(float(_debug.get('target_pitch_rad', 0.0))), 3),
+            'bypass_ekf': bool(self.bypass_ekf),
             'cmd': {
                 'right_deg': round(float(cmd[0]), 3),
                 'top_deg': round(float(cmd[1]), 3),

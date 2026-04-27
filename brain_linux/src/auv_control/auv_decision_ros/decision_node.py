@@ -16,11 +16,13 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
 from std_msgs.msg import Float32, String
+import json
 
 from auv_decision_core.bt_engine import DecisionTreeEngine
 from auv_decision_core.models import SensorStatusData
 from auv_decision_core.telemetry import DecisionTelemetrySnapshot, build_decision_telemetry_snapshot
-from auv_interfaces.msg import AuvDiagnostic, ControlGoal, SensorStatus, Setpoint
+from auv_interfaces.msg import AuvDiagnostic, ArbiterStatus, ControlGoal, SensorStatus, Setpoint
+from common.enums import WorkInstruction
 
 from .mappers import (
     motion_goal_dict_to_msg,
@@ -44,6 +46,10 @@ class AUVDecisionNode(Node):
         self.declare_parameter('protocol_control_mode_byte', 0xEE)
         self.declare_parameter('guidance_lookahead_distance', 3.5)
         self.declare_parameter('guidance_cross_track_gain', 0.7)
+        self.declare_parameter('mock_amd_timeout_s', 5.0)
+        self.declare_parameter('debug_level', 0)  # 0:AUTO, 1:HOLD, 2:PATH, 3:FULL
+        self.declare_parameter('transition_threshold_m', 2.0)  # 触发平滑过渡的跳变阈值（米）
+        self.declare_parameter('transition_duration_s', 3.0)  # 平滑过渡持续时间（秒）
 
         threshold = float(self.get_parameter('confidence_threshold').value)
         self.bt_status_publish_period = float(self.get_parameter('bt_status_publish_period').value)
@@ -53,6 +59,10 @@ class AUVDecisionNode(Node):
         self.protocol_control_mode_byte = int(self.get_parameter('protocol_control_mode_byte').value)
         self.guidance_lookahead_distance = float(self.get_parameter('guidance_lookahead_distance').value)
         self.guidance_cross_track_gain = float(self.get_parameter('guidance_cross_track_gain').value)
+        self.mock_amd_timeout_s = float(self.get_parameter('mock_amd_timeout_s').value)
+        self.debug_level = int(self.get_parameter('debug_level').value)
+        self.transition_threshold_m = float(self.get_parameter('transition_threshold_m').value)
+        self.transition_duration_s = float(self.get_parameter('transition_duration_s').value)
 
         self.engine = DecisionTreeEngine(confidence_threshold=threshold)
 
@@ -69,11 +79,24 @@ class AUVDecisionNode(Node):
         self.last_summary_log_ns: int = 0
         self.last_bt_status_ns: int = 0
 
+        # Mock AMD clock synchronization
+        self.mock_amd_timestamp_us: int = 0
+        self.mock_amd_last_update_ns: int = self.get_clock().now().nanoseconds
+        self.mock_amd_synced: bool = False
+
+        # 平滑过渡状态
+        self.prev_setpoint: dict | None = None
+        self.transition_start_time_ns: int = 0
+        self.transition_start_setpoint: dict | None = None
+        self.transition_target_setpoint: dict | None = None
+
         self.create_subscription(SensorStatus, '/auv/sensors/status', self._on_sensor_status, 10)
+        self.create_subscription(String, '/auv/mock_amd/time', self._on_mock_amd_time, 10)
         self.create_subscription(Float32, '/auv/metrics/depth_error', self._on_depth_error, 10)
         self.create_subscription(Float32, '/auv/metrics/lateral_error', self._on_lateral_error, 10)
         self.create_subscription(Odometry, '/auv/state/filtered', self._on_state_filtered, 10)
         self.create_subscription(MagneticField, '/auv/sensors/magnetic', self._on_magnetic, 10)
+        self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 10)
 
         self.pub_goal = self.create_publisher(ControlGoal, '/auv/control/goal', 10)
         self.pub_setpoint = self.create_publisher(Setpoint, '/auv/control/setpoint', 10)
@@ -88,7 +111,11 @@ class AUVDecisionNode(Node):
         self.get_logger().info(f'行为树打印周期: {self.tree_print_period:.1f}s')
         self.get_logger().info(f'摘要日志周期: {self.summary_log_period:.1f}s')
         self.get_logger().info(f'桥接后端: {self.bridge_backend}')
+        self.get_logger().info(f'Debug Level: {self.debug_level} (0:AUTO, 1:HOLD, 2:PATH, 3:FULL)')
+        self.get_logger().info(f'平滑过渡阈值: {self.transition_threshold_m:.2f}m')
+        self.get_logger().info(f'平滑过渡时长: {self.transition_duration_s:.2f}s')
         self.get_logger().info('订阅: /auv/sensors/status (auv_interfaces/SensorStatus)')
+        self.get_logger().info('订阅: /auv/mock_amd/time (std_msgs/String)')
         self.get_logger().info('订阅: /auv/metrics/depth_error (std_msgs/Float32)')
         self.get_logger().info('订阅: /auv/metrics/lateral_error (std_msgs/Float32)')
         self.get_logger().info('订阅: /auv/state/filtered (nav_msgs/Odometry)')
@@ -100,6 +127,8 @@ class AUVDecisionNode(Node):
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
         status = sensor_msg_to_core(msg)
+        # 注入 debug_level（从 ROS2 参数覆盖）
+        status.debug_level = self.debug_level
         self.latest_sensor_status = status
         self.engine.set_sensor_status(status)
 
@@ -123,6 +152,35 @@ class AUVDecisionNode(Node):
         z = float(msg.magnetic_field.z)
         self.latest_magnetic_magnitude = math.sqrt(x * x + y * y + z * z)
 
+    def _on_mock_amd_time(self, msg: String) -> None:
+        """Mock AMD时间同步回调"""
+        try:
+            data = json.loads(msg.data)
+            timestamp_us = int(data.get('timestamp_us', 0))
+            if timestamp_us > 0:
+                self.mock_amd_timestamp_us = timestamp_us
+                self.mock_amd_last_update_ns = self.get_clock().now().nanoseconds
+                if not self.mock_amd_synced:
+                    self.mock_amd_synced = True
+                    self.get_logger().info(f"Mock AMD time synchronized: {timestamp_us} µs")
+        except (json.JSONDecodeError, ValueError) as e:
+            self.get_logger().warning(f"Failed to parse Mock AMD time: {e}")
+
+    def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
+        """处理 WorkInstruction 0xA1/0xA2（仅在 debug_level=0 时生效）"""
+        # 仅在 AUTO 模式下响应 0xA1/0xA2
+        if self.debug_level != 0:
+            return
+
+        work_instruction = int(msg.effective_work_instruction)
+
+        if work_instruction == WorkInstruction.HOLD_DEBUG:
+            self.get_logger().info('收到 0xA1 HOLD_DEBUG 指令，切换到 debug_level=1')
+            self.debug_level = 1
+        elif work_instruction == WorkInstruction.ANALYTICAL_PATH_DEBUG:
+            self.get_logger().info('收到 0xA2 ANALYTICAL_PATH_DEBUG 指令，切换到 debug_level=2')
+            self.debug_level = 2
+
     def _resolve_lateral_error(self) -> float | None:
         if self.latest_lateral_error_m is not None:
             return self.latest_lateral_error_m
@@ -131,6 +189,88 @@ class AUVDecisionNode(Node):
     @staticmethod
     def _wrap_angle(angle_rad: float) -> float:
         return math.atan2(math.sin(angle_rad), math.cos(angle_rad))
+
+    def _check_position_jump(self, current_setpoint: dict, prev_setpoint: dict | None) -> float:
+        """检查位置跳变，返回跳变距离（米）。
+
+        计算 (target_x_m, target_y_m, target_depth_m) 的欧氏距离。
+        """
+        if prev_setpoint is None:
+            return 0.0
+
+        dx = float(current_setpoint.get('target_x_m', 0.0)) - float(prev_setpoint.get('target_x_m', 0.0))
+        dy = float(current_setpoint.get('target_y_m', 0.0)) - float(prev_setpoint.get('target_y_m', 0.0))
+        dz = float(current_setpoint.get('target_depth_m', 0.0)) - float(prev_setpoint.get('target_depth_m', 0.0))
+
+        return math.sqrt(dx * dx + dy * dy + dz * dz)
+
+    def _apply_transition_smoothing(
+        self, goal_dict: dict, now_ns: int
+    ) -> dict:
+        """应用平滑过渡插值。
+
+        如果正在进行过渡（transition_start_time_ns > 0），则根据时间进度线性插值。
+        如果检测到跳变（mode 切换且位置跳变 > threshold），则启动过渡。
+        """
+        current_mode = goal_dict.get('mode', '')
+        prev_mode = self.prev_setpoint.get('mode', '') if self.prev_setpoint else ''
+
+        # 检查是否需要启动新过渡
+        if self.transition_start_time_ns == 0:
+            # 检测模式切换（AnalyticalPath → 其他 或 其他 → AnalyticalPath）
+            mode_switched = current_mode != prev_mode and 'ANALYTICAL_PATH' in (current_mode, prev_mode)
+
+            if mode_switched:
+                jump_distance = self._check_position_jump(goal_dict, self.prev_setpoint)
+                if jump_distance > self.transition_threshold_m:
+                    self.get_logger().info(
+                        f'检测到位置跳变 {jump_distance:.2f}m > {self.transition_threshold_m}m, '
+                        f'启动平滑过渡（{prev_mode} → {current_mode}）'
+                    )
+                    self.transition_start_time_ns = now_ns
+                    self.transition_start_setpoint = self.prev_setpoint.copy() if self.prev_setpoint else {}
+                    self.transition_target_setpoint = goal_dict.copy()
+
+        # 应用线性插值
+        if self.transition_start_time_ns > 0 and self.transition_duration_s > 0:
+            elapsed_s = (now_ns - self.transition_start_time_ns) / 1e9
+            progress = min(elapsed_s / self.transition_duration_s, 1.0)
+
+            # 线性插值目标位置
+            if self.transition_start_setpoint and self.transition_target_setpoint:
+                start_x = float(self.transition_start_setpoint.get('target_x_m', 0.0))
+                start_y = float(self.transition_start_setpoint.get('target_y_m', 0.0))
+                start_z = float(self.transition_start_setpoint.get('target_depth_m', 0.0))
+                start_speed = float(self.transition_start_setpoint.get('target_speed_mps', 0.0))
+                start_heading = float(self.transition_start_setpoint.get('target_heading_rad', 0.0))
+
+                target_x = float(self.transition_target_setpoint.get('target_x_m', 0.0))
+                target_y = float(self.transition_target_setpoint.get('target_y_m', 0.0))
+                target_z = float(self.transition_target_setpoint.get('target_depth_m', 0.0))
+                target_speed = float(self.transition_target_setpoint.get('target_speed_mps', 0.0))
+                target_heading = float(self.transition_target_setpoint.get('target_heading_rad', 0.0))
+
+                # 线性插值
+                goal_dict['target_x_m'] = start_x + (target_x - start_x) * progress
+                goal_dict['target_y_m'] = start_y + (target_y - start_y) * progress
+                goal_dict['target_depth_m'] = start_z + (target_z - start_z) * progress
+                goal_dict['target_speed_mps'] = start_speed + (target_speed - start_speed) * progress
+                goal_dict['target_heading_rad'] = start_heading + (target_heading - start_heading) * progress
+
+                self.get_logger().debug(
+                    f'平滑过渡进度: {progress*100:.1f}% | '
+                    f'x={goal_dict["target_x_m"]:.2f}m, y={goal_dict["target_y_m"]:.2f}m, '
+                    f'z={goal_dict["target_depth_m"]:.2f}m'
+                )
+
+            # 检查过渡完成
+            if progress >= 1.0:
+                self.get_logger().info('平滑过渡完成')
+                self.transition_start_time_ns = 0
+                self.transition_start_setpoint = None
+                self.transition_target_setpoint = None
+
+        return goal_dict
 
     def _resolve_target_heading(self, goal_dict: dict) -> float:
         explicit_heading = goal_dict.get('target_heading_rad')
@@ -150,6 +290,31 @@ class AUVDecisionNode(Node):
         return self._wrap_angle(heading_target_rad)
 
     def _on_tick(self) -> None:
+        now_ns = self.get_clock().now().nanoseconds
+
+        if not self.mock_amd_synced:
+            time_since_update_s = (now_ns - self.mock_amd_last_update_ns) / 1e9
+            if time_since_update_s <= self.mock_amd_timeout_s:
+                self.get_logger().info('Waiting for Mock AMD time synchronization...')
+                return
+
+            self.get_logger().warning(
+                f'Mock AMD time not received within {self.mock_amd_timeout_s:.2f}s; '
+                'falling back to system time'
+            )
+            self.mock_amd_timestamp_us = int(now_ns / 1000)
+            self.mock_amd_last_update_ns = now_ns
+            self.mock_amd_synced = True
+
+        # 检查Mock AMD时间是否超时
+        time_since_update_s = (now_ns - self.mock_amd_last_update_ns) / 1e9
+        if time_since_update_s > self.mock_amd_timeout_s:
+            self.get_logger().warning(
+                f'Mock AMD time timeout: {time_since_update_s:.2f}s > {self.mock_amd_timeout_s}s, '
+                'falling back to system time'
+            )
+            self.mock_amd_timestamp_us = int(now_ns / 1000)
+
         self.engine.tick()
 
         goal_dict = self.engine.get_target_motion_state()
@@ -163,6 +328,12 @@ class AUVDecisionNode(Node):
         goal_dict.setdefault('bridge_backend', self.bridge_backend)
         if self.bridge_backend == 'protocol_udp':
             goal_dict.setdefault('control_mode_byte', self.protocol_control_mode_byte)
+
+        # 应用平滑过渡（Phase 5）
+        goal_dict = self._apply_transition_smoothing(goal_dict, now_ns)
+
+        # 保存当前 setpoint 用于下次跳变检测
+        self.prev_setpoint = goal_dict.copy()
 
         stamp = self.get_clock().now().to_msg()
         self.pub_goal.publish(motion_goal_dict_to_msg(goal_dict))

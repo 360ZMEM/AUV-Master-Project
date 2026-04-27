@@ -14,6 +14,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ControlGoal.msg"
   "msg/Setpoint.msg"
   "msg/AuvDiagnostic.msg"
+  "msg/MpcCmd.msg"
+  "msg/ArbiterStatus.msg"
   DEPENDENCIES std_msgs
 )
 

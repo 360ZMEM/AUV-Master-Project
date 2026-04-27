@@ -9,8 +9,10 @@ from __future__ import annotations
 import struct
 import time
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Iterable, Sequence
 
+from .enums import ArbiterMode, ArbiterSource, AutoState, DenyReason
 from .physics import clamp_rudder_deg, clamp_thrust_percent
 
 # -----------------------------------------------------------------------------
@@ -18,6 +20,10 @@ from .physics import clamp_rudder_deg, clamp_thrust_percent
 # -----------------------------------------------------------------------------
 
 Z_PATH_CMD_VEL = "rt/auv/control/cmd_vel"
+Z_PATH_PC_CMD_RAW = "rt/pc/cmd_raw"
+Z_PATH_AUV_TELEMETRY = "rt/auv/telemetry"
+Z_PATH_AUV_VIZ_INTERNAL = "rt/auv/viz/internal"
+Z_PATH_AUV_STATE_RAW_DR = "rt/auv/state/raw_dr"
 
 Z_PATH_GROUND_TRUTH = "rt/auv/sensors/ground_truth"
 Z_PATH_IMU = "rt/auv/sensors/imu"
@@ -31,6 +37,7 @@ Z_PATH_CABLE_MARKER = "rt/auv/visual/cable_marker"
 Z_PATH_TRUTH_POSE = "rt/auv/visual/truth_pose"
 Z_PATH_HISTORY_TRAIL = "rt/auv/visual/history_trail"
 Z_PATH_VIEW_RANGE = "rt/auv/visual/view_range"
+Z_PATH_MOCK_AMD_TIME = "rt/auv/mock_amd/time"
 
 # -----------------------------------------------------------------------------
 # Common metadata keys
@@ -55,6 +62,9 @@ KEY_GYRO_NED = "gyro_ned"
 KEY_VEL_NED = "vel_ned"
 
 KEY_DEPTH_M = "depth_m"
+KEY_CONFIDENCE = "confidence"
+KEY_LEAK_LEVEL = "leak_level"
+KEY_TOTAL_VOLTAGE_V = "total_voltage_v"
 
 KEY_B_NED = "B_ned"
 KEY_B_NORM = "B_norm"
@@ -68,11 +78,65 @@ KEY_HEIGHT_M = "height_m"
 
 # Control command keys
 KEY_COMMAND = "command"
+KEY_SOURCE = "source"
+KEY_VALID = "valid"
+KEY_HEALTHY = "healthy"
+KEY_NOTE = "note"
 KEY_RIGHT = "right"
 KEY_TOP = "top"
 KEY_LEFT = "left"
 KEY_BOTTOM = "bottom"
 KEY_THRUST = "thrust"
+KEY_FRAME_NUMBER = "frame_number"
+KEY_OBJ_ADDRESS = "obj_address"
+KEY_AUV_ADDRESS = "auv_address"
+KEY_CONTROL_MODE_BYTE = "control_mode_byte"
+KEY_WORK_INSTRUCTION = "work_instruction"
+KEY_ORIENTATION_DEG = "orientation_deg"
+KEY_MAIN_MOTOR_RPM = "main_motor_rpm"
+KEY_SIDE_MOTOR_RPM = "side_motor_rpm"
+KEY_DEPTH_PROTECT_PARAMS = "depth_protect_params"
+KEY_BOTTOM_PROTECT_PARAMS = "bottom_protect_params"
+KEY_PRESET_TIME_TENTHS_MIN = "preset_time_tenths_min"
+KEY_SPARE_PARAMS = "spare_params"
+KEY_PARAMETERS = "parameters"
+KEY_ACTIVE_ARBITER = "active_arbiter"
+KEY_ARBITER_SOURCE = "arbiter_source"
+KEY_AUTO_STATE = "auto_state"
+KEY_DENY_REASON = "deny_reason"
+KEY_TELEMETRY_FRESHNESS_MS = "telemetry_freshness_ms"
+KEY_STATE_SOURCE = "state_source"
+KEY_MOCK_AMD_TIMESTAMP = "mock_amd_timestamp_us"
+
+# -----------------------------------------------------------------------------
+# Binary protocol byte offsets for Para1-12 (reserved tuning fields)
+# -----------------------------------------------------------------------------
+
+PROTOCOL_DOWNLINK_PARA1_OFFSET = 37
+PROTOCOL_DOWNLINK_PARA2_OFFSET = 41
+PROTOCOL_DOWNLINK_PARA3_OFFSET = 45
+PROTOCOL_DOWNLINK_PARA4_OFFSET = 49
+PROTOCOL_DOWNLINK_PARA5_OFFSET = 53
+PROTOCOL_DOWNLINK_PARA6_OFFSET = 55
+PROTOCOL_DOWNLINK_PARA7_OFFSET = 57
+PROTOCOL_DOWNLINK_PARA8_OFFSET = 59
+PROTOCOL_DOWNLINK_PARA9_OFFSET = 61
+PROTOCOL_DOWNLINK_PARA10_OFFSET = 63
+PROTOCOL_DOWNLINK_PARA11_OFFSET = 65
+PROTOCOL_DOWNLINK_PARA12_OFFSET = 67
+
+PROTOCOL_UPLINK_PARA1_OFFSET = 40
+PROTOCOL_UPLINK_PARA2_OFFSET = 44
+PROTOCOL_UPLINK_PARA3_OFFSET = 48
+PROTOCOL_UPLINK_PARA4_OFFSET = 52
+PROTOCOL_UPLINK_PARA5_OFFSET = 56
+PROTOCOL_UPLINK_PARA6_OFFSET = 58
+PROTOCOL_UPLINK_PARA7_OFFSET = 60
+PROTOCOL_UPLINK_PARA8_OFFSET = 62
+PROTOCOL_UPLINK_PARA9_OFFSET = 64
+PROTOCOL_UPLINK_PARA10_OFFSET = 66
+PROTOCOL_UPLINK_PARA11_OFFSET = 68
+PROTOCOL_UPLINK_PARA12_OFFSET = 70
 
 CONTROL_KEYS = (KEY_RIGHT, KEY_TOP, KEY_LEFT, KEY_BOTTOM, KEY_THRUST)
 
@@ -115,6 +179,7 @@ class ProtocolDownlinkState:
     preset_time_tenths_min: int
     spare_params: tuple[int, int]
     parameters: tuple[int, ...]
+    mock_amd_timestamp_us: int = 0
 
 
 @dataclass(frozen=True)
@@ -192,6 +257,14 @@ def _is_point_list(value: Any) -> bool:
 
 def _missing_keys(payload: dict[str, Any], required: Iterable[str]) -> list[str]:
     return [k for k in required if k not in payload]
+
+
+def _enum_value(value: Enum | str | None) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, Enum):
+        return str(value.value)
+    return str(value)
 
 
 def enrich_meta(payload: dict[str, Any], *, step: int, sim_time: float, ts: float | None = None) -> dict[str, Any]:
@@ -344,6 +417,136 @@ def validate_control_payload(payload: Any) -> tuple[bool, list[str]]:
     return True, []
 
 
+def downlink_state_to_payload(state: ProtocolDownlinkState) -> dict[str, Any]:
+    """Convert decoded $CKTH state into a canonical dict for arbitration."""
+    return {
+        KEY_FRAME_NUMBER: int(state.frame_number),
+        KEY_OBJ_ADDRESS: int(state.obj_address),
+        KEY_CONTROL_MODE_BYTE: int(state.control_mode_byte),
+        KEY_WORK_INSTRUCTION: int(state.work_instruction),
+        KEY_RIGHT: float(state.right_fin_deg),
+        KEY_TOP: float(state.top_fin_deg),
+        KEY_LEFT: float(state.left_fin_deg),
+        KEY_BOTTOM: float(state.bottom_fin_deg),
+        KEY_THRUST: float(state.thrust_percent),
+        KEY_MAIN_MOTOR_RPM: int(state.main_motor_rpm),
+        KEY_SIDE_MOTOR_RPM: int(state.side_motor_rpm),
+        KEY_ORIENTATION_DEG: float(state.orientation_deg),
+        KEY_DEPTH_PROTECT_PARAMS: tuple(state.depth_protect_params),
+        KEY_BOTTOM_PROTECT_PARAMS: tuple(state.bottom_protect_params),
+        KEY_PRESET_TIME_TENTHS_MIN: int(state.preset_time_tenths_min),
+        KEY_SPARE_PARAMS: tuple(state.spare_params),
+        KEY_PARAMETERS: tuple(state.parameters),
+    }
+
+
+def parse_downlink_packet_to_payload(
+    packet: bytes,
+    *,
+    main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
+) -> dict[str, Any]:
+    """Decode raw $CKTH bytes into the shared arbitration payload shape."""
+    return downlink_state_to_payload(parse_downlink_packet(packet, main_motor_rpm_scale=main_motor_rpm_scale))
+
+
+def build_downlink_packet_from_payload(
+    payload: Any,
+    *,
+    main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
+) -> bytes:
+    """Build $CKTH bytes from the shared arbitration payload shape."""
+    if not isinstance(payload, dict):
+        return build_downlink_packet(payload, main_motor_rpm_scale=main_motor_rpm_scale)
+
+    return build_downlink_packet(
+        payload,
+        frame_counter=int(payload.get(KEY_FRAME_NUMBER, 0)),
+        obj_address=int(payload.get(KEY_OBJ_ADDRESS, 1)),
+        control_mode_byte=int(payload.get(KEY_CONTROL_MODE_BYTE, 0x01)),
+        work_instruction=int(payload.get(KEY_WORK_INSTRUCTION, 0x00)),
+        orientation_deg=float(payload.get(KEY_ORIENTATION_DEG, 0.0)),
+        depth_protect_params=payload.get(KEY_DEPTH_PROTECT_PARAMS),
+        bottom_protect_params=payload.get(KEY_BOTTOM_PROTECT_PARAMS),
+        preset_time_tenths_min=int(payload.get(KEY_PRESET_TIME_TENTHS_MIN, 0)),
+        spare_params=payload.get(KEY_SPARE_PARAMS),
+        parameter_values=payload.get(KEY_PARAMETERS),
+        main_motor_rpm_scale=main_motor_rpm_scale,
+        side_motor_rpm=int(payload.get(KEY_SIDE_MOTOR_RPM, 0)),
+    )
+
+
+def build_bridge_telemetry_payload(
+    telemetry: ProtocolUplinkTelemetry,
+    *,
+    ts: float | None = None,
+    active_arbiter: ArbiterMode | str | None = None,
+    arbiter_source: ArbiterSource | str | None = None,
+    auto_state: AutoState | str | None = None,
+    deny_reason: DenyReason | str | None = None,
+    telemetry_freshness_ms: float | None = None,
+) -> dict[str, Any]:
+    """Convert decoded $AUV telemetry into the shared bridge feedback payload."""
+    payload = {
+        KEY_TS: float(time.time() if ts is None else ts),
+        KEY_FRAME_NUMBER: int(telemetry.frame_number),
+        KEY_AUV_ADDRESS: int(telemetry.auv_address),
+        KEY_CONTROL_MODE_BYTE: int(telemetry.control_mode_byte),
+        KEY_WORK_INSTRUCTION: int(telemetry.work_instruction),
+        KEY_MAIN_MOTOR_RPM: int(telemetry.main_motor_rpm),
+        KEY_SIDE_MOTOR_RPM: int(telemetry.side_motor_rpm),
+        KEY_RIGHT: float(telemetry.right_fin_deg),
+        KEY_TOP: float(telemetry.top_fin_deg),
+        KEY_LEFT: float(telemetry.left_fin_deg),
+        KEY_BOTTOM: float(telemetry.bottom_fin_deg),
+        KEY_ORIENTATION_DEG: float(telemetry.orientation_deg),
+        "internal_pressure_psi": float(telemetry.internal_pressure_psi),
+        "internal_temp_c": int(telemetry.internal_temp_c),
+        KEY_DEPTH_M: float(telemetry.depth_m),
+        "heading_deg": float(telemetry.heading_deg),
+        "pitch_deg": float(telemetry.pitch_deg),
+        "roll_deg": float(telemetry.roll_deg),
+        "gps_heading_deg": float(telemetry.gps_heading_deg),
+        "gps_speed_mps": float(telemetry.gps_speed_mps),
+        "dvl_speed_mps": float(telemetry.dvl_speed_mps),
+        "altitude_m": float(telemetry.altitude_m),
+        "dead_reckoning_lon_deg": float(telemetry.dead_reckoning_lon_deg),
+        "dead_reckoning_lat_deg": float(telemetry.dead_reckoning_lat_deg),
+        "gps_lon_deg": float(telemetry.gps_lon_deg),
+        "gps_lat_deg": float(telemetry.gps_lat_deg),
+        KEY_TOTAL_VOLTAGE_V: float(telemetry.total_voltage_v),
+        "total_current_a": float(telemetry.total_current_a),
+        "soc": int(telemetry.soc),
+        "soh": int(telemetry.soh),
+        "device_power_status": int(telemetry.device_power_status),
+        "operation_feedback": int(telemetry.operation_feedback),
+        "task_status": int(telemetry.task_status),
+        "system_alarm": int(telemetry.system_alarm),
+        "depth_alarm": int(telemetry.depth_alarm),
+        "bottom_alarm": int(telemetry.bottom_alarm),
+    }
+
+    active_arbiter_value = _enum_value(active_arbiter)
+    if active_arbiter_value is not None:
+        payload[KEY_ACTIVE_ARBITER] = active_arbiter_value
+
+    arbiter_source_value = _enum_value(arbiter_source)
+    if arbiter_source_value is not None:
+        payload[KEY_ARBITER_SOURCE] = arbiter_source_value
+
+    auto_state_value = _enum_value(auto_state)
+    if auto_state_value is not None:
+        payload[KEY_AUTO_STATE] = auto_state_value
+
+    deny_reason_value = _enum_value(deny_reason)
+    if deny_reason_value is not None:
+        payload[KEY_DENY_REASON] = deny_reason_value
+
+    if telemetry_freshness_ms is not None:
+        payload[KEY_TELEMETRY_FRESHNESS_MS] = float(telemetry_freshness_ms)
+
+    return payload
+
+
 def calculate_byte_sum_checksum(data: bytes | bytearray) -> int:
     """Return the protocol checksum as low 8 bits of the byte sum."""
     return sum(data) & 0xFF
@@ -469,6 +672,7 @@ def parse_downlink_packet(
     )
 
     main_motor_rpm = struct.unpack(">h", packet[23:25])[0]
+    mock_amd_timestamp_us = struct.unpack(">i", packet[PROTOCOL_DOWNLINK_PARA1_OFFSET:PROTOCOL_DOWNLINK_PARA1_OFFSET + 4])[0]
     return ProtocolDownlinkState(
         frame_number=int(packet[5]),
         obj_address=int(packet[6]),
@@ -487,7 +691,7 @@ def parse_downlink_packet(
         preset_time_tenths_min=struct.unpack(">H", packet[16:18])[0],
         spare_params=(struct.unpack(">h", packet[18:20])[0], struct.unpack(">h", packet[20:22])[0]),
         parameters=(
-            struct.unpack(">i", packet[37:41])[0],
+            mock_amd_timestamp_us,
             struct.unpack(">i", packet[41:45])[0],
             struct.unpack(">i", packet[45:49])[0],
             struct.unpack(">i", packet[49:53])[0],
@@ -500,6 +704,7 @@ def parse_downlink_packet(
             struct.unpack(">h", packet[65:67])[0],
             struct.unpack(">h", packet[67:69])[0],
         ),
+        mock_amd_timestamp_us=mock_amd_timestamp_us,
     )
 
 

@@ -14,6 +14,7 @@
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>auv_common</depend>
   <depend>auv_interfaces</depend>
   <exec_depend>python3-yaml</exec_depend>
 

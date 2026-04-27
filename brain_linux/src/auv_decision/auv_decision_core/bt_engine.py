@@ -16,10 +16,13 @@ from .behaviors import (
     SENSOR_STATUS_KEY,
     TARGET_MOTION_STATE_KEY,
     ConfidenceAboveThreshold,
+    DebugLevelCondition,
     DiveToDepth,
     EmergencyCondition,
     EmergencySurface,
+    HoldCurrentPoseBehavior,
     ParallelTracking,
+    TrackAnalyticalTrajectoryBehavior,
     ZigZagSearch,
 )
 from .decorators import AnomalySpeedLimiter
@@ -45,21 +48,48 @@ class DecisionTreeEngine:
     def _build_tree(self, confidence_threshold: float) -> py_trees.behaviour.Behaviour:
         """组装用户指定的行为树。
 
-        Root(Selector)
-        ├── 紧急自救(Sequence): EmergencyCondition -> EmergencySurface
-        └── 主任务流(Sequence)
-            ├── DiveToDepth
-            └── 海底安全包装(Decorator)
-                └── 路由锁定(Selector)
-                    ├── 精准巡检(Sequence): ConfidenceAboveThreshold -> AnomalySpeedLimiter(ParallelTracking)
-                    └── ZigZagSearch
+        树结构（Phase 4 重构）:
+        RootSelector
+        ├── EmergencySequence (EmergencyCondition → EmergencySurface)  [始终最高优先级]
+        └── DebugCascadeSelector
+            ├── HoldCurrentPose           [debug_level >= 1 时可激活]
+            ├── TrackAnalyticalTrajectory [debug_level >= 2 时可激活]
+            └── MainMissionSequence       [debug_level == 0 或 3 时激活]
         """
+        # L0: 紧急序列（始终最高优先级）
         emergency_sequence = py_trees.composites.Sequence(name='EmergencySequence', memory=False)
         emergency_sequence.add_children([
             EmergencyCondition(name='EmergencyCondition'),
             EmergencySurface(),
         ])
 
+        # L1: Hold 行为（debug_level == 1）
+        # 使用 Inverter 装饰器创建 "debug_level < 2" 条件
+        debug_level_not_2_or_3 = py_trees.decorators.Inverter(
+            name='NotDebugLevel2Or3',
+            child=DebugLevelCondition(required_level=2),
+        )
+        hold_sequence = py_trees.composites.Sequence(name='HoldSequence', memory=False)
+        hold_sequence.add_children([
+            DebugLevelCondition(required_level=1),
+            debug_level_not_2_or_3,  # debug_level >= 1 且 debug_level < 2，即 debug_level == 1
+            HoldCurrentPoseBehavior(),
+        ])
+
+        # L2: AnalyticalPath 行为（debug_level == 2）
+        # 使用 Inverter 装饰器创建 "debug_level < 3" 条件
+        debug_level_not_3 = py_trees.decorators.Inverter(
+            name='NotDebugLevel3',
+            child=DebugLevelCondition(required_level=3),
+        )
+        path_sequence = py_trees.composites.Sequence(name='AnalyticalPathSequence', memory=False)
+        path_sequence.add_children([
+            DebugLevelCondition(required_level=2),
+            debug_level_not_3,  # debug_level >= 2 且 debug_level < 3，即 debug_level == 2
+            TrackAnalyticalTrajectoryBehavior(trajectory_kind='cable_like_3d'),
+        ])
+
+        # L3: 主任务流（原有逻辑）
         precise_sequence = py_trees.composites.Sequence(name='PreciseInspectionSequence', memory=False)
         precise_sequence.add_children([
             ConfidenceAboveThreshold(threshold=confidence_threshold),
@@ -80,10 +110,22 @@ class DecisionTreeEngine:
             seabed_safe_route,
         ])
 
+        # Debug 级联选择器（L1/L2/L3 路由）
+        debug_cascade_selector = py_trees.composites.Selector(
+            name='DebugCascadeSelector',
+            memory=False,
+        )
+        debug_cascade_selector.add_children([
+            hold_sequence,
+            path_sequence,
+            main_sequence,
+        ])
+
+        # 根选择器（L0 > L1/L2/L3）
         root = py_trees.composites.Selector(name='RootSelector', memory=False)
         root.add_children([
             emergency_sequence,
-            main_sequence,
+            debug_cascade_selector,
         ])
         return root
 

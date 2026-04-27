@@ -13,6 +13,8 @@ class BehaviorMode(str, Enum):
     ZIGZAG_SEARCH = "ZIGZAG_SEARCH"
     PARALLEL_TRACK = "PARALLEL_TRACK"
     EMERGENCY_SURFACE = "EMERGENCY_SURFACE"
+    STABILIZE_HOLD = "STABILIZE_HOLD"
+    ANALYTICAL_PATH = "ANALYTICAL_PATH"
 
 
 class BridgeBackend(str, Enum):
@@ -55,6 +57,63 @@ class WorkInstruction(IntEnum):
     DIRECTIONAL_NAV_OFF = 0x72
     CLEAR_FAULT = 0x91
     INITIALIZE = 0x92
+    AUTONOMOUS_CONTROL = 0xEE
+    HOLD_DEBUG = 0xA1
+    ANALYTICAL_PATH_DEBUG = 0xA2
+
+
+class AutoState(str, Enum):
+    """Autonomy handshake states shared by bridge, UI, and safety logic."""
+
+    LOCKED = "LOCKED"
+    REQUESTING = "REQUESTING"
+    ACTIVE = "ACTIVE"
+    DENIED = "DENIED"
+
+
+class ArbiterMode(str, Enum):
+    """Effective control owner after arbitration."""
+
+    REMOTE = "REMOTE"
+    AUTONOMOUS = "AUTONOMOUS"
+
+
+class ArbiterSource(str, Enum):
+    """Source that produced the active command output."""
+
+    NONE = "NONE"
+    PC_RAW = "PC_RAW"
+    JETSON_MPC = "JETSON_MPC"
+    SAFETY_FALLBACK = "SAFETY_FALLBACK"
+
+
+class StateEstimateSource(str, Enum):
+    """State estimate source selected by control and analysis tooling."""
+
+    FILTERED = "FILTERED"
+    RAW_DR = "RAW_DR"
+
+
+class DenyReason(str, Enum):
+    """Reasons that block or revoke autonomous takeover."""
+
+    NONE = "NONE"
+    MANUAL_OVERRIDE = "MANUAL_OVERRIDE"
+    LEAK_DETECTED = "LEAK_DETECTED"
+    LOW_VOLTAGE = "LOW_VOLTAGE"
+    LOW_CONFIDENCE = "LOW_CONFIDENCE"
+    AMD_UPLINK_STALE = "AMD_UPLINK_STALE"
+    MPC_HEARTBEAT_TIMEOUT = "MPC_HEARTBEAT_TIMEOUT"
+    UNKNOWN = "UNKNOWN"
+
+
+class DebugLevel(str, Enum):
+    """Algorithm transparency level for decision stack debugging."""
+
+    AUTO = "AUTO"
+    HOLD = "HOLD"
+    PATH = "PATH"
+    FULL = "FULL"
 
 
 class FaultCode(str, Enum):

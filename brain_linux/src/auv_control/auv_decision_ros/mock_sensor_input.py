@@ -111,10 +111,24 @@ class MockSensorInputNode(Node):
         2) 安装脚本路径反推仓库根目录；
         3) 用户主目录下常见项目路径。
         """
+        # 仓库实际结构: AUV_Master_Project/ 与 Console上位机软件/ 并列
+        workspace = Path(__file__).resolve()
+        # 尝试从当前文件反推仓库根目录
+        for i in range(2, 10):
+            candidate_root = workspace.parents[i] if i < len(workspace.parents) else workspace.parent
+            if (candidate_root / 'AUV_Master_Project').exists():
+                workspace_root = candidate_root
+                break
+        else:
+            workspace_root = Path.cwd()
+
         candidates = [
-            Path.cwd() / '..' / 'auv_console_python' / '20020101103632.txt',
-            Path(__file__).resolve().parents[7] / 'auv_console_python' / '20020101103632.txt',
-            Path.home() / 'auv_console_python' / 'auv_console_python' / '20020101103632.txt',
+            # 1) 仓库根目录下的 Console上位机软件 样例日志
+            workspace_root / 'Console上位机软件' / 'auv_console_python' / '20020101103632.txt',
+            # 2) 当前工作目录同级（常见开发布局）
+            Path.cwd().parent / 'Console上位机软件' / 'auv_console_python' / '20020101103632.txt',
+            # 3) 用户主目录下常见位置
+            Path.home() / 'master_work-tmp' / 'Console上位机软件' / 'auv_console_python' / '20020101103632.txt',
         ]
 
         for candidate in candidates:

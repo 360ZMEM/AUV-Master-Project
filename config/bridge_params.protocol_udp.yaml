@@ -71,6 +71,13 @@ bridge:
     telemetry_total_current_a: 12.0
     telemetry_soc: 100
     telemetry_soh: 100
+    sniffer_mirror_host: 127.0.0.1
+    sniffer_mirror_port: 52366
+    log_packets: true
+    log_packet_hex: false
+    log_ascii_format: true
+    log_hex_bytes: 48
+    log_every_n: 1
 
 zenoh:
   # Zenoh 通信相关配置：session 可留空采用默认连接参数。

@@ -4,6 +4,7 @@ stage:
   name: auv_project_new_stack
 
 simulation:
+  backend: holoocean
   # 仿真环境与主循环参数。
   # world/package_name/agent_name 与 HoloOcean 场景和载具实例绑定。
   world: Dam
@@ -19,8 +20,8 @@ simulation:
   frames_per_sec: false
   # 仿真步长，通常与 ticks_per_sec 互相对应。
   dt: 0.0333333333
-  # 最大仿真步数；1500 表示跑到上限后自动结束。
-  max_steps: 1500
+  # 最大仿真步数；6000 允许覆盖 120s 级 benchmark，并留出安全余量。
+  max_steps: 6000
 
 agent:
   # AUV 本体与挂载传感器设置。
@@ -94,25 +95,27 @@ control:
 guidance:
   # 导引层参数：用于轨迹跟踪、最近点搜索和横向误差修正。
   lookahead_distance: 3.5
-  nearest_search_window: 220
+  nearest_search_window: 400
   cross_track_gain: 0.7
 
 trajectory:
   # 轨迹发生器配置：这里是 cable_like_3d，表示“类电缆”三维曲线路径。
   kind: cable_like_3d
-  duration: 40.0
+  # 轨迹时长与实验时长解耦，默认给 120s benchmark 留足参考路径。
+  duration: 150.0
   dt: 0.1
   # 轨迹起点，通常与场景初始位置相匹配。
   start: [0.0, 0.0, -12.0]
   # 沿轨迹前进的纵向速度。
   surge_speed: 1.1
   # 轨迹长度与横向/深度扰动参数。
-  length: 36.0
+  length: 165.0
   lateral_amplitude: 1.2
-  lateral_wavenumber: 0.08
+  # 更高的空间频率用于在长实验中形成多次 zig-zag。
+  lateral_wavenumber: 0.14
   depth_base: -12.0
   depth_amplitude: 0.35
-  depth_wavenumber: 0.05
+  depth_wavenumber: 0.09
   # 最小转弯半径约束，避免轨迹过于尖锐。
   min_turn_radius: 6.0
 

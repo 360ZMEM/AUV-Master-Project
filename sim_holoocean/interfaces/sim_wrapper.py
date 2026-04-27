@@ -1,4 +1,7 @@
-import holoocean
+try:
+    import holoocean
+except Exception:  # pragma: no cover - optional when running PVS-only flows
+    holoocean = None
 import numpy as np
 
 
@@ -13,18 +16,22 @@ class HoloOceanSimWrapper:
     - parse_state(raw_state)
     """
 
-    def __init__(self, scenario_cfg, agent_name, show_viewport=False, verbose=False):
+    def __init__(self, scenario_cfg, agent_name, show_viewport=False, verbose=False, window_res=None):
         self.scenario_cfg = scenario_cfg
         self.agent_name = agent_name
         self.show_viewport = bool(show_viewport)
         self.verbose = bool(verbose)
+        self.window_res = window_res
         self.env = None
 
     def open(self):
+        if holoocean is None:
+            raise RuntimeError("holoocean package is required for the HoloOcean backend")
         self.env = holoocean.make(
             scenario_cfg=self.scenario_cfg,
             show_viewport=self.show_viewport,
             verbose=self.verbose,
+            window_res=self.window_res,
         )
         return self
 
@@ -135,3 +142,34 @@ def extract_depth(depth_sensor, fallback_z):
     if depth.size >= 1:
         return float(depth[0])
     return float(-fallback_z)
+
+
+def _normalize_backend_name(backend_name):
+    backend = str(backend_name or "holoocean").strip().lower()
+    if backend in {"ho", "holocean", "holoocean"}:
+        return "holoocean"
+    if backend in {"pvs", "pythonvehiclesimulator", "python_vehicle_simulator"}:
+        return "pvs"
+    return backend
+
+
+def create_sim_wrapper(config, *, scenario_cfg, agent_name, show_viewport=False, verbose=False, window_res=None):
+    backend_name = _normalize_backend_name((config or {}).get("simulation", {}).get("backend"))
+    if backend_name == "pvs":
+        from pvs_sim_wrapper import PVSSimWrapper
+
+        return PVSSimWrapper(
+            config=config,
+            scenario_cfg=scenario_cfg,
+            agent_name=agent_name,
+            show_viewport=show_viewport,
+            verbose=verbose,
+        )
+
+    return HoloOceanSimWrapper(
+        scenario_cfg=scenario_cfg,
+        agent_name=agent_name,
+        show_viewport=show_viewport,
+        verbose=verbose,
+        window_res=window_res,
+    )
