@@ -37,6 +37,8 @@ class ControlModeByte(IntEnum):
 
     这些值用于仿真、桥接和实物协议之间保持一致的控制模式约定，例如遥控、
     自动定点、自动定向以及返航等状态。
+
+    对应协议的第7字节
     """
 
     SEND_ONLY = 0x00
@@ -44,7 +46,7 @@ class ControlModeByte(IntEnum):
     AUTO_FIXED_POINT = 0x02
     AUTO_DIRECTION = 0x03
     RETURN_HOME = 0x04
-    JETSON_PROTOCOL = 0xEE
+    JETSON_PROTOCOL = 0xEE # 新增
 
 
 class WorkInstruction(IntEnum):
@@ -52,6 +54,8 @@ class WorkInstruction(IntEnum):
 
     这组枚举用于表达“开始任务”“切换模式”“进入保持”等较高层的控制意图，
     适合跨进程、跨语言传输。
+
+    对应协议的第22字节
     """
 
     NONE = 0x00
@@ -73,7 +77,7 @@ class WorkInstruction(IntEnum):
     DIRECTIONAL_NAV_OFF = 0x72
     CLEAR_FAULT = 0x91
     INITIALIZE = 0x92
-    AUTONOMOUS_CONTROL = 0xEE
+    AUTONOMOUS_CONTROL = 0xEE # 新增
     HOLD_DEBUG = 0xA1
     ANALYTICAL_PATH_DEBUG = 0xA2
 

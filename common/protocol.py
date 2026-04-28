@@ -1069,12 +1069,12 @@ def build_downlink_packet(
     packet[6] = obj_address & 0xFF
     packet[7] = control_mode_byte & 0xFF
 
-    struct.pack_into(">H", packet, 8, depth_pair[0])
+    struct.pack_into(">H", packet, 8, depth_pair[0]) # ">H" 表示大端无符号短整数
     struct.pack_into(">H", packet, 10, depth_pair[1])
     struct.pack_into(">H", packet, 12, bottom_pair[0])
     struct.pack_into(">H", packet, 14, bottom_pair[1])
     struct.pack_into(">H", packet, 16, _clamp_int(preset_time_tenths_min, 0, 65535))
-    struct.pack_into(">h", packet, 18, spare_pair[0])
+    struct.pack_into(">h", packet, 18, spare_pair[0]) # ">h" 表示大端有符号短整数
     struct.pack_into(">h", packet, 20, spare_pair[1])
     packet[22] = work_instruction & 0xFF
 
