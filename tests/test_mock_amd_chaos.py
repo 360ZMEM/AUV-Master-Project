@@ -1,6 +1,23 @@
-"""Unit tests for ChaosInjector and ChaosProfile.
+"""
+ChaosInjector 和 ChaosProfile 单元测试。
 
-Each injector is tested independently.  No dependency on mock_amd_server.
+该模块测试混沌工程组件的各项故障注入功能，每个注入器独立测试。
+
+测试覆盖：
+  - 主开关：enabled=False 时所有注入器应被禁用
+  - DVL 冻结：速度值在触发时间后保持冻结
+  - IMU 漂移：航向角随时间线性漂移
+  - 深度尖峰：深度读数在触发时间后增加固定偏移
+  - 磁力计饱和：磁场强度超过阈值时被限幅
+  - 上行链路中断：周期性丢包模式测试
+  - 随机丢包：按百分比概率丢包
+  - 重排序：数据包乱序注入
+  - 重置功能：清除内部状态
+
+测试独立性：
+  - 不依赖 mock_amd_server
+  - 不依赖 protocol.py
+  - 使用固定随机种子保证可重复性
 """
 
 from __future__ import annotations

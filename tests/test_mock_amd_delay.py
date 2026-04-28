@@ -1,7 +1,24 @@
-"""Unit tests for TransportDelayQueue.
+"""
+TransportDelayQueue 单元测试。
 
-Each test is isolated: constructor, enqueue, dequeue, edge-cases.
-No dependency on mock_amd_server or protocol.py.
+该模块测试传输时延队列的核心 FIFO 语义和时序逻辑。
+
+测试覆盖：
+  - 构造函数：零延迟、负延迟、零深度等各种边界情况
+  - 基础 FIFO：
+    - 零延迟立即释放
+    - 固定延迟按时释放
+    - 多包顺序保持
+    - 部分释放（仅到期包）
+  - 队列溢出：FIFO 驱逐最老包
+  - 抖动：随机时延变化
+  - 重置：清空队列
+  - 调试输出：__repr__ 验证
+
+测试独立性：
+  - 不依赖 mock_amd_server
+  - 不依赖 protocol.py
+  - 使用固定随机种子保证可重复性
 """
 
 from __future__ import annotations

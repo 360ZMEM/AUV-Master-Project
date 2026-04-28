@@ -1,9 +1,26 @@
 #!/usr/bin/env python3
-"""Generate a lightweight replay video from an AUV MCAP bag.
+"""
+MCAP 回放视频生成器 - 从实验记录生成轻量级动画。
 
-The script reuses the offline MCAP reader from tools/analyze_bag.py and renders
-an animation that shows the estimated and truth trajectories from a top-down
-view plus a depth-over-time trace.
+该工具复用 analyze_bag.py 的离线 MCAP 读取器，渲染 AUV 轨迹动画：
+  - 俯视图：估计轨迹 vs 真值轨迹
+  - 深度-时间曲线
+  - 支持 GIF 和 MP4 输出格式
+
+使用示例：
+  # 生成默认 GIF 回放（存储在 bag 目录下）
+  python tools/replay_mcap_video.py /path/to/experiment_bag
+
+  # 指定输出路径和格式
+  python tools/replay_mcap_video.py /path/to/bag.mcap --output replay.mp4 --format mp4
+
+  # 调整帧率和 DPI
+  python tools/replay_mcap_video.py /path/to/bag --fps 24 --dpi 200
+
+功能：
+  - 自动回退到备用 topic（兼容历史数据）
+  - 可配置轨迹尾迹长度
+  - 支持多种可视化 topic（位姿、磁场、电缆标记等）
 """
 
 from __future__ import annotations

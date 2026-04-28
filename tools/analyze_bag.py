@@ -1,21 +1,32 @@
 #!/usr/bin/env python3
-"""Offline MCAP analysis tool for AUV experiment figures.
+"""
+MCAP 离线分析工具 - AUV 实验数据可视化与指标提取。
 
-Installation:
-1. Python dependencies:
-   pip install mcap mcap-ros2-support matplotlib numpy
-2. This script does not require a running ROS2 graph. It reads ROS2 messages
-   directly from MCAP files through `mcap_ros2`.
+该工具从 ROS2 MCAP 记录中读取消息并生成静态图表，无需运行 ROS2 环境。
+支持多种数据源：位姿轨迹估计、真值、磁场数据、行为树状态等。
 
-Examples:
-1. Analyze a single MCAP file and export PDF figures:
-   python tools/analyze_bag.py /path/to/bag_0.mcap --output-dir ./figures
-2. Analyze a rosbag2 directory that contains one or more .mcap chunks:
-   python tools/analyze_bag.py /path/to/experiment_bag --format eps
-3. Override topic names if a historical bag uses old names:
-   python tools/analyze_bag.py /path/to/bag.mcap \
-     --topic-diagnostics /auv/diagnostic \
-     --topic-magnetic /auv/sensors/mag
+安装：
+  1. 依赖安装：
+     pip install mcap mcap-ros2-support matplotlib numpy
+  2. 无需运行 ROS2 图，直接从 MCAP 文件读取 ROS2 消息
+
+使用示例：
+  # 分析单个 MCAP 文件并导出 PDF 图表
+  python tools/analyze_bag.py /path/to/bag_0.mcap --output-dir ./figures
+
+  # 分析包含多个 .mcap 块的 rosbag2 目录
+  python tools/analyze_bag.py /path/to/experiment_bag --format eps
+
+  # 覆盖历史 bag 使用的旧 topic 名称
+  python tools/analyze_bag.py /path/to/bag.mcap \
+    --topic-diagnostics /auv/diagnostic \
+    --topic-magnetic /auv/sensors/mag
+
+功能：
+  - 从 MCAP 读取多个 topic 的时序数据
+  - 计算轨迹误差统计（位置、速度）
+  - 绘制 2D 俯视图、深度-时间曲线、磁场读数
+  - 支持自定义 topic 映射（兼容历史数据）
 """
 
 from __future__ import annotations

@@ -1,10 +1,56 @@
+"""
+实时仿真可视化 - matplotlib 交互式绘图。
+
+该模块提供仿真运行时的实时可视化面板，显示 6 个子图：
+  1. 3D 轨迹：参考路径 vs AUV 实际轨迹
+  2. XY 平面轨迹：俯视图
+  3. Z 轴深度：随时间变化的深度曲线
+  4. 前向速度：u vs 目标 u
+  5. 控制命令：推力和 4 个舵角的时序图
+  6. （预留）可用于其他可视化
+
+使用方式：
+  >>> from plot_runtime import initialize_plot, update_live_plot, render_plot
+  >>>
+  >>> # 初始化
+  >>> fig, lines, storage = initialize_plot(ref_bundle, dpi=140)
+  >>> plt.ion()
+  >>> plt.show()
+  >>>
+  >>> # 每个时间步更新
+  >>> update_live_plot(fig, lines, storage, ref_points)
+  >>> plt.pause(0.001)
+  >>>
+  >>> # 仿真结束
+  >>> render_plot(fig, "output.pdf")
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def initialize_plot(ref_bundle, dpi):
+    """
+    初始化实时绘图面板。
+
+    创建 2x3 子图布局，初始化所有线条和数据存储。
+
+    参数：
+        ref_bundle (dict)：参考轨迹信息，包含：
+          - points (ndarray[N, 3])：参考路径点
+        dpi (int)：图像分辨率
+
+    返回值：
+        tuple：(fig, lines, storage)
+          - fig (matplotlib.figure.Figure)：图形对象
+          - lines (dict)：所有可更新的线条对象
+          - storage (dict)：数据存储（t, x, y, z, u, target_u, ref_z）
+    """
     fig = plt.figure(figsize=(11, 7), dpi=dpi)
 
+    # ────────────────────────────────────────────────
+    # 子图 1️⃣：3D 轨迹
+    # ────────────────────────────────────────────────
     ax3d = fig.add_subplot(2, 3, 1, projection="3d")
     ref_line_3d, = ax3d.plot([], [], [], "k--", lw=1.0, label="Ref path")
     live_line_3d, = ax3d.plot([], [], [], "tab:blue", lw=1.2, label="AUV")
@@ -14,6 +60,9 @@ def initialize_plot(ref_bundle, dpi):
     ax3d.set_zlabel("Z (m, NWU)")
     ax3d.legend()
 
+    # ────────────────────────────────────────────────
+    # 子图 2️⃣：XY 平面轨迹
+    # ────────────────────────────────────────────────
     ax_xy = fig.add_subplot(2, 3, 2)
     ref_line_xy, = ax_xy.plot(ref_bundle["points"][:, 0], ref_bundle["points"][:, 1], "k--", lw=1.1, label="Ref path")
     live_line_xy, = ax_xy.plot([], [], "tab:blue", lw=1.2, label="AUV")
@@ -23,6 +72,9 @@ def initialize_plot(ref_bundle, dpi):
     ax_xy.grid(True, alpha=0.3)
     ax_xy.legend()
 
+    # ────────────────────────────────────────────────
+    # 子图 3️⃣：深度 (Z) 时序
+    # ────────────────────────────────────────────────
     ax_z = fig.add_subplot(2, 3, 3)
     live_ref_z, = ax_z.plot([], [], "k--", lw=1.1, label="Ref Z")
     live_pos_z, = ax_z.plot([], [], "tab:orange", lw=1.2, label="AUV Z")
@@ -32,6 +84,9 @@ def initialize_plot(ref_bundle, dpi):
     ax_z.grid(True, alpha=0.3)
     ax_z.legend()
 
+    # ────────────────────────────────────────────────
+    # 子图 4️⃣：前向速度
+    # ────────────────────────────────────────────────
     ax_u = fig.add_subplot(2, 3, 4)
     live_u, = ax_u.plot([], [], "tab:green", lw=1.2, label="u")
     live_u_tgt, = ax_u.plot([], [], "tab:red", ls="--", lw=1.1, label="u_target")
@@ -41,6 +96,9 @@ def initialize_plot(ref_bundle, dpi):
     ax_u.grid(True, alpha=0.3)
     ax_u.legend()
 
+    # ────────────────────────────────────────────────
+    # 子图 5️⃣：控制命令
+    # ────────────────────────────────────────────────
     ax_cmd = fig.add_subplot(2, 3, 5)
     live_cmd_thrust, = ax_cmd.plot([], [], lw=1.2, label="thrust")
     live_cmd_right, = ax_cmd.plot([], [], lw=1.0, label="right_fin")
@@ -55,6 +113,9 @@ def initialize_plot(ref_bundle, dpi):
 
     fig.tight_layout()
 
+    # ────────────────────────────────────────────────
+    # 构建线条引用和数据存储
+    # ────────────────────────────────────────────────
     lines = {
         "3d": live_line_3d,
         "ref3d": ref_line_3d,
@@ -69,7 +130,21 @@ def initialize_plot(ref_bundle, dpi):
 
 
 def update_live_plot(fig_live, live_lines, live_storage, ref_points):
+    """
+    更新实时绘图数据。
+
+    将 storage 中的最新数据更新到对应的线条对象。
+
+    参数：
+        fig_live (matplotlib.figure.Figure)：图形对象
+        live_lines (dict)：initialize_plot 返回的线条字典
+        live_storage (dict)：数据存储字典
+        ref_points (ndarray)：参考路径点（用于 ref3d 和 refxy）
+    """
     if len(live_storage["t"]) > 0:
+        # ────────────────────────────────────────────────
+        # 更新参考路径（显示到当前进度）
+        # ────────────────────────────────────────────────
         idx = min(len(live_storage["t"]) - 1, len(ref_points) - 1)
         if idx >= 0:
             partial = ref_points[: idx + 1]
@@ -77,11 +152,22 @@ def update_live_plot(fig_live, live_lines, live_storage, ref_points):
             live_lines["ref3d"].set_3d_properties(partial[:, 2])
             live_lines["refxy"].set_data(partial[:, 0], partial[:, 1])
 
+        # ────────────────────────────────────────────────
+        # 更新 AUV 实时轨迹
+        # ────────────────────────────────────────────────
         live_lines["3d"].set_data(live_storage["x"], live_storage["y"])
         live_lines["3d"].set_3d_properties(live_storage["z"])
         live_lines["xy"].set_data(live_storage["x"], live_storage["y"])
+
+        # ────────────────────────────────────────────────
+        # 更新深度曲线
+        # ────────────────────────────────────────────────
         live_lines["z"][0].set_data(live_storage["t"], live_storage["ref_z"])
         live_lines["z"][1].set_data(live_storage["t"], live_storage["z"])
+
+        # ────────────────────────────────────────────────
+        # 更新速度曲线
+        # ────────────────────────────────────────────────
         live_lines["u"][0].set_data(live_storage["t"], live_storage["u"])
         live_lines["u"][1].set_data(live_storage["t"], live_storage["target_u"])
         cmd = np.asarray(live_storage.get("cmd_history", []))

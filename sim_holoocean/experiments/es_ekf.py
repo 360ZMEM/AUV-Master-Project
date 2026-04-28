@@ -1,3 +1,22 @@
+"""
+ES-EKF（误差状态卡尔曼滤波）仿真实验框架。
+
+该模块实现 ES-EKF 状态估计器的完整仿真实验：
+  1. HoloOcean 物理仿真环境
+  2. 多传感器融合：IMU + DVL + 深度计 + GPS
+  3. 航点状态机提供参考轨迹
+  4. PID 控制器闭环控制
+  5. 实时可视化：真值 vs 估计轨迹
+
+支持实验：
+  - 不同 DVL 坐标系（world vs body）
+  - 传感器噪声参数调优
+  - GPS 丢失场景测试
+
+使用方式：
+  python sim_holoocean/experiments/es_ekf.py --config path/to/sim_params.yaml
+"""
+
 import argparse
 import math
 import sys
@@ -26,11 +45,25 @@ from state_machine import WaypointStateMachine
 
 
 def load_config(path):
+    """从 YAML 文件加载配置。"""
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 def read_imu(sensor):
+    """
+    从 HoloOcean IMU 传感器读取加速度和角速度。
+
+    支持多种输入格式：
+      - 1D 数组 [6+]：[ax, ay, az, gx, gy, gz, ...]
+      - 2D 数组 [2+, 3+]：第一行加速度，第二行角速度
+
+    参数：
+        sensor：HoloOcean IMU 传感器数据
+
+    返回值：
+        tuple：(accel[3], gyro[3]) 加速度和角速度向量
+    """
     imu = np.asarray(sensor)
     if imu.ndim == 1 and imu.size >= 6:
         return imu[:3].astype(float), imu[3:6].astype(float)
@@ -43,6 +76,17 @@ def read_imu(sensor):
 
 
 def read_gps_xy(sensor):
+    """
+    从 GPS 传感器读取 XY 位置。
+
+    GPS 仅在水面可用（深度小于阈值），返回 None 表示不可用。
+
+    参数：
+        sensor：HoloOcean GPS 传感器数据
+
+    返回值：
+        ndarray[2] or None：XY 位置，或 None（不可用）
+    """
     gps = np.asarray(sensor).reshape(-1)
     if gps.size < 2:
         return None
@@ -52,6 +96,23 @@ def read_gps_xy(sensor):
 
 
 def compute_error_metrics(gt_xyz, ekf_xyz, gps_on_flags):
+    """
+    计算 ES-EKF 估计误差指标。
+
+    指标：
+      - rmse_all：整体 RMS 误差
+      - rmse_gps_on：GPS 可用期间的 RMS 误差
+      - rmse_gps_off：GPS 丢失期间的 RMS 误差
+      - final_error：最终时刻的位置误差
+
+    参数：
+        gt_xyz (list)：真值轨迹
+        ekf_xyz (list)：估计轨迹
+        gps_on_flags (list[bool])：每步 GPS 可用标志
+
+    返回值：
+        dict：包含所有误差指标的字典
+    """
     gt = np.asarray(gt_xyz, dtype=float)
     est = np.asarray(ekf_xyz, dtype=float)
     flags = np.asarray(gps_on_flags, dtype=bool)
@@ -67,6 +128,22 @@ def compute_error_metrics(gt_xyz, ekf_xyz, gps_on_flags):
 
 
 def build_es_ekf_scenario(cfg):
+    """
+    构建 ES-EKF 实验的 HoloOcean 场景配置。
+
+    配置传感器：
+      - PoseSensor：真值位姿（用于评估，不输入滤波器）
+      - IMUSensor：加速度计 + 陀螺仪
+      - DVLSensor：多普勒测速仪
+      - DepthSensor：深度计
+      - GPSSensor：GPS（仅水面可用）
+
+    参数：
+        cfg (dict)：完整配置字典
+
+    返回值：
+        dict：HoloOcean 场景配置
+    """
     sim = cfg["simulation"]
     exp = cfg.get("es_ekf_experiment", {})
     world = exp.get("world", "OpenWater")
@@ -131,6 +208,27 @@ def build_es_ekf_scenario(cfg):
 
 
 def run_experiment(cfg, enable_plot=True, max_steps_override=None):
+    """
+    运行 ES-EKF 仿真实验。
+
+    流程：
+      1. 构建场景并初始化 ESKF、控制器、状态机
+      2. 主循环：
+         - 读取传感器数据
+         - ESKF 预测 + 校正
+         - 状态机生成目标点
+         - PID 控制计算命令
+         - 更新可视化
+      3. 计算误差指标并保存结果
+
+    参数：
+        cfg (dict)：完整配置
+        enable_plot (bool)：是否启用实时绘图
+        max_steps_override (int or None)：最大步数覆盖
+
+    返回值：
+        dict：误差指标（rmse_all, rmse_gps_on, rmse_gps_off, final_error）
+    """
     sim_cfg = cfg["simulation"]
     ctrl_cfg = cfg["control"]
     exp_cfg = cfg.get("es_ekf_experiment", {})
@@ -141,6 +239,9 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
     max_steps = int(max_steps_override if max_steps_override is not None else exp_cfg.get("max_steps", 900))
     print_every = int(exp_cfg.get("print_every_n_steps", 20))
 
+    # ────────────────────────────────────────────────
+    # 初始化控制器、状态机、ES-EKF
+    # ────────────────────────────────────────────────
     controller = AUVPIDController(ctrl_cfg, cfg["limits"])
     sm = WaypointStateMachine(exp_cfg)
 
@@ -166,6 +267,9 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
 
     t_hist, gt_xyz, ekf_xyz, gps_on = [], [], [], []
 
+    # ────────────────────────────────────────────────
+    # 初始化实时绘图
+    # ────────────────────────────────────────────────
     fig = None
     if enable_plot:
         plt.ion()
@@ -181,6 +285,9 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
         plt.show()
     gps_loss_mark = None
 
+    # ────────────────────────────────────────────────
+    # 启动仿真
+    # ────────────────────────────────────────────────
     wrapper = HoloOceanSimWrapper(scenario, agent_name, show_viewport=False, verbose=bool(sim_cfg.get("verbose", False))).open()
     state_raw = wrapper.reset_and_tick()
     wall_start = time.time()
@@ -191,12 +298,18 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
         pose = state["PoseSensor"]
         gt_pos = pose[:3, 3].astype(float)
 
+        # ────────────────────────────────────────────────
+        # 读取传感器数据
+        # ────────────────────────────────────────────────
         imu_acc, imu_gyro = read_imu(state.get("IMUSensor", np.zeros(6)))
         dvl_vel = extract_body_velocity(state.get("DVLSensor", np.zeros(3)))
         depth_raw = extract_depth(state.get("DepthSensor", np.array([-gt_pos[2]])), gt_pos[2])
         depth = -depth_raw if depth_raw < 0.0 else depth_raw
         gps_xy = read_gps_xy(state.get("GPSSensor", np.array([np.nan, np.nan, np.nan])))
 
+        # ────────────────────────────────────────────────
+        # ES-EKF 预测 + 校正
+        # ────────────────────────────────────────────────
         ekf.predict(imu_acc, imu_gyro, dt)
         if dvl_frame == "world":
             ekf.correct_dvl_world(dvl_vel)
@@ -206,11 +319,15 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
         if gps_xy is not None:
             ekf.correct_gps(gps_xy)
         elif gps_loss_mark is None:
+            # 记录 GPS 丢失位置
             gps_loss_mark = gt_pos[:2].copy()
 
         est = ekf.get_state()
         est_rpy = quat_to_euler(est["q"])
 
+        # ────────────────────────────────────────────────
+        # 状态机 → 控制器
+        # ────────────────────────────────────────────────
         bt = sm.tick({"t": t_sec, "p_est": est["p"], "q_est": est["q"]})
         target_xyz = np.asarray(bt["target_xyz"], dtype=float)
         target_yaw = math.atan2(target_xyz[1] - est["p"][1], target_xyz[0] - est["p"][0])
@@ -227,11 +344,17 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
 
         state_raw = wrapper.step(command)
 
+        # ────────────────────────────────────────────────
+        # 记录历史
+        # ────────────────────────────────────────────────
         t_hist.append(t_sec)
         gt_xyz.append(gt_pos.copy())
         ekf_xyz.append(est["p"].copy())
         gps_on.append(gps_xy is not None)
 
+        # ────────────────────────────────────────────────
+        # 更新实时绘图
+        # ────────────────────────────────────────────────
         if enable_plot and step % int(exp_cfg.get("plot_every_n_steps", 3)) == 0:
             gt_arr = np.asarray(gt_xyz)
             ekf_arr = np.asarray(ekf_xyz)
@@ -248,6 +371,9 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
 
     wrapper.close()
 
+    # ────────────────────────────────────────────────
+    # 保存结果和计算指标
+    # ────────────────────────────────────────────────
     if enable_plot:
         save_path = exp_cfg.get("save_plot", "es_ekf_xy_map.png")
         fig.savefig(save_path)
@@ -265,9 +391,11 @@ def run_experiment(cfg, enable_plot=True, max_steps_override=None):
 
     np.savez(exp_cfg.get("save_results", "es_ekf_results.npz"), t=np.asarray(t_hist), gt_xyz=np.asarray(gt_xyz), ekf_xyz=np.asarray(ekf_xyz), gps_on=np.asarray(gps_on))
     print(f"ES-EKF experiment done, wall_time={time.time() - wall_start:.2f}s")
+    return metrics
 
 
 def parse_args():
+    """解析命令行参数。"""
     parser = argparse.ArgumentParser(description="Run standalone ES-EKF experiment")
     parser.add_argument("--config", type=str, default=str(STACK_ROOT / "config" / "sim_params.yaml"))
     parser.add_argument("--no-plot", action="store_true")

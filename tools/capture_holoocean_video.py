@@ -1,16 +1,32 @@
 #!/usr/bin/env python3
-"""Capture a live HoloOcean run and export it as a GIF or MP4.
+"""
+HoloOcean 实时视频捕获工具 - 记录仿真运行为 GIF/MP4。
 
-The script reuses the existing AUV guidance and PID control stack, starts a
-fresh HoloOcean environment, samples camera frames from the environment, and
-stitches the captured frames into a replay video.
+该工具复用现有的 AUV 导引和 PID 控制栈，启动全新的 HoloOcean 环境，
+从中采样相机帧并拼接成回放视频。
 
-Two capture modes are supported:
+两种捕获模式：
+  - agent：捕获 AUV 附带的 RGBCamera 视角
+  - viewport：捕获活动视口（ViewportCapture），自动启用 HoloOcean 视口
 
-- agent: capture the attached RGBCamera view.
-- viewport: capture the active viewport with ViewportCapture. This mode
-  automatically enables the HoloOcean viewport so the exported video and the
-  on-screen replay stay aligned.
+使用示例：
+  # 使用默认设置捕获 GIF（存储在 log/ 目录）
+  python tools/capture_holoocean_video.py
+
+  # 指定配置文件和输出路径
+  python tools/capture_holoocean_video.py --config path/to/sim_params.yaml --output demo.gif
+
+  # 捕获 MP4 格式，调整分辨率和帧率
+  python tools/capture_holoocean_video.py --format mp4 --fps 30 --capture-width 1920 --capture-height 1080
+
+  # 捕获视口模式（显示完整 HoloOcean UI）
+  python tools/capture_holoocean_video.py --capture-mode viewport --show-viewport
+
+功能：
+  - 复用完整控制栈（导引 + PID + 安全护栏）
+  - 支持指定最大步数（录制固定长度）
+  - 自动处理 RGBA → RGB 转换
+  - 支持同时显示视口（用于调试）
 """
 
 from __future__ import annotations
