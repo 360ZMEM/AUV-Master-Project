@@ -1,3 +1,33 @@
+"""
+PythonVehicleSimulator（PVS）后端模拟器 - 轻量级 REMUS 100 AUV 动力学。
+
+该模块提供 PythonVehicleSimulator 框架的适配层，用于在 GPU 不可用或快速原型开发时
+使用简化的 6 自由度（6-DOF）刚体动力学替代 HoloOcean。
+
+仿真器选择：
+  - HoloOcean（物理引擎）：基于 UE4，高保真但需要 GPU
+  - PVS（纯数学模型）：MATLAB/Simulink 级别的多体动力学，轻量级高效
+
+REMUS 100 特性：
+  - 典型运行深度：0-300m
+  - 推进系统：单螺旋桨、水平舵（方向舵）、垂直舵（升降舵）
+  - 自动驾驶系统：深度-航向自动驾驶仪（可选）
+  - 坐标系：NED（北东地）
+
+主要接口（与 HoloOcean 兼容）：
+  open()：创建并初始化 REMUS 100 仿真模型
+  step(command5)：执行一个仿真时间步
+  reset_and_tick()：复位状态并执行首步
+  close()：清理资源
+  set_reference()：设置自动驾驶仪参考值（可选方法）
+
+关键参数：
+  - control_mode：控制方式（stepInput 或 depthHeadingAutopilot）
+  - dt：仿真时间步长（秒）
+  - initial_depth_m、initial_heading_deg、initial_speed_mps：初始状态
+  - command_thrust_rpm_scale、max_command_rpm：推力映射参数
+"""
+
 from __future__ import annotations
 
 import math
@@ -15,7 +45,32 @@ from python_vehicle_simulator.lib.gnc import Rzyx, attitudeEuler
 from python_vehicle_simulator.vehicles.remus100 import remus100
 
 
+
 def _build_pose_matrix_ue(position_ned: np.ndarray, rpy_ned: np.ndarray) -> np.ndarray:
+    """
+    从 NED 位姿构造 UE4 风格的 4×4 变换矩阵。
+
+    这是 NED → UE4 坐标系的桥梁。PVS 使用 NED，但我们需要 UE4 格式
+    供上层（如 HoloOcean 桥接）使用。
+
+    坐标系变换：
+      - UE4 欧拉角 → NED 欧拉角：
+          roll_ue = roll_ned
+          pitch_ue = -pitch_ned
+          yaw_ue = -yaw_ned
+      - UE4 位置 → NED 位置：
+          pos_ue = [x_ned, y_ned, -z_ned]
+
+    参数：
+        position_ned (ndarray)，形状 (3,)：NED 坐标下的位置 [x, y, z]
+        rpy_ned (ndarray)，形状 (3,)：NED 欧拉角 [roll, pitch, yaw]（弧度）
+
+    返回值：
+        ndarray，形状 (4, 4)：齐次变换矩阵
+          [R(3×3)  T(3×1)]
+          [0(1×3)    1   ]
+          其中 R 是 UE4 风格的旋转矩阵，T 是 UE4 风格的位置向量
+    """
     pose = np.eye(4, dtype=float)
     roll_ue = float(rpy_ned[0])
     pitch_ue = float(-rpy_ned[1])
@@ -26,47 +81,145 @@ def _build_pose_matrix_ue(position_ned: np.ndarray, rpy_ned: np.ndarray) -> np.n
     return pose
 
 
+
+
+
 class PVSSimWrapper:
-    """Simulation adapter for PythonVehicleSimulator REMUS 100."""
+    """────────────────────────────────────────────────────────────────
+    PythonVehicleSimulator REMUS 100 仿真模块包装器
+    ────────────────────────────────────────────────────────────────
+
+    职责：
+      1. 创建和管理 REMUS 100 仿真实例（6-DOF 刚体动力学）
+      2. 执行仿真时间步进（应用控制命令，更新位姿）
+      3. 统一状态格式为 HoloOcean 兼容的字典
+      4. 支持两种控制模式：
+         - stepInput：直接接收用户命令
+         - depthHeadingAutopilot：自动驾驶仪控制（参考深度、航向、推进）
+      5. 维护速度、加速度、欧拉角等仿真状态
+
+    状态向量定义：
+      eta：位置和姿态 [x, y, z, roll, pitch, yaw]（NED）
+      nu：速度和角速度 [u, v, w, p, q, r]
+         - u, v, w：身体坐标系线速度
+         - p, q, r：身体坐标系角速度
+      u_actual：实际执行器状态（推力、舵角）
+
+    流程（每时间步）：
+      1. 根据 control_mode 选择控制律：
+         - stepInput：使用外部命令5元组
+         - 自动驾驶仪：计算错误反馈控制
+      2. dynamics()：积分运动方程，更新 nu 和 u_actual
+      3. attitudeEuler()：积分欧拉微分方程，更新 eta
+      4. _build_state()：转换为上层格式
+    """
 
     def __init__(self, *, config, scenario_cfg, agent_name, show_viewport=False, verbose=False):
+        """
+        初始化 PVS 包装器（不启动引擎）。
+
+        参数：
+            config (dict)：全局配置，包含 simulation 和 pvs 配置组
+            scenario_cfg (dict)：仿真场景定义（兼容性参数，PVS 不使用）
+            agent_name (str)：代理名称（返回状态时使用此键）
+            show_viewport (bool)：是否显示可视化（PVS 默认无 UI，参数保留用于 API 兼容）
+            verbose (bool)：冗长日志输出
+
+        配置键（来自 config['pvs']）：
+          - control_mode：str，"stepInput" 或 "depthHeadingAutopilot"
+          - initial_depth_m：初始深度（米），默认 12.0
+          - initial_heading_deg：初始航向（度），默认 0.0
+          - initial_speed_mps：初始前进速度（m/s），默认 0.5
+          - initial_rpm：初始螺旋桨转速（RPM），默认 1200
+          - reference_rpm、reference_speed_rpm_slope、reference_speed_rpm_offset：自动驾驶仪参数
+          - current_speed_mps、current_direction_deg：海流参数
+        """
         self.config = config or {}
         self.scenario_cfg = scenario_cfg
         self.agent_name = agent_name
         self.show_viewport = bool(show_viewport)
         self.verbose = bool(verbose)
 
+        # ────────────────────────────────────────
+        # 仿真配置
+        # ────────────────────────────────────────
         self.sim_cfg = dict(self.config.get("simulation", {}))
         self.pvs_cfg = dict(self.config.get("pvs", {}))
         self.dt = float(self.sim_cfg.get("dt", 1.0 / max(float(self.sim_cfg.get("ticks_per_sec", 30.0)), 1e-6)))
         self.control_mode = str(self.pvs_cfg.get("control_mode", self.sim_cfg.get("control_mode", "stepInput")))
+
+        # ────────────────────────────────────────
+        # REMUS 100 初始状态参数
+        # ────────────────────────────────────────
         self.initial_depth_m = float(self.pvs_cfg.get("initial_depth_m", 12.0))
         self.initial_heading_deg = float(self.pvs_cfg.get("initial_heading_deg", 0.0))
         self.initial_speed_mps = float(self.pvs_cfg.get("initial_speed_mps", 0.5))
         self.initial_rpm = float(self.pvs_cfg.get("initial_rpm", 1200.0))
+
+        # ────────────────────────────────────────
+        # 自动驾驶仪参考值和增益参数
+        # ────────────────────────────────────────
         self.reference_rpm = float(self.pvs_cfg.get("reference_rpm", self.initial_rpm))
+        # 速度 (m/s) → RPM 映射：rpm = slope * speed + offset
         self.reference_speed_rpm_slope = float(self.pvs_cfg.get("reference_speed_rpm_slope", 581.0))
         self.reference_speed_rpm_offset = float(self.pvs_cfg.get("reference_speed_rpm_offset", -115.0))
         self.reference_rpm_min = float(self.pvs_cfg.get("reference_rpm_min", 300.0))
+
+        # ────────────────────────────────────────
+        # 命令到执行器映射
+        # ────────────────────────────────────────
+        # 推力百分比 → RPM：rpm = thrust_percent * scale
         self.command_thrust_rpm_scale = float(self.pvs_cfg.get("command_thrust_rpm_scale", 15.0))
         self.max_command_rpm = float(self.pvs_cfg.get("max_command_rpm", 1525.0))
+
+        # ────────────────────────────────────────
+        # 海流和噪声参数
+        # ────────────────────────────────────────
         self.current_speed_mps = float(self.pvs_cfg.get("current_speed_mps", 0.5))
         self.current_direction_deg = float(self.pvs_cfg.get("current_direction_deg", 0.0))
 
-        self.vehicle = None
+        # ────────────────────────────────────────
+        # 运行时状态（初始化为空，待 open()）
+        # ────────────────────────────────────────
+        self.vehicle = None  # REMUS 100 模拟对象
+        # 位置和姿态：[x, y, z, roll, pitch, yaw]（NED）
         self.eta = np.array(
             [0.0, 0.0, self.initial_depth_m, 0.0, 0.0, np.deg2rad(self.initial_heading_deg)],
             dtype=float,
         )
+        # 速度和角速度：[u, v, w, p, q, r]（身体坐标系）
         self.nu = np.array([self.initial_speed_mps, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=float)
+        # 实际执行器状态
         self.u_actual = np.zeros(3, dtype=float)
+        # 前一时步的速度（用于计算加速度）
         self.prev_nu = self.nu.copy()
+        # 仿真步数计数器
         self.step_index = 0
+        # 自动驾驶仪参考值（动态更新）
         self.reference_depth_m = float(self.initial_depth_m)
         self.reference_heading_deg = float(self.initial_heading_deg)
         self.reference_rpm = float(self.reference_rpm)
 
+
     def set_reference(self, *, depth_m: float, heading_rad: float, speed_mps: float | None = None) -> None:
+        """
+        设置自动驾驶仪的参考值（仅在自动驾驶仪模式下有效）。
+
+        参数：
+            depth_m (float)：目标深度（米）
+            heading_rad (float)：目标航向（弧度，0-2π）
+            speed_mps (float or None)：目标前进速度（m/s）；
+                                       若为 None，参考 RPM 保持不变
+
+        实现细节：
+          1. 存储目标值到 self.reference_*
+          2. 若 vehicle 已初始化，推送参考值到其自动驾驶仪逻辑
+          3. 速度 → RPM 映射：rpm = slope * speed + offset，限制在 [min, max]
+
+        用途：
+          - 动态改变目标（如从深度 10m 改为 15m）
+          - 支持轨迹跟踪（由上层控制律周期性调用）
+        """
         self.reference_depth_m = float(depth_m)
         self.reference_heading_deg = float(math.degrees(float(heading_rad)))
         if speed_mps is not None:
@@ -84,6 +237,24 @@ class PVSSimWrapper:
             self.vehicle.ref_n = float(self.reference_rpm)
 
     def open(self):
+        """
+        创建并初始化 REMUS 100 模型对象。
+
+        流程：
+          1. 根据 control_mode 选择控制系统类型
+          2. 调用 remus100() 工厂函数创建实例
+          3. 初始化动力学和控制器内部状态
+          4. 打印初始化日志（若 verbose=True）
+
+        返回值：
+            self（支持链式调用）
+
+        参考初值（可选）：
+          - ref_z：目标深度（米）
+          - ref_psi：目标航向（度）
+          - ref_n：目标 RPM
+          - V_current、beta_current：海流速度和方向
+        """
         mode = self.control_mode.strip().lower()
         if mode in {"depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"}:
             control_system = "depthHeadingAutopilot"
@@ -100,6 +271,7 @@ class PVSSimWrapper:
         )
         self.vehicle.nu = self.nu.copy()
         self.vehicle.u_actual = self.u_actual.copy()
+        # 控制器内部状态初始化（深度和航向 PI 环自积状态）
         self.vehicle.z_d = self.reference_depth_m
         self.vehicle.z_int = 0.0
         self.vehicle.theta_int = 0.0
@@ -116,18 +288,54 @@ class PVSSimWrapper:
         return self
 
     def __enter__(self):
+        """支持 with 语句进入。"""
         return self.open()
 
     def __exit__(self, exc_type, exc, tb):
+        """支持 with 语句退出（自动清理资源）。"""
         self.close()
         return False
 
     def reset_and_tick(self):
+        """
+        复位仿真状态并执行首个时间步。
+
+        步骤：
+          1. 重置仿真计数器和速度历史
+          2. 调用 _build_state() 生成初始状态
+
+        返回值：
+            dict：仿真状态（兼容 HoloOcean 格式）
+        """
         self.step_index = 0
         self.prev_nu = self.nu.copy()
         return self._build_state()
 
     def _command_to_actuators(self, command5) -> np.ndarray:
+        """
+        将上层命令5元组映射到 REMUS 100 的执行器空间。
+
+        输入格式：
+          [right_fin_deg, top_fin_deg, left_fin_deg, bottom_fin_deg, thrust_percent]
+          - 舵角：度数，范围 [-45, 45]（或其他）
+          - 推力：百分比，范围 [-100, 100]
+
+        执行器映射：
+          - 方向舵（偏航控制）：rudder = 0.5 * (left - right)
+          - 升降舵（俯仰控制）：stern = 0.5 * (bottom - top)
+          - 推进（螺旋桨转速）：rpm = thrust_percent * scale
+
+        输出：
+          [rudder_rad, stern_rad, rpm]，单位：
+            - 舵角：弧度
+            - RPM：转每分钟
+
+        参数：
+            command5：长度为 5 的数组或列表
+
+        返回值：
+            ndarray (3,)：[rudder_rad, stern_rad, rpm]
+        """
         cmd = np.asarray(command5, dtype=float).reshape(-1)
         if cmd.size != 5:
             raise ValueError("command must be length 5: [right,top,left,bottom,thrust]")
@@ -138,12 +346,35 @@ class PVSSimWrapper:
         return np.array([np.deg2rad(rudder_deg), np.deg2rad(stern_deg), thrust_rpm], dtype=float)
 
     def _build_state(self):
+        """
+        从仿真状态构造兼容 HoloOcean 的状态字典。
+
+        转换步骤：
+          1. 提取 eta[0:3] → position_ned（位置）
+          2. 提取 eta[3:6] → rpy_ned（欧拉角）
+          3. 计算加速度 = (nu - prev_nu) / dt
+          4. 坐标系转换：NED → UE4（身体轴）
+          5. 打包为标准格式
+
+        返回值：
+            dict：
+              {
+                  agent_name: {
+                      "PoseSensor": 4×4 变换矩阵 (UE4 坐标系),
+                      "DVLSensor": [vx, vy, vz] 身体速度 (UE4),
+                      "IMUSensor": [ax, ay, az, gx, gy, gz] 加速度和角速度 (UE4),
+                      "DepthSensor": [z_ned] 深度 (米，正向下),
+                  }
+              }
+        """
         position_ned = self.eta[:3].copy()
         rpy_ned = self.eta[3:6].copy()
         pose = _build_pose_matrix_ue(position_ned, rpy_ned)
 
+        # 计算加速度
         accel_ned = (self.nu[:3] - self.prev_nu[:3]) / max(self.dt, 1e-6)
         gyro_ned = self.nu[3:6].copy()
+        # 坐标系转换：NED → UE4（身体）
         accel_ue = np.array([accel_ned[0], accel_ned[1], -accel_ned[2]], dtype=float)
         gyro_ue = np.array([gyro_ned[0], gyro_ned[1], -gyro_ned[2]], dtype=float)
         return {
@@ -156,6 +387,27 @@ class PVSSimWrapper:
         }
 
     def step(self, command5):
+        """
+        执行一个仿真时间步。
+
+        核心流程：
+          1. 根据 control_mode 选择控制方式：
+             - stepInput：使用外部命令，转换到执行器空间
+             - depthHeadingAutopilot：调用内置自动驾驶仪，忽略外部命令
+          2. 调用 vehicle.dynamics()：积分运动方程，更新 nu 和 u_actual
+          3. 调用 attitudeEuler()：积分位姿微分方程，更新 eta
+          4. 更新计数器并返回新状态
+
+        参数：
+            command5 (array-like)：控制命令
+              [right_fin_deg, top_fin_deg, left_fin_deg, bottom_fin_deg, thrust_percent]
+
+        返回值：
+            dict：仿真新状态
+
+        异常：
+            RuntimeError：vehicle 未初始化（未调用 open()）
+        """
         if self.vehicle is None:
             raise RuntimeError("PVS wrapper is not open")
 
@@ -172,4 +424,11 @@ class PVSSimWrapper:
         return self._build_state()
 
     def close(self):
+        """
+        清理仿真资源。
+
+        流程：
+          - 销毁 vehicle 对象
+          - 释放 PVS 内部分配的内存
+        """
         self.vehicle = None

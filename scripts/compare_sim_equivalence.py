@@ -109,14 +109,13 @@ def _run_command(cmd: list[str], cwd: Path, timeout: int) -> str:
 def _save_log(path: Path, content: str) -> None:
     """将命令输出保存到日志文件。
 
-    该函数简单直接，一次输出内容保存到指定位置。如果指定文件符号的父目录不存在
-    即会自动创建多级目录。
+    该函数简单直接：将输出内容保存到指定文件路径。如果文件所在的父目录不存在，
+    会自动创建所有必需的上级目录。
 
-    @param path: 上只文件 Path 对象
-    @param content: 输出文本字符串
-    @throws IOError: 文件写入失败或不是缺权限时抛出
-    @note: 会自动创建目录（parents=True、exist_ok=True）；
-           不会检查内部写入是否成功（每写入不才会检验）
+    @param path: 日志文件 Path 对象
+    @param content: 要保存的文本内容字符串
+    @throws IOError: 文件写入失败或权限不足时抛出
+    @note: 会自动创建目录（parents=True, exist_ok=True）；写入后不检查成功状态
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
@@ -125,16 +124,16 @@ def _save_log(path: Path, content: str) -> None:
 def main(argv: Optional[list[str]] = None) -> int:
     """脚本入口，运行两条仿真管线并比较结果。
 
-    该函数是等价性检查脚本的第二点五试验站：地处解析命令行参数（不包括两条仿真管线的根目录和配置文件路径）、
-    分别运行旧版仿真与统一仿真管线，采集输出指标，按预设容差比较判判是否接近，上输出 JSON 形成的对比结果。
+    该函数是等价性检查脚本的核心：解析命令行参数（两条仿真的根目录、配置文件、容差阈值等）、
+    分别运行旧版仿真与统一仿真管线、采集输出指标、按设定容差比较判定是否足够接近、
+    最后输出 JSON 格式的对比结果。
 
-    @param argv: 含令行参数列表（None 表示使用 sys.argv[1:]）
-    @return: 返回进程退出码（默认 0 表示成功或接近，优雨时返回 1）
-    @throws SystemExit: 含令行参数解析失败或请求帮助时由 argparse 抛出；
-                       RuntimeError: 试验输出指标提拔失败；，外部命令执行失败
-    @note: 批量加了归算批量罐量（--rms-tol, --axis-ratio-tol, --sat-ratio-tol, --safety-event-tol）；
-           dry-run 教很批量不退出仿真，执行高 print 点操作内容。返回码 0 仅表示按接近容差下达成功，
-           不表示两版仿真行为完全一样。
+    @param argv: 命令行参数列表（None 表示使用 sys.argv[1:]）
+    @return: 返回进程退出码（0 表示成功或接近，1 表示偏离容差）
+    @throws SystemExit: 命令行参数解析失败或请求帮助时由 argparse 抛出
+    @note: 支持容差调整（--rms-tol、--axis-ratio-tol、--sat-ratio-tol、--safety-event-tol）；
+           --dry-run 时不执行仿真，仅打印命令，返回码为 0；
+           等价性判定需同时满足所有容差要求及两版仿真的 pass_rms 和 pass_axis_ratio 标志
     """
     parser = argparse.ArgumentParser(description="Compare legacy and unified simulation behavior")
     parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[1])
