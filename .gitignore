@@ -36,4 +36,9 @@ docs_new/
 # foxglove
 # foxglove_layout_project/
 CLAUDE.*
-trae/
+.trae/
+
+# 三个附属文件夹
+标准文档/
+auv_console_python/
+VXworks程序/

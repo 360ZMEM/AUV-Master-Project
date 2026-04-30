@@ -29,19 +29,20 @@ from __future__ import annotations
 import json
 import math
 import time
+from typing import Any
 from pathlib import Path
 import sys
 import importlib.util
 import os
 
 import rclpy
-from auv_interfaces.msg import Setpoint
-from geometry_msgs.msg import Twist
+from auv_interfaces.msg import Setpoint, MpcCmd
+from geometry_msgs.msg import Twist, TwistStamped
 from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 import yaml
 
 from common.enums import StateEstimateSource, ControlModeByte
@@ -50,6 +51,8 @@ from common.protocol import KEY_STATE_SOURCE
 from .base_controller import BaseController, ControlOutput
 from .pid_controller import PIDController
 from .mpc_controller import MPCController
+from .terrain_engine import TerrainFollower
+from .terrain_perception import ROSTerrainPerception
 from .mappers import clamp_int16
 
 def _resolve_project_root() -> Path:
@@ -122,6 +125,13 @@ class AUVControllerNode(Node):
         self.declare_parameter('heading_ramp_limit_deg', 30.0)
         self.declare_parameter('heading_ramp_rate_deg_s', 10.0)
 
+        # --- 特征开关 (Feature Flags) ---
+        self.declare_parameter('depth_mode', 'CONSTANT')
+        self.declare_parameter('heading_mode', 'CONSTANT')
+        self.declare_parameter('constant_depth_m', 2.0)
+        self.declare_parameter('constant_heading_rad', 0.0)
+        self.declare_parameter('bypass_zero_effort', False)
+
         params_file = str(self.get_parameter('params_file').value)
         cfg = self._load_config(params_file)
 
@@ -152,6 +162,17 @@ class AUVControllerNode(Node):
         self._heading_ramp_limit_deg = float(self.get_parameter('heading_ramp_limit_deg').value)
         self._heading_ramp_rate_deg_s = float(self.get_parameter('heading_ramp_rate_deg_s').value)
 
+        self._depth_mode = str(self.get_parameter('depth_mode').value)
+        self._heading_mode = str(self.get_parameter('heading_mode').value)
+        self._constant_depth_m = float(self.get_parameter('constant_depth_m').value)
+        self._constant_heading_rad = float(self.get_parameter('constant_heading_rad').value)
+        self._bypass_zero_effort = bool(self.get_parameter('bypass_zero_effort').value)
+        self._last_chain_status = ""
+
+        # 实例化地形跟踪模块
+        self._terrain_perception = ROSTerrainPerception()
+        self._terrain_follower = TerrainFollower(lookahead_time_s=2.0, lpf_alpha=0.2)
+
         self.latest_setpoint: Setpoint | None = None
         self.latest_filtered_state: Odometry | None = None
         self.latest_raw_state: Odometry | None = None
@@ -166,10 +187,14 @@ class AUVControllerNode(Node):
         self.filtered_state_sub = self.create_subscription(Odometry, self.filtered_state_topic, self._on_filtered_state, 20)
         self.raw_state_sub = self.create_subscription(Odometry, self.raw_state_topic, self._on_raw_state, 20)
         self.imu_sub = self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
+        self.dvl_sub = self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 20)
+        self.depth_sub = self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 20)
+        self.altitude_sub = self.create_subscription(Float32, '/auv/sensors/altitude', self._on_altitude, 20)
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
-        self._mpc_cmd_pub = self.create_publisher(String, '/auv/control/mpc_cmd', 20)  # 临时使用 String，实际应为 MpcCmd
+        self._mpc_cmd_pub = self.create_publisher(MpcCmd, '/auv/control/mpc_cmd', 20)
+        self._terrain_debug_pub = self.create_publisher(String, '/auv/controller/terrain_debug', 20)
         self._control_timer = self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
 
         self._lat_count = 0
@@ -208,6 +233,30 @@ class AUVControllerNode(Node):
         """缓存原始死推进状态估计，供 bypass_ekf 模式使用。"""
         self.latest_raw_state = msg
         self.latest_raw_state_ts = time.time()
+
+    def _on_dvl(self, msg: TwistStamped) -> None:
+        """缓存 DVL 速度，并更新地形感知接口（前向速度）。"""
+        self._terrain_perception.update_state(
+            altitude=self._terrain_perception.get_altitude(),
+            depth=self._terrain_perception.get_current_depth(),
+            forward_velocity=float(msg.twist.linear.x)
+        )
+
+    def _on_depth(self, msg: Float32) -> None:
+        """缓存深度。"""
+        self._terrain_perception.update_state(
+            altitude=self._terrain_perception.get_altitude(),
+            depth=float(msg.data),
+            forward_velocity=self._terrain_perception.get_forward_velocity(),
+        )
+
+    def _on_altitude(self, msg: Float32) -> None:
+        """缓存高度。"""
+        self._terrain_perception.update_state(
+            altitude=float(msg.data),
+            depth=self._terrain_perception.get_current_depth(),
+            forward_velocity=self._terrain_perception.get_forward_velocity()
+        )
 
     def _on_imu(self, msg: Imu) -> None:
         """缓存 IMU 角速度，用于补充或覆盖状态里的角速度来源。"""
@@ -275,6 +324,19 @@ class AUVControllerNode(Node):
                 self._heading_ramp_rate_deg_s = float(param.value)
             elif param.name == 'control_mode_byte':
                 self._control_mode_byte = int(param.value)
+            elif param.name == 'depth_mode':
+                self._depth_mode = str(param.value)
+                self.get_logger().info(f"特征开关: depth_mode -> {self._depth_mode}")
+            elif param.name == 'heading_mode':
+                self._heading_mode = str(param.value)
+                self.get_logger().info(f"特征开关: heading_mode -> {self._heading_mode}")
+            elif param.name == 'constant_depth_m':
+                self._constant_depth_m = float(param.value)
+            elif param.name == 'constant_heading_rad':
+                self._constant_heading_rad = float(param.value)
+            elif param.name == 'bypass_zero_effort':
+                self._bypass_zero_effort = bool(param.value)
+                self.get_logger().info(f"特征开关: bypass_zero_effort -> {self._bypass_zero_effort}")
         return SetParametersResult(successful=True)
 
     def _apply_heading_ramp(self, target_rad: float, now: float) -> float:
@@ -319,7 +381,48 @@ class AUVControllerNode(Node):
         if st is None:
             return
 
-        sp = self.latest_setpoint
+        # --- 导引旁路与特征控制链处理 ---
+        # 复制 Setpoint 以便修改
+        sp = Setpoint()
+        sp.target_depth_m = self.latest_setpoint.target_depth_m
+        sp.target_heading_rad = self.latest_setpoint.target_heading_rad
+        sp.target_speed_mps = self.latest_setpoint.target_speed_mps
+        
+        is_altitude_follow = (self.latest_setpoint.mode == 'ALTITUDE_FOLLOW' or self._depth_mode == 'TERRAIN_FOLLOWING')
+        
+        # 1. 深度源选择
+        work_instruction = 0x00
+        if is_altitude_follow:
+            target_altitude_m = float(self.latest_setpoint.target_depth_m)
+            z_target, terrain_debug = self._terrain_follower.compute(self._terrain_perception, target_altitude_m)
+            
+            # 安全仲裁：防撞底
+            if self._terrain_perception.get_altitude() < 1.5 and self._terrain_perception.get_altitude() > 0.01:
+                z_target = self._terrain_perception.get_current_depth() - 2.0
+                terrain_debug["safety_override"] = "EMERGENCY_RISE"
+            
+            # 安全仲裁：防冲出水面
+            z_target = max(z_target, 0.5)
+            sp.target_depth_m = z_target
+            work_instruction = 0xEF
+            
+            # 发布地形调试信息
+            self._terrain_debug_pub.publish(String(data=json.dumps(terrain_debug, ensure_ascii=False)))
+            
+        elif self._depth_mode == 'CONSTANT':
+            sp.target_depth_m = self._constant_depth_m
+        elif self._depth_mode == 'SINE_WAVE':
+            sp.target_depth_m = self._constant_depth_m + 1.0 * math.sin(time.time() * 0.5)
+
+        # 2. 航向源选择
+        if self._heading_mode == 'CONSTANT':
+            sp.target_heading_rad = self._constant_heading_rad
+
+        # 打印当前控制链状态日志 (仅在状态改变时打印)
+        current_chain = f"Heading:{self._heading_mode} + Depth:{self._depth_mode}"
+        if current_chain != self._last_chain_status:
+            self.get_logger().info(f"[Controller] Current Chain: {current_chain}")
+            self._last_chain_status = current_chain
 
         q = st.pose.pose.orientation
         roll, pitch, yaw = quat_to_euler(q.w, q.x, q.y, q.z)
@@ -347,35 +450,51 @@ class AUVControllerNode(Node):
             'r': r_rate,
         }
 
-        setpoint = {
-            'dt': 1.0 / max(self.control_rate_hz, 1e-3),
-            'target_depth_m': float(sp.target_depth_m),
-            'target_heading_rad': float(sp.target_heading_rad),
-            'target_speed_mps': float(sp.target_speed_mps),
-        }
-
-        # 调用当前活跃控制器
-        ctrl_output = self._active_controller.compute(state, setpoint)
-
+        # --- 指令平滑器 (Heading Ramping) ---
         # 指令平滑器：heading 跳变超过阈值时生成斜坡信号
         now = time.time()
         target_heading = float(sp.target_heading_rad)
         smoothed_heading = self._apply_heading_ramp(target_heading, now=now)
 
-        if self._use_mpc:
-            # MPC 模式：发布 MpcCmd 消息（供 auv_bridge/arbiter 消费）
-            mpc_payload = {
-                'source': 'JETSON_MPC',
-                'valid': True,
-                'healthy': True,
-                'thrust_percent': float(ctrl_output.thrust_percent),
-                'right_fin_deg': float(ctrl_output.right_fin_deg or 0.0),
-                'top_fin_deg': float(ctrl_output.top_fin_deg or 0.0),
-                'left_fin_deg': float(ctrl_output.left_fin_deg or 0.0),
-                'bottom_fin_deg': float(ctrl_output.bottom_fin_deg or 0.0),
-                'note': str(ctrl_output.debug.get('note', '')),
-            }
-            self._mpc_cmd_pub.publish(String(data=json.dumps(mpc_payload, ensure_ascii=False)))
+        setpoint = {
+            'dt': 1.0 / max(self.control_rate_hz, 1e-3),
+            'target_depth_m': float(sp.target_depth_m),
+            'target_heading_rad': smoothed_heading,
+            'target_speed_mps': float(sp.target_speed_mps),
+        }
+
+        if self._bypass_zero_effort:
+            # 零推力零舵角保底输出，跳过控制器计算
+            from auv_controller.base_controller import ControlOutput
+            ctrl_output = ControlOutput(
+                thrust_percent=0.0,
+                right_fin_deg=0.0,
+                top_fin_deg=0.0,
+                left_fin_deg=0.0,
+                bottom_fin_deg=0.0,
+                debug={'note': 'Bypass zero effort active'}
+            )
+        else:
+            # 调用当前活跃控制器
+            ctrl_output = self._active_controller.compute(state, setpoint)
+
+        if self._use_mpc or is_altitude_follow:
+            # MPC 模式或高度跟随模式：发布 MpcCmd 消息（供 auv_bridge/arbiter 消费）
+            mpc_msg = MpcCmd()
+            mpc_msg.header.stamp = self.get_clock().now().to_msg()
+            mpc_msg.source = 'JETSON_MPC'
+            mpc_msg.valid = True
+            mpc_msg.healthy = True
+            mpc_msg.thrust_percent = float(ctrl_output.thrust_percent)
+            mpc_msg.right_fin_deg = float(ctrl_output.right_fin_deg or 0.0)
+            mpc_msg.top_fin_deg = float(ctrl_output.top_fin_deg or 0.0)
+            mpc_msg.left_fin_deg = float(ctrl_output.left_fin_deg or 0.0)
+            mpc_msg.bottom_fin_deg = float(ctrl_output.bottom_fin_deg or 0.0)
+            mpc_msg.target_depth_m = float(sp.target_depth_m)
+            mpc_msg.work_instruction = work_instruction
+            mpc_msg.note = str(ctrl_output.debug.get('note', ''))
+            
+            self._mpc_cmd_pub.publish(mpc_msg)
         else:
             # PID 模式：直接发布 Twist
             tw = Twist()

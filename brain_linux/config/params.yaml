@@ -48,6 +48,7 @@ controller:
   control_mode_byte: 239
   heading_ramp_limit_deg: 30.0
   heading_ramp_rate_deg_s: 10.0
+  depth_mode: 'CONSTANT'
 
 mappers:
   rudder:

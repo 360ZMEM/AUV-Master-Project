@@ -44,6 +44,7 @@ from common.protocol import (
     KEY_TS,
     KEY_VALID,
     KEY_WORK_INSTRUCTION,
+    KEY_TARGET_DEPTH_M,
     normalize_control_command,
 )
 
@@ -178,7 +179,12 @@ class CommandArbiter:
         merged[KEY_LEFT] = float(self._last_mpc[KEY_LEFT])
         merged[KEY_BOTTOM] = float(self._last_mpc[KEY_BOTTOM])
         merged[KEY_THRUST] = float(self._last_mpc[KEY_THRUST])
-        merged[KEY_WORK_INSTRUCTION] = int(WorkInstruction.AUTONOMOUS_CONTROL)
+        if KEY_TARGET_DEPTH_M in self._last_mpc:
+            merged[KEY_TARGET_DEPTH_M] = float(self._last_mpc[KEY_TARGET_DEPTH_M])
+        if KEY_WORK_INSTRUCTION in self._last_mpc and self._last_mpc[KEY_WORK_INSTRUCTION] != 0:
+            merged[KEY_WORK_INSTRUCTION] = int(self._last_mpc[KEY_WORK_INSTRUCTION])
+        else:
+            merged[KEY_WORK_INSTRUCTION] = int(WorkInstruction.AUTONOMOUS_CONTROL)
         merged[KEY_CONTROL_MODE_BYTE] = int(ControlModeByte.JETSON_PROTOCOL)
         return merged
 

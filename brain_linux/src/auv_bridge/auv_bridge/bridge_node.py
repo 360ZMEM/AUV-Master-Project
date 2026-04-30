@@ -59,6 +59,7 @@ from common.protocol import (
     KEY_TOP,
     KEY_THRUST,
     KEY_WORK_INSTRUCTION,
+    KEY_TARGET_DEPTH_M,
     ProtocolUplinkTelemetry,
     Z_PATH_AUV_TELEMETRY,
     Z_PATH_AUV_VIZ_INTERNAL,
@@ -154,6 +155,7 @@ class AUVBridgeNode(Node):
         self.imu_pub = self.create_publisher(Imu, '/auv/sensors/imu', 10)
         self.dvl_pub = self.create_publisher(TwistStamped, '/auv/sensors/dvl', 10)
         self.depth_pub = self.create_publisher(Float32, '/auv/sensors/depth', 10)
+        self.altitude_pub = self.create_publisher(Float32, '/auv/sensors/altitude', 10)
         self.magnetic_pub = self.create_publisher(MagneticField, '/auv/sensors/magnetic', 10)
         self.shadow_cmd_pub = self.create_publisher(String, self.shadow_cmd_topic, 10)
         self.shadow_telemetry_pub = self.create_publisher(String, self.shadow_telemetry_topic, 10)
@@ -345,6 +347,8 @@ class AUVBridgeNode(Node):
                 'left_fin_deg': float(msg.left_fin_deg),
                 'bottom_fin_deg': float(msg.bottom_fin_deg),
                 'thrust_percent': float(msg.thrust_percent),
+                KEY_TARGET_DEPTH_M: float(msg.target_depth_m),
+                KEY_WORK_INSTRUCTION: int(msg.work_instruction),
                 'source': str(msg.source),
                 'valid': bool(msg.valid),
                 'healthy': bool(msg.healthy),
@@ -660,6 +664,10 @@ class AUVBridgeNode(Node):
         depth_msg = Float32()
         depth_msg.data = float(telemetry.depth_m)
         self.depth_pub.publish(depth_msg)
+
+        altitude_msg = Float32()
+        altitude_msg.data = float(telemetry.altitude_m)
+        self.altitude_pub.publish(altitude_msg)
 
         guard_decision = None
         if self.arbiter_enabled:

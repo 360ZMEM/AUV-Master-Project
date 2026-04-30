@@ -1,18 +1,143 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, TimerAction
+from launch.actions import DeclareLaunchArgument, TimerAction, OpaqueFunction
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from pathlib import Path
 
+def generate_nodes(context, *args, **kwargs):
+    params = LaunchConfiguration('params_file')
+    feature_flags = str(Path(__file__).resolve().parents[1] / 'config' / 'feature_flags.yaml')
+    
+    minimal = context.launch_configurations.get('minimal', 'false').lower() == 'true'
+    passive_mode = context.launch_configurations.get('passive_mode', 'false').lower() == 'true'
+    
+    # 构建基础参数列表
+    bridge_params = [{'params_file': params}, feature_flags, 
+                    {'bridge_backend': LaunchConfiguration('bridge_backend')},
+                    {'main_motor_rpm_scale': LaunchConfiguration('main_motor_rpm_scale')}]
+    
+    controller_params = [{'params_file': params}, feature_flags,
+                        {'bypass_ekf': LaunchConfiguration('bypass_ekf')}]
+    
+    decision_params = [{'params_file': params}, feature_flags, {
+        'confidence_threshold': 0.7,
+        'bt_status_publish_period': 0.5,
+        'tree_print_period': 5.0,
+        'summary_log_period': 2.0,
+        'bridge_backend': LaunchConfiguration('bridge_backend'),
+        'protocol_control_mode_byte': LaunchConfiguration('protocol_control_mode_byte'),
+        'debug_level': LaunchConfiguration('debug_level'),
+        'transition_threshold_m': LaunchConfiguration('transition_threshold_m'),
+        'transition_duration_s': LaunchConfiguration('transition_duration_s'),
+        'mock_amd_timeout_s': LaunchConfiguration('mock_amd_timeout_s'),
+    }]
+
+    # 如果启用了 minimal 模式，追加覆盖参数
+    if minimal:
+        bridge_params.append({'passive_mode': True})
+        controller_params.append({'bypass_zero_effort': True})
+        decision_params.append({'enable_behavior_tree': False})
+    else:
+        bridge_params.append({'passive_mode': passive_mode})
+
+    bridge = Node(
+        package='auv_bridge',
+        executable='zenoh_json_bridge_node',
+        name='zenoh_json_bridge_node',
+        condition=IfCondition(LaunchConfiguration('enable_bridge')),
+        output='screen',
+        parameters=bridge_params,
+    )
+
+    localization = Node(
+        package='auv_localization',
+        executable='auv_localization_node',
+        name='auv_localization_node',
+        condition=IfCondition(LaunchConfiguration('enable_localization')),
+        output='screen',
+        parameters=[
+            {'params_file': params},
+            feature_flags,
+            {'world_frame_id': LaunchConfiguration('world_frame_id')},
+            {'base_frame_id': LaunchConfiguration('base_frame_id')},
+            {'imu_frame_id': LaunchConfiguration('imu_frame_id')},
+            {'dvl_frame_id': LaunchConfiguration('dvl_frame_id')},
+            {'depth_frame_id': LaunchConfiguration('depth_frame_id')},
+            {'camera_frame_id': LaunchConfiguration('camera_frame_id')},
+            {'sonar_frame_id': LaunchConfiguration('sonar_frame_id')},
+            {'imu_frame_offset_xyz': LaunchConfiguration('imu_frame_offset_xyz')},
+            {'dvl_frame_offset_xyz': LaunchConfiguration('dvl_frame_offset_xyz')},
+            {'depth_frame_offset_xyz': LaunchConfiguration('depth_frame_offset_xyz')},
+            {'camera_frame_offset_xyz': LaunchConfiguration('camera_frame_offset_xyz')},
+            {'sonar_frame_offset_xyz': LaunchConfiguration('sonar_frame_offset_xyz')},
+            {'publish_imu_tf': LaunchConfiguration('publish_imu_tf')},
+            {'publish_dvl_tf': LaunchConfiguration('publish_dvl_tf')},
+            {'publish_depth_tf': LaunchConfiguration('publish_depth_tf')},
+            {'publish_camera_tf': LaunchConfiguration('publish_camera_tf')},
+            {'publish_sonar_tf': LaunchConfiguration('publish_sonar_tf')},
+            {'publish_sensor_status': LaunchConfiguration('publish_sensor_status')},
+            {'publish_raw_state': LaunchConfiguration('publish_raw_state')},
+            {'seabed_depth_m': LaunchConfiguration('seabed_depth_m')},
+            {'seabed_proximity_margin_m': LaunchConfiguration('seabed_proximity_margin_m')},
+        ],
+    )
+
+    controller = Node(
+        package='auv_controller',
+        executable='auv_controller_node',
+        name='auv_controller_node',
+        condition=IfCondition(LaunchConfiguration('enable_controller')),
+        output='screen',
+        parameters=controller_params,
+    )
+
+    decision = Node(
+        package='auv_decision_ros',
+        executable='decision_node',
+        name='auv_decision_node',
+        condition=IfCondition(LaunchConfiguration('enable_decision')),
+        output='screen',
+        parameters=decision_params,
+    )
+
+    viz_bridge = Node(
+        package='auv_viz_bridge',
+        executable='zenoh_viz_bridge_node',
+        name='zenoh_viz_bridge_node',
+        condition=IfCondition(LaunchConfiguration('enable_viz_bridge')), 
+        output='screen',
+        parameters=[
+            {
+                'params_file': params,
+                'mock_mode': LaunchConfiguration('viz_mock_mode'),
+                'mock_fallback_timeout_s': LaunchConfiguration('viz_mock_fallback_timeout_s'),
+            }
+        ],
+    )
+
+    return [
+        bridge,
+        TimerAction(period=2.0, actions=[localization]),
+        TimerAction(period=3.0, actions=[viz_bridge]),
+        TimerAction(period=4.0, actions=[controller]),
+        TimerAction(period=6.0, actions=[decision]),
+    ]
 
 def generate_launch_description() -> LaunchDescription:
     default_params = str(Path(__file__).resolve().parents[1] / 'config' / 'params.yaml')
+    feature_flags = str(Path(__file__).resolve().parents[1] / 'config' / 'feature_flags.yaml')
 
     params_arg = DeclareLaunchArgument(
         'params_file',
         default_value=default_params,
         description='Unified params file path, relative to brain_linux workspace',
+    )
+
+    minimal_arg = DeclareLaunchArgument(
+        'minimal',
+        default_value='false',
+        description='Minimal mode: disable advanced algorithms, output zero effort for basic connectivity',
     )
 
     start_ros2dds_arg = DeclareLaunchArgument(
@@ -243,106 +368,10 @@ def generate_launch_description() -> LaunchDescription:
         description='Mock AMD time synchronization timeout for decision_node',
     )
 
-    params = LaunchConfiguration('params_file')
-
-    bridge = Node(
-        package='auv_bridge',
-        executable='zenoh_json_bridge_node',
-        name='zenoh_json_bridge_node',
-        condition=IfCondition(LaunchConfiguration('enable_bridge')),
-        output='screen',
-        parameters=[
-            {'params_file': params},
-            {'bridge_backend': LaunchConfiguration('bridge_backend')},
-            {'passive_mode': LaunchConfiguration('passive_mode')},
-            {'main_motor_rpm_scale': LaunchConfiguration('main_motor_rpm_scale')},
-        ],
-    )
-
-    localization = Node(
-        package='auv_localization',
-        executable='auv_localization_node',
-        name='auv_localization_node',
-        condition=IfCondition(LaunchConfiguration('enable_localization')),
-        output='screen',
-        parameters=[
-            {'params_file': params},
-            {'world_frame_id': LaunchConfiguration('world_frame_id')},
-            {'base_frame_id': LaunchConfiguration('base_frame_id')},
-            {'imu_frame_id': LaunchConfiguration('imu_frame_id')},
-            {'dvl_frame_id': LaunchConfiguration('dvl_frame_id')},
-            {'depth_frame_id': LaunchConfiguration('depth_frame_id')},
-            {'camera_frame_id': LaunchConfiguration('camera_frame_id')},
-            {'sonar_frame_id': LaunchConfiguration('sonar_frame_id')},
-            {'imu_frame_offset_xyz': LaunchConfiguration('imu_frame_offset_xyz')},
-            {'dvl_frame_offset_xyz': LaunchConfiguration('dvl_frame_offset_xyz')},
-            {'depth_frame_offset_xyz': LaunchConfiguration('depth_frame_offset_xyz')},
-            {'camera_frame_offset_xyz': LaunchConfiguration('camera_frame_offset_xyz')},
-            {'sonar_frame_offset_xyz': LaunchConfiguration('sonar_frame_offset_xyz')},
-            {'publish_imu_tf': LaunchConfiguration('publish_imu_tf')},
-            {'publish_dvl_tf': LaunchConfiguration('publish_dvl_tf')},
-            {'publish_depth_tf': LaunchConfiguration('publish_depth_tf')},
-            {'publish_camera_tf': LaunchConfiguration('publish_camera_tf')},
-            {'publish_sonar_tf': LaunchConfiguration('publish_sonar_tf')},
-            {'publish_sensor_status': LaunchConfiguration('publish_sensor_status')},
-            {'publish_raw_state': LaunchConfiguration('publish_raw_state')},
-            {'seabed_depth_m': LaunchConfiguration('seabed_depth_m')},
-            {'seabed_proximity_margin_m': LaunchConfiguration('seabed_proximity_margin_m')},
-        ],
-    )
-
-    controller = Node(
-        package='auv_controller',
-        executable='auv_controller_node',
-        name='auv_controller_node',
-        condition=IfCondition(LaunchConfiguration('enable_controller')),
-        output='screen',
-        parameters=[
-            {'params_file': params},
-            {'bypass_ekf': LaunchConfiguration('bypass_ekf')},
-        ],
-    )
-
-    decision = Node(
-        package='auv_decision_ros',
-        executable='decision_node',
-        name='auv_decision_node',
-        condition=IfCondition(LaunchConfiguration('enable_decision')),
-        output='screen',
-        parameters=[
-            {
-                'confidence_threshold': 0.7,
-                'bt_status_publish_period': 0.5,
-                'tree_print_period': 5.0,
-                'summary_log_period': 2.0,
-                'bridge_backend': LaunchConfiguration('bridge_backend'),
-                'protocol_control_mode_byte': LaunchConfiguration('protocol_control_mode_byte'),
-                'debug_level': LaunchConfiguration('debug_level'),
-                'transition_threshold_m': LaunchConfiguration('transition_threshold_m'),
-                'transition_duration_s': LaunchConfiguration('transition_duration_s'),
-                'mock_amd_timeout_s': LaunchConfiguration('mock_amd_timeout_s'),
-            }
-        ],
-    )
-
-    viz_bridge = Node(
-        package='auv_viz_bridge',
-        executable='zenoh_viz_bridge_node',
-        name='zenoh_viz_bridge_node',
-        condition=IfCondition(LaunchConfiguration('enable_viz_bridge')), 
-        output='screen',
-        parameters=[
-            {
-                'params_file': params,
-                'mock_mode': LaunchConfiguration('viz_mock_mode'),
-                'mock_fallback_timeout_s': LaunchConfiguration('viz_mock_fallback_timeout_s'),
-            }
-        ],
-    )
-
     return LaunchDescription(
         [
             params_arg,
+            minimal_arg,
             start_ros2dds_arg,
             enable_bridge_arg,
             passive_mode_arg,
@@ -381,10 +410,6 @@ def generate_launch_description() -> LaunchDescription:
             transition_threshold_arg,
             transition_duration_arg,
             mock_amd_timeout_arg,
-            bridge,
-            TimerAction(period=2.0, actions=[localization]),
-            TimerAction(period=3.0, actions=[viz_bridge]),
-            TimerAction(period=4.0, actions=[controller]),
-            TimerAction(period=6.0, actions=[decision]),
+            OpaqueFunction(function=generate_nodes),
         ]
     )

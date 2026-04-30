@@ -73,7 +73,8 @@ which python3  # 应该输出 /usr/bin/python3
     mcap \
     mcap-ros2-support \
     pandas \
-    seaborn
+    seaborn \
+    PySide6
 ```
 
 | 包名 | 说明 |
@@ -83,6 +84,7 @@ which python3  # 应该输出 /usr/bin/python3
 | `foxglove-sdk` | Foxglove Python SDK，用于数据记录和可视化 |
 | `mcap` / `mcap-ros2-support` | MCAP 格式读写，离线分析工具依赖 |
 | `pandas` / `seaborn` | 数据分析和可视化 |
+| `PySide6` | Qt for Python 框架，用于底层协议调试小工具 (Manual Protocol Injector) 等独立工具 |
 
 ### 4. 设置 Foxglove SDK ROS 工作区
 
@@ -124,6 +126,7 @@ ros2 --version  # 应该显示 ROS 2 版本
 /usr/bin/python3 -c "import py_trees; print('py_trees OK')"
 /usr/bin/python3 -c "import foxglove; print('foxglove-sdk OK')"
 /usr/bin/python3 -c "import mcap; print('mcap OK')"
+/usr/bin/python3 -c "import PySide6; print('PySide6 OK')"
 
 # 检查项目结构
 ls brain_linux/src/

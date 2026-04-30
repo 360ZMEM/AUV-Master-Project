@@ -12,7 +12,7 @@ from typing import Any
 from common.protocol import (
     KEY_CONTROL_MODE_BYTE,
     KEY_FRAME_NUMBER,
-    KEY_MOCK_AMD_TIMESTAMP,
+    KEY_MOCK_AMD_TIMESTAMP_US,
     KEY_OBJ_ADDRESS,
     KEY_ORIENTATION_DEG,
     KEY_PARAMETERS,
@@ -299,11 +299,11 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self.node.handle_pc_raw_command(data)
 
         # Publish Mock AMD timestamp from Para1 for decision node clock synchronization
-        mock_amd_timestamp_us = data.get(KEY_MOCK_AMD_TIMESTAMP, 0)
-        if mock_amd_timestamp_us != 0:
+        mock_amd_timestamp_us = data.get(KEY_MOCK_AMD_TIMESTAMP_US, 0)
+        if mock_amd_timestamp_us > 0:
             publisher = self._publishers.get(Z_PATH_MOCK_AMD_TIME)
             if publisher is not None:
-                publisher.put(json.dumps({KEY_MOCK_AMD_TIMESTAMP: int(mock_amd_timestamp_us)}))
+                publisher.put(json.dumps({KEY_MOCK_AMD_TIMESTAMP_US: int(mock_amd_timestamp_us)}))
 
     def _decode_pc_raw_payload(self, payload_bytes: bytes) -> dict[str, Any] | None:
         """把原始 PC 控制负载解码为统一的字典格式。"""

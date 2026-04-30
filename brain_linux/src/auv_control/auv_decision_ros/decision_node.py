@@ -56,6 +56,10 @@ class AUVDecisionNode(Node):
         self.declare_parameter('transition_threshold_m', 2.0)  # 触发平滑过渡的跳变阈值（米）
         self.declare_parameter('transition_duration_s', 3.0)  # 平滑过渡持续时间（秒）
 
+        # --- 特征开关 (Feature Flags) ---
+        self.declare_parameter('enable_behavior_tree', True)
+        self.declare_parameter('bypass_to_manual_setpoint', False)
+
         threshold = float(self.get_parameter('confidence_threshold').value)
         self.bt_status_publish_period = float(self.get_parameter('bt_status_publish_period').value)
         self.tree_print_period = float(self.get_parameter('tree_print_period').value)
@@ -68,6 +72,9 @@ class AUVDecisionNode(Node):
         self.debug_level = int(self.get_parameter('debug_level').value)
         self.transition_threshold_m = float(self.get_parameter('transition_threshold_m').value)
         self.transition_duration_s = float(self.get_parameter('transition_duration_s').value)
+
+        self.enable_behavior_tree = bool(self.get_parameter('enable_behavior_tree').value)
+        self.bypass_to_manual_setpoint = bool(self.get_parameter('bypass_to_manual_setpoint').value)
 
         self.engine = DecisionTreeEngine(confidence_threshold=threshold)
 
@@ -102,6 +109,9 @@ class AUVDecisionNode(Node):
         self.create_subscription(Odometry, '/auv/state/filtered', self._on_state_filtered, 10)
         self.create_subscription(MagneticField, '/auv/sensors/magnetic', self._on_magnetic, 10)
         self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 10)
+        self.create_subscription(Setpoint, '/auv/manual/setpoint', self._on_manual_setpoint, 10)
+
+        self.latest_manual_setpoint: Setpoint | None = None
 
         self.pub_goal = self.create_publisher(ControlGoal, '/auv/control/goal', 10)
         self.pub_setpoint = self.create_publisher(Setpoint, '/auv/control/setpoint', 10)
@@ -109,6 +119,7 @@ class AUVDecisionNode(Node):
         self.pub_diagnostic = self.create_publisher(AuvDiagnostic, '/auv/diagnostics', 10)
 
         self.timer = self.create_timer(0.1, self._on_tick)
+        self.add_on_set_parameters_callback(self._on_parameters_changed)
 
         self.get_logger().info('AUV 决策节点已启动。')
         self.get_logger().info(f'置信度阈值: {threshold:.2f}')
@@ -129,6 +140,22 @@ class AUVDecisionNode(Node):
         self.get_logger().info('发布: /auv/control/setpoint (auv_interfaces/Setpoint)')
         self.get_logger().info('发布: /auv/bt_status (std_msgs/String)')
         self.get_logger().info('发布: /auv/diagnostics (auv_interfaces/AuvDiagnostic)')
+
+    def _on_manual_setpoint(self, msg: Setpoint) -> None:
+        """接收手动下发的 Setpoint 调试指令。"""
+        if self.bypass_to_manual_setpoint:
+            self.latest_manual_setpoint = msg
+
+    def _on_parameters_changed(self, params):
+        from rcl_interfaces.msg import SetParametersResult
+        for param in params:
+            if param.name == 'enable_behavior_tree':
+                self.enable_behavior_tree = bool(param.value)
+                self.get_logger().info(f'特征开关: enable_behavior_tree -> {self.enable_behavior_tree}')
+            elif param.name == 'bypass_to_manual_setpoint':
+                self.bypass_to_manual_setpoint = bool(param.value)
+                self.get_logger().info(f'特征开关: bypass_to_manual_setpoint -> {self.bypass_to_manual_setpoint}')
+        return SetParametersResult(successful=True)
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
         """接收传感器状态并注入决策引擎的黑板缓存。"""
@@ -304,6 +331,23 @@ class AUVDecisionNode(Node):
 
     def _on_tick(self) -> None:
         now_ns = self.get_clock().now().nanoseconds
+
+        # 1. 旁路逻辑：如果开启了 bypass_to_manual_setpoint，则直接转发手动指令
+        if self.bypass_to_manual_setpoint:
+            if self.latest_manual_setpoint is not None:
+                # 给手动 setpoint 打上当前时间戳并转发
+                sp_msg = self.latest_manual_setpoint
+                sp_msg.header.stamp = self.get_clock().now().to_msg()
+                self.pub_setpoint.publish(sp_msg)
+                
+                # 发布简易诊断
+                self.get_logger().debug('Decision node is bypassed: forwarding manual setpoint')
+            return
+
+        # 2. 屏蔽逻辑：如果不启用行为树，则静默
+        if not self.enable_behavior_tree:
+            self.get_logger().debug('Decision node behavior tree is disabled')
+            return
 
         if not self.mock_amd_synced:
             time_since_update_s = (now_ns - self.mock_amd_last_update_ns) / 1e9

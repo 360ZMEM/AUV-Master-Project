@@ -143,7 +143,8 @@ KEY_AUTO_STATE = "auto_state"  # 自主控制状态（LOCKED / REQUESTING / ACTI
 KEY_DENY_REASON = "deny_reason"  # 自主被拒原因
 KEY_TELEMETRY_FRESHNESS_MS = "telemetry_freshness_ms"  # 遥测数据新鲜度 (ms)
 KEY_STATE_SOURCE = "state_source"  # 状态来源（仿真 / 实物）
-KEY_MOCK_AMD_TIMESTAMP = "mock_amd_timestamp_us"  # Mock AMD 时间戳 (微秒)
+KEY_MOCK_AMD_TIMESTAMP_US = "mock_amd_timestamp_us"  # Mock AMD 时间戳 (微秒)
+KEY_TARGET_DEPTH_M = "target_depth_m"  # 目标深度 (m)
 
 # =============================================================================
 # 二进制协议字节偏移量 - Para1-Para12 可调参数字段位置
@@ -256,6 +257,7 @@ class ProtocolDownlinkState:
     spare_params: tuple[int, int]
     parameters: tuple[int, ...]
     mock_amd_timestamp_us: int = 0
+    target_depth_m: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -787,6 +789,8 @@ def build_downlink_packet_from_payload(
         preset_time_tenths_min=int(payload.get(KEY_PRESET_TIME_TENTHS_MIN, 0)),
         spare_params=payload.get(KEY_SPARE_PARAMS),
         parameter_values=payload.get(KEY_PARAMETERS),
+        mock_amd_timestamp_us=int(payload.get(KEY_MOCK_AMD_TIMESTAMP_US, 0)),
+        target_depth_m=float(payload.get(KEY_TARGET_DEPTH_M, 0.0)),
         main_motor_rpm_scale=main_motor_rpm_scale,
         side_motor_rpm=int(payload.get(KEY_SIDE_MOTOR_RPM, 0)),
     )
@@ -1013,6 +1017,8 @@ def build_downlink_packet(
     preset_time_tenths_min: int = 0,
     spare_params: Sequence[int] | None = None,
     parameter_values: Sequence[int] | None = None,
+    mock_amd_timestamp_us: int = 0,
+    target_depth_m: float = 0.0,
     main_motor_rpm_scale: float = DEFAULT_MAIN_MOTOR_RPM_SCALE,
     side_motor_rpm: int = 0,
 ) -> bytes:
@@ -1061,7 +1067,17 @@ def build_downlink_packet(
     depth_pair = _coerce_pair(depth_protect_params, low=0, high=65535)
     bottom_pair = _coerce_pair(bottom_protect_params, low=0, high=65535)
     spare_pair = _coerce_pair(spare_params, low=-32768, high=32767)
-    parameters = _coerce_parameters(parameter_values)
+    parameters = list(_coerce_parameters(parameter_values))
+    if isinstance(command_payload, dict):
+        if KEY_TARGET_DEPTH_M in command_payload:
+            parameters[0] = _clamp_int(round(target_depth_m * 10.0), -2147483648, 2147483647)
+        if KEY_MOCK_AMD_TIMESTAMP_US in command_payload:
+            parameters[1] = _clamp_int(mock_amd_timestamp_us, -2147483648, 2147483647)
+    else:
+        if target_depth_m != 0.0:
+            parameters[0] = _clamp_int(round(target_depth_m * 10.0), -2147483648, 2147483647)
+        if mock_amd_timestamp_us != 0:
+            parameters[1] = _clamp_int(mock_amd_timestamp_us, -2147483648, 2147483647)
 
     packet = bytearray(PROTOCOL_DOWNLINK_SIZE)
     packet[0:5] = PROTOCOL_DOWNLINK_HEADER
@@ -1149,7 +1165,9 @@ def parse_downlink_packet(
     )
 
     main_motor_rpm = struct.unpack(">h", packet[23:25])[0]
-    mock_amd_timestamp_us = struct.unpack(">i", packet[PROTOCOL_DOWNLINK_PARA1_OFFSET:PROTOCOL_DOWNLINK_PARA1_OFFSET + 4])[0]
+    mock_amd_timestamp_us = struct.unpack(">i", packet[PROTOCOL_DOWNLINK_PARA2_OFFSET:PROTOCOL_DOWNLINK_PARA2_OFFSET + 4])[0]
+    target_depth_m_raw = struct.unpack(">i", packet[PROTOCOL_DOWNLINK_PARA1_OFFSET:PROTOCOL_DOWNLINK_PARA1_OFFSET + 4])[0]
+    target_depth_m = target_depth_m_raw * 0.1
     return ProtocolDownlinkState(
         frame_number=int(packet[5]),
         obj_address=int(packet[6]),
@@ -1168,8 +1186,8 @@ def parse_downlink_packet(
         preset_time_tenths_min=struct.unpack(">H", packet[16:18])[0],
         spare_params=(struct.unpack(">h", packet[18:20])[0], struct.unpack(">h", packet[20:22])[0]),
         parameters=(
+            target_depth_m_raw,
             mock_amd_timestamp_us,
-            struct.unpack(">i", packet[41:45])[0],
             struct.unpack(">i", packet[45:49])[0],
             struct.unpack(">i", packet[49:53])[0],
             struct.unpack(">h", packet[53:55])[0],
@@ -1182,6 +1200,7 @@ def parse_downlink_packet(
             struct.unpack(">h", packet[67:69])[0],
         ),
         mock_amd_timestamp_us=mock_amd_timestamp_us,
+        target_depth_m=target_depth_m,
     )
 
 

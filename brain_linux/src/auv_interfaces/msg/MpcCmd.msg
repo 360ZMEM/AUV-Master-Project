@@ -20,5 +20,9 @@ float32 bottom_fin_deg
 # Main thrust command in percent.
 float32 thrust_percent
 
+# Terrain Following depth command and work instruction mode
+float32 target_depth_m
+uint8 work_instruction
+
 # Free-form note for observability.
 string note

@@ -1,0 +1,24 @@
+# 全局特征配置文件 (Feature Flags)
+# 该文件用于配置各个节点的旁路开关与特征功能
+# 支持通过 ros2 param 实时修改部分参数
+
+/**:
+  ros__parameters:
+    # --- 决策层旁路 (Decision Node) ---
+    enable_behavior_tree: true
+    bypass_to_manual_setpoint: false
+
+    # --- 控制层旁路 (Controller Node) ---
+    bypass_zero_effort: false   # 强制输出零推力零舵角的保底指令
+
+    # 可选值: 'CONSTANT', 'SINE_WAVE', 'TERRAIN_FOLLOWING'
+    depth_mode: 'CONSTANT'
+    # 可选值: 'CONSTANT', 'TRAJECTORY', 'MAGNETIC_TRACKING'
+    heading_mode: 'CONSTANT'
+    
+    # 控制层旁路的固定目标值 (当 mode 为 'CONSTANT' 时生效)
+    constant_depth_m: 2.0
+    constant_heading_rad: 0.0
+
+    # --- 桥接层旁路 (Bridge Node) ---
+    passive_mode: false

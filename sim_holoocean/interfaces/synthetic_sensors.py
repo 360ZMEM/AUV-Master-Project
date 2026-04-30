@@ -68,6 +68,7 @@ class VirtualEnvironmentConfig:
     terrain_noise_scale_m: float = 8.0
     terrain_noise_octaves: int = 3
     terrain_seed: int = 7
+    terrain_slope_deg: float = 0.0  # 新增：地形斜坡角度（度），正值表示下坡（深度增加），负值表示上坡（深度减小）
     seabed_z_m: float = SEA_BOTTOM_Z
     cable_suspension_height_m: float = CABLE_SUSPENSION_HEIGHT
     cable_origin_ned: tuple[float, float, float] = (0.0, 0.0, 14.0)
@@ -195,6 +196,7 @@ class VirtualEnvironment:
             terrain_noise_scale_m=float(cfg.get("terrain_noise_scale_m", 8.0)),
             terrain_noise_octaves=int(cfg.get("terrain_noise_octaves", 3)),
             terrain_seed=int(cfg.get("terrain_seed", 7)),
+            terrain_slope_deg=float(cfg.get("terrain_slope_deg", 0.0)),
             seabed_z_m=float(cfg.get("seabed_z_m", SEA_BOTTOM_Z)),
             cable_suspension_height_m=float(cfg.get("cable_suspension_height_m", CABLE_SUSPENSION_HEIGHT)),
             cable_origin_ned=tuple(float(v) for v in cfg.get("cable_origin_ned", (0.0, 0.0, 14.0))[:3]),
@@ -227,7 +229,10 @@ class VirtualEnvironment:
             octaves=self.config.terrain_noise_octaves,
             scale=self.config.terrain_noise_scale_m,
         )
-        return self.config.seabed_z_m + self.config.terrain_noise_amplitude_m * noise
+        # 添加基于 X 轴的线性斜坡：正的 slope_deg 表示随着 X 增加深度变浅（上坡，z变小）
+        # z 轴正方向朝下，因此上坡是减去高度
+        slope_offset = -math.tan(math.radians(self.config.terrain_slope_deg)) * max(0.0, x - 10.0) # 假设斜坡从 x=10 处开始
+        return self.config.seabed_z_m + self.config.terrain_noise_amplitude_m * noise + slope_offset
 
     def sample_seabed_points(self, center_ned: np.ndarray | list[float]) -> list[list[float]]:
         """

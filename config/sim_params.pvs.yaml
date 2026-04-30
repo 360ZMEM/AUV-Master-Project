@@ -80,6 +80,9 @@ pvs:
   current_speed_mps: 0.5
   current_direction_deg: 0.0
 
+digital_twin:
+  terrain_slope_deg: 0.0
+
 guidance:
   lookahead_distance: 3.5
   nearest_search_window: 400
