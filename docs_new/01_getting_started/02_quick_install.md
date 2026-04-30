@@ -5,15 +5,25 @@
 ## 系统要求
 
 ### 硬件要求
+
 - CPU: 4 核心及以上
 - 内存: 8GB 及以上（推荐 16GB）
 - 硬盘: 20GB 可用空间
 
 ### 软件要求
+
 - **操作系统**: Ubuntu 22.04 LTS
 - **Python**: 3.10+（系统 Python `/usr/bin/python3`）
 - **ROS2**: Humble Hawksbill
-- **显卡**: 支持 OpenGL 4.5+（用于 HoloOcean）
+
+### 多个后端
+
+- 本仿真仓库目前包含了holoocean和Python Vehicle Simulator（下称PVS）两个后端仿真，它们支持AUV的动力学仿真。
+- 其中holoocean建议使用6GB+ VRAM的显卡进行驱动（如果运行声呐，建议至少100GB+的磁盘空间，8GB+ VRAM和较强的CPU）。由于Python Vehicle Simulator配置和安装难度显著较低，我们建议新手从这里开始。holoocean更适合炫酷的画面效果，真实的动力学，但是算法迭代上更推荐PVS。
+- 本代码仓库已经在2.2.2的holoocean版本，以及截至2025年5月的Python Vehicle Simulator（使用\`git checkout c717e07\`）下测试通过。
+- 遵循两个后端各自的安装规程完成基础配置：
+  - holoocean：<https://byu-holoocean.github.io/holoocean-docs/develop/usage/installation.html>
+  - PVS：<https://github.com/cybergalactic/PythonVehicleSimulator>
 
 ## 安装步骤
 
@@ -22,24 +32,29 @@
 如果尚未安装 ROS2 Humble：
 
 ```bash
-# 添加 ROS2 apt 仓库
-sudo apt update && sudo apt install software-properties-common -y
-sudo add-apt-repository universe -y
-sudo apt update && sudo apt install curl -y
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
-# 安装 ROS2 Humble
-sudo apt update
-sudo apt install ros-humble-desktop -y
-
-# 配置环境
-echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-source ~/.bashrc
+# 懒人安装脚本
+wget http://fishros.com/install -O fishros && . fishros
 ```
 
-### 2. 安装 Python 依赖
+### 2. 安装 ROS2 系统包
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+    ros-humble-foxglove-bridge \
+    ros-humble-rosbag2-storage-mcap \
+    libwebsocketpp-dev \
+    nlohmann-json3-dev
+```
+
+| 包名 | 说明 |
+|------|------|
+| `ros-humble-foxglove-bridge` | Foxglove WebSocket 桥接，用于实时可视化 |
+| `ros-humble-rosbag2-storage-mcap` | MCAP 存储 backend，用于高效 bag 录制 |
+| `libwebsocketpp-dev` | foxglove_bridge 的编译依赖 |
+| `nlohmann-json3-dev` | JSON 处理库依赖 |
+
+### 3. 安装 Python 依赖
 
 **重要提示**: 使用系统 Python，避免使用 conda 环境！
 
@@ -47,28 +62,43 @@ source ~/.bashrc
 # 确认使用系统 Python
 which python3  # 应该输出 /usr/bin/python3
 
-# 安装必要的 Python 包
-/usr/bin/python3 -m pip install --user \
-    zenoh \
+# 安装核心 Python 包 (全局安装，不要 --user)
+/usr/bin/python3 -m pip install \
+    eclipse-zenoh \
     pyyaml \
     py_trees \
-    rclpy \
-    geometry_msgs \
-    sensor_msgs \
-    std_msgs \
-    nav_msgs
+    numpy \
+    matplotlib \
+    foxglove-sdk \
+    mcap \
+    mcap-ros2-support \
+    pandas \
+    seaborn
 ```
 
-### 3. 克隆项目
+| 包名 | 说明 |
+|------|------|
+| `eclipse-zenoh` | Zenoh 通信中间件（注意：安装包名是 `eclipse-zenoh`，但代码中 `import zenoh`） |
+| `py_trees` | 行为树引擎，决策系统核心依赖 |
+| `foxglove-sdk` | Foxglove Python SDK，用于数据记录和可视化 |
+| `mcap` / `mcap-ros2-support` | MCAP 格式读写，离线分析工具依赖 |
+| `pandas` / `seaborn` | 数据分析和可视化 |
+
+### 4. 设置 Foxglove SDK ROS 工作区
+
+启动脚本 `start_foxglove_holoocean_ros.sh` 需要一个 Foxglove SDK ROS 工作区路径。
+由于 `ros-humble-foxglove-bridge` 已通过 apt 安装，只需创建一个 stub：
 
 ```bash
-# 克隆仓库（如果还没有）
-cd ~
-git clone <repository-url> AUV_Master_Project
-cd AUV_Master_Project
+mkdir -p /home/$USER/auv_ws/foxglove-sdk/ros/install
+cat > /home/$USER/auv_ws/foxglove-sdk/ros/install/local_setup.bash << 'EOF'
+# Foxglove SDK ROS stub - uses system-installed ros-humble-foxglove-bridge
+# The actual foxglove_bridge is provided by: ros-humble-foxglove-bridge (apt)
+source /opt/ros/humble/setup.bash
+EOF
 ```
 
-### 4. 首次构建 ROS2 工作区
+### 5. 首次构建 ROS2 工作区
 
 ```bash
 cd scripts
@@ -76,12 +106,13 @@ bash start_lin_brain.sh bootstrap
 ```
 
 这个脚本会：
+
 - 检查系统 Python 环境
 - 自动禁用 conda 环境
-- 构建 brain_linux ROS2 工作区
+- 构建 brain\_linux ROS2 工作区
 - 安装必要的依赖
 
-### 5. 验证安装
+### 6. 验证安装
 
 ```bash
 # 检查 ROS2 环境
@@ -89,34 +120,46 @@ source /opt/ros/humble/setup.bash
 ros2 --version  # 应该显示 ROS 2 版本
 
 # 检查 Python 包
-/usr/bin/python3 -c "import zenoh; print(zenoh.__version__)"
-/usr/bin/python3 -c "import py_trees; print(py_trees.__version__)"
+/usr/bin/python3 -c "import zenoh; print('zenoh OK')"
+/usr/bin/python3 -c "import py_trees; print('py_trees OK')"
+/usr/bin/python3 -c "import foxglove; print('foxglove-sdk OK')"
+/usr/bin/python3 -c "import mcap; print('mcap OK')"
 
 # 检查项目结构
 ls brain_linux/src/
+
+# 检查 Foxglove bridge
+ros2 pkg list | grep foxglove  # 应该显示 foxglove_bridge
+
+# 检查 MCAP 存储
+ros2 bag record -h 2>&1 | grep mcap  # 应该显示 mcap 选项
 ```
 
 ## 常见安装问题
 
 ### 问题 1: ModuleNotFoundError: No module named 'zenoh'
 
-**原因**: 可能使用了 conda 环境或 pip 安装到了错误的 Python 环境。
+**原因**: 可能使用了 conda 环境或 pip 安装到了错误的 Python 环境。正确的包名是 `eclipse-zenoh`。
 
 **解决方法**:
+
 ```bash
 # 确认退出 conda 环境
 conda deactivate
 conda deactivate
 
-# 使用系统 Python 重新安装
-/usr/bin/python3 -m pip install --user zenoh
+# 使用系统 Python 重新安装（全局安装，不要 --user）
+/usr/bin/python3 -m pip install eclipse-zenoh
 ```
+
+**导入说明**: 安装包名是 `eclipse-zenoh`，但代码中 `import zenoh`，这是正常的。
 
 ### 问题 2: ROS2 命令找不到
 
 **原因**: ROS2 环境未正确 source。
 
 **解决方法**:
+
 ```bash
 source /opt/ros/humble/setup.bash
 source ~/AUV_Master_Project/brain_linux/install/setup.bash
@@ -127,6 +170,7 @@ source ~/AUV_Master_Project/brain_linux/install/setup.bash
 **原因**: 可能是 Python 版本或路径问题。
 
 **解决方法**:
+
 ```bash
 # 清理构建缓存
 cd brain_linux
@@ -135,6 +179,33 @@ rm -rf build install log
 # 重新构建
 cd ~/AUV_Master_Project/scripts
 bash start_lin_brain.sh bootstrap
+```
+
+### 问题 4: foxglove_bridge 启动失败
+
+**原因**: Foxglove SDK ROS 工作区路径不存在。
+
+**解决方法**: 确保已创建 stub 文件（见步骤 4）：
+
+```bash
+ls /home/$USER/auv_ws/foxglove-sdk/ros/install/local_setup.bash
+# 如果不存在，按照步骤 4 创建
+```
+
+### 问题 5: MCAP bag 录制失败
+
+**原因**: 未安装 `ros-humble-rosbag2-storage-mcap`。
+
+**解决方法**:
+
+```bash
+sudo apt-get install -y ros-humble-rosbag2-storage-mcap
+```
+
+如果 MCAP 不可用，可使用 sqlite3 替代：
+
+```bash
+bash start_experiment.sh --bag-storage sqlite3 --duration 120
 ```
 
 ## 环境变量配置（可选）
@@ -157,11 +228,5 @@ alias pip='/usr/bin/python3 -m pip'
 ## 下一步
 
 安装完成后，继续阅读：
+
 - [第一次运行](03_first_run.md) - 启动第一个仿真
-
-## 需要帮助？
-
-如果遇到安装问题：
-1. 查看 [常见问题](04_faq.md)
-2. 检查系统日志
-3. 在项目 issue 中搜索类似问题

@@ -46,7 +46,8 @@ class ControlModeByte(IntEnum):
     AUTO_FIXED_POINT = 0x02
     AUTO_DIRECTION = 0x03
     RETURN_HOME = 0x04
-    JETSON_PROTOCOL = 0xEE # 新增
+    JETSON_PROTOCOL = 0xEE
+    JETSON_HYBRID = 0xEF
 
 
 class WorkInstruction(IntEnum):

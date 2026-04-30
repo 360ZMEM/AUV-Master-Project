@@ -13,7 +13,7 @@ ModuleNotFoundError: No module named 'zenoh'
 
 **原因**:
 - 使用了错误的 Python 环境（如 conda）
-- zenoh 包未正确安装
+- **正确的包名是 `eclipse-zenoh`，不是 `zenoh`**
 
 **解决方案**:
 ```bash
@@ -24,9 +24,13 @@ conda deactivate
 # 2. 确认使用系统 Python
 which python3  # 应该输出 /usr/bin/python3
 
-# 3. 重新安装 zenoh
-/usr/bin/python3 -m pip install --user zenoh
+# 3. 重新安装 eclipse-zenoh（全局安装，不要 --user）
+/usr/bin/python3 -m pip install eclipse-zenoh py-trees pyyaml
 ```
+
+**导入说明**:
+- 虽然安装包名是 `eclipse-zenoh`，但导入时仍然使用 `import zenoh`
+- 代码中已经正确配置了这一点，无需修改任何代码！
 
 ### Q2: ROS2 命令找不到
 

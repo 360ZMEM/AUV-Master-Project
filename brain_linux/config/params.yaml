@@ -44,6 +44,21 @@ controller:
   bypass_ekf: false
   filtered_state_topic: /auv/state/filtered
   raw_state_topic: /auv/state/raw_dr
+  use_mpc: false
+  control_mode_byte: 239
+  heading_ramp_limit_deg: 30.0
+  heading_ramp_rate_deg_s: 10.0
+
+mappers:
+  rudder:
+    center_bias: 0.0
+    gain: 1.0
+    flip: false
+  thrust:
+    deadzone_percent: 5.0
+    rpm_per_percent: 15.0
+    voltage_nominal: 24.0
+    voltage_compensation: true
 
 limits:
   fin_deg_max: 30.0

@@ -1,10 +1,22 @@
 #!/usr/bin/env python3
-"""ROS2 控制节点：目标状态 + 滤波状态 -> /cmd_vel。
+"""ROS2 控制节点：支持 PID/MPC 混合控制架构。
 
 该节点是决策层与底层控制器之间的桥梁，负责把 Setpoint 和状态估计
-转换为固定映射的 Twist 输出，避免上层逻辑直接依赖具体舵面/推力实现。
+转换为控制指令。支持两种控制器模式：
 
-输出映射约定：
+PID 模式（默认）:
+  - 纵向推力：由 PID 速度环闭环计算
+  - 舵角：透传（None 标记），由 AMD 本地 PID 闭环处理
+  - 输出：Twist (/cmd_vel)
+
+MPC 模式（预留）:
+  - 所有通道由 MPC 优化器计算
+  - 输出：MpcCmd (/auv/control/mpc_cmd)
+
+切换方式：
+  ros2 param set /auv_controller_node use_mpc true/false
+
+输出映射约定（Twist）:
 - linear.x: thrust（推力）
 - angular.x: right fin（右舵）
 - angular.y: top fin（上舵）
@@ -32,8 +44,13 @@ from sensor_msgs.msg import Imu
 from std_msgs.msg import String
 import yaml
 
-from common.enums import StateEstimateSource
+from common.enums import StateEstimateSource, ControlModeByte
 from common.protocol import KEY_STATE_SOURCE
+
+from .base_controller import BaseController, ControlOutput
+from .pid_controller import PIDController
+from .mpc_controller import MPCController
+from .mappers import clamp_int16
 
 def _resolve_project_root() -> Path:
     """解析工程根目录，优先使用环境变量和 ament 安装路径。"""
@@ -61,18 +78,6 @@ def _resolve_project_root() -> Path:
 
 PROJECT_ROOT = _resolve_project_root()
 ALGO_DIR = PROJECT_ROOT / 'algorithm'
-def _load_pid_controller_class():
-    """按文件路径动态加载 PID 控制器类，避免运行时导入路径冲突。"""
-    module_path = ALGO_DIR / 'auv_pid_controller.py'
-    spec = importlib.util.spec_from_file_location('auv_algorithm_pid', str(module_path))
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f'failed to load PID module: {module_path}')
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.AUVPIDController
-
-
-AUVPIDController = _load_pid_controller_class()
 
 
 def quat_to_euler(w: float, x: float, y: float, z: float) -> tuple[float, float, float]:
@@ -94,10 +99,10 @@ def quat_to_euler(w: float, x: float, y: float, z: float) -> tuple[float, float,
 
 
 class AUVControllerNode(Node):
-    """AUV 控制节点主类。
+    """AUV 控制节点主类，支持 PID/MPC 混合控制架构。
 
-    该节点订阅控制目标、滤波状态和原始状态，周期性调用级联 PID 控制器，
-    并把五通道舵面/推力指令发布到 /cmd_vel。
+    该节点订阅控制目标、滤波状态和原始状态，周期性调用当前活跃控制器，
+    并根据模式输出 Twist 或 MpcCmd。
     """
 
     def __init__(self) -> None:
@@ -111,17 +116,41 @@ class AUVControllerNode(Node):
         self.declare_parameter('bypass_ekf', False)
         self.declare_parameter('control_rate_hz', 20.0)
 
+        # 混合控制架构参数
+        self.declare_parameter('use_mpc', False)
+        self.declare_parameter('control_mode_byte', int(ControlModeByte.JETSON_HYBRID))
+        self.declare_parameter('heading_ramp_limit_deg', 30.0)
+        self.declare_parameter('heading_ramp_rate_deg_s', 10.0)
+
         params_file = str(self.get_parameter('params_file').value)
         cfg = self._load_config(params_file)
 
         ctrl_cfg = cfg.get('control', {})
         lim_cfg = cfg.get('limits', {})
+        mapper_cfg = cfg.get('mappers', {})
         self.control_rate_hz = float(self.get_parameter('control_rate_hz').value)
         self.filtered_state_topic = str(self.get_parameter('filtered_state_topic').value)
         self.raw_state_topic = str(self.get_parameter('raw_state_topic').value)
         self.bypass_ekf = bool(self.get_parameter('bypass_ekf').value)
 
-        self.controller = AUVPIDController(ctrl_cfg, lim_cfg)
+        # 初始化混合控制器
+        self._pid_controller = PIDController(ctrl_cfg, lim_cfg, mapper_cfg)
+        self._mpc_controller = MPCController(ctrl_cfg, lim_cfg, mapper_cfg)
+        self._active_controller: BaseController = self._pid_controller
+        self._use_mpc = bool(self.get_parameter('use_mpc').value)
+        if self._use_mpc:
+            self._active_controller = self._mpc_controller
+
+        # 控制模式字节
+        self._control_mode_byte = int(self.get_parameter('control_mode_byte').value)
+
+        # 指令平滑器状态
+        self._last_heading_cmd = 0.0
+        self._heading_ramp_active = False
+        self._heading_ramp_start = 0.0
+        self._heading_ramp_target = 0.0
+        self._heading_ramp_limit_deg = float(self.get_parameter('heading_ramp_limit_deg').value)
+        self._heading_ramp_rate_deg_s = float(self.get_parameter('heading_ramp_rate_deg_s').value)
 
         self.latest_setpoint: Setpoint | None = None
         self.latest_filtered_state: Odometry | None = None
@@ -140,6 +169,7 @@ class AUVControllerNode(Node):
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
+        self._mpc_cmd_pub = self.create_publisher(String, '/auv/control/mpc_cmd', 20)  # 临时使用 String，实际应为 MpcCmd
         self._control_timer = self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
 
         self._lat_count = 0
@@ -148,7 +178,9 @@ class AUVControllerNode(Node):
         self.create_timer(0.5, self._publish_debug)
         self._param_callback = self.add_on_set_parameters_callback(self._on_parameters_changed)
 
-        self.get_logger().info('auv_controller_node started')
+        mode_str = 'MPC' if self._use_mpc else 'PID'
+        self.get_logger().info(f'auv_controller_node started ({mode_str} mode)')
+        self.get_logger().info(f'Control mode byte: 0x{self._control_mode_byte:02X}')
 
     @staticmethod
     def _load_config(path: str) -> dict:
@@ -217,9 +249,17 @@ class AUVControllerNode(Node):
         return None, preferred_source, False, 0.0
 
     def _on_parameters_changed(self, params) -> SetParametersResult:
-        """响应运行时参数更新，支持切换状态源和控制频率。"""
+        """响应运行时参数更新，支持切换控制器模式、状态源和控制频率。"""
         for param in params:
-            if param.name == 'bypass_ekf':
+            if param.name == 'use_mpc':
+                self._use_mpc = bool(param.value)
+                if self._use_mpc:
+                    self._active_controller = self._mpc_controller
+                    self.get_logger().info('控制器切换为 MPC 模式')
+                else:
+                    self._active_controller = self._pid_controller
+                    self.get_logger().info('控制器切换为 PID 模式')
+            elif param.name == 'bypass_ekf':
                 self.bypass_ekf = bool(param.value)
             elif param.name == 'control_rate_hz':
                 new_rate = float(param.value)
@@ -229,10 +269,49 @@ class AUVControllerNode(Node):
                     self.control_rate_hz = new_rate
                     self._control_timer.cancel()
                     self._control_timer = self.create_timer(1.0 / max(self.control_rate_hz, 1e-3), self._on_timer)
+            elif param.name == 'heading_ramp_limit_deg':
+                self._heading_ramp_limit_deg = float(param.value)
+            elif param.name == 'heading_ramp_rate_deg_s':
+                self._heading_ramp_rate_deg_s = float(param.value)
+            elif param.name == 'control_mode_byte':
+                self._control_mode_byte = int(param.value)
         return SetParametersResult(successful=True)
 
+    def _apply_heading_ramp(self, target_rad: float, now: float) -> float:
+        """如果 target_heading 跳变超过阈值，自动生成斜坡信号。
+
+        防止 AMD 侧 PID 产生过大的冲击电流。
+        """
+        target_deg = math.degrees(target_rad)
+        delta = abs(target_deg - self._last_heading_cmd)
+
+        if delta > self._heading_ramp_limit_deg and not self._heading_ramp_active:
+            self._heading_ramp_active = True
+            self._heading_ramp_start = now
+            self._heading_ramp_target = target_deg
+            self.get_logger().info(
+                f'Heading ramp activated: {self._last_heading_cmd:.1f}° -> {target_deg:.1f}°'
+            )
+
+        if self._heading_ramp_active:
+            elapsed = now - self._heading_ramp_start
+            max_delta = self._heading_ramp_rate_deg_s * elapsed
+            actual_delta = min(max_delta, abs(self._heading_ramp_target - self._last_heading_cmd))
+            direction = 1 if self._heading_ramp_target > self._last_heading_cmd else -1
+            result = self._last_heading_cmd + direction * actual_delta
+
+            if abs(result - self._heading_ramp_target) < 0.1:
+                self._heading_ramp_active = False
+                result = self._heading_ramp_target
+
+            self._last_heading_cmd = result
+            return math.radians(result)
+
+        self._last_heading_cmd = target_deg
+        return target_rad
+
     def _on_timer(self) -> None:
-        """控制周期主回调：读取状态、计算控制量并发布 Twist。"""
+        """控制周期主回调：读取状态、计算控制量并发布。"""
         if self.latest_setpoint is None:
             return
 
@@ -268,38 +347,73 @@ class AUVControllerNode(Node):
             'r': r_rate,
         }
 
-        target = {
+        setpoint = {
             'dt': 1.0 / max(self.control_rate_hz, 1e-3),
-            'target_depth': float(sp.target_depth_m),
-            'target_yaw': float(sp.target_heading_rad),
-            'target_u': float(sp.target_speed_mps),
+            'target_depth_m': float(sp.target_depth_m),
+            'target_heading_rad': float(sp.target_heading_rad),
+            'target_speed_mps': float(sp.target_speed_mps),
         }
 
-        cmd, _debug = self.controller.compute(state, target)
+        # 调用当前活跃控制器
+        ctrl_output = self._active_controller.compute(state, setpoint)
 
-        tw = Twist()
-        tw.linear.x = float(cmd[4])
-        tw.angular.x = float(cmd[0])
-        tw.angular.y = float(cmd[1])
-        tw.angular.z = float(cmd[2])
-        tw.linear.z = float(cmd[3])
-        self.cmd_pub.publish(tw)
-
+        # 指令平滑器：heading 跳变超过阈值时生成斜坡信号
         now = time.time()
+        target_heading = float(sp.target_heading_rad)
+        smoothed_heading = self._apply_heading_ramp(target_heading, now=now)
+
+        if self._use_mpc:
+            # MPC 模式：发布 MpcCmd 消息（供 auv_bridge/arbiter 消费）
+            mpc_payload = {
+                'source': 'JETSON_MPC',
+                'valid': True,
+                'healthy': True,
+                'thrust_percent': float(ctrl_output.thrust_percent),
+                'right_fin_deg': float(ctrl_output.right_fin_deg or 0.0),
+                'top_fin_deg': float(ctrl_output.top_fin_deg or 0.0),
+                'left_fin_deg': float(ctrl_output.left_fin_deg or 0.0),
+                'bottom_fin_deg': float(ctrl_output.bottom_fin_deg or 0.0),
+                'note': str(ctrl_output.debug.get('note', '')),
+            }
+            self._mpc_cmd_pub.publish(String(data=json.dumps(mpc_payload, ensure_ascii=False)))
+        else:
+            # PID 模式：直接发布 Twist
+            tw = Twist()
+            tw.linear.x = float(ctrl_output.thrust_percent)
+            tw.angular.x = float(ctrl_output.right_fin_deg or 0.0)
+            tw.angular.y = float(ctrl_output.top_fin_deg or 0.0)
+            tw.angular.z = float(ctrl_output.left_fin_deg or 0.0)
+            tw.linear.z = float(ctrl_output.bottom_fin_deg or 0.0)
+            self.cmd_pub.publish(tw)
+
+        # 延迟统计
         sensor_to_cmd = now - max(self.latest_setpoint_ts, state_ts)
         if sensor_to_cmd >= 0:
             self._lat_count += 1
             self._lat_sum += sensor_to_cmd
 
+        # 构建调试信息
+        cmd = [
+            ctrl_output.right_fin_deg or 0.0,
+            ctrl_output.top_fin_deg or 0.0,
+            ctrl_output.left_fin_deg or 0.0,
+            ctrl_output.bottom_fin_deg or 0.0,
+            ctrl_output.thrust_percent,
+        ]
+
         self.latest_debug_payload = {
-            'mode': str(sp.mode),
+            'mode': 'MPC' if self._use_mpc else 'PID',
+            'control_mode_byte': self._control_mode_byte,
+            'thrust_cmd': ctrl_output.thrust_percent,
+            'guidance_heading': smoothed_heading,
+            'guidance_depth': setpoint.get('target_depth_m', 0.0),
             'rate_source': rate_source,
             KEY_STATE_SOURCE: state_source.value,
             'state_source_requested': StateEstimateSource.RAW_DR.value if self.bypass_ekf else StateEstimateSource.FILTERED.value,
             'state_source_fallback': bool(state_source_fallback),
-            'attitude_guard_active': bool(_debug.get('attitude_guard_active', False)),
-            'current_roll_deg': round(float(_debug.get('current_roll_deg', 0.0)), 3),
-            'current_pitch_deg': round(float(_debug.get('current_pitch_deg', 0.0)), 3),
+            'attitude_guard_active': bool(ctrl_output.debug.get('attitude_guard_active', False)),
+            'current_roll_deg': round(float(ctrl_output.debug.get('current_roll_deg', 0.0)), 3),
+            'current_pitch_deg': round(float(ctrl_output.debug.get('current_pitch_deg', 0.0)), 3),
             'depth_error_m': round(depth_error, 4),
             'yaw_error_deg': round(math.degrees(yaw_error), 3),
             'current_yaw_deg': round(math.degrees(yaw), 3),
@@ -308,11 +422,12 @@ class AUVControllerNode(Node):
             'current_depth_m': round(float(-st.pose.pose.position.z), 3),
             'target_speed_mps': round(float(sp.target_speed_mps), 3),
             'current_speed_mps': round(float(st.twist.twist.linear.x), 3),
-            'pitch_saturated': bool(_debug.get('pitch_saturated', False)),
-            'yaw_saturated': bool(_debug.get('yaw_saturated', False)),
-            'thrust_saturated': bool(_debug.get('thrust_saturated', False)),
-            'target_pitch_deg': round(math.degrees(float(_debug.get('target_pitch_rad', 0.0))), 3),
+            'pitch_saturated': bool(ctrl_output.debug.get('pitch_saturated', False)),
+            'yaw_saturated': bool(ctrl_output.debug.get('yaw_saturated', False)),
+            'thrust_saturated': bool(ctrl_output.debug.get('thrust_saturated', False)),
+            'target_pitch_deg': round(math.degrees(float(ctrl_output.debug.get('target_pitch_rad', 0.0))), 3),
             'bypass_ekf': bool(self.bypass_ekf),
+            'fin_passthrough': bool(ctrl_output.debug.get('fin_passthrough', False)),
             'cmd': {
                 'right_deg': round(float(cmd[0]), 3),
                 'top_deg': round(float(cmd[1]), 3),
@@ -333,7 +448,44 @@ class AUVControllerNode(Node):
         """发布控制调试信息，供可视化和日志订阅。"""
         if self.latest_debug_payload is None:
             return
-        self.debug_pub.publish(String(data=json.dumps(self.latest_debug_payload, ensure_ascii=False)))
+        payload = self.latest_debug_payload
+        cleaned = self._sanitize_for_json(payload)
+        try:
+            json_str = json.dumps(cleaned, ensure_ascii=False)
+            self.debug_pub.publish(String(data=json_str))
+        except (TypeError, ValueError) as e:
+            self.get_logger().error(f'Failed to serialize debug payload: {e}')
+            # Fallback: publish minimal info
+            minimal = {
+                'mode': cleaned.get('mode', 'UNKNOWN'),
+                'error': str(e),
+                'thrust_cmd': cleaned.get('thrust_cmd', 0),
+            }
+            self.debug_pub.publish(String(data=json.dumps(minimal, ensure_ascii=False)))
+
+    @staticmethod
+    def _sanitize_for_json(obj: Any) -> Any:
+        """将 dict/list 中的 numpy 类型和非 JSON 兼容类型转为标准 Python 类型。"""
+        import numpy as np
+
+        if isinstance(obj, dict):
+            return {k: AUVControllerNode._sanitize_for_json(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [AUVControllerNode._sanitize_for_json(v) for v in obj]
+
+        # 所有 numpy 标量类型
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            return float(obj)
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        if isinstance(obj, np.generic):
+            return obj.item()
+
+        return obj
 
 
 def main(args=None) -> None:

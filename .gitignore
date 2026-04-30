@@ -30,9 +30,10 @@ env/
 
 # JetBrains
 .idea/
-# docs/
-# docs_new/
+docs/
+docs_new/
 
 # foxglove
 # foxglove_layout_project/
 CLAUDE.*
+trae/
