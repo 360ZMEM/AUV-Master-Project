@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<AutoPloitPoint TaskNumber="" TotalTimeout="" TotalNumber="8">
+  <Points Name="Point1">
+    <TrackPoint>1</TrackPoint>
+    <Longitude>110.118505</Longitude>
+    <Latitude>31.034896</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point2">
+    <TrackPoint>2</TrackPoint>
+    <Longitude>110.117749</Longitude>
+    <Latitude>31.026472</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point3">
+    <TrackPoint>3</TrackPoint>
+    <Longitude>110.128167</Longitude>
+    <Latitude>31.024024</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point4">
+    <TrackPoint>4</TrackPoint>
+    <Longitude>110.130015</Longitude>
+    <Latitude>31.029100</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point5">
+    <TrackPoint>5</TrackPoint>
+    <Longitude>110.125226</Longitude>
+    <Latitude>31.031800</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point6">
+    <TrackPoint>6</TrackPoint>
+    <Longitude>110.131444</Longitude>
+    <Latitude>31.036695</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point7">
+    <TrackPoint>7</TrackPoint>
+    <Longitude>110.128839</Longitude>
+    <Latitude>31.040151</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+  <Points Name="Point8">
+    <TrackPoint>8</TrackPoint>
+    <Longitude>110.122160</Longitude>
+    <Latitude>31.039755</Latitude>
+    <strategy>0</strategy>
+    <Parameter>0</Parameter>
+    <MotorSetSpeed>0</MotorSetSpeed>
+    <Device>00000000</Device>
+  </Points>
+</AutoPloitPoint>

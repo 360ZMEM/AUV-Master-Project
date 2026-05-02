@@ -1,0 +1,76 @@
+D:\work\汕头\project\Console\Console\bin\Debug\Console.exe
+D:\work\汕头\project\Console\Console\bin\Debug\Console.pdb
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.Form1.resources
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.Properties.Resources.resources
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.csproj.GenerateResource.Cache
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.exe
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.pdb
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.csprojResolveAssemblyReference.cache
+D:\work\汕头\project\Console\Console\obj\x86\Debug\Console.Form2.resources
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.exe
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.pdb
+D:\ZC\project\Console\Console\bin\Debug\Console.exe
+D:\ZC\project\Console\Console\bin\Debug\Console.pdb
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.Form1.resources
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.Form2.resources
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.Properties.Resources.resources
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.csproj.GenerateResource.Cache
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.Form3.resources
+D:\ZC\project\Console\Console\obj\x86\Debug\Console.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\Console\Console\bin\Debug\Console.exe
+C:\Users\Administrator\Desktop\Console\Console\bin\Debug\Console.pdb
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.Form1.resources
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.Form2.resources
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.Form3.resources
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.Properties.Resources.resources
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.csproj.GenerateResource.cache
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.exe
+C:\Users\Administrator\Desktop\Console\Console\obj\x86\Debug\Console.pdb
+C:\Users\xiao\Desktop\Console\Console\bin\Debug\Console.exe
+C:\Users\xiao\Desktop\Console\Console\bin\Debug\Console.pdb
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.csprojAssemblyReference.cache
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.Form1.resources
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.Form2.resources
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.Form3.resources
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.Properties.Resources.resources
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.csproj.GenerateResource.cache
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.csproj.CoreCompileInputs.cache
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.exe
+C:\Users\xiao\Desktop\Console\Console\obj\x86\Debug\Console.pdb
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.exe
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.pdb
+D:\work\汕头\北斗最新\Console\Console\bin\Debug\Console.exe
+D:\work\汕头\北斗最新\Console\Console\bin\Debug\Console.pdb
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.csprojResolveAssemblyReference.cache
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.Form1.resources
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.Form2.resources
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.Form3.resources
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.Properties.Resources.resources
+D:\work\汕头\北斗最新\Console\Console\obj\x86\Debug\Console.csproj.GenerateResource.Cache
+E:\我的资源\1111\Console20220516\Console\bin\Debug\Console.exe.config
+E:\我的资源\1111\Console20220516\Console\bin\Debug\Console.exe
+E:\我的资源\1111\Console20220516\Console\bin\Debug\Console.pdb
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.csproj.AssemblyReference.cache
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.csproj.SuggestedBindingRedirects.cache
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.Form1.resources
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.Form2.resources
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.Form3.resources
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.Properties.Resources.resources
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.csproj.GenerateResource.cache
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.csproj.CoreCompileInputs.cache
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.exe
+E:\我的资源\1111\Console20220516\Console\obj\x86\Debug\Console.pdb
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\bin\Debug\Console.exe.config
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\bin\Debug\Console.exe
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\bin\Debug\Console.pdb
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.csproj.AssemblyReference.cache
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.Form1.resources
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.Form2.resources
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.Form3.resources
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.Properties.Resources.resources
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.csproj.GenerateResource.cache
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.csproj.CoreCompileInputs.cache
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.exe
+C:\文件\研1\AUV调诚\4- 技术资料\Console上位机软件\Console\obj\x86\Debug\Console.pdb
