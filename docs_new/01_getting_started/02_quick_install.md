@@ -76,7 +76,10 @@ which python3  # 应该输出 /usr/bin/python3
     mcap-ros2-support \
     pandas \
     seaborn \
-    PySide6
+    PySide6 \
+    pyserial \
+    configobj \
+    scapy
 ```
 
 | 包名                           | 说明                                                            |
@@ -87,6 +90,10 @@ which python3  # 应该输出 /usr/bin/python3
 | `mcap` / `mcap-ros2-support` | MCAP 格式读写，离线分析工具依赖                                            |
 | `pandas` / `seaborn`         | 数据分析和可视化                                                      |
 | `PySide6`                    | Qt for Python 框架，用于底层协议调试小工具 (Manual Protocol Injector) 等独立工具 |
+| `pyserial`                   | Python 串口通信库，用于硬件设备连接                                         |
+| `configobj`                  | 配置文件解析库，支持嵌套配置结构                                            |
+| `scapy`                      | 网络数据包处理库，用于底层协议调试和网络分析                                 |
+
 
 ### 4. 设置 Foxglove SDK ROS 工作区
 

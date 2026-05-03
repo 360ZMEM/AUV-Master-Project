@@ -148,14 +148,14 @@ class MapWidget(QWidget):
                                int(width/2), int(-100*i))
 
         # Draw "航行器" label (C# lines 1944-1948)
-        font = QFont("Arial", int(8 * ratio))
+        font = QFont("Arial", int(24 * ratio))  # Increased from 8 to 14 for better readability
         painter.setFont(font)
         painter.setPen(QColor(0xFFDEAD))  # NavajoWhite
         painter.drawText(int(-width/2 + 10), int(-height/2 + 18*ratio), "航行器")
 
         # Draw scale indicator (C# line 1963)
         scale_text = f"量程：{int(100/self.scale)}米/格"
-        painter.drawText(int(-width/2), int(-height/2 + 23*ratio), scale_text)
+        painter.drawText(int(-width/2), int(-height/2 + 50*ratio), scale_text)
 
     def _draw_gps_trajectory(self, painter):
         """Draw GPS trajectory as red dots (C# lines 1996-2007)"""

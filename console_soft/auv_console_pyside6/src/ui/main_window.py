@@ -142,16 +142,22 @@ class MainWindow(QMainWindow):
     def create_telemetry_group(self) -> QGroupBox:
         """Create telemetry display group"""
         group = QGroupBox("实时遥测数据")
+        group.setMinimumHeight(80)  # 增加最小高度防止压缩
         layout = QVBoxLayout()
+        layout.setSpacing(6)  # 增加行间距
 
         # Create labels dictionary
         self.labels = {}
 
         # Row 1: Basic info
         row1 = QHBoxLayout()
+        row1.setSpacing(40)  # 增加列间距
         self.labels['frame'] = QLabel("报文编号: --")
+        self.labels['frame'].setMinimumWidth(120)
         self.labels['address'] = QLabel("本机地址: --")
+        self.labels['address'].setMinimumWidth(120)
         self.labels['mode'] = QLabel("工作模式: --")
+        self.labels['mode'].setMinimumWidth(120)
         row1.addWidget(self.labels['frame'])
         row1.addWidget(self.labels['address'])
         row1.addWidget(self.labels['mode'])
@@ -159,10 +165,15 @@ class MainWindow(QMainWindow):
 
         # Row 2: Position data
         row2 = QHBoxLayout()
+        row2.setSpacing(40)  # 增加列间距
         self.labels['longitude'] = QLabel("经度: --")
+        self.labels['longitude'].setMinimumWidth(150)
         self.labels['latitude'] = QLabel("纬度: --")
+        self.labels['latitude'].setMinimumWidth(150)
         self.labels['depth'] = QLabel("深度: --")
+        self.labels['depth'].setMinimumWidth(100)
         self.labels['heading'] = QLabel("航向: --")
+        self.labels['heading'].setMinimumWidth(100)
         row2.addWidget(self.labels['longitude'])
         row2.addWidget(self.labels['latitude'])
         row2.addWidget(self.labels['depth'])
@@ -170,10 +181,15 @@ class MainWindow(QMainWindow):
         layout.addLayout(row2)
 
         row3 = QHBoxLayout()
+        row3.setSpacing(40)  # 增加列间距
         self.labels['arbiter'] = QLabel("控制归属: --")
+        self.labels['arbiter'].setMinimumWidth(120)
         self.labels['auto_state'] = QLabel("自主状态: --")
+        self.labels['auto_state'].setMinimumWidth(120)
         self.labels['deny_reason'] = QLabel("拒绝原因: --")
+        self.labels['deny_reason'].setMinimumWidth(120)
         self.labels['freshness'] = QLabel("链路时延: --")
+        self.labels['freshness'].setMinimumWidth(120)
         row3.addWidget(self.labels['arbiter'])
         row3.addWidget(self.labels['auto_state'])
         row3.addWidget(self.labels['deny_reason'])
@@ -443,9 +459,10 @@ class MainWindow(QMainWindow):
         """创建底部控制台 - 最高优先级操作区"""
         bar = QWidget()
         bar.setStyleSheet("background-color: #1e1e1e; border-top: 2px solid #555;")
+        bar.setMinimumHeight(140)  # 增加最小高度
         layout = QHBoxLayout(bar)
-        layout.setContentsMargins(8, 6, 8, 6)
-        layout.setSpacing(10)
+        layout.setContentsMargins(12, 8, 12, 8)  # 增加边距
+        layout.setSpacing(12)  # 增加组件间距
 
         # 1. 紧急切断按钮（醒目红色，带显式复位）
         estop_layout = QVBoxLayout()
@@ -498,6 +515,7 @@ class MainWindow(QMainWindow):
         zenoh_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
         zenoh_layout = QVBoxLayout()
         zenoh_row = QHBoxLayout()
+        zenoh_row.setSpacing(6)
         zenoh_row.addWidget(QLabel("Router IP:"))
         self.edit_zenoh_ip = QLineEdit("127.0.0.1")
         self.edit_zenoh_ip.setMaximumWidth(120)
@@ -520,32 +538,36 @@ class MainWindow(QMainWindow):
         task_layout = QVBoxLayout()
 
         row1 = QHBoxLayout()
+        row1.setSpacing(6)
         row1.addWidget(QLabel("目标深度(m):"))
         self.spin_target_depth = QDoubleSpinBox()
         self.spin_target_depth.setRange(0.0, 500.0)
         self.spin_target_depth.setValue(5.0)
         self.spin_target_depth.setSingleStep(0.5)
-        self.spin_target_depth.setMaximumWidth(80)
+        self.spin_target_depth.setMaximumWidth(90)
         row1.addWidget(self.spin_target_depth)
 
+        row1.addSpacing(10)
         row1.addWidget(QLabel("巡检距离(m):"))
         self.spin_track_distance = QDoubleSpinBox()
         self.spin_track_distance.setRange(0.0, 10000.0)
         self.spin_track_distance.setValue(500.0)
         self.spin_track_distance.setSingleStep(50.0)
-        self.spin_track_distance.setMaximumWidth(90)
+        self.spin_track_distance.setMaximumWidth(100)
         row1.addWidget(self.spin_track_distance)
         task_layout.addLayout(row1)
 
         row2 = QHBoxLayout()
+        row2.setSpacing(6)
         row2.addWidget(QLabel("任务超时(s):"))
         self.spin_task_timeout = QSpinBox()
         self.spin_task_timeout.setRange(60, 7200)
         self.spin_task_timeout.setValue(1200)
         self.spin_task_timeout.setSingleStep(60)
-        self.spin_task_timeout.setMaximumWidth(80)
+        self.spin_task_timeout.setMaximumWidth(90)
         row2.addWidget(self.spin_task_timeout)
 
+        row2.addSpacing(10)
         row2.addWidget(QLabel("任务类型:"))
         self.combo_mission_type = QComboBox()
         self.combo_mission_type.addItems([
@@ -553,7 +575,7 @@ class MainWindow(QMainWindow):
             "AREA_SEARCH",
             "PIPELINE_INSPECT"
         ])
-        self.combo_mission_type.setMaximumWidth(140)
+        self.combo_mission_type.setMaximumWidth(150)
         row2.addWidget(self.combo_mission_type)
 
         self.btn_send_mission = QPushButton("下发任务")
