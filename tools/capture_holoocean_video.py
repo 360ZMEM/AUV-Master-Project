@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
 """
-HoloOcean 实时视频捕获工具 - 记录仿真运行为 GIF/MP4。
+HoloOcean 视频生成工具 - 优先从 MCAP 回放生成 GIF/MP4。
 
-该工具复用现有的 AUV 导引和 PID 控制栈，启动全新的 HoloOcean 环境，
-从中采样相机帧并拼接成回放视频。
+该工具支持两条路径：
+    1. 直接指定或自动发现一个 MCAP/rosbag2 记录，然后离线回放生成视频
+    2. 保留原有的实时 HoloOcean 采样模式，作为没有 MCAP 时的回退方案
 
-两种捕获模式：
-  - agent：捕获 AUV 附带的 RGBCamera 视角
-  - viewport：捕获活动视口（ViewportCapture），自动启用 HoloOcean 视口
+MCAP 回放模式：
+    - 先运行一个录制命令生成新的 MCAP，或直接复用已有 MCAP
+    - 再调用 tools/replay_mcap_video.py 生成较长的视频
+
+实时采样模式：
+    - agent：捕获 AUV 附带的 RGBCamera 视角
+    - viewport：捕获活动视口（ViewportCapture），自动启用 HoloOcean 视口
 
 使用示例：
+    # 使用已有 MCAP 生成视频
+    python tools/capture_holoocean_video.py --mcap-input /path/to/bag.mcap --output replay.mp4 --format mp4
+
+    # 先运行命令生成 MCAP，再基于新记录导出视频
+    python tools/capture_holoocean_video.py --mcap-command "bash scripts/start_experiment.sh --duration 120 --bag-storage mcap" \
+        --output replay.mp4 --format mp4
+
   # 使用默认设置捕获 GIF（存储在 log/ 目录）
   python tools/capture_holoocean_video.py
 
@@ -27,12 +39,15 @@ HoloOcean 实时视频捕获工具 - 记录仿真运行为 GIF/MP4。
   - 支持指定最大步数（录制固定长度）
   - 自动处理 RGBA → RGB 转换
   - 支持同时显示视口（用于调试）
+    - 支持自动发现已有 MCAP 并离线回放
 """
 
 from __future__ import annotations
 
 import argparse
 import copy
+import os
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -78,6 +93,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=None, help="Output video path. Defaults to log/holoocean_capture_<timestamp>.<format>.")
     parser.add_argument("--format", choices=("gif", "mp4"), default="gif", help="Output container format.")
     parser.add_argument("--fps", type=int, default=15, help="Camera sampling rate and output video frame rate.")
+    parser.add_argument("--mcap-input", type=Path, default=None, help="Path to an existing .mcap file or rosbag2 directory. When set, the script generates video from this MCAP instead of live capture.")
+    parser.add_argument("--mcap-command", type=str, default=None, help="Shell command used to generate a fresh MCAP before replaying it into video.")
     parser.add_argument("--capture-mode", choices=("auto", "agent", "viewport"), default="auto", help="Capture the agent camera or the active viewport.")
     parser.add_argument("--show-viewport", action="store_true", help="Show the HoloOcean viewport while recording.")
     parser.add_argument("--capture-width", type=int, default=None, help="Camera capture width. Defaults to 960 for agent mode or 1280 for viewport mode.")
@@ -85,6 +102,75 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=None, help="Maximum control-loop steps to execute. Defaults to the value from the YAML config.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose HoloOcean engine logs.")
     return parser.parse_args()
+
+
+def resolve_mcap_path(mcap_input: Path | None) -> Path | None:
+    if mcap_input is not None:
+        resolved = mcap_input.expanduser()
+        if resolved.exists():
+            return resolved.resolve()
+        raise SystemExit(f"MCAP input not found: {resolved}")
+
+    search_roots = [
+        PROJECT_ROOT / "log",
+        PROJECT_ROOT / "logs",
+        Path("/tmp/mcap_recordings"),
+    ]
+
+    latest_path: Path | None = None
+    latest_mtime = -1.0
+    for root in search_roots:
+        if not root.exists():
+            continue
+        if root.is_file() and root.suffix.lower() == ".mcap":
+            candidates = [root]
+        else:
+            candidates = list(root.rglob("*.mcap"))
+        for candidate in candidates:
+            try:
+                mtime = candidate.stat().st_mtime
+            except OSError:
+                continue
+            if mtime > latest_mtime:
+                latest_mtime = mtime
+                latest_path = candidate
+    return latest_path
+
+
+def generate_mcap_via_command(command: str) -> None:
+    env = os.environ.copy()
+    env.setdefault("MCAP_OUTPUT_DIR", str((PROJECT_ROOT / "log" / "mcap_recordings").resolve()))
+    env.setdefault(
+        "MCAP_OUTPUT_FILE",
+        str((Path(env["MCAP_OUTPUT_DIR"]) / f"holoocean_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mcap").resolve()),
+    )
+    Path(env["MCAP_OUTPUT_DIR"]).mkdir(parents=True, exist_ok=True)
+
+    print("=" * 72)
+    print("Generating MCAP via command")
+    print(command)
+    print(f"MCAP_OUTPUT_DIR={env['MCAP_OUTPUT_DIR']}")
+    print(f"MCAP_OUTPUT_FILE={env['MCAP_OUTPUT_FILE']}")
+    print("=" * 72)
+    subprocess.run(command, shell=True, check=True, cwd=str(PROJECT_ROOT), env=env)
+
+
+def render_video_from_mcap(mcap_path: Path, output_path: Path, output_format: str, fps: int, verbose: bool) -> None:
+    replay_script = PROJECT_ROOT / "tools" / "replay_mcap_video.py"
+    command = [
+        sys.executable,
+        str(replay_script),
+        str(mcap_path),
+        "--output",
+        str(output_path),
+        "--format",
+        output_format,
+        "--fps",
+        str(fps),
+    ]
+    if verbose:
+        command.append("--verbose")
+    subprocess.run(command, check=True, cwd=str(PROJECT_ROOT))
 
 
 def resolve_config_path(config_path: Path) -> Path:
@@ -198,6 +284,26 @@ def capture_frame_from_state(state: dict[str, object], sensor_name: str) -> np.n
 
 def main() -> None:
     args = parse_args()
+
+    mcap_path = resolve_mcap_path(args.mcap_input)
+    if mcap_path is None and args.mcap_command:
+        generate_mcap_via_command(args.mcap_command)
+        mcap_path = resolve_mcap_path(None)
+
+    if mcap_path is not None:
+        output_path = resolve_output_path(args.output, args.format)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        print("=" * 72)
+        print("MCAP replay video generation")
+        print(f"mcap_input={mcap_path}")
+        print(f"output={output_path}")
+        print(f"format={args.format}")
+        print(f"fps={args.fps}")
+        print("=" * 72)
+        render_video_from_mcap(mcap_path, output_path, args.format, int(args.fps), bool(args.verbose))
+        print(f"Saved video to: {output_path}")
+        return
+
     config_path = resolve_config_path(args.config)
     if not config_path.exists():
         raise SystemExit(f"Config file not found: {config_path}")
