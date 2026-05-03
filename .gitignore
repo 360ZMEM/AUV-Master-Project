@@ -11,6 +11,9 @@ dist/
 # ROS and workspace build outputs
 install/
 log/
+*results/
+foxglove_layout_project/output/
+
 build/
 docs_backup/
 
@@ -42,3 +45,4 @@ CLAUDE.*
 标准文档/
 auv_console_python/
 VXworks程序/
+

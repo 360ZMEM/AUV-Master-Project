@@ -12,11 +12,13 @@ from .behaviors import (
     ZigZagSearch,
 )
 from .bt_engine import DecisionTreeEngine
+from .fsm_baseline import FiniteStateMachineEngine
 from .models import MotionGoal, SensorStatusData
 from .telemetry import DecisionTelemetrySnapshot, build_bt_status_markdown, build_decision_telemetry_snapshot
 
 __all__ = [
     'DecisionTreeEngine',
+    'FiniteStateMachineEngine',
     'MotionGoal',
     'SensorStatusData',
     'DecisionTelemetrySnapshot',

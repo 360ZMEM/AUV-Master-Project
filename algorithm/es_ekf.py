@@ -99,6 +99,11 @@ class ES_EKF:
 
     状态向量包含位置、速度、姿态四元数、加速度零偏和陀螺零偏，
     支持 IMU 预测以及 DVL、深度、GPS 观测修正。
+
+    增强特性：
+    - 支持自动初始化：首次收到 DVL 或深度观测时自动对齐位置
+    - 可配置初始化策略：固定位置 / 观测对齐 / 混合模式
+    - 支持零偏预校准：使用静止期间IMU样本估计初始零偏，减少预测漂移
     """
 
     def __init__(self, cfg):
@@ -116,12 +121,177 @@ class ES_EKF:
         self.sigma_depth = float(cfg.get("sigma_depth", 0.05))
         self.sigma_gps_xy = float(cfg.get("sigma_gps_xy", 0.5))
 
-        self.p = np.array(cfg.get("init_pos", [0.0, 0.0, 0.0]), dtype=float)
-        self.v = np.array(cfg.get("init_vel", [0.0, 0.0, 0.0]), dtype=float)
-        self.q = quat_normalize(np.array(cfg.get("init_quat_wxyz", [1.0, 0.0, 0.0, 0.0]), dtype=float))
+        self.auto_init = bool(cfg.get("auto_init", True))
+        self.use_first_dvl_for_init = bool(cfg.get("use_first_dvl_for_init", True))
+        self.use_first_depth_for_init = bool(cfg.get("use_first_depth_for_init", True))
+
+        init_P = cfg.get("init_P_diag", [1.0] * 15)
+        if len(init_P) == 15:
+            init_P = list(init_P)
+        self._init_P_diag = np.array(init_P, dtype=float)
+        self.P = np.diag(self._init_P_diag)
+
+        self._init_pos = np.array(cfg.get("init_pos", [0.0, 0.0, 0.0]), dtype=float)
+        self._init_vel = np.array(cfg.get("init_vel", [0.0, 0.0, 0.0]), dtype=float)
+        self._init_quat = quat_normalize(np.array(cfg.get("init_quat_wxyz", [1.0, 0.0, 0.0, 0.0]), dtype=float))
+
+        self.p = self._init_pos.copy()
+        self.v = self._init_vel.copy()
+        self.q = self._init_quat.copy()
         self.b_a = np.array(cfg.get("init_ba", [0.0, 0.0, 0.0]), dtype=float)
         self.b_g = np.array(cfg.get("init_bg", [0.0, 0.0, 0.0]), dtype=float)
-        self.P = np.diag(np.array(cfg.get("init_P_diag", [1.0] * 15), dtype=float))
+
+        self._initialized = False
+        self._init_info = None
+
+        # 零偏预校准机制：使用静止期间的IMU样本估计初始零偏
+        self.enable_bias_calibration = bool(cfg.get("enable_bias_calibration", True))
+        self.bias_calibration_samples = int(cfg.get("bias_calibration_samples", 50))  # 用于校准的样本数
+        self._bias_calibration_buffer_acc = []  # 加速度校准缓冲区
+        self._bias_calibration_buffer_gyro = []  # 陀螺仪校准缓冲区
+        self._bias_calibration_done = False
+
+    def add_bias_calibration_sample(self, acc_body, gyro_body):
+        """添加IMU样本用于零偏预校准。
+
+        在滤波器首次predict之前调用，收集静止期间的IMU样本来估计零偏。
+        当收集到足够样本后自动完成校准。
+
+        Args:
+            acc_body (array-like): 机体系加速度测量
+            gyro_body (array-like): 机体系角速度测量
+        """
+        if self._bias_calibration_done or not self.enable_bias_calibration:
+            return
+
+        acc = np.asarray(acc_body, dtype=float).reshape(3)
+        gyro = np.asarray(gyro_body, dtype=float).reshape(3)
+
+        self._bias_calibration_buffer_acc.append(acc)
+        self._bias_calibration_buffer_gyro.append(gyro)
+
+        # 当收集到足够样本时，计算零偏估计
+        if len(self._bias_calibration_buffer_acc) >= self.bias_calibration_samples:
+            # 加速度零偏：静止时加速度应等于重力向量（机体系）
+            # 假设初始姿态为水平，重力沿Z轴向下，因此b_a = mean(acc) - [0, 0, -g]
+            mean_acc = np.mean(self._bias_calibration_buffer_acc, axis=0)
+            self.b_a = mean_acc - self.g_n  # 估计加速度零偏
+
+            # 陀螺零偏：静止时角速度应为零
+            self.b_g = np.mean(self._bias_calibration_buffer_gyro, axis=0)
+
+            self._bias_calibration_done = True
+            self._bias_calibration_info = {
+                "samples_used": len(self._bias_calibration_buffer_acc),
+                "mean_acc_before_calibration": mean_acc.tolist(),
+                "estimated_ba": self.b_a.tolist(),
+                "estimated_bg": self.b_g.tolist(),
+            }
+
+            # 清空缓冲区
+            self._bias_calibration_buffer_acc.clear()
+            self._bias_calibration_buffer_gyro.clear()
+
+    def is_bias_calibration_done(self):
+        """检查零偏预校准是否已完成。"""
+        return self._bias_calibration_done
+
+    def get_bias_calibration_info(self):
+        """获取零偏预校准信息。"""
+        return getattr(self, '_bias_calibration_info', None)
+
+    def is_initialized(self):
+        """检查滤波器是否已完成初始化。"""
+        return self._initialized
+
+    def initialize_from_observation(self, pos=None, vel=None, quat=None):
+        """从观测值初始化滤波器状态。
+
+        当首次收到可靠的传感器观测（DVL 或深度）时调用，
+        将滤波器状态对齐到观测值，消除初始位置偏移。
+
+        Args:
+            pos (array-like, optional): 观测到的位置 [x, y, z]
+            vel (array-like, optional): 观测到的速度 [vx, vy, vz]
+            quat (array-like, optional): 观测到的姿态四元数 [w, x, y, z]
+        """
+        if pos is not None:
+            self.p = np.array(pos, dtype=float).copy()
+        if vel is not None:
+            self.v = np.array(vel, dtype=float).copy()
+        if quat is not None:
+            self.q = quat_normalize(np.array(quat, dtype=float))
+
+        self._initialized = True
+
+    def _auto_initialize(self, pos=None, vel=None, source="observation"):
+        """内部自动初始化辅助方法。
+
+        当 auto_init=True 且滤波器未初始化时，从首次观测中自动对齐状态。
+        该方法记录初始化信息以供后续查询。
+
+        Args:
+            pos (array-like, optional): 观测到的位置
+            vel (array-like, optional): 观测到的速度
+            source (str): 初始化来源标识 ("dvl" 或 "depth")
+        """
+        if self._initialized:
+            return
+
+        init_pos = self.p.copy()
+        init_vel = self.v.copy()
+
+        if pos is not None:
+            self.p = np.array(pos, dtype=float).copy()
+        if vel is not None:
+            self.v = np.array(vel, dtype=float).copy()
+
+        self.P = np.diag(self._init_P_diag)
+
+        self._initialized = True
+        self._init_info = {
+            "source": source,
+            "initial_pos_config": self._init_pos.tolist(),
+            "aligned_pos": self.p.tolist(),
+            "initial_vel_config": self._init_vel.tolist(),
+            "aligned_vel": self.v.tolist(),
+            "position_offset": (self.p - self._init_pos).tolist(),
+        }
+
+    def _try_auto_init_from_dvl(self, dvl_vel_body):
+        """尝试从首次DVL观测自动初始化。
+
+        如果 auto_init=True 且 use_first_dvl_for_init=True 且未初始化，
+        则从DVL速度推断初始状态。
+
+        关键改进：
+          1. 对齐速度：将 self.v 对齐到 DVL 测量的世界系速度
+          2. 消除 init_vel=[0,0,0] 导致的初始运动积分误差跳变
+
+        Args:
+            dvl_vel_body (array-like): 机体系DVL速度（若调用 correct_dvl_world 则传入世界系）
+        """
+        if self._initialized or not self.auto_init or not self.use_first_dvl_for_init:
+            return
+
+        vel = np.asarray(dvl_vel_body, dtype=float).reshape(3)
+        self._auto_initialize(pos=self._init_pos.copy(), vel=vel, source="dvl")
+
+    def _try_auto_init_from_depth(self, depth_m):
+        """尝试从首次深度观测自动初始化。
+
+        如果 auto_init=True 且 use_first_depth_for_init=True 且未初始化，
+        则从深度观测中对齐Z轴位置。
+
+        Args:
+            depth_m (float): 深度观测值（米）
+        """
+        if self._initialized or not self.auto_init or not self.use_first_depth_for_init:
+            return
+
+        new_pos = self.p.copy()
+        new_pos[2] = -depth_m
+        self._auto_initialize(pos=new_pos, source="depth")
 
     def get_state(self):
         """返回当前滤波状态的拷贝，避免外部直接修改内部状态。"""
@@ -193,6 +363,7 @@ class ES_EKF:
 
     def correct_dvl(self, dvl_vel_body):
         """使用机体系 DVL 速度修正滤波状态。"""
+        self._try_auto_init_from_dvl(dvl_vel_body)
         z = np.asarray(dvl_vel_body, dtype=float).reshape(3)
         r_nb = quat_to_rotmat(self.q)
         h = r_nb.T @ self.v
@@ -203,6 +374,7 @@ class ES_EKF:
 
     def correct_dvl_world(self, dvl_vel_world):
         """使用世界系 DVL 速度修正滤波状态。"""
+        self._try_auto_init_from_dvl(dvl_vel_world)
         z = np.asarray(dvl_vel_world, dtype=float).reshape(3)
         h = self.v.copy()
         h_mat = np.zeros((3, 15), dtype=float)
@@ -211,6 +383,7 @@ class ES_EKF:
 
     def correct_depth(self, depth_m):
         """使用深度观测修正位置的 Z 轴分量。"""
+        self._try_auto_init_from_depth(depth_m)
         z = float(depth_m)
         h = -self.p[2]
         h_mat = np.zeros((1, 15), dtype=float)

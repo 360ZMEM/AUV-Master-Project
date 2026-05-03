@@ -23,6 +23,15 @@ simulation:
   # 最大仿真步数；6000 允许覆盖 120s 级 benchmark，并留出安全余量。
   max_steps: 6000
 
+environment:
+  # 洋流干扰模型：用于 MPC 抗扰性评估。
+  current:
+    enabled: true
+    type: 'CONSTANT'  # 'CONSTANT' 恒定洋流 | 'SINE_WAVE' 潮汐模拟
+    vector_ned: [0.3, 0.2, 0.0]  # [北, 东, 地] 单位 m/s
+    noise_std: 0.05  # 洋流脉动噪声标准差 (经低通滤波)
+    max_t: 5.0  # 低通滤波时间常数 τ (秒), 截止频率 fc = 1/(2πτ) ≈ 0.03 Hz
+
 agent:
   # AUV 本体与挂载传感器设置。
   type: TorpedoAUV

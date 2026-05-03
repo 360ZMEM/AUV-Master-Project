@@ -143,6 +143,12 @@ def run_gui(ip: str, port: int):
             self.setCentralWidget(central_widget)
             main_layout = QVBoxLayout(central_widget)
             
+            # 创建两列布局
+            columns_layout = QHBoxLayout()
+            
+            # 左列
+            left_column = QVBoxLayout()
+            
             # 网络设置区
             net_group = QGroupBox("网络设置区")
             net_layout = QHBoxLayout()
@@ -153,7 +159,7 @@ def run_gui(ip: str, port: int):
             net_layout.addWidget(QLabel("端口:"))
             net_layout.addWidget(self.port_input)
             net_group.setLayout(net_layout)
-            main_layout.addWidget(net_group)
+            left_column.addWidget(net_group)
             
             # 核心控制区
             ctrl_group = QGroupBox("核心控制区 (可干预位)")
@@ -180,7 +186,7 @@ def run_gui(ip: str, port: int):
                 self.work_cmd_combo.addItem(text, val)
             ctrl_layout.addRow("Work_Cmd (Byte 22):", self.work_cmd_combo)
             ctrl_group.setLayout(ctrl_layout)
-            main_layout.addWidget(ctrl_group)
+            left_column.addWidget(ctrl_group)
             
             # 电机动力
             motor_group = QGroupBox("电机动力 (Byte 23-26)")
@@ -194,7 +200,7 @@ def run_gui(ip: str, port: int):
             motor_layout.addRow("Motor_Speed1 (主推):", self.motor1_spin)
             motor_layout.addRow("Motor_Speed2 (侧推):", self.motor2_spin)
             motor_group.setLayout(motor_layout)
-            main_layout.addWidget(motor_group)
+            left_column.addWidget(motor_group)
             
             # 舵机角度
             rudder_group = QGroupBox("舵机角度 (Byte 27-34)")
@@ -212,7 +218,12 @@ def run_gui(ip: str, port: int):
             rudder_layout.addRow("上垂直舵:", self.rudder_top)
             rudder_layout.addRow("下垂直舵:", self.rudder_bottom)
             rudder_group.setLayout(rudder_layout)
-            main_layout.addWidget(rudder_group)
+            left_column.addWidget(rudder_group)
+            
+            columns_layout.addLayout(left_column)
+            
+            # 右列
+            right_column = QVBoxLayout()
             
             # 保护参数
             protect_group = QGroupBox("保护参数 (Byte 8-15)")
@@ -226,7 +237,7 @@ def run_gui(ip: str, port: int):
             protect_layout.addRow("超深保护最大值:", self.depth_max_spin)
             protect_layout.addRow("离底保护最小值:", self.bottom_min_spin)
             protect_group.setLayout(protect_layout)
-            main_layout.addWidget(protect_group)
+            right_column.addWidget(protect_group)
             
             # 调参区
             param_group = QGroupBox("调参区 (Byte 37-68)")
@@ -241,7 +252,7 @@ def run_gui(ip: str, port: int):
                 param_layout.addRow(f"Para{i+1}:", spin)
                 self.params_spins.append(spin)
             param_group.setLayout(param_layout)
-            main_layout.addWidget(param_group)
+            right_column.addWidget(param_group)
             
             # 动作执行区
             action_group = QGroupBox("动作执行区")
@@ -265,7 +276,7 @@ def run_gui(ip: str, port: int):
             action_layout.addWidget(self.status_light)
             action_layout.addWidget(self.estop_btn)
             action_group.setLayout(action_layout)
-            main_layout.addWidget(action_group)
+            right_column.addWidget(action_group)
             
             # 原始监测区
             monitor_group = QGroupBox("原始监测区")
@@ -278,7 +289,12 @@ def run_gui(ip: str, port: int):
             monitor_layout.addWidget(self.hex_display)
             monitor_layout.addWidget(self.checksum_label)
             monitor_group.setLayout(monitor_layout)
-            main_layout.addWidget(monitor_group)
+            right_column.addWidget(monitor_group)
+            
+            columns_layout.addLayout(right_column)
+            
+            # 添加两列到主布局
+            main_layout.addLayout(columns_layout)
 
         def get_current_params(self):
             return {

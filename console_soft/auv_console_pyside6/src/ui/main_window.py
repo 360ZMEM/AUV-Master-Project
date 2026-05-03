@@ -8,7 +8,7 @@ from datetime import datetime
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                                QGroupBox, QLabel, QPushButton, QTableWidget,
                                QTableWidgetItem, QTabWidget, QStatusBar, QTextEdit,
-                               QComboBox, QSpinBox, QCheckBox, QButtonGroup)
+                               QComboBox, QSpinBox, QCheckBox, QButtonGroup, QMessageBox)
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtGui import QAction
 
@@ -35,7 +35,13 @@ class MainWindow(QMainWindow):
         # Data structures
         self.preferences = Preferences()
         self.work_instruct = 0x00
-        self.arbiter_control_mode_override = None
+        self.arbiter_control_mode_override = None  # Store the control mode override from the user
+        self.autonomy_mode_active = False          # True = AUTONOMY (0xEE), False = MANUAL (0x01)
+        self.estop_active = False                  # 紧急切断标志
+        self.estop_locked = False                  # ESTOP 显式锁死标志
+        self.last_command_ts = 0.0                 # 最后发送命令时间戳
+        self.zenoh_router_ip = "127.0.0.1"         # Zenoh Router IP (从配置文件加载)
+        self.config_path = None                    # 配置文件路径
         self.gps_queue = GPSQueue()
         self.dead_reckoning_queue = GPSQueue()
         self.autofixed_points = []
@@ -115,6 +121,10 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(self.create_mission_tab(), "任务配置")
         self.tab_widget.addTab(self.create_message_tab(), "消息")
         main_layout.addWidget(self.tab_widget)
+
+        # 新增：底部控制台 - 最高优先级操作区
+        self.control_bar = self.create_bottom_control_bar()
+        main_layout.addWidget(self.control_bar)
 
         # Status bar
         self.status_bar = QStatusBar()
@@ -360,6 +370,156 @@ class MainWindow(QMainWindow):
         widget.setLayout(layout)
         return widget
 
+    def load_console_config(self) -> dict:
+        """加载上位机配置文件 console_config.yaml"""
+        try:
+            config_file = Path(__file__).parent.parent.parent / "console_config.yaml"
+            self.config_path = config_file
+            if config_file.exists():
+                import yaml
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    return yaml.safe_load(f) or {}
+        except Exception as exc:
+            print(f"[config] 加载配置文件失败: {exc}")
+        return {}
+
+    def create_bottom_control_bar(self) -> QWidget:
+        """创建底部控制台 - 最高优先级操作区"""
+        bar = QWidget()
+        bar.setStyleSheet("background-color: #1e1e1e; border-top: 2px solid #555;")
+        layout = QHBoxLayout(bar)
+        layout.setContentsMargins(8, 6, 8, 6)
+        layout.setSpacing(10)
+
+        # 1. 紧急切断按钮（醒目红色，带显式复位）
+        estop_layout = QVBoxLayout()
+        self.btn_estop = QPushButton("🛑 紧急切断 ESTOP")
+        self.btn_estop.setMinimumWidth(180)
+        self.btn_estop.setMinimumHeight(50)
+        self.btn_estop.setStyleSheet(
+            "QPushButton { background-color: #cc0000; color: white; font-weight: bold; "
+            "font-size: 15px; padding: 8px; border-radius: 5px; }"
+            "QPushButton:pressed { background-color: #990000; }"
+            "QPushButton:disabled { background-color: #666; color: #999; }"
+        )
+        self.btn_estop_reset = QPushButton("🔓 解除急停")
+        self.btn_estop_reset.setMinimumWidth(180)
+        self.btn_estop_reset.setMinimumHeight(35)
+        self.btn_estop_reset.setEnabled(False)
+        self.btn_estop_reset.setStyleSheet(
+            "QPushButton { background-color: #ff6600; color: white; font-weight: bold; "
+            "font-size: 13px; padding: 6px; border-radius: 5px; }"
+            "QPushButton:pressed { background-color: #cc5200; }"
+            "QPushButton:disabled { background-color: #555; color: #888; }"
+        )
+        estop_layout.addWidget(self.btn_estop)
+        estop_layout.addWidget(self.btn_estop_reset)
+        layout.addLayout(estop_layout, stretch=0)
+
+        # 2. 模式切换开关（手动/自主）
+        mode_group = QGroupBox("控制模式")
+        mode_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        mode_layout = QVBoxLayout()
+        self.toggle_mode = QPushButton("手动遥控 MANUAL")
+        self.toggle_mode.setCheckable(True)
+        self.toggle_mode.setMinimumWidth(200)
+        self.toggle_mode.setMinimumHeight(45)
+        self.toggle_mode.setStyleSheet(
+            "QPushButton { background-color: #0066cc; color: white; font-weight: bold; "
+            "font-size: 14px; padding: 8px; border-radius: 5px; }"
+            "QPushButton:checked { background-color: #009933; }"
+            "QPushButton:disabled { background-color: #555; color: #888; }"
+        )
+        self.lbl_arbiter_status = QLabel("仲裁状态: UNKNOWN")
+        self.lbl_arbiter_status.setStyleSheet("color: #aaa; font-size: 11px;")
+        mode_layout.addWidget(self.toggle_mode)
+        mode_layout.addWidget(self.lbl_arbiter_status)
+        mode_group.setLayout(mode_layout)
+        layout.addWidget(mode_group, stretch=0)
+
+        # 3. Zenoh 连接状态
+        zenoh_group = QGroupBox("Zenoh 链路")
+        zenoh_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        zenoh_layout = QVBoxLayout()
+        zenoh_row = QHBoxLayout()
+        zenoh_row.addWidget(QLabel("Router IP:"))
+        self.edit_zenoh_ip = QLineEdit("127.0.0.1")
+        self.edit_zenoh_ip.setMaximumWidth(120)
+        zenoh_row.addWidget(self.edit_zenoh_ip)
+        zenoh_layout.addLayout(zenoh_row)
+
+        self.lbl_zenoh_status = QLabel("状态: 未连接")
+        self.lbl_zenoh_status.setStyleSheet("color: #ff4444; font-size: 11px;")
+        zenoh_layout.addWidget(self.lbl_zenoh_status)
+
+        self.btn_zenoh_connect = QPushButton("连接 Zenoh")
+        self.btn_zenoh_connect.setMinimumHeight(30)
+        zenoh_layout.addWidget(self.btn_zenoh_connect)
+        zenoh_group.setLayout(zenoh_layout)
+        layout.addWidget(zenoh_group, stretch=0)
+
+        # 4. 自主任务参数输入区
+        task_group = QGroupBox("自主任务参数")
+        task_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        task_layout = QVBoxLayout()
+
+        row1 = QHBoxLayout()
+        row1.addWidget(QLabel("目标深度(m):"))
+        self.spin_target_depth = QDoubleSpinBox()
+        self.spin_target_depth.setRange(0.0, 500.0)
+        self.spin_target_depth.setValue(5.0)
+        self.spin_target_depth.setSingleStep(0.5)
+        self.spin_target_depth.setMaximumWidth(80)
+        row1.addWidget(self.spin_target_depth)
+
+        row1.addWidget(QLabel("巡检距离(m):"))
+        self.spin_track_distance = QDoubleSpinBox()
+        self.spin_track_distance.setRange(0.0, 10000.0)
+        self.spin_track_distance.setValue(500.0)
+        self.spin_track_distance.setSingleStep(50.0)
+        self.spin_track_distance.setMaximumWidth(90)
+        row1.addWidget(self.spin_track_distance)
+        task_layout.addLayout(row1)
+
+        row2 = QHBoxLayout()
+        row2.addWidget(QLabel("任务超时(s):"))
+        self.spin_task_timeout = QSpinBox()
+        self.spin_task_timeout.setRange(60, 7200)
+        self.spin_task_timeout.setValue(1200)
+        self.spin_task_timeout.setSingleStep(60)
+        self.spin_task_timeout.setMaximumWidth(80)
+        row2.addWidget(self.spin_task_timeout)
+
+        row2.addWidget(QLabel("任务类型:"))
+        self.combo_mission_type = QComboBox()
+        self.combo_mission_type.addItems([
+            "CABLE_TRACKING",
+            "AREA_SEARCH",
+            "PIPELINE_INSPECT"
+        ])
+        self.combo_mission_type.setMaximumWidth(140)
+        row2.addWidget(self.combo_mission_type)
+
+        self.btn_send_mission = QPushButton("下发任务")
+        self.btn_send_mission.setMinimumHeight(30)
+        row2.addWidget(self.btn_send_mission)
+
+        task_layout.addLayout(row2)
+        task_group.setLayout(task_layout)
+        layout.addWidget(task_group, stretch=1)
+
+        # 5. 置信度显示
+        conf_group = QGroupBox("传感器置信度")
+        conf_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        conf_layout = QVBoxLayout()
+        self.lbl_confidence = QLabel("置信度: --")
+        self.lbl_confidence.setStyleSheet("color: #aaa; font-size: 16px; font-weight: bold;")
+        conf_layout.addWidget(self.lbl_confidence)
+        conf_group.setLayout(conf_layout)
+        layout.addWidget(conf_group, stretch=0)
+
+        return bar
+
     def create_menu_bar(self):
         """Create menu bar"""
         menubar = self.menuBar()
@@ -437,8 +597,30 @@ class MainWindow(QMainWindow):
         self.comm_manager.arbiter_state_received.connect(self.update_arbiter_state_display)
         self.comm_manager.side_channel_status_changed.connect(self.on_side_channel_status_changed)
 
+        # 新增：底部控制台信号
+        self.btn_estop.clicked.connect(self.trigger_estop)
+        self.btn_estop_reset.clicked.connect(self.reset_estop)
+        self.toggle_mode.clicked.connect(self.on_mode_toggle)
+        self.btn_send_mission.clicked.connect(self.send_mission_command)
+        self.btn_zenoh_connect.clicked.connect(self.toggle_zenoh_connection)
+
     def load_configuration(self):
         """Load configuration files"""
+        # 加载 console_config.yaml
+        console_cfg = self.load_console_config()
+        if console_cfg:
+            zenoh_cfg = console_cfg.get('zenoh', {})
+            self.zenoh_router_ip = zenoh_cfg.get('router_ip', '127.0.0.1')
+            self.edit_zenoh_ip.setText(self.zenoh_router_ip)
+            defaults = console_cfg.get('defaults', {})
+            self.spin_target_depth.setValue(defaults.get('target_depth_m', 5.0))
+            self.spin_track_distance.setValue(defaults.get('track_distance_m', 500.0))
+            self.spin_task_timeout.setValue(defaults.get('task_timeout_s', 1200))
+            mission_type = defaults.get('mission_type', 'CABLE_TRACKING')
+            idx = self.combo_mission_type.findText(mission_type)
+            if idx >= 0:
+                self.combo_mission_type.setCurrentIndex(idx)
+
         # Load port configuration first (needed for both modes)
         port_config = self.config_manager.load_port_config()
         port_config['zenoh_side_channel'] = self.config_manager.load_side_channel_config()
@@ -528,7 +710,34 @@ class MainWindow(QMainWindow):
         self.update_arbiter_control_ui()
 
     def transmit_data(self):
-        """Transmit data packet every 600ms (C# timer1_Tick)"""
+        """Transmit data packet - 600ms timer (C# timer1_Tick) with 5Hz heartbeat"""
+        self.last_command_ts = time.time()
+
+        # ─── 紧急切断：强制发送 ESTOP 包 ───
+        if self.estop_active:
+            self._send_estop_packet()
+            # 同时通过 Zenoh 发送自主心跳（保持 Jetson 连接感知）
+            self.send_autonomy_heartbeat()
+            return True
+
+        # ─── 自主模式：发送语义 JSON 心跳 + 传统 0xEE 包 ───
+        if self.autonomy_mode_active:
+            self.send_autonomy_heartbeat()
+            # 同时发送传统包保持向后兼容（Jetson 通过 UDP 也能收到）
+            packet = self.packet_builder.build_send_packet(
+                preferences=self.preferences,
+                work_instruct=0x00,
+                motor_speeds=(0, 0),
+                rudder_angles=(0, 0, 0, 0),
+                orientation=0,
+                parameters=tuple(self.params),
+                control_mode_byte=0xEE,
+            )
+            sent = self.comm_manager.send_packet(packet, self.preferences, 0x00)
+            self.packet_builder.increment_frame()
+            return bool(sent)
+
+        # ─── 手动模式：发送 CKTH 包（直连 AMD） ───
         effective_control_mode = self.get_effective_control_mode()
 
         # Check if we should send (not in send-only or return mode)
@@ -780,6 +989,17 @@ class MainWindow(QMainWindow):
             return
         if 'active_arbiter' in payload:
             self.labels['arbiter'].setText(f"控制归属: {payload.get('active_arbiter', '--')}")
+            # 同步更新底部仲裁状态标签
+            arb = payload.get('active_arbiter', '--')
+            if arb == 'REMOTE':
+                self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
+                self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+            elif arb == 'AUTONOMOUS':
+                self.lbl_arbiter_status.setText("仲裁状态: AUTONOMOUS")
+                self.lbl_arbiter_status.setStyleSheet("color: #0099ff; font-weight: bold;")
+            elif 'ESTOP' in str(arb):
+                self.lbl_arbiter_status.setText(f"仲裁状态: {arb}")
+                self.lbl_arbiter_status.setStyleSheet("color: #ff0000; font-weight: bold;")
         if 'auto_state' in payload:
             self.labels['auto_state'].setText(f"自主状态: {payload.get('auto_state', '--')}")
         if 'deny_reason' in payload:
@@ -787,6 +1007,15 @@ class MainWindow(QMainWindow):
         freshness = payload.get('telemetry_freshness_ms')
         if isinstance(freshness, (int, float)):
             self.labels['freshness'].setText(f"链路时延: {float(freshness):.1f} ms")
+        if 'confidence' in payload:
+            conf = float(payload.get('confidence', 0.0))
+            self.lbl_confidence.setText(f"置信度: {conf:.2f}")
+            if conf < 0.5:
+                self.lbl_confidence.setStyleSheet("color: #ff4444; font-size: 16px; font-weight: bold;")
+            elif conf < 0.7:
+                self.lbl_confidence.setStyleSheet("color: #ffaa00; font-size: 16px; font-weight: bold;")
+            else:
+                self.lbl_confidence.setStyleSheet("color: #00cc66; font-size: 16px; font-weight: bold;")
         self.update_arbiter_feedback(
             str(payload.get('auto_state', '--')),
             str(payload.get('deny_reason', 'NONE')),
@@ -905,6 +1134,182 @@ class MainWindow(QMainWindow):
         sent = self.comm_manager.send_packet(packet, self.preferences, effective_work_instruct)
         self.packet_builder.increment_frame()
         return bool(sent)
+
+    # ========================================================================
+    # 新增：底部控制台核心逻辑 (ESTOP / 模式切换 / 任务下发 / Zenoh 连接)
+    # ========================================================================
+
+    def trigger_estop(self):
+        """触发紧急切断 - 立即发送 ESTOP 包并锁死状态"""
+        if self.estop_locked:
+            return  # 已经锁死，需要先解锁
+
+        self.estop_active = True
+        self.estop_locked = True
+        self.autonomy_mode_active = False
+        self.toggle_mode.setChecked(False)
+        self.toggle_mode.setEnabled(False)
+
+        # UI 更新
+        self.btn_estop.setEnabled(False)
+        self.btn_estop_reset.setEnabled(True)
+        self.lbl_arbiter_status.setText("仲裁状态: ESTOP LOCKED")
+        self.lbl_arbiter_status.setStyleSheet("color: #ff0000; font-weight: bold; font-size: 14px;")
+
+        self.append_message("安全", "🛑 紧急切断已触发！所有推力归零，状态锁死")
+        self.status_bar.showMessage("🛑 紧急切断生效 - 必须显式复位", 5000)
+
+        # 立即发送 ESTOP 包 (mode=0x01, work=0x02, thrust=0)
+        self._send_estop_packet()
+
+    def _send_estop_packet(self):
+        """发送 ESTOP 包: mode=0x01, work=0x02, 推力归零"""
+        packet = self.packet_builder.build_send_packet(
+            preferences=self.preferences,
+            work_instruct=CMD_TASK_CANCEL,  # 0x02
+            motor_speeds=(0, 0),
+            rudder_angles=(0, 0, 0, 0),
+            orientation=0,
+            parameters=tuple(self.params),
+            control_mode_byte=0x01,  # 强制手动模式
+        )
+        self.comm_manager.send_packet(packet, self.preferences, CMD_TASK_CANCEL)
+        self.packet_builder.increment_frame()
+
+    def reset_estop(self):
+        """解除急停 - 仅在推力归零时允许"""
+        # 检查推力是否归零
+        thrust_ok = (abs(self.motor_speed1) < 0.1 and abs(self.motor_speed2) < 0.1)
+        if not thrust_ok:
+            self.append_message("安全", "⚠ 推力未归零！请将遥杆回中后再解除急停")
+            self.status_bar.showMessage("⚠ 推力未归零，无法解除急停", 3000)
+            return
+
+        self.estop_active = False
+        self.estop_locked = False
+
+        # UI 恢复
+        self.btn_estop.setEnabled(True)
+        self.btn_estop_reset.setEnabled(False)
+        self.toggle_mode.setEnabled(True)
+        self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
+        self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+
+        self.append_message("安全", "✅ 急停已解除，恢复手动遥控模式")
+        self.status_bar.showMessage("急停已解除", 3000)
+
+    def on_mode_toggle(self, checked: bool):
+        """模式切换：手动 ↔ 自主"""
+        if self.estop_active:
+            self.append_message("仲裁", "⚠ 急停状态下无法切换模式")
+            self.toggle_mode.setChecked(False)
+            return
+
+        if checked:
+            self.autonomy_mode_active = True
+            self.toggle_mode.setText("自主授权 AUTONOMY")
+            self.lbl_arbiter_status.setText("仲裁状态: 请求自主...")
+            self.lbl_arbiter_status.setStyleSheet("color: #ffcc00;")
+            self.append_message("仲裁", "切换至自主模式，等待 Jetson 确认")
+
+            # 发送自主请求包 (mode=0xEE)
+            self.send_autonomy_heartbeat()
+        else:
+            self.autonomy_mode_active = False
+            self.toggle_mode.setText("手动遥控 MANUAL")
+            self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
+            self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+            self.clear_autonomy_hold(reason="手动模式切换", send_override=True)
+            self.append_message("仲裁", "切换至手动遥控模式")
+
+    def send_mission_command(self):
+        """下发语义任务指令"""
+        if not self.autonomy_mode_active:
+            self.append_message("任务", "⚠ 请先切换至自主模式")
+            self.status_bar.showMessage("请先切换至自主模式", 2000)
+            return
+
+        mission_json = {
+            "control_mode_byte": 0xEE,
+            "work_instruction": 0x01,  # TASK_START
+            "mission": self.combo_mission_type.currentText(),
+            "search_depth": self.spin_target_depth.value(),
+            "track_distance": self.spin_track_distance.value(),
+            "timeout_s": self.spin_task_timeout.value(),
+            "ts": time.time(),
+            "thrust": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+        }
+
+        # 通过 Zenoh 发布任务
+        success = self._publish_json_to_zenoh(mission_json)
+        if success:
+            self.append_message("任务", f"已下发任务: {mission_json['mission']}")
+            self.status_bar.showMessage(f"任务已下发: {mission_json['mission']}", 3000)
+        else:
+            self.append_message("任务", "⚠ Zenoh 链路未连接，任务下发失败")
+            self.status_bar.showMessage("Zenoh 未连接", 3000)
+
+    def toggle_zenoh_connection(self):
+        """切换 Zenoh 连接状态"""
+        if self.comm_manager.is_side_channel_active():
+            # 断开连接
+            self.comm_manager.set_side_channel_active(False)
+            self.lbl_zenoh_status.setText("状态: 未连接")
+            self.lbl_zenoh_status.setStyleSheet("color: #ff4444;")
+            self.btn_zenoh_connect.setText("连接 Zenoh")
+            self.append_message("链路", "Zenoh 连接已断开")
+        else:
+            # 连接 Zenoh Router
+            ip = self.edit_zenoh_ip.text().strip() or "127.0.0.1"
+            self.zenoh_router_ip = ip
+            try:
+                # 尝试通过 side channel 连接到指定 IP
+                self.comm_manager.connect_zenoh_to_ip(ip)
+                self.lbl_zenoh_status.setText(f"状态: 已连接 ({ip})")
+                self.lbl_zenoh_status.setStyleSheet("color: #00cc66;")
+                self.btn_zenoh_connect.setText("断开 Zenoh")
+                self.append_message("链路", f"Zenoh 已连接到 {ip}:7447")
+                self.status_bar.showMessage(f"Zenoh 已连接到 {ip}", 3000)
+            except Exception as exc:
+                self.append_message("链路", f"Zenoh 连接失败: {exc}")
+                self.status_bar.showMessage(f"Zenoh 连接失败: {exc}", 5000)
+
+    def send_autonomy_heartbeat(self):
+        """自主模式下发送心跳到 rt/pc/cmd_raw"""
+        if not self.comm_manager.is_side_channel_active():
+            return
+
+        heartbeat = {
+            "control_mode_byte": 0xEE,
+            "work_instruction": 0x00,
+            "mission": self.combo_mission_type.currentText(),
+            "target_depth": self.spin_target_depth.value(),
+            "track_distance": self.spin_track_distance.value(),
+            "timeout_s": self.spin_task_timeout.value(),
+            "ts": time.time(),
+            "thrust": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+        }
+        self._publish_json_to_zenoh(heartbeat)
+
+    def _publish_json_to_zenoh(self, cmd_dict: dict) -> bool:
+        """发布 JSON 命令到 Zenoh rt/pc/cmd_raw topic"""
+        try:
+            if not self.comm_manager.is_side_channel_active():
+                return False
+            sc = self.comm_manager.side_channel
+            if hasattr(sc, 'publish_json_command'):
+                return sc.publish_json_command(cmd_dict)
+            elif hasattr(sc, 'publish_pc_cmd_raw'):
+                import json
+                return sc.publish_pc_cmd_raw(json.dumps(cmd_dict).encode('utf-8'))
+            return False
+        except Exception as exc:
+            self.append_message("链路", f"Zenoh 发布失败: {exc}")
+            return False
 
     def update_arbiter_control_ui(self):
         """Refresh arbiter buttons and hold-state labels from current transport state."""

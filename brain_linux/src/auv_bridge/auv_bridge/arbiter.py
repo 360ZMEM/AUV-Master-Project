@@ -69,21 +69,43 @@ class ArbiterDecision:
 
 
 class CommandArbiter:
-    """Pure arbitration core independent from ROS2 and transport details."""
+    """Pure arbitration core independent from ROS2 and transport details.
 
-    def __init__(self, *, mpc_timeout_s: float = 0.5, default_obj_address: int = 1) -> None:
+    实现“带透明路由功能的条件拦截器”（Conditional Interceptor with Transparent Routing）：
+    - 手动模式 (REMOTE)：原封不动转发 PC 原始指令（透明路由）
+    - 自主模式 (AUTONOMOUS)：使用 MPC 输出，丢弃 PC 推力字段
+    """
+
+    def __init__(self, *, mpc_timeout_s: float = 0.5, default_obj_address: int = 1,
+                 pc_timeout_s: float = 1.5, pc_soft_warning_s: float = 1.0) -> None:
         self.mpc_timeout_s = float(mpc_timeout_s)
         self.default_obj_address = int(default_obj_address)
+        # 新增：分层超时机制（Tiered Watchdog）
+        self.pc_timeout_s = float(pc_timeout_s)            # 1.5s Hard ESTOP
+        self.pc_soft_warning_s = float(pc_soft_warning_s)  # 1.0s Soft Warning
 
         self._mode = ArbiterMode.REMOTE
         self._last_pc_raw: dict[str, Any] | None = None
         self._last_pc_ts = 0.0
         self._last_mpc: dict[str, Any] | None = None
         self._last_mpc_ts = 0.0
+        self.pc_link_status = "OK"  # "OK" / "WEAK" / "LOST"
 
     @property
     def active_mode(self) -> ArbiterMode:
         return self._mode
+
+    def check_pc_link_health(self, *, now: float | None = None) -> str:
+        """检查上位机链路健康状态：OK / WEAK / LOST"""
+        stamp = time.time() if now is None else float(now)
+        if self._last_pc_ts <= 0:
+            return "OK"
+        dt = stamp - self._last_pc_ts
+        if dt > self.pc_timeout_s:
+            return "LOST"
+        if dt > self.pc_soft_warning_s:
+            return "WEAK"
+        return "OK"
 
     def update_pc_raw_command(self, payload: Any, *, now: float | None = None) -> ArbiterDecision:
         stamp = time.time() if now is None else float(now)
@@ -128,6 +150,7 @@ class CommandArbiter:
 
     def decide(self, *, now: float | None = None) -> ArbiterDecision:
         stamp = time.time() if now is None else float(now)
+        self.pc_link_status = self.check_pc_link_health(now=stamp)
 
         if self._mode == ArbiterMode.AUTONOMOUS:
             if self._has_fresh_valid_mpc(stamp):
@@ -146,11 +169,32 @@ class CommandArbiter:
                 manual_override_active=False,
             )
 
+        # REMOTE 模式：透明路由 PC 原始指令
         if self._last_pc_raw is not None:
+            # 透明路由：原封不动转发 PC 包的执行器字段
+            passthrough = {
+                KEY_FRAME_NUMBER: self._last_pc_raw.get(KEY_FRAME_NUMBER, 0),
+                KEY_OBJ_ADDRESS: self._last_pc_raw.get(KEY_OBJ_ADDRESS, self.default_obj_address),
+                KEY_CONTROL_MODE_BYTE: int(self._last_pc_raw.get(KEY_CONTROL_MODE_BYTE, 0x01)),
+                KEY_WORK_INSTRUCTION: self._last_pc_raw.get(KEY_WORK_INSTRUCTION, 0),
+                KEY_THRUST: float(self._last_pc_raw.get(KEY_THRUST, 0.0)),
+                KEY_LEFT: float(self._last_pc_raw.get(KEY_LEFT, 0.0)),
+                KEY_RIGHT: float(self._last_pc_raw.get(KEY_RIGHT, 0.0)),
+                KEY_TOP: float(self._last_pc_raw.get(KEY_TOP, 0.0)),
+                KEY_BOTTOM: float(self._last_pc_raw.get(KEY_BOTTOM, 0.0)),
+                KEY_SIDE_MOTOR_RPM: int(self._last_pc_raw.get(KEY_SIDE_MOTOR_RPM, 0)),
+                KEY_ORIENTATION_DEG: float(self._last_pc_raw.get(KEY_ORIENTATION_DEG, 0.0)),
+                KEY_DEPTH_PROTECT_PARAMS: self._last_pc_raw.get(KEY_DEPTH_PROTECT_PARAMS, (0, 0)),
+                KEY_BOTTOM_PROTECT_PARAMS: self._last_pc_raw.get(KEY_BOTTOM_PROTECT_PARAMS, (0, 0)),
+                KEY_PRESET_TIME_TENTHS_MIN: self._last_pc_raw.get(KEY_PRESET_TIME_TENTHS_MIN, 0),
+                KEY_SPARE_PARAMS: self._last_pc_raw.get(KEY_SPARE_PARAMS, (0, 0)),
+                KEY_PARAMETERS: self._last_pc_raw.get(KEY_PARAMETERS, (0,) * 12),
+                KEY_TS: self._last_pc_raw.get(KEY_TS, stamp),
+            }
             return ArbiterDecision(
                 active_arbiter=ArbiterMode.REMOTE,
                 arbiter_source=ArbiterSource.PC_RAW,
-                command_payload=dict(self._last_pc_raw),
+                command_payload=passthrough,
                 mpc_command_valid=False,
                 manual_override_active=self._is_manual_override(self._last_pc_raw),
             )

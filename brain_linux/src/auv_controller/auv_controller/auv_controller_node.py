@@ -182,6 +182,7 @@ class AUVControllerNode(Node):
         self.latest_raw_state_ts = 0.0
         self.latest_imu_ts = 0.0
         self.latest_debug_payload: dict | None = None
+        self._latest_confidence: float = 1.0
 
         self.setpoint_sub = self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
         self.filtered_state_sub = self.create_subscription(Odometry, self.filtered_state_topic, self._on_filtered_state, 20)

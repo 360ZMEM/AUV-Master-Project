@@ -44,15 +44,17 @@ sudo apt-get install -y \
     ros-humble-foxglove-bridge \
     ros-humble-rosbag2-storage-mcap \
     libwebsocketpp-dev \
-    nlohmann-json3-dev
+    nlohmann-json3-dev \
+    fonts-wqy-zenhei
 ```
 
-| 包名 | 说明 |
-|------|------|
-| `ros-humble-foxglove-bridge` | Foxglove WebSocket 桥接，用于实时可视化 |
-| `ros-humble-rosbag2-storage-mcap` | MCAP 存储 backend，用于高效 bag 录制 |
-| `libwebsocketpp-dev` | foxglove_bridge 的编译依赖 |
-| `nlohmann-json3-dev` | JSON 处理库依赖 |
+| 包名                                | 说明                            |
+| --------------------------------- | ----------------------------- |
+| `ros-humble-foxglove-bridge`      | Foxglove WebSocket 桥接，用于实时可视化 |
+| `ros-humble-rosbag2-storage-mcap` | MCAP 存储 backend，用于高效 bag 录制   |
+| `libwebsocketpp-dev`              | foxglove\_bridge 的编译依赖        |
+| `nlohmann-json3-dev`              | JSON 处理库依赖                    |
+| `fonts-wqy-zenhei`                  | 中文字体，用于 matplotlib 图表显示 |
 
 ### 3. 安装 Python 依赖
 
@@ -77,14 +79,14 @@ which python3  # 应该输出 /usr/bin/python3
     PySide6
 ```
 
-| 包名 | 说明 |
-|------|------|
-| `eclipse-zenoh` | Zenoh 通信中间件（注意：安装包名是 `eclipse-zenoh`，但代码中 `import zenoh`） |
-| `py_trees` | 行为树引擎，决策系统核心依赖 |
-| `foxglove-sdk` | Foxglove Python SDK，用于数据记录和可视化 |
-| `mcap` / `mcap-ros2-support` | MCAP 格式读写，离线分析工具依赖 |
-| `pandas` / `seaborn` | 数据分析和可视化 |
-| `PySide6` | Qt for Python 框架，用于底层协议调试小工具 (Manual Protocol Injector) 等独立工具 |
+| 包名                           | 说明                                                            |
+| ---------------------------- | ------------------------------------------------------------- |
+| `eclipse-zenoh`              | Zenoh 通信中间件（注意：安装包名是 `eclipse-zenoh`，但代码中 `import zenoh`）     |
+| `py_trees`                   | 行为树引擎，决策系统核心依赖                                                |
+| `foxglove-sdk`               | Foxglove Python SDK，用于数据记录和可视化                                |
+| `mcap` / `mcap-ros2-support` | MCAP 格式读写，离线分析工具依赖                                            |
+| `pandas` / `seaborn`         | 数据分析和可视化                                                      |
+| `PySide6`                    | Qt for Python 框架，用于底层协议调试小工具 (Manual Protocol Injector) 等独立工具 |
 
 ### 4. 设置 Foxglove SDK ROS 工作区
 
@@ -184,7 +186,7 @@ cd ~/AUV_Master_Project/scripts
 bash start_lin_brain.sh bootstrap
 ```
 
-### 问题 4: foxglove_bridge 启动失败
+### 问题 4: foxglove\_bridge 启动失败
 
 **原因**: Foxglove SDK ROS 工作区路径不存在。
 
@@ -233,3 +235,4 @@ alias pip='/usr/bin/python3 -m pip'
 安装完成后，继续阅读：
 
 - [第一次运行](03_first_run.md) - 启动第一个仿真
+

@@ -461,3 +461,9 @@ class CommunicationManager(QObject):
     def is_side_channel_active(self) -> bool:
         """Report whether the optional Zenoh side channel is currently active."""
         return bool(self.side_channel is not None and self.side_channel.is_active)
+
+    def connect_zenoh_to_ip(self, ip: str, port: int = 7447):
+        """以 Client 模式显式连接到指定 Zenoh Router。"""
+        if self.side_channel is None:
+            raise RuntimeError("Zenoh side channel 未初始化")
+        self.side_channel.connect_to_router(ip, port)

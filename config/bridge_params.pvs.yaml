@@ -88,6 +88,7 @@ cable_path:
 
 perception:
   hvdc_current_amp: 500.0
+  dvl_update_rate_hz: 5.0  # 真实声学 DVL 频率（5-10 Hz），降采样还原声学真实性
   noise:
     magnetic_sigma: [1.0e-8, 1.0e-8, 1.0e-8]
     dvl_sigma: [0.02, 0.02, 0.02]

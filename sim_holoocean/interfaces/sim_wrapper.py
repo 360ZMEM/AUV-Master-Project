@@ -20,6 +20,7 @@ try:
 except Exception:  # pragma: no cover - optional when running PVS-only flows
     holoocean = None
 import numpy as np
+from ocean_current_model import OceanCurrentModel
 
 
 class HoloOceanSimWrapper:
@@ -31,6 +32,7 @@ class HoloOceanSimWrapper:
       2. 物理步进（执行控制命令并更新位姿、传感器）
       3. 环境重置和观察获取
       4. 资源清理
+      5. 洋流干扰注入（通过等效速度扰动）
 
     生命周期：
       with HoloOceanSimWrapper(...).open() as wrapper:
@@ -45,7 +47,7 @@ class HoloOceanSimWrapper:
       - 推力：百分比，范围 [-100, 100]
     """
 
-    def __init__(self, scenario_cfg, agent_name, show_viewport=False, verbose=False, window_res=None):
+    def __init__(self, scenario_cfg, agent_name, show_viewport=False, verbose=False, window_res=None, config=None):
         """
         初始化 HoloOcean 包装器。
 
@@ -60,6 +62,8 @@ class HoloOceanSimWrapper:
               是否启用详细日志输出
           window_res: tuple or None
               窗口分辨率 (width, height)，None 使用默认值
+          config: dict or None
+              全局配置（用于读取洋流参数）
         """
         self.scenario_cfg = scenario_cfg
         self.agent_name = agent_name
@@ -67,6 +71,15 @@ class HoloOceanSimWrapper:
         self.verbose = bool(verbose)
         self.window_res = window_res
         self.env = None  # HoloOcean 环境实例
+        self.config = config or {}
+
+        # ────────────────────────────────────────
+        # 三维洋流干扰模型
+        # ────────────────────────────────────────
+        env_cfg = self.config.get("environment", {}).get("current", {})
+        sim_dt = float(self.config.get("simulation", {}).get("dt", 1.0 / 30.0))
+        self.ocean_current = OceanCurrentModel(env_cfg, dt=sim_dt) if env_cfg.get("enabled", False) else None
+        self._sim_time = 0.0
 
     def open(self):
         """
@@ -105,6 +118,9 @@ class HoloOceanSimWrapper:
             dict：仿真状态（包含所有代理的传感器数据和位姿）
         """
         self.env.reset()
+        self._sim_time = 0.0
+        if self.ocean_current is not None:
+            self.ocean_current.reset()
         return self.env.tick()
 
     def step(self, command5):
@@ -125,7 +141,12 @@ class HoloOceanSimWrapper:
         if cmd.size != 5:
             raise ValueError("command must be length 5: [right,top,left,bottom,thrust]")
         self.env.act(self.agent_name, cmd)
-        return self.env.tick()
+        state = self.env.tick()
+
+        sim_dt = float(self.config.get("simulation", {}).get("dt", 1.0 / 30.0))
+        self._sim_time += sim_dt
+
+        return state
 
     def close(self):
         """清理 HoloOcean 环境资源（关闭窗口、释放内存）。"""
@@ -401,4 +422,5 @@ def create_sim_wrapper(config, *, scenario_cfg, agent_name, show_viewport=False,
         show_viewport=show_viewport,
         verbose=verbose,
         window_res=window_res,
+        config=config,
     )

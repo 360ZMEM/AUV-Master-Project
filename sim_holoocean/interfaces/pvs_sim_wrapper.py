@@ -43,6 +43,7 @@ if str(PVS_ROOT) not in sys.path:
 
 from python_vehicle_simulator.lib.gnc import Rzyx, attitudeEuler
 from python_vehicle_simulator.vehicles.remus100 import remus100
+from ocean_current_model import OceanCurrentModel
 
 
 
@@ -179,6 +180,13 @@ class PVSSimWrapper:
         self.current_direction_deg = float(self.pvs_cfg.get("current_direction_deg", 0.0))
 
         # ────────────────────────────────────────
+        # 三维洋流干扰模型
+        # ────────────────────────────────────────
+        env_cfg = self.config.get("environment", {}).get("current", {})
+        self.ocean_current = OceanCurrentModel(env_cfg, dt=self.dt) if env_cfg.get("enabled", False) else None
+        self._sim_time = 0.0
+
+        # ────────────────────────────────────────
         # 运行时状态（初始化为空，待 open()）
         # ────────────────────────────────────────
         self.vehicle = None  # REMUS 100 模拟对象
@@ -302,14 +310,35 @@ class PVSSimWrapper:
 
         步骤：
           1. 重置仿真计数器和速度历史
-          2. 调用 _build_state() 生成初始状态
+          2. 重置洋流模型状态
+          3. 调用 _build_state() 生成初始状态
 
         返回值：
             dict：仿真状态（兼容 HoloOcean 格式）
         """
         self.step_index = 0
         self.prev_nu = self.nu.copy()
+        self._sim_time = 0.0
+        if self.ocean_current is not None:
+            self.ocean_current.reset()
         return self._build_state()
+
+    def _build_rotation_matrix_ned(self) -> np.ndarray:
+        """
+        从 eta[3:6] (roll, pitch, yaw in NED) 构建体坐标系→NED 的旋转矩阵。
+
+        R_b2n = Rz(yaw) · Ry(pitch) · Rx(roll)
+        """
+        roll, pitch, yaw = self.eta[3], self.eta[4], self.eta[5]
+        cr, sr = np.cos(roll), np.sin(roll)
+        cp, sp = np.cos(pitch), np.sin(pitch)
+        cy, sy = np.cos(yaw), np.sin(yaw)
+        R = np.array([
+            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+            [   -sp,             cp * sr,             cp * cr],
+        ], dtype=np.float64)
+        return R
 
     def _command_to_actuators(self, command5) -> np.ndarray:
         """
@@ -377,10 +406,23 @@ class PVSSimWrapper:
         # 坐标系转换：NED → UE4（身体）
         accel_ue = np.array([accel_ned[0], accel_ned[1], -accel_ned[2]], dtype=float)
         gyro_ue = np.array([gyro_ned[0], gyro_ned[1], -gyro_ned[2]], dtype=float)
+        
+        # DVL速度转换：从body frame到world NED frame
+        # nu[0:3]是body系速度[u, v, w]，需要使用旋转矩阵转换到world系
+        # 注意：Rzyx(roll, pitch, yaw)返回的是Rzyx，但根据Fossen标准：
+        #   Rzyx 计算的是 R_ned_to_body（从NED到Body的旋转）
+        #   我们需要的是 R_body_to_ned = Rzyx.T（转置）
+        roll, pitch, yaw = rpy_ned
+        R_ned_to_body = Rzyx(roll, pitch, yaw)
+        R_body_to_ned = R_ned_to_body.T
+        vel_body = np.array([self.nu[0], self.nu[1], self.nu[2]], dtype=float)
+        vel_world_ned = R_body_to_ned @ vel_body
+        # 注意：NED的Z轴向下为正，vel_world_ned[2]应该为正表示下沉
+        
         return {
             self.agent_name: {
                 "PoseSensor": pose,
-                "DVLSensor": np.array([self.nu[0], self.nu[1], -self.nu[2]], dtype=float),
+                "DVLSensor": vel_world_ned,  # 发布world NED系速度
                 "IMUSensor": np.concatenate([accel_ue, gyro_ue]),
                 "DepthSensor": np.array([float(position_ned[2])], dtype=float),
             }
@@ -394,9 +436,15 @@ class PVSSimWrapper:
           1. 根据 control_mode 选择控制方式：
              - stepInput：使用外部命令，转换到执行器空间
              - depthHeadingAutopilot：调用内置自动驾驶仪，忽略外部命令
-          2. 调用 vehicle.dynamics()：积分运动方程，更新 nu 和 u_actual
-          3. 调用 attitudeEuler()：积分位姿微分方程，更新 eta
-          4. 更新计数器并返回新状态
+          2. 洋流干扰注入：计算对水速度 (water-relative velocity)
+          3. 调用 vehicle.dynamics()：积分运动方程，更新 nu 和 u_actual
+          4. 调用 attitudeEuler()：积分位姿微分方程，更新 eta
+          5. 更新计数器并返回新状态
+
+        洋流注入逻辑：
+          - ν_rel = ν_body - R_n2b @ v_current_ned  (对水速度)
+          - dynamics() 使用 ν_rel 计算阻尼项
+          - attitudeEuler() 使用原始 ν 积分位姿 (对地运动)
 
         参数：
             command5 (array-like)：控制命令
@@ -417,8 +465,39 @@ class PVSSimWrapper:
         else:
             u_control = self._command_to_actuators(command5)
 
+        # ────────────────────────────────────────
+        # 洋流干扰注入
+        # ────────────────────────────────────────
+        if self.ocean_current is not None:
+            self._sim_time = self.step_index * self.dt
+            rpy_ned = self.eta[3:6].copy()
+
+            # 获取洋流速度 (NED 世界系)
+            v_current_ned = self.ocean_current.get_current_world(self._sim_time)
+
+            # 构建 NED→体坐标系旋转矩阵
+            R_n2b = self._build_rotation_matrix_ned().T  # R_b2n^T = R_n2b
+
+            # 洋流速度转换到体坐标系
+            v_current_body = R_n2b @ v_current_ned
+
+            # 对水速度 = 体坐标系速度 - 洋流 (体坐标系)
+            nu_rel = self.nu.copy()
+            nu_rel[:3] = self.nu[:3] - v_current_body
+
+            # 临时替换 vehicle.nu 以对水速度计算阻尼
+            saved_nu = self.vehicle.nu.copy()
+            self.vehicle.nu = nu_rel
+        else:
+            saved_nu = None
+
         self.prev_nu = self.nu.copy()
         self.nu, self.u_actual = self.vehicle.dynamics(self.eta, self.nu, self.u_actual, u_control, self.dt)
+
+        # 恢复 vehicle.nu (attitudeEuler 使用原始速度积分位姿)
+        if saved_nu is not None:
+            self.vehicle.nu = saved_nu
+
         self.eta = attitudeEuler(self.eta, self.nu, self.dt)
         self.step_index += 1
         return self._build_state()

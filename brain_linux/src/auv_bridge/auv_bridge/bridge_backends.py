@@ -296,6 +296,30 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         if data is None:
             self.node.get_logger().warning('[bridge] failed to decode rt/pc/cmd_raw side-channel payload')
             return
+
+        # 严密校验 PC 命令
+        validation_errors = self._validate_pc_command(data)
+        if validation_errors:
+            self.node.get_logger().warning(
+                f'[bridge] PC command validation failed: {validation_errors}'
+            )
+            return
+
+        # 语义指令提取：注入行为树黑板（通过 ROS2 话题 /auv/mission_command）
+        if 'mission' in data:
+            mission_payload = {
+                'mission_type': data.get('mission', 'UNKNOWN'),
+                'target_depth': float(data.get('search_depth', data.get('target_depth', 0.0))),
+                'track_distance': float(data.get('track_distance', 0.0)),
+                'timeout_s': int(data.get('timeout_s', 1200)),
+                'ts': float(data.get('ts', time.time())),
+            }
+            self.node.get_logger().info(
+                f'[bridge] Mission command received: {mission_payload}'
+            )
+            # 发布到 ROS2 话题供行为树订阅
+            self.node.publish_mission_command(mission_payload)
+
         self.node.handle_pc_raw_command(data)
 
         # Publish Mock AMD timestamp from Para1 for decision node clock synchronization
@@ -304,6 +328,31 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
             publisher = self._publishers.get(Z_PATH_MOCK_AMD_TIME)
             if publisher is not None:
                 publisher.put(json.dumps({KEY_MOCK_AMD_TIMESTAMP_US: int(mock_amd_timestamp_us)}))
+
+    def _validate_pc_command(self, data: dict) -> list[str]:
+        """校验 PC 原始命令的完整性和新鲜度"""
+        errors = []
+
+        # 必须包含时间戳
+        if 'ts' not in data:
+            errors.append("missing 'ts' timestamp")
+
+        # 校验时间戳新鲜度
+        ts = data.get('ts', 0)
+        if isinstance(ts, (int, float)) and time.time() - float(ts) > 2.0:
+            errors.append(f"stale timestamp: {time.time() - float(ts):.1f}s ago")
+
+        # 必须包含控制模式字节
+        if 'control_mode_byte' not in data:
+            errors.append("missing 'control_mode_byte'")
+
+        # 校验控制模式字节有效性
+        mode = data.get('control_mode_byte', -1)
+        valid_modes = {0x00, 0x01, 0x02, 0x03, 0x04, 0xEE, 0xEF, 238}
+        if int(mode) not in valid_modes:
+            errors.append(f"invalid control_mode_byte: {mode}")
+
+        return errors
 
     def _decode_pc_raw_payload(self, payload_bytes: bytes) -> dict[str, Any] | None:
         """把原始 PC 控制负载解码为统一的字典格式。"""

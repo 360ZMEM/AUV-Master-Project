@@ -16,6 +16,11 @@ Outputs:
 - /auv/state/covariance (std_msgs/Float32MultiArray)
 - /tf (world -> auv/base_link)
 - /tf_static (auv/base_link -> sensor links)
+
+增强特性：
+- 自动位置对齐：首次收到 DVL 或深度观测时，自动初始化滤波器位置
+- 动态初始化日志：记录初始化时间和对齐位置
+- 兼容原有行为：如已配置 init_pos，则按原配置初始化
 """
 
 from __future__ import annotations
@@ -180,8 +185,12 @@ class AUVLocalizationNode(Node):
         self._last_imu_ts = 0.0
         self._last_dvl_ts = 0.0
         self._last_depth_ts = 0.0
+        self._last_imu_header_stamp = None  # 新增：保存IMU消息的Header Stamp
+        self._last_dvl_header_stamp = None  # 新增：保存DVL消息的Header Stamp
+        self._last_depth_header_stamp = None  # 新增：保存深度消息的Header Stamp
         self._last_loop_ts = time.time()
         self._latest_setpoint_depth_m: float | None = None
+        self._filter_initialized_logged = False
 
         self.odom_pub = self.create_publisher(Odometry, '/auv/state/filtered', 10)
         self.raw_odom_pub = self.create_publisher(Odometry, self.raw_state_topic, 10)
@@ -194,10 +203,12 @@ class AUVLocalizationNode(Node):
         self.tf_broadcaster = TransformBroadcaster(self)
         self.static_tf_broadcaster = StaticTransformBroadcaster(self)
 
-        self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 20)
-        self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 20)
-        self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 20)
-        self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
+        # QoS 降级：队列深度强制改为1，消除队列积压导致的时间戳滑移
+        # 宁可丢弃旧包（Drop），也绝不能让旧包在队列里排队
+        self.create_subscription(Imu, '/auv/sensors/imu', self._on_imu, 1)
+        self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 1)
+        self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 1)
+        self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 10)
 
         if self.publish_static_tf:
             self._publish_static_transforms()
@@ -257,7 +268,9 @@ class AUVLocalizationNode(Node):
             msg.angular_velocity.y,
             msg.angular_velocity.z,
         ], dtype=float)
-        self._last_imu_ts = time.time()
+        # 严格保存消息的 Header Stamp，用于后续状态发布
+        self._last_imu_header_stamp = msg.header.stamp
+        self._last_imu_ts = float(msg.header.stamp.sec) + float(msg.header.stamp.nanosec) * 1e-9
 
     def _on_dvl(self, msg: TwistStamped) -> None:
         """缓存最新 DVL 速度测量。"""
@@ -266,12 +279,16 @@ class AUVLocalizationNode(Node):
             msg.twist.linear.y,
             msg.twist.linear.z,
         ], dtype=float)
-        self._last_dvl_ts = time.time()
+        # 严格保存消息的 Header Stamp
+        self._last_dvl_header_stamp = msg.header.stamp
+        self._last_dvl_ts = float(msg.header.stamp.sec) + float(msg.header.stamp.nanosec) * 1e-9
 
     def _on_depth(self, msg: Float32) -> None:
         """缓存最新深度测量。"""
         self._last_depth = float(msg.data)
-        self._last_depth_ts = time.time()
+        # Float32 没有 header，但我们可以从节点时钟获取时间戳（深度传感器通常没有独立时间源）
+        # 这里使用IMU时间戳作为参考，因为深度更新通常与IMU同步
+        self._last_depth_ts = self._last_imu_ts if self._last_imu_ts > 0 else time.time()
 
     def _on_setpoint(self, msg: Setpoint) -> None:
         """缓存当前目标深度，用于显示深度误差。"""
@@ -379,7 +396,9 @@ class AUVLocalizationNode(Node):
 
     def _publish_state_odom(self, state: dict, publisher, *, publish_tf: bool) -> None:
         odom = Odometry()
-        odom.header.stamp = self.get_clock().now().to_msg()
+        # 严禁使用 get_clock().now()，必须使用传感器原始Header Stamp
+        # IMU是最前沿传感器，用IMU时间戳作为状态发布的物理时间锚点
+        odom.header.stamp = self._last_imu_header_stamp
         odom.header.frame_id = self.world_frame_id
         odom.child_frame_id = self.base_frame_id
         odom.pose.pose.position.x = float(state['p'][0])
@@ -396,7 +415,7 @@ class AUVLocalizationNode(Node):
 
         if publish_tf:
             transform = TransformStamped()
-            transform.header.stamp = odom.header.stamp
+            transform.header.stamp = odom.header.stamp  # 与odom使用相同的时间戳
             transform.header.frame_id = self.world_frame_id
             transform.child_frame_id = self.base_frame_id
             transform.transform.translation.x = float(state['p'][0])
@@ -414,6 +433,10 @@ class AUVLocalizationNode(Node):
         dt = max(1e-3, min(0.2, now - self._last_loop_ts))
         self._last_loop_ts = now
 
+        # 强制对齐：如果没有收到IMU时间锚点，跳过发布（绝不发布垃圾状态）
+        if self._last_imu_header_stamp is None:
+            return
+
         self.filter.predict(self._last_imu, self._last_gyro, dt)
 
         raw_state = self.filter.get_state()
@@ -421,9 +444,15 @@ class AUVLocalizationNode(Node):
             self._publish_state_odom(raw_state, self.raw_odom_pub, publish_tf=False)
 
         if self._last_dvl is not None:
+            was_initialized = self.filter.is_initialized()
             self.filter.correct_dvl_world(self._last_dvl)
+            if not was_initialized and self.filter.is_initialized():
+                self._log_filter_initialization("dvl")
         if self._last_depth is not None:
+            was_initialized = self.filter.is_initialized()
             self.filter.correct_depth(self._last_depth)
+            if not was_initialized and self.filter.is_initialized():
+                self._log_filter_initialization("depth")
 
         state = self.filter.get_state()
 
@@ -454,6 +483,29 @@ class AUVLocalizationNode(Node):
             return
         mean_ms = (self._lat_sum / self._lat_count) * 1000.0
         self.get_logger().info(f'[localization] mean sensor->filter latency: {mean_ms:.2f} ms over {self._lat_count} samples')
+
+    def _log_filter_initialization(self, source: str) -> None:
+        """记录滤波器初始化事件。"""
+        if self._filter_initialized_logged:
+            return
+        self._filter_initialized_logged = True
+
+        init_info = getattr(self.filter, '_init_info', None)
+        if init_info is not None:
+            pos_offset = init_info.get('position_offset', [0.0, 0.0, 0.0])
+            aligned_pos = init_info.get('aligned_pos', [0.0, 0.0, 0.0])
+            self.get_logger().info(
+                f'[ES-EKF] Auto-initialized from {source} observation\n'
+                f'  Aligned position: [{aligned_pos[0]:.4f}, {aligned_pos[1]:.4f}, {aligned_pos[2]:.4f}]\n'
+                f'  Position offset from config: [{pos_offset[0]:.4f}, {pos_offset[1]:.4f}, {pos_offset[2]:.4f}]'
+            )
+        else:
+            state = self.filter.get_state()
+            self.get_logger().info(
+                f'[ES-EKF] Initialized from {source} observation\n'
+                f'  Position: [{state["p"][0]:.4f}, {state["p"][1]:.4f}, {state["p"][2]:.4f}]\n'
+                f'  Velocity: [{state["v"][0]:.4f}, {state["v"][1]:.4f}, {state["v"][2]:.4f}]'
+            )
 
 
 def main(args=None) -> None:

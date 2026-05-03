@@ -62,7 +62,7 @@ mappers:
     voltage_compensation: true
 
 limits:
-  fin_deg_max: 30.0
+  fin_deg_max: 15.0
   thrust_min: -100.0
   thrust_max: 100.0
 
@@ -78,31 +78,72 @@ control:
     recovery_target_pitch_deg: 0.0
     recovery_thrust: 20.0
   depth:
-    kp: 0.30
+    kp: 1.0
     ki: 0.01
     kd: 0.0
-    integral_limit: 4.0
+    integral_limit: 50.0
     target_pitch_deg_max: 15.0
-    target_pitch_rate_limit_deg_s: 8.0
+    target_pitch_rate_limit_deg_s: 10.0
   pitch:
-    kp: 6.5
-    ki: 0.15
-    kd: 2.2
+    kp: 12.0
+    ki: 0.3
+    kd: 1.0
     integral_limit: 45.0
   yaw:
-    kp: 9.0
-    ki: 0.12
-    kd: 1.4
+    kp: 40.0
+    ki: 5.0
+    kd: 5.0
     integral_limit: 45.0
   speed:
-    kp: 28.0
-    ki: 1.4
-    kd: 3.0
-    integral_limit: 55.0
+    kp: 5.0
+    ki: 2.0
+    kd: 1.0
+    integral_limit: 30.0
     feedforward:
-      a: 2.497183
-      b: 27.729751
-      c: 0.546851
+      a: 0.0
+      b: 0.0
+      c: 0.0
+
+mpc:
+  prediction_horizon: 20
+  dt: 0.1
+  solver: 'ipopt'
+  warm_start: true
+  max_solve_time_ms: 50.0
+  fail_safe_fallback: true
+
+mpc_model:
+  mass_u: 50.0
+  mass_w: 50.0
+  drag_u: 12.0
+  drag_w: 20.0
+  buoyancy_term: 0.0
+  yaw_rate_gain: 8.0
+  pitch_depth_gain: 0.8
+  depth_to_heave_gain: 12.0
+  max_pitch_deg: 20.0
+
+mpc_weights:
+  tracking:
+    x: 1.0
+    y: 1.0
+    z: 25.0
+    psi: 80.0
+    u: 0.5
+    w: 3.0
+  control:
+    psi_cmd: 0.005
+    z_cmd: 0.01
+    T_cmd: 0.01
+  confidence_threshold: 0.6
+  low_confidence_scale: 3.0
+  low_confidence_control_scale: 0.3
+
+mpc_constraints:
+  min_speed_ms: 0.3
+  max_pitch_deg: 20.0
+  min_altitude_m: 1.5
+  max_thrust_percent: 100.0
 
 ekf:
   gravity: 9.81

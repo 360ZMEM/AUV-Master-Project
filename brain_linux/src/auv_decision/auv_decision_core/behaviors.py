@@ -17,6 +17,7 @@ from .models import MotionGoal, SensorStatusData
 
 SENSOR_STATUS_KEY = 'sensor_status'
 TARGET_MOTION_STATE_KEY = 'target_motion_state'
+MISSION_TARGET_KEY = 'mission_target'
 
 
 class _BaseBehavior(py_trees.behaviour.Behaviour):
@@ -27,6 +28,7 @@ class _BaseBehavior(py_trees.behaviour.Behaviour):
         self.blackboard = py_trees.blackboard.Client(name=name)
         self.blackboard.register_key(key=SENSOR_STATUS_KEY, access=py_trees.common.Access.READ)
         self.blackboard.register_key(key=TARGET_MOTION_STATE_KEY, access=py_trees.common.Access.WRITE)
+        self.blackboard.register_key(key=MISSION_TARGET_KEY, access=py_trees.common.Access.READ)
 
     def _get_sensor_status(self) -> SensorStatusData:
         """从黑板读取传感状态。
@@ -285,23 +287,92 @@ class DebugLevelCondition(py_trees.behaviour.Behaviour):
         """检查 debug_level 是否满足条件。"""
         status = self.blackboard.get(SENSOR_STATUS_KEY)
         if not isinstance(status, SensorStatusData):
-            # 尚未初始化，默认返回 FAILURE
             return py_trees.common.Status.FAILURE
 
-        # 从 sensor_status 读取 debug_level
         current_level = getattr(status, 'debug_level', 0)
 
         if self.exact_match:
-            # 精确匹配
             return (
                 py_trees.common.Status.SUCCESS
                 if current_level == self.required_level
                 else py_trees.common.Status.FAILURE
             )
         else:
-            # 阈值匹配
             return (
                 py_trees.common.Status.SUCCESS
                 if current_level >= self.required_level
                 else py_trees.common.Status.FAILURE
             )
+
+
+class MockCableTrackingBehavior(_BaseBehavior):
+    """Mock 电缆跟踪行为：从黑板 mission_target 读取任务参数。
+
+    该行为用于模拟真实任务执行，当收到 CABLE_TRACKING 任务指令时，
+    读取目标深度、跟踪距离等参数并发布控制目标。
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name='MockCableTracking')
+        self._task_started = False
+        self._target_depth_m = 4.0
+        self._track_distance_m = 500.0
+        self._timeout_s = 1200.0
+
+    def initialise(self) -> None:
+        """从黑板读取任务参数。"""
+        mission_target = self.blackboard.get(MISSION_TARGET_KEY)
+        if isinstance(mission_target, dict) and mission_target:
+            self._target_depth_m = float(mission_target.get('target_depth', 4.0))
+            self._track_distance_m = float(mission_target.get('track_distance', 500.0))
+            self._timeout_s = float(mission_target.get('timeout_s', 1200.0))
+            self.logger.info(
+                f'MockCableTracking 启动: depth={self._target_depth_m}m, '
+                f'distance={self._track_distance_m}m, timeout={self._timeout_s}s'
+            )
+        self._task_started = True
+
+    def update(self) -> py_trees.common.Status:
+        """持续发布电缆跟踪控制目标。"""
+        status = self._get_sensor_status()
+        self._write_goal(
+            MotionGoal(
+                mode='CABLE_TRACKING',
+                target_depth_m=self._target_depth_m,
+                target_speed_mps=0.5,
+                track_cable=True,
+                note=f'Mock 电缆跟踪: depth={self._target_depth_m}m, distance={self._track_distance_m}m',
+            )
+        )
+        return py_trees.common.Status.RUNNING
+
+
+class MissionCommandCondition(_BaseBehavior):
+    """任务指令条件：检查是否收到有效的任务指令。
+
+    当黑板 mission_target 包含 mission_type 时返回 SUCCESS。
+    """
+
+    def __init__(self, required_mission_type: str | None = None) -> None:
+        """初始化任务指令条件。
+
+        Args:
+            required_mission_type: 如果指定，则要求任务类型必须匹配；否则接受任意任务。
+        """
+        super().__init__(name='MissionCommandReceived')
+        self.required_mission_type = required_mission_type
+
+    def update(self) -> py_trees.common.Status:
+        """检查是否收到任务指令。"""
+        mission_target = self.blackboard.get(MISSION_TARGET_KEY)
+        if not isinstance(mission_target, dict) or not mission_target:
+            return py_trees.common.Status.FAILURE
+
+        mission_type = mission_target.get('mission_type', '')
+        if not mission_type:
+            return py_trees.common.Status.FAILURE
+
+        if self.required_mission_type and mission_type != self.required_mission_type:
+            return py_trees.common.Status.FAILURE
+
+        return py_trees.common.Status.SUCCESS

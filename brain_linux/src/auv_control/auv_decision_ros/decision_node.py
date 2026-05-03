@@ -110,8 +110,10 @@ class AUVDecisionNode(Node):
         self.create_subscription(MagneticField, '/auv/sensors/magnetic', self._on_magnetic, 10)
         self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 10)
         self.create_subscription(Setpoint, '/auv/manual/setpoint', self._on_manual_setpoint, 10)
+        self.create_subscription(String, '/auv/mission_command', self._on_mission_command, 10)
 
         self.latest_manual_setpoint: Setpoint | None = None
+        self.latest_mission_command: dict | None = None
 
         self.pub_goal = self.create_publisher(ControlGoal, '/auv/control/goal', 10)
         self.pub_setpoint = self.create_publisher(Setpoint, '/auv/control/setpoint', 10)
@@ -145,6 +147,23 @@ class AUVDecisionNode(Node):
         """接收手动下发的 Setpoint 调试指令。"""
         if self.bypass_to_manual_setpoint:
             self.latest_manual_setpoint = msg
+
+    def _on_mission_command(self, msg: String) -> None:
+        """接收上位机下发的任务指令，注入行为树黑板。"""
+        try:
+            data = json.loads(msg.data)
+            self.latest_mission_command = data
+            mission_type = data.get('mission_type', 'UNKNOWN')
+            target_depth = data.get('target_depth', 0.0)
+            track_distance = data.get('track_distance', 0.0)
+            timeout_s = data.get('timeout_s', 1200)
+            self.get_logger().info(
+                f'[mission_command] type={mission_type}, depth={target_depth}m, '
+                f'distance={track_distance}m, timeout={timeout_s}s'
+            )
+            self.engine.set_mission_target(data)
+        except (json.JSONDecodeError, ValueError) as e:
+            self.get_logger().warning(f"Failed to parse mission command: {e}")
 
     def _on_parameters_changed(self, params):
         from rcl_interfaces.msg import SetParametersResult

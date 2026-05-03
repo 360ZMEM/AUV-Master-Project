@@ -156,6 +156,9 @@ class AUVBridgeNode(Node):
         self.dvl_pub = self.create_publisher(TwistStamped, '/auv/sensors/dvl', 10)
         self.depth_pub = self.create_publisher(Float32, '/auv/sensors/depth', 10)
         self.altitude_pub = self.create_publisher(Float32, '/auv/sensors/altitude', 10)
+        # 新增：任务指令发布者（供行为树订阅）
+        self.mission_command_pub = self.create_publisher(String, '/auv/mission_command', 10)
+        self._current_bt_status = "IDLE"
         self.magnetic_pub = self.create_publisher(MagneticField, '/auv/sensors/magnetic', 10)
         self.shadow_cmd_pub = self.create_publisher(String, self.shadow_cmd_topic, 10)
         self.shadow_telemetry_pub = self.create_publisher(String, self.shadow_telemetry_topic, 10)
@@ -179,6 +182,8 @@ class AUVBridgeNode(Node):
             self.command_arbiter = CommandArbiter(
                 mpc_timeout_s=self.arbiter_mpc_timeout_s,
                 default_obj_address=self.protocol_obj_address,
+                pc_timeout_s=float(self.arbiter_cfg.get('pc_timeout_s', 1.5)),
+                pc_soft_warning_s=float(self.arbiter_cfg.get('pc_soft_warning_s', 1.0)),
             )
             self.autonomy_guard = AutonomyGuard(
                 min_total_voltage_v=self.guard_min_total_voltage_v,
@@ -188,6 +193,10 @@ class AUVBridgeNode(Node):
             self.arbiter_status_pub = self.create_publisher(ArbiterStatus, self.arbiter_status_topic, 10)
             self.create_subscription(SensorStatus, self.sensor_status_topic, self._on_sensor_status, 10)
             self.create_subscription(MpcCmd, self.mpc_topic, self._on_mpc_cmd, 10)
+
+            # 新增：上位机失联看门狗状态
+            self._last_pc_heartbeat_ts = 0.0
+            self._pc_lost_triggered = False
 
         self.latest_setpoint: Setpoint | None = None
         self.latest_command_payload: dict[str, float] | None = None
@@ -370,13 +379,18 @@ class AUVBridgeNode(Node):
             return
 
         now = time.time()
+        self._last_pc_heartbeat_ts = now  # 更新心跳时间戳
+
         control_mode_byte = int(payload.get(KEY_CONTROL_MODE_BYTE, int(ControlModeByte.REMOTE_CONTROL)))
         work_instruction = int(payload.get(KEY_WORK_INSTRUCTION, int(WorkInstruction.NONE)))
 
         if work_instruction in {int(WorkInstruction.TASK_CANCEL), int(WorkInstruction.CLEAR_FAULT)}:
+            # ESTOP：无论当前状态，立即锁回遥控
             guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
             decision = self.command_arbiter.force_remote(payload, now=now)
+            self.get_logger().warn('[bridge] ESTOP/MANUAL_OVERRIDE received, forcing REMOTE')
         elif control_mode_byte == int(ControlModeByte.JETSON_PROTOCOL):
+            # 自主申请：守卫检查
             guard_decision = self.autonomy_guard.request_activation(
                 sensor_status=self.latest_sensor_status_payload,
                 telemetry_status=self._current_telemetry_status(now=now),
@@ -384,8 +398,14 @@ class AUVBridgeNode(Node):
             if guard_decision.autonomy_allowed:
                 decision = self.command_arbiter.update_pc_raw_command(payload, now=now)
             else:
-                decision = self.command_arbiter.force_remote(payload, now=now)
+                # 守卫拒绝：回退到 REMOTE，输出零推力
+                decision = self.command_arbiter.force_remote(
+                    payload=self._build_degraded_payload(ts=now),
+                    now=now
+                )
+                self.get_logger().warn('[bridge] Autonomy guard rejected, forcing zero-thrust REMOTE')
         else:
+            # 手动模式：透明路由
             guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.NONE)
             decision = self.command_arbiter.update_pc_raw_command(payload, now=now)
 
@@ -393,9 +413,46 @@ class AUVBridgeNode(Node):
         self._publish_arbiter_decision(decision, guard_decision=guard_decision)
 
     def _on_command_keepalive(self) -> None:
-        """周期性发送心跳或零命令，避免下行通道超时。"""
+        """周期性发送心跳或零命令，增加分层超时检测。"""
+        now = time.time()
+
+        # ─── 分层超时检测（Tiered Watchdog） ───
         if self.arbiter_enabled and self.command_arbiter is not None:
-            now = time.time()
+            pc_link_status = self.command_arbiter.check_pc_link_health(now=now)
+            dt_since_last = now - self._last_pc_heartbeat_ts if self._last_pc_heartbeat_ts > 0 else 0.0
+
+            if pc_link_status == "LOST":
+                # Hard ESTOP: 上位机失联超过 1.5s
+                if not self._pc_lost_triggered:
+                    self._pc_lost_triggered = True
+                    self.get_logger().error(
+                        f'[bridge] PC LOST! No heartbeat for {dt_since_last:.2f}s > {self.command_arbiter.pc_timeout_s}s'
+                    )
+                # 强制锁回遥控模式，发送零推力包
+                if self.autonomy_guard is not None:
+                    self.autonomy_guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
+                decision = self.command_arbiter.force_remote(
+                    payload=self._build_degraded_payload(ts=now),
+                    now=now
+                )
+                self.last_arbiter_decision = decision
+                self._publish_arbiter_decision(decision, guard_decision=None)
+                return
+
+            elif pc_link_status == "WEAK":
+                # Soft Warning: 上位机链路弱 (1.0s ~ 1.5s)
+                if self.command_arbiter.pc_link_status != "WEAK":
+                    self.get_logger().warn(
+                        f'[bridge] PC link WEAK! Heartbeat delay {dt_since_last:.2f}s > {self.command_arbiter.pc_soft_warning_s}s'
+                    )
+            else:
+                # 恢复：上位机重新连接
+                if self._pc_lost_triggered:
+                    self._pc_lost_triggered = False
+                    self.get_logger().info('[bridge] PC reconnected, resuming normal operation')
+
+        # 原有心跳逻辑
+        if self.arbiter_enabled and self.command_arbiter is not None:
             guard_decision = self._refresh_guard_and_fallback(now=now)
             decision = self.last_arbiter_decision or self.command_arbiter.decide(now=now)
             self.last_arbiter_decision = decision
@@ -412,6 +469,28 @@ class AUVBridgeNode(Node):
             payload = dict(self.latest_command_payload)
             payload['ts'] = time.time()
         self._publish_command(payload)
+
+    def _build_degraded_payload(self, *, ts: float) -> dict[str, Any]:
+        """构建降级安全包（上位机失联时使用）"""
+        return {
+            KEY_FRAME_NUMBER: 0,
+            KEY_OBJ_ADDRESS: self.protocol_obj_address,
+            KEY_CONTROL_MODE_BYTE: int(ControlModeByte.REMOTE_CONTROL),
+            KEY_WORK_INSTRUCTION: int(WorkInstruction.TASK_CANCEL),
+            KEY_THRUST: 0.0,
+            KEY_LEFT: 0.0,
+            KEY_RIGHT: 0.0,
+            KEY_TOP: 0.0,
+            KEY_BOTTOM: 0.0,
+            KEY_SIDE_MOTOR_RPM: 0,
+            KEY_ORIENTATION_DEG: 0.0,
+            KEY_DEPTH_PROTECT_PARAMS: (0, 0),
+            KEY_BOTTOM_PROTECT_PARAMS: (0, 0),
+            KEY_PRESET_TIME_TENTHS_MIN: 0,
+            KEY_SPARE_PARAMS: (0, 0),
+            KEY_PARAMETERS: (0,) * 12,
+            KEY_TS: ts,
+        }
 
     def _zero_command_payload(self) -> dict[str, float]:
         """构造零控制输出，作为超时或空闲时的安全兜底。"""
@@ -577,6 +656,34 @@ class AUVBridgeNode(Node):
             return time.time()
         return float(stamp.sec) + float(stamp.nanosec) * 1.0e-9
 
+    def _make_header_stamp(self, data: dict[str, Any]):
+        """从传感器数据中提取时间戳并转为 ROS2 stamp。
+
+        优先级：
+          1. sim_time（仿真物理时间，来自 HoloOcean）
+          2. ts（仿真侧打戳，现已对齐 sim_time）
+          3. 兜底使用系统时钟（get_clock）
+        """
+        sim_time = data.get('sim_time')
+        if isinstance(sim_time, (int, float)) and sim_time > 0:
+            sec = int(sim_time)
+            nsec = int((sim_time - sec) * 1e9)
+            stamp = self.get_clock().now().to_msg()
+            stamp.sec = sec
+            stamp.nanosec = nsec
+            return stamp
+
+        ts = data.get('ts')
+        if isinstance(ts, (int, float)) and ts > 0:
+            sec = int(ts)
+            nsec = int((ts - sec) * 1e9)
+            stamp = self.get_clock().now().to_msg()
+            stamp.sec = sec
+            stamp.nanosec = nsec
+            return stamp
+
+        return self.get_clock().now().to_msg()
+
     def handle_json_sensor_payload(self, keyexpr: str, data: dict[str, Any]) -> None:
         self._rx_count += 1
         self._record_latency(data)
@@ -587,7 +694,7 @@ class AUVBridgeNode(Node):
             if not (isinstance(accel, list) and len(accel) == 3 and isinstance(gyro, list) and len(gyro) == 3):
                 return
             msg = Imu()
-            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.stamp = self._make_header_stamp(data)
             msg.header.frame_id = 'auv/base_link'
             msg.linear_acceleration.x = float(accel[0])
             msg.linear_acceleration.y = float(accel[1])
@@ -603,7 +710,7 @@ class AUVBridgeNode(Node):
             if not (isinstance(vel, list) and len(vel) == 3):
                 return
             msg = TwistStamped()
-            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.stamp = self._make_header_stamp(data)
             msg.header.frame_id = 'auv/base_link'
             msg.twist.linear.x = float(vel[0])
             msg.twist.linear.y = float(vel[1])
@@ -625,7 +732,7 @@ class AUVBridgeNode(Node):
             if not (isinstance(magnetic_vec, list) and len(magnetic_vec) == 3):
                 return
             msg = MagneticField()
-            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.stamp = self._make_header_stamp(data)
             msg.header.frame_id = 'auv/base_link'
             msg.magnetic_field.x = float(magnetic_vec[0])
             msg.magnetic_field.y = float(magnetic_vec[1])
@@ -692,10 +799,37 @@ class AUVBridgeNode(Node):
             telemetry_freshness_ms=0.0,
         )
         self.latest_bridge_telemetry_payload = bridge_payload
+
+        # 新增：注入置信度和漏水状态到遥测负载
+        if self.latest_sensor_status_payload:
+            bridge_payload['confidence'] = float(
+                self.latest_sensor_status_payload.get(KEY_CONFIDENCE, 0.0)
+            )
+            bridge_payload['leak_level'] = int(
+                self.latest_sensor_status_payload.get(KEY_LEAK_LEVEL, 0)
+            )
+
+        # 注入行为树状态
+        bridge_payload['bt_status_markdown'] = self._current_bt_status
+
         self.transport.publish_bridge_telemetry(bridge_payload)
         if self.passive_mode:
             self._publish_shadow_telemetry(bridge_payload)
         self._publish_arbiter_status(guard_decision=guard_decision)
+
+    def publish_mission_command(self, mission_payload: dict) -> None:
+        """发布语义任务指令到 /auv/mission_command 话题，供行为树订阅。"""
+        try:
+            msg = String()
+            msg.data = json.dumps(mission_payload, ensure_ascii=False)
+            self.mission_command_pub.publish(msg)
+            self.get_logger().info(f'[bridge] Published mission command to /auv/mission_command: {mission_payload["mission_type"]}')
+        except Exception as exc:
+            self.get_logger().warning(f'[bridge] Failed to publish mission command: {exc}')
+
+    def update_bt_status(self, status_markdown: str) -> None:
+        """更新行为树状态（由外部决策节点调用）。"""
+        self._current_bt_status = status_markdown
 
     def _on_stats_timer(self) -> None:
         if self._rx_count == 0:

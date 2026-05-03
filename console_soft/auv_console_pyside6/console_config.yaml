@@ -1,0 +1,26 @@
+# AUV 上位机配置文件 (console_config.yaml)
+# 默认值: 127.0.0.1 (模拟上位机和 Jetson 在同一设备)
+zenoh:
+  router_ip: "127.0.0.1"
+  router_port: 7447
+  mode: "client"
+
+# UDP 直连 AMD (向后兼容，MANUAL 模式下使用)
+udp:
+  amd_ip: "192.168.0.101"
+  amd_port: 52364
+  local_port: 52365
+
+# 通信参数
+communication:
+  heartbeat_hz: 5.0       # 心跳频率 (5Hz = 200ms)
+  pc_timeout_s: 1.5       # 上位机失联超时 (秒)
+  soft_warning_s: 1.0     # 软警告阈值 (秒)
+
+# 默认工作参数
+defaults:
+  work_mode: 1              # 1=SEND_ONLY, 2=SEND_RETURN
+  target_depth_m: 5.0
+  track_distance_m: 500.0
+  task_timeout_s: 1200
+  mission_type: "CABLE_TRACKING"

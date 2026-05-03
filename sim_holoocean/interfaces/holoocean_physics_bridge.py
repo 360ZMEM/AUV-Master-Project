@@ -149,6 +149,14 @@ class HoloOceanPhysicsZenohBridge:
         self._last_terrain_publish_ts = -1e9  # 上一次发布地形的时间
 
         # ────────────────────────────────────────
+        # DVL 降采样机制（还原声学真实性）
+        # ────────────────────────────────────────
+        # 真实声学 DVL 物理极限频率 5-10 Hz（水深 15m 时声波往返约 20ms）
+        self.dvl_update_rate_hz = float(config.get("perception", {}).get("dvl_update_rate_hz", 5.0))
+        self.dvl_update_interval = 1.0 / max(self.dvl_update_rate_hz, 1e-6)
+        self._last_dvl_publish_sim_time = -1e9  # 上一次发布 DVL 的仿真时间
+
+        # ────────────────────────────────────────
         # 运行时状态
         # ────────────────────────────────────────
         self.wrapper = None  # HoloOcean 环境包装器
@@ -259,10 +267,30 @@ class HoloOceanPhysicsZenohBridge:
         )
 
         # ────────────────────────────────────────
-        # 步骤 4️⃣：噪声注入
+        # 步骤 4️⃣：噪声注入（含洋流自适应 DVL 噪声）
         # ────────────────────────────────────────
         b_noisy = inject_gaussian_noise(b_vec, p_cfg["noise"]["magnetic_sigma"])
-        dvl_noisy = inject_gaussian_noise(dvl_ned, p_cfg["noise"]["dvl_sigma"])
+
+        # 获取洋流速度用于自适应噪声
+        current_vel_ned = None
+        if hasattr(self.wrapper, 'ocean_current') and self.wrapper.ocean_current is not None:
+            current_vel_ned = self.wrapper.ocean_current.get_current_world(sim_time)
+
+        # 自适应 DVL 噪声: 洋流越大，方差越大 (模拟气泡干扰)
+        base_dvl_sigma = p_cfg["noise"]["dvl_sigma"]
+        if current_vel_ned is not None:
+            current_magnitude = np.linalg.norm(current_vel_ned)
+            adaptive_dvl_sigma = base_dvl_sigma + 0.01 * current_magnitude
+        else:
+            adaptive_dvl_sigma = base_dvl_sigma
+
+        # DVL 降采样：只有当仿真时间跨过发布间隔边界时才计算噪声并标记为可发布
+        should_publish_dvl = (sim_time - self._last_dvl_publish_sim_time) >= self.dvl_update_interval
+        if should_publish_dvl:
+            dvl_noisy = inject_gaussian_noise(dvl_ned, adaptive_dvl_sigma)
+            self._last_dvl_publish_sim_time = sim_time
+        else:
+            dvl_noisy = None  # 不发布 DVL 数据
 
         # 深度处理和噪声
         depth_ned = float(-depth_raw if depth_raw < 0.0 else depth_raw)
@@ -282,8 +310,15 @@ class HoloOceanPhysicsZenohBridge:
         # ────────────────────────────────────────
         # 步骤 5️⃣：打包所有传感器数据
         # ────────────────────────────────────────
-        # 元数据：步号、仿真时间、墙钟时间
-        base = enrich_meta({}, step=int(step), sim_time=float(sim_time), ts=time.time())
+        # 元数据：步号、仿真时间（所有时间戳严格使用 sim_time，杜绝墙上时钟滑移）
+        base = enrich_meta({}, step=int(step), sim_time=float(sim_time), ts=float(sim_time))
+
+        # 计算对水速度 (用于 spare_params 透传)
+        vel_water_ned = None
+        current_magnitude = 0.0
+        if current_vel_ned is not None and dvl_noisy is not None:
+            vel_water_ned = (dvl_noisy - current_vel_ned).tolist()
+            current_magnitude = float(np.linalg.norm(current_vel_ned))
 
         packets = {
             # 地面真值：位置、姿态和电缆信息
@@ -300,27 +335,34 @@ class HoloOceanPhysicsZenohBridge:
                 KEY_ACCEL_NED: accel_ned.tolist(),
                 KEY_GYRO_NED: gyro_ned.tolist(),
             },
-            # DVL：前向速度
-            "dvl": {
+        }
+
+        # DVL：对地速度 (Bottom Track) — 降采样至 5Hz 以还原声学真实性
+        if dvl_noisy is not None:
+            packets["dvl"] = {
                 **base,
                 KEY_VEL_NED: dvl_noisy.tolist(),
-            },
-            # 深度传感器
-            "depth": {
-                **base,
-                KEY_DEPTH_M: depth_noisy,
-            },
-            # 磁力计：HVDC 电缆产生的磁场
-            "magnetic": {
-                **base,
-                KEY_B_NED: b_noisy.tolist(),
-                KEY_B_NORM: float(np.linalg.norm(b_noisy)),
-            },
-            # 声纳：电缆检测
-            "sonar": {
-                **base,
-                KEY_SONAR_BINS: sonar.tolist(),
-            },
+                "vel_water_ned": vel_water_ned,
+                "current_magnitude": current_magnitude,
+            }
+
+        # 深度传感器
+        packets["depth"] = {
+            **base,
+            KEY_DEPTH_M: depth_noisy,
+        }
+
+        # 磁力计：HVDC 电缆产生的磁场
+        packets["magnetic"] = {
+            **base,
+            KEY_B_NED: b_noisy.tolist(),
+            KEY_B_NORM: float(np.linalg.norm(b_noisy)),
+        }
+
+        # 声纳：电缆检测
+        packets["sonar"] = {
+            **base,
+            KEY_SONAR_BINS: sonar.tolist(),
         }
 
         # ────────────────────────────────────────

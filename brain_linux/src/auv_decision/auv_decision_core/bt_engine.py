@@ -21,6 +21,7 @@ from .behaviors import (
     EmergencyCondition,
     EmergencySurface,
     HoldCurrentPoseBehavior,
+    MockCableTrackingBehavior,
     ParallelTracking,
     TrackAnalyticalTrajectoryBehavior,
     ZigZagSearch,
@@ -37,6 +38,8 @@ class DecisionTreeEngine:
     供 ROS2 包装层直接驱动。它不依赖 ROS2 消息类型，因此可在单元测试中独立运行。
     """
 
+    MISSION_TARGET_KEY = 'mission_target'
+
     def __init__(self, confidence_threshold: float = 0.7) -> None:
         """初始化行为树、黑板缓存和冷启动默认状态。"""
         self.confidence_threshold = confidence_threshold
@@ -46,9 +49,10 @@ class DecisionTreeEngine:
         self.blackboard = py_trees.blackboard.Client(name='DecisionTreeEngine')
         self.blackboard.register_key(key=SENSOR_STATUS_KEY, access=py_trees.common.Access.WRITE)
         self.blackboard.register_key(key=TARGET_MOTION_STATE_KEY, access=py_trees.common.Access.READ)
+        self.blackboard.register_key(key=self.MISSION_TARGET_KEY, access=py_trees.common.Access.WRITE)
 
-        # 冷启动默认值：避免首次 tick 时无输入导致节点读取异常。
         self.blackboard.set(SENSOR_STATUS_KEY, SensorStatusData())
+        self.blackboard.set(self.MISSION_TARGET_KEY, {})
 
     def _build_tree(self, confidence_threshold: float) -> py_trees.behaviour.Behaviour:
         """组装决策行为树结构。
@@ -142,6 +146,17 @@ class DecisionTreeEngine:
     def set_sensor_status(self, status: SensorStatusData) -> None:
         """更新行为树的输入状态黑板值。"""
         self.blackboard.set(SENSOR_STATUS_KEY, status)
+
+    def set_mission_target(self, mission_data: dict) -> None:
+        """写入任务目标到行为树黑板。"""
+        self.blackboard.set(self.MISSION_TARGET_KEY, mission_data)
+
+    def get_mission_target(self) -> dict:
+        """读取当前任务目标。"""
+        result = self.blackboard.get(self.MISSION_TARGET_KEY)
+        if isinstance(result, dict):
+            return result
+        return {}
 
     def tick(self) -> None:
         """执行一次行为树 tick 并推进当前决策状态。"""

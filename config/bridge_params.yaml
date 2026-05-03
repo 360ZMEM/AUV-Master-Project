@@ -57,6 +57,14 @@ bridge:
   thrust_max: 100.0
   # 桥接最大步数；0 表示无限运行。
   max_steps: 0
+
+  # 仲裁器配置：分层超时机制（AD3）
+  arbiter:
+    enabled: true
+    pc_timeout_s: 1.5          # 硬超时：触发 ESTOP
+    pc_soft_warning_s: 1.0     # 软超时：发出警告
+    pc_cmd_raw_key: "rt/pc/cmd_raw"
+    telemetry_key: "rt/auv/telemetry"
   protocol_udp:
     bind_host: 0.0.0.0
     bind_port: 52364

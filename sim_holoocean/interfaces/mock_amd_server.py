@@ -20,6 +20,7 @@ import time
 from pathlib import Path
 
 import numpy as np
+from pvs_sim_wrapper import PVSSimWrapper
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common']:
@@ -35,6 +36,7 @@ from mock_amd_delay import TransportDelayQueue
 from mock_amd_sensor_cache import SensorSampleCache, SensorSnapshot
 from frame_transform import body_vector_ue_to_ned, pose_matrix_ue_to_ned
 from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, get_agent_state
+from ocean_current_model import OceanCurrentModel
 
 
 class MockAmdUdpServer:
@@ -192,9 +194,17 @@ class MockAmdUdpServer:
         # 运行时状态
         # ────────────────────────────────────────
         self._start_time = 0.0
+        self._sim_time = 0.0
 
         # HoloOcean 仿真包装器
         self.wrapper = None
+
+        # ────────────────────────────────────────
+        # 三维洋流干扰模型
+        # ────────────────────────────────────────
+        env_cfg = self.config.get("environment", {}).get("current", {})
+        sim_dt = float(self.config.get("simulation", {}).get("dt", 1.0 / 30.0))
+        self.ocean_current = OceanCurrentModel(env_cfg, dt=sim_dt) if env_cfg.get("enabled", False) else None
         # UDP socket
         self.sock = None
 
@@ -212,6 +222,7 @@ class MockAmdUdpServer:
         self.last_work_instruction = 0           # 上次接收到的工作指令字节
         self.last_control_mode_byte = self.default_control_mode_byte  # 控制模式
         self.last_mock_amd_timestamp_us = 0      # 上次接收的 AMD 时间戳（微秒）
+        self._last_downlink_packet = None        # 最近一次接收到的原始下行数据包
 
     # ========================================================================
     # 公共 API：生命周期管理
@@ -426,6 +437,7 @@ class MockAmdUdpServer:
                 'thrust': float(downlink.thrust_percent),
             }
             self.last_cmd_ts = time.time()
+            self._last_downlink_packet = ready_packet
 
     # ========================================================================
     # 私有 API：遥测数据包构造
@@ -583,15 +595,18 @@ class MockAmdUdpServer:
         核心流程（每个 dt 秒一次迭代）：
           1. _poll_command_packet()：从网络接收下行命令（非阻塞）
           2. command_guard.sanitize()：应用安全护栏（推力限幅等）
-          3. wrapper.step(cmd)：推进 HoloOcean 物理仿真一步
-          4. _build_uplink_packet()：从仿真状态构造上行遥测包
+          3. 【新增】control_mode_dispatch()：根据 control_mode_byte 选择控制律
+             - mode == 0x01 (REMOTE)：wrapper.stepInput(cmd) 直接驱动
+             - mode == 0xEE/0xEF (AUTONOMY)：PVS set_reference() + depthHeadingAutopilot
+          4. wrapper.step(cmd) 或 wrapper._build_state()：推进物理仿真一步
+          5. _build_uplink_packet()：从仿真状态构造上行遥测包
                   ├─ 坐标系转换（UE4 → NED）
                   ├─ 多速率传感器采样
                   ├─ 故障注入（丢包、漂移、中断）
                   └─ 协议编码
-          5. 通过 UDP 发送到 last_client_addr（若包非 None）
-          6. 日志输出（可配置格式）
-          7. 自适应睡眠以维持目标速率（rate_hz）
+          6. 通过 UDP 发送到 last_client_addr（若包非 None）
+          7. 日志输出（可配置格式）
+          8. 自适应睡眠以维持目标速率（rate_hz）
 
         循环条件：
           - 无限循环，直到 max_steps 达到阈值或强制中断
@@ -616,9 +631,43 @@ class MockAmdUdpServer:
             self.last_cmd = cmd
 
             # ────────────────────────────────────────
-            # 推进仿真并构造遥测包
+            # 【新增】控制模式分发：透传 vs PID 自动驾驶
             # ────────────────────────────────────────
-            state = self.wrapper.step(cmd)
+            mode = self.last_control_mode_byte
+            is_autonomy_mode = mode in {0xEE, 0xEF, 238}
+
+            if is_autonomy_mode and isinstance(self.wrapper, PVSSimWrapper):
+                # 自主模式：从下行包提取语义目标，注入 PVS 自动驾驶仪
+                target_depth_m = self._extract_target_depth_from_downlink()
+                target_heading_deg = self._extract_target_heading_from_downlink()
+                target_speed_mps = self._extract_target_speed_from_downlink()
+
+                # 设置自动驾驶仪参考值
+                self.wrapper.set_reference(
+                    depth_m=target_depth_m,
+                    heading_rad=np.deg2rad(target_heading_deg),
+                    speed_mps=target_speed_mps if target_speed_mps > 0 else None,
+                )
+
+                # 切换到自动驾驶仪模式（若尚未切换）
+                if self.wrapper.control_mode.strip().lower() not in {
+                    "depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"
+                }:
+                    self.wrapper.control_mode = "depthHeadingAutopilot"
+
+                # 推进仿真一步（自动驾驶仪内部计算控制）
+                state = self.wrapper.step(cmd)
+            else:
+                # 手动模式 (0x01)：直接透传推力/舵角到物理引擎
+                # 确保 PVS 使用 stepInput 模式
+                if isinstance(self.wrapper, PVSSimWrapper):
+                    if self.wrapper.control_mode.strip().lower() not in {"stepinput", "manual", "direct"}:
+                        self.wrapper.control_mode = "stepInput"
+                state = self.wrapper.step(cmd)
+
+            # ────────────────────────────────────────
+            # 构造遥测包
+            # ────────────────────────────────────────
             packet = self._build_uplink_packet(state, step, cmd)
 
             # ────────────────────────────────────────
@@ -652,7 +701,7 @@ class MockAmdUdpServer:
                                 include_timestamp=True,
                             )
                         )
-                        print(f'step={step:06d}')
+                        print(f'step={step:06d} mode={"AUTO" if is_autonomy_mode else "MANUAL"}')
                         print()  # 空行分隔
                     else:
                         # 单行摘要格式
@@ -665,12 +714,14 @@ class MockAmdUdpServer:
                             max_hex_bytes=self.log_hex_bytes,
                             main_motor_rpm_scale=self.main_motor_rpm_scale,
                         )
-                        print(f'{uplink_log} step={step:06d}')
+                        mode_tag = "AUTO" if is_autonomy_mode else "MANUAL"
+                        print(f'{uplink_log} step={step:06d} mode={mode_tag}')
                 else:
                     # 简化模式：只打印关键数值（深度和控制向量）
                     depth_m = int.from_bytes(packet[38:40], byteorder='big', signed=False) * 0.1
+                    mode_tag = "AUTO" if is_autonomy_mode else "MANUAL"
                     print(
-                        f'step={step:06d} depth={depth_m:.2f}m '
+                        f'step={step:06d} depth={depth_m:.2f}m mode={mode_tag} '
                         f'cmd=({cmd[0]:.1f},{cmd[1]:.1f},{cmd[2]:.1f},{cmd[3]:.1f},{cmd[4]:.1f})'
                     )
 
@@ -688,5 +739,49 @@ class MockAmdUdpServer:
             # ────────────────────────────────────────
             if self.config['bridge'].get('max_steps', 0) > 0 and step >= int(self.config['bridge']['max_steps']):
                 break
+
+    def _extract_target_depth_from_downlink(self) -> float:
+        """
+        从下行包 Para1 (int32, offset 37-40) 提取目标深度。
+        Para1 存储的是 depth_m * 10.0 的整数值。
+        """
+        if self.last_client_addr is None:
+            return self.wrapper.reference_depth_m
+        try:
+            import struct
+            # Para1 位于 offset 37，4 字节大端有符号整数
+            para1_raw = struct.unpack('>i', self._last_downlink_packet[37:41])[0]
+            return float(para1_raw) / 10.0
+        except Exception:
+            return self.wrapper.reference_depth_m
+
+    def _extract_target_heading_from_downlink(self) -> float:
+        """
+        从下行包 orientation_deg (offset 35-36, uint16) 提取目标航向。
+        存储的是 deg * 10 的整数值。
+        """
+        try:
+            import struct
+            orientation_raw = struct.unpack('>H', self._last_downlink_packet[35:37])[0]
+            return float(orientation_raw) / 10.0
+        except Exception:
+            return self.wrapper.reference_heading_deg
+
+    def _extract_target_speed_from_downlink(self) -> float:
+        """
+        从下行包 main_motor_rpm (offset 23-24, int16) 估算目标速度。
+        使用 PVS 的 RPM → speed 反向映射。
+        """
+        try:
+            import struct
+            rpm_raw = struct.unpack('>h', self._last_downlink_packet[23:25])[0]
+            # 反向映射：speed = (rpm - offset) / slope
+            rpm = float(abs(rpm_raw))
+            if rpm < self.wrapper.reference_rpm_min:
+                return 0.0
+            speed = (rpm - self.wrapper.reference_speed_rpm_offset) / self.wrapper.reference_speed_rpm_slope
+            return max(0.0, speed)
+        except Exception:
+            return 0.0
 
         print(f'mock amd done, wall_time={time.time() - start_wall:.2f}s')

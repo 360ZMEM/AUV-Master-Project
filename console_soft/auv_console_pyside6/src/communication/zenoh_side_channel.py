@@ -105,6 +105,57 @@ class ZenohSideChannel(QObject):
             self.status_changed.emit(f'Zenoh raw publish failed: {exc}')
             return False
 
+    def publish_json_command(self, cmd_dict: dict) -> bool:
+        """发布 JSON 格式命令到 rt/pc/cmd_raw topic"""
+        if not self.is_active or self._publisher is None:
+            return False
+        try:
+            payload = json.dumps(cmd_dict, ensure_ascii=False).encode('utf-8')
+            self._publisher.put(payload)
+            return True
+        except Exception as exc:
+            self.status_changed.emit(f'Zenoh JSON publish failed: {exc}')
+            return False
+
+    def connect_to_router(self, ip: str, port: int = 7447) -> bool:
+        """以 Client 模式显式连接到指定 Zenoh Router。"""
+        if self._active:
+            self.stop()
+
+        try:
+            import zenoh  # type: ignore
+        except Exception as exc:
+            self.status_changed.emit(f'Zenoh side channel unavailable: {exc}')
+            return False
+
+        connect_str = f"tcp/{ip}:{port}"
+        zcfg = zenoh.Config()
+        zcfg.insert_json5("connect/endpoints", json.dumps([connect_str]))
+        zcfg.insert_json5("mode", '"client"')
+
+        try:
+            self._session = zenoh.open(zcfg)
+            if self.publish_cmd_raw:
+                self._publisher = self._session.declare_publisher(self.pc_cmd_raw_key)
+            if self.subscribe_bridge_telemetry:
+                self._subscribers.append(
+                    self._session.declare_subscriber(self.telemetry_key, self._make_cb('telemetry'))
+                )
+            if self.subscribe_viz_internal:
+                self._subscribers.append(
+                    self._session.declare_subscriber(self.viz_internal_key, self._make_cb('viz'))
+                )
+
+            self._active = True
+            self.status_changed.emit(f'Zenoh connected to {connect_str} (client mode)')
+            return True
+        except Exception as exc:
+            self.status_changed.emit(f'Zenoh connection failed: {exc}')
+            self._session = None
+            self._publisher = None
+            self._subscribers = []
+            return False
+
     def _make_cb(self, stream_name: str):
         def _cb(sample) -> None:
             payload = sample.payload.to_bytes() if hasattr(sample.payload, 'to_bytes') else bytes(sample.payload)
