@@ -4,11 +4,16 @@ C# Reference: Form1.cs (complete implementation)
 """
 
 import os
+import time
+import json
+import yaml
 from datetime import datetime
+from pathlib import Path
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                                QGroupBox, QLabel, QPushButton, QTableWidget,
                                QTableWidgetItem, QTabWidget, QStatusBar, QTextEdit,
-                               QComboBox, QSpinBox, QCheckBox, QButtonGroup, QMessageBox)
+                               QComboBox, QSpinBox, QCheckBox, QButtonGroup, QMessageBox,
+                               QLineEdit, QDoubleSpinBox)
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtGui import QAction
 
@@ -107,7 +112,7 @@ class MainWindow(QMainWindow):
 
         # Map widget
         self.map_widget = MapWidget(self)
-        middle_split.addWidget(self.map_widget, stretch=2)
+        middle_split.addWidget(self.map_widget, stretch=1)
 
         # Control panel
         control_panel = self.create_control_panel()
@@ -115,16 +120,16 @@ class MainWindow(QMainWindow):
 
         main_layout.addLayout(middle_split)
 
-        # Bottom: Tab widget
+        # Bottom: Tab widget (compressed height)
         self.tab_widget = QTabWidget()
         self.tab_widget.addTab(self.create_waypoint_tab(), "航点规划")
         self.tab_widget.addTab(self.create_mission_tab(), "任务配置")
         self.tab_widget.addTab(self.create_message_tab(), "消息")
-        main_layout.addWidget(self.tab_widget)
+        main_layout.addWidget(self.tab_widget, stretch=2)  # More space for tab widget
 
-        # 新增：底部控制台 - 最高优先级操作区
+        # 新增：底部控制台 - 最高优先级操作区（拉高高度）
         self.control_bar = self.create_bottom_control_bar()
-        main_layout.addWidget(self.control_bar)
+        main_layout.addWidget(self.control_bar, stretch=1)  # Balanced height
 
         # Status bar
         self.status_bar = QStatusBar()
@@ -179,29 +184,50 @@ class MainWindow(QMainWindow):
         return group
 
     def create_control_panel(self) -> QGroupBox:
-        """Create control panel"""
+        """Create control panel with two-column layout to save vertical space"""
         group = QGroupBox("控制面板")
-        layout = QVBoxLayout()
+        group.setContentsMargins(8, 10, 8, 8)  # Balanced margins
+        main_layout = QHBoxLayout()  # Main layout is horizontal (two columns)
+        main_layout.setContentsMargins(4, 4, 4, 4)  # Balanced inner margins
+        main_layout.setSpacing(4)  # Reasonable spacing
 
-        # Task control
+        # Left column
+        left_layout = QVBoxLayout()
+        left_layout.setContentsMargins(3, 3, 3, 3)
+        left_layout.setSpacing(3)
+
+        # Task control - 2x2 grid layout
         task_group = QGroupBox("任务控制")
-        task_layout = QHBoxLayout()
+        task_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        task_layout = QVBoxLayout()
+        task_layout.setContentsMargins(3, 3, 3, 3)
+        task_layout.setSpacing(2)
 
         self.btn_task_start = QPushButton("任务开启")
         self.btn_task_cancel = QPushButton("任务取消")
         self.btn_clear_fault = QPushButton("清除故障")
         self.btn_init = QPushButton("初始化")
 
-        task_layout.addWidget(self.btn_task_start)
-        task_layout.addWidget(self.btn_task_cancel)
-        task_layout.addWidget(self.btn_clear_fault)
-        task_layout.addWidget(self.btn_init)
-        task_group.setLayout(task_layout)
+        # Row 1
+        task_row1 = QHBoxLayout()
+        task_row1.addWidget(self.btn_task_start)
+        task_row1.addWidget(self.btn_task_cancel)
+        task_layout.addLayout(task_row1)
 
-        layout.addWidget(task_group)
+        # Row 2
+        task_row2 = QHBoxLayout()
+        task_row2.addWidget(self.btn_clear_fault)
+        task_row2.addWidget(self.btn_init)
+        task_layout.addLayout(task_row2)
+
+        task_group.setLayout(task_layout)
+        left_layout.addWidget(task_group)
 
         arbiter_group = QGroupBox("仲裁控制")
+        arbiter_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
         arbiter_layout = QVBoxLayout()
+        arbiter_layout.setContentsMargins(3, 3, 3, 3)
+        arbiter_layout.setSpacing(2)
         arbiter_button_row = QHBoxLayout()
 
         self.btn_request_autonomy = QPushButton("请求自主")
@@ -219,11 +245,20 @@ class MainWindow(QMainWindow):
         arbiter_layout.addWidget(self.labels['arbiter_feedback'])
         arbiter_group.setLayout(arbiter_layout)
 
-        layout.addWidget(arbiter_group)
+        left_layout.addWidget(arbiter_group)
+        left_layout.addStretch()
+
+        # Right column
+        right_layout = QVBoxLayout()
+        right_layout.setContentsMargins(3, 3, 3, 3)
+        right_layout.setSpacing(3)
 
         # Communication mode
         comm_group = QGroupBox("通信模式")
-        comm_layout = QHBoxLayout()
+        comm_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        comm_layout = QVBoxLayout()  # Changed to vertical to fit in narrow column
+        comm_layout.setContentsMargins(3, 3, 3, 3)
+        comm_layout.setSpacing(2)
 
         self.btn_radio = QPushButton("无线电")
         self.btn_wifi = QPushButton("WiFi")
@@ -231,16 +266,21 @@ class MainWindow(QMainWindow):
         self.btn_wifi.setChecked(True)
         self.btn_beidou = QPushButton("北斗")
 
-        comm_layout.addWidget(self.btn_radio)
-        comm_layout.addWidget(self.btn_wifi)
+        comm_row1 = QHBoxLayout()
+        comm_row1.addWidget(self.btn_radio)
+        comm_row1.addWidget(self.btn_wifi)
+        comm_layout.addLayout(comm_row1)
         comm_layout.addWidget(self.btn_beidou)
         comm_group.setLayout(comm_layout)
 
-        layout.addWidget(comm_group)
+        right_layout.addWidget(comm_group)
 
         # Operation mode
         mode_group = QGroupBox("运行模式")
+        mode_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
         mode_layout = QHBoxLayout()
+        mode_layout.setContentsMargins(3, 3, 3, 3)
+        mode_layout.setSpacing(2)
 
         self.btn_online_mode = QPushButton("在线模式")
         self.btn_online_mode.setCheckable(True)
@@ -261,40 +301,56 @@ class MainWindow(QMainWindow):
         mode_layout.addWidget(self.btn_offline_mode)
         mode_group.setLayout(mode_layout)
 
-        layout.addWidget(mode_group)
+        right_layout.addWidget(mode_group)
 
-        # Quick actions
+        # Quick actions (compact vertical layout)
         action_group = QGroupBox("快捷操作")
+        action_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
         action_layout = QVBoxLayout()
+        action_layout.setContentsMargins(3, 3, 3, 3)
+        action_layout.setSpacing(2)
 
         self.btn_extend = QPushButton("扩展控制...")
         self.btn_settings = QPushButton("端口设置...")
-        self.btn_load_xml = QPushButton("导入航点文件...")
-        self.btn_save_xml = QPushButton("导出航点文件...")
+        self.btn_load_xml = QPushButton("导入航点...")
+        self.btn_save_xml = QPushButton("导出航点...")
 
-        action_layout.addWidget(self.btn_extend)
-        action_layout.addWidget(self.btn_settings)
-        action_layout.addWidget(self.btn_load_xml)
-        action_layout.addWidget(self.btn_save_xml)
+        # Two-row layout for buttons
+        action_row1 = QHBoxLayout()
+        action_row1.addWidget(self.btn_extend)
+        action_row1.addWidget(self.btn_settings)
+        action_layout.addLayout(action_row1)
+        
+        action_row2 = QHBoxLayout()
+        action_row2.addWidget(self.btn_load_xml)
+        action_row2.addWidget(self.btn_save_xml)
+        action_layout.addLayout(action_row2)
+        
         action_group.setLayout(action_layout)
+        right_layout.addWidget(action_group)
+        right_layout.addStretch()
 
-        layout.addWidget(action_group)
-        layout.addStretch()
+        # Add both columns to main layout (RIGHT column first - comm/mode/actions, LEFT column second - task/arbiter)
+        main_layout.addLayout(right_layout, stretch=1)
+        main_layout.addLayout(left_layout, stretch=1)
 
-        group.setLayout(layout)
+        group.setLayout(main_layout)
         return group
 
     def create_waypoint_tab(self) -> QWidget:
         """Create waypoint planning tab"""
         widget = QWidget()
         layout = QVBoxLayout()
+        layout.setContentsMargins(5, 5, 5, 5)  # Reduce margins to save space
+        layout.setSpacing(2)  # Reduce spacing
 
-        # Waypoint table
+        # Waypoint table (compact mode)
         self.waypoint_table = QTableWidget()
         self.waypoint_table.setColumnCount(7)
         self.waypoint_table.setHorizontalHeaderLabels([
             "序号", "经度", "纬度", "策略", "参数", "电机转速", "设备控制"
         ])
+        self.waypoint_table.setMaximumHeight(150)  # Limit height to compress tab
         layout.addWidget(self.waypoint_table)
 
         # Buttons

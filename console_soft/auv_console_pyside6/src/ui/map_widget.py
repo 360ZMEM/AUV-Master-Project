@@ -39,8 +39,8 @@ class MapWidget(QWidget):
         self.measure_start = QPointF()
         self.measure_end = QPointF()
 
-        # Set minimum size
-        self.setMinimumSize(400, 400)
+        # Set minimum size (height reduced to 180px)
+        self.setMinimumSize(400, 180)
 
     def set_map_origin(self, longitude: float, latitude: float):
         """Set map origin from first GPS fix"""

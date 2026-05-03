@@ -46,6 +46,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import json
 import os
 import subprocess
 import sys
@@ -95,6 +96,40 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fps", type=int, default=15, help="Camera sampling rate and output video frame rate.")
     parser.add_argument("--mcap-input", type=Path, default=None, help="Path to an existing .mcap file or rosbag2 directory. When set, the script generates video from this MCAP instead of live capture.")
     parser.add_argument("--mcap-command", type=str, default=None, help="Shell command used to generate a fresh MCAP before replaying it into video.")
+    parser.add_argument(
+        "--mcap-render-mode",
+        choices=("curves", "holoocean_agent", "holoocean_viewport"),
+        default="curves",
+        help="MCAP rendering mode: matplotlib curves or HoloOcean pose replay with agent/viewport capture.",
+    )
+    parser.add_argument(
+        "--mcap-render-all",
+        action="store_true",
+        help="Render all three MCAP modes in one run: curves, holoocean_agent, holoocean_viewport.",
+    )
+    parser.add_argument(
+        "--mcap-render-all-prefix",
+        type=str,
+        default="mcap_bundle",
+        help="Base filename prefix for --mcap-render-all when --output is not provided.",
+    )
+    parser.add_argument(
+        "--mcap-render-all-dir",
+        type=Path,
+        default=None,
+        help="Output directory for --mcap-render-all. Defaults to PROJECT_ROOT/log.",
+    )
+    parser.add_argument(
+        "--mcap-render-all-json",
+        type=Path,
+        default=None,
+        help="Optional JSON manifest path to save all rendered output file paths.",
+    )
+    parser.add_argument("--mcap-pose-topic", type=str, default="/auv/state/filtered", help="Pose topic used by HoloOcean MCAP replay mode.")
+    parser.add_argument("--mcap-pose-frame", choices=("as-is", "ned-to-ue"), default="as-is", help="Pose frame mapping used by HoloOcean MCAP replay mode.")
+    parser.add_argument("--mcap-max-samples", type=int, default=None, help="Maximum pose samples used by HoloOcean MCAP replay mode.")
+    parser.add_argument("--mcap-sample-step", type=int, default=1, help="Take one pose sample every N messages in HoloOcean MCAP replay mode.")
+    parser.add_argument("--force-live", action="store_true", help="Force live HoloOcean capture and ignore any discovered MCAP files.")
     parser.add_argument("--capture-mode", choices=("auto", "agent", "viewport"), default="auto", help="Capture the agent camera or the active viewport.")
     parser.add_argument("--show-viewport", action="store_true", help="Show the HoloOcean viewport while recording.")
     parser.add_argument("--capture-width", type=int, default=None, help="Camera capture width. Defaults to 960 for agent mode or 1280 for viewport mode.")
@@ -155,22 +190,104 @@ def generate_mcap_via_command(command: str) -> None:
     subprocess.run(command, shell=True, check=True, cwd=str(PROJECT_ROOT), env=env)
 
 
-def render_video_from_mcap(mcap_path: Path, output_path: Path, output_format: str, fps: int, verbose: bool) -> None:
-    replay_script = PROJECT_ROOT / "tools" / "replay_mcap_video.py"
-    command = [
-        sys.executable,
-        str(replay_script),
-        str(mcap_path),
-        "--output",
-        str(output_path),
-        "--format",
-        output_format,
-        "--fps",
-        str(fps),
-    ]
+def render_video_from_mcap(
+    *,
+    mcap_path: Path,
+    output_path: Path,
+    output_format: str,
+    fps: int,
+    verbose: bool,
+    config_path: Path,
+    render_mode: str,
+    pose_topic: str,
+    pose_frame: str,
+    max_samples: int | None,
+    sample_step: int,
+) -> None:
+    if render_mode == "curves":
+        replay_script = PROJECT_ROOT / "tools" / "replay_mcap_video.py"
+        command = [
+            sys.executable,
+            str(replay_script),
+            str(mcap_path),
+            "--output",
+            str(output_path),
+            "--format",
+            output_format,
+            "--fps",
+            str(fps),
+        ]
+    else:
+        replay_script = PROJECT_ROOT / "tools" / "replay_mcap_holoocean.py"
+        capture_mode = "agent" if render_mode == "holoocean_agent" else "viewport"
+        command = [
+            sys.executable,
+            str(replay_script),
+            str(mcap_path),
+            "--config",
+            str(config_path),
+            "--capture-mode",
+            capture_mode,
+            "--output",
+            str(output_path),
+            "--format",
+            output_format,
+            "--fps",
+            str(fps),
+            "--pose-topic",
+            pose_topic,
+            "--pose-frame",
+            pose_frame,
+            "--sample-step",
+            str(sample_step),
+        ]
+        if capture_mode == "viewport":
+            command.append("--show-viewport")
+        if max_samples is not None:
+            command.extend(["--max-samples", str(max_samples)])
+
     if verbose:
         command.append("--verbose")
     subprocess.run(command, check=True, cwd=str(PROJECT_ROOT))
+
+
+def build_render_all_targets(base_output_path: Path) -> dict[str, Path]:
+    suffix = base_output_path.suffix
+    stem = base_output_path.stem
+    parent = base_output_path.parent
+    return {
+        "curves": parent / f"{stem}_curves{suffix}",
+        "holoocean_agent": parent / f"{stem}_holoocean_agent{suffix}",
+        "holoocean_viewport": parent / f"{stem}_holoocean_viewport{suffix}",
+    }
+
+
+def resolve_render_all_base_output(args: argparse.Namespace) -> Path:
+    if args.output is not None:
+        return resolve_output_path(args.output, args.format)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_prefix = str(args.mcap_render_all_prefix).strip() or "mcap_bundle"
+    output_dir = PROJECT_ROOT / "log"
+    if args.mcap_render_all_dir is not None:
+        output_dir = args.mcap_render_all_dir.expanduser().resolve()
+    return output_dir / f"{safe_prefix}_{timestamp}.{args.format}"
+
+
+def write_render_manifest(manifest_path: Path, mcap_path: Path, mode_targets: dict[str, Path], args: argparse.Namespace) -> None:
+    payload = {
+        "created_at": datetime.now().isoformat(),
+        "mcap_input": str(mcap_path),
+        "format": str(args.format),
+        "fps": int(args.fps),
+        "pose_topic": str(args.mcap_pose_topic),
+        "pose_frame": str(args.mcap_pose_frame),
+        "max_samples": args.mcap_max_samples,
+        "sample_step": int(args.mcap_sample_step),
+        "outputs": {mode: str(path) for mode, path in mode_targets.items()},
+    }
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    with manifest_path.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False)
 
 
 def resolve_config_path(config_path: Path) -> Path:
@@ -284,27 +401,66 @@ def capture_frame_from_state(state: dict[str, object], sensor_name: str) -> np.n
 
 def main() -> None:
     args = parse_args()
+    config_path = resolve_config_path(args.config)
 
     mcap_path = resolve_mcap_path(args.mcap_input)
+    if args.force_live:
+        mcap_path = None
+
     if mcap_path is None and args.mcap_command:
         generate_mcap_via_command(args.mcap_command)
         mcap_path = resolve_mcap_path(None)
 
     if mcap_path is not None:
-        output_path = resolve_output_path(args.output, args.format)
+        output_path = (
+            resolve_render_all_base_output(args)
+            if args.mcap_render_all
+            else resolve_output_path(args.output, args.format)
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        modes = (
+            ["curves", "holoocean_agent", "holoocean_viewport"]
+            if args.mcap_render_all
+            else [str(args.mcap_render_mode)]
+        )
+        targets = (
+            build_render_all_targets(output_path)
+            if args.mcap_render_all
+            else {str(args.mcap_render_mode): output_path}
+        )
+
         print("=" * 72)
         print("MCAP replay video generation")
         print(f"mcap_input={mcap_path}")
-        print(f"output={output_path}")
         print(f"format={args.format}")
         print(f"fps={args.fps}")
+        print(f"modes={','.join(modes)}")
+        for mode in modes:
+            print(f"target[{mode}]={targets[mode]}")
         print("=" * 72)
-        render_video_from_mcap(mcap_path, output_path, args.format, int(args.fps), bool(args.verbose))
-        print(f"Saved video to: {output_path}")
+
+        for mode in modes:
+            render_video_from_mcap(
+                mcap_path=mcap_path,
+                output_path=targets[mode],
+                output_format=args.format,
+                fps=int(args.fps),
+                verbose=bool(args.verbose),
+                config_path=config_path,
+                render_mode=mode,
+                pose_topic=str(args.mcap_pose_topic),
+                pose_frame=str(args.mcap_pose_frame),
+                max_samples=args.mcap_max_samples,
+                sample_step=int(args.mcap_sample_step),
+            )
+            print(f"Saved video ({mode}) to: {targets[mode]}")
+
+        if args.mcap_render_all and args.mcap_render_all_json is not None:
+            manifest_path = args.mcap_render_all_json.expanduser().resolve()
+            write_render_manifest(manifest_path, mcap_path, targets, args)
+            print(f"Saved render manifest to: {manifest_path}")
         return
 
-    config_path = resolve_config_path(args.config)
     if not config_path.exists():
         raise SystemExit(f"Config file not found: {config_path}")
 

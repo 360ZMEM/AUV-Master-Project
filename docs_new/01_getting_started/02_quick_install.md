@@ -7,13 +7,13 @@
 ### 硬件要求
 
 - CPU: 4 核心及以上
-- 内存: 8GB 及以上（推荐 16GB）
+- 内存: 4GB 及以上（推荐 8GB）
 - 硬盘: 20GB 可用空间
 
-### 软件要求
+### 软件版本
 
 - **操作系统**: Ubuntu 22.04 LTS
-- **Python**: 3.10+（系统 Python `/usr/bin/python3`）
+- **Python**: 3.10（系统 Python `/usr/bin/python3`）
 - **ROS2**: Humble Hawksbill
 
 ### 多个后端
@@ -229,6 +229,57 @@ source $AUV_PROJECT_ROOT/brain_linux/install/setup.bash
 alias python=/usr/bin/python3
 alias pip='/usr/bin/python3 -m pip'
 ```
+
+## 附录：在 Linux (arm64) 上安装 `ffmpeg`
+
+本项目在将 GIF/帧转换为 MP4 或做视频转码时会用到 `ffmpeg`。可以遵循下面的命令安装:
+
+### 1) Ubuntu / Debian（arm64）
+
+```bash
+sudo apt update
+sudo apt install -y ffmpeg
+```
+
+或者:
+
+```bash
+#mamba install -y -c conda-forge ffmpeg
+# 或
+conda install -y -c conda-forge ffmpeg
+```
+
+### 验证安装
+
+```bash
+ffmpeg -version
+which ffmpeg
+```
+
+## 附录：MCAP 一键导出三路 MP4（曲线 + Holoocean 双视角）
+
+安装好 `ffmpeg` 后，可以用如下命令从一个 MCAP 一次性导出三路 MP4：
+
+```bash
+/usr/bin/python3 tools/capture_holoocean_video.py \
+  --mcap-input log/experiments/20260503_204842/rosbag/rosbag_0.mcap \
+  --mcap-render-all \
+  --mcap-render-all-prefix replay_batch \
+  --mcap-render-all-dir log/replays \
+  --mcap-render-all-json log/replays/replay_batch_manifest.json \
+  --format mp4 \
+  --fps 12
+```
+
+输出文件说明：
+- `*_curves.mp4`：matplotlib 轨迹/深度曲线回放
+- `*_holoocean_agent.mp4`：Holoocean agent 视角（MCAP 位姿驱动）
+- `*_holoocean_viewport.mp4`：Holoocean viewport 视角（MCAP 位姿驱动）
+
+新增参数说明：
+- `--mcap-render-all-dir`：指定三路视频输出目录（默认 `log/`）
+- `--mcap-render-all-json`：输出 JSON 清单（包含三路结果路径）
+- `--mcap-render-all-prefix`：批次文件名前缀
 
 ## 下一步
 
