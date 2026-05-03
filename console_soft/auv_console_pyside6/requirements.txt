@@ -1,0 +1,21 @@
+# AUV Console Application - Python Dependencies
+
+# Core GUI Framework
+PySide6==6.6.0
+
+# Serial Communication
+pyserial==3.5
+
+# PCAP Processing (for offline mode)
+scapy==2.7.0
+
+# Configuration File Parsing
+configobj==5.0.9
+
+# Optional Zenoh side channel for arbiter integration
+zenoh
+
+# Testing
+pytest==7.4.3
+pytest-qt==4.3.1
+pytest-cov==4.1.0

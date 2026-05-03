@@ -1,0 +1,21 @@
+# AUV Console Port Configuration for Local Testing
+# This configuration is for testing with the PCAP replay sender on localhost
+# The sender acts as a virtual AUV on 127.0.0.1
+
+# Radio serial port (not used in WiFi mode)
+COM3
+
+# Beidou serial port (not used in WiFi mode)
+COM4
+
+# Console IP address (local host for testing)
+127.0.0.1
+
+# Console UDP port (listening for AUV packets)
+21
+
+# AUV IP address (simulated by replay sender)
+127.0.0.1
+
+# AUV UDP port (simulated sender port)
+52364
