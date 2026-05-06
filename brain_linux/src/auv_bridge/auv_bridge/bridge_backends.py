@@ -146,7 +146,17 @@ class TopicBridgeBackend(BaseBridgeBackend):
         payload = dict(command_payload)
         payload['control_mode_byte'] = int(control_mode_byte)
         payload['work_instruction'] = int(work_instruction)
-        self._publishers[self.cmd_key].put(json.dumps(payload, ensure_ascii=False))
+        try:
+            self._publishers[self.cmd_key].put(json.dumps(payload, ensure_ascii=False))
+        except Exception as exc:
+            self.node.get_logger().warning(f'[bridge] Zenoh send failed, attempting reconnection: {exc}')
+            try:
+                self.close()
+                self.open()
+                self._publishers[self.cmd_key].put(json.dumps(payload, ensure_ascii=False))
+                self.node.get_logger().info('[bridge] Zenoh reconnection successful')
+            except Exception as reconnect_exc:
+                self.node.get_logger().error(f'[bridge] Zenoh reconnection failed: {reconnect_exc}')
 
 
 class ProtocolBridgeBackend(BaseBridgeBackend):
@@ -180,6 +190,10 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self._session = None
         self._subscribers = []
         self._publishers: dict[str, Any] = {}
+        self._reconnect_attempts = 0
+        self._max_reconnect_attempts = 3
+        self._on_link_failure_callback = None
+        self._on_link_recovery_callback = None
 
     def open(self) -> None:
         """打开 UDP 套接字并启动接收线程。"""
@@ -375,9 +389,21 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
                 return
             try:
                 packet, _addr = self._socket.recvfrom(self.recv_buffer_size)
+                self._reconnect_attempts = 0
             except socket.timeout:
                 continue
-            except OSError:
+            except (ConnectionResetError, BrokenPipeError, OSError) as exc:
+                if self._stop_event.is_set():
+                    return
+                self.node.get_logger().error(f'[bridge] UDP socket error: {exc}, attempting reconnect...')
+                if self._on_link_failure_callback:
+                    self._on_link_failure_callback()
+                if self._safe_reconnect():
+                    self.node.get_logger().info('[bridge] UDP reconnected successfully')
+                    if self._on_link_recovery_callback:
+                        self._on_link_recovery_callback()
+                else:
+                    self.node.get_logger().error('[bridge] UDP reconnect failed, exiting recv loop')
                 return
 
             if len(packet) != PROTOCOL_UPLINK_SIZE:
@@ -391,3 +417,41 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
                 continue
 
             self.node.handle_protocol_telemetry(telemetry)
+
+    def _safe_reconnect(self) -> bool:
+        """安全重连 UDP socket，返回是否成功。"""
+        self._stop_event.set()
+        if self._recv_thread is not None:
+            self._recv_thread.join(timeout=1.0)
+        if self._socket is not None:
+            try:
+                self._socket.close()
+            except Exception:
+                pass
+            self._socket = None
+
+        time.sleep(1.0)
+
+        try:
+            self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self._socket.bind((self.local_host, self.local_port))
+            self._socket.settimeout(self.socket_timeout_s)
+            self._stop_event.clear()
+            self._reconnect_attempts = 0
+            self._recv_thread = threading.Thread(target=self._recv_loop, name='auv-protocol-udp-rx', daemon=True)
+            self._recv_thread.start()
+            return True
+        except Exception as exc:
+            self._reconnect_attempts += 1
+            self.node.get_logger().error(f'[bridge] Reconnect failed (attempt {self._reconnect_attempts}/{self._max_reconnect_attempts}): {exc}')
+            if self._reconnect_attempts < self._max_reconnect_attempts:
+                return self._safe_reconnect()
+            return False
+
+    def set_link_failure_callback(self, callback) -> None:
+        """设置链路断开回调。"""
+        self._on_link_failure_callback = callback
+
+    def set_link_recovery_callback(self, callback) -> None:
+        """设置链路恢复回调。"""
+        self._on_link_recovery_callback = callback

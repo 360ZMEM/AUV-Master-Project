@@ -10,6 +10,7 @@
   - 消息转换是单向的，无回溯依赖
   - 所有数值字段进行显式类型转换，避免隐式转换错误
   - 缺失字段采用合理的默认值，便于向后兼容
+  - 提供饱和度日志访问接口，用于调试控制器何时触碰物理极限
 """
 
 from __future__ import annotations
@@ -18,6 +19,8 @@ from builtin_interfaces.msg import Time
 from auv_decision_core.models import MotionGoal, SensorStatusData
 from auv_decision_core.telemetry import DecisionTelemetrySnapshot
 from auv_interfaces.msg import AuvDiagnostic, ControlGoal, SensorStatus, Setpoint
+
+from common.physics import get_saturation_log, clear_saturation_log, SaturationRecord
 
 
 def sensor_msg_to_core(msg: SensorStatus) -> SensorStatusData:

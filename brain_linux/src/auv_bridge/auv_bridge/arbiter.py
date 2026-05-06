@@ -89,11 +89,17 @@ class CommandArbiter:
         self._last_pc_ts = 0.0
         self._last_mpc: dict[str, Any] | None = None
         self._last_mpc_ts = 0.0
+        self._last_decision_mode = ArbiterMode.REMOTE
         self.pc_link_status = "OK"  # "OK" / "WEAK" / "LOST"
 
     @property
     def active_mode(self) -> ArbiterMode:
         return self._mode
+
+    def reset_all_buffers(self) -> None:
+        """在模式切换时清空所有历史指令缓存，防止旧指令残留。"""
+        self._last_mpc = None
+        self._last_mpc_ts = 0.0
 
     def check_pc_link_health(self, *, now: float | None = None) -> str:
         """检查上位机链路健康状态：OK / WEAK / LOST"""
@@ -118,9 +124,12 @@ class CommandArbiter:
 
         if work_instruction in {int(WorkInstruction.TASK_CANCEL), int(WorkInstruction.CLEAR_FAULT)}:
             self._mode = ArbiterMode.REMOTE
+            self.reset_all_buffers()
         elif control_mode_byte == int(ControlModeByte.JETSON_PROTOCOL):
             self._mode = ArbiterMode.AUTONOMOUS
         else:
+            if self._mode == ArbiterMode.AUTONOMOUS:
+                self.reset_all_buffers()
             self._mode = ArbiterMode.REMOTE
 
         return self.decide(now=stamp)
@@ -134,7 +143,9 @@ class CommandArbiter:
     def force_remote(self, payload: dict[str, Any] | None = None, *, now: float | None = None) -> ArbiterDecision:
         """Force the arbiter back to remote mode after guard rejection or manual takeover."""
         stamp = time.time() if now is None else float(now)
+        old_mode = self._mode
         self._mode = ArbiterMode.REMOTE
+        self.reset_all_buffers()
 
         if payload is not None:
             self._last_pc_raw = self._normalize_pc_raw_command(self._coerce_remote_payload(payload), ts=stamp)
@@ -151,6 +162,10 @@ class CommandArbiter:
     def decide(self, *, now: float | None = None) -> ArbiterDecision:
         stamp = time.time() if now is None else float(now)
         self.pc_link_status = self.check_pc_link_health(now=stamp)
+
+        if self._last_decision_mode != self._mode:
+            self.reset_all_buffers()
+            self._last_decision_mode = self._mode
 
         if self._mode == ArbiterMode.AUTONOMOUS:
             if self._has_fresh_valid_mpc(stamp):

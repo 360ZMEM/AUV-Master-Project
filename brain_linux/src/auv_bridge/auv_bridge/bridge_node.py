@@ -206,6 +206,7 @@ class AUVBridgeNode(Node):
         self._lat_sum = 0.0
 
         self.transport = self._create_transport(self.backend)
+        self._setup_link_healing_callbacks()
         self.transport.open()
 
         self._reset_command_keepalive_timer()
@@ -223,6 +224,23 @@ class AUVBridgeNode(Node):
         with p.open('r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
         return data if isinstance(data, dict) else {}
+
+    def _setup_link_healing_callbacks(self) -> None:
+        """注册链路自愈回调到传输后端。"""
+        if hasattr(self.transport, 'set_link_failure_callback'):
+            self.transport.set_link_failure_callback(self._on_link_failure)
+        if hasattr(self.transport, 'set_link_recovery_callback'):
+            self.transport.set_link_recovery_callback(self._on_link_recovery)
+
+    def _on_link_failure(self) -> None:
+        """链路断开处理：触发守卫器锁定。"""
+        self.get_logger().error('[bridge] Link failure detected, triggering LOCKED mode')
+        if self.arbiter_enabled and self.autonomy_guard is not None:
+            self.autonomy_guard.lock(deny_reason=DenyReason.COMM_LINK_FAILURE)
+
+    def _on_link_recovery(self) -> None:
+        """链路恢复处理：记录日志。"""
+        self.get_logger().info('[bridge] Link recovered, resuming normal operation')
 
     def _create_transport(self, backend: BridgeBackend) -> BaseBridgeBackend:
         """根据配置选择具体传输后端实现。"""
@@ -385,10 +403,13 @@ class AUVBridgeNode(Node):
         work_instruction = int(payload.get(KEY_WORK_INSTRUCTION, int(WorkInstruction.NONE)))
 
         if work_instruction in {int(WorkInstruction.TASK_CANCEL), int(WorkInstruction.CLEAR_FAULT)}:
-            # ESTOP：无论当前状态，立即锁回遥控
+            old_mode = self.command_arbiter.active_mode
             guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
             decision = self.command_arbiter.force_remote(payload, now=now)
-            self.get_logger().warn('[bridge] ESTOP/MANUAL_OVERRIDE received, forcing REMOTE')
+            self.get_logger().warn(
+                f'[bridge] ESTOP/MANUAL_OVERRIDE: switching from {old_mode.value} -> REMOTE '
+                f'(MPC buffers cleared, payload={payload.get(KEY_THRUST, "?")})'
+            )
         elif control_mode_byte == int(ControlModeByte.JETSON_PROTOCOL):
             # 自主申请：守卫检查
             guard_decision = self.autonomy_guard.request_activation(
@@ -405,7 +426,18 @@ class AUVBridgeNode(Node):
                 )
                 self.get_logger().warn('[bridge] Autonomy guard rejected, forcing zero-thrust REMOTE')
         else:
-            # 手动模式：透明路由
+            # 手动模式：透明路由，但需检查ESTOP安全锁
+            if self.autonomy_guard.auto_state == AutoState.LOCKED:
+                # 安全锁生效中：强制归零推力，保持LOCKED状态
+                payload = dict(payload)
+                payload[KEY_THRUST] = 0.0
+                payload[KEY_LEFT] = 0.0
+                payload[KEY_RIGHT] = 0.0
+                payload[KEY_TOP] = 0.0
+                payload[KEY_BOTTOM] = 0.0
+                self.get_logger().warn(
+                    '[bridge] ESTOP safety lock active: command thrust forced to 0.0'
+                )
             guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.NONE)
             decision = self.command_arbiter.update_pc_raw_command(payload, now=now)
 

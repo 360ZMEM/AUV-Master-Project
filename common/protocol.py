@@ -25,6 +25,7 @@
 
 from __future__ import annotations
 
+import math
 import struct
 import time
 from dataclasses import dataclass
@@ -639,12 +640,18 @@ def normalize_control_command(payload: Any) -> dict[str, float]:
     if not all(_is_number(v) for v in values):
         raise ValueError("control values must be numeric")
 
+    right = _sanitize_float(float(right))
+    top = _sanitize_float(float(top))
+    left = _sanitize_float(float(left))
+    bottom = _sanitize_float(float(bottom))
+    thrust = _sanitize_float(float(thrust))
+
     return {
-        KEY_RIGHT: float(clamp_rudder_deg(float(right))),
-        KEY_TOP: float(clamp_rudder_deg(float(top))),
-        KEY_LEFT: float(clamp_rudder_deg(float(left))),
-        KEY_BOTTOM: float(clamp_rudder_deg(float(bottom))),
-        KEY_THRUST: float(clamp_thrust_percent(float(thrust))),
+        KEY_RIGHT: float(clamp_rudder_deg(right)),
+        KEY_TOP: float(clamp_rudder_deg(top)),
+        KEY_LEFT: float(clamp_rudder_deg(left)),
+        KEY_BOTTOM: float(clamp_rudder_deg(bottom)),
+        KEY_THRUST: float(clamp_thrust_percent(thrust)),
     }
 
 
@@ -935,6 +942,23 @@ def _clamp_int(value: int, low: int, high: int) -> int:
     return max(low, min(high, int(value)))
 
 
+def _sanitize_float(value: float, default: float = 0.0) -> float:
+    """
+    浮点数安全性检查 — 拦截 NaN 和 Inf，返回安全默认值。
+    
+    @param value 待检查的浮点值
+    @param default 当 value 为 NaN/Inf 时返回的默认值
+    @return value（若有限）或 default
+    
+    @details
+    用于在 struct.pack 前拦截控制器输出的非法浮点数，
+    防止整数溢出导致舵角/推力异常跳变。
+    """
+    if not math.isfinite(value):
+        return default
+    return float(value)
+
+
 def _coerce_pair(values: Sequence[int] | None, *, low: int, high: int) -> tuple[int, int]:
     """
     强制转换二元参数组。若为 None 返回 (0, 0)，否则限制范围。
@@ -1094,14 +1118,14 @@ def build_downlink_packet(
     struct.pack_into(">h", packet, 20, spare_pair[1])
     packet[22] = work_instruction & 0xFF
 
-    main_motor_rpm = _clamp_int(round(normalized[KEY_THRUST] * main_motor_rpm_scale), -32768, 32767)
+    main_motor_rpm = _clamp_int(round(_sanitize_float(normalized[KEY_THRUST]) * main_motor_rpm_scale), -32768, 32767)
     struct.pack_into(">h", packet, 23, main_motor_rpm)
     struct.pack_into(">h", packet, 25, _clamp_int(side_motor_rpm, -32768, 32767))
-    struct.pack_into(">h", packet, 27, _clamp_int(round(normalized[KEY_LEFT] * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 29, _clamp_int(round(normalized[KEY_RIGHT] * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 31, _clamp_int(round(normalized[KEY_TOP] * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 33, _clamp_int(round(normalized[KEY_BOTTOM] * 10.0), -32768, 32767))
-    struct.pack_into(">H", packet, 35, _clamp_int(round(orientation_deg * 10.0), 0, 65535))
+    struct.pack_into(">h", packet, 27, _clamp_int(round(_sanitize_float(normalized[KEY_LEFT]) * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 29, _clamp_int(round(_sanitize_float(normalized[KEY_RIGHT]) * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 31, _clamp_int(round(_sanitize_float(normalized[KEY_TOP]) * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 33, _clamp_int(round(_sanitize_float(normalized[KEY_BOTTOM]) * 10.0), -32768, 32767))
+    struct.pack_into(">H", packet, 35, _clamp_int(round(_sanitize_float(orientation_deg) * 10.0), 0, 65535))
 
     struct.pack_into(">i", packet, 37, parameters[0])
     struct.pack_into(">i", packet, 41, parameters[1])
