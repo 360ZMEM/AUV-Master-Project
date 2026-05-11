@@ -36,7 +36,7 @@ import importlib.util
 import os
 
 import rclpy
-from auv_interfaces.msg import Setpoint, MpcCmd
+from auv_interfaces.msg import Setpoint, MpcCmd, ArbiterStatus
 from geometry_msgs.msg import Twist, TwistStamped
 from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import SetParametersResult
@@ -47,6 +47,7 @@ import yaml
 
 from common.enums import StateEstimateSource, ControlModeByte
 from common.protocol import KEY_STATE_SOURCE
+from common.env_utils import load_config_with_overrides
 
 from .base_controller import BaseController, ControlOutput
 from .pid_controller import PIDController
@@ -183,7 +184,9 @@ class AUVControllerNode(Node):
         self.latest_imu_ts = 0.0
         self.latest_debug_payload: dict | None = None
         self._latest_confidence: float = 1.0
+        self.latest_arbiter_status: ArbiterStatus | None = None
 
+        self.arbiter_status_sub = self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 20)
         self.setpoint_sub = self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
         self.filtered_state_sub = self.create_subscription(Odometry, self.filtered_state_topic, self._on_filtered_state, 20)
         self.raw_state_sub = self.create_subscription(Odometry, self.raw_state_topic, self._on_raw_state, 20)
@@ -211,14 +214,14 @@ class AUVControllerNode(Node):
     @staticmethod
     def _load_config(path: str) -> dict:
         """加载控制参数 YAML，并确保配置结构是字典。"""
-        p = Path(path)
-        if not p.exists():
-            raise FileNotFoundError(f'controller params file not found: {p}')
-        with p.open('r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        if not isinstance(data, dict):
+        cfg = load_config_with_overrides(path)
+        if not isinstance(cfg, dict):
             raise RuntimeError('invalid controller params yaml')
-        return data
+        return cfg
+
+    def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
+        """缓存最新仲裁器状态。"""
+        self.latest_arbiter_status = msg
 
     def _on_setpoint(self, msg: Setpoint) -> None:
         """缓存最新控制目标并记录时间戳。"""
@@ -428,6 +431,20 @@ class AUVControllerNode(Node):
         q = st.pose.pose.orientation
         roll, pitch, yaw = quat_to_euler(q.w, q.x, q.y, q.z)
         p_rate, q_rate, r_rate, rate_source = self._resolve_body_rates(st)
+
+        # --- 无扰动切换 (Bumpless Transfer) ---
+        is_autonomous = False
+        if self.latest_arbiter_status is not None:
+            is_autonomous = (self.latest_arbiter_status.active_arbiter == 'AUTONOMOUS')
+
+        if not is_autonomous:
+            # 重置积分
+            if hasattr(self._active_controller, 'reset'):
+                self._active_controller.reset()
+            # 状态跟随 (Setpoint Shadowing)
+            sp.target_depth_m = float(-st.pose.pose.position.z)
+            sp.target_heading_rad = yaw
+
         depth_error = float(sp.target_depth_m) - float(-st.pose.pose.position.z)
         yaw_error = math.atan2(
             math.sin(float(sp.target_heading_rad) - yaw),

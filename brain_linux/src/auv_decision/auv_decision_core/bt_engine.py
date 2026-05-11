@@ -24,6 +24,7 @@ from .behaviors import (
     MockCableTrackingBehavior,
     ParallelTracking,
     TrackAnalyticalTrajectoryBehavior,
+    Wait_For_Arbiter_Authorization,
     ZigZagSearch,
 )
 from .decorators import AnomalySpeedLimiter
@@ -139,6 +140,7 @@ class DecisionTreeEngine:
         root = py_trees.composites.Selector(name='RootSelector', memory=False)
         root.add_children([
             emergency_sequence,
+            Wait_For_Arbiter_Authorization(name='StandbyCheck'),
             debug_cascade_selector,
         ])
         return root

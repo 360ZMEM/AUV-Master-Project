@@ -37,6 +37,12 @@ import math
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable, Sequence
+import sys
+import os
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.append(str(PROJECT_ROOT))
+from common.env_utils import get_output_dir
 
 import numpy as np
 
@@ -315,10 +321,7 @@ def resolve_output_dir(input_path: Path, explicit_output_dir: Path | None) -> Pa
         explicit_output_dir.mkdir(parents=True, exist_ok=True)
         return explicit_output_dir
 
-    anchor = input_path if input_path.is_dir() else input_path.parent
-    output_dir = anchor / "analysis_figures"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    return output_dir
+    return get_output_dir("results/analyze_bag")
 
 
 def candidate_truth_topics(preferred: str, fallbacks_csv: str) -> list[str]:

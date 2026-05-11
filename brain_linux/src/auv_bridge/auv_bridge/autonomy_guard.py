@@ -105,6 +105,7 @@ class AutonomyGuard:
             total_voltage_v = float((telemetry_status or {}).get(KEY_TOTAL_VOLTAGE_V, 0.0))
             confidence = float((sensor_status or {}).get(KEY_CONFIDENCE, 0.0))
             telemetry_freshness_ms = float((telemetry_status or {}).get(KEY_TELEMETRY_FRESHNESS_MS, float("inf")))
+            storage_usage = float((telemetry_status or {}).get('storage_usage', 0.0))
         except (TypeError, ValueError):
             return DenyReason.UNKNOWN
 
@@ -116,4 +117,6 @@ class AutonomyGuard:
             return DenyReason.LOW_CONFIDENCE
         if telemetry_freshness_ms >= self.max_uplink_age_ms:
             return DenyReason.AMD_UPLINK_STALE
+        if storage_usage > 0.9:
+            return DenyReason.LOW_CONFIDENCE
         return DenyReason.NONE

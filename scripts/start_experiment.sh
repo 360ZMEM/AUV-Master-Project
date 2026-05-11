@@ -4,7 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS_DIR="$ROOT_DIR/scripts"
 BRAIN_DIR="$ROOT_DIR/brain_linux"
-LOG_ROOT="${AUV_EXPERIMENT_LOG_ROOT:-$ROOT_DIR/log/experiments}"
+DATA_ROOT=$(python3 -c "import sys; sys.path.append('$ROOT_DIR'); from common.env_utils import get_data_root; print(get_data_root())")
+LOG_ROOT="${AUV_EXPERIMENT_LOG_ROOT:-$DATA_ROOT/bags}"
 SIM_MODE="both"
 BRAIN_MODE="stack"
 LAUNCH_ARGS=()

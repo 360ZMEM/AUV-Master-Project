@@ -1,5 +1,7 @@
 # Unified parameters for bridge/localization/controller/decision.
 
+auv_data_root: "/auv_data"
+
 bridge:
   backend: zenoh_json
   passive_mode: false

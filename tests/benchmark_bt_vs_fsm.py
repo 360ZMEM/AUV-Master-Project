@@ -30,6 +30,7 @@ import matplotlib.font_manager as fm
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / 'brain_linux' / 'src'))
 
 from auv_decision.auv_decision_core.bt_engine import DecisionTreeEngine
@@ -62,10 +63,10 @@ def _seed_all(seed: int) -> None:
     np.random.seed(seed)
 
 
+from common.env_utils import get_output_dir as env_get_output_dir
+
 def get_output_dir(base: str = 'results/decision') -> Path:
-    ts = datetime.now().strftime('%Y%m%d_%H%M%S')
-    out = PROJECT_ROOT / base / f'bt_vs_fsm_{ts}'
-    out.mkdir(parents=True, exist_ok=True)
+    out = env_get_output_dir(f'{base}/bt_vs_fsm')
     (out / 'figures').mkdir(parents=True, exist_ok=True)
     return out
 

@@ -224,6 +224,8 @@ class AUVDecisionNode(Node):
 
     def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
         """处理仲裁器下发的工作指令，并在自动模式下切换调试等级。"""
+        self.latest_sensor_status.auto_state = str(msg.auto_state)
+
         # 仅在 AUTO 模式下响应 0xA1/0xA2
         if self.debug_level != 0:
             return

@@ -47,6 +47,7 @@ class SensorStatusData:
     heading_rad: float = 0.0
     mock_amd_timestamp_us: int = 0
     debug_level: int = 0
+    auto_state: str = 'LOCKED'
 
     def is_leaking(self) -> bool:
         """判断当前是否存在漏水风险。"""

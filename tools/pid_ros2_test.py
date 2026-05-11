@@ -27,6 +27,7 @@ from python_vehicle_simulator.vehicles.remus100 import remus100
 
 import importlib.util
 project_root = Path(__file__).resolve().parent.parent
+from common.env_utils import get_output_dir
 algo_dir = project_root / 'algorithm'
 module_path = algo_dir / 'auv_pid_controller.py'
 spec = importlib.util.spec_from_file_location('auv_pid_controller', str(module_path))
@@ -39,8 +40,7 @@ params_file = project_root / 'brain_linux' / 'config' / 'params.yaml'
 with open(params_file, 'r') as f:
     cfg = yaml.safe_load(f)
 
-TEST_TIMESTAMP = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-RESULTS_DIR = project_root / 'tools' / 'results' / 'control' / f'pid_test_{TEST_TIMESTAMP}'
+RESULTS_DIR = get_output_dir('results/control/pid_test')
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR = RESULTS_DIR / 'figures'
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)

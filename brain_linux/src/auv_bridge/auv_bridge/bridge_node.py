@@ -30,6 +30,8 @@ import json
 import time
 from pathlib import Path
 from typing import Any
+import psutil
+import shutil
 
 import rclpy
 
@@ -43,6 +45,7 @@ from std_msgs.msg import Float32, String
 import yaml
 
 from common.enums import ArbiterMode, ArbiterSource, AutoState, BridgeBackend, ControlModeByte, DenyReason, WorkInstruction
+from common.env_utils import load_config_with_overrides
 from common.protocol import (
     KEY_B_NED,
     KEY_BOTTOM,
@@ -218,12 +221,8 @@ class AUVBridgeNode(Node):
     @staticmethod
     def _load_config(path: str) -> dict[str, Any]:
         """加载桥接配置文件，若不存在则返回空字典。"""
-        p = Path(path)
-        if not p.exists():
-            return {}
-        with p.open('r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        return data if isinstance(data, dict) else {}
+        cfg = load_config_with_overrides(path)
+        return cfg if isinstance(cfg, dict) else {}
 
     def _setup_link_healing_callbacks(self) -> None:
         """注册链路自愈回调到传输后端。"""
@@ -843,6 +842,25 @@ class AUVBridgeNode(Node):
 
         # 注入行为树状态
         bridge_payload['bt_status_markdown'] = self._current_bt_status
+
+        # 新增：注入心跳自检状态 (CPU/Mem/Storage)
+        try:
+            from common.env_utils import get_data_root
+            cpu_percent = psutil.cpu_percent(interval=None)
+            mem = psutil.virtual_memory()
+            mem_percent = mem.percent
+            bridge_payload['jetson_load'] = f"CPU:{cpu_percent:.1f}% Mem:{mem_percent:.1f}%"
+            
+            data_root = get_data_root()
+            if data_root.exists():
+                total, used, free = shutil.disk_usage(str(data_root))
+                bridge_payload['storage_usage'] = used / total if total > 0 else 0.0
+            else:
+                bridge_payload['storage_usage'] = 0.0
+        except Exception as e:
+            self.get_logger().warning(f"Health check failed: {e}")
+            bridge_payload['jetson_load'] = "UNKNOWN"
+            bridge_payload['storage_usage'] = 0.0
 
         self.transport.publish_bridge_telemetry(bridge_payload)
         if self.passive_mode:

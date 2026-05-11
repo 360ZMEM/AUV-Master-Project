@@ -34,6 +34,7 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from common.env_utils import get_output_dir
 
 import numpy as np
 
@@ -983,7 +984,7 @@ def main() -> None:
     if args.skip_ekf_benchmark:
         if args.run_control_benchmark:
             _run_control_benchmarks(
-                output_dir=PROJECT_ROOT / 'tools' / 'results' / 'control',
+                output_dir=get_output_dir('results/control'),
                 control_type=args.control_type,
                 dpi=args.dpi,
                 verbose=args.verbose,
@@ -1001,7 +1002,7 @@ def main() -> None:
     if not args.input.exists():
         raise SystemExit(f"Input file not found: {args.input}")
 
-    output_dir = args.output_dir if args.output_dir else args.input.parent / f"{args.input.stem}.benchmark"
+    output_dir = args.output_dir if args.output_dir else get_output_dir(f"results/ekf_benchmark/{args.input.stem}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     ekf_cfg = load_ekf_config(args.ekf_config)
@@ -1340,8 +1341,7 @@ def _run_control_benchmarks(
         print("\n[WARN] control_benchmark_module 未找到，跳过控制基准测试")
         return
 
-    timestamp = _datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    control_output_dir = PROJECT_ROOT / 'tools' / 'results' / 'control' / f'benchmark_{timestamp}'
+    control_output_dir = get_output_dir('results/control/benchmark')
     control_output_dir.mkdir(parents=True, exist_ok=True)
 
     if verbose:

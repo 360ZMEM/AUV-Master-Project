@@ -28,6 +28,9 @@ import importlib.util
 import yaml
 
 project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
+from common.env_utils import get_output_dir
+
 algo_dir = project_root / 'algorithm'
 
 module_path = algo_dir / 'auv_mpc_controller.py'
@@ -41,8 +44,7 @@ params_file = project_root / 'brain_linux' / 'config' / 'params.yaml'
 with open(params_file, 'r') as f:
     cfg = yaml.safe_load(f)
 
-TEST_TIMESTAMP = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-RESULTS_DIR = project_root / 'tools' / 'results' / 'control' / f'mpc_test_{TEST_TIMESTAMP}'
+RESULTS_DIR = get_output_dir('results/control/mpc_test')
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR = RESULTS_DIR / 'figures'
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)

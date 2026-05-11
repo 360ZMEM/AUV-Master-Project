@@ -45,6 +45,23 @@ class _BaseBehavior(py_trees.behaviour.Behaviour):
         self.blackboard.set(TARGET_MOTION_STATE_KEY, asdict(goal))
 
 
+class Wait_For_Arbiter_Authorization(_BaseBehavior):
+    """待命模式：等待仲裁器授权。"""
+
+    def update(self) -> py_trees.common.Status:
+        sensor = self._get_sensor_status()
+        if sensor.auto_state != 'ACTIVE':
+            self._write_goal(
+                MotionGoal(
+                    mode='IDLE',
+                    high_priority=False,
+                    note='Standby: Waiting for manual authorization'
+                )
+            )
+            return py_trees.common.Status.SUCCESS
+        return py_trees.common.Status.FAILURE
+
+
 class EmergencyCondition(_BaseBehavior):
     """紧急条件：漏水 OR 低电 OR 穿底。"""
 
