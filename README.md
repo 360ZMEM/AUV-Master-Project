@@ -1,141 +1,149 @@
-# AUV_Master_Project
+# AUV Master Project
 
-统一后的 AUV 项目根目录，目标是将仿真侧与 Linux ROS2 决策侧组织为一个可演进仓库。
-
----
-
-## 📖 目录索引
-
-- **[docs/INDEX.md](docs/INDEX.md)** — **从这里开始！** 完整的文档导航与快速检索
+自主水下机器人（AUV）硕士研究项目。集成了仿真环境、ROS2 决策控制栈、上位机系统和可视化工具链，支持从纯仿真到实物测试的完整开发流程。
 
 ---
 
-## 📁 项目结构
+## 30 秒上手
 
-| 目录 | 说明 | 用途 |
-|------|------|------|
-| **common/** | 双端共享协议、枚举、物理常量 | 协议契约与常数定义 |
-| **algorithm/** | 与环境无关的控制/导引算法 | PID、Guidance、ES-EKF、轨迹生成 |
-| **sim_holoocean/** | HoloOcean 仿真与 Zenoh 桥接 | 仿真环境与跨进程通信 |
-| **brain_linux/** | ROS2 Humble 工作区 | 决策栈：定位、控制、行为树 |
-| **config/** | 仿真与桥接配置 | YAML 配置文件（仿真、桥接、实物） |
-| **scripts/** | 一键启动脚本 | 快速启动各部分功能 |
-| **docs/** | 原理说明与开发进度 | **详见下方文档快速指南** |
-| **foxglove_layout_project/** | Foxglove 布局生成器 | 可视化系统配置与生成 |
-| **msgs/** | 中间件无关消息映射 | Topic 与字段映射说明 |
-| **tools/** | 辅助工具脚本 | 视频采集、数据处理等 |
-
----
-
-## 🚀 快速启动
-
-### 首次使用？
-1. 阅读 [docs/INDEX.md](docs/INDEX.md) — 了解项目结构
-2. 查看 [docs/原理说明.md](docs/原理说明.md) — 理解五层架构
-3. 选择对应的启动指南（下面有链接）
-
-### 选择你要做的事情
-
-| 需求 | 推荐指南 | 相关命令 |
-|------|--------|--------|
-| **仅仿真验证** | [仿真启动指南](docs/guides/simulation_startup.md) | `bash scripts/start_lin_sim.sh sim` |
-| **仿真 + 桥接** | [仿真启动指南](docs/guides/simulation_startup.md) | `bash scripts/start_lin_sim.sh both` |
-| **ROS2 决策栈** | [决策启动指南](docs/guides/brain_startup.md) | `bash scripts/start_lin_brain.sh stack` |
-| **完整端到端** | [端到端设置](docs/guides/end_to_end_setup.md) | `bash scripts/start_foxglove_holoocean_ros.sh` |
-| **长实验 (120s)** | [实验配置指南](docs/guides/experiment_guide.md) | `bash scripts/start_experiment.sh --duration 120` |
-| **参数调优** | [配置参数详解](docs/guides/configuration.md) | 编辑 `config/sim_params.yaml` |
-| **遇到问题** | [文档索引](docs/INDEX.md#-调试与排障) | 查找对应排障指南 |
-
----
-
-## 📚 文档指南
-
-### 核心设计文档
-- **[docs/原理说明.md](docs/原理说明.md)** — 五层架构、数据流、坐标系约定
-- **[docs/字段真值表.md](docs/字段真值表.md)** — 所有 topic 和 JSON 字段的映射表
-
-### 启动与配置
-- **[docs/guides/simulation_startup.md](docs/guides/simulation_startup.md)** — 仿真侧启动（HoloOcean + Zenoh）
-- **[docs/guides/brain_startup.md](docs/guides/brain_startup.md)** — 决策侧启动（ROS2 栈）
-- **[docs/guides/end_to_end_setup.md](docs/guides/end_to_end_setup.md)** — 完整端到端闭环设置
-- **[docs/guides/configuration.md](docs/guides/configuration.md)** — 所有 YAML 参数详解
-
-### 调试与排障
-- **[docs/联调调试记录_2026-03-21.md](docs/联调调试记录_2026-03-21.md)** — 全栈联调记录与已验证范围
-- **[docs/控制回路问题定位与修复建议_2026-04-01.md](docs/控制回路问题定位与修复建议_2026-04-01.md)** — 当前问题与修复方向
-- **[docs/protocol_udp联调复现与模式切换_2026-04-01.md](docs/protocol_udp联调复现与模式切换_2026-04-01.md)** — 二进制协议调试
-
-### 进度与规划
-- **[docs/开发进度.md](docs/开发进度.md)** — 当前阶段与后续计划
-- **[docs/仲裁器长期路线图_2026-04-08.md](docs/仲裁器长期路线图_2026-04-08.md)** — 自主控制权仲裁设计
-
-### 完整索引
-**→ [docs/INDEX.md](docs/INDEX.md)** — 所有文档的分类索引与快速导航
-
----
-
-## 💾 备份与版本控制
-
-- **docs_backup/** — 原始文档备份（自动保存）
-- **logs/** — 运行日志与实验数据
-- **.github/copilot-instructions.md** — AI 助手的项目指导
-
-## Foxglove 布局生成
-```bash
-cd foxglove_layout_project
-/usr/bin/python3 -m foxglove_layout_project.generator.build_layout --pretty
-```
-
-如果要同时生成 mock topic 快照，使用：
-
-```bash
-/usr/bin/python3 -m foxglove_layout_project.generator.build_layout --with-mock-topics --pretty
-```
-
-一键联动启动：
 ```bash
 cd scripts
-bash start_foxglove_holoocean_ros.sh
-bash start_foxglove_holoocean_ros.sh --bridge-backend protocol_udp --protocol-control-mode-byte 238
----
-
-## 🔗 其他资源
-
-### 工作流脚本
-```bash
-# 仿真等价性检查
-bash scripts/run_sim_equivalence_check.sh --dry-run
-bash scripts/run_sim_equivalence_check.sh
-
-# HoloOcean 视频采集
-python tools/capture_holoocean_video.py --format gif
-python tools/capture_holoocean_video.py --capture-mode viewport --show-viewport --format mp4
-
-# Foxglove 布局生成
-cd foxglove_layout_project
-python -m foxglove_layout_project.generator.build_layout --pretty
-python -m foxglove_layout_project.generator.build_layout --with-mock-topics --pretty
+bash start_experiment.sh --sim-backend pvs --duration 120
 ```
 
-### 向后兼容
+这会启动一个 120 秒的 PVS 仿真实验，自动录制 rosbag，输出到 `$AUV_DATA_ROOT/bags/YYYYMMDD_HHMMSS/`。
+
+分析数据：
 ```bash
-# 直接调用 Python 脚本（仍支持）
-cd sim_holoocean/apps
-python main.py --config ../../config/sim_params.yaml
-python run_zenoh_bridge.py --config ../../config/bridge_params.yaml
+python tools/analyze_bag.py <bag路径>/*.mcap --output-dir ./figures
 ```
+
+实时可视化：浏览器打开 Foxglove → 连接 `ws://localhost:8765`
 
 ---
 
-## ✅ 当前状态
+## 文档入口
 
-| 功能 | 状态 | 备注 |
-|------|------|------|
-| HoloOcean 仿真 | ✅ 完成 | 可独立运行 |
-| Zenoh 桥接 | ✅ 完成 | 跨进程通信正常 |
-| ROS2 决策栈 | ✅ 完成 | 4 核心节点可运行 |
-| Foxglove 可视化 | ✅ 完成 | 布局生成与导入 |
-| 系统闭环 | ✅ 完成 | 仿真↔决策可交互 |
-| auv_bridge | ⚠️ 进行中 | Zenoh JSON ↔ ROS2 DDS |
-| 端到端回归 | ❌ 未完成 | 自动化测试脚本待完善 |
+> **从这里开始 → [docs/INDEX.md](docs/INDEX.md)**
 
+文档分为两条线：
+
+| 维度 | 面向 | 内容 | 入口 |
+|------|------|------|------|
+| **明线** (user-guide) | 使用者 | 每个模块怎么用、按什么按钮、输出怎么读 | [docs/user-guide/INDEX.md](docs/user-guide/INDEX.md) |
+| **暗线** (internals) | 开发者 | 系统内部原理、数据流、子系统协作 | [docs/internals/INDEX.md](docs/internals/INDEX.md) |
+
+### 快速导航
+
+| 我想... | 去看 |
+|---------|------|
+| 5 分钟跑通第一次仿真 | [快速开始](docs/user-guide/01_quick_start.md) |
+| 了解 start_experiment.sh 所有参数 | [实验脚本详解](docs/user-guide/02_experiment_runner.md) |
+| 使用上位机遥控/授权自主 | [上位机指南](docs/user-guide/03_console.md) |
+| 分析 rosbag 数据 | [数据分析工具链](docs/user-guide/04_rosbag_analysis.md) |
+| 运行基准测试(PID/MPC/EKF) | [基准测试](docs/user-guide/05_benchmarks.md) |
+| 配置 Foxglove 可视化 | [Foxglove](docs/user-guide/06_foxglove.md) |
+| 查看已做/可做的实验清单 | [实验目录](docs/user-guide/07_experiments_catalog.md) |
+| 把系统部署到真机 | [真机迁移 SOP](docs/user-guide/08_real_hardware_sop.md) |
+| 查配置文件参数含义 | [配置速查](docs/user-guide/09_config_reference.md) |
+| 理解系统整体架构 | [架构总览](docs/internals/01_architecture.md) |
+| 了解仲裁器安全机制 | [仲裁器](docs/internals/07_arbiter.md) |
+| 了解二进制通信协议 | [协议说明](docs/internals/05_binary_protocol.md) |
+
+---
+
+## 项目结构
+
+```
+AUV-Master-Project/
+├── algorithm/           控制/导引/定位算法（PID, MPC, ES-EKF, LOS, 轨迹生成）
+├── brain_linux/         ROS2 Humble 工作区（决策栈 5 节点）
+├── common/              双端共享协议、枚举、物理常量
+├── config/              仿真与桥接 YAML 配置（4 种组合）
+├── console_soft/        上位机（PySide6 主线 + C# 旧版参照）
+├── docs/                文档体系（明线 + 暗线）
+├── foxglove_layout_project/  Foxglove 布局生成器
+├── scripts/             一键启动脚本（实验/仿真/决策/可视化）
+├── sim_holoocean/       仿真环境（HoloOcean/PVS + Zenoh/UDP 桥接）
+├── tests/               基准测试与集成测试
+└── tools/               数据分析、调参、视频捕获工具
+```
+
+---
+
+## 核心启动脚本链
+
+```
+start_experiment.sh            ← 顶层：实验录制入口
+  └── start_foxglove_holoocean_ros.sh  ← 中层：统一启动器
+        ├── start_lin_sim.sh           ← 仿真侧（HoloOcean/PVS + Zenoh Bridge）
+        └── start_lin_brain.sh         ← 决策侧（ROS2 栈 colcon build + launch）
+```
+
+### 配置自动推导
+
+| sim-backend | bridge-backend | 仿真配置 | 桥接配置 |
+|-------------|---------------|----------|----------|
+| holoocean | zenoh_json | sim_params.yaml | bridge_params.yaml |
+| holoocean | protocol_udp | sim_params.yaml | bridge_params.protocol_udp.yaml |
+| pvs | zenoh_json | sim_params.pvs.yaml | bridge_params.pvs.yaml |
+| pvs | protocol_udp | sim_params.pvs.yaml | bridge_params.protocol_udp.pvs.yaml |
+
+---
+
+## 典型使用场景
+
+```bash
+# PVS 快速实验（最轻量，推荐日常使用）
+bash scripts/start_experiment.sh --sim-backend pvs --duration 120
+
+# HoloOcean 完整 3D 仿真
+bash scripts/start_experiment.sh --duration 120
+
+# 模拟真机通信协议
+bash scripts/start_experiment.sh --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --duration 120
+
+# 透明度三级基准测试
+bash scripts/run_transparency_level_benchmark.sh
+
+# 仅启动上位机
+cd console_soft/auv_console_pyside6 && python main.py
+
+# PID vs MPC 控制器对比
+python tests/benchmark_pid_vs_mpc.py
+
+# 离线 EKF 定位分析
+python tools/offline_ekf_benchmark.py --input <bag>.mcap --output-dir ./results
+```
+
+---
+
+## 主线配置文件（必须关心的 4 个）
+
+| 文件 | 用途 |
+|------|------|
+| `config/sim_params.pvs.yaml` | 仿真实验核心参数（PID增益、轨迹、阈值） |
+| `brain_linux/config/params.protocol_udp_arbiter.yaml` | 真机部署核心参数 |
+| `brain_linux/config/feature_flags.yaml` | 功能开关（决策/控制/桥接各层使能） |
+| `console_soft/auv_console_pyside6/console_config.yaml` | 上位机通信参数 |
+
+---
+
+## 当前状态
+
+| 功能 | 状态 |
+|------|------|
+| PVS 轻量仿真 | 完成 |
+| HoloOcean 3D 仿真 | 完成 |
+| Zenoh JSON 桥接 | 完成 |
+| Protocol UDP 桥接 | 完成 |
+| ROS2 决策栈 (5节点) | 完成 |
+| 级联 PID 控制器 | 完成 |
+| MPC 控制器 | 完成 |
+| ES-EKF 定位 | 完成 (RMSE 1.5m) |
+| 行为树决策 | 完成 |
+| 仲裁器安全机制 | 完成 |
+| Mock AMD 故障注入 | 完成 |
+| 上位机 (PySide6) | 完成 |
+| Foxglove 可视化 | 完成 |
+| 真机部署 | 配置就绪，待实物对接 |

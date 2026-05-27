@@ -33,9 +33,8 @@ env/
 
 # JetBrains
 .idea/
-docs/
 docs_new/
-
+docs_old/
 # foxglove
 # foxglove_layout_project/
 CLAUDE.*
@@ -45,4 +44,4 @@ CLAUDE.*
 标准文档/
 auv_console_python/
 VXworks程序/
-
+csd_vx6.8_lastest/
