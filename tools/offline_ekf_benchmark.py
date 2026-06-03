@@ -34,14 +34,17 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from common.env_utils import get_output_dir
-
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TOOLS_DIR = PROJECT_ROOT / "tools"
 SIM_DIR = PROJECT_ROOT / "sim_holoocean"
 ALGO_DIR = PROJECT_ROOT / "algorithm"
+
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from common.env_utils import get_output_dir
 
 for p in (str(TOOLS_DIR), str(SIM_DIR), str(ALGO_DIR)):
     if p not in sys.path:
@@ -87,6 +90,21 @@ def ensure_runtime_dependencies() -> None:
                 "pip install mcap mcap-ros2-support"
             ) from exc
         read_ros2_messages = _reader
+
+
+def resolve_mcap_input(path: Path) -> Path:
+    if path.is_file():
+        return path
+    if path.is_dir():
+        mcap_files = sorted(path.glob("*.mcap"))
+        if len(mcap_files) == 1:
+            return mcap_files[0]
+        if len(mcap_files) > 1:
+            raise SystemExit(
+                f"Expected one .mcap file in {path}, found {len(mcap_files)}. "
+                "Point --input at a specific file instead."
+            )
+    raise SystemExit(f"Could not resolve MCAP input from: {path}")
 
 
 def configure_matplotlib() -> None:
@@ -242,6 +260,7 @@ def read_mcap_sensor_data(
     verbose: bool = False,
 ) -> tuple[list[ImuSample], list[DvlSample], list[DepthSample], list[TruthSample]]:
     ft = load_frame_transform_module()
+    mcap_file = resolve_mcap_input(mcap_path)
     topics_to_read = {imu_topic, dvl_topic, depth_topic, *truth_topics}
     imu_samples: list[ImuSample] = []
     dvl_samples: list[DvlSample] = []
@@ -249,7 +268,7 @@ def read_mcap_sensor_data(
     truth_samples: list[TruthSample] = []
     truth_topic_found: str | None = None
 
-    for decoded in read_ros2_messages(str(mcap_path), topics=topics_to_read):
+    for decoded in read_ros2_messages(str(mcap_file), topics=topics_to_read):
         topic = decoded.channel.topic
         ts_ns = select_timestamp_ns(decoded)
         msg = decoded.ros_msg
