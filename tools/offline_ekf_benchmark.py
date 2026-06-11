@@ -1021,7 +1021,7 @@ def main() -> None:
     if not args.input.exists():
         raise SystemExit(f"Input file not found: {args.input}")
 
-    output_dir = args.output_dir if args.output_dir else get_output_dir(f"results/ekf_benchmark/{args.input.stem}")
+    output_dir = args.output_dir if args.output_dir else get_output_dir(f"results/localization/{args.input.stem}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     ekf_cfg = load_ekf_config(args.ekf_config)
@@ -1360,7 +1360,7 @@ def _run_control_benchmarks(
         print("\n[WARN] control_benchmark_module 未找到，跳过控制基准测试")
         return
 
-    control_output_dir = get_output_dir('results/control/benchmark')
+    control_output_dir = get_output_dir('results/control')
     control_output_dir.mkdir(parents=True, exist_ok=True)
 
     if verbose:

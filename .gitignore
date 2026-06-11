@@ -44,5 +44,5 @@ CLAUDE.*
 标准文档/
 auv_console_python/
 VXworks程序/
-csd_vx6.8_lastest/
+csd_vx6.8_lastest*
 .auv_data/

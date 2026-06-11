@@ -947,7 +947,7 @@ def main():
     if not args.input.exists():
         raise SystemExit(f"Input file not found: {args.input}")
 
-    output_dir = args.output_dir or args.input.parent / "tuning_results"
+    output_dir = args.output_dir or Path("results/tuning")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     truth_topic_list = [t.strip() for t in args.truth_topics.split(",") if t.strip()]

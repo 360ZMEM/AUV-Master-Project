@@ -165,7 +165,7 @@ def load_dataset(mcap_path, truth_topics):
 def main():
     parser = argparse.ArgumentParser(description="ES-EKF Quick Parameter Tuning")
     parser.add_argument("--input", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path, default=Path("./tuning_results"))
+    parser.add_argument("--output-dir", type=Path, default=Path("results/tuning"))
     parser.add_argument("--truth-topics", default="/auv/visual/truth_marker")
     args = parser.parse_args()
 

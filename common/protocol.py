@@ -327,6 +327,14 @@ class ProtocolUplinkTelemetry:
     system_alarm: int
     depth_alarm: int
     bottom_alarm: int
+    # DVL Body Frame 三轴速度 (m/s)，从 Para5/6/7 解析
+    dvl_body_x_mps: float = 0.0
+    dvl_body_y_mps: float = 0.0
+    dvl_body_z_mps: float = 0.0
+    # IMU 三轴角速度 (rad/s)，从 Para8/9/10 解析
+    gyro_x_rps: float = 0.0
+    gyro_y_rps: float = 0.0
+    gyro_z_rps: float = 0.0
 
 REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_GROUND_TRUTH: (KEY_POSITION_NED, KEY_RPY_NED, KEY_CABLE_CLOSEST_NED, KEY_CABLE_DISTANCE_M),
@@ -1469,4 +1477,12 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         system_alarm=int(packet[127]),
         depth_alarm=int(packet[128]),
         bottom_alarm=int(packet[129]),
+        # Para5-7: DVL Body Frame (mm/s → m/s, ÷1000)
+        dvl_body_x_mps=struct.unpack(">h", packet[56:58])[0] * 0.001,
+        dvl_body_y_mps=struct.unpack(">h", packet[58:60])[0] * 0.001,
+        dvl_body_z_mps=struct.unpack(">h", packet[60:62])[0] * 0.001,
+        # Para8-10: IMU Angular Velocity (×1000 int16 → rad/s, ÷1000)
+        gyro_x_rps=struct.unpack(">h", packet[62:64])[0] * 0.001,
+        gyro_y_rps=struct.unpack(">h", packet[64:66])[0] * 0.001,
+        gyro_z_rps=struct.unpack(">h", packet[66:68])[0] * 0.001,
     )

@@ -159,26 +159,37 @@ class TestControlOutput:
 
 
 class TestMPCController:
-    def test_placeholder_output(self):
+    def test_initial_state(self):
+        """验证 MPC 控制器初始化后内部状态正确。"""
         ctrl = MPCController({}, {})
-        state = {"x": 0, "y": 0, "z": 0, "u": 0, "v": 0, "w": 0, "roll": 0, "pitch": 0, "yaw": 0, "p": 0, "q": 0, "r": 0}
+        assert ctrl._prev_U is None
+        assert ctrl._solver_status == "NOT_RUN"
+        assert ctrl._solve_time_ms == 0.0
+
+    def test_reset_clears_warm_start(self):
+        """验证 reset() 清除热启动缓存和求解状态。"""
+        ctrl = MPCController({}, {})
+        # 模拟已有热启动数据
+        import numpy as np
+        ctrl._prev_U = np.zeros((3, 20))
+        ctrl._solver_status = "Solve_Succeeded"
+        ctrl._solve_time_ms = 12.5
+        ctrl._last_cost = 0.42
+        ctrl.reset()
+        assert ctrl._prev_U is None
+        assert ctrl._solver_status == "NOT_RUN"
+        assert ctrl._solve_time_ms == 0.0
+        assert ctrl._last_cost == 0.0
+
+    def test_compute_returns_control_output(self):
+        """验证 compute() 返回 ControlOutput 且 debug 包含必要字段。"""
+        ctrl = MPCController({}, {})
+        state = {"x": 0, "y": 0, "z": 0, "u": 0, "v": 0, "w": 0,
+                 "roll": 0, "pitch": 0, "yaw": 0, "p": 0, "q": 0, "r": 0}
         setpoint = {"target_depth_m": 2.0, "target_heading_rad": 0.0, "target_speed_mps": 1.0}
         result = ctrl.compute(state, setpoint)
-        assert result.thrust_percent == 0.0
-        assert result.debug["mpc_status"] == "placeholder"
-
-    def test_state_history_grows(self):
-        ctrl = MPCController({}, {})
-        state = {"x": 0, "y": 0, "z": 0, "u": 0, "v": 0, "w": 0, "roll": 0, "pitch": 0, "yaw": 0, "p": 0, "q": 0, "r": 0}
-        setpoint = {"target_depth_m": 2.0, "target_heading_rad": 0.0, "target_speed_mps": 1.0}
-        for _ in range(110):
-            ctrl.compute(state, setpoint)
-        assert len(ctrl._state_history) == 100
-
-    def test_reset_clears_history(self):
-        ctrl = MPCController({}, {})
-        state = {"x": 0, "y": 0, "z": 0, "u": 0, "v": 0, "w": 0, "roll": 0, "pitch": 0, "yaw": 0, "p": 0, "q": 0, "r": 0}
-        setpoint = {"target_depth_m": 2.0, "target_heading_rad": 0.0, "target_speed_mps": 1.0}
-        ctrl.compute(state, setpoint)
-        ctrl.reset()
-        assert len(ctrl._state_history) == 0
+        assert isinstance(result, ControlOutput)
+        assert result.debug["controller_type"] == "MPC"
+        assert "solver_status" in result.debug
+        assert "solve_time_ms" in result.debug
+        assert 0.0 <= result.thrust_percent <= 100.0

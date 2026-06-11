@@ -825,7 +825,7 @@ def main():
     if not args.input.exists():
         raise SystemExit(f"Input file not found: {args.input}")
 
-    output_dir = args.output_dir if args.output_dir else args.input.parent / f"{args.input.stem}.turning_analysis"
+    output_dir = args.output_dir if args.output_dir else Path(f"results/localization/{args.input.stem}_turning_analysis")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Load EKF config

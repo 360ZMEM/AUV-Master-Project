@@ -35,7 +35,7 @@ from mock_amd_chaos import ChaosInjector, ChaosProfile
 from mock_amd_delay import TransportDelayQueue
 from mock_amd_sensor_cache import SensorSampleCache, SensorSnapshot
 from frame_transform import body_vector_ue_to_ned, pose_matrix_ue_to_ned
-from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, get_agent_state
+from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, extract_gyro, get_agent_state
 from ocean_current_model import OceanCurrentModel
 
 
@@ -476,6 +476,10 @@ class MockAmdUdpServer:
         dvl_ue = extract_body_velocity(state.get('DVLSensor', np.zeros(3)))
         dvl_ned = body_vector_ue_to_ned(dvl_ue)  # 转换到 NED
 
+        # IMU 角速度提取
+        gyro_ue = extract_gyro(state.get('IMUSensor', np.zeros(3)))
+        gyro_ned = body_vector_ue_to_ned(gyro_ue)
+
         # 深度：从位置 Z 坐标（负值 = 深度）
         depth_raw = extract_depth(state.get('DepthSensor', np.array([-pose[2, 3]])), pose[2, 3])
         depth_ned = float(-depth_raw if depth_raw < 0.0 else depth_raw)
@@ -557,6 +561,14 @@ class MockAmdUdpServer:
         # Parameter values[0] 回显 AMD 时间戳用于时间同步
         parameter_values = [0] * 12
         parameter_values[0] = int(self.last_mock_amd_timestamp_us)
+        # Para5/6/7: DVL Body Frame (m/s × 1000 → mm/s, int16)
+        parameter_values[4] = int(np.clip(dvl_ned[0] * 1000, -32768, 32767))
+        parameter_values[5] = int(np.clip(dvl_ned[1] * 1000, -32768, 32767))
+        parameter_values[6] = int(np.clip(dvl_ned[2] * 1000, -32768, 32767))
+        # Para8/9/10: IMU Angular Velocity (rad/s × 1000, int16)
+        parameter_values[7] = int(np.clip(gyro_ned[0] * 1000, -32768, 32767))
+        parameter_values[8] = int(np.clip(gyro_ned[1] * 1000, -32768, 32767))
+        parameter_values[9] = int(np.clip(gyro_ned[2] * 1000, -32768, 32767))
 
         return build_uplink_packet(
             frame_counter=int(step) & 0xFF,

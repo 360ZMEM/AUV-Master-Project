@@ -133,7 +133,7 @@ def evaluate_config(cfg, imu, dvl, depth, truth, bm=None):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path, default=Path("./tuning_results"))
+    parser.add_argument("--output-dir", type=Path, default=Path("results/tuning"))
     parser.add_argument("--truth-topics", default="/auv/visual/truth_marker")
     args = parser.parse_args()
 

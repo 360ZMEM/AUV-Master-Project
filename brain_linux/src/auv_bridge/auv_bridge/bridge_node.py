@@ -89,6 +89,27 @@ def _rpy_deg_to_quaternion(roll_deg: float, pitch_deg: float, yaw_deg: float) ->
     return qx, qy, qz, qw
 
 
+def _rotate_body_to_world(qx: float, qy: float, qz: float, qw: float, v: list[float]) -> list[float]:
+    """使用四元数将 body-frame 向量旋转到 world frame (R_nb @ v)。"""
+    # R_nb from quaternion (x,y,z,w)
+    vx, vy, vz = v[0], v[1], v[2]
+    # quaternion rotation: v' = q * v * q_conj (expanded)
+    r00 = 1.0 - 2.0*(qy*qy + qz*qz)
+    r01 = 2.0*(qx*qy - qw*qz)
+    r02 = 2.0*(qx*qz + qw*qy)
+    r10 = 2.0*(qx*qy + qw*qz)
+    r11 = 1.0 - 2.0*(qx*qx + qz*qz)
+    r12 = 2.0*(qy*qz - qw*qx)
+    r20 = 2.0*(qx*qz - qw*qy)
+    r21 = 2.0*(qy*qz + qw*qx)
+    r22 = 1.0 - 2.0*(qx*qx + qy*qy)
+    return [
+        r00*vx + r01*vy + r02*vz,
+        r10*vx + r11*vy + r12*vz,
+        r20*vx + r21*vy + r22*vz,
+    ]
+
+
 class AUVBridgeNode(Node):
     """AUV 桥接节点。
 
@@ -508,6 +529,11 @@ class AUVBridgeNode(Node):
         control_mode_byte = self._resolve_control_mode_byte()
         work_instruction = self.protocol_work_instruction
         orientation_deg = self._resolve_target_heading_deg()
+
+        # 0xEE/0xEF 模式需要 target_depth: 若 payload 中没有，从 setpoint 注入
+        if KEY_TARGET_DEPTH_M not in payload and self.latest_setpoint is not None:
+            payload[KEY_TARGET_DEPTH_M] = float(self.latest_setpoint.target_depth_m)
+
         if self.passive_mode:
             self._publish_shadow_snapshot(
                 kind='command',
@@ -752,9 +778,9 @@ class AUVBridgeNode(Node):
         imu_msg.orientation.y = qy
         imu_msg.orientation.z = qz
         imu_msg.orientation.w = qw
-        imu_msg.angular_velocity.x = 0.0
-        imu_msg.angular_velocity.y = 0.0
-        imu_msg.angular_velocity.z = 0.0
+        imu_msg.angular_velocity.x = float(telemetry.gyro_x_rps)
+        imu_msg.angular_velocity.y = float(telemetry.gyro_y_rps)
+        imu_msg.angular_velocity.z = float(telemetry.gyro_z_rps)
         imu_msg.linear_acceleration.x = 0.0
         imu_msg.linear_acceleration.y = 0.0
         imu_msg.linear_acceleration.z = 0.0
@@ -763,9 +789,14 @@ class AUVBridgeNode(Node):
         dvl_msg = TwistStamped()
         dvl_msg.header.stamp = self.get_clock().now().to_msg()
         dvl_msg.header.frame_id = 'auv/base_link'
-        dvl_msg.twist.linear.x = float(telemetry.dvl_speed_mps)
-        dvl_msg.twist.linear.y = 0.0
-        dvl_msg.twist.linear.z = 0.0
+        # Protocol UDP DVL 为 body frame；旋转到 world frame 以匹配 EKF correct_dvl_world()
+        dvl_body = [float(telemetry.dvl_body_x_mps),
+                    float(telemetry.dvl_body_y_mps),
+                    float(telemetry.dvl_body_z_mps)]
+        dvl_world = _rotate_body_to_world(qx, qy, qz, qw, dvl_body)
+        dvl_msg.twist.linear.x = dvl_world[0]
+        dvl_msg.twist.linear.y = dvl_world[1]
+        dvl_msg.twist.linear.z = dvl_world[2]
         self.dvl_pub.publish(dvl_msg)
 
         depth_msg = Float32()

@@ -500,7 +500,7 @@ def generate_tuning_report(all_results, best, baseline, output_dir, input_path):
 def main():
     parser = argparse.ArgumentParser(description="ES-EKF Parameter Tuning Tool")
     parser.add_argument("--input", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path, default=Path("./tuning_results"))
+    parser.add_argument("--output-dir", type=Path, default=Path("results/tuning"))
     parser.add_argument("--truth-topics", default="/auv/visual/truth_marker,/auv/state/truth,/auv/sensors/ground_truth")
     parser.add_argument("--skip-rounds", nargs="+", type=int, default=[])
     args = parser.parse_args()

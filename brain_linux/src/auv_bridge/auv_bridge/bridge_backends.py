@@ -142,10 +142,10 @@ class TopicBridgeBackend(BaseBridgeBackend):
         orientation_deg: float,
     ) -> None:
         """将控制命令写入 Zenoh 控制通道。"""
-        _ = orientation_deg
         payload = dict(command_payload)
         payload['control_mode_byte'] = int(control_mode_byte)
         payload['work_instruction'] = int(work_instruction)
+        payload['orientation_deg'] = float(orientation_deg)
         try:
             self._publishers[self.cmd_key].put(json.dumps(payload, ensure_ascii=False))
         except Exception as exc:
@@ -259,16 +259,10 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         payload[KEY_WORK_INSTRUCTION] = int(work_instruction) # 协议工作指令，定义当前具体动作指令（如前进、后退、转向等），由上层决策逻辑设置
         payload[KEY_ORIENTATION_DEG] = float(orientation_deg) # 协议航向角度，单位度，范围 0~360，由上层决策逻辑设置，表示当前期望的航向角度
 
-        # 从 Para1 开始的参数字段，协议中预留了 12 个参数位置（Para1~Para12），供上层决策逻辑根据需要使用。这里我们把 Para1 用来携带一个 Mock AMD 时间戳（微秒级），以便协议侧的决策节点进行时钟同步和调试验证。其他参数位置暂时保留为 0。
+        # Mock AMD 时间戳注入 Para2（通过 KEY_MOCK_AMD_TIMESTAMP_US），
+        # Para1 预留给 target_depth_m（由 build_downlink_packet 自动填充）。
         mock_amd_timestamp_us = int(time.time() * 1e6)
-        # 确保 payload 中的 KEY_PARAMETERS 是一个长度至少为 1 的列表或元组，如果存在则更新第一个元素为 mock_amd_timestamp_us，否则创建一个新的列表并放入 payload 中。协议中 Para1~Para12 的位置由 KEY_PARAMETERS 定义，协议解析时会把它们映射到对应的参数字段。
-        current_parameters = payload.get(KEY_PARAMETERS, [0] * 12)
-        if isinstance(current_parameters, (list, tuple)) and len(current_parameters) >= 1:
-            parameters_list = list(current_parameters)
-            parameters_list[0] = mock_amd_timestamp_us
-            payload[KEY_PARAMETERS] = tuple(parameters_list)
-        else:
-            payload[KEY_PARAMETERS] = [mock_amd_timestamp_us] + [0] * 11
+        payload[KEY_MOCK_AMD_TIMESTAMP_US] = mock_amd_timestamp_us
 
         packet = build_downlink_packet_from_payload(payload, main_motor_rpm_scale=self.main_motor_rpm_scale) # 根据协议定义把 payload 字典编码成二进制下行数据包，main_motor_rpm_scale 用于把协议中的 RPM 值转换为实际推力百分比（仅供调试使用，实际控制算法中不应依赖此转换）
         self._socket.sendto(packet, (self.remote_host, self.remote_port))

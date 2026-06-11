@@ -445,6 +445,22 @@ class AUVControllerNode(Node):
             sp.target_depth_m = float(-st.pose.pose.position.z)
             sp.target_heading_rad = yaw
 
+        # === 全局深度安全围栏 (BUG-8: 所有模式通用, 与VxWorks多层协调) ===
+        _MAX_DEPTH_M = 50.0   # 最大允许深度
+        _MIN_ALTITUDE_M = 2.0  # 最小允许离底高度 (高于VxWorks硬限1.8m)
+
+        # 1. 深度绝对上限
+        if sp.target_depth_m > _MAX_DEPTH_M:
+            sp.target_depth_m = _MAX_DEPTH_M
+
+        # 2. 离底高度围栏 (当altitude有效且不在ALTITUDE_FOLLOW模式时)
+        _current_altitude = self._terrain_perception.get_altitude()
+        if (not is_altitude_follow
+                and _current_altitude > 0.01
+                and _current_altitude < _MIN_ALTITUDE_M):
+            _current_depth = float(-st.pose.pose.position.z)
+            sp.target_depth_m = min(sp.target_depth_m, _current_depth - 1.0)
+
         depth_error = float(sp.target_depth_m) - float(-st.pose.pose.position.z)
         yaw_error = math.atan2(
             math.sin(float(sp.target_heading_rad) - yaw),

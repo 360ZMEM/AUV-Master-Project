@@ -295,7 +295,7 @@ def main():
     if not args.input.exists():
         sys.exit(f"Input not found: {args.input}")
 
-    out = args.output_dir or args.input.parent / f"{args.input.stem}.enhanced"
+    out = args.output_dir or Path(f"results/localization/{args.input.stem}_enhanced")
     out.mkdir(parents=True, exist_ok=True)
 
     import yaml
