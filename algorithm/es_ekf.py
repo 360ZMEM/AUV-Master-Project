@@ -120,6 +120,29 @@ class ES_EKF:
         self.sigma_dvl = float(cfg.get("sigma_dvl", 0.03))
         self.sigma_depth = float(cfg.get("sigma_depth", 0.05))
         self.sigma_gps_xy = float(cfg.get("sigma_gps_xy", 0.5))
+        self.sigma_mag_depth = float(cfg.get("sigma_mag_depth", 0.20))
+
+        # Feature flags — keep magnetic correction OFF by default; thesis §3.3.3 only.
+        ff = cfg.get("feature_flags", {}) or {}
+        self.feature_enable_mag_correction = bool(
+            ff.get("enable_mag_correction", False)
+        )
+        # Cable model parameters for the linearized Biot-Savart inversion
+        # used by correct_mag(). Defaults match scenarios/ amplitude.
+        self.mag_cable_current_amp = float(cfg.get("mag_cable_current_amp", 500.0))
+        # Sensor lever-arm (m, NED body frame) — for §2.4 杆臂改正; default 0.
+        self.mag_lever_arm_b = np.array(
+            cfg.get("mag_lever_arm_b", [0.0, 0.0, 0.0]), dtype=float
+        )
+
+        # NIS sliding-window + adaptive R (论文 §3.4.1)
+        # nis_window_size=0 ⇒ disable window (no adaptive R, history still recorded if size>0)
+        self.nis_window_size = int(cfg.get("nis_window_size", 50))
+        self.nis_threshold = float(cfg.get("nis_threshold", 9.0))
+        self.adaptive_r_scale_max = float(cfg.get("adaptive_r_scale_max", 5.0))
+        self.adaptive_r_scale_decay = float(cfg.get("adaptive_r_scale_decay", 0.95))
+        self._adaptive_r_scale = 1.0
+        self.nis_history: list = []  # entries: {"source", "dim", "nis"}
 
         self.auto_init = bool(cfg.get("auto_init", True))
         self.use_first_dvl_for_init = bool(cfg.get("use_first_dvl_for_init", True))
@@ -172,10 +195,15 @@ class ES_EKF:
 
         # 当收集到足够样本时，计算零偏估计
         if len(self._bias_calibration_buffer_acc) >= self.bias_calibration_samples:
-            # 加速度零偏：静止时加速度应等于重力向量（机体系）
-            # 假设初始姿态为水平，重力沿Z轴向下，因此b_a = mean(acc) - [0, 0, -g]
+            # 假设初始姿态为水平，body frame 与世界系 NED 对齐：
+            #   - imu_acc_is_linear=True：IMU 已扣重力 → 静态期望 acc_m≈0 → b_a = mean_acc
+            #   - imu_acc_is_linear=False：IMU 输出比力 → 静态期望 acc_m≈-g_n=[0,0,+9.81]
+            #     与 predict() 的 a_n = r_nb@(acc-b_a) + g_n 公式一致 → b_a = mean_acc + g_n
             mean_acc = np.mean(self._bias_calibration_buffer_acc, axis=0)
-            self.b_a = mean_acc - self.g_n  # 估计加速度零偏
+            if self.imu_acc_is_linear:
+                self.b_a = mean_acc.copy()
+            else:
+                self.b_a = mean_acc + self.g_n
 
             # 陀螺零偏：静止时角速度应为零
             self.b_g = np.mean(self._bias_calibration_buffer_gyro, axis=0)
@@ -184,6 +212,7 @@ class ES_EKF:
             self._bias_calibration_info = {
                 "samples_used": len(self._bias_calibration_buffer_acc),
                 "mean_acc_before_calibration": mean_acc.tolist(),
+                "imu_acc_is_linear": self.imu_acc_is_linear,
                 "estimated_ba": self.b_a.tolist(),
                 "estimated_bg": self.b_g.tolist(),
             }
@@ -344,7 +373,7 @@ class ES_EKF:
         self.b_a += dx[9:12]
         self.b_g += dx[12:15]
 
-    def _correct(self, y, h, h_mat, r):
+    def _correct(self, y, h, h_mat, r, source: str = "unknown"):
         """执行 EKF 观测更新。
 
         Args:
@@ -352,14 +381,51 @@ class ES_EKF:
             h (np.ndarray): 预测观测值。
             h_mat (np.ndarray): 观测雅可比。
             r (np.ndarray): 观测噪声协方差。
+            source (str): 观测来源标签（用于 NIS 历史与论文 §3.4.1 分析）。
         """
-        s = h_mat @ self.P @ h_mat.T + r
-        k = self.P @ h_mat.T @ np.linalg.pinv(s)
-        dx = k @ (y - h)
+        r_eff = r * self._adaptive_r_scale
+        innov = (y - h)
+        s = h_mat @ self.P @ h_mat.T + r_eff
+        s_inv = np.linalg.pinv(s)
+        k = self.P @ h_mat.T @ s_inv
+        dx = k @ innov
         self._inject(dx)
         i = np.eye(15)
         ikh = i - k @ h_mat
-        self.P = ikh @ self.P @ ikh.T + k @ r @ k.T
+        self.P = ikh @ self.P @ ikh.T + k @ r_eff @ k.T
+
+        # NIS 记录与自适应 R 调整（论文 §3.4.1）
+        try:
+            nis_val = float(innov.T @ s_inv @ innov)
+        except Exception:
+            nis_val = float("nan")
+        self.nis_history.append(
+            {"source": source, "dim": int(np.asarray(y).shape[0]), "nis": nis_val}
+        )
+        if self.nis_window_size > 0 and len(self.nis_history) >= self.nis_window_size:
+            recent = self.nis_history[-self.nis_window_size:]
+            mean_nis = float(np.nanmean([e["nis"] for e in recent]))
+            if np.isfinite(mean_nis) and mean_nis > self.nis_threshold:
+                self._adaptive_r_scale = min(
+                    self._adaptive_r_scale * 1.5, self.adaptive_r_scale_max
+                )
+            else:
+                self._adaptive_r_scale = max(
+                    self._adaptive_r_scale * self.adaptive_r_scale_decay, 1.0
+                )
+
+    def get_nis_stats(self):
+        """返回滑动窗内的 NIS 统计与当前自适应 R 比例（论文 §3.4.1）。"""
+        window = self.nis_history[-self.nis_window_size:] if self.nis_window_size > 0 else self.nis_history
+        if not window:
+            return {"count": 0, "mean": 0.0, "latest": 0.0, "r_scale": self._adaptive_r_scale}
+        nis_vals = [e["nis"] for e in window if np.isfinite(e["nis"])]
+        return {
+            "count": len(window),
+            "mean": float(np.mean(nis_vals)) if nis_vals else 0.0,
+            "latest": float(window[-1]["nis"]),
+            "r_scale": float(self._adaptive_r_scale),
+        }
 
     def correct_dvl(self, dvl_vel_body):
         """使用机体系 DVL 速度修正滤波状态。"""
@@ -370,7 +436,7 @@ class ES_EKF:
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = r_nb.T
         h_mat[:, 6:9] = -r_nb.T @ _skew(self.v)
-        self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3))
+        self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3), source="dvl_body")
 
     def correct_dvl_world(self, dvl_vel_world):
         """使用世界系 DVL 速度修正滤波状态。"""
@@ -379,7 +445,7 @@ class ES_EKF:
         h = self.v.copy()
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = np.eye(3)
-        self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3))
+        self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3), source="dvl_world")
 
     def correct_dvl_with_timestamp(self, dvl_vel_body, dvl_timestamp, current_timestamp):
         """使用带时间戳的 DVL 速度修正，处理异步传感器延迟。
@@ -408,7 +474,7 @@ class ES_EKF:
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = r_nb.T
         h_mat[:, 6:9] = -r_nb.T @ _skew(self.v)
-        self._correct(z, h, h_mat, r)
+        self._correct(z, h, h_mat, r, source="dvl_body_ts")
 
     def correct_depth(self, depth_m):
         """使用深度观测修正位置的 Z 轴分量。"""
@@ -417,7 +483,7 @@ class ES_EKF:
         h = -self.p[2]
         h_mat = np.zeros((1, 15), dtype=float)
         h_mat[0, 2] = -1.0
-        self._correct(np.array([z], dtype=float), np.array([h], dtype=float), h_mat, np.array([[self.sigma_depth ** 2]], dtype=float))
+        self._correct(np.array([z], dtype=float), np.array([h], dtype=float), h_mat, np.array([[self.sigma_depth ** 2]], dtype=float), source="depth")
 
     def correct_gps(self, gps_xy):
         """使用 GPS 平面位置观测修正滤波状态。"""
@@ -426,4 +492,40 @@ class ES_EKF:
         h_mat = np.zeros((2, 15), dtype=float)
         h_mat[0, 0] = 1.0
         h_mat[1, 1] = 1.0
-        self._correct(z, h, h_mat, (self.sigma_gps_xy ** 2) * np.eye(2))
+        self._correct(z, h, h_mat, (self.sigma_gps_xy ** 2) * np.eye(2), source="gps")
+
+    def correct_mag(self, mag_body_t, cable_current_amp=None, sigma_mag_depth=None):
+        """磁场观测最小钩（论文 §3.3.3）。
+
+        采用线性化的毕奥-萨伐尔反演，将磁场幅值映射到"传感器到电缆的最近距离"，
+        并把该距离当作"对深度差"的弱观测。仅当 feature_flags.enable_mag_correction
+        为 True 时生效；默认关闭。
+
+        模型：|B| ≈ μ0·I / (2π·d)  →  d = μ0·I / (2π·|B|)
+
+        观测量取 sensor 上方深度（NED z 越大越深），残差为 d_pred − d_meas，
+        H 行只在 z 上有 +1（与 correct_depth 同形），噪声 sigma_mag_depth。
+
+        本钩用于论文章节性的"声磁协同"展示，不接入主线 fallback；
+        缺省 sigma 较大（0.20m），不会冲击 DVL/Depth 主路。
+        """
+        if not self.feature_enable_mag_correction:
+            return
+        b = np.asarray(mag_body_t, dtype=float).reshape(3)
+        b_norm = float(np.linalg.norm(b))
+        if not np.isfinite(b_norm) or b_norm <= 1e-12:
+            return
+        I = float(cable_current_amp if cable_current_amp is not None
+                  else self.mag_cable_current_amp)
+        mu0 = 4.0 * np.pi * 1e-7
+        d_meas = mu0 * I / (2.0 * np.pi * b_norm)  # 传感器到电缆距离 (m)
+        # 假设电缆在海床上、传感器深度 z_sensor，缆深 z_cable 已知（默认 0）
+        # 残差对应"深度差 d_pred - d_meas"，d_pred 用 -p_z (NED 正向下)。
+        d_pred = -self.p[2]
+        z_obs = np.array([d_meas], dtype=float)
+        h_pred = np.array([d_pred], dtype=float)
+        h_mat = np.zeros((1, 15), dtype=float)
+        h_mat[0, 2] = -1.0
+        sigma = float(sigma_mag_depth if sigma_mag_depth is not None
+                      else self.sigma_mag_depth)
+        self._correct(z_obs, h_pred, h_mat, np.array([[sigma ** 2]], dtype=float), source="mag")

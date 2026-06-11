@@ -28,7 +28,16 @@ for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common']:
     if folder_str not in sys.path:
         sys.path.insert(0, folder_str)
 
-from common.protocol import build_uplink_packet, parse_downlink_packet
+from common.protocol import (
+    build_uplink_packet,
+    parse_downlink_packet,
+    KEY_CABLE_CLOSEST_NED,
+    KEY_CABLE_DISTANCE_M,
+    KEY_POSITION_NED,
+    KEY_RPY_NED,
+    enrich_meta,
+    validate_sensor_payload,
+)
 from common.protocol_debug import format_protocol_packet, format_protocol_packet_ascii, format_protocol_packet_raw
 
 from mock_amd_chaos import ChaosInjector, ChaosProfile
@@ -37,6 +46,8 @@ from mock_amd_sensor_cache import SensorSampleCache, SensorSnapshot
 from frame_transform import body_vector_ue_to_ned, pose_matrix_ue_to_ned
 from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, extract_gyro, get_agent_state
 from ocean_current_model import OceanCurrentModel
+from synthetic_sensors import VirtualEnvironment
+from zenoh_bridge import ZenohBridge
 
 
 class MockAmdUdpServer:
@@ -209,6 +220,12 @@ class MockAmdUdpServer:
         self.sock = None
 
         # ────────────────────────────────────────
+        # 动态地形模型（与 holoocean_physics_bridge 共享相同参数）
+        # ────────────────────────────────────────
+        digital_twin_cfg = self.config.get("digital_twin", {})
+        self._virtual_env = VirtualEnvironment(digital_twin_cfg)
+
+        # ────────────────────────────────────────
         # 最后接收的命令状态
         # ────────────────────────────────────────
         self.last_cmd = np.array(config['bridge'].get('default_command', [0, 0, 0, 0, 0]), dtype=float)
@@ -223,6 +240,16 @@ class MockAmdUdpServer:
         self.last_control_mode_byte = self.default_control_mode_byte  # 控制模式
         self.last_mock_amd_timestamp_us = 0      # 上次接收的 AMD 时间戳（微秒）
         self._last_downlink_packet = None        # 最近一次接收到的原始下行数据包
+
+        # ────────────────────────────────────────
+        # Zenoh GT publisher（D9.7 修复，2026-06-09）
+        # ────────────────────────────────────────
+        # protocol_udp 后端默认只发 UDP 二进制；为支持 sweep harness 下游
+        # benchmark 拿到真 GT（而非 viz_bridge mock fallback），在此并联一个
+        # zenoh GT publisher，与 HoloOceanPhysicsZenohBridge.ground_truth 通道
+        # schema 完全一致（rt/auv/sensors/ground_truth）。
+        self.zbridge = None
+        self._gt_step = 0
 
     # ========================================================================
     # 公共 API：生命周期管理
@@ -249,10 +276,26 @@ class MockAmdUdpServer:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.bind_host, self.bind_port))
         self.sock.settimeout(self.socket_timeout_s)
+
+        # D9.7：开启 zenoh GT 旁路 publisher（仅当 yaml 含 zenoh.uplink_keys.ground_truth）
+        zenoh_cfg = self.config.get("zenoh") or {}
+        if zenoh_cfg.get("uplink_keys", {}).get("ground_truth"):
+            try:
+                self.zbridge = ZenohBridge(zenoh_cfg).open()
+                print(f"[mock-amd] zenoh GT publisher opened on {zenoh_cfg['uplink_keys']['ground_truth']}")
+            except Exception as exc:
+                print(f"[mock-amd][warn] zenoh GT publisher init failed: {exc}; GT will not be published to zenoh")
+                self.zbridge = None
         return self
 
     def close(self):
         """关闭 Mock AMD 服务器，释放 socket 和仿真资源。"""
+        if self.zbridge is not None:
+            try:
+                self.zbridge.close()
+            except Exception:
+                pass
+            self.zbridge = None
         if self.sock is not None:
             try:
                 self.sock.close()
@@ -486,7 +529,8 @@ class MockAmdUdpServer:
 
         # 欧拉角（滚转、俯仰、偏航） / NED 坐标系
         rpy_deg = np.degrees(tf['rpy_ned'])
-        seabed_depth_m = float(self.config.get('digital_twin', {}).get('seabed_z_m', 15.0))
+        pos_ned = tf["position_ned"]
+        seabed_depth_m = self._virtual_env.terrain_height_at(float(pos_ned[0]), float(pos_ned[1]))
 
         # 提取各分量（基准值，将被故障注入覆盖）
         base_heading_deg = float((rpy_deg[2] + 360.0) % 360.0)  # 航向：偏航角 [0, 360)
@@ -569,6 +613,14 @@ class MockAmdUdpServer:
         parameter_values[7] = int(np.clip(gyro_ned[0] * 1000, -32768, 32767))
         parameter_values[8] = int(np.clip(gyro_ned[1] * 1000, -32768, 32767))
         parameter_values[9] = int(np.clip(gyro_ned[2] * 1000, -32768, 32767))
+        # Para11: Forward terrain slope (tan(alpha) × 10000, int16) for terrain following
+        heading_rad = float(np.radians(heading_deg))
+        lookahead_m = 5.0
+        x_fwd = float(pos_ned[0]) + lookahead_m * np.cos(heading_rad)
+        y_fwd = float(pos_ned[1]) + lookahead_m * np.sin(heading_rad)
+        terrain_z_fwd = self._virtual_env.terrain_height_at(x_fwd, y_fwd)
+        fwd_slope = (terrain_z_fwd - seabed_depth_m) / lookahead_m
+        parameter_values[10] = int(np.clip(fwd_slope * 10000, -32768, 32767))
 
         return build_uplink_packet(
             frame_counter=int(step) & 0xFF,
@@ -599,6 +651,44 @@ class MockAmdUdpServer:
     # ========================================================================
     # 公共 API：主运行循环
     # ========================================================================
+
+    def _publish_ground_truth_zenoh(self, raw_state, step: int):
+        """
+        D9.7 旁路 publish：从仿真 state 提取真位姿并发布到 rt/auv/sensors/ground_truth。
+
+        与 HoloOceanPhysicsZenohBridge._build_sensor_packet 的 ground_truth payload
+        结构完全一致（KEY_POSITION_NED / KEY_RPY_NED / KEY_CABLE_*），下游 viz_bridge
+        和 benchmark 直接复用同一 schema。
+
+        参数:
+            raw_state: HoloOcean 返回的仿真状态字典
+            step: 仿真步数（用于 enrich_meta）
+        """
+        if self.zbridge is None:
+            return
+        try:
+            agent_state = get_agent_state(raw_state, self.agent_name)
+            pose = agent_state['PoseSensor']
+            tf = pose_matrix_ue_to_ned(pose)
+            pos_ned = tf["position_ned"]
+            sim_time = float(step) * self.dt
+            base = enrich_meta({}, step=int(step), sim_time=sim_time, ts=sim_time)
+            payload = {
+                **base,
+                KEY_POSITION_NED: pos_ned.tolist(),
+                KEY_RPY_NED: tf["rpy_ned"].tolist(),
+                # cable 信息在 mock_amd_server 不可得；填零占位以满足 schema
+                KEY_CABLE_CLOSEST_NED: [0.0, 0.0, 0.0],
+                KEY_CABLE_DISTANCE_M: 0.0,
+            }
+            topic = self.zbridge.get_uplink_topic("ground_truth")
+            ok, errors = validate_sensor_payload(topic, payload)
+            if not ok:
+                print(f"[mock-amd][warn] invalid GT payload: {errors}")
+                return
+            self.zbridge.publish("ground_truth", payload)
+        except Exception as exc:
+            print(f"[mock-amd][warn] GT publish failed at step={step}: {exc}")
 
     def run_forever(self):
         """
@@ -736,6 +826,12 @@ class MockAmdUdpServer:
                         f'step={step:06d} depth={depth_m:.2f}m mode={mode_tag} '
                         f'cmd=({cmd[0]:.1f},{cmd[1]:.1f},{cmd[2]:.1f},{cmd[3]:.1f},{cmd[4]:.1f})'
                     )
+
+            # ────────────────────────────────────────
+            # D9.7 GT 旁路：每 tick 把真位姿发到 zenoh GT 通道
+            # ────────────────────────────────────────
+            if self.zbridge is not None:
+                self._publish_ground_truth_zenoh(state, step)
 
             # ────────────────────────────────────────
             # 速率控制：维持 rate_hz

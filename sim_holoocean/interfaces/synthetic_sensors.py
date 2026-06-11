@@ -234,6 +234,10 @@ class VirtualEnvironment:
         slope_offset = -math.tan(math.radians(self.config.terrain_slope_deg)) * max(0.0, x - 10.0) # 假设斜坡从 x=10 处开始
         return self.config.seabed_z_m + self.config.terrain_noise_amplitude_m * noise + slope_offset
 
+    def terrain_height_at(self, x: float, y: float) -> float:
+        """查询给定 (x, y) NED位置的海底深度(Z坐标，正向下)。"""
+        return self._terrain_height(x, y)
+
     def sample_seabed_points(self, center_ned: np.ndarray | list[float]) -> list[list[float]]:
         """
         采样以 AUV 为中心的海底点云。

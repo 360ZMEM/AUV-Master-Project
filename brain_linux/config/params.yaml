@@ -108,7 +108,7 @@ control:
 
 mpc:
   prediction_horizon: 20
-  dt: 0.1
+  dt: 0.2
   solver: 'ipopt'
   warm_start: true
   max_solve_time_ms: 50.0
@@ -129,13 +129,13 @@ mpc_weights:
   tracking:
     x: 1.0
     y: 1.0
-    z: 25.0
+    z: 40.0
     psi: 80.0
     u: 0.5
     w: 3.0
   control:
     psi_cmd: 0.005
-    z_cmd: 0.01
+    z_cmd: 0.002
     T_cmd: 0.01
   confidence_threshold: 0.6
   low_confidence_scale: 3.0
@@ -146,6 +146,15 @@ mpc_constraints:
   max_pitch_deg: 20.0
   min_altitude_m: 1.5
   max_thrust_percent: 100.0
+  # P1 (MPC v2): 制导级参考的速率/带宽约束，避免 z_cmd / psi_cmd 飞出 PVS 内环可执行域。
+  # 取值与 PID v2 内环 wn_d_z / r_max 相容（dt=0.2s 下每步上限）。
+  min_thrust_percent: 15.0
+  delta_z_max_per_step: 1.0        # m/step：每步最大 z_cmd 变化
+  delta_psi_max_per_step: 0.0419   # rad/step：12 deg/s * 0.2s ≈ 2.4 deg/step（保守 0.0419≈2.4°）
+  z_band_m: 4.0                    # m：z_cmd 与当前 z 的最大偏差
+  psi_band_rad: 0.7854             # rad：45° 带宽
+  enable_rate_constraints: true
+  enable_band_constraints: true
 
 ekf:
   gravity: 9.81

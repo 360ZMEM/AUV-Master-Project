@@ -16,6 +16,8 @@ BaseController 接口，提供：
 
 from __future__ import annotations
 
+import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -107,12 +109,29 @@ class MPCController(BaseController):
     ) -> None:
         mpc_cfg = ctrl_cfg.get("mpc", {})
         model_cfg = ctrl_cfg.get("mpc_model", {})
-        weights_cfg = ctrl_cfg.get("mpc_weights", {})
+        weights_cfg = dict(ctrl_cfg.get("mpc_weights", {}))
         constraints_cfg = ctrl_cfg.get("mpc_constraints", {})
+
+        # E3 — sweep harness 通过 AUV_MPC_MODE 注入消融模式 (ua/baseline)
+        env_mpc_mode = os.environ.get("AUV_MPC_MODE", "").strip().lower()
+        if env_mpc_mode in ("ua", "baseline"):
+            weights_cfg["mpc_mode"] = env_mpc_mode
+
+        # E6 — sweep harness 通过 AUV_MPC_PARAM_OVERRIDES 注入参数网格 (论文 §5.5.1)
+        overrides_json = os.environ.get("AUV_MPC_PARAM_OVERRIDES", "").strip()
+        if overrides_json:
+            try:
+                overrides = json.loads(overrides_json)
+                if isinstance(overrides, dict):
+                    weights_cfg.update(overrides)
+            except Exception:
+                pass
 
         self._N = int(mpc_cfg.get("prediction_horizon", 20))
         self._dt = float(mpc_cfg.get("dt", 0.1))
         self._max_solve_time_ms = float(mpc_cfg.get("max_solve_time_ms", 50.0))
+        self._fail_safe_fallback = bool(mpc_cfg.get("fail_safe_fallback", True))
+        self._fallback_thrust_percent = float(constraints_cfg.get("min_thrust_percent", 15.0))
 
         self._kinematics = AUVKinematicsModel(model_cfg)
         self._optimizer = AUVMPCOptimizer(
@@ -128,6 +147,7 @@ class MPCController(BaseController):
         self._solver_status: str = "NOT_RUN"
         self._last_cost: float = 0.0
         self._confidence: float = 1.0
+        self._last_output: ControlOutput | None = None
 
         self._use_los_reference: bool = mpc_cfg.get("use_los_reference", False)
         self._los_lookahead_distance: float = mpc_cfg.get("los_lookahead_distance", 3.0)
@@ -148,14 +168,20 @@ class MPCController(BaseController):
         """
         t_start = time.time()
 
+        # MPC 内部统一使用 NED 深度：z 正向下、w 正向下。
+        # 新版 auv_controller_node 已传入 state["z"] = state["depth"] = 正深度；
+        # 这里保留 fallback，防止其他调用方仍只提供 depth。
+        depth_ned = float(state.get("depth", state.get("z", 0.0)))
+        w_ned = float(state.get("w", 0.0))
+
         x0 = np.array(
             [
                 float(state["x"]),
                 float(state["y"]),
-                float(state["z"]),
+                depth_ned,
                 float(state["yaw"]),
                 float(state["u"]),
-                float(state["w"]),
+                w_ned,
             ],
             dtype=np.float64,
         )
@@ -179,8 +205,32 @@ class MPCController(BaseController):
                 confidence=confidence,
                 warm_start_U=self._prev_U,
             )
-        except RuntimeError:
-            raise
+        except RuntimeError as exc:
+            if not self._fail_safe_fallback:
+                raise
+            self._solver_status = f"FALLBACK: {exc}"
+            if self._last_output is not None:
+                self._last_output.debug["solver_status"] = "FALLBACK_LAST_OUTPUT"
+                self._last_output.debug["fallback_reason"] = str(exc)
+                return self._last_output
+            return ControlOutput(
+                thrust_percent=float(np.clip(self._fallback_thrust_percent, 0.0, 100.0)),
+                right_fin_deg=None,
+                top_fin_deg=None,
+                left_fin_deg=None,
+                bottom_fin_deg=None,
+                guidance_heading=float(target_heading),
+                guidance_depth=float(target_depth),
+                debug={
+                    "controller_type": "MPC",
+                    "solver_status": "FALLBACK_SETPOINT",
+                    "fallback_reason": str(exc),
+                    "solve_time_ms": round((time.time() - t_start) * 1000.0, 2),
+                    "confidence": round(confidence, 3),
+                    "prediction_horizon": self._N,
+                    "dt": self._dt,
+                },
+            )
 
         self._solve_time_ms = result["solve_time_ms"]
         self._solver_status = result["solver_status"]
@@ -216,7 +266,7 @@ class MPCController(BaseController):
                 }
             )
 
-        return ControlOutput(
+        output = ControlOutput(
             thrust_percent=float(np.clip(T_opt, 0.0, 100.0)),
             right_fin_deg=None,
             top_fin_deg=None,
@@ -242,6 +292,8 @@ class MPCController(BaseController):
                 "ref_trajectory": ref_traj_list,
             },
         )
+        self._last_output = output
+        return output
 
     def _build_reference_trajectory(
         self,

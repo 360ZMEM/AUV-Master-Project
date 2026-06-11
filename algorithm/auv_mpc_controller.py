@@ -74,9 +74,12 @@ class AUVKinematicsModel:
         dy = u * ca.sin(psi)
 
         depth_err = z_cmd - z
+        # NED convention: z is positive downward, while positive pitch (theta)
+        # is nose-up. A deeper target therefore requires negative pitch so that
+        # -u*sin(theta) contributes positive dz (downward motion).
         theta_approx = ca.fmax(-self.max_pitch_rad,
                                ca.fmin(self.max_pitch_rad,
-                                       self.pitch_depth_gain * depth_err))
+                                       -self.pitch_depth_gain * depth_err))
 
         sin_theta = ca.sin(theta_approx)
         cos_theta = ca.cos(theta_approx)
@@ -122,6 +125,20 @@ class AUVMPCOptimizer:
     N_STATES = 6
     N_CONTROLS = 3
 
+    @staticmethod
+    def _normalize_weights(weights):
+        """兼容 params.yaml 的嵌套权重格式与测试中的扁平格式。"""
+        weights = dict(weights or {})
+        normalized = {}
+        for section in ("tracking", "control"):
+            section_values = weights.get(section)
+            if isinstance(section_values, dict):
+                normalized.update(section_values)
+        for key, value in weights.items():
+            if key not in ("tracking", "control"):
+                normalized[key] = value
+        return normalized
+
     def __init__(
         self,
         kinematics,
@@ -143,7 +160,7 @@ class AUVMPCOptimizer:
         self.N = N
         self.dt = dt
 
-        weights = weights or {}
+        weights = self._normalize_weights(weights)
         self.W_x = float(weights.get("x", 1.0))
         self.W_y = float(weights.get("y", 1.0))
         self.W_z = float(weights.get("z", 5.0))
@@ -156,14 +173,42 @@ class AUVMPCOptimizer:
         self.confidence_threshold = float(weights.get("confidence_threshold", 0.6))
         self.low_conf_scale = float(weights.get("low_confidence_scale", 3.0))
         self.low_conf_ctrl_scale = float(weights.get("low_confidence_control_scale", 0.3))
+        # E3 — sigmoid 平滑 + 消融开关（论文 §4.4.2）
+        self.confidence_smoothness_k = float(weights.get("confidence_smoothness_k", 8.0))
+        self.confidence_alpha = float(weights.get("confidence_alpha", 1.5))
+        self.mpc_mode = str(weights.get("mpc_mode", "ua")).lower()
+        if self.mpc_mode not in ("ua", "baseline"):
+            self.mpc_mode = "ua"
 
         constraints = constraints or {}
         self.min_speed = float(constraints.get("min_speed_ms", 0.1))
         self.max_thrust = float(constraints.get("max_thrust_percent", 100.0))
+        self.min_thrust = float(constraints.get("min_thrust_percent", 0.0))
         self.min_z_cmd = float(constraints.get("min_z_cmd_m", 0.0))
         self.max_z_cmd = float(constraints.get("max_z_cmd_m", 50.0))
         self.min_psi_cmd = float(constraints.get("min_psi_cmd_rad", -np.pi))
         self.max_psi_cmd = float(constraints.get("max_psi_cmd_rad", np.pi))
+        # P1: 参考速率约束（每个 dt 的最大变化量）
+        # 默认值与 PVS v2 内环 wn_d_z=0.4 / r_max=12deg/s 相容。
+        self.delta_z_max_per_step = float(
+            constraints.get("delta_z_max_per_step", 0.5)
+        )  # m / step
+        self.delta_psi_max_per_step = float(
+            constraints.get(
+                "delta_psi_max_per_step",
+                np.deg2rad(8.0),
+            )
+        )  # rad / step
+        # P1: 参考相对当前态的带宽约束（z_cmd, psi_cmd 不能离当前 z, psi 太远）
+        self.z_band = float(constraints.get("z_band_m", 3.0))
+        self.psi_band = float(constraints.get("psi_band_rad", np.deg2rad(45.0)))
+        # P1: 启用/禁用速率/带宽约束（用于消融）
+        self.enable_rate_constraints = bool(
+            constraints.get("enable_rate_constraints", True)
+        )
+        self.enable_band_constraints = bool(
+            constraints.get("enable_band_constraints", True)
+        )
 
         self._build_solver()
 
@@ -196,8 +241,52 @@ class AUVMPCOptimizer:
         # 硬约束：航速下限（确保舵效）
         opti.subject_to(X[4, 1:] >= self.min_speed)
 
-        # 硬约束：推力限幅
-        opti.subject_to(opti.bounded(0, U[2, :], self.max_thrust))
+        # 硬约束：制导指令边界，防止优化器输出不可执行的极端参考。
+        opti.subject_to(opti.bounded(self.min_psi_cmd, U[0, :], self.max_psi_cmd))
+        opti.subject_to(opti.bounded(self.min_z_cmd, U[1, :], self.max_z_cmd))
+
+        # 硬约束：推力上下限（min_thrust 防止 z_cmd 拉飞时把推力清零导致失稳）
+        opti.subject_to(opti.bounded(self.min_thrust, U[2, :], self.max_thrust))
+
+        # P1: 参考速率约束（z_cmd / psi_cmd 每个 dt 的最大变化量）
+        if self.enable_rate_constraints and N >= 2:
+            for k in range(N - 1):
+                opti.subject_to(opti.bounded(
+                    -self.delta_z_max_per_step,
+                    U[1, k + 1] - U[1, k],
+                    self.delta_z_max_per_step,
+                ))
+                # psi 速率约束（差分 wrap 不严格，但 N·dt 内 psi 不会绕圈）
+                opti.subject_to(opti.bounded(
+                    -self.delta_psi_max_per_step,
+                    U[0, k + 1] - U[0, k],
+                    self.delta_psi_max_per_step,
+                ))
+            # 第一步参考相对当前态的速率限制
+            opti.subject_to(opti.bounded(
+                -self.delta_z_max_per_step,
+                U[1, 0] - x0_param[2],
+                self.delta_z_max_per_step,
+            ))
+            opti.subject_to(opti.bounded(
+                -self.delta_psi_max_per_step,
+                U[0, 0] - x0_param[3],
+                self.delta_psi_max_per_step,
+            ))
+
+        # P1: 参考带宽约束（z_cmd / psi_cmd 与当前 z, psi 偏差不超过带宽）
+        if self.enable_band_constraints:
+            for k in range(N):
+                opti.subject_to(opti.bounded(
+                    -self.z_band,
+                    U[1, k] - x0_param[2],
+                    self.z_band,
+                ))
+                opti.subject_to(opti.bounded(
+                    -self.psi_band,
+                    U[0, k] - x0_param[3],
+                    self.psi_band,
+                ))
 
         # 软约束：指令物理合理性 (作为代价函数的惩罚项而非硬约束)
         # 这些约束通过代价函数中的控制权重自然限制
@@ -209,10 +298,19 @@ class AUVMPCOptimizer:
             err = X[:, k] - ref_X_param[:, k]
             conf = confidence_param
 
-            w_x = self.W_x * (1 + (1 - conf) * (self.low_conf_scale - 1))
-            w_y = self.W_y * (1 + (1 - conf) * (self.low_conf_scale - 1))
-            w_z = self.W_z * (1 + (1 - conf) * 0.5)
-            w_psi = self.W_psi * (1 + (1 - conf) * (self.low_conf_scale - 1))
+            if self.mpc_mode == "baseline":
+                # 消融基线：忽略置信度，权重恒定
+                w_x = self.W_x
+                w_y = self.W_y
+                w_z = self.W_z
+                w_psi = self.W_psi
+            else:
+                # UA-MPC：(1 - conf)^alpha 平滑放大跟踪权重
+                conf_pow = ca.power(ca.fmax(0.0, 1.0 - conf), self.confidence_alpha)
+                w_x = self.W_x * (1.0 + (self.low_conf_scale - 1.0) * conf_pow)
+                w_y = self.W_y * (1.0 + (self.low_conf_scale - 1.0) * conf_pow)
+                w_z = self.W_z * (1.0 + 0.5 * conf_pow)
+                w_psi = self.W_psi * (1.0 + (self.low_conf_scale - 1.0) * conf_pow)
 
             J += (
                 w_x * err[0] ** 2
@@ -231,11 +329,17 @@ class AUVMPCOptimizer:
             )
 
             conf = confidence_param
-            control_scale = ca.if_else(
-                conf < self.confidence_threshold,
-                self.low_conf_ctrl_scale,
-                1.0,
-            )
+            if self.mpc_mode == "baseline":
+                control_scale = 1.0
+            else:
+                # sigmoid 平滑：conf 高 → control_scale ≈ 1；conf 低 → low_conf_ctrl_scale
+                sig = 1.0 / (1.0 + ca.exp(
+                    self.confidence_smoothness_k * (conf - self.confidence_threshold)
+                ))
+                control_scale = (
+                    self.low_conf_ctrl_scale
+                    + (1.0 - self.low_conf_ctrl_scale) * (1.0 - sig)
+                )
             J += control_scale * ctrl_effort
 
         opti.minimize(J)

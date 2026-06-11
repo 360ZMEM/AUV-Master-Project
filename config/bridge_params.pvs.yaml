@@ -52,8 +52,10 @@ zenoh:
     imu: rt/auv/sensors/imu
     dvl: rt/auv/sensors/dvl
     depth: rt/auv/sensors/depth
+    altitude: rt/auv/sensors/altitude
     magnetic: rt/auv/sensors/magnetic
     sonar: rt/auv/sensors/sonar
+    forward_sonar: rt/auv/sensors/forward_sonar
     seabed_cloud: rt/auv/visual/seabed_cloud
     cable_marker: rt/auv/visual/cable_marker
     truth_pose: rt/auv/visual/truth_pose

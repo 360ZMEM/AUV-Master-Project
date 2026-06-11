@@ -1,0 +1,26 @@
+name: combined_stress
+description: Composite stress test - moderate DVL drop + light mag distortion + sonar clutter + flow.
+duration_s: 120
+sim_backend: pvs
+mpc_mode: ua
+chaos:
+  enabled: true
+  packet_loss_prob: 0.05
+  dvl_freeze:
+    enabled: true
+    drop_rate: 0.30
+    freeze_window_s: [1.0, 3.0]
+  imu_drift:
+    enabled: true
+    bias_rate: 0.001
+  depth_spike:
+    enabled: true
+    rate_hz: 0.05
+    amplitude_m: 0.5
+  mag_saturation_threshold_t: 1.0e-7
+perception:
+  imu_acc_noise_scale: 1.5
+  sonar_noise_scale: 2.0
+  cable_current_amp: 500.0
+flow:
+  current_speed_mps: 0.3

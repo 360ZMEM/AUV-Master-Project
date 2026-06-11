@@ -158,13 +158,50 @@ if [[ ! -d "$SCRIPTS_DIR" ]]; then
 fi
 
 cleanup() {
+  local grace="${LAUNCHER_GRACE_S:-5}"
+  local pids_to_kill=()
   if [[ -n "${SIM_PID:-}" ]]; then
-    echo "[AUV] stopping simulation launcher ($SIM_PID)"
-    kill "$SIM_PID" >/dev/null 2>&1 || true
+    pids_to_kill+=("$SIM_PID")
   fi
   if [[ -n "${BRIDGE_PID:-}" ]]; then
-    echo "[AUV] stopping foxglove bridge ($BRIDGE_PID)"
-    kill "$BRIDGE_PID" >/dev/null 2>&1 || true
+    pids_to_kill+=("$BRIDGE_PID")
+  fi
+  if [[ -n "${BRAIN_PID:-}" ]]; then
+    pids_to_kill+=("$BRAIN_PID")
+  fi
+  if [[ "${#pids_to_kill[@]}" -gt 0 ]]; then
+    echo "[AUV] stopping child launchers (${pids_to_kill[*]}), grace ${grace}s"
+    local pid
+    for pid in "${pids_to_kill[@]}"; do
+      kill -INT -- -"$pid" >/dev/null 2>&1 || kill -INT "$pid" >/dev/null 2>&1 || true
+    done
+    local i
+    for i in $(seq 1 "$grace"); do
+      local any_alive=0
+      for pid in "${pids_to_kill[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then
+          any_alive=1
+          break
+        fi
+      done
+      if [[ "$any_alive" -eq 0 ]]; then
+        break
+      fi
+      sleep 1
+    done
+    for pid in "${pids_to_kill[@]}"; do
+      if kill -0 "$pid" 2>/dev/null; then
+        echo "[AUV][WARN] $pid still alive, escalating to SIGTERM on group"
+        kill -TERM -- -"$pid" >/dev/null 2>&1 || kill -TERM "$pid" >/dev/null 2>&1 || true
+      fi
+    done
+    sleep 2
+    for pid in "${pids_to_kill[@]}"; do
+      if kill -0 "$pid" 2>/dev/null; then
+        echo "[AUV][WARN] $pid still alive, escalating to SIGKILL on group"
+        kill -KILL -- -"$pid" >/dev/null 2>&1 || kill -KILL "$pid" >/dev/null 2>&1 || true
+      fi
+    done
   fi
 }
 
@@ -192,6 +229,8 @@ else
 fi
 
 echo "[AUV] starting HoloOcean + bridge simulation via start_lin_sim.sh (${SIM_MODE})..."
+# NOTE: do NOT use setsid here — keep children in this script's process group so the
+# parent (start_experiment.sh) can kill -- -<pgid> and reach every descendant.
 bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" "${SIM_ARGS[@]}" &
 SIM_PID=$!
 
@@ -203,7 +242,7 @@ if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/lo
     source "$BRAIN_DIR/install/setup.bash"
     source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
     set -u
-    ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+    exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
   ) &
   BRIDGE_PID=$!
 else
@@ -214,4 +253,23 @@ echo "[AUV] waiting ${SIM_DELAY_S}s before starting ROS2 brain..."
 sleep "$SIM_DELAY_S"
 
 echo "[AUV] starting ROS2 brain via start_lin_brain.sh (${BRAIN_MODE})..."
-bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}"
+bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}" &
+BRAIN_PID=$!
+
+# Wait on whichever child exits first; cleanup() (via traps) handles the rest.
+WAIT_PIDS=("$SIM_PID" "$BRAIN_PID")
+if [[ -n "${BRIDGE_PID:-}" ]]; then
+  WAIT_PIDS+=("$BRIDGE_PID")
+fi
+EXIT_PID=""
+wait -n -p EXIT_PID "${WAIT_PIDS[@]}" 2>/dev/null
+EXIT_CODE=$?
+which_child="unknown"
+case "$EXIT_PID" in
+  "$SIM_PID")    which_child="sim (start_lin_sim.sh)" ;;
+  "$BRIDGE_PID") which_child="bridge (foxglove_bridge)" ;;
+  "$BRAIN_PID")  which_child="brain (start_lin_brain.sh)" ;;
+esac
+echo "[AUV] one of (sim/bridge/brain) exited: pid=${EXIT_PID:-?} code=${EXIT_CODE} child=${which_child}"
+echo "[AUV] finalizing via cleanup trap"
+exit 0

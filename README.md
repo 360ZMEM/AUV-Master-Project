@@ -44,7 +44,7 @@ python tools/analyze_bag.py <bag路径>/*.mcap --output-dir ./figures
 | 运行基准测试(PID/MPC/EKF) | [基准测试](docs/user-guide/05_benchmarks.md) |
 | 配置 Foxglove 可视化 | [Foxglove](docs/user-guide/06_foxglove.md) |
 | 查看已做/可做的实验清单 | [实验目录](docs/user-guide/07_experiments_catalog.md) |
-| 把系统部署到真机 | [真机迁移 SOP](docs/user-guide/08_real_hardware_sop.md) |
+| 把系统部署到真机 | [真机迁移 SOP](docs/user-guide/08_real_hardware_sop.md)（速记） + [实物部署多 Level 路径](docs/real_deployment/INDEX.md)（完整 SOP） |
 | 查配置文件参数含义 | [配置速查](docs/user-guide/09_config_reference.md) |
 | 理解系统整体架构 | [架构总览](docs/internals/01_architecture.md) |
 | 了解仲裁器安全机制 | [仲裁器](docs/internals/07_arbiter.md) |
@@ -147,3 +147,37 @@ python tools/offline_ekf_benchmark.py --input <bag>.mcap --output-dir ./results
 | 上位机 (PySide6) | 完成 |
 | Foxglove 可视化 | 完成 |
 | 真机部署 | 配置就绪，待实物对接 |
+
+---
+
+## 实物部署 Real Deployment
+
+仓库提供从仿真到真机的**多 Level 实施路径**，每阶段独立 shell 入口、独立通过判据、独立失败回退：
+
+```
+S0 静态自检  →  S1 链路审计  →  S2 静态执行器极性  →  S3 影子导航  →  S4 单点闭环  →  S5 全自主
+                                                                                       └ KS 急停（任何阶段可触发）
+```
+
+三种 target 共用同一套脚本骨架：
+- `mock` — 默认；用 mock_amd_server.py 在 PC 本机回环验证
+- `vxsim` — 把 mock 换为 csd_vx6.8_vxsim VxWorks 仿真
+- `real` — 真机；需 `--i-have-physical-auv` 显式确认
+
+文档与脚本入口：
+
+| 类别 | 入口 |
+|---|---|
+| SOP 体系（预先规约） | [docs/real_deployment/INDEX.md](docs/real_deployment/INDEX.md) |
+| 过程日志（事后记录） | [docs/experiment/real_deployment/INDEX.md](docs/experiment/real_deployment/INDEX.md) |
+| 现场速记表 | [docs/user-guide/08_real_hardware_sop.md](docs/user-guide/08_real_hardware_sop.md) |
+| 阶段 shell 脚本 | [scripts/real_deployment/](scripts/real_deployment/) |
+| 急停 | [scripts/real_deployment/kill_switch.sh](scripts/real_deployment/kill_switch.sh) |
+
+最小命令（mock target，dry-run 不发实弹）：
+
+```bash
+RD_DRY_RUN=true bash scripts/real_deployment/00_static_preflight.sh --target mock
+RD_DRY_RUN=true bash scripts/real_deployment/01_link_audit.sh --target mock
+# ... 02..05 同前缀
+```

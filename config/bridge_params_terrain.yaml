@@ -1,0 +1,22 @@
+# 起伏地形场景配置 - 用于地形跟随基准测试
+# 继承 bridge_params.yaml 的其余配置，仅覆盖地形参数
+
+digital_twin:
+  enabled: true
+  terrain_extent_m: 50.0
+  terrain_resolution_m: 1.0
+  terrain_noise_amplitude_m: 2.0     # 增大到 ±2m 起伏（默认1.0）
+  terrain_noise_scale_m: 6.0         # 缩短波长到 6m（默认8.0，更剧烈变化）
+  terrain_noise_octaves: 4           # 4层噪声（默认3）
+  terrain_seed: 42                   # 不同种子产生不同地形
+  terrain_slope_deg: 3.0             # 3度线性斜坡（默认0.0）
+  seabed_z_m: 15.0
+  cable_suspension_height_m: 1.0
+  cable_origin_ned: [0.0, 0.0, 14.0]
+  cable_direction_ned: [1.0, 0.0, 0.0]
+  cable_length_m: 60.0
+  cable_step_m: 1.0
+  view_radius_m: 3.0
+  view_height_m: 0.1
+  terrain_publish_hz: 3.0
+  trail_limit: 800

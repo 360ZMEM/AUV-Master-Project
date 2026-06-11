@@ -25,6 +25,8 @@
 | 07 | [experiments_catalog.md](experiments_catalog.md) | 实验目录：已完成/可复现/待开展的仿真实验清单 |
 | 08 | [real_hardware_sop.md](real_hardware_sop.md) | 真机迁移 SOP：从仿真到实物的完整操作流程 |
 | 09 | [config_reference.md](config_reference.md) | 配置文件速查：主线配置地图与参数含义 |
+| 10 | [terrain.md](10_terrain.md) | 地形跟随基准：恒深 vs 自适应离底高度对比 |
+| 11 | [real_deployment/INDEX.md](../real_deployment/INDEX.md) | **多 Level 实物部署路径**：08 是速记表，本入口给出 S1–S5 完整 SOP 体系 |
 
 ---
 

@@ -6,34 +6,37 @@
 
 ## 输出路径契约
 
-所有基准测试结果统一存放在 `results/` 目录下：
+### 路径机制说明
+
+基准测试的输出路径存在**两种模式**：
+
+| 模式 | 触发条件 | 实际输出路径 |
+|------|----------|-------------|
+| 显式指定 | 传 `--output-dir results/...` 参数 | 项目内相对路径（如 `results/localization/my_run/`） |
+| 默认模式 | 不传 `--output-dir` 或脚本无此参数 | `$AUV_DATA_ROOT/results/<类别>/YYYYMMDD_HHMMSS/` |
+
+- `$AUV_DATA_ROOT` 优先取环境变量，其次读 `brain_linux/config/params.yaml` 中的 `auv_data_root`，最终回退 `/tmp/auv_data`
+- 同一次进程内多个输出共享同一时间戳子目录
+
+### 最终归档结构（项目内）
+
+已确认的最终可引用版结果存放在项目内 `results/`：
 
 ```
 results/
 ├── control/                    # 控制器对比（PID vs MPC）
-│   └── benchmark_final/        # 最终可引用版
-│       ├── pid/figures/         # PID 响应曲线
-│       ├── mpc/figures/         # MPC 响应曲线
-│       ├── control_benchmark_summary.md
-│       ├── pid/pid_control_report.md
-│       └── mpc/mpc_control_report.md
+│   └── benchmark_final/
 ├── decision/                   # 决策架构对比（BT vs FSM）
-│   └── benchmark_final/        # 最终可引用版
-│       ├── figures/             # 对比图表
-│       ├── decision_architecture_benchmark.md
-│       └── thesis_reference.md
+│   └── benchmark_final/
 ├── localization/               # 定位算法评估（ES-EKF）
 │   ├── dvl_fixed_final/        # DVL修复后验证（最终版）
-│   ├── enhanced_diagnosis/     # 增强版诊断分析
-│   └── turning_convergence/    # 转向段收敛对比
+│   ├── enhanced_diagnosis/
+│   └── turning_convergence/
 ├── tuning/                     # EKF 参数调优
-│   ├── ekf_comprehensive/      # 综合调优结果
-│   ├── es_ekf_tuning_report.md
-│   └── tuning_report.md
 └── archive/                    # 历史中间结果（不引用）
 ```
 
-**新产生的结果应遵循此路径**——各脚本通过 `--output-dir` 参数指定输出到对应子目录。
+**最佳实践**：运行基准时显式传 `--output-dir results/<类别>/<描述性名称>` 可确保结果留在项目内。不传则输出到 `$AUV_DATA_ROOT` 下的临时位置。
 
 ---
 
@@ -48,7 +51,7 @@ python tools/control_benchmark_module.py --output-dir results/control/<run_name>
 # 替代入口（测试套件风格）
 python tests/benchmark_pid_vs_mpc.py
 
-# MPC 独立验证
+# MPC 独立验证（无 --output-dir 参数，输出由 get_output_dir 决定）
 python tools/mpc_test.py
 ```
 
@@ -83,6 +86,12 @@ python tools/mpc_test.py
 
 **结论**：MPC 深度阶跃响应显著更快（RMSE -49%），PID 航向和综合跟踪全面胜出。
 
+### 依赖与注意事项
+
+- `mpc_test.py` 依赖 `/root/PythonVehicleSimulator/src`（硬编码路径）
+- 依赖 CasADi + IPOPT（`pip install casadi`）
+- MPC/PID 测试无需 rosbag 输入，完全独立运行
+
 ---
 
 ## 二、决策架构对比（行为树 vs FSM）
@@ -90,7 +99,8 @@ python tools/mpc_test.py
 ### 命令行入口
 
 ```bash
-python tests/benchmark_bt_vs_fsm.py --output-dir results/decision/<run_name>
+# 注意：此脚本无 --output-dir 参数，输出路径由 get_output_dir 决定
+python tests/benchmark_bt_vs_fsm.py
 ```
 
 ### 评估维度
@@ -110,13 +120,18 @@ python tests/benchmark_bt_vs_fsm.py --output-dir results/decision/<run_name>
 | 维度 | BT | FSM | BT优势 |
 |------|-----|-----|--------|
 | 响应延迟 | 100 ms | 100 ms | 等价 |
-| Chattering | 4.77 Hz | 4.77 Hz | 等价 |
-| 存活率 | 100% | 100% | 等价 |
+| 振荡频率 | 0 Hz | 4.77 Hz | BT 无振荡 |
 | 圈复杂度 | **15** | 40 | ↓62% |
-| 紧急检查重复 | **1x** | 5x | ↓80% |
 | 扩展成本 | **~8行/状态** | ~28行/状态 | ↓71% |
+| 蒙特卡洛存活率 | 100% | 100% | 等价 |
 
 **结论**：运行时性能完全等价，BT 在代码可维护性全面胜出。
+
+### 依赖与注意事项
+
+- 依赖 `brain_linux/src/auv_decision/` 下的引擎模块（需 colcon build 后 PYTHONPATH 正确）
+- 依赖 `mccabe` 包（`pip install mccabe`）
+- 此测试无需 rosbag 输入，纯内存计算
 
 ---
 
@@ -162,6 +177,12 @@ python tools/analyze_turning_convergence.py \
 | ES-EKF | 0.949 m | 11.990 m | 0.833 m | 1.649 m |
 
 **结论**：DVL 坐标系修复后，EKF XY 精度达亚米级 (0.9m)，相比 Raw DR 改善 95%。
+
+### 依赖与注意事项
+
+- 需要安装 `mcap` 和 `mcap-ros2-support` pip 包
+- `--output-dir` 传相对路径时输出到项目内；不传则输出到 `$AUV_DATA_ROOT/results/localization/...`
+- 输入 MCAP 文件必须完整（有 footer），否则解析失败
 
 ---
 
@@ -245,8 +266,8 @@ bash scripts/run_sim_equivalence_check.sh
 ### 命令行入口
 
 ```bash
-# 标准实验（PVS, 120s, 自动rosbag录制）
-bash scripts/start_experiment.sh --sim-backend pvs --duration 120
+# 标准实验（PVS + Zenoh, 120s, 自动rosbag录制）
+bash scripts/start_experiment.sh --sim-backend pvs --bridge-backend zenoh_json --duration 120
 
 # 分析产出的MCAP数据
 python tools/analyze_bag.py <bag_path>/*.mcap --output-dir ./figures
@@ -257,22 +278,26 @@ python tools/replay_mcap_video.py <bag>.mcap --output replay.gif --fps 24
 
 ### 输出路径
 
-实验录制输出到：`log/experiments/YYYYMMDD_HHMMSS/`
+实验录制输出到：`$AUV_DATA_ROOT/bags/YYYYMMDD_HHMMSS/`
 
 ```
-log/experiments/20260503_143351/
-├── metadata.txt          # 运行参数快照
-├── rosbag/               # 原始 ROS2 bag
-├── rosbag_mcap/          # MCAP 格式
-└── analysis/             # 分析产物（图表/统计）
+$AUV_DATA_ROOT/bags/20260608_172454/
+├── rosbag/
+│   └── rosbag_0.mcap       # MCAP 格式录制
+└── (metadata.yaml)
 ```
+
+> **✅ 已修复：`--duration` 停止导致 MCAP 损坏**
+>
+> 此问题已修复（`scripts/start_experiment.sh` 第 176 行 `kill` → `kill -INT` + `sleep 2`）。
+> 修复前的旧录制文件可能仍然损坏，可使用 `log/experiments/benchmark_120s/rosbag_mcap/rosbag_mcap_0.mcap` 作为已知完好的替代。
 
 ---
 
 ## 八、如何新增一次基准测试
 
 1. 选择对应类别的命令（见上各节）
-2. 通过 `--output-dir results/<category>/<描述性名称>` 指定输出路径
+2. 通过 `--output-dir results/<category>/<描述性名称>` 指定输出路径（仅支持 `--output-dir` 参数的脚本）
 3. 运行完成后检查生成的 Markdown 报告
 4. 如为最终可引用版本，将路径更新到本文档对应章节
 

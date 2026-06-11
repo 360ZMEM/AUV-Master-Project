@@ -72,6 +72,7 @@ from common.protocol import (
     KEY_RPY_NED,
     KEY_TRAIL_NED,
     Z_PATH_CABLE_MARKER,
+    Z_PATH_GROUND_TRUTH,
     Z_PATH_HISTORY_TRAIL,
     Z_PATH_SEABED_CLOUD,
     Z_PATH_TRUTH_POSE,
@@ -464,6 +465,7 @@ class ZenohVizBridgeNode(Node):
         self.declare_parameter('truth_key', Z_PATH_TRUTH_POSE)
         self.declare_parameter('trail_key', Z_PATH_HISTORY_TRAIL)
         self.declare_parameter('range_key', Z_PATH_VIEW_RANGE)
+        self.declare_parameter('ground_truth_key', Z_PATH_GROUND_TRUTH)
 
         self.params_file = str(self.get_parameter('params_file').value)
         self.mock_mode = bool(self.get_parameter('mock_mode').value)
@@ -477,6 +479,7 @@ class ZenohVizBridgeNode(Node):
         self.truth_key = str(cfg.get('truth_topic_key', self.get_parameter('truth_key').value))
         self.trail_key = str(cfg.get('history_topic_key', self.get_parameter('trail_key').value))
         self.range_key = str(cfg.get('view_topic_key', self.get_parameter('range_key').value))
+        self.gt_key = str(cfg.get('ground_truth_topic_key', self.get_parameter('ground_truth_key').value))
 
         self.virtual_env = VirtualEnvironment(cfg)
         self._session = None
@@ -497,6 +500,7 @@ class ZenohVizBridgeNode(Node):
         self.trail_pub = self.create_publisher(Marker, '/auv/visual/history_trail', 10)
         self.range_pub = self.create_publisher(Marker, '/auv/visual/view_range', 10)
         self.mock_scene_pub = self.create_publisher(String, '/auv/mock/scene', 10)
+        self.gt_pub = self.create_publisher(PoseStamped, '/auv/sensors/ground_truth', 50)
         self.tf_broadcaster = TransformBroadcaster(self)
 
         self._open_zenoh()
@@ -547,6 +551,7 @@ class ZenohVizBridgeNode(Node):
         _sub(self.truth_key, self._on_truth)
         _sub(self.trail_key, self._on_trail)
         _sub(self.range_key, self._on_range)
+        _sub(self.gt_key, self._on_ground_truth)
 
     def _make_cb(self, handler):
         """创建Zenoh订阅回调（JSON解析包装）。
@@ -590,6 +595,31 @@ class ZenohVizBridgeNode(Node):
     def _on_range(self, data: dict[str, Any]) -> None:
         """接收搜索范围配置（中心+半径）。"""
         self._live_range = data
+
+    def _on_ground_truth(self, data: dict[str, Any]) -> None:
+        """转发 sim 端 ground_truth payload 到 ROS /auv/sensors/ground_truth。
+
+        与 _on_truth (Z_PATH_TRUTH_POSE) 不同：此回调消费 Z_PATH_GROUND_TRUTH，
+        不依赖 mock fallback，直接桥接 sim → ROS PoseStamped 供 benchmark 消费。
+        """
+        position = data.get(KEY_POSITION_NED)
+        rpy = data.get(KEY_RPY_NED)
+        if not isinstance(position, list) or not isinstance(rpy, list):
+            return
+        msg = PoseStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = self.frame_id
+        # NED z is positive-down; ROS world frame is z-up. Flip to match
+        # /auv/state/filtered and downstream RViz/Foxglove conventions.
+        msg.pose.position.x = float(position[0])
+        msg.pose.position.y = float(position[1])
+        msg.pose.position.z = float(-position[2])
+        msg.pose.orientation = _rpy_to_quaternion(rpy)
+        self.gt_pub.publish(msg)
+
+        # Backfill _live_truth so the visualization marker tracks the real pose
+        # if Z_PATH_TRUTH_POSE delivery is broken (avoids silent mock fallback).
+        self._live_truth = {KEY_POSITION_NED: list(position), KEY_RPY_NED: list(rpy)}
 
     def _publish_scene(self, terrain: dict[str, Any], cable: dict[str, Any], truth: dict[str, Any], trail: dict[str, Any], view_range: dict[str, Any]) -> None:
         """将场景数据转换为ROS2 Marker/PointCloud2并发布。

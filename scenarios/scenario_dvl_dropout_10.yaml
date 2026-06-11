@@ -1,0 +1,26 @@
+name: dvl_dropout_10
+description: 10% DVL packet drop, ES-EKF must lean on IMU + depth predictions.
+duration_s: 120
+sim_backend: pvs
+mpc_mode: ua
+chaos:
+  enabled: true
+  packet_loss_prob: 0.0
+  dvl_freeze:
+    enabled: true
+    drop_rate: 0.10
+    freeze_window_s: [0.5, 1.5]
+  imu_drift:
+    enabled: false
+    bias_rate: 0.0
+  depth_spike:
+    enabled: false
+    rate_hz: 0.0
+    amplitude_m: 0.0
+  mag_saturation_threshold_t: null
+perception:
+  imu_acc_noise_scale: 1.0
+  sonar_noise_scale: 1.0
+  cable_current_amp: 500.0
+flow:
+  current_speed_mps: 0.0

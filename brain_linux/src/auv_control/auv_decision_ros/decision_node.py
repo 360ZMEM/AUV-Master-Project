@@ -95,6 +95,8 @@ class AUVDecisionNode(Node):
         self.mock_amd_timestamp_us: int = 0
         self.mock_amd_last_update_ns: int = self.get_clock().now().nanoseconds
         self.mock_amd_synced: bool = False
+        self.mock_amd_wait_logged: bool = False
+        self.mock_amd_fallback_active: bool = False
 
         # 平滑过渡状态
         self.prev_setpoint: dict | None = None
@@ -212,10 +214,11 @@ class AUVDecisionNode(Node):
         """同步 Mock AMD 时间戳，供解析式轨迹行为按仿真时间采样。"""
         try:
             data = json.loads(msg.data)
-            timestamp_us = int(data.get('timestamp_us', 0))
+            timestamp_us = int(data.get('timestamp_us', data.get('mock_amd_timestamp_us', 0)))
             if timestamp_us > 0:
                 self.mock_amd_timestamp_us = timestamp_us
                 self.mock_amd_last_update_ns = self.get_clock().now().nanoseconds
+                self.mock_amd_fallback_active = False
                 if not self.mock_amd_synced:
                     self.mock_amd_synced = True
                     self.get_logger().info(f"Mock AMD time synchronized: {timestamp_us} µs")
@@ -373,25 +376,32 @@ class AUVDecisionNode(Node):
         if not self.mock_amd_synced:
             time_since_update_s = (now_ns - self.mock_amd_last_update_ns) / 1e9
             if time_since_update_s <= self.mock_amd_timeout_s:
-                self.get_logger().info('Waiting for Mock AMD time synchronization...')
+                if not self.mock_amd_wait_logged:
+                    self.get_logger().info('Waiting for Mock AMD time synchronization...')
+                    self.mock_amd_wait_logged = True
                 return
 
-            self.get_logger().warning(
-                f'Mock AMD time not received within {self.mock_amd_timeout_s:.2f}s; '
-                'falling back to system time'
-            )
+            if not self.mock_amd_fallback_active:
+                self.get_logger().warning(
+                    f'Mock AMD time not received within {self.mock_amd_timeout_s:.2f}s; '
+                    'falling back to system time'
+                )
             self.mock_amd_timestamp_us = int(now_ns / 1000)
             self.mock_amd_last_update_ns = now_ns
             self.mock_amd_synced = True
+            self.mock_amd_fallback_active = True
 
         # 检查Mock AMD时间是否超时
         time_since_update_s = (now_ns - self.mock_amd_last_update_ns) / 1e9
         if time_since_update_s > self.mock_amd_timeout_s:
-            self.get_logger().warning(
-                f'Mock AMD time timeout: {time_since_update_s:.2f}s > {self.mock_amd_timeout_s}s, '
-                'falling back to system time'
-            )
+            if not self.mock_amd_fallback_active:
+                self.get_logger().warning(
+                    f'Mock AMD time timeout: {time_since_update_s:.2f}s > {self.mock_amd_timeout_s}s, '
+                    'falling back to system time'
+                )
             self.mock_amd_timestamp_us = int(now_ns / 1000)
+            self.mock_amd_last_update_ns = now_ns
+            self.mock_amd_fallback_active = True
 
         self.engine.tick()
 

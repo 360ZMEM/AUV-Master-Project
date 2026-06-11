@@ -1,0 +1,26 @@
+name: mag_distortion_heavy
+description: Heavy magnetic saturation (~50% events) with elevated noise.
+duration_s: 120
+sim_backend: pvs
+mpc_mode: ua
+chaos:
+  enabled: true
+  packet_loss_prob: 0.0
+  dvl_freeze:
+    enabled: false
+    drop_rate: 0.0
+    freeze_window_s: [0.0, 0.0]
+  imu_drift:
+    enabled: false
+    bias_rate: 0.0
+  depth_spike:
+    enabled: false
+    rate_hz: 0.0
+    amplitude_m: 0.0
+  mag_saturation_threshold_t: 1.0e-8
+perception:
+  imu_acc_noise_scale: 1.0
+  sonar_noise_scale: 1.5
+  cable_current_amp: 500.0
+flow:
+  current_speed_mps: 0.0

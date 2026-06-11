@@ -42,7 +42,8 @@ from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
-from std_msgs.msg import String, Float32
+from std_msgs.msg import String, Float32, Float32MultiArray
+import numpy as np
 import yaml
 
 from common.enums import StateEstimateSource, ControlModeByte
@@ -54,6 +55,7 @@ from .pid_controller import PIDController
 from .mpc_controller import MPCController
 from .terrain_engine import TerrainFollower
 from .terrain_perception import ROSTerrainPerception
+from .virtual_sonar_wrapper import VirtualSonarWrapper
 from .mappers import clamp_int16
 
 def _resolve_project_root() -> Path:
@@ -146,7 +148,12 @@ class AUVControllerNode(Node):
 
         # 初始化混合控制器
         self._pid_controller = PIDController(ctrl_cfg, lim_cfg, mapper_cfg)
-        self._mpc_controller = MPCController(ctrl_cfg, lim_cfg, mapper_cfg)
+        # MPC 参数位于 params.yaml 顶层（mpc/mpc_model/mpc_weights/mpc_constraints），
+        # 不能只传 cfg["control"]，否则 ROS 仿真环境会退回 MPC 默认值。
+        mpc_ctrl_cfg = dict(ctrl_cfg)
+        for key in ('mpc', 'mpc_model', 'mpc_weights', 'mpc_constraints'):
+            mpc_ctrl_cfg[key] = cfg.get(key, {})
+        self._mpc_controller = MPCController(mpc_ctrl_cfg, lim_cfg, mapper_cfg)
         self._active_controller: BaseController = self._pid_controller
         self._use_mpc = bool(self.get_parameter('use_mpc').value)
         if self._use_mpc:
@@ -186,6 +193,19 @@ class AUVControllerNode(Node):
         self._latest_confidence: float = 1.0
         self.latest_arbiter_status: ArbiterStatus | None = None
 
+        # E4 — EKF 协方差驱动的置信度（论文 §4.4 主创新点）
+        self._latest_p_trace_xy = float('nan')
+        self._latest_p_trace_z = float('nan')
+        self.declare_parameter('cov_to_conf.enable', True)
+        self.declare_parameter('cov_to_conf.sigma_xy_ref', 1.0)
+        self.declare_parameter('cov_to_conf.sigma_z_ref', 0.5)
+        self._cov_conf_enable = bool(self.get_parameter('cov_to_conf.enable').value)
+        self._sigma_xy_ref = float(self.get_parameter('cov_to_conf.sigma_xy_ref').value)
+        self._sigma_z_ref = float(self.get_parameter('cov_to_conf.sigma_z_ref').value)
+        env_mode = os.environ.get('AUV_MPC_MODE', 'ua').strip().lower()
+        if env_mode == 'baseline':
+            self._cov_conf_enable = False
+
         self.arbiter_status_sub = self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 20)
         self.setpoint_sub = self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 20)
         self.filtered_state_sub = self.create_subscription(Odometry, self.filtered_state_topic, self._on_filtered_state, 20)
@@ -194,6 +214,8 @@ class AUVControllerNode(Node):
         self.dvl_sub = self.create_subscription(TwistStamped, '/auv/sensors/dvl', self._on_dvl, 20)
         self.depth_sub = self.create_subscription(Float32, '/auv/sensors/depth', self._on_depth, 20)
         self.altitude_sub = self.create_subscription(Float32, '/auv/sensors/altitude', self._on_altitude, 20)
+        self.forward_sonar_sub = self.create_subscription(Float32, '/auv/sensors/forward_sonar_slope', self._on_forward_sonar, 20)
+        self.cov_sub = self.create_subscription(Float32MultiArray, '/auv/state/covariance', self._on_covariance, 20)
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
@@ -261,6 +283,36 @@ class AUVControllerNode(Node):
             depth=self._terrain_perception.get_current_depth(),
             forward_velocity=self._terrain_perception.get_forward_velocity()
         )
+
+    def _on_forward_sonar(self, msg: Float32) -> None:
+        """灌入前视声呐斜率到地形跟踪引擎。"""
+        VirtualSonarWrapper().update_slope(float(msg.data))
+
+    def _on_covariance(self, msg: Float32MultiArray) -> None:
+        """E4 — 订阅 ES-EKF 15x15 P 矩阵 (Float32MultiArray 225 元素)。"""
+        data = list(msg.data)
+        if len(data) != 225:
+            return
+        try:
+            p = np.asarray(data, dtype=float).reshape(15, 15)
+        except Exception:
+            return
+        self._latest_p_trace_xy = float(p[0, 0] + p[1, 1])
+        self._latest_p_trace_z = float(p[2, 2])
+
+    def _confidence_from_cov(self) -> float | None:
+        """E4 — 把 EKF P 协方差 trace 映射为置信度 [0,1]；不可用时返回 None。"""
+        if not self._cov_conf_enable:
+            return None
+        if not math.isfinite(self._latest_p_trace_xy):
+            return None
+        sigma = max(self._sigma_xy_ref, 1e-6)
+        conf = math.exp(-self._latest_p_trace_xy / sigma)
+        if conf < 0.0:
+            conf = 0.0
+        elif conf > 1.0:
+            conf = 1.0
+        return float(conf)
 
     def _on_imu(self, msg: Imu) -> None:
         """缓存 IMU 角速度，用于补充或覆盖状态里的角速度来源。"""
@@ -467,18 +519,25 @@ class AUVControllerNode(Node):
             math.cos(float(sp.target_heading_rad) - yaw),
         )
 
+        # ES-EKF/Odometry 使用 ROS/ENU 风格 z（下潜为负），而 MPC/PVS
+        # 制导模型使用 NED 深度（下潜为正）。控制状态在这里统一成
+        # z/depth 正向下，w 正向下，避免 MPC x0[2] 与 target_depth_m 符号混用。
+        depth_ned = float(-st.pose.pose.position.z)
+        w_ned = float(-st.twist.twist.linear.z)
+
         state = {
             'roll': roll,
             'pitch': pitch,
             'yaw': yaw,
             'x': float(st.pose.pose.position.x),
             'y': float(st.pose.pose.position.y),
-            'z': float(st.pose.pose.position.z),
-            'depth': float(-st.pose.pose.position.z),
-            'depth_sensor': float(-st.pose.pose.position.z),
+            'z': depth_ned,
+            'z_ros': float(st.pose.pose.position.z),
+            'depth': depth_ned,
+            'depth_sensor': depth_ned,
             'u': float(st.twist.twist.linear.x),
             'v': float(st.twist.twist.linear.y),
-            'w': float(st.twist.twist.linear.z),
+            'w': w_ned,
             'p': p_rate,
             'q': q_rate,
             'r': r_rate,
@@ -496,6 +555,12 @@ class AUVControllerNode(Node):
             'target_heading_rad': smoothed_heading,
             'target_speed_mps': float(sp.target_speed_mps),
         }
+
+        # E4 — 用 EKF 协方差驱动的置信度覆盖 setpoint["confidence"]
+        conf_from_cov = self._confidence_from_cov()
+        if conf_from_cov is not None:
+            setpoint['confidence'] = conf_from_cov
+            self._latest_confidence = conf_from_cov
 
         if self._bypass_zero_effort:
             # 零推力零舵角保底输出，跳过控制器计算
@@ -524,7 +589,10 @@ class AUVControllerNode(Node):
             mpc_msg.top_fin_deg = float(ctrl_output.top_fin_deg or 0.0)
             mpc_msg.left_fin_deg = float(ctrl_output.left_fin_deg or 0.0)
             mpc_msg.bottom_fin_deg = float(ctrl_output.bottom_fin_deg or 0.0)
-            mpc_msg.target_depth_m = float(sp.target_depth_m)
+            guidance_depth = ctrl_output.guidance_depth
+            if guidance_depth is None:
+                guidance_depth = sp.target_depth_m
+            mpc_msg.target_depth_m = float(guidance_depth)
             mpc_msg.work_instruction = work_instruction
             mpc_msg.note = str(ctrl_output.debug.get('note', ''))
             
@@ -559,7 +627,7 @@ class AUVControllerNode(Node):
             'control_mode_byte': self._control_mode_byte,
             'thrust_cmd': ctrl_output.thrust_percent,
             'guidance_heading': smoothed_heading,
-            'guidance_depth': setpoint.get('target_depth_m', 0.0),
+            'guidance_depth': ctrl_output.guidance_depth,
             'rate_source': rate_source,
             KEY_STATE_SOURCE: state_source.value,
             'state_source_requested': StateEstimateSource.RAW_DR.value if self.bypass_ekf else StateEstimateSource.FILTERED.value,

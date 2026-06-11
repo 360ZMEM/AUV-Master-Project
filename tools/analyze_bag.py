@@ -61,6 +61,7 @@ DEFAULT_DIAGNOSTICS_TOPIC = "/auv/diagnostics"
 DEFAULT_MAGNETIC_TOPIC = "/auv/sensors/magnetic"
 DEFAULT_CABLE_MARKER_TOPIC = "/auv/visual/cable_marker"
 DEFAULT_SEABED_CLOUD_TOPIC = "/auv/visual/seabed_cloud"
+DEFAULT_SEABED_CLOUD_THROTTLED_TOPIC = "/auv/visual/seabed_cloud_throttled"
 
 
 def ensure_runtime_dependencies() -> None:
@@ -224,9 +225,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--format",
-        choices=("pdf", "eps"),
+        choices=("pdf", "eps", "png"),
         default="pdf",
-        help="Vector output format.",
+        help="Figure output format.",
     )
     parser.add_argument(
         "--dpi",
@@ -310,7 +311,7 @@ def resolve_input_chunks(input_path: Path) -> list[Path]:
     if not input_path.is_dir():
         raise SystemExit(f"Input path does not exist: {input_path}")
 
-    mcap_files = sorted(input_path.glob("*.mcap"))
+    mcap_files = sorted(input_path.rglob("*.mcap"))
     if not mcap_files:
         raise SystemExit(f"No .mcap files found under: {input_path}")
     return mcap_files
@@ -431,10 +432,18 @@ def read_bag_data(
     diagnostics_topic: str,
     magnetic_topic: str,
     cable_topic: str,
-    terrain_topic: str,
+    terrain_topics: Sequence[str],
     verbose: bool,
 ) -> BagData:
-    topics_to_read = {estimated_topic, bt_status_topic, diagnostics_topic, magnetic_topic, cable_topic, terrain_topic, *truth_topics}
+    topics_to_read = {
+        estimated_topic,
+        bt_status_topic,
+        diagnostics_topic,
+        magnetic_topic,
+        cable_topic,
+        *terrain_topics,
+        *truth_topics,
+    }
     data = BagData()
 
     for chunk in chunks:
@@ -505,7 +514,7 @@ def read_bag_data(
                     data.cable_points_xyz = cable_points
                 continue
 
-            if topic == terrain_topic and data.terrain_points_xyz is None:
+            if topic in terrain_topics and data.terrain_points_xyz is None:
                 terrain_points = extract_pointcloud_xyz(msg)
                 if terrain_points.size:
                     data.terrain_points_xyz = terrain_points
@@ -625,6 +634,103 @@ def interpolate_continuous(source_t: np.ndarray, source_v: np.ndarray, target_t:
     if source_t.size == 1:
         return np.full_like(target_t, source_v[0], dtype=float)
     return np.interp(target_t, source_t, source_v)
+
+
+def nearest_terrain_depths(
+    *,
+    terrain_points_xyz: np.ndarray,
+    x_values: Sequence[float],
+    y_values: Sequence[float],
+) -> np.ndarray:
+    """Return local seabed depth (positive down) from display-frame terrain cloud.
+
+    The visualization bridge publishes PointCloud2 in display coordinates
+    (z = -down). Estimated odometry uses the same display convention, so
+    clearance can be computed as odom_z - terrain_z.
+    """
+    terrain = np.asarray(terrain_points_xyz, dtype=float)
+    if terrain.ndim != 2 or terrain.shape[1] != 3 or terrain.size == 0:
+        return np.full(len(x_values), np.nan, dtype=float)
+
+    terrain_xy = terrain[:, :2]
+    terrain_z_display = terrain[:, 2]
+    depths: list[float] = []
+    for x_value, y_value in zip(x_values, y_values):
+        if not (math.isfinite(float(x_value)) and math.isfinite(float(y_value))):
+            depths.append(float("nan"))
+            continue
+        d2 = np.sum((terrain_xy - np.asarray([float(x_value), float(y_value)])) ** 2, axis=1)
+        idx = int(np.argmin(d2))
+        depths.append(float(-terrain_z_display[idx]))
+    return np.asarray(depths, dtype=float)
+
+
+def synthesize_diagnostics_from_odometry(
+    data: BagData,
+    *,
+    target_clearance_m: float = 3.0,
+    proximity_margin_m: float = 1.5,
+) -> bool:
+    """Create minimal diagnostics when /auv/diagnostics is absent.
+
+    PID terrain smoke runs can produce odometry and seabed cloud but miss
+    diagnostics. This fallback keeps terrain-clearance analysis usable while
+    marking lateral/confidence/battery fields as NaN.
+    """
+    if data.diagnostics.timestamps_ns:
+        return False
+    if not data.estimated.timestamps_ns or data.terrain_points_xyz is None:
+        return False
+
+    estimated = sort_position_series(data.estimated)
+    seabed_depth = nearest_terrain_depths(
+        terrain_points_xyz=data.terrain_points_xyz,
+        x_values=estimated.x,
+        y_values=estimated.y,
+    )
+    if not np.any(np.isfinite(seabed_depth)):
+        return False
+
+    depth = -np.asarray(estimated.z, dtype=float)
+    clearance = seabed_depth - depth
+    target_depth = seabed_depth - float(target_clearance_m)
+    depth_error = depth - target_depth
+    labels_t = normalize_time_ns(estimated.timestamps_ns, int(np.min(estimated.timestamps_ns)))
+    bt_labels = []
+    if data.bt_status.timestamps_ns:
+        bt_t = normalize_time_ns(data.bt_status.timestamps_ns, int(np.min(estimated.timestamps_ns)))
+        bt_labels = forward_fill_strings(
+            bt_t,
+            [parse_bt_markdown(text) for text in data.bt_status.values],
+            labels_t,
+        )
+    else:
+        bt_labels = ["FALLBACK_ODOM_TERRAIN"] * len(estimated.timestamps_ns)
+
+    for idx, timestamp_ns in enumerate(estimated.timestamps_ns):
+        data.diagnostics.append(
+            timestamp_ns=timestamp_ns,
+            lateral_error_m=float("nan"),
+            confidence=float("nan"),
+            magnetic_magnitude=float("nan"),
+            total_voltage_v=float("nan"),
+            battery_low=False,
+            anomaly_detected=False,
+            depth_m=float(depth[idx]),
+            target_depth_m=float(target_depth[idx]),
+            depth_error_m=float(depth_error[idx]),
+            speed_mps=float("nan"),
+            target_speed_mps=float("nan"),
+            seabed_clearance_m=float(clearance[idx]),
+            seabed_proximity_warning=bool(clearance[idx] <= proximity_margin_m),
+            seabed_penetration_warning=bool(clearance[idx] < 0.0),
+            high_priority=False,
+            mode="FALLBACK_ODOM_TERRAIN",
+            current_behavior=str(bt_labels[idx]),
+            has_lateral_error=False,
+            has_magnetic_magnitude=False,
+        )
+    return True
 
 
 def forward_fill_strings(source_t: np.ndarray, source_values: Sequence[str], target_t: np.ndarray) -> list[str]:
@@ -816,6 +922,113 @@ def compute_depth_rmse(data: BagData) -> float:
     return float(np.sqrt(np.mean(filtered * filtered)))
 
 
+def compute_clearance_rmse(data: BagData, target_clearance_m: float = 3.0) -> float:
+    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
+    valid = np.isfinite(clearance)
+    if not np.any(valid):
+        return float("nan")
+    error = clearance[valid] - float(target_clearance_m)
+    return float(np.sqrt(np.mean(error * error)))
+
+
+def compute_clearance_std(data: BagData) -> float:
+    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
+    valid = np.isfinite(clearance)
+    if not np.any(valid):
+        return float("nan")
+    return float(np.std(clearance[valid]))
+
+
+def compute_clearance_safety_violation_ratio(
+    data: BagData,
+    min_clearance_m: float = 1.5,
+) -> float:
+    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
+    valid = np.isfinite(clearance)
+    if not np.any(valid):
+        return float("nan")
+    return float(np.mean(clearance[valid] < float(min_clearance_m)))
+
+
+def path_length(points_xyz: np.ndarray) -> float:
+    points = np.asarray(points_xyz, dtype=float)
+    if points.ndim != 2 or points.shape[0] < 2:
+        return float("nan")
+    return float(np.sum(np.linalg.norm(np.diff(points, axis=0), axis=1)))
+
+
+def compute_relative_localization_metric_rows(
+    data: BagData,
+    global_start_ns: int,
+) -> list[tuple[str, float]]:
+    if not data.estimated.timestamps_ns or not data.truth.timestamps_ns:
+        return []
+
+    estimated = sort_position_series(data.estimated)
+    truth = sort_position_series(data.truth)
+    est_t = normalize_time_ns(estimated.timestamps_ns, global_start_ns)
+    truth_t = normalize_time_ns(truth.timestamps_ns, global_start_ns)
+    if est_t.size < 2 or truth_t.size < 2:
+        return []
+
+    est_xyz = np.column_stack((as_numpy(estimated.x), as_numpy(estimated.y), as_numpy(estimated.z)))
+    truth_xyz = np.column_stack((as_numpy(truth.x), as_numpy(truth.y), as_numpy(truth.z)))
+    overlap = (est_t >= truth_t[0]) & (est_t <= truth_t[-1])
+    if np.count_nonzero(overlap) < 2:
+        return []
+
+    overlap_t = est_t[overlap]
+    est_overlap = est_xyz[overlap]
+    truth_interp = np.column_stack(
+        [
+            interpolate_continuous(truth_t, truth_xyz[:, axis], overlap_t)
+            for axis in range(3)
+        ]
+    )
+    diff = est_overlap - truth_interp
+    valid = np.all(np.isfinite(diff), axis=1)
+    if np.count_nonzero(valid) < 2:
+        return []
+
+    diff = diff[valid]
+    est_overlap = est_overlap[valid]
+    truth_interp = truth_interp[valid]
+    offset_mean = np.nanmean(diff, axis=0)
+    aligned_diff = diff - offset_mean
+    offset_xy = float(np.linalg.norm(offset_mean[:2]))
+    offset_3d = float(np.linalg.norm(offset_mean))
+    truth_delta = truth_interp[-1] - truth_interp[0]
+    truth_net_xy = float(np.linalg.norm(truth_delta[:2]))
+    truth_net_3d = float(np.linalg.norm(truth_delta))
+    truth_path = path_length(truth_interp)
+    est_path = path_length(est_overlap)
+
+    def safe_pct(numerator: float, denominator: float) -> float:
+        if not math.isfinite(denominator) or abs(denominator) < 1e-9:
+            return float("nan")
+        return float(100.0 * numerator / denominator)
+
+    return [
+        ("relative_loc_overlap_duration_s", float(overlap_t[-1] - overlap_t[0])),
+        ("relative_loc_truth_net_displacement_xy_m", truth_net_xy),
+        ("relative_loc_truth_net_displacement_3d_m", truth_net_3d),
+        ("relative_loc_truth_path_length_m", truth_path),
+        ("relative_loc_estimated_path_length_m", est_path),
+        ("relative_loc_constant_offset_x_m", float(offset_mean[0])),
+        ("relative_loc_constant_offset_y_m", float(offset_mean[1])),
+        ("relative_loc_constant_offset_z_m", float(offset_mean[2])),
+        ("relative_loc_constant_offset_xy_m", offset_xy),
+        ("relative_loc_constant_offset_3d_m", offset_3d),
+        ("relative_loc_constant_offset_pct_of_truth_net_xy", safe_pct(offset_xy, truth_net_xy)),
+        ("relative_loc_constant_offset_pct_of_truth_path", safe_pct(offset_3d, truth_path)),
+        ("relative_loc_raw_rmse_xy_m", float(np.sqrt(np.nanmean(np.sum(diff[:, :2] ** 2, axis=1))))),
+        ("relative_loc_raw_rmse_3d_m", float(np.sqrt(np.nanmean(np.sum(diff ** 2, axis=1))))),
+        ("relative_loc_offset_removed_rmse_xy_m", float(np.sqrt(np.nanmean(np.sum(aligned_diff[:, :2] ** 2, axis=1))))),
+        ("relative_loc_offset_removed_rmse_3d_m", float(np.sqrt(np.nanmean(np.sum(aligned_diff ** 2, axis=1))))),
+        ("relative_loc_offset_removed_rmse_pct_of_truth_path", safe_pct(float(np.sqrt(np.nanmean(np.sum(aligned_diff ** 2, axis=1)))), truth_path)),
+    ]
+
+
 def compute_summary_metric_rows(data: BagData) -> list[tuple[str, float | str | bool | int]]:
     diagnostics = sort_diagnostics_series(data.diagnostics)
     unique_state_labels = {
@@ -834,6 +1047,9 @@ def compute_summary_metric_rows(data: BagData) -> list[tuple[str, float | str | 
         ("speed_target_mean_mps", float(np.nanmean(np.asarray(diagnostics.target_speed_mps, dtype=float))) if diagnostics.target_speed_mps else float("nan")),
         ("seabed_clearance_min_m", compute_numeric_stats(diagnostics.seabed_clearance_m, positive_only=True)[0]),
         ("seabed_clearance_mean_m", float(np.nanmean(np.asarray(diagnostics.seabed_clearance_m, dtype=float))) if diagnostics.seabed_clearance_m else float("nan")),
+        ("seabed_clearance_std_m", compute_clearance_std(data)),
+        ("seabed_clearance_rmse_to_3m", compute_clearance_rmse(data, target_clearance_m=3.0)),
+        ("seabed_clearance_safety_violation_ratio_1p5m", compute_clearance_safety_violation_ratio(data, min_clearance_m=1.5)),
         ("seabed_proximity_ratio", compute_boolean_ratio(diagnostics.seabed_proximity_warning)),
         ("seabed_penetration_ratio", compute_boolean_ratio(diagnostics.seabed_penetration_warning)),
         ("high_priority_ratio", compute_boolean_ratio(diagnostics.high_priority)),
@@ -869,6 +1085,7 @@ def export_statistics_tables(
         ("confidence_mean", compute_confidence_mean(data)),
         ("magnetic_peak_t", compute_magnetic_peak(data)),
     ]
+    summary_rows.extend(compute_relative_localization_metric_rows(data, global_start_ns))
     summary_rows.extend(compute_summary_metric_rows(data))
 
     with summary_path.open("w", encoding="utf-8", newline="") as handle:
@@ -936,11 +1153,20 @@ def format_metric_label(metric: str) -> str:
         "speed_target_mean_mps": "Target mean speed (m/s)",
         "seabed_clearance_min_m": "Minimum seabed clearance (m)",
         "seabed_clearance_mean_m": "Mean seabed clearance (m)",
+        "seabed_clearance_std_m": "Seabed clearance std. (m)",
+        "seabed_clearance_rmse_to_3m": "Seabed clearance RMSE to 3 m (m)",
+        "seabed_clearance_safety_violation_ratio_1p5m": "Clearance <1.5 m ratio",
         "seabed_proximity_ratio": "Seabed proximity ratio",
         "seabed_penetration_ratio": "Seabed penetration ratio",
         "high_priority_ratio": "High-priority ratio",
         "state_transition_count": "State transition count",
         "unique_state_count": "Unique state count",
+        "relative_loc_truth_net_displacement_xy_m": "Relative localization truth net displacement XY (m)",
+        "relative_loc_truth_path_length_m": "Relative localization truth path length (m)",
+        "relative_loc_constant_offset_3d_m": "Relative localization constant offset 3D (m)",
+        "relative_loc_constant_offset_pct_of_truth_net_xy": "Relative localization offset / truth net XY",
+        "relative_loc_offset_removed_rmse_3d_m": "Relative localization offset-removed RMSE 3D (m)",
+        "relative_loc_offset_removed_rmse_pct_of_truth_path": "Relative localization offset-removed RMSE / truth path",
     }
     return labels.get(metric, metric)
 
@@ -960,6 +1186,8 @@ def format_metric_value(metric: str, value: object) -> str:
             return str(int(round(numeric)))
         if metric.endswith("_ratio"):
             return f"{numeric:.2%}"
+        if "_pct_" in metric:
+            return f"{numeric:.2f}%"
         if metric in {
             "duration_s",
             "lateral_error_rmse_m",
@@ -972,6 +1200,8 @@ def format_metric_value(metric: str, value: object) -> str:
             "speed_target_mean_mps",
             "seabed_clearance_min_m",
             "seabed_clearance_mean_m",
+            "seabed_clearance_std_m",
+            "seabed_clearance_rmse_to_3m",
         }:
             return f"{numeric:.3f}"
         if metric == "confidence_mean":
@@ -988,6 +1218,7 @@ def plot_trajectory_comparison(
     global_start_ns: int,
     output_path: Path,
     dpi: int,
+    align_constant_offset: bool = False,
 ) -> None:
     estimated = sort_position_series(data.estimated)
     truth = sort_position_series(data.truth)
@@ -996,14 +1227,30 @@ def plot_trajectory_comparison(
 
     est_xyz = np.column_stack((as_numpy(estimated.x), as_numpy(estimated.y), as_numpy(estimated.z)))
     truth_xyz = np.column_stack((as_numpy(truth.x), as_numpy(truth.y), as_numpy(truth.z)))
+    overlap = (est_t >= truth_t[0]) & (est_t <= truth_t[-1])
+    if np.count_nonzero(overlap) >= 2:
+        plot_est_t = est_t[overlap]
+        plot_est_xyz = est_xyz[overlap]
+    else:
+        plot_est_t = est_t
+        plot_est_xyz = est_xyz
     truth_interp = np.column_stack(
         [
-            interpolate_continuous(truth_t, truth_xyz[:, axis], est_t)
+            interpolate_continuous(truth_t, truth_xyz[:, axis], plot_est_t)
             for axis in range(3)
         ]
     )
+    offset_mean = np.nanmean(plot_est_xyz - truth_interp, axis=0)
+    raw_diff = plot_est_xyz - truth_interp
+    plot_label = "Offset-aligned estimate" if align_constant_offset else "Estimated trajectory"
+    plot_title = "3D Relative Trajectory Comparison (Constant Offset Removed)" if align_constant_offset else "3D Trajectory, Cable, and Terrain Comparison"
+    annotation_prefix = "constant offset removed" if align_constant_offset else "overlap-only"
+    display_est_xyz = plot_est_xyz - offset_mean if align_constant_offset else plot_est_xyz
+    raw_rmse_3d = float(np.sqrt(np.nanmean(np.sum(raw_diff ** 2, axis=1))))
+    aligned_rmse_3d = float(np.sqrt(np.nanmean(np.sum((raw_diff - offset_mean) ** 2, axis=1))))
+    display_rmse_3d = aligned_rmse_3d if align_constant_offset else raw_rmse_3d
 
-    labels = diagnostic_state_labels(data, est_t)
+    labels = diagnostic_state_labels(data, plot_est_t)
     switch_indices = [0]
     for idx in range(1, len(labels)):
         if labels[idx] != labels[idx - 1]:
@@ -1061,36 +1308,51 @@ def plot_trajectory_comparison(
         label="Truth trajectory",
     )
     ax.plot(
-        est_xyz[:, 0],
-        est_xyz[:, 1],
-        est_xyz[:, 2],
+        display_est_xyz[:, 0],
+        display_est_xyz[:, 1],
+        display_est_xyz[:, 2],
         color="#4c78a8",
         linewidth=1.6,
-        label="Estimated trajectory",
+        label=plot_label,
     )
 
     for idx in switch_indices:
         ax.scatter(
-            est_xyz[idx, 0],
-            est_xyz[idx, 1],
-            est_xyz[idx, 2],
+            display_est_xyz[idx, 0],
+            display_est_xyz[idx, 1],
+            display_est_xyz[idx, 2],
             color=state_color(labels[idx]),
             s=28,
             depthshade=False,
         )
 
     ax.view_init(elev=22, azim=-58)
-    ax.set_title("3D Trajectory, Cable, and Terrain Comparison")
+    ax.set_title(plot_title)
     ax.set_xlabel("X (m)")
     ax.set_ylabel("Y (m)")
     ax.set_zlabel("Z (m)")
+    ax.text2D(
+        0.43,
+        0.88,
+        f"{annotation_prefix}; mean est-truth offset = "
+        f"[{offset_mean[0]:+.2f}, {offset_mean[1]:+.2e}, {offset_mean[2]:+.2f}] m\n"
+        f"raw RMSE = {raw_rmse_3d:.2f} m; shown RMSE = {display_rmse_3d:.2f} m",
+        transform=ax.transAxes,
+        fontsize=7.5,
+        bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "alpha": 0.78, "edgecolor": "none"},
+    )
 
-    line_handles = [
-        plt.Line2D([0], [0], marker="s", linestyle="None", markerfacecolor="#6b8f6a", markeredgecolor="none", alpha=0.25, label="Reference terrain"),
-        plt.Line2D([0], [0], color="#8c6d31", linewidth=3.0, label="Cable reference"),
-        plt.Line2D([0], [0], color="#111111", linestyle="--", linewidth=1.3, label="Truth trajectory"),
-        plt.Line2D([0], [0], color="#4c78a8", linestyle="-", linewidth=1.6, label="Estimated trajectory"),
-    ]
+    line_handles = []
+    if terrain_points.size:
+        line_handles.append(plt.Line2D([0], [0], marker="s", linestyle="None", markerfacecolor="#6b8f6a", markeredgecolor="none", alpha=0.25, label="Reference terrain"))
+    if cable_points.size:
+        line_handles.append(plt.Line2D([0], [0], color="#8c6d31", linewidth=3.0, label="Cable reference"))
+    line_handles.extend(
+        [
+            plt.Line2D([0], [0], color="#111111", linestyle="--", linewidth=1.3, label="Truth trajectory"),
+            plt.Line2D([0], [0], color="#4c78a8", linestyle="-", linewidth=1.6, label=plot_label),
+        ]
+    )
     ax.legend(handles=[*line_handles, *unique_state_handles(labels)], loc="upper left", frameon=True)
     fig.savefig(output_path, dpi=dpi)
     plt.close(fig)
@@ -1161,7 +1423,7 @@ def plot_system_monitoring(
     voltage = np.asarray(diagnostics.total_voltage_v, dtype=float)
     confidence = np.asarray(diagnostics.confidence, dtype=float)
     depth = np.asarray(diagnostics.depth_m, dtype=float)
-    target_depth = np.asarray(diagnostics.target_depth_m, dtype=float)
+    controller_target_depth = np.asarray(diagnostics.target_depth_m, dtype=float)
     depth_error = np.asarray(diagnostics.depth_error_m, dtype=float)
     speed = np.asarray(diagnostics.speed_mps, dtype=float)
     target_speed = np.asarray(diagnostics.target_speed_mps, dtype=float)
@@ -1169,6 +1431,8 @@ def plot_system_monitoring(
     lateral_mask = np.asarray(diagnostics.has_lateral_error, dtype=bool)
     lateral_error = np.where(lateral_mask, lateral_error, np.nan)
     seabed_clearance = np.asarray(diagnostics.seabed_clearance_m, dtype=float)
+    terrain_target_depth = depth + seabed_clearance - 3.0
+    has_terrain_target = np.any(np.isfinite(terrain_target_depth))
 
     battery_low = np.asarray(diagnostics.battery_low, dtype=bool)
     anomaly_detected = np.asarray(diagnostics.anomaly_detected, dtype=bool)
@@ -1187,8 +1451,10 @@ def plot_system_monitoring(
     axes[0].legend(loc="upper right", frameon=True)
 
     axes[1].plot(diag_t, depth, color="#1f77b4", linewidth=1.5, label="Depth")
-    axes[1].plot(diag_t, target_depth, color="#1f77b4", linewidth=1.0, linestyle="--", label="Target depth")
-    axes[1].plot(diag_t, depth_error, color="#9467bd", linewidth=1.2, label="Depth error")
+    if has_terrain_target:
+        axes[1].plot(diag_t, terrain_target_depth, color="#2ca02c", linewidth=1.1, linestyle="--", label="Terrain target depth")
+    axes[1].plot(diag_t, controller_target_depth, color="#7f7f7f", linewidth=0.9, linestyle=":", label="Controller setpoint")
+    axes[1].plot(diag_t, depth_error, color="#9467bd", linewidth=1.0, alpha=0.65, label="Controller depth error")
     axes[1].set_ylabel("Depth (m)")
     axes[1].legend(loc="upper right", frameon=True, ncol=2)
 
@@ -1353,9 +1619,12 @@ def main() -> None:
         diagnostics_topic=args.topic_diagnostics,
         magnetic_topic=args.topic_magnetic,
         cable_topic=DEFAULT_CABLE_MARKER_TOPIC,
-        terrain_topic=DEFAULT_SEABED_CLOUD_TOPIC,
+        terrain_topics=(DEFAULT_SEABED_CLOUD_TOPIC, DEFAULT_SEABED_CLOUD_THROTTLED_TOPIC),
         verbose=args.verbose,
     )
+    synthesized_diagnostics = synthesize_diagnostics_from_odometry(data)
+    if synthesized_diagnostics:
+        print("[WARN] /auv/diagnostics missing; synthesized terrain diagnostics from odometry + seabed cloud.")
     validate_required_topics(data, allow_missing_truth=args.allow_missing_truth)
 
     global_start_ns = int(np.min(all_timestamps(data)))
@@ -1386,6 +1655,15 @@ def main() -> None:
             dpi=args.dpi,
         )
         exported_paths.append(trajectory_path)
+        trajectory_aligned_path = output_dir / f"trajectory_comparison_offset_aligned.{args.format}"
+        plot_trajectory_comparison(
+            data=data,
+            global_start_ns=global_start_ns,
+            output_path=trajectory_aligned_path,
+            dpi=args.dpi,
+            align_constant_offset=True,
+        )
+        exported_paths.append(trajectory_aligned_path)
 
     state_timeline_path = output_dir / f"state_timeline.{args.format}"
     if plot_state_timeline(

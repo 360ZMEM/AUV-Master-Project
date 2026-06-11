@@ -12,6 +12,7 @@ simulation:
   frames_per_sec: false
   dt: 0.0333333333
   max_steps: 6000
+  realtime: true
 
 agent:
   type: TorpedoAUV
@@ -79,6 +80,22 @@ pvs:
   max_command_rpm: 1525.0
   current_speed_mps: 0.5
   current_direction_deg: 0.0
+  # PID/MPC v2 tuned PVS inner-loop profile for terrain-following simulation.
+  # Terrain-following targets are smooth/continuous, so use the sine-tuned depth
+  # profile while keeping the v2 heading and physical-limit relaxations.
+  autopilot_profile: sine_tuned_v2
+  Kp_z: 1.0
+  Kp_theta: 6.0
+  Kd_theta: 2.0
+  Ki_theta: 1.5
+  lam: 0.1
+  phi_b: 0.4
+  K_d: 0.1
+  K_sigma: 0.01
+  wn_d_z: 0.4
+  wn_d: 0.6
+  r_max_deg: 12.0
+  deltaMax_deg: 20.0
 
 digital_twin:
   terrain_slope_deg: 0.0

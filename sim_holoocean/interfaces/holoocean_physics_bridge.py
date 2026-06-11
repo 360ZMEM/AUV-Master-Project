@@ -41,6 +41,7 @@ HoloOcean 物理仿真 + Zenoh 桥接器 - 仿真侧的完整传感和通信系�
   ╚═════════════════════════════════════════════════════════╝
 """
 
+import math
 import time
 import numpy as np
 import sys
@@ -350,6 +351,27 @@ class HoloOceanPhysicsZenohBridge:
         packets["depth"] = {
             **base,
             KEY_DEPTH_M: depth_noisy,
+        }
+
+        # 离底高度（基于动态地形模型）
+        terrain_z = self.virtual_env.terrain_height_at(pos_ned[0], pos_ned[1])
+        altitude_m = max(0.0, float(terrain_z) - float(pos_ned[2]))
+        packets["altitude"] = {
+            **base,
+            "altitude_m": altitude_m,
+        }
+
+        # 前视声呐仿真：查询AUV前方地形斜率
+        heading_rad = tf["rpy_ned"][2]
+        lookahead_m = 5.0
+        x_fwd = float(pos_ned[0]) + lookahead_m * math.cos(heading_rad)
+        y_fwd = float(pos_ned[1]) + lookahead_m * math.sin(heading_rad)
+        terrain_z_fwd = self.virtual_env.terrain_height_at(x_fwd, y_fwd)
+        forward_terrain_slope = (float(terrain_z_fwd) - float(terrain_z)) / lookahead_m
+        packets["forward_sonar"] = {
+            **base,
+            "slope": forward_terrain_slope,
+            "lookahead_m": lookahead_m,
         }
 
         # 磁力计：HVDC 电缆产生的磁场

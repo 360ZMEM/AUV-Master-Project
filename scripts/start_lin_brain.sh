@@ -161,13 +161,17 @@ else
   ROS_PYTHON="$(command -v python3)"
 fi
 
-echo "[AUV] colcon build with PYTHON_EXECUTABLE=$ROS_PYTHON"
-colcon build \
-  --cmake-clean-cache \
-  --packages-select "${PKGS[@]}" \
-  --cmake-args \
-    -DPython3_EXECUTABLE="$ROS_PYTHON" \
-    -DPYTHON_EXECUTABLE="$ROS_PYTHON"
+if [[ "${AUV_SKIP_BRAIN_BUILD:-0}" == "1" ]]; then
+  echo "[AUV] skipping colcon build because AUV_SKIP_BRAIN_BUILD=1"
+else
+  echo "[AUV] colcon build with PYTHON_EXECUTABLE=$ROS_PYTHON"
+  colcon build \
+    --cmake-clean-cache \
+    --packages-select "${PKGS[@]}" \
+    --cmake-args \
+      -DPython3_EXECUTABLE="$ROS_PYTHON" \
+      -DPYTHON_EXECUTABLE="$ROS_PYTHON"
+fi
 
 if [[ -f "$BRAIN_DIR/install/setup.bash" ]]; then
   set +u

@@ -1,0 +1,167 @@
+# high terrain ablation config; full protocol_udp/PVS config.
+stage:
+  name: auv_zenoh_bridge_pvs_protocol_udp_terrain_high
+simulation:
+  backend: pvs
+  world: Dam
+  package_name: Ocean
+  agent_name: auv0
+  show_viewport: false
+  verbose: false
+  ticks_per_sec: 50
+  frames_per_sec: false
+  dt: 0.02
+  max_steps: 0
+agent:
+  type: TorpedoAUV
+  control_scheme: 0
+  location:
+  - 0.0
+  - 0.0
+  - -12.0
+  rotation:
+  - 0.0
+  - 0.0
+  - 0.0
+  sensors:
+  - sensor_type: PoseSensor
+  - sensor_type: IMUSensor
+  - sensor_type: DVLSensor
+  - sensor_type: DepthSensor
+limits:
+  fin_deg_max: 30.0
+  thrust_min: -100.0
+  thrust_max: 100.0
+  env_min:
+  - -200.0
+  - -45.0
+  - -35.0
+  env_max:
+  - 200.0
+  - 45.0
+  - -4.0
+  safety_margin_xy: 3.0
+  safety_margin_z: 1.5
+bridge:
+  backend: protocol_udp
+  rate_hz: 50.0
+  cmd_timeout_s: 0.5
+  require_first_cmd: false
+  default_command:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  fin_abs_max: 30.0
+  thrust_min: -100.0
+  thrust_max: 100.0
+  max_steps: 0
+  protocol_udp:
+    bind_host: 0.0.0.0
+    bind_port: 52364
+    remote_host: 127.0.0.1
+    remote_port: 52365
+    socket_timeout_s: 0.01
+    recv_buffer_size: 2048
+    auv_address: 1
+    default_control_mode_byte: 238
+    main_motor_rpm_scale: 15.0
+    side_motor_rpm: 0
+    telemetry_total_voltage_v: 48.0
+    telemetry_total_current_a: 12.0
+    telemetry_soc: 100
+    telemetry_soh: 100
+    sniffer_mirror_host: 127.0.0.1
+    sniffer_mirror_port: 52366
+    log_packets: true
+    log_packet_hex: false
+    log_ascii_format: true
+    log_hex_bytes: 48
+    log_every_n: 1
+zenoh:
+  session: {}
+  downlink_cmd_key: rt/auv/control/cmd_vel
+  uplink_keys:
+    ground_truth: rt/auv/sensors/ground_truth
+    imu: rt/auv/sensors/imu
+    dvl: rt/auv/sensors/dvl
+    depth: rt/auv/sensors/depth
+    magnetic: rt/auv/sensors/magnetic
+    sonar: rt/auv/sensors/sonar
+    seabed_cloud: rt/auv/visual/seabed_cloud
+    cable_marker: rt/auv/visual/cable_marker
+    truth_pose: rt/auv/visual/truth_pose
+    history_trail: rt/auv/visual/history_trail
+    view_range: rt/auv/visual/view_range
+digital_twin:
+  enabled: true
+  terrain_extent_m: 50.0
+  terrain_resolution_m: 1.0
+  terrain_noise_amplitude_m: 3.0
+  terrain_noise_scale_m: 4.5
+  terrain_noise_octaves: 5
+  terrain_seed: 42
+  seabed_z_m: 15.0
+  cable_suspension_height_m: 1.0
+  cable_origin_ned:
+  - 0.0
+  - 0.0
+  - 14.0
+  cable_direction_ned:
+  - 1.0
+  - 0.0
+  - 0.0
+  cable_length_m: 60.0
+  cable_step_m: 1.0
+  view_radius_m: 3.0
+  view_height_m: 0.1
+  terrain_publish_hz: 3.0
+  trail_limit: 800
+  terrain_slope_deg: 5.0
+cable_path:
+  points_ned:
+  - - 0.0
+    - 0.0
+    - 12.0
+  - - 10.0
+    - 2.0
+    - 12.5
+  - - 20.0
+    - 5.0
+    - 13.0
+  - - 30.0
+    - 8.0
+    - 13.5
+perception:
+  hvdc_current_amp: 500.0
+  noise:
+    magnetic_sigma:
+    - 1.0e-08
+    - 1.0e-08
+    - 1.0e-08
+    dvl_sigma:
+    - 0.02
+    - 0.02
+    - 0.02
+    depth_sigma: 0.03
+  sonar:
+    n_bins: 256
+    max_range_m: 30.0
+    base_noise_sigma: 0.01
+    peak_gain: 0.9
+    peak_width_bins: 4.0
+pvs:
+  control_mode: stepInput
+  initial_depth_m: 12.0
+  initial_heading_deg: 0.0
+  initial_speed_mps: 0.5
+  initial_rpm: 0.0
+  reference_rpm: 520.0
+  reference_speed_rpm_slope: 581.0
+  reference_speed_rpm_offset: -115.0
+  reference_rpm_min: 300.0
+  command_thrust_rpm_scale: 15.0
+  max_command_rpm: 1525.0
+  current_speed_mps: 0.5
+  current_direction_deg: 0.0

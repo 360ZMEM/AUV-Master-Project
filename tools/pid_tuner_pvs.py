@@ -67,8 +67,19 @@ class PVSControlSim:
 
     def set_controller_params(self, Kp_z=None, Kp_theta=None, Kd_theta=None, 
                               Ki_theta=None, K_w=None, lam=None, phi_b=None,
-                              K_d=None, K_sigma=None, Kp_yaw=None, Ki_yaw=None, Kd_yaw=None):
-        """设置控制器参数。"""
+                              K_d=None, K_sigma=None, Kp_yaw=None, Ki_yaw=None, Kd_yaw=None,
+                              wn_d_z=None, wn_d=None, r_max_deg=None,
+                              deltaMax_deg=None):
+        """设置控制器参数。
+
+        除 PID/SMC 增益外，还暴露 PVS remus100 内部的参考模型带宽与执行器限制：
+        - wn_d_z: 深度期望值一阶低通带宽（原始默认 0.02，极慢）。
+        - wn_d:   航向参考模型自然频率（原始默认 0.1）。
+        - r_max_deg: 航向角速率限制，单位 deg/s（原始默认 5）。
+        - deltaMax_deg: 舵/尾翼最大偏角，单位 deg（原始默认 15）。
+        这些参数原本硬编码在 remus100.__init__ 中，未通过本接口暴露，
+        导致只调 PID/SMC 增益时被参考模型/速率限制卡住。
+        """
         if Kp_z is not None:
             self.vehicle.Kp_z = Kp_z
         if Kp_theta is not None:
@@ -87,6 +98,15 @@ class PVSControlSim:
             self.vehicle.K_d = K_d
         if K_sigma is not None:
             self.vehicle.K_sigma = K_sigma
+        if wn_d_z is not None:
+            self.vehicle.wn_d_z = wn_d_z
+        if wn_d is not None:
+            self.vehicle.wn_d = wn_d
+        if r_max_deg is not None:
+            self.vehicle.r_max = np.deg2rad(r_max_deg)
+        if deltaMax_deg is not None:
+            self.vehicle.deltaMax_r = np.deg2rad(deltaMax_deg)
+            self.vehicle.deltaMax_s = np.deg2rad(deltaMax_deg)
         if Kp_yaw is not None:
             # 注意: PVS 使用 integralSMC，没有直接的 Kp_yaw
             # 这里我们调整 heading autopilot 参数
@@ -124,11 +144,19 @@ class PVSControlSim:
             self.vehicle.ref_n = self.target_n
             
             u_control = self.vehicle.depthHeadingAutopilot(self.eta, self.nu, dt)
+            # 物理限幅：PVS depthHeadingAutopilot 输出的舵/尾翼指令未限幅，
+            # 仅在水动力计算时内部 clip，会导致 u_actual 状态漂移到远超 deltaMax
+            # 的不可执行值。实物部署舵机有硬限位，这里对指令显式限幅。
+            u_control[0] = float(np.clip(u_control[0], -self.vehicle.deltaMax_r, self.vehicle.deltaMax_r))
+            u_control[1] = float(np.clip(u_control[1], -self.vehicle.deltaMax_s, self.vehicle.deltaMax_s))
 
         # PVS 动力学
         self.nu, self.u_actual = self.vehicle.dynamics(
             self.eta, self.nu, self.u_actual, u_control, dt
         )
+        # 同步对实际舵角状态限幅，避免一阶作动器环节积分漂移越界。
+        self.u_actual[0] = float(np.clip(self.u_actual[0], -self.vehicle.deltaMax_r, self.vehicle.deltaMax_r))
+        self.u_actual[1] = float(np.clip(self.u_actual[1], -self.vehicle.deltaMax_s, self.vehicle.deltaMax_s))
 
         # 运动学 (Fossen 2021, Eq. 2.85)
         phi, theta, psi = self.eta[3], self.eta[4], self.eta[5]

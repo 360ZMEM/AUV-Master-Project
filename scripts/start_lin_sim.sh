@@ -220,9 +220,24 @@ case "$MODE" in
     # Keep bridge in background so simulation remains attached to current shell.
     AUV_HOLOOCEAN_UUID="$(make_uuid)" run_bridge &
     BRIDGE_PID=$!
-    trap 'echo "[AUV] stopping bridge ($BRIDGE_PID)"; kill "$BRIDGE_PID" 2>/dev/null || true' EXIT
-    trap 'echo "[AUV] received SIGINT, treating as manual termination."; kill "$BRIDGE_PID" 2>/dev/null || true; exit 0' INT
-    trap 'echo "[AUV] received SIGTERM, treating as manual termination."; kill "$BRIDGE_PID" 2>/dev/null || true; exit 0' TERM
+    sim_cleanup() {
+      if [[ -n "${BRIDGE_PID:-}" ]]; then
+        echo "[AUV] stopping bridge ($BRIDGE_PID)"
+        kill -INT -- -"$BRIDGE_PID" >/dev/null 2>&1 || kill -INT "$BRIDGE_PID" >/dev/null 2>&1 || true
+        for _ in 1 2 3; do
+          kill -0 "$BRIDGE_PID" 2>/dev/null || break
+          sleep 1
+        done
+        if kill -0 "$BRIDGE_PID" 2>/dev/null; then
+          kill -KILL -- -"$BRIDGE_PID" >/dev/null 2>&1 || kill -KILL "$BRIDGE_PID" >/dev/null 2>&1 || true
+        fi
+      fi
+      pkill -KILL -f "run_zenoh_bridge.py" >/dev/null 2>&1 || true
+      pkill -KILL -f "sim_holoocean/apps/main.py" >/dev/null 2>&1 || true
+    }
+    trap sim_cleanup EXIT
+    trap 'echo "[AUV] received SIGINT, treating as manual termination."; sim_cleanup; exit 0' INT
+    trap 'echo "[AUV] received SIGTERM, treating as manual termination."; sim_cleanup; exit 0' TERM
     AUV_HOLOOCEAN_UUID="$(make_uuid)" run_sim
     ;;
   *)

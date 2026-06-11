@@ -65,10 +65,34 @@ def _wrap_angle(angle):
     return (angle + np.pi) % (2 * np.pi) - np.pi
 
 
-class MPCControlSim:
-    """MPC 引导级控制 + PVS 动力学闭环仿真。"""
+# PID v2 已落地 PVS 内环增益 profile（与 pid_pvs_tracking_plots.py v2 完全一致）
+PVS_V2_PROFILES = {
+    'step_depth': {
+        'Kp_z': 1.0, 'Kp_theta': 12.0, 'Kd_theta': 2.0, 'Ki_theta': 2.0,
+        'lam': 0.08, 'phi_b': 0.4, 'K_d': 0.1, 'K_sigma': 0.01,
+        'wn_d_z': 0.15, 'wn_d': 0.6,
+    },
+    'step_yaw': {
+        'Kp_z': 1.0, 'Kp_theta': 12.0, 'Kd_theta': 2.0, 'Ki_theta': 2.0,
+        'lam': 0.08, 'phi_b': 0.4, 'K_d': 0.1, 'K_sigma': 0.01,
+        'wn_d_z': 0.15, 'wn_d': 0.6,
+    },
+    'sine': {
+        'Kp_z': 1.0, 'Kp_theta': 6.0, 'Kd_theta': 2.0, 'Ki_theta': 1.5,
+        'lam': 0.1, 'phi_b': 0.4, 'K_d': 0.1, 'K_sigma': 0.01,
+        'wn_d_z': 0.4, 'wn_d': 0.6,
+    },
+}
+PVS_V2_LIMITS = {
+    'r_max_deg': 12.0,
+    'deltaMax_deg': 20.0,
+}
 
-    def __init__(self, dt=0.05, u_init=1.5):
+
+class MPCControlSim:
+    """MPC 引导级控制 + PVS 动力学闭环仿真（v2 对齐版）。"""
+
+    def __init__(self, dt=0.05, u_init=1.5, pvs_profile='step_depth'):
         self.dt = dt
         self.vehicle = remus100()
 
@@ -96,14 +120,30 @@ class MPCControlSim:
 
         self._prev_U = None
 
-        self._pvs_Kp_z = 1.0
-        self._pvs_Kp_theta = 15.0
-        self._pvs_Kd_theta = 2.0
-        self._pvs_Ki_theta = 1.0
-        self._pvs_lam = 0.3
-        self._pvs_phi_b = 0.2
-        self._pvs_K_d = 0.3
-        self._pvs_K_sigma = 0.03
+        # ---- PID v2 内环 profile 注入 ----
+        if pvs_profile not in PVS_V2_PROFILES:
+            raise ValueError(f"unknown pvs_profile: {pvs_profile}")
+        self._profile_name = pvs_profile
+        prof = PVS_V2_PROFILES[pvs_profile]
+        self._pvs_Kp_z = prof['Kp_z']
+        self._pvs_Kp_theta = prof['Kp_theta']
+        self._pvs_Kd_theta = prof['Kd_theta']
+        self._pvs_Ki_theta = prof['Ki_theta']
+        self._pvs_lam = prof['lam']
+        self._pvs_phi_b = prof['phi_b']
+        self._pvs_K_d = prof['K_d']
+        self._pvs_K_sigma = prof['K_sigma']
+        self._pvs_wn_d_z = prof['wn_d_z']
+        self._pvs_wn_d = prof['wn_d']
+
+        # ---- 物理硬限位放宽（与 PID v2 完全一致）----
+        self._r_max = np.deg2rad(PVS_V2_LIMITS['r_max_deg'])
+        self._deltaMax = np.deg2rad(PVS_V2_LIMITS['deltaMax_deg'])
+        self.vehicle.wn_d_z = self._pvs_wn_d_z
+        self.vehicle.wn_d = self._pvs_wn_d
+        self.vehicle.r_max = self._r_max
+        self.vehicle.deltaMax_r = self._deltaMax
+        self.vehicle.deltaMax_s = self._deltaMax
 
     def get_state(self):
         return {
@@ -189,9 +229,17 @@ class MPCControlSim:
 
         u_control = self.vehicle.depthHeadingAutopilot(self.eta, self.nu, dt)
 
+        # ---- v2 对齐：u_control 双重 ±deltaMax 限幅（与 PID v2 完全一致）----
+        u_control[0] = float(np.clip(u_control[0], -self._deltaMax, self._deltaMax))
+        u_control[1] = float(np.clip(u_control[1], -self._deltaMax, self._deltaMax))
+
         self.nu, self.u_actual = self.vehicle.dynamics(
             self.eta, self.nu, self.u_actual, u_control, dt
         )
+
+        # 同步对 u_actual 限幅，防止动力学一阶滤波后越限
+        self.u_actual[0] = float(np.clip(self.u_actual[0], -self._deltaMax, self._deltaMax))
+        self.u_actual[1] = float(np.clip(self.u_actual[1], -self._deltaMax, self._deltaMax))
 
         phi, theta, psi = self.eta[3], self.eta[4], self.eta[5]
         cphi, sphi = np.cos(phi), np.sin(phi)
@@ -210,17 +258,18 @@ class MPCControlSim:
         self.eta += dt * (J @ self.nu)
 
 
-def test_mpc_depth_step(duration=40.0, target_depth=5.0):
-    """测试 MPC 深度阶跃响应。"""
+def test_mpc_depth_step(duration=60.0, target_depth=5.0):
+    """测试 MPC 深度阶跃响应（v2 对齐：60s, t>=3s 起算 RMSE）。"""
     print(f"\n{'='*60}")
-    print(f"MPC 测试 1: 深度阶跃响应 (0 → {target_depth}m, {duration}s)")
+    print(f"MPC 测试 1: 深度阶跃响应 (0 → {target_depth}m, {duration}s, v2 profile)")
     print(f"{'='*60}")
 
-    sim = MPCControlSim(dt=0.05, u_init=1.5)
+    sim = MPCControlSim(dt=0.05, u_init=1.5, pvs_profile='step_depth')
     dt = sim.dt
     steps = int(duration / dt)
 
     depth_history = []
+    feasible_depth_history = []
     time_history = []
     z_cmd_history = []
     T_cmd_history = []
@@ -229,9 +278,11 @@ def test_mpc_depth_step(duration=40.0, target_depth=5.0):
     for i in range(steps):
         t = i * dt
         state = sim.get_state()
+        # 与 PID v2 step 对齐：t<3s 保持 0, t>=3s 跃迁到 target
+        z_target = target_depth if t >= 3.0 else 0.0
 
         mpc_result = sim.solve_mpc(
-            target_depth=target_depth,
+            target_depth=z_target,
             target_heading=0.0,
             target_speed=sim.target_u,
         )
@@ -239,25 +290,33 @@ def test_mpc_depth_step(duration=40.0, target_depth=5.0):
         sim.step_with_mpc(mpc_result)
 
         depth_history.append(state['depth'])
+        feasible_depth_history.append(float(sim.vehicle.z_d))
         time_history.append(t)
         z_cmd_history.append(mpc_result['z_cmd'])
         T_cmd_history.append(mpc_result['T_cmd'])
         psi_cmd_history.append(mpc_result['psi_cmd'])
 
     depth_array = np.array(depth_history)
+    feasible_array = np.array(feasible_depth_history)
+    time_array = np.array(time_history)
+    mask = time_array >= 3.0
+
     error = depth_array - target_depth
-    rmse = np.sqrt(np.mean(error**2))
-    max_error = np.max(np.abs(error))
-    final_depth = depth_array[-1]
+    error_feasible = depth_array - feasible_array
+    rmse = float(np.sqrt(np.mean(error[mask] ** 2)))
+    rmse_feasible = float(np.sqrt(np.mean(error_feasible[mask] ** 2)))
+    max_error = float(np.max(np.abs(error[mask])))
+    final_depth = float(depth_array[-1])
 
     threshold = 0.9 * target_depth
     rise_time = None
     for i, d in enumerate(depth_history):
-        if d >= threshold:
-            rise_time = time_history[i]
+        if time_history[i] >= 3.0 and d >= threshold:
+            rise_time = time_history[i] - 3.0
             break
 
-    print(f"深度 RMSE: {rmse:.3f} m")
+    print(f"深度 RMSE (command): {rmse:.3f} m")
+    print(f"深度 RMSE (feasible): {rmse_feasible:.3f} m")
     print(f"深度最大误差: {max_error:.3f} m")
     print(f"最终深度: {final_depth:.3f} m (目标: {target_depth}m)")
     print(f"MPC z_cmd 范围: [{np.min(z_cmd_history):.2f}, {np.max(z_cmd_history):.2f}] m")
@@ -270,28 +329,31 @@ def test_mpc_depth_step(duration=40.0, target_depth=5.0):
     return {
         'time': time_history,
         'depth': depth_history,
+        'feasible_depth': feasible_depth_history,
         'z_cmd': z_cmd_history,
         'T_cmd': T_cmd_history,
         'psi_cmd': psi_cmd_history,
         'rmse': rmse,
+        'rmse_feasible': rmse_feasible,
         'max_error': max_error,
         'final_depth': final_depth,
         'rise_time': rise_time,
     }
 
 
-def test_mpc_heading_step(duration=40.0, target_heading_deg=30.0):
-    """测试 MPC 航向阶跃响应。"""
+def test_mpc_heading_step(duration=60.0, target_heading_deg=30.0):
+    """测试 MPC 航向阶跃响应（v2 对齐：60s, t>=3s 起算 RMSE）。"""
     print(f"\n{'='*60}")
-    print(f"MPC 测试 2: 航向阶跃响应 (0 → {target_heading_deg}°, {duration}s)")
+    print(f"MPC 测试 2: 航向阶跃响应 (0 → {target_heading_deg}°, {duration}s, v2 profile)")
     print(f"{'='*60}")
 
-    sim = MPCControlSim(dt=0.05, u_init=1.5)
+    sim = MPCControlSim(dt=0.05, u_init=1.5, pvs_profile='step_yaw')
     dt = sim.dt
     steps = int(duration / dt)
     target_heading = np.deg2rad(target_heading_deg)
 
     yaw_history = []
+    feasible_yaw_history = []
     time_history = []
     psi_cmd_history = []
     z_cmd_history = []
@@ -300,35 +362,45 @@ def test_mpc_heading_step(duration=40.0, target_heading_deg=30.0):
     for i in range(steps):
         t = i * dt
         state = sim.get_state()
+        psi_target = target_heading if t >= 3.0 else 0.0
 
         mpc_result = sim.solve_mpc(
             target_depth=2.0,
-            target_heading=target_heading,
+            target_heading=psi_target,
             target_speed=sim.target_u,
         )
 
         sim.step_with_mpc(mpc_result)
 
         yaw_history.append(state['yaw'])
+        feasible_yaw_history.append(float(sim.vehicle.psi_d))
         time_history.append(t)
         psi_cmd_history.append(mpc_result['psi_cmd'])
         z_cmd_history.append(mpc_result['z_cmd'])
         T_cmd_history.append(mpc_result['T_cmd'])
 
     yaw_array = np.array(yaw_history)
+    feasible_array = np.array(feasible_yaw_history)
+    time_array = np.array(time_history)
+    mask = time_array >= 3.0
+
     error = np.arctan2(np.sin(yaw_array - target_heading), np.cos(yaw_array - target_heading))
-    rmse = np.sqrt(np.mean(error**2))
-    max_error = np.max(np.abs(error))
-    final_yaw = yaw_array[-1]
+    error_feasible = np.arctan2(np.sin(yaw_array - feasible_array),
+                                np.cos(yaw_array - feasible_array))
+    rmse = float(np.sqrt(np.mean(error[mask] ** 2)))
+    rmse_feasible = float(np.sqrt(np.mean(error_feasible[mask] ** 2)))
+    max_error = float(np.max(np.abs(error[mask])))
+    final_yaw = float(yaw_array[-1])
 
     threshold = 0.9 * target_heading
     rise_time = None
     for i, y in enumerate(yaw_history):
-        if y >= threshold:
-            rise_time = time_history[i]
+        if time_history[i] >= 3.0 and y >= threshold:
+            rise_time = time_history[i] - 3.0
             break
 
-    print(f"航向 RMSE: {rmse:.3f} rad ({np.rad2deg(rmse):.2f}°)")
+    print(f"航向 RMSE (command): {rmse:.3f} rad ({np.rad2deg(rmse):.2f}°)")
+    print(f"航向 RMSE (feasible): {rmse_feasible:.3f} rad ({np.rad2deg(rmse_feasible):.2f}°)")
     print(f"航向最大误差: {max_error:.3f} rad ({np.rad2deg(max_error):.2f}°)")
     print(f"最终航向: {np.rad2deg(final_yaw):.2f}° (目标: {target_heading_deg}°)")
     if rise_time is not None:
@@ -339,10 +411,12 @@ def test_mpc_heading_step(duration=40.0, target_heading_deg=30.0):
     return {
         'time': time_history,
         'yaw': yaw_history,
+        'feasible_yaw': feasible_yaw_history,
         'psi_cmd': psi_cmd_history,
         'z_cmd': z_cmd_history,
         'T_cmd': T_cmd_history,
         'rmse': rmse,
+        'rmse_feasible': rmse_feasible,
         'max_error': max_error,
         'final_yaw': final_yaw,
         'rise_time': rise_time,
@@ -350,17 +424,19 @@ def test_mpc_heading_step(duration=40.0, target_heading_deg=30.0):
 
 
 def test_mpc_cable_tracking(duration=60.0):
-    """测试 MPC 电缆跟踪轨迹。"""
+    """测试 MPC 电缆跟踪轨迹（v2 对齐：60s, 0.12 rad/s, t>=20s 起算 RMSE）。"""
     print(f"\n{'='*60}")
-    print(f"MPC 测试 3: 电缆跟踪轨迹 ({duration}s)")
+    print(f"MPC 测试 3: 电缆跟踪轨迹 ({duration}s, v2 profile, 0.12 rad/s)")
     print(f"{'='*60}")
 
-    sim = MPCControlSim(dt=0.05, u_init=1.5)
+    sim = MPCControlSim(dt=0.05, u_init=1.5, pvs_profile='sine')
     dt = sim.dt
     steps = int(duration / dt)
 
     depth_history = []
     yaw_history = []
+    feasible_depth_history = []
+    feasible_yaw_history = []
     target_depth_history = []
     target_yaw_history = []
     time_history = []
@@ -373,8 +449,9 @@ def test_mpc_cable_tracking(duration=60.0):
         t = i * dt
         state = sim.get_state()
 
-        target_depth = 3.0 + 2.0 * np.sin(0.2 * t)
-        target_yaw = np.deg2rad(20.0 * np.cos(0.15 * t))
+        # 与 PID v2 sine 完全对齐
+        target_depth = 2.5 + 0.75 * np.sin(0.12 * t)
+        target_yaw = np.deg2rad(10.0) * np.sin(0.12 * t)
 
         mpc_result = sim.solve_mpc(
             target_depth=target_depth,
@@ -386,6 +463,8 @@ def test_mpc_cable_tracking(duration=60.0):
 
         depth_history.append(state['depth'])
         yaw_history.append(state['yaw'])
+        feasible_depth_history.append(float(sim.vehicle.z_d))
+        feasible_yaw_history.append(float(sim.vehicle.psi_d))
         target_depth_history.append(target_depth)
         target_yaw_history.append(target_yaw)
         time_history.append(t)
@@ -396,20 +475,31 @@ def test_mpc_cable_tracking(duration=60.0):
 
     depth_array = np.array(depth_history)
     target_depth_array = np.array(target_depth_history)
+    feasible_depth_array = np.array(feasible_depth_history)
     yaw_array = np.array(yaw_history)
     target_yaw_array = np.array(target_yaw_history)
+    feasible_yaw_array = np.array(feasible_yaw_history)
+    time_array = np.array(time_history)
+    mask = time_array >= 20.0
 
     depth_error = depth_array - target_depth_array
+    depth_error_feasible = depth_array - feasible_depth_array
     yaw_error = np.arctan2(np.sin(yaw_array - target_yaw_array),
                            np.cos(yaw_array - target_yaw_array))
+    yaw_error_feasible = np.arctan2(np.sin(yaw_array - feasible_yaw_array),
+                                    np.cos(yaw_array - feasible_yaw_array))
 
-    depth_rmse = np.sqrt(np.mean(depth_error**2))
-    yaw_rmse = np.sqrt(np.mean(yaw_error**2))
-    depth_max_error = np.max(np.abs(depth_error))
-    yaw_max_error = np.max(np.abs(yaw_error))
+    depth_rmse = float(np.sqrt(np.mean(depth_error[mask] ** 2)))
+    depth_rmse_feasible = float(np.sqrt(np.mean(depth_error_feasible[mask] ** 2)))
+    yaw_rmse = float(np.sqrt(np.mean(yaw_error[mask] ** 2)))
+    yaw_rmse_feasible = float(np.sqrt(np.mean(yaw_error_feasible[mask] ** 2)))
+    depth_max_error = float(np.max(np.abs(depth_error[mask])))
+    yaw_max_error = float(np.max(np.abs(yaw_error[mask])))
 
-    print(f"深度 RMSE: {depth_rmse:.3f} m")
-    print(f"航向 RMSE: {yaw_rmse:.3f} rad ({np.rad2deg(yaw_rmse):.2f}°)")
+    print(f"深度 RMSE (command): {depth_rmse:.3f} m")
+    print(f"深度 RMSE (feasible): {depth_rmse_feasible:.3f} m")
+    print(f"航向 RMSE (command): {yaw_rmse:.3f} rad ({np.rad2deg(yaw_rmse):.2f}°)")
+    print(f"航向 RMSE (feasible): {yaw_rmse_feasible:.3f} rad ({np.rad2deg(yaw_rmse_feasible):.2f}°)")
     print(f"深度最大误差: {depth_max_error:.3f} m")
     print(f"航向最大误差: {np.rad2deg(yaw_max_error):.2f}°")
 
@@ -417,6 +507,8 @@ def test_mpc_cable_tracking(duration=60.0):
         'time': time_history,
         'depth': depth_history,
         'yaw': yaw_history,
+        'feasible_depth': feasible_depth_history,
+        'feasible_yaw': feasible_yaw_history,
         'target_depth': target_depth_history,
         'target_yaw': target_yaw_history,
         'z_cmd': z_cmd_history,
@@ -424,7 +516,9 @@ def test_mpc_cable_tracking(duration=60.0):
         'psi_cmd': psi_cmd_history,
         'u': u_history,
         'depth_rmse': depth_rmse,
+        'depth_rmse_feasible': depth_rmse_feasible,
         'yaw_rmse': yaw_rmse,
+        'yaw_rmse_feasible': yaw_rmse_feasible,
         'depth_max_error': depth_max_error,
         'yaw_max_error': yaw_max_error,
     }
@@ -438,14 +532,18 @@ def generate_plots(results):
     fig, axes = plt.subplots(3, 1, figsize=(12, 9), sharex=True)
     t = results['depth_step']['time']
     d = results['depth_step']['depth']
+    feas = results['depth_step'].get('feasible_depth', None)
     tgt = 5.0
     z_cmd = results['depth_step']['z_cmd']
     T_cmd = results['depth_step']['T_cmd']
 
+    target_traj = [tgt if tt >= 3.0 else 0.0 for tt in t]
     axes[0].plot(t, d, 'b-', linewidth=2, label='Actual Depth')
-    axes[0].axhline(y=tgt, color='r', linestyle='--', linewidth=1.5, label='Target Depth')
+    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='Target (step @3s)')
+    if feas is not None:
+        axes[0].plot(t, feas, 'g-.', linewidth=1.2, label='PVS feasible z_d')
     axes[0].set_ylabel('Depth (m)')
-    axes[0].set_title('MPC Depth Step Response')
+    axes[0].set_title('MPC Depth Step Response (v2 aligned)')
     axes[0].legend(loc='lower right', fontsize=9)
     axes[0].grid(True)
 
@@ -470,13 +568,17 @@ def generate_plots(results):
     fig, axes = plt.subplots(3, 1, figsize=(12, 9), sharex=True)
     t = results['heading_step']['time']
     yaw = np.rad2deg(results['heading_step']['yaw'])
+    feas_yaw = results['heading_step'].get('feasible_yaw', None)
     yaw_tgt = 30.0
     psi_cmd = results['heading_step']['psi_cmd']
 
+    target_traj = [yaw_tgt if tt >= 3.0 else 0.0 for tt in t]
     axes[0].plot(t, yaw, 'b-', linewidth=2, label='Actual Heading')
-    axes[0].axhline(y=yaw_tgt, color='r', linestyle='--', linewidth=1.5, label='Target Heading')
+    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='Target (step @3s)')
+    if feas_yaw is not None:
+        axes[0].plot(t, np.rad2deg(feas_yaw), 'g-.', linewidth=1.2, label='PVS feasible psi_d')
     axes[0].set_ylabel('Heading (deg)')
-    axes[0].set_title('MPC Heading Step Response')
+    axes[0].set_title('MPC Heading Step Response (v2 aligned)')
     axes[0].legend(loc='lower right', fontsize=9)
     axes[0].grid(True)
 
@@ -642,25 +744,27 @@ def generate_report(results, fig_paths):
     report.append(f"- **时间步长 (dt)**: {mpc_cfg.get('dt', 0.1)} s")
     report.append(f"- **最大求解时间**: {mpc_cfg.get('max_solve_time', 0.05)} s")
 
-    report.append("\n### 1.5 内环控制器 (PVS depthHeadingAutopilot)\n")
-    report.append(f"- Kp_z: 1.0")
-    report.append(f"- Kp_theta: 15.0")
-    report.append(f"- Kd_theta: 2.0")
-    report.append(f"- Ki_theta: 1.0")
+    report.append("\n### 1.5 内环控制器 (PVS depthHeadingAutopilot, v2 aligned)\n")
+    report.append("step_depth/step_yaw profile: Kp_z=1.0, Kp_theta=12.0, Kd_theta=2.0, Ki_theta=2.0,")
+    report.append("lam=0.08, phi_b=0.4, K_d=0.1, K_sigma=0.01, wn_d_z=0.15, wn_d=0.6.\n")
+    report.append("sine profile: Kp_z=1.0, Kp_theta=6.0, Kd_theta=2.0, Ki_theta=1.5,")
+    report.append("lam=0.1, phi_b=0.4, K_d=0.1, K_sigma=0.01, wn_d_z=0.4, wn_d=0.6.\n")
+    report.append("放宽硬限位：deltaMax=±20°, r_max=12°/s（与 PID v2 一致）。\n")
 
-    report.append("\n### 1.6 测试场景\n")
-    report.append("| 测试 | 描述 | 时长 |")
-    report.append("|------|------|------|")
-    report.append("| 1    | 深度阶跃：0 → 5 m | 40 s |")
-    report.append("| 2    | 航向阶跃：0 → 30° | 40 s |")
-    report.append("| 3    | 电缆跟踪：正弦深度 + 余弦航向 | 60 s |")
+    report.append("\n### 1.6 测试场景（v2 对齐）\n")
+    report.append("| 测试 | 描述 | 时长 | RMSE 起算 |")
+    report.append("|------|------|------|-----------|")
+    report.append("| 1    | 深度阶跃：0 → 5 m @ t=3s | 60 s | t≥3s |")
+    report.append("| 2    | 航向阶跃：0 → 30° @ t=3s | 60 s | t≥3s |")
+    report.append("| 3    | 电缆跟踪：2.5+0.75sin(0.12t), 10sin(0.12t)° | 60 s | t≥20s |")
 
     report.append("\n---\n")
     report.append("\n## 2. 测试结果\n")
 
     report.append("\n### 2.1 深度阶跃响应\n")
     r = results['depth_step']
-    report.append(f"- **均方根误差 (RMSE)**: {r['rmse']:.3f} m")
+    report.append(f"- **均方根误差 (command)**: {r['rmse']:.3f} m")
+    report.append(f"- **均方根误差 (feasible)**: {r['rmse_feasible']:.3f} m")
     report.append(f"- **最大误差**: {r['max_error']:.3f} m")
     report.append(f"- **最终深度**: {r['final_depth']:.3f} m (目标: 5.0 m)")
     if r['rise_time'] is not None:
@@ -672,7 +776,8 @@ def generate_report(results, fig_paths):
 
     report.append("\n### 2.2 航向阶跃响应\n")
     r = results['heading_step']
-    report.append(f"- **均方根误差 (RMSE)**: {r['rmse']:.3f} rad ({np.rad2deg(r['rmse']):.2f}°)")
+    report.append(f"- **均方根误差 (command)**: {r['rmse']:.3f} rad ({np.rad2deg(r['rmse']):.2f}°)")
+    report.append(f"- **均方根误差 (feasible)**: {r['rmse_feasible']:.3f} rad ({np.rad2deg(r['rmse_feasible']):.2f}°)")
     report.append(f"- **最大误差**: {r['max_error']:.3f} rad ({np.rad2deg(r['max_error']):.2f}°)")
     report.append(f"- **最终航向**: {np.rad2deg(r['final_yaw']):.2f}° (目标: 30.0°)")
     if r['rise_time'] is not None:
@@ -682,8 +787,10 @@ def generate_report(results, fig_paths):
 
     report.append("\n### 2.3 电缆跟踪\n")
     r = results['cable_tracking']
-    report.append(f"- **深度 RMSE**: {r['depth_rmse']:.3f} m")
-    report.append(f"- **航向 RMSE**: {r['yaw_rmse']:.3f} rad ({np.rad2deg(r['yaw_rmse']):.2f}°)")
+    report.append(f"- **深度 RMSE (command)**: {r['depth_rmse']:.3f} m")
+    report.append(f"- **深度 RMSE (feasible)**: {r['depth_rmse_feasible']:.3f} m")
+    report.append(f"- **航向 RMSE (command)**: {r['yaw_rmse']:.3f} rad ({np.rad2deg(r['yaw_rmse']):.2f}°)")
+    report.append(f"- **航向 RMSE (feasible)**: {r['yaw_rmse_feasible']:.3f} rad ({np.rad2deg(r['yaw_rmse_feasible']):.2f}°)")
     report.append(f"- **深度最大误差**: {r['depth_max_error']:.3f} m")
     report.append(f"- **航向最大误差**: {np.rad2deg(r['yaw_max_error']):.2f}°")
 

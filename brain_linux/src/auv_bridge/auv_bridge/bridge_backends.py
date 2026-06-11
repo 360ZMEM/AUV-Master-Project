@@ -78,6 +78,8 @@ class TopicBridgeBackend(BaseBridgeBackend):
         self.imu_key = str(bridge_cfg.get('imu_key', 'rt/auv/sensors/imu'))
         self.dvl_key = str(bridge_cfg.get('dvl_key', 'rt/auv/sensors/dvl'))
         self.depth_key = str(bridge_cfg.get('depth_key', 'rt/auv/sensors/depth'))
+        self.altitude_key = str(bridge_cfg.get('altitude_key', 'rt/auv/sensors/altitude'))
+        self.forward_sonar_key = str(bridge_cfg.get('forward_sonar_key', 'rt/auv/sensors/forward_sonar'))
         self._session = None
         self._subscribers = []
         self._publishers: dict[str, Any] = {}
@@ -95,6 +97,8 @@ class TopicBridgeBackend(BaseBridgeBackend):
         self._subscribers.append(self._session.declare_subscriber(self.imu_key, self._make_cb(self.imu_key)))
         self._subscribers.append(self._session.declare_subscriber(self.dvl_key, self._make_cb(self.dvl_key)))
         self._subscribers.append(self._session.declare_subscriber(self.depth_key, self._make_cb(self.depth_key)))
+        self._subscribers.append(self._session.declare_subscriber(self.altitude_key, self._make_cb(self.altitude_key)))
+        self._subscribers.append(self._session.declare_subscriber(self.forward_sonar_key, self._make_cb(self.forward_sonar_key)))
         magnetic_key = str(self.bridge_cfg.get('magnetic_key', 'rt/auv/sensors/magnetic'))
         self._subscribers.append(self._session.declare_subscriber(magnetic_key, self._make_cb(magnetic_key)))
 
@@ -194,6 +198,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self._max_reconnect_attempts = 3
         self._on_link_failure_callback = None
         self._on_link_recovery_callback = None
+        self._mock_amd_clock_start_s = time.monotonic()
 
     def open(self) -> None:
         """打开 UDP 套接字并启动接收线程。"""
@@ -261,7 +266,10 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
 
         # Mock AMD 时间戳注入 Para2（通过 KEY_MOCK_AMD_TIMESTAMP_US），
         # Para1 预留给 target_depth_m（由 build_downlink_packet 自动填充）。
-        mock_amd_timestamp_us = int(time.time() * 1e6)
+        # Para2 is a signed int32 field; wall-clock microseconds overflow it.
+        # Use elapsed monotonic microseconds so the decision node receives a
+        # steadily increasing simulation clock during each experiment run.
+        mock_amd_timestamp_us = max(1, int((time.monotonic() - self._mock_amd_clock_start_s) * 1e6))
         payload[KEY_MOCK_AMD_TIMESTAMP_US] = mock_amd_timestamp_us
 
         packet = build_downlink_packet_from_payload(payload, main_motor_rpm_scale=self.main_motor_rpm_scale) # 根据协议定义把 payload 字典编码成二进制下行数据包，main_motor_rpm_scale 用于把协议中的 RPM 值转换为实际推力百分比（仅供调试使用，实际控制算法中不应依赖此转换）
@@ -335,7 +343,10 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         if mock_amd_timestamp_us > 0:
             publisher = self._publishers.get(Z_PATH_MOCK_AMD_TIME)
             if publisher is not None:
-                publisher.put(json.dumps({KEY_MOCK_AMD_TIMESTAMP_US: int(mock_amd_timestamp_us)}))
+                publisher.put(json.dumps({
+                    'timestamp_us': int(mock_amd_timestamp_us),
+                    KEY_MOCK_AMD_TIMESTAMP_US: int(mock_amd_timestamp_us),
+                }))
 
     def _validate_pc_command(self, data: dict) -> list[str]:
         """校验 PC 原始命令的完整性和新鲜度"""

@@ -1,0 +1,22 @@
+# Terrain Following 基准实验配置（地形跟随模式预设）
+# 通过 scripts/run_terrain_benchmark.sh 自动切换为该配置
+
+/**:
+  ros__parameters:
+    # --- 决策层 ---
+    enable_behavior_tree: true
+    bypass_to_manual_setpoint: false
+
+    # --- 控制层 ---
+    bypass_zero_effort: false
+
+    # 启用地形跟随模式：constant_depth_m 在此模式下被复用为目标离底高度
+    depth_mode: 'TERRAIN_FOLLOWING'
+    heading_mode: 'CONSTANT'
+
+    # 目标离底高度 3.0m，目标航向 0 rad
+    constant_depth_m: 3.0
+    constant_heading_rad: 0.0
+
+    # --- 桥接层 ---
+    passive_mode: false

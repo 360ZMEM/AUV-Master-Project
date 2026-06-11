@@ -342,10 +342,30 @@ def read_mcap_sensor_data(
 # =============================================================================
 
 class DeadReckoningEngine:
-    """纯航位推算：DVL 速度 + IMU 航向积分，无反馈修正。"""
+    """纯航位推算：DVL 速度 + IMU 航向积分，无反馈修正。
 
-    def __init__(self, init_pos: np.ndarray, init_yaw: float = 0.0):
+    mode:
+      - "dvl_world": DVL 速度已在 world frame，直接积分 (与 ES-EKF correct_dvl_world 路径一致)
+      - "dvl_body":  DVL 速度在 body frame，按 yaw 旋转后积分
+      - "imu_only":  纯 IMU 加速度二次积分，不用 DVL
+      - "heading_only": 仅估航向，位置始终保持 init_pos (位置基线 = 起点)
+    """
+
+    VALID_MODES = ("dvl_world", "dvl_body", "imu_only", "heading_only")
+
+    def __init__(
+        self,
+        init_pos: np.ndarray,
+        init_yaw: float = 0.0,
+        mode: str = "dvl_world",
+        gyro_bias_z: float = 0.0,
+    ):
+        if mode not in self.VALID_MODES:
+            raise ValueError(f"DR mode must be one of {self.VALID_MODES}, got {mode!r}")
+        self.mode = mode
+        self.gyro_bias_z = float(gyro_bias_z)
         self.p = init_pos.copy()
+        self.v = np.zeros(3, dtype=float)  # used by imu_only
         self.yaw = float(init_yaw)
         self.history_ts: list[int] = []
         self.history_p: list[np.ndarray] = []
@@ -355,25 +375,54 @@ class DeadReckoningEngine:
         self._dt_predict: float = 0.02
 
     def predict(self, acc_body: np.ndarray, gyro_body: np.ndarray, dt: float) -> None:
-        self.yaw += float(gyro_body[2]) * dt
+        self.yaw += (float(gyro_body[2]) - self.gyro_bias_z) * dt
         self._dt_predict = dt
+        if self.mode == "imu_only" and dt > 0:
+            cy, sy = math.cos(self.yaw), math.sin(self.yaw)
+            ax_w = acc_body[0] * cy - acc_body[1] * sy
+            ay_w = acc_body[0] * sy + acc_body[1] * cy
+            az_w = acc_body[2]
+            self.v[0] += ax_w * dt
+            self.v[1] += ay_w * dt
+            self.v[2] += az_w * dt
+            self.p[0] += self.v[0] * dt
+            self.p[1] += self.v[1] * dt
+            self.p[2] += self.v[2] * dt
 
     def update_dvl(self, vel: np.ndarray, ts_ns: int) -> None:
+        prev_dvl_ts = self._last_dvl_ts
         self._last_dvl_vel = vel.copy()
         self._last_dvl_ts = ts_ns
-        if self._last_imu_ts is not None and ts_ns > self._last_imu_ts:
+        if self.mode in ("imu_only", "heading_only"):
+            return
+        # NED-frame DVL integration uses the DVL inter-frame interval, not the
+        # last IMU step: DVL is much slower (≈4-10 Hz) than IMU (≈50 Hz), and
+        # falling back to _dt_predict (≈20 ms) under-counts each DVL sample by
+        # ~10× and hides the true DR drift. Use prev DVL timestamp when known,
+        # otherwise the configured DVL interval, otherwise the IMU-step fallback.
+        if prev_dvl_ts is not None and ts_ns > prev_dvl_ts:
+            dt = (ts_ns - prev_dvl_ts) / 1e9
+        elif self._last_imu_ts is not None and ts_ns > self._last_imu_ts:
             dt = (ts_ns - self._last_imu_ts) / 1e9
         else:
             dt = self._dt_predict
-        if self._last_dvl_vel is not None and dt > 0:
+        if self._last_dvl_vel is None or dt <= 0:
+            return
+        if self.mode == "dvl_body":
             vx = self._last_dvl_vel[0] * math.cos(self.yaw) - self._last_dvl_vel[1] * math.sin(self.yaw)
             vy = self._last_dvl_vel[0] * math.sin(self.yaw) + self._last_dvl_vel[1] * math.cos(self.yaw)
             vz = self._last_dvl_vel[2]
-            self.p[0] += vx * dt
-            self.p[1] += vy * dt
-            self.p[2] += vz * dt
+        else:  # dvl_world
+            vx = self._last_dvl_vel[0]
+            vy = self._last_dvl_vel[1]
+            vz = self._last_dvl_vel[2]
+        self.p[0] += vx * dt
+        self.p[1] += vy * dt
+        self.p[2] += vz * dt
 
     def update_depth(self, depth_m: float, ts_ns: int) -> None:
+        if self.mode == "heading_only":
+            return
         self.p[2] = depth_m
 
     def record_state(self, ts_ns: int) -> None:
@@ -541,6 +590,8 @@ class StandardEKFEngine:
         K = self.P @ H.T @ np.linalg.pinv(S)
         dx = K @ y
         self.state += dx
+        # NOTE(thesis Step 0 fix): 四元数加法后必须归一化，否则长跑姿态漂移
+        self.state[6:10] = self._quat_normalize(self.state[6:10])
         I_KH = np.eye(16) - K @ H
         self.P = I_KH @ self.P @ I_KH.T + K @ R @ K.T
 
@@ -560,6 +611,8 @@ class StandardEKFEngine:
         K = self.P @ H.T @ np.linalg.pinv(S)
         dx = K @ y
         self.state += dx
+        # NOTE(thesis Step 0 fix): 同 update_dvl，归一化四元数避免漂移
+        self.state[6:10] = self._quat_normalize(self.state[6:10])
         I_KH = np.eye(16) - K @ H
         self.P = I_KH @ self.P @ I_KH.T + K @ R @ K.T
 
@@ -603,8 +656,18 @@ class EseKfEngine:
         return mod.ES_EKF
 
     def get_position(self) -> np.ndarray:
+        # ES-EKF (algorithm/es_ekf.py) keeps state.p in ROS-up convention
+        # (state.p[2] = -depth, e.g. -12 for 12 m below surface), matching the
+        # brain_linux runtime contract (/auv/state/filtered, controller, TF).
+        # The offline benchmark compares against truth_pos that goes through
+        # ft.ue_position_to_ned() and StandardEKFEngine state, both NED
+        # (z = +depth). Flip Z here so the offline comparator sees a consistent
+        # NED frame across all three engines without touching the main-line
+        # algorithm or the truth pipeline.
         s = self.filter.get_state()
-        return s["p"].copy()
+        p = s["p"].copy()
+        p[2] = -p[2]
+        return p
 
     def predict(self, acc_body: np.ndarray, gyro_body: np.ndarray, dt: float) -> None:
         # 在首次predict之前，执行零偏预校准
@@ -635,7 +698,10 @@ class EseKfEngine:
     def update_depth(self, depth_m: float, ts_ns: int = 0) -> None:
         was_initialized = self.filter.is_initialized()
         h_before = self.filter.get_state()
-        self.filter.correct_depth(-depth_m)
+        # NOTE(thesis Step 0 fix): ES-EKF.correct_depth expects positive-down depth (m).
+        # 内部 _try_auto_init_from_depth 已做 new_pos[2] = -depth_m 完成 NED 转换，
+        # 之前传 -depth_m 导致深度被双重取负，对 ES-EKF 不公平。
+        self.filter.correct_depth(depth_m)
         h_after = self.filter.get_state()
         innovation = abs(h_after["p"][2] - h_before["p"][2])
         self.innovation_ts.append(ts_ns)
@@ -752,7 +818,20 @@ def plot_trajectory_xy(
     ax.set_ylabel("Y [m] (East)")
     ax.set_title("AUV Trajectory Comparison (XY Plane)")
     ax.legend(loc="best", frameon=True)
-    ax.set_aspect("equal")
+    span_x = float(all_x.max() - all_x.min())
+    span_y = float(all_y.max() - all_y.min())
+    if span_x > 0.0 and span_y / span_x < 0.05:
+        ax.set_aspect("auto")
+        ax.text(
+            0.02,
+            0.03,
+            "Y variation magnified for readability",
+            transform=ax.transAxes,
+            fontsize=8,
+            bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "alpha": 0.75, "edgecolor": "none"},
+        )
+    else:
+        ax.set_aspect("equal")
 
     fig.savefig(output_path, dpi=dpi)
     plt.close(fig)
@@ -940,6 +1019,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--depth-topic", default=DEFAULT_DEPTH_TOPIC, help=f"Depth topic (默认: {DEFAULT_DEPTH_TOPIC})")
     parser.add_argument("--truth-topics", default=",".join(DEFAULT_TRUTH_TOPICS), help=f"真值 topic 列表 (逗号分隔, 默认: {','.join(DEFAULT_TRUTH_TOPICS)})")
     parser.add_argument("--dvl-frame", choices=["body", "world"], default="world", help="DVL 速度坐标系 (默认: world)")
+    parser.add_argument("--dr-mode", choices=list(DeadReckoningEngine.VALID_MODES), default="dvl_world",
+                        help="Dead Reckoning 模式 (默认: dvl_world，与 DVL world frame 数据一致)")
+    parser.add_argument("--dr-gyro-bias-z", type=float, default=0.0,
+                        help="DR yaw 积分使用的 gyro_z bias (rad/s, 默认: 0.0)")
     parser.add_argument("--no-coordinate-transform", action="store_true", help="跳过 UE4->NED 坐标系转换 (假设数据已是 NED)")
     parser.add_argument("--ekf-config", type=Path, default=Path(DEFAULT_EKF_CONFIG), help=f"EKF 参数 YAML (默认: {DEFAULT_EKF_CONFIG})")
     parser.add_argument("--verbose", action="store_true", help="打印详细信息")
@@ -954,8 +1037,84 @@ def parse_args() -> argparse.Namespace:
                         help="要测试的控制器类型 (默认: both)")
     parser.add_argument("--skip-ekf-benchmark", action="store_true",
                         help="跳过 EKF 定位基准测试，仅运行控制测试")
-    
+
+    # 论文导出选项
+    parser.add_argument("--export", choices=["png", "pdf", "both"], default="png",
+                        help="图表导出格式 (默认 png；论文用 both 同时落 pdf)")
+    parser.add_argument("--export-tex", action="store_true",
+                        help="额外导出 results.tex (LaTeX booktabs 表)")
+
     return parser.parse_args()
+
+
+def _export_pdf_siblings(output_dir: Path, dpi: int) -> list[Path]:
+    """For every PNG produced under output_dir, render a same-name PDF.
+
+    Uses matplotlib's PIL backend to avoid re-running the data pipeline.
+    Returns the list of created PDFs.
+    """
+    if plt is None:
+        return []
+    try:
+        import matplotlib.image as mpimg
+    except Exception:
+        return []
+    created: list[Path] = []
+    for png in sorted(output_dir.glob("*.png")):
+        pdf = png.with_suffix(".pdf")
+        try:
+            img = mpimg.imread(png)
+            h, w = img.shape[:2]
+            fig = plt.figure(figsize=(w / dpi, h / dpi), dpi=dpi)
+            ax = fig.add_axes([0, 0, 1, 1])
+            ax.imshow(img)
+            ax.axis("off")
+            fig.savefig(pdf, dpi=dpi)
+            plt.close(fig)
+            created.append(pdf)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  [WARN] failed to export {png.name} -> {pdf.name}: {exc}")
+    return created
+
+
+def _export_results_tex(metrics: dict[str, dict[str, float]],
+                        latencies: dict[str, float],
+                        output_path: Path) -> None:
+    """Write a minimal LaTeX booktabs table mirroring benchmark_results.md."""
+    rows = []
+    for algo_key in ("raw_dr", "std_ekf", "es_ekf"):
+        m = metrics.get(algo_key, {})
+        lat = latencies.get(algo_key, float("nan"))
+        algo_name = {"raw_dr": "Raw DR",
+                     "std_ekf": "Std EKF",
+                     "es_ekf": "ES-EKF"}.get(algo_key, algo_key)
+        rows.append(
+            f"{algo_name} & "
+            f"{m.get('rmse_xy', float('nan')):.3f} & "
+            f"{m.get('rmse_z', float('nan')):.3f} & "
+            f"{m.get('rmse_3d', float('nan')):.3f} & "
+            f"{m.get('cep50', float('nan')):.3f} & "
+            f"{m.get('max_drift', float('nan')):.3f} & "
+            f"{lat:.1f} \\\\"
+        )
+    body = "\n".join(rows)
+    tex = (
+        "% Auto-generated by tools/offline_ekf_benchmark.py --export-tex\n"
+        "\\begin{table}[t]\n"
+        "\\centering\n"
+        "\\caption{Localization benchmark.}\n"
+        "\\label{tab:auv-localization-benchmark}\n"
+        "\\begin{tabular}{lrrrrrr}\n"
+        "\\toprule\n"
+        "Algorithm & XY RMSE (m) & Z RMSE (m) & 3D RMSE (m) "
+        "& CEP50 (m) & Max Drift (m) & Latency ($\\mu$s) \\\\\n"
+        "\\midrule\n"
+        f"{body}\n"
+        "\\bottomrule\n"
+        "\\end{tabular}\n"
+        "\\end{table}\n"
+    )
+    output_path.write_text(tex, encoding="utf-8")
 
 
 def load_ekf_config(config_path: Path) -> dict:
@@ -1078,11 +1237,20 @@ def main() -> None:
     print("\n[2/6] Initializing algorithm engines ...")
     init_pos = truth_pos[0].copy()
     init_yaw = 0.0
+    init_yaw_source = "default 0.0 (no truth quat)"
     if truth_samples[0].quat_wxyz is not None:
         rpy = _quat_to_euler(truth_samples[0].quat_wxyz)
         init_yaw = float(rpy[2])
+        init_yaw_source = f"truth[0].quat_wxyz -> roll={float(rpy[0]):.4f} pitch={float(rpy[1]):.4f} yaw={init_yaw:.4f} (rad)"
+    print(f"  init_pos = {init_pos.tolist()}")
+    print(f"  init_yaw = {init_yaw:.6f} rad ({math.degrees(init_yaw):.3f} deg) from {init_yaw_source}")
 
-    dr_engine = DeadReckoningEngine(init_pos, init_yaw)
+    dr_engine = DeadReckoningEngine(
+        init_pos,
+        init_yaw,
+        mode=args.dr_mode,
+        gyro_bias_z=float(args.dr_gyro_bias_z),
+    )
 
     ekf_cfg_aligned = ekf_cfg.copy()
     ekf_cfg_aligned["init_pos"] = init_pos.tolist()
@@ -1109,6 +1277,8 @@ def main() -> None:
     dvl_timestamps_ns = [s.ts_ns for s in dvl_samples]
     depth_timestamps_ns = [s.ts_ns for s in depth_samples]
     truth_timestamps_ns = [s.ts_ns for s in truth_samples]
+    # NOTE(thesis Step 0 fix): O(N²) `event_ts in list` 改为 set 查找，避免长 bag 阻塞
+    truth_timestamps_set = set(truth_timestamps_ns)
 
     all_event_ts = sorted(set(
         imu_timestamps_ns + dvl_timestamps_ns + depth_timestamps_ns + truth_timestamps_ns
@@ -1170,7 +1340,7 @@ def main() -> None:
 
             depth_idx += 1
 
-        if event_ts in truth_timestamps_ns:
+        if event_ts in truth_timestamps_set:
             dr_engine.record_state(event_ts)
             std_ekf_engine.record_state(event_ts)
             es_ekf_engine.record_state(event_ts)
@@ -1293,6 +1463,16 @@ def main() -> None:
         output_path=report_path,
     )
     print(f"  Saved: benchmark_results.md")
+
+    # 论文导出钩子
+    if args.export in ("pdf", "both"):
+        pdfs = _export_pdf_siblings(output_dir, args.dpi)
+        for pdf in pdfs:
+            print(f"  Saved: {pdf.name}")
+    if args.export_tex:
+        tex_path = output_dir / "results.tex"
+        _export_results_tex(metrics, latencies, tex_path)
+        print(f"  Saved: {tex_path.name}")
 
     if not args.skip_assertions:
         print("\n[VALIDATION] Running logical assertions ...")

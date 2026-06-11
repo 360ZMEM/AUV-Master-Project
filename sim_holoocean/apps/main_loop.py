@@ -48,6 +48,7 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
     max_steps = int(sim_cfg["max_steps"])
     agent_name = sim_cfg["agent_name"]
     print_every = int(cfg["debug"]["print_every_n_steps"])
+    realtime = bool(sim_cfg.get("realtime", True))
 
     scenario = build_scenario(cfg)
     controller = AUVPIDController(ctrl_cfg, lim_cfg)
@@ -119,6 +120,7 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
             state_raw = wrapper.reset_and_tick()
 
             for step in range(max_steps):
+                step_start_wall = time.time()
                 t_sec = step * dt
                 state = get_agent_state(state_raw, agent_name)
 
@@ -228,8 +230,16 @@ def run_main(cfg, config_path, enable_plot, enable_interactive=False):
                     print(f"step={step:04d} t={t_sec:6.2f}s {pos_txt} {ref_txt} {rpy_txt} {aux_txt} {cmd_txt}{evt_txt}")
 
                 if los_idx >= len(points) - 1:
-                    print(f"Reach end of reference path at step={step}, early stop.")
-                    break
+                    if not realtime:
+                        print(f"Reach end of reference path at step={step}, early stop.")
+                        break
+                    if step % print_every == 0:
+                        print(f"Reach end of reference path at step={step}, holding pose (realtime mode).")
+
+                if realtime:
+                    slack = dt - (time.time() - step_start_wall)
+                    if slack > 0:
+                        time.sleep(slack)
 
             wrapper.close()
         except Exception as e:

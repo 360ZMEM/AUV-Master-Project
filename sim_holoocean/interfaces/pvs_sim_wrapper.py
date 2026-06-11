@@ -178,6 +178,20 @@ class PVSSimWrapper:
         # ────────────────────────────────────────
         self.current_speed_mps = float(self.pvs_cfg.get("current_speed_mps", 0.5))
         self.current_direction_deg = float(self.pvs_cfg.get("current_direction_deg", 0.0))
+        self.autopilot_params = {
+            "Kp_z": self.pvs_cfg.get("Kp_z"),
+            "Kp_theta": self.pvs_cfg.get("Kp_theta"),
+            "Kd_theta": self.pvs_cfg.get("Kd_theta"),
+            "Ki_theta": self.pvs_cfg.get("Ki_theta"),
+            "lam": self.pvs_cfg.get("lam"),
+            "phi_b": self.pvs_cfg.get("phi_b"),
+            "K_d": self.pvs_cfg.get("K_d"),
+            "K_sigma": self.pvs_cfg.get("K_sigma"),
+            "wn_d_z": self.pvs_cfg.get("wn_d_z"),
+            "wn_d": self.pvs_cfg.get("wn_d"),
+        }
+        self.r_max = np.deg2rad(float(self.pvs_cfg.get("r_max_deg", 5.0)))
+        self.deltaMax = np.deg2rad(float(self.pvs_cfg.get("deltaMax_deg", 15.0)))
 
         # ────────────────────────────────────────
         # 三维洋流干扰模型
@@ -279,6 +293,7 @@ class PVSSimWrapper:
         )
         self.vehicle.nu = self.nu.copy()
         self.vehicle.u_actual = self.u_actual.copy()
+        self._apply_autopilot_params()
         # 控制器内部状态初始化（深度和航向 PI 环自积状态）
         self.vehicle.z_d = self.reference_depth_m
         self.vehicle.z_int = 0.0
@@ -294,6 +309,17 @@ class PVSSimWrapper:
                 f"heading={self.initial_heading_deg:.1f}deg rpm={self.reference_rpm:.1f}"
             )
         return self
+
+    def _apply_autopilot_params(self) -> None:
+        """把 params.yaml/sim_params.pvs.yaml 中的 PVS v2 内环参数同步到车辆实例。"""
+        if self.vehicle is None:
+            return
+        for name, value in self.autopilot_params.items():
+            if value is not None:
+                setattr(self.vehicle, name, float(value))
+        self.vehicle.r_max = float(self.r_max)
+        self.vehicle.deltaMax_r = float(self.deltaMax)
+        self.vehicle.deltaMax_s = float(self.deltaMax)
 
     def __enter__(self):
         """支持 with 语句进入。"""
@@ -461,7 +487,10 @@ class PVSSimWrapper:
 
         mode = self.control_mode.strip().lower()
         if mode in {"depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"}:
+            self._apply_autopilot_params()
             u_control = self.vehicle.depthHeadingAutopilot(self.eta, self.nu, self.dt)
+            u_control[0] = float(np.clip(u_control[0], -self.deltaMax, self.deltaMax))
+            u_control[1] = float(np.clip(u_control[1], -self.deltaMax, self.deltaMax))
         else:
             u_control = self._command_to_actuators(command5)
 
@@ -493,6 +522,8 @@ class PVSSimWrapper:
 
         self.prev_nu = self.nu.copy()
         self.nu, self.u_actual = self.vehicle.dynamics(self.eta, self.nu, self.u_actual, u_control, self.dt)
+        self.u_actual[0] = float(np.clip(self.u_actual[0], -self.deltaMax, self.deltaMax))
+        self.u_actual[1] = float(np.clip(self.u_actual[1], -self.deltaMax, self.deltaMax))
 
         # 恢复 vehicle.nu (attitudeEuler 使用原始速度积分位姿)
         if saved_nu is not None:

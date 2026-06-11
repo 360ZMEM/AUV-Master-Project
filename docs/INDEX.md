@@ -41,6 +41,36 @@
 - 仿真后端接口与物理引擎对接
 - 上位机通信协议与前后端交互
 
+### 论文向 — 硕士毕业设计实验体系
+
+> 路径：[thesis/INDEX.md](thesis/INDEX.md)（Phase 4 收口产物）
+
+- [00_overview.md](thesis/00_overview.md) — 实验体系总览 + 5 大创新点对照表
+- [01_baseline_repro_log.md](thesis/01_baseline_repro_log.md) — baseline 复现日志（§5.4）
+- [02_es_ekf_validation.md](thesis/02_es_ekf_validation.md) — ES-EKF 15 维状态 + 6 通道观测验证（§3.4 / §5.4）
+- [03_uncertainty_quantification.md](thesis/03_uncertainty_quantification.md) — 不确定性量化与 EKF→MPC 耦合链路（§3.5 / §4.4）
+- [04_mpc_robustness_ablation.md](thesis/04_mpc_robustness_ablation.md) — UA-MPC 消融与灵敏度（§4.5 / §5.5 / §5.5.1）
+- [05_scenario_recipes.md](thesis/05_scenario_recipes.md) — 9 个 yaml 场景配方与三维强度覆盖（§5.2）
+- [06_jetson_deploy_emulated.md](thesis/06_jetson_deploy_emulated.md) — Jetson 算力部署 emulated 文档（§5.5）
+- [07_drift_log_and_known_issues.md](thesis/07_drift_log_and_known_issues.md) — 文档/代码偏差闭环 + 已知问题（§5.6）
+
+> 入口与上下文：参见 Phase 4 计划 [thesis_experiment_phase4_consolidation_plan.md](../.trae/documents/thesis_experiment_phase4_consolidation_plan.md)。
+
+### 实物部署 — 从仿真到真机的工程化路径
+
+> 路径：[real_deployment/INDEX.md](real_deployment/INDEX.md)（SOP 体系，预先规约）+ [experiment/real_deployment/INDEX.md](experiment/real_deployment/INDEX.md)（事后日志）
+
+明线 `08_real_hardware_sop.md` 是 6 步速记表，便于现场对照；本节给出**多 Level 实施路径**：S1 链路审计 → S2 静态执行器极性 → S3 影子导航 → S4 单点闭环 → S5 全自主，每阶段独立 shell 入口、独立通过判据、独立失败回退。
+
+- [00_principles.md](real_deployment/00_principles.md) — 三战术 + 三架构智慧 + 三铁律
+- [01_stage1_link_audit.md](real_deployment/01_stage1_link_audit.md) — 协议字节对齐与时延 p95 测量
+- [02_stage2_static_actuator.md](real_deployment/02_stage2_static_actuator.md) — 5 路推力极性与死区
+- [03_stage3_shadow_navigation.md](real_deployment/03_stage3_shadow_navigation.md) — passive_mode 影子模式（不夺权）
+- [04_stage4_closed_loop_single.md](real_deployment/04_stage4_closed_loop_single.md) — 首次单点闭环（Kp 取仿真 50%）
+- [05_stage5_full_autonomy.md](real_deployment/05_stage5_full_autonomy.md) — 行为树释放 + ros2 bag 黑匣子
+- [06_kill_switch.md](real_deployment/06_kill_switch.md) — 急停双保险与释放顺序
+- [07_param_diff_sim_vs_real.md](real_deployment/07_param_diff_sim_vs_real.md) — 仿真 vs 真机参数差异速查
+
 ---
 
 ## 最小启动命令
