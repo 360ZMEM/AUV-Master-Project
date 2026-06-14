@@ -75,7 +75,7 @@ shell 在内部做：
 ## 6. 实施修复（EKF 协方差更新）
 
 1. 把 `shadow_diff.csv` 中 `dheading_deg`/`ddepth_m` 的方差作为新的 R 的初值；
-2. 在 [params.protocol_udp_arbiter.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/params.protocol_udp_arbiter.yaml) 找到 `auv_localization` 的 `R_*` 段，把对应通道方差调到与实测一致；
+2. 在当前 target 的 brain params 文件里找到 `ekf` 的 `sigma_*` 段，把对应通道噪声调到与实测一致；默认映射见 [07_param_diff_sim_vs_real.md](07_param_diff_sim_vs_real.md) §7；
 3. **不要**为了让 RMSE 漂亮去缩小 Q——会让 EKF 过度信任模型，水中机动响应变慢。
 
 > 参考：[docs/internals/INDEX.md](../internals/INDEX.md) 中的 EKF 章节解释 Q/R 物理含义。
@@ -87,4 +87,4 @@ shell 在内部做：
 - [scripts/real_deployment/03_shadow_navigation.sh](file:///home/auv_user/auv_ws/AUV-Master-Project/scripts/real_deployment/03_shadow_navigation.sh)
 - [tools/shadow_diff_recorder.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/shadow_diff_recorder.py)
 - [brain_linux/src/auv_bridge/auv_bridge/bridge_node.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_bridge/auv_bridge/bridge_node.py) — `shadow_cmd_topic` / `shadow_telemetry_topic` 默认值
-- [params.protocol_udp_arbiter.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/params.protocol_udp_arbiter.yaml) — passive_mode / R_*
+- [07_param_diff_sim_vs_real.md](07_param_diff_sim_vs_real.md) §7 — S3/S4/S5 当前 target 到 brain params yaml 的默认映射

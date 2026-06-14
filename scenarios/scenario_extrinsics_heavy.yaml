@@ -1,0 +1,37 @@
+name: extrinsics_heavy
+description: Heavy sensor mounting offsets for ES-EKF lever-arm validation.
+duration_s: 120
+sim_backend: pvs
+mpc_mode: ua
+sensor_extrinsics_truth:
+  dvl:
+    translation_b_m: [0.30, 0.10, -0.05]
+    rotation_rpy_deg: [2.0, -1.2, 4.0]
+  depth:
+    translation_b_m: [0.20, 0.0, -0.25]
+    rotation_rpy_deg: [0.0, 0.0, 0.0]
+  imu:
+    translation_b_m: [0.10, 0.02, 0.04]
+    rotation_rpy_deg: [1.0, 0.5, -1.0]
+perception:
+  dvl_measurement_frame: world
+  imu_acc_noise_scale: 1.0
+  sonar_noise_scale: 1.0
+  cable_current_amp: 500.0
+flow:
+  current_speed_mps: 0.0
+chaos:
+  enabled: false
+  packet_loss_prob: 0.0
+  dvl_freeze:
+    enabled: false
+    drop_rate: 0.0
+    freeze_window_s: [0.0, 0.0]
+  imu_drift:
+    enabled: false
+    bias_rate: 0.0
+  depth_spike:
+    enabled: false
+    rate_hz: 0.0
+    amplitude_m: 0.0
+  mag_saturation_threshold_t: null

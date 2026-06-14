@@ -33,7 +33,7 @@ env/
 
 # JetBrains
 .idea/
-docs_new/
+# docs_new/
 docs_old/
 # foxglove
 # foxglove_layout_project/
@@ -46,5 +46,5 @@ auv_console_python/
 VXworks程序/
 csd_vx6.8*
 .auv_data/
-docs/thesis
-docs/real_delpoyment
+# docs/thesis
+# docs/real_delpoyment

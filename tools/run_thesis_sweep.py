@@ -136,7 +136,7 @@ class RunResult:
     metrics: dict[str, float]
     benchmark_dir: Path | None
     duration_s_actual: float
-    status: str  # "ok" | "start_failed" | "no_bag" | "bench_failed"
+    status: str  # "ok" | "start_failed" | "no_bag" | "bag_empty" | "bench_failed"
     error: str | None
 
 
@@ -179,6 +179,16 @@ def run_one(
         contract_args += ["--arbiter-profile"]
     if "--auto-activate" not in user_args:
         contract_args += ["--auto-activate"]
+    if "--bag-arg" not in user_args:
+        # Thesis metrics only need sensor/state/control/truth topics. Full
+        # visual topics can be large enough to starve rosbag finalization under
+        # PVS sweeps, producing non-empty but corrupt MCAP files.
+        contract_args += [
+            "--bag-arg",
+            "--exclude",
+            "--bag-arg",
+            "^/auv/visual/.*",
+        ]
     forwarded_args = contract_args + user_args
 
     cmd = [
@@ -217,6 +227,13 @@ def run_one(
 
     # E6 — env injection of MPC weight overrides for sensitivity sweep
     sub_env = os.environ.copy()
+    # Thesis sweeps are timed runtime experiments. Building the ROS workspace
+    # inside each run can starve/kill rosbag and move bag T0 before the brain
+    # stack is ready; the installed workspace is the runtime contract.
+    sub_env.setdefault("AUV_SKIP_BRAIN_BUILD", "1")
+    sub_env.setdefault("SIM_DELAY_S", "0")
+    sub_env.setdefault("BRAIN_READY_TOPIC", "/auv/control/mpc_cmd")
+    sub_env.setdefault("BRAIN_READY_TIMEOUT_S", "90")
     if param_overrides:
         sub_env["AUV_MPC_PARAM_OVERRIDES"] = json.dumps(param_overrides)
 
@@ -280,6 +297,26 @@ def run_one(
             benchmark_dir=None, duration_s_actual=elapsed,
             status="no_bag",
             error="no mcap under run_dir",
+        )
+    try:
+        mcap_size = mcap.stat().st_size
+    except OSError as exc:
+        return RunResult(
+            spec=spec, run_dir=run_dir, mcap=mcap,
+            metrics={"xy_rmse": float("nan"), "z_rmse": float("nan"),
+                     "cep50": float("nan"), "max_drift": float("nan")},
+            benchmark_dir=None, duration_s_actual=elapsed,
+            status="no_bag",
+            error=f"mcap stat failed: {exc}",
+        )
+    if mcap_size <= 0:
+        return RunResult(
+            spec=spec, run_dir=run_dir, mcap=mcap,
+            metrics={"xy_rmse": float("nan"), "z_rmse": float("nan"),
+                     "cep50": float("nan"), "max_drift": float("nan")},
+            benchmark_dir=None, duration_s_actual=elapsed,
+            status="bag_empty",
+            error=f"mcap file is empty: {mcap}",
         )
 
     if skip_benchmark:

@@ -72,6 +72,7 @@ rd_require_real_confirm() {
 rd_init_run_dir() {
   local stage_id="${1:-stage}"
   local ts; ts="$(date +%Y%m%d_%H%M%S)"
+  local brain_params_file; brain_params_file="$(rd_brain_params_file)"
   RD_RUN_ID="${ts}_${stage_id}_${RD_TARGET}"
   RD_RUN_DIR="${RD_ROOT_DIR}/log/real_deployment/${RD_RUN_ID}"
   mkdir -p "$RD_RUN_DIR"
@@ -81,12 +82,31 @@ rd_init_run_dir() {
     echo "target=$RD_TARGET"
     echo "dry_run=$RD_DRY_RUN"
     echo "duration_s=$RD_DURATION_S"
+    echo "brain_params_file=$brain_params_file"
     echo "started_at=$(date --iso-8601=seconds)"
     echo "git_head=$(cd "$RD_ROOT_DIR" && git rev-parse HEAD 2>/dev/null || echo unknown)"
     echo "passthrough=${RD_PASSTHROUGH[*]:-}"
   } > "$RD_RUN_DIR/metadata.txt"
   rd_log "run_dir: $RD_RUN_DIR"
   export RD_RUN_ID RD_RUN_DIR
+}
+
+rd_brain_params_file() {
+  local override="${RD_BRAIN_PARAMS_FILE:-${AUV_RD_BRAIN_PARAMS_FILE:-}}"
+  local default_file="${RD_ROOT_DIR}/brain_linux/config/params.protocol_udp_arbiter.${RD_TARGET}.yaml"
+  local fallback_file="${RD_ROOT_DIR}/brain_linux/config/params.protocol_udp_arbiter.yaml"
+  local selected
+
+  if [[ -n "$override" ]]; then
+    selected="$override"
+  elif [[ -f "$default_file" ]]; then
+    selected="$default_file"
+  else
+    selected="$fallback_file"
+  fi
+
+  [[ -f "$selected" ]] || rd_die "brain params file not found: $selected"
+  printf '%s\n' "$selected"
 }
 
 rd_track_bg_pid() {

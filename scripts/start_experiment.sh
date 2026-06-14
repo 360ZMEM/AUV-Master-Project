@@ -21,9 +21,8 @@ MPC_MODE=""
 BAG_FINALIZE_S="${BAG_FINALIZE_S:-30}"
 AUTO_ACTIVATE=false
 AUTO_ACTIVATE_RATE_HZ="${AUTO_ACTIVATE_RATE_HZ:-10}"
-LEAN_BAG=true
-LEAN_BAG_VISUAL=false
-LEAN_BAG_VISUAL_RATE_HZ="${LEAN_BAG_VISUAL_RATE_HZ:-1.0}"
+BRAIN_READY_TOPIC="${BRAIN_READY_TOPIC:-}"
+BRAIN_READY_TIMEOUT_S="${BRAIN_READY_TIMEOUT_S:-0}"
 
 storage_backend_supported() {
   local storage_id="$1"
@@ -74,6 +73,7 @@ Options:
   --protocol-control-mode-byte N
                                explicit protocol control mode byte for brain side
   --arbiter-profile            force protocol_udp arbiter profile on the brain side
+  --brain-arg ARG              append one raw argument forwarded to start_lin_brain.sh
   --topic-prefix PREFIX        apply a namespace prefix to generated Foxglove topics
   --with-map                   include the 3D map layer in generated layout
   --viz-mock-mode              force visualization bridge mock mode
@@ -92,16 +92,15 @@ Options:
                                behavior tree stays in StandbyCheck and the bag
                                will be 0 byte. See docs/experiment/terrain_benchmark_log.md §3.2
   --auto-activate-rate HZ      heartbeat rate for the emulator (default: 10)
+  --brain-ready-topic TOPIC    wait for a publisher on TOPIC before starting
+                               rosbag; empty disables this wait
+  --brain-ready-timeout SECONDS
+                               max wait for --brain-ready-topic or
+                               BRAIN_READY_TOPIC (default: 0 = disabled)
   --duration SECONDS           auto-stop experiment after a fixed duration (recommend 120 for benchmark runs)
   --scenario PATH              thesis scenario yaml (forwarded as AUV_SCENARIO_FILE env)
   --seed N                     thesis scenario seed (forwarded as AUV_SCENARIO_SEED env)
   --mpc-mode MODE              MPC mode {baseline,ua}; forwarded as AUV_MPC_MODE env
-  --lean-bag                   exclude /auv/visual/.* from rosbag (drops ~97% of bag size)
-  --lean-bag-visual            keep /auv/visual/history_trail at full rate, downsample
-                               /auv/visual/seabed_mesh and /auv/visual/seabed_cloud
-                               via scripts/visual_throttle.py (default 1 Hz)
-                               implies --lean-bag (originals excluded; throttled copies kept)
-  --lean-bag-visual-rate HZ    throttle rate for --lean-bag-visual (default: 1.0)
   --help                       show this message
 EOF
 }
@@ -136,6 +135,10 @@ while [[ $# -gt 0 ]]; do
       LAUNCH_ARGS+=("$1" "${2:?missing value for $1}")
       shift 2
       ;;
+    --brain-arg)
+      LAUNCH_ARGS+=("--brain-arg" "${2:?missing value for --brain-arg}")
+      shift 2
+      ;;
     --bag-arg)
       BAG_EXTRA_ARGS+=("${2:?missing value for --bag-arg}")
       shift 2
@@ -164,6 +167,14 @@ while [[ $# -gt 0 ]]; do
       AUTO_ACTIVATE_RATE_HZ="${2:?missing value for --auto-activate-rate}"
       shift 2
       ;;
+    --brain-ready-topic)
+      BRAIN_READY_TOPIC="${2:?missing value for --brain-ready-topic}"
+      shift 2
+      ;;
+    --brain-ready-timeout)
+      BRAIN_READY_TIMEOUT_S="${2:?missing value for --brain-ready-timeout}"
+      shift 2
+      ;;
     --duration)
       RUN_DURATION_S="${2:?missing value for --duration}"
       shift 2
@@ -178,18 +189,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --mpc-mode)
       MPC_MODE="${2:?missing value for --mpc-mode}"
-      shift 2
-      ;;
-    --lean-bag)
-      LEAN_BAG=true
-      shift
-      ;;
-    --lean-bag-visual)
-      LEAN_BAG_VISUAL=true
-      shift
-      ;;
-    --lean-bag-visual-rate)
-      LEAN_BAG_VISUAL_RATE_HZ="${2:?missing value for --lean-bag-visual-rate}"
       shift 2
       ;;
     -h|--help)
@@ -207,89 +206,6 @@ done
 if [[ ! -x "$SCRIPTS_DIR/start_foxglove_holoocean_ros.sh" ]]; then
   echo "[AUV][ERROR] launcher not found or not executable: $SCRIPTS_DIR/start_foxglove_holoocean_ros.sh"
   exit 1
-fi
-
-# ---------------------------------------------------------------------------
-# Pre-flight (timing contract v2.1, 2026-06-09):
-# Two-layer split — main script stays lightweight (probe + daemon warm-up),
-# heavy cleanup is an explicit operator action (scripts/preflight_clean.sh).
-#
-# Why split: contract v2 inlined the full sweep here, which also killed
-# `_ros2_daemon`. Each subsequent launcher then paid a ~26s daemon cold-start
-# before brain controllers came up — for 60s sweep runs that meant ~26s of
-# the bag was uncontrolled drift, making the data incomparable to the n=1
-# manual baseline (run 113311). See terrain_benchmark_log.md §6.7.6.
-#
-# v2.1 fast path (this script):
-#   1. Probe stale state (port 8765 busy or stale brain/zenoh procs alive).
-#      If detected → fail-fast and tell the operator to run preflight_clean.sh.
-#      No process is killed, no shm is touched, no _ros2_daemon disturbed.
-#   2. Warm up `_ros2_daemon` proactively so the first `ros2 bag record -a`
-#      observes an up-to-date graph instead of cold-starting it.
-#
-# v2.1 slow path (operator action):
-#   bash scripts/preflight_clean.sh   # see that script's header for details.
-preflight_probe() {
-  local pat
-  pat="ros2 launch foxglove_bridge|/foxglove_bridge/foxglove_bridge"
-  pat="$pat|run_zenoh_bridge\.py|sim_holoocean/apps/main\.py|mock_amd_server"
-  pat="$pat|ros2 launch.*auv_stack|ros2 bag record"
-  pat="$pat|zenoh_viz_bridge_node|zenoh_json_bridge_node"
-  local stale_pids
-  stale_pids=$(pgrep -f "$pat" 2>/dev/null || true)
-  local port_busy=0
-  if ! python3 -c "import socket,sys
-s=socket.socket(); s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-try:
-  s.bind(('0.0.0.0',8765)); s.close(); sys.exit(0)
-except OSError:
-  sys.exit(1)" 2>/dev/null; then
-    port_busy=1
-  fi
-  if [[ -n "$stale_pids" || "$port_busy" == "1" ]]; then
-    echo "[AUV][ERROR] pre-flight: stale state detected" >&2
-    if [[ -n "$stale_pids" ]]; then
-      echo "[AUV][ERROR]   stale pids: $(echo $stale_pids | tr '\n' ' ')" >&2
-    fi
-    if [[ "$port_busy" == "1" ]]; then
-      echo "[AUV][ERROR]   port 8765 busy (foxglove_bridge would hit Bind Error)" >&2
-    fi
-    echo "[AUV][ERROR] please run: bash scripts/preflight_clean.sh   then re-run this command." >&2
-    exit 2
-  fi
-  # Warm up ros2 daemon so the first bag recorder sees a fresh graph
-  # without paying the ~26s cold-start cost. Idempotent: a no-op if already
-  # running. Errors are tolerated (degrades gracefully to lazy start).
-  # ROS env is sourced in a subshell so we don't leak it to the parent
-  # (the main RECORD_BAG block below sources it again under controlled set -u).
-  (
-    set +u
-    if [[ -f /opt/ros/humble/setup.bash ]]; then
-      source /opt/ros/humble/setup.bash
-      ros2 daemon start >/dev/null 2>&1 || true
-    fi
-  )
-}
-preflight_probe
-
-# --lean-bag-visual implies --lean-bag (originals are excluded; throttled copies are recorded).
-if [[ "$LEAN_BAG_VISUAL" == true ]]; then
-  LEAN_BAG=true
-fi
-
-# --lean-bag: drop heavy /auv/visual/* topics from the bag, but keep
-# /auv/visual/truth_marker (offline_ekf_benchmark needs it as ground truth).
-# When --lean-bag-visual is also set, the throttled copies live on
-# /auv/visual/*_throttled and are NOT matched by the exclude regex, so they get recorded.
-if [[ "$LEAN_BAG" == true ]]; then
-  if [[ "$LEAN_BAG_VISUAL" == true ]]; then
-    # Keep history_trail at full rate; drop only mesh/cloud originals.
-    # Throttled copies are on /auv/visual/seabed_(mesh|cloud)_throttled (not excluded).
-    BAG_EXTRA_ARGS+=("--exclude" "^/auv/visual/seabed_(mesh|cloud)$")
-  else
-    # Negative lookahead exempts /auv/visual/truth_marker (std::regex ECMAScript).
-    BAG_EXTRA_ARGS+=("--exclude" '^/auv/visual/(?!truth_marker$).*')
-  fi
 fi
 
 if [[ "$RECORD_BAG" == true ]]; then
@@ -338,17 +254,6 @@ cleanup() {
       sleep 1
     fi
   fi
-  if [[ -n "${THROTTLE_PID:-}" ]]; then
-    echo "[AUV] stopping visual_throttle ($THROTTLE_PID)"
-    kill -INT "$THROTTLE_PID" >/dev/null 2>&1 || true
-    for _ in 1 2 3; do
-      if ! kill -0 "$THROTTLE_PID" 2>/dev/null; then break; fi
-      sleep 1
-    done
-    if kill -0 "$THROTTLE_PID" 2>/dev/null; then
-      kill -KILL "$THROTTLE_PID" >/dev/null 2>&1 || true
-    fi
-  fi
   if [[ -n "${LAUNCH_PID:-}" ]]; then
     echo "[AUV] stopping launcher ($LAUNCH_PID), grace ${BAG_FINALIZE_S}s"
     # SIGINT first → let the launcher's own cleanup propagate to its children.
@@ -385,7 +290,6 @@ cleanup() {
     fi
   fi
   pkill -KILL -f "scripts/auto_activate_emu.py" >/dev/null 2>&1 || true
-  pkill -KILL -f "scripts/visual_throttle.py" >/dev/null 2>&1 || true
 }
 
 trap cleanup EXIT INT TERM
@@ -402,9 +306,8 @@ trap cleanup EXIT INT TERM
   echo "bag_finalize_s=$BAG_FINALIZE_S"
   echo "auto_activate=$AUTO_ACTIVATE"
   echo "auto_activate_rate_hz=$AUTO_ACTIVATE_RATE_HZ"
-  echo "lean_bag=$LEAN_BAG"
-  echo "lean_bag_visual=$LEAN_BAG_VISUAL"
-  echo "lean_bag_visual_rate_hz=$LEAN_BAG_VISUAL_RATE_HZ"
+  echo "brain_ready_topic=$BRAIN_READY_TOPIC"
+  echo "brain_ready_timeout_s=$BRAIN_READY_TIMEOUT_S"
   echo "scenario_file=$SCENARIO_FILE"
   echo "scenario_seed=$SCENARIO_SEED"
   echo "mpc_mode=$MPC_MODE"
@@ -444,46 +347,22 @@ if [[ "$AUTO_ACTIVATE" == true ]]; then
   EMU_PID=$!
 fi
 
-if [[ "$LEAN_BAG_VISUAL" == true ]]; then
-  THROTTLE_LOG="$RUN_DIR/visual_throttle.log"
-  echo "[AUV] starting visual_throttle (rate=${LEAN_BAG_VISUAL_RATE_HZ}Hz, log=$THROTTLE_LOG)"
-  python3 "$SCRIPTS_DIR/visual_throttle.py" \
-    --rate-hz "$LEAN_BAG_VISUAL_RATE_HZ" \
-    </dev/null > "$THROTTLE_LOG" 2>&1 &
-  THROTTLE_PID=$!
-fi
-
 if [[ "$RECORD_BAG" == true ]]; then
-  # Wait for brain stack to be ready before starting the bag recorder.
-  # Why: launcher fork → sim → SIM_DELAY (10s) → colcon build (~15s) → ros2 launch
-  # means /auv/control/mpc_cmd / raw_dr publishers don't appear until ~T+25s after
-  # this script starts. If we record from T+3s, the first 22-26s of the bag are
-  # uncontrolled drift (no MPC, no DR/EKF output) — analysis comparing 60s windows
-  # against the n=1 manual baseline (run 113311, where brain was already warm)
-  # becomes incoherent.
-  #
-  # Fix: poll `ros2 topic info /auv/control/mpc_cmd` until at least one publisher
-  # is up (= brain controller node has spun and registered). Then start the bag
-  # so its T0 is aligned with brain ready.
-  #
-  # Side-effect: total wall time of this script grows by ~25s, but the recorded
-  # 60s duration is now entirely useful data. Timeout 90s gives slack for cold
-  # colcon builds; if it expires we fall through (record anyway) so we don't
-  # block on misconfiguration.
-  local_brain_ready_topic="${BRAIN_READY_TOPIC:-/auv/control/mpc_cmd}"
-  local_brain_ready_timeout="${BRAIN_READY_TIMEOUT_S:-90}"
-  echo "[AUV] waiting up to ${local_brain_ready_timeout}s for brain ready (publisher on ${local_brain_ready_topic})..."
-  brain_ready=0
-  for i in $(seq 1 "$local_brain_ready_timeout"); do
-    if ros2 topic info "$local_brain_ready_topic" 2>/dev/null | grep -qE "Publisher count: [1-9]"; then
-      echo "[AUV] brain ready after ${i}s (publisher detected on ${local_brain_ready_topic})"
-      brain_ready=1
-      break
+  if [[ -n "$BRAIN_READY_TOPIC" && "${BRAIN_READY_TIMEOUT_S:-0}" != "0" ]]; then
+    echo "[AUV] waiting for publisher on $BRAIN_READY_TOPIC before rosbag record (timeout=${BRAIN_READY_TIMEOUT_S}s)"
+    ready=false
+    for _ in $(seq 1 "$BRAIN_READY_TIMEOUT_S"); do
+      if ros2 topic info "$BRAIN_READY_TOPIC" 2>/dev/null | grep -qE "Publisher count: [1-9]"; then
+        ready=true
+        break
+      fi
+      sleep 1
+    done
+    if [[ "$ready" != true ]]; then
+      echo "[AUV][WARN] timed out waiting for publisher on $BRAIN_READY_TOPIC; starting rosbag anyway"
+    else
+      echo "[AUV] detected publisher on $BRAIN_READY_TOPIC"
     fi
-    sleep 1
-  done
-  if [[ "$brain_ready" == "0" ]]; then
-    echo "[AUV][WARN] brain ready timeout (${local_brain_ready_timeout}s) — recording bag anyway; data may include warm-up drift"
   fi
 
   echo "[AUV] waiting ${WAIT_BEFORE_RECORD_S}s before rosbag record..."

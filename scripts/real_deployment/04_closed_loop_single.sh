@@ -44,6 +44,7 @@ STACK_LOG="${RD_RUN_DIR}/stack.log"
 EMU_LOG="${RD_RUN_DIR}/auto_activate.log"
 DRV_LOG="${RD_RUN_DIR}/single_setpoint.log"
 DRV_CSV="${RD_RUN_DIR}/single_setpoint.csv"
+BRAIN_PARAMS_FILE="$(rd_brain_params_file)"
 
 # 1) 后台 log + mock AMD
 rd_start_log_receiver_bg
@@ -51,11 +52,12 @@ rd_start_mock_amd_bg
 
 # 2) 启动 stack（passive_mode=false 默认）
 if [[ "$RD_DRY_RUN" == "true" ]]; then
-  rd_log "  [dry-run] bash scripts/start_lin_brain.sh stack --arbiter-profile"
+  rd_log "  [dry-run] bash scripts/start_lin_brain.sh stack --arbiter-profile params_file:=${BRAIN_PARAMS_FILE}"
 else
-  rd_log "step: launching stack (closed-loop, duration ${DURATION_S}s)"
+  rd_log "step: launching stack (closed-loop, params=${BRAIN_PARAMS_FILE}, duration ${DURATION_S}s)"
   ( cd "$RD_ROOT_DIR" && \
     timeout "${DURATION_S}" bash scripts/start_lin_brain.sh stack --arbiter-profile \
+      "params_file:=${BRAIN_PARAMS_FILE}" \
     > "$STACK_LOG" 2>&1 ) &
   rd_track_bg_pid "$!"
   sleep 8
@@ -111,7 +113,7 @@ REPORT="${RD_RUN_DIR}/report.md"
   fi
   echo
   echo "## 实施修复建议"
-  echo "- 振荡：减小 brain_linux/config/params.protocol_udp_arbiter.yaml 的 controller.{depth,yaw}.kp"
+  echo "- 振荡：减小 ${BRAIN_PARAMS_FILE} 的 controller.{depth,yaw}.kp"
   echo "- 上下振：在 docs/real_deployment/04_stage4_closed_loop_single.md 表格的 Set_Course 变化率限幅条目里降低速率。"
 } > "$REPORT"
 

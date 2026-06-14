@@ -109,3 +109,50 @@
 - 上一文档：[`06_kill_switch.md`](06_kill_switch.md)
 - 总入口：[`INDEX.md`](INDEX.md)
 - 标准依据：`../../标准文档/AMD通讯协议.pdf` §字段缩放定义
+
+---
+
+## 7. 当前落盘配置区分（2026-06-09 核对）
+
+### 7.1 结论
+
+ROS2 brain stack **不能再只依赖** `brain_linux/config/params.protocol_udp_arbiter.yaml` 这一份文件。实物部署 shell 已按 target 显式选择 `params_file`：
+
+| target | brain params file | 关键差异 |
+|---|---|---|
+| `mock` | [`brain_linux/config/params.protocol_udp_arbiter.yaml`](../../brain_linux/config/params.protocol_udp_arbiter.yaml) | 仿真/本机默认：`127.0.0.1:52364` |
+| `vxsim` | [`brain_linux/config/params.protocol_udp_arbiter.vxsim.yaml`](../../brain_linux/config/params.protocol_udp_arbiter.vxsim.yaml) | VxWorks 仿真：`127.0.0.1:21` |
+| `real` | [`brain_linux/config/params.protocol_udp_arbiter.real.yaml`](../../brain_linux/config/params.protocol_udp_arbiter.real.yaml) | 真机：`192.168.0.101:21`，首次部署推力/PID 更保守 |
+
+选择逻辑在 [`scripts/real_deployment/_lib.sh`](../../scripts/real_deployment/_lib.sh) 的 `rd_brain_params_file()`：
+
+1. 若设置 `RD_BRAIN_PARAMS_FILE` 或 `AUV_RD_BRAIN_PARAMS_FILE`，优先使用该显式覆盖；
+2. 否则优先使用 `brain_linux/config/params.protocol_udp_arbiter.<target>.yaml`；
+3. 如果 target 专属文件不存在，回退到兼容默认 `params.protocol_udp_arbiter.yaml`。
+
+### 7.2 要改哪里
+
+- **只改网络端点**：改对应 target 文件的 `bridge.protocol_udp.remote_host` / `remote_port`。
+- **真机首次闭环保守化**：改 `params.protocol_udp_arbiter.real.yaml` 的 `limits.*`、`control.*`、`ekf.*`；不要改 mock 默认文件。
+- **vxsim 复现真机端口问题**：改 `params.protocol_udp_arbiter.vxsim.yaml`，不要改 `config/bridge_params*.yaml`。后者是 sim/HoloOcean 侧桥接配置，不是 ROS2 brain stack 的主配置。
+- **临时现场覆盖**：用 `RD_BRAIN_PARAMS_FILE=/abs/path/custom.yaml bash scripts/real_deployment/04_closed_loop_single.sh --target real --i-have-physical-auv`，并把该路径写入 run log。
+
+### 7.3 哪些 shell 已显式区分
+
+以下阶段会在启动 brain stack 时传入 `params_file:=...`：
+
+- [`03_shadow_navigation.sh`](../../scripts/real_deployment/03_shadow_navigation.sh) — `passive_mode:=true` + target 专属 params；
+- [`04_closed_loop_single.sh`](../../scripts/real_deployment/04_closed_loop_single.sh) — 闭环 stack + target 专属 params；
+- [`05_full_autonomy.sh`](../../scripts/real_deployment/05_full_autonomy.sh) — mock 经 `start_experiment.sh --brain-arg params_file:=...`，vxsim/real 直接传 `params_file:=...`。
+
+S1/S2/KS 不启动 ROS2 brain stack；它们只走协议工具或急停帧，因此不需要 brain params file。
+
+### 7.4 S0 dry-run 为什么会落 `passed.flag`
+
+S0 是**静态自检**，不启动网络、推进器或 ROS2 brain stack。它的 dry-run 只把 build/pytest/protocol roundtrip 命令打印出来，随后仍然走到脚本尾部的 `rd_mark_stage_passed`。这和 S1-S5 不同：
+
+- S1-S5 的通过判据依赖真实运行产物（UDP 帧、CSV、bag、RMSE、ESTOP 日志）；
+- 因此 S1-S5 在 dry-run 下会执行 `[dry-run] skipping pass criteria`，**不会**写 `passed.flag`；
+- 这就是 `00_dryrun_log.md` 里 S2-S5 会看到上一阶段 soft-warning 的原因。
+
+该差异目前是**已知且不阻塞**：S0 dry-run 的 `passed.flag` 只代表静态骨架未崩，不代表任何硬件链路通过。若后续要严格统一语义，可把 S0 dry-run 也改为跳过 `rd_mark_stage_passed`。

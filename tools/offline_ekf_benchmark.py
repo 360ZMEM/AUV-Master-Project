@@ -1025,6 +1025,12 @@ def parse_args() -> argparse.Namespace:
                         help="DR yaw 积分使用的 gyro_z bias (rad/s, 默认: 0.0)")
     parser.add_argument("--no-coordinate-transform", action="store_true", help="跳过 UE4->NED 坐标系转换 (假设数据已是 NED)")
     parser.add_argument("--ekf-config", type=Path, default=Path(DEFAULT_EKF_CONFIG), help=f"EKF 参数 YAML (默认: {DEFAULT_EKF_CONFIG})")
+    parser.add_argument(
+        "--estimated-extrinsics-yaml",
+        type=Path,
+        default=None,
+        help="估计传感器外参 YAML；读取其中 sensor_extrinsics 并合入 ES-EKF 配置",
+    )
     parser.add_argument("--verbose", action="store_true", help="打印详细信息")
     parser.add_argument("--dpi", type=int, default=300, help="图表 DPI (默认: 300)")
     parser.add_argument("--skip-assertions", action="store_true", help="跳过逻辑断言验证")
@@ -1129,6 +1135,22 @@ def load_ekf_config(config_path: Path) -> dict:
     return {}
 
 
+def load_estimated_extrinsics(path: Path) -> dict:
+    import yaml
+    if not path.exists():
+        raise SystemExit(f"Estimated extrinsics YAML not found: {path}")
+    with open(path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    if not isinstance(data, dict):
+        raise SystemExit(f"Invalid estimated extrinsics YAML: {path}")
+    extrinsics = data.get("sensor_extrinsics", data.get("sensor_extrinsics_estimated"))
+    if not isinstance(extrinsics, dict):
+        raise SystemExit(
+            f"Estimated extrinsics YAML must contain sensor_extrinsics: {path}"
+        )
+    return extrinsics
+
+
 def _resample_to_truth(
     truth_ts: np.ndarray,
     est_ts: np.ndarray,
@@ -1184,6 +1206,9 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     ekf_cfg = load_ekf_config(args.ekf_config)
+    if args.estimated_extrinsics_yaml is not None:
+        ekf_cfg = ekf_cfg.copy()
+        ekf_cfg["sensor_extrinsics"] = load_estimated_extrinsics(args.estimated_extrinsics_yaml)
     truth_topic_list = [t.strip() for t in args.truth_topics.split(",") if t.strip()]
     apply_transform = not args.no_coordinate_transform
 

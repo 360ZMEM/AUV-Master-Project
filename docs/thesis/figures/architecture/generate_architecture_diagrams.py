@@ -1,0 +1,432 @@
+"""Generate low-saturation draw.io architecture diagrams for AUV docs."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from xml.sax.saxutils import escape
+
+
+OUT = Path(__file__).resolve().parent
+VERSION = "30.0.4"
+
+FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=14;fontColor=#2F3A45;"
+TITLE_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=22;fontStyle=1;fontColor=#26323D;"
+SUB_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=12;fontColor=#5C6B7A;"
+EDGE = (
+    "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;"
+    "html=1;strokeColor=#7E93A8;fontColor=#536577;fontSize=12;"
+    "endArrow=block;endFill=1;"
+)
+EDGE_DASH = EDGE + "dashed=1;dashPattern=6 4;"
+
+PALETTE = {
+    "blue": ("#EAF2F8", "#8AA9C4"),
+    "green": ("#EEF6EF", "#8DBA98"),
+    "yellow": ("#FFF7E8", "#D8B46A"),
+    "orange": ("#FBEFE5", "#D4A17B"),
+    "purple": ("#F2EDF7", "#A996C0"),
+    "red": ("#F8EEEE", "#C68C8C"),
+    "gray": ("#F6F7F8", "#9AA7B2"),
+    "teal": ("#EAF6F5", "#80B4AF"),
+}
+
+
+def value(text: str) -> str:
+    return escape(text, {'"': "&quot;"}).replace("\n", "&#xa;")
+
+
+def box_style(color: str = "blue", extra: str = "") -> str:
+    fill, stroke = PALETTE[color]
+    return (
+        "rounded=1;whiteSpace=wrap;html=1;arcSize=12;"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.5;spacing=8;"
+        f"{FONT}{extra}"
+    )
+
+
+def lane_style(color: str = "gray") -> str:
+    fill, stroke = PALETTE[color]
+    return (
+        "swimlane;whiteSpace=wrap;html=1;startSize=34;rounded=1;arcSize=8;"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.5;"
+        f"collapsible=0;childLayout=none;{FONT}"
+    )
+
+
+def title_style() -> str:
+    return (
+        "text;html=1;strokeColor=none;fillColor=none;align=center;"
+        f"verticalAlign=middle;whiteSpace=wrap;rounded=0;{TITLE_FONT}"
+    )
+
+
+def note_style() -> str:
+    return (
+        "text;html=1;strokeColor=none;fillColor=none;align=left;"
+        f"verticalAlign=top;whiteSpace=wrap;rounded=0;{SUB_FONT}"
+    )
+
+
+def rect(cells, id_, label, x, y, w, h, color="blue", parent="1", extra=""):
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{box_style(color, extra)}" '
+        f'vertex="1" parent="{parent}"><mxGeometry x="{x}" y="{y}" width="{w}" '
+        f'height="{h}" as="geometry" /></mxCell>'
+    )
+
+
+def lane(cells, id_, label, x, y, w, h, color="gray"):
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{lane_style(color)}" '
+        f'vertex="1" parent="1"><mxGeometry x="{x}" y="{y}" width="{w}" '
+        f'height="{h}" as="geometry" /></mxCell>'
+    )
+
+
+def text(cells, id_, label, x, y, w, h, title=False):
+    style = title_style() if title else note_style()
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{style}" vertex="1" '
+        f'parent="1"><mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" '
+        f'as="geometry" /></mxCell>'
+    )
+
+
+def edge(cells, id_, source, target, label="", dashed=False, points=None, extra=""):
+    style = (EDGE_DASH if dashed else EDGE) + extra
+    if points:
+        pts = "".join(f'<mxPoint x="{x}" y="{y}" />' for x, y in points)
+        geometry = f'<mxGeometry relative="1" as="geometry"><Array as="points">{pts}</Array></mxGeometry>'
+    else:
+        geometry = '<mxGeometry relative="1" as="geometry" />'
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{style}" edge="1" '
+        f'parent="1" source="{source}" target="{target}">{geometry}</mxCell>'
+    )
+
+
+def write(name: str, cells, page_width=1400, page_height=900) -> None:
+    body = "\n        ".join(['<mxCell id="0" />', '<mxCell id="1" parent="0" />'] + cells)
+    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="{VERSION}">
+  <diagram name="{value(name)}">
+    <mxGraphModel dx="1200" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="{page_width}" pageHeight="{page_height}" math="0" shadow="0">
+      <root>
+        {body}
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+'''
+    (OUT / f"{name}.drawio").write_text(xml, encoding="utf-8")
+
+
+def code_layer_architecture():
+    cells = []
+    text(cells, "t1", "AUV 软件系统五层架构", 390, 20, 620, 40, True)
+    text(cells, "s1", "面向 docs/internals/01_architecture 与 thesis 总览：从运行入口到共享协议的代码分层", 390, 62, 660, 34)
+    for spec in [
+        ("l_app", "应用层 apps/", 80, 120, 1240, 110, "blue"),
+        ("l_if", "接口层 interfaces/", 80, 250, 1240, 120, "teal"),
+        ("l_beh", "行为层 behavior/", 80, 390, 1240, 110, "yellow"),
+        ("l_alg", "算法层 algorithm/", 80, 520, 1240, 120, "green"),
+        ("l_common", "协议/基础层 common/", 80, 660, 1240, 120, "purple"),
+    ]:
+        lane(cells, *spec)
+    for spec in [
+        ("app1", "main.py\n独立仿真入口", 50, 46, 190, 46, "blue", "l_app"),
+        ("app2", "main_loop.py\n单进程闭环", 285, 46, 190, 46, "blue", "l_app"),
+        ("app3", "run_zenoh_bridge.py\n桥接运行入口", 520, 46, 210, 46, "blue", "l_app"),
+        ("app4", "scripts/start_experiment.sh\n实验编排入口", 785, 46, 260, 46, "blue", "l_app"),
+        ("if1", "sim_wrapper / pvs_sim_wrapper\nHoloOcean / PVS 后端", 50, 48, 255, 50, "teal", "l_if"),
+        ("if2", "frame_transform.py\nUE4 ↔ NED 坐标统一", 345, 48, 250, 50, "teal", "l_if"),
+        ("if3", "zenoh_bridge / protocol_udp\n跨进程通信桥接", 635, 48, 250, 50, "teal", "l_if"),
+        ("if4", "mock_amd_server\n协议级硬件替身", 925, 48, 230, 50, "teal", "l_if"),
+        ("beh1", "command_guard\n命令合法性过滤", 170, 45, 230, 46, "yellow", "l_beh"),
+        ("beh2", "safety_monitor\n限幅 / 急停 / 保护", 505, 45, 230, 46, "yellow", "l_beh"),
+        ("beh3", "state_machine\n任务运行状态", 840, 45, 230, 46, "yellow", "l_beh"),
+        ("alg1", "guidance.py\nLOS 导引", 70, 50, 190, 46, "green", "l_alg"),
+        ("alg2", "auv_pid_controller.py\n级联 PID", 310, 50, 220, 46, "green", "l_alg"),
+        ("alg3", "auv_mpc_controller.py\nMPC / UA-MPC", 580, 50, 220, 46, "green", "l_alg"),
+        ("alg4", "es_ekf.py\n状态估计", 850, 50, 190, 46, "green", "l_alg"),
+        ("alg5", "trajectory_generator.py\n轨迹生成", 1090, 50, 120, 46, "green", "l_alg"),
+        ("co1", "protocol.py\nTopic / Payload 契约", 125, 50, 240, 46, "purple", "l_common"),
+        ("co2", "enums.py\n模式 / 指令 / 状态", 445, 50, 230, 46, "purple", "l_common"),
+        ("co3", "physics.py\n物理限幅 / 饱和日志", 755, 50, 240, 46, "purple", "l_common"),
+    ]:
+        rect(cells, *spec)
+    edge(cells, "e1", "app2", "if1", "组装后端", extra="exitX=0.5;exitY=1;entryX=0.25;entryY=0;")
+    edge(cells, "e2", "app3", "if3", "启动桥接", extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+    edge(cells, "e3", "if2", "co3", "坐标/物理约束", extra="exitX=0.5;exitY=1;entryX=0.75;entryY=0;")
+    edge(cells, "e4", "if3", "co1", "协议编解码", extra="exitX=0.35;exitY=1;entryX=0.5;entryY=0;")
+    edge(cells, "e5", "beh2", "alg2", "保护控制器", extra="exitX=0.4;exitY=1;entryX=0.5;entryY=0;")
+    edge(cells, "e6", "alg2", "co3", "限幅", extra="exitX=0.5;exitY=1;entryX=0.35;entryY=0;")
+    write("auv_code_layer_architecture", cells)
+
+
+def runtime_dataflow():
+    cells = []
+    text(cells, "t1", "AUV 双运行路径数据流", 360, 20, 680, 40, True)
+    text(cells, "s1", "独立仿真闭环用于快速算法验证；桥接通信闭环用于 ROS2 集成和真机迁移前验证", 350, 62, 720, 34)
+    lane(cells, "standalone", "路径一：独立仿真闭环（单进程）", 70, 120, 1260, 270, "green")
+    lane(cells, "bridged", "路径二：桥接通信闭环（仿真/协议/ROS2 分进程）", 70, 450, 1260, 330, "blue")
+    for spec in [
+        ("st1", "TrajectoryGenerator\n目标路点", 60, 70, 180, 60, "green", "standalone"),
+        ("st2", "guidance LOS\n期望航向/深度", 270, 70, 180, 60, "green", "standalone"),
+        ("st3", "PIDController\n舵角/推力", 500, 70, 180, 60, "green", "standalone"),
+        ("st4", "safety_monitor\n限幅保护", 725, 70, 180, 60, "yellow", "standalone"),
+        ("st5", "sim_wrapper\nPVS/HoloOcean step", 950, 70, 180, 60, "teal", "standalone"),
+        ("st6", "传感器状态\n位置/姿态/速度", 520, 175, 220, 55, "gray", "standalone"),
+        ("br1", "PVS / HoloOcean\n仿真或 Mock AMD", 50, 75, 190, 58, "teal", "bridged"),
+        ("br2", "frame_transform\nholoocean_physics_bridge", 270, 75, 205, 58, "teal", "bridged"),
+        ("br3", "Zenoh JSON / Protocol UDP\n多 Topic / 二进制帧", 505, 75, 190, 58, "purple", "bridged"),
+        ("br4", "auv_bridge\n协议 ↔ ROS2 Topic", 750, 75, 190, 58, "blue", "bridged"),
+        ("br5", "localization\nES-EKF 融合状态", 985, 75, 190, 58, "green", "bridged"),
+        ("br6", "decision\n行为树 Setpoint", 985, 190, 190, 58, "yellow", "bridged"),
+        ("br7", "controller\nPID / MPC / Terrain", 750, 190, 190, 58, "green", "bridged"),
+        ("br8", "cmd_vel / arbiter_cmd\n下行控制命令", 505, 190, 190, 58, "orange", "bridged"),
+    ]:
+        rect(cells, *spec)
+    for spec in [
+        ("se1", "st1", "st2", "ref", False, None, "exitX=1;entryX=0;"),
+        ("se2", "st2", "st3", "target", False, None, "exitX=1;entryX=0;"),
+        ("se3", "st3", "st4", "cmd[5]", False, None, "exitX=1;entryX=0;"),
+        ("se4", "st4", "st5", "safe cmd", False, None, "exitX=1;entryX=0;"),
+        ("se5", "st5", "st6", "readback", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0.5;"),
+        ("se6", "st6", "st2", "闭环反馈", True, [(380, 320)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("be1", "br1", "br2", "raw state", False, None, "exitX=1;entryX=0;"),
+        ("be2", "br2", "br3", "NED + sensors", False, None, "exitX=1;entryX=0;"),
+        ("be3", "br3", "br4", "rt/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
+        ("be4", "br4", "br5", "/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
+        ("be5", "br5", "br6", "state + health", False, None, "exitX=0.65;exitY=1;entryX=0.65;entryY=0;"),
+        ("be6", "br6", "br7", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;"),
+        ("be7", "br5", "br7", "/auv/state/filtered", False, None, "exitX=0.35;exitY=1;entryX=0.65;entryY=0;"),
+        ("be8", "br7", "br8", "/cmd_vel / mpc_cmd", False, None, "exitX=0;entryX=1;"),
+        ("be9", "br8", "br3", "encode command", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
+        ("be10", "br3", "br1", "actuator command", True, [(250, 705)], "exitX=0;entryX=0.5;entryY=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_runtime_dataflow", cells)
+
+
+def ros2_node_topology():
+    cells = []
+    text(cells, "t1", "ROS2 决策控制栈节点拓扑", 350, 20, 700, 40, True)
+    text(cells, "s1", "对应 docs/internals/06_ros2_stack：Bridge → Localization → Controller，并由 Decision 产生 setpoint，Viz/Console 负责观测", 250, 62, 900, 34)
+    lane(cells, "external", "外部系统 / 仿真 / 上位机", 70, 120, 1260, 120, "gray")
+    lane(cells, "ros", "brain_linux ROS2 Humble 工作区", 70, 285, 1260, 330, "blue")
+    lane(cells, "obs", "可视化与离线证据", 70, 660, 1260, 110, "purple")
+    for spec in [
+        ("ex1", "sim_holoocean / PVS\n传感器与执行器", 80, 45, 260, 52, "teal", "external"),
+        ("ex2", "PySide6 Console\n遥控 / 授权 / ESTOP", 500, 45, 260, 52, "orange", "external"),
+        ("ex3", "Protocol UDP / Zenoh\n跨进程链路", 920, 45, 260, 52, "purple", "external"),
+        ("n1", "auv_bridge\nZenoh/UDP ↔ ROS2", 70, 75, 210, 60, "blue", "ros"),
+        ("n2", "auv_localization\nES-EKF", 350, 75, 200, 60, "green", "ros"),
+        ("n3", "auv_controller\nPID / MPC", 630, 75, 200, 60, "green", "ros"),
+        ("n4", "auv_decision_ros\nBehavior Tree", 910, 75, 220, 60, "yellow", "ros"),
+        ("n5", "auv_viz_bridge\nFoxglove / Console Stream", 350, 210, 260, 58, "purple", "ros"),
+        ("n6", "auv_interfaces\nSetpoint / MpcCmd / Status", 680, 210, 300, 58, "gray", "ros"),
+        ("o1", "Foxglove\nws://localhost:8765", 210, 35, 250, 48, "purple", "obs"),
+        ("o2", "rosbag / MCAP\n实验黑匣子", 585, 35, 250, 48, "purple", "obs"),
+        ("o3", "tools/analyze_bag.py\n离线图表与 KPI", 960, 35, 250, 48, "purple", "obs"),
+    ]:
+        rect(cells, *spec)
+    for spec in [
+        ("r1", "ex1", "ex3", "raw sensor / cmd", False, None, "exitX=1;entryX=0;"),
+        ("r2", "ex2", "ex3", "manual / auth / estop", False, None, "exitX=1;entryX=0;"),
+        ("r3", "ex3", "n1", "/auv/sensors/*", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("r4", "n1", "n2", "/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
+        ("r5", "n2", "n3", "/auv/state/filtered", False, None, "exitX=1;entryX=0;"),
+        ("r6", "n2", "n4", "state + health", False, None, "exitX=0.8;exitY=1;entryX=0.35;entryY=0;"),
+        ("r7", "n4", "n3", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;"),
+        ("r8", "n3", "n1", "/cmd_vel / mpc_cmd", True, [(400, 420)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("r9", "n1", "ex3", "encoded control", True, None, "exitX=0.5;exitY=0;entryX=0.35;entryY=1;"),
+        ("r10", "n2", "n5", "state/status/bt", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;"),
+        ("r11", "n4", "n5", "bt_status", False, None, "exitX=0.3;exitY=1;entryX=0.8;entryY=0;"),
+        ("r12", "n5", "o1", "live view", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;"),
+        ("r13", "n1", "o2", "record topics", True, None, "exitX=0.55;exitY=1;entryX=0.5;entryY=0;"),
+        ("r14", "o2", "o3", "offline analysis", False, None, "exitX=1;entryX=0;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_ros2_node_topology", cells)
+
+
+def safety_arbiter_deployment():
+    cells = []
+    text(cells, "t1", "真机部署安全链路与仲裁器", 350, 20, 700, 40, True)
+    text(cells, "s1", "对应 docs/internals/07_arbiter 与 docs/real_deployment：控制权唯一、守卫检查、被动影子、急停回退", 280, 62, 850, 34)
+    lane(cells, "pc", "地面站 PC", 70, 120, 300, 540, "orange")
+    lane(cells, "jetson", "Jetson / brain_linux", 430, 120, 520, 540, "blue")
+    lane(cells, "amd", "AMD PC104 / 执行器", 1010, 120, 320, 540, "teal")
+    for spec in [
+        ("pc1", "PySide6 Console\nMANUAL / AUTONOMY / ESTOP", 55, 60, 210, 65, "orange", "pc"),
+        ("pc2", "通信新鲜度\nuplink age / watchdog", 55, 175, 210, 58, "yellow", "pc"),
+        ("pc3", "操作员确认\nreal 需显式确认", 55, 300, 210, 58, "red", "pc"),
+        ("j1", "protocol_udp_bridge\n上/下行协议编解码", 50, 60, 220, 58, "blue", "jetson"),
+        ("j2", "AutonomyGuard\n漏水/电压/置信度/时延/磁盘", 50, 165, 220, 74, "red", "jetson"),
+        ("j3", "Arbiter\nREMOTE ↔ AUTONOMOUS", 50, 300, 220, 62, "purple", "jetson"),
+        ("j4", "Controller\nPID / MPC / Terrain", 310, 165, 160, 58, "green", "jetson"),
+        ("j5", "Decision BT\n任务目标 / Setpoint", 310, 60, 160, 58, "yellow", "jetson"),
+        ("j6", "passive_mode\n影子导航只记录不执行", 310, 300, 160, 62, "gray", "jetson"),
+        ("j7", "Safety fallback\n零推力 / 锁回 REMOTE", 170, 420, 200, 58, "red", "jetson"),
+        ("a1", "AMD 上行\n传感器/状态/健康", 55, 60, 210, 58, "teal", "amd"),
+        ("a2", "5 路控制输出\n4 舵 + 推力", 55, 185, 210, 58, "teal", "amd"),
+        ("a3", "执行器极性/死区\nS2 静态验证", 55, 310, 210, 58, "yellow", "amd"),
+    ]:
+        rect(cells, *spec)
+    for spec in [
+        ("sa1", "pc1", "j1", "manual cmd / auth byte", False, None, "exitX=1;entryX=0;"),
+        ("sa2", "pc2", "j2", "freshness check", False, None, "exitX=1;entryX=0;"),
+        ("sa3", "pc3", "j3", "release authority", True, None, "exitX=1;entryX=0;"),
+        ("sa4", "a1", "j1", "uplink telemetry", False, [(1000, 150), (720, 150)], "exitX=0;entryX=1;"),
+        ("sa5", "j1", "j2", "request AUTONOMY", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("sa6", "j2", "j3", "guard pass / deny", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("sa7", "j5", "j4", "setpoint", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("sa8", "j4", "j3", "", False, None, "exitX=0;entryX=1;"),
+        ("sa9", "j3", "a2", "selected command", False, [(955, 475)], "exitX=1;entryX=0;"),
+        ("sa10", "j3", "j7", "timeout / ESTOP", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
+        ("sa11", "j7", "a2", "zero thrust", True, [(1000, 575)], "exitX=1;entryX=0.5;entryY=1;"),
+        ("sa12", "j6", "j3", "shadow only", True, None, "exitX=0;entryX=1;"),
+        ("sa13", "a3", "a2", "polarity accepted", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_safety_arbiter_deployment", cells)
+
+
+def system_capability_map():
+    cells = []
+    text(cells, "t1", "AUV 研发平台总体能力地图", 350, 20, 700, 40, True)
+    text(cells, "s1", "宏观视角：围绕自主水下任务，组织仿真、自治、上位机、观测、实验与真机部署能力", 330, 62, 760, 34)
+    rect(cells, "core", "自主水下任务平台\n任务执行 / 安全控制 / 数据闭环", 550, 365, 300, 90, "blue")
+    rect(cells, "sim", "仿真与环境子系统\n场景构建 / 传感器生成 / 执行器响应", 110, 150, 290, 78, "teal")
+    rect(cells, "autonomy", "自主决策与控制子系统\n状态估计 / 任务决策 / 运动控制", 555, 130, 290, 78, "green")
+    rect(cells, "operator", "人机协同子系统\n遥控接管 / 自主授权 / 急停处置", 1000, 150, 290, 78, "orange")
+    rect(cells, "obs", "可观测性子系统\n实时看板 / 运行日志 / 黑匣子记录", 1000, 555, 290, 78, "purple")
+    rect(cells, "experiment", "实验验证子系统\n场景编排 / 指标评估 / 对比验证", 555, 600, 290, 78, "yellow")
+    rect(cells, "deploy", "实物部署子系统\n分级试验 / 链路审计 / 安全回退", 110, 555, 290, 78, "red")
+    for spec in [
+        ("c1", "sim", "core", "虚拟世界与传感输入", False, None, "exitX=1;entryX=0;"),
+        ("c2", "autonomy", "core", "自主能力", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("c3", "operator", "core", "人工监督与授权", False, None, "exitX=0;entryX=1;"),
+        ("c4", "core", "obs", "运行证据", False, None, "exitX=1;entryX=0;"),
+        ("c5", "core", "experiment", "实验数据", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("c6", "core", "deploy", "工程迁移", False, None, "exitX=0;entryX=1;"),
+        ("c7", "experiment", "sim", "场景反哺", True, [(320, 705), (320, 260)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("c8", "obs", "operator", "态势反馈", True, [(1250, 330)], "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_system_capability_map", cells)
+
+
+def system_subsystem_organization():
+    cells = []
+    text(cells, "t1", "AUV 系统组织与子系统边界", 350, 20, 700, 40, True)
+    text(cells, "s1", "系统组织视角：强调职责边界、协作关系和从地面到水下平台的分工", 390, 62, 660, 34)
+    lane(cells, "ground", "地面与实验侧", 80, 130, 1240, 150, "orange")
+    lane(cells, "onboard", "艇载自治侧", 80, 335, 1240, 210, "blue")
+    lane(cells, "world", "环境与被控对象侧", 80, 610, 1240, 150, "teal")
+    for spec in [
+        ("g1", "任务设计\n航线 / 场景 / 目标", 75, 55, 220, 58, "yellow", "ground"),
+        ("g2", "操作监督\n授权 / 接管 / 急停", 370, 55, 220, 58, "orange", "ground"),
+        ("g3", "实验管理\n启动 / 录制 / 评估", 665, 55, 220, 58, "purple", "ground"),
+        ("g4", "可视化分析\n态势 / 图表 / 报告", 960, 55, 220, 58, "purple", "ground"),
+        ("o1", "通信接入\n上行感知 / 下行控制", 85, 70, 220, 62, "blue", "onboard"),
+        ("o2", "状态理解\n定位 / 健康 / 置信度", 375, 70, 220, 62, "green", "onboard"),
+        ("o3", "任务智能\n模式切换 / 行为选择", 665, 70, 220, 62, "yellow", "onboard"),
+        ("o4", "运动执行\n控制分配 / 安全限幅", 955, 70, 220, 62, "green", "onboard"),
+        ("o5", "安全治理\n权限仲裁 / 故障回退", 520, 150, 260, 50, "red", "onboard"),
+        ("w1", "虚拟海洋\n可重复场景 / 扰动注入", 150, 55, 260, 58, "teal", "world"),
+        ("w2", "真实 AUV\n传感器 / 执行器 / 载体动力学", 570, 55, 260, 58, "teal", "world"),
+        ("w3", "外部环境\n水流 / 地形 / 通信条件", 990, 55, 220, 58, "gray", "world"),
+    ]:
+        rect(cells, *spec)
+    for spec in [
+        ("s1", "g1", "o3", "任务意图", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;"),
+        ("s2", "g2", "o5", "控制权约束", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
+        ("s3", "g3", "o1", "运行编排", False, None, "exitX=0.35;exitY=1;entryX=0.5;entryY=0;"),
+        ("s4", "o1", "o2", "感知输入", False, None, "exitX=1;entryX=0;"),
+        ("s5", "o2", "o3", "态势理解", False, None, "exitX=1;entryX=0;"),
+        ("s6", "o3", "o4", "行动目标", False, None, "exitX=1;entryX=0;"),
+        ("s7", "o5", "o4", "安全约束", False, None, "exitX=1;entryX=0.5;"),
+        ("s8", "o4", "w2", "控制作用", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("s9", "w2", "o1", "传感反馈", True, [(260, 590)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("s10", "w1", "o1", "仿真替身", True, None, "exitX=0.5;exitY=0;entryX=0.35;entryY=1;"),
+        ("s11", "w3", "o2", "扰动与不确定性", True, None, "exitX=0.5;exitY=0;entryX=0.65;entryY=1;"),
+        ("s12", "o2", "g4", "观测证据", True, None, "exitX=0.35;exitY=0;entryX=0.5;entryY=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_system_subsystem_organization", cells)
+
+
+def autonomy_functional_loop():
+    cells = []
+    text(cells, "t1", "自主系统功能闭环", 390, 20, 620, 40, True)
+    text(cells, "s1", "微观系统视角：不展开代码实现，只描述单个自主单元内部的信息加工与安全闭环", 350, 62, 720, 34)
+    rect(cells, "env", "环境与艇体\n水流 / 地形 / 动力学", 560, 110, 280, 66, "teal")
+    rect(cells, "sense", "感知采集\n运动 / 姿态 / 深度 / 健康", 150, 300, 260, 66, "blue")
+    rect(cells, "estimate", "状态理解\n位置速度 / 置信度 / 风险", 560, 300, 280, 66, "green")
+    rect(cells, "decide", "任务决策\n目标选择 / 模式管理", 970, 300, 260, 66, "yellow")
+    rect(cells, "control", "运动控制\n跟踪 / 约束 / 平滑输出", 560, 510, 280, 66, "green")
+    rect(cells, "safety", "安全治理\n权限 / 限幅 / 回退 / 急停", 970, 510, 260, 66, "red")
+    rect(cells, "operator", "人工监督\n授权 / 接管 / 任务调整", 150, 510, 260, 66, "orange")
+    rect(cells, "evidence", "运行证据\n记录 / 回放 / 评估", 560, 700, 280, 58, "purple")
+    for spec in [
+        ("l1", "env", "sense", "传感观测", False, None, "exitX=0;entryX=0.5;entryY=0;"),
+        ("l2", "sense", "estimate", "信息融合", False, None, "exitX=1;entryX=0;"),
+        ("l3", "estimate", "decide", "态势输入", False, None, "exitX=1;entryX=0;"),
+        ("l4", "decide", "control", "行动目标", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0;"),
+        ("l5", "control", "env", "控制作用", False, [(455, 470), (455, 215)], "exitX=0.15;exitY=0;entryX=0.35;entryY=1;"),
+        ("l6", "operator", "safety", "授权与接管", False, None, "exitX=1;entryX=0;"),
+        ("l7", "safety", "control", "安全边界", False, None, "exitX=0;entryX=1;"),
+        ("l8", "estimate", "safety", "健康与风险", True, [(895, 405), (1110, 405)], "exitX=1;entryX=0.5;entryY=0;"),
+        ("l9", "control", "evidence", "执行记录", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("l10", "evidence", "operator", "复盘反馈", True, [(280, 740)], "exitX=0;entryX=0.5;entryY=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_system_autonomy_functional_loop", cells)
+
+
+def verification_to_deployment_ladder():
+    cells = []
+    text(cells, "t1", "从仿真验证到实物部署的系统演进", 320, 20, 760, 40, True)
+    text(cells, "s1", "系统生命周期视角：以风险递减和证据累积为主线，逐级释放自主能力", 365, 62, 700, 34)
+    lane(cells, "ladder", "能力释放路径", 70, 125, 1260, 330, "blue")
+    lane(cells, "evidence_lane", "每级必须累积的系统证据", 70, 520, 1260, 190, "purple")
+    for spec in [
+        ("p1", "算法级仿真\n验证基本可控", 45, 80, 170, 70, "green", "ladder"),
+        ("p2", "系统级仿真\n验证闭环协同", 250, 80, 170, 70, "teal", "ladder"),
+        ("p3", "协议级联调\n验证通信边界", 455, 80, 170, 70, "blue", "ladder"),
+        ("p4", "影子导航\n验证不夺权观测", 660, 80, 170, 70, "yellow", "ladder"),
+        ("p5", "单回路闭环\n验证小范围执行", 865, 80, 170, 70, "orange", "ladder"),
+        ("p6", "全自主试验\n验证任务完成", 1070, 80, 170, 70, "red", "ladder"),
+        ("g1", "模型一致性\n轨迹误差 / 稳定性", 45, 65, 170, 58, "green", "evidence_lane"),
+        ("g2", "闭环一致性\n状态 / 控制 / 延迟", 250, 65, 170, 58, "teal", "evidence_lane"),
+        ("g3", "链路一致性\n字节 / 时延 / 丢包", 455, 65, 170, 58, "blue", "evidence_lane"),
+        ("g4", "安全一致性\n影子输出 / 日志", 660, 65, 170, 58, "yellow", "evidence_lane"),
+        ("g5", "执行一致性\n极性 / 死区 / 响应", 865, 65, 170, 58, "orange", "evidence_lane"),
+        ("g6", "任务证据\n黑匣子 / 指标 / 回退", 1070, 65, 170, 58, "red", "evidence_lane"),
+    ]:
+        rect(cells, *spec)
+    for i in range(1, 6):
+        edge(cells, f"pe{i}", f"p{i}", f"p{i+1}", "风险受控后升级", False, None, "exitX=1;entryX=0;")
+        edge(cells, f"g{i}", f"p{i}", f"g{i}", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+    edge(cells, "g6edge", "p6", "g6", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+    rect(cells, "guard", "统一原则\n先观测、再接管、再释放自主；任何阶段保留回退通道", 360, 245, 620, 58, "gray", "ladder")
+    write("auv_system_verification_deployment_ladder", cells)
+
+
+def main() -> None:
+    code_layer_architecture()
+    runtime_dataflow()
+    ros2_node_topology()
+    safety_arbiter_deployment()
+    system_capability_map()
+    system_subsystem_organization()
+    autonomy_functional_loop()
+    verification_to_deployment_ladder()
+    for path in sorted(OUT.glob("*.drawio")):
+        print(path)
+
+
+if __name__ == "__main__":
+    main()

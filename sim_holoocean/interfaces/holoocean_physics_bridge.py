@@ -242,10 +242,11 @@ class HoloOceanPhysicsZenohBridge:
         gyro_ue = extract_gyro(state.get("IMUSensor", np.zeros(3)))
         dvl_ue = extract_body_velocity(state.get("DVLSensor", np.zeros(3)))
         depth_raw = extract_depth(state.get("DepthSensor", np.array([-pose[2, 3]])), pose[2, 3])
+        dvl_frame = str(state.get("DVLFrame", "body")).strip().lower()
 
         # 坐标转换：身体轴向量 UE4 → NED
         gyro_ned = body_vector_ue_to_ned(gyro_ue)
-        dvl_ned = body_vector_ue_to_ned(dvl_ue)
+        dvl_ned = dvl_ue.astype(float) if dvl_frame == "world" else body_vector_ue_to_ned(dvl_ue)
 
         # 加速度：IMU 的前 3 个分量
         accel_ue = imu_sensor[:3] if imu_sensor.size >= 3 else np.zeros(3, dtype=float)
@@ -343,6 +344,7 @@ class HoloOceanPhysicsZenohBridge:
             packets["dvl"] = {
                 **base,
                 KEY_VEL_NED: dvl_noisy.tolist(),
+                "measurement_frame": dvl_frame,
                 "vel_water_ned": vel_water_ned,
                 "current_magnitude": current_magnitude,
             }

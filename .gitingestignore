@@ -1,0 +1,10 @@
+# 用于LLM上下文gitingest的排除项
+docs_new/
+console_soft/auv_console_pyside6/
+scripts/real_deployment
+tests/
+logs/
+docs/extra
+docs/real_deployment
+foxglove_layout_project/
+docs/thesis

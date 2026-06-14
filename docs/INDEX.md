@@ -45,6 +45,7 @@
 
 > 路径：[thesis/INDEX.md](thesis/INDEX.md)（Phase 4 收口产物）
 
+- [paper/INDEX.md](thesis/paper/INDEX.md) — 毕设正文层：按 1–5 章组织背景、系统、估计、控制、实验讨论和缺口计划
 - [00_overview.md](thesis/00_overview.md) — 实验体系总览 + 5 大创新点对照表
 - [01_baseline_repro_log.md](thesis/01_baseline_repro_log.md) — baseline 复现日志（§5.4）
 - [02_es_ekf_validation.md](thesis/02_es_ekf_validation.md) — ES-EKF 15 维状态 + 6 通道观测验证（§3.4 / §5.4）
@@ -53,6 +54,8 @@
 - [05_scenario_recipes.md](thesis/05_scenario_recipes.md) — 9 个 yaml 场景配方与三维强度覆盖（§5.2）
 - [06_jetson_deploy_emulated.md](thesis/06_jetson_deploy_emulated.md) — Jetson 算力部署 emulated 文档（§5.5）
 - [07_drift_log_and_known_issues.md](thesis/07_drift_log_and_known_issues.md) — 文档/代码偏差闭环 + 已知问题（§5.6）
+
+`thesis/paper/` 面向论文正文写作，`thesis/` 根目录保留工程证据和实验依据，`experiment/` 保留单次运行日志。
 
 > 入口与上下文：参见 Phase 4 计划 [thesis_experiment_phase4_consolidation_plan.md](../.trae/documents/thesis_experiment_phase4_consolidation_plan.md)。
 

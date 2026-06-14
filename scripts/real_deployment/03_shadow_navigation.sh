@@ -39,6 +39,7 @@ DURATION_S="${RD_DURATION_S:-60}"
 STACK_LOG="${RD_RUN_DIR}/stack.log"
 DIFF_LOG="${RD_RUN_DIR}/shadow_diff.log"
 DIFF_CSV="${RD_RUN_DIR}/shadow_diff.csv"
+BRAIN_PARAMS_FILE="$(rd_brain_params_file)"
 
 # 1) 后台启动 mock AMD（仅 mock 目标）+ 日志接收
 rd_start_log_receiver_bg
@@ -47,11 +48,12 @@ rd_start_mock_amd_bg
 # 2) 启动 stack with arbiter profile, 通过 launch 参数显式覆盖 passive_mode=true
 #    （不修改 launch 默认值, 仅在本 shell 内传 ros2 launch 参数）
 if [[ "$RD_DRY_RUN" == "true" ]]; then
-  rd_log "  [dry-run] bash scripts/start_lin_brain.sh stack --arbiter-profile passive_mode:=true"
+  rd_log "  [dry-run] bash scripts/start_lin_brain.sh stack --arbiter-profile params_file:=${BRAIN_PARAMS_FILE} passive_mode:=true"
 else
-  rd_log "step: launching stack (passive_mode:=true, duration ${DURATION_S}s)"
+  rd_log "step: launching stack (passive_mode:=true, params=${BRAIN_PARAMS_FILE}, duration ${DURATION_S}s)"
   ( cd "$RD_ROOT_DIR" && \
     timeout "${DURATION_S}" bash scripts/start_lin_brain.sh stack --arbiter-profile \
+      "params_file:=${BRAIN_PARAMS_FILE}" \
       passive_mode:=true \
     > "$STACK_LOG" 2>&1 ) &
   rd_track_bg_pid "$!"

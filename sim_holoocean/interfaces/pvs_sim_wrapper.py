@@ -38,11 +38,14 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PVS_ROOT = PROJECT_ROOT.parent / "PythonVehicleSimulator-master" / "src"
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 if str(PVS_ROOT) not in sys.path:
     sys.path.insert(0, str(PVS_ROOT))
 
 from python_vehicle_simulator.lib.gnc import Rzyx, attitudeEuler
 from python_vehicle_simulator.vehicles.remus100 import remus100
+from common.sensor_extrinsics import base_velocity_to_sensor, load_extrinsics_map
 from ocean_current_model import OceanCurrentModel
 
 
@@ -80,6 +83,11 @@ def _build_pose_matrix_ue(position_ned: np.ndarray, rpy_ned: np.ndarray) -> np.n
     position_ned = np.asarray(position_ned, dtype=float).reshape(3)
     pose[:3, 3] = np.array([position_ned[0], position_ned[1], -position_ned[2]], dtype=float)
     return pose
+
+
+def _body_ned_vector_to_ue(vec_ned_body: np.ndarray) -> np.ndarray:
+    vec = np.asarray(vec_ned_body, dtype=float).reshape(3)
+    return np.array([vec[0], vec[1], -vec[2]], dtype=float)
 
 
 
@@ -199,6 +207,13 @@ class PVSSimWrapper:
         env_cfg = self.config.get("environment", {}).get("current", {})
         self.ocean_current = OceanCurrentModel(env_cfg, dt=self.dt) if env_cfg.get("enabled", False) else None
         self._sim_time = 0.0
+        self.sensor_extrinsics_truth = load_extrinsics_map(self.config.get("sensor_extrinsics_truth", {}) or {})
+        self.imu_truth_extrinsic = self.sensor_extrinsics_truth["imu"]
+        self.dvl_truth_extrinsic = self.sensor_extrinsics_truth["dvl"]
+        self.depth_truth_extrinsic = self.sensor_extrinsics_truth["depth"]
+        self.dvl_measurement_frame = str(
+            self.config.get("perception", {}).get("dvl_measurement_frame", "world")
+        ).strip().lower()
 
         # ────────────────────────────────────────
         # 运行时状态（初始化为空，待 open()）
@@ -429,9 +444,11 @@ class PVSSimWrapper:
         # 计算加速度
         accel_ned = (self.nu[:3] - self.prev_nu[:3]) / max(self.dt, 1e-6)
         gyro_ned = self.nu[3:6].copy()
-        # 坐标系转换：NED → UE4（身体）
-        accel_ue = np.array([accel_ned[0], accel_ned[1], -accel_ned[2]], dtype=float)
-        gyro_ue = np.array([gyro_ned[0], gyro_ned[1], -gyro_ned[2]], dtype=float)
+        accel_sensor = self.imu_truth_extrinsic.rotation_b_to_s @ accel_ned
+        gyro_sensor = self.imu_truth_extrinsic.rotation_b_to_s @ gyro_ned
+        # 坐标系转换：NED body/sensor → UE4 body/sensor
+        accel_ue = _body_ned_vector_to_ue(accel_sensor)
+        gyro_ue = _body_ned_vector_to_ue(gyro_sensor)
         
         # DVL速度转换：从body frame到world NED frame
         # nu[0:3]是body系速度[u, v, w]，需要使用旋转矩阵转换到world系
@@ -443,14 +460,22 @@ class PVSSimWrapper:
         R_body_to_ned = R_ned_to_body.T
         vel_body = np.array([self.nu[0], self.nu[1], self.nu[2]], dtype=float)
         vel_world_ned = R_body_to_ned @ vel_body
+        if self.dvl_measurement_frame == "sensor":
+            dvl_sensor = base_velocity_to_sensor(vel_body, gyro_ned, self.dvl_truth_extrinsic)
+            dvl_output = _body_ned_vector_to_ue(dvl_sensor)
+        else:
+            dvl_output = vel_world_ned
+        depth_sensor_ned = position_ned + self._build_rotation_matrix_ned() @ self.depth_truth_extrinsic.translation_b_m
+        depth_m = float(depth_sensor_ned[2])
         # 注意：NED的Z轴向下为正，vel_world_ned[2]应该为正表示下沉
         
         return {
             self.agent_name: {
                 "PoseSensor": pose,
-                "DVLSensor": vel_world_ned,  # 发布world NED系速度
+                "DVLSensor": dvl_output,
+                "DVLFrame": self.dvl_measurement_frame,
                 "IMUSensor": np.concatenate([accel_ue, gyro_ue]),
-                "DepthSensor": np.array([float(position_ned[2])], dtype=float),
+                "DepthSensor": np.array([float(depth_m)], dtype=float),
             }
         }
 

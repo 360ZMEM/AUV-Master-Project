@@ -55,7 +55,61 @@ from mock_amd_server import MockAmdUdpServer
 def load_config(path):
     """从 YAML 文件加载配置。"""
     with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        cfg = yaml.safe_load(f)
+    return apply_scenario_overrides(cfg)
+
+
+def _deep_merge(base, override):
+    for key, value in (override or {}).items():
+        if isinstance(value, dict) and isinstance(base.get(key), dict):
+            _deep_merge(base[key], value)
+        else:
+            base[key] = value
+    return base
+
+
+def apply_scenario_overrides(cfg):
+    scenario_file = os.environ.get("AUV_SCENARIO_FILE")
+    if not scenario_file:
+        return cfg
+    path = Path(scenario_file)
+    if not path.exists():
+        print(f"[scenario][WARN] file not found: {path}")
+        return cfg
+    with path.open("r", encoding="utf-8") as handle:
+        scenario = yaml.safe_load(handle) or {}
+
+    if scenario.get("sim_backend"):
+        cfg.setdefault("simulation", {})["backend"] = scenario["sim_backend"]
+    if "perception" in scenario:
+        _deep_merge(cfg.setdefault("perception", {}), scenario.get("perception", {}) or {})
+    if "sensor_extrinsics_truth" in scenario:
+        cfg["sensor_extrinsics_truth"] = scenario.get("sensor_extrinsics_truth", {}) or {}
+    if "flow" in scenario:
+        speed = float((scenario.get("flow", {}) or {}).get("current_speed_mps", 0.0))
+        current_cfg = cfg.setdefault("environment", {}).setdefault("current", {})
+        current_cfg["enabled"] = abs(speed) > 0.0
+        current_cfg["vector_ned"] = [speed, 0.0, 0.0]
+    if "chaos" in scenario:
+        chaos = scenario.get("chaos", {}) or {}
+        mock_chaos = cfg.setdefault("mock_amd", {}).setdefault("chaos", {})
+        mock_chaos["enabled"] = bool(chaos.get("enabled", False))
+        mock_chaos["packet_loss_pct"] = 100.0 * float(chaos.get("packet_loss_prob", 0.0) or 0.0)
+        dvl_freeze = chaos.get("dvl_freeze", {}) or {}
+        mock_chaos["dvl_freeze_enabled"] = bool(dvl_freeze.get("enabled", False))
+        window = dvl_freeze.get("freeze_window_s", [30.0, 60.0])
+        mock_chaos["dvl_freeze_after_s"] = float(window[0] if isinstance(window, list) and window else 30.0)
+        imu_drift = chaos.get("imu_drift", {}) or {}
+        mock_chaos["imu_drift_enabled"] = bool(imu_drift.get("enabled", False))
+        mock_chaos["imu_drift_rate_deg_per_s"] = float(imu_drift.get("bias_rate", 0.0) or 0.0)
+        depth_spike = chaos.get("depth_spike", {}) or {}
+        mock_chaos["depth_spike_enabled"] = bool(depth_spike.get("rate_hz", 0.0) or depth_spike.get("enabled", False))
+        mock_chaos["depth_spike_m"] = float(depth_spike.get("amplitude_m", 0.0) or 0.0)
+        if chaos.get("mag_saturation_threshold_t") is not None:
+            mock_chaos["mag_saturation_enabled"] = True
+            mock_chaos["mag_saturation_threshold_t"] = float(chaos["mag_saturation_threshold_t"])
+    print(f"[scenario] applied {path}")
+    return cfg
 
 
 def parse_args():

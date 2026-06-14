@@ -75,6 +75,7 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    _bench.ensure_runtime_dependencies()
 
     print(f"[uncertainty] reading {args.input}")
     imu, dvl, depth, _truth = _bench.read_mcap_sensor_data(

@@ -148,12 +148,7 @@ class AUVControllerNode(Node):
 
         # 初始化混合控制器
         self._pid_controller = PIDController(ctrl_cfg, lim_cfg, mapper_cfg)
-        # MPC 参数位于 params.yaml 顶层（mpc/mpc_model/mpc_weights/mpc_constraints），
-        # 不能只传 cfg["control"]，否则 ROS 仿真环境会退回 MPC 默认值。
-        mpc_ctrl_cfg = dict(ctrl_cfg)
-        for key in ('mpc', 'mpc_model', 'mpc_weights', 'mpc_constraints'):
-            mpc_ctrl_cfg[key] = cfg.get(key, {})
-        self._mpc_controller = MPCController(mpc_ctrl_cfg, lim_cfg, mapper_cfg)
+        self._mpc_controller = MPCController(ctrl_cfg, lim_cfg, mapper_cfg)
         self._active_controller: BaseController = self._pid_controller
         self._use_mpc = bool(self.get_parameter('use_mpc').value)
         if self._use_mpc:
@@ -519,25 +514,18 @@ class AUVControllerNode(Node):
             math.cos(float(sp.target_heading_rad) - yaw),
         )
 
-        # ES-EKF/Odometry 使用 ROS/ENU 风格 z（下潜为负），而 MPC/PVS
-        # 制导模型使用 NED 深度（下潜为正）。控制状态在这里统一成
-        # z/depth 正向下，w 正向下，避免 MPC x0[2] 与 target_depth_m 符号混用。
-        depth_ned = float(-st.pose.pose.position.z)
-        w_ned = float(-st.twist.twist.linear.z)
-
         state = {
             'roll': roll,
             'pitch': pitch,
             'yaw': yaw,
             'x': float(st.pose.pose.position.x),
             'y': float(st.pose.pose.position.y),
-            'z': depth_ned,
-            'z_ros': float(st.pose.pose.position.z),
-            'depth': depth_ned,
-            'depth_sensor': depth_ned,
+            'z': float(st.pose.pose.position.z),
+            'depth': float(-st.pose.pose.position.z),
+            'depth_sensor': float(-st.pose.pose.position.z),
             'u': float(st.twist.twist.linear.x),
             'v': float(st.twist.twist.linear.y),
-            'w': w_ned,
+            'w': float(st.twist.twist.linear.z),
             'p': p_rate,
             'q': q_rate,
             'r': r_rate,
@@ -589,10 +577,7 @@ class AUVControllerNode(Node):
             mpc_msg.top_fin_deg = float(ctrl_output.top_fin_deg or 0.0)
             mpc_msg.left_fin_deg = float(ctrl_output.left_fin_deg or 0.0)
             mpc_msg.bottom_fin_deg = float(ctrl_output.bottom_fin_deg or 0.0)
-            guidance_depth = ctrl_output.guidance_depth
-            if guidance_depth is None:
-                guidance_depth = sp.target_depth_m
-            mpc_msg.target_depth_m = float(guidance_depth)
+            mpc_msg.target_depth_m = float(sp.target_depth_m)
             mpc_msg.work_instruction = work_instruction
             mpc_msg.note = str(ctrl_output.debug.get('note', ''))
             
@@ -625,9 +610,14 @@ class AUVControllerNode(Node):
         self.latest_debug_payload = {
             'mode': 'MPC' if self._use_mpc else 'PID',
             'control_mode_byte': self._control_mode_byte,
+            'controller_type': ctrl_output.debug.get('controller_type', 'MPC' if self._use_mpc else 'PID'),
+            'solver_status': ctrl_output.debug.get('solver_status', ''),
+            'solve_time_ms': ctrl_output.debug.get('solve_time_ms', None),
+            'total_compute_ms': ctrl_output.debug.get('total_compute_ms', None),
+            'fallback_reason': ctrl_output.debug.get('fallback_reason', ''),
             'thrust_cmd': ctrl_output.thrust_percent,
             'guidance_heading': smoothed_heading,
-            'guidance_depth': ctrl_output.guidance_depth,
+            'guidance_depth': setpoint.get('target_depth_m', 0.0),
             'rate_source': rate_source,
             KEY_STATE_SOURCE: state_source.value,
             'state_source_requested': StateEstimateSource.RAW_DR.value if self.bypass_ekf else StateEstimateSource.FILTERED.value,

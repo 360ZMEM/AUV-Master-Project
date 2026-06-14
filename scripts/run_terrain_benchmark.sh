@@ -203,8 +203,6 @@ run_phase() {
     --bridge-cfg "$TERRAIN_BRIDGE_CFG" \
     --arbiter-profile \
     --auto-activate \
-    --lean-bag-visual \
-    --lean-bag-visual-rate 1.0 \
     --duration "$DURATION" \
     --record-bag \
     2>&1 | tee "$OUTPUT_BASE/${label}_log.txt" || true

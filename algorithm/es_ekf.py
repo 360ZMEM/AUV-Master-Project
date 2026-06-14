@@ -1,5 +1,12 @@
 import numpy as np
 
+from common.sensor_extrinsics import (
+    base_velocity_to_sensor,
+    depth_at_sensor,
+    load_extrinsics_map,
+    sensor_velocity_to_base,
+)
+
 
 def _skew(v):
     """构造三维向量的反对称矩阵，用于叉乘线性化。"""
@@ -134,6 +141,12 @@ class ES_EKF:
         self.mag_lever_arm_b = np.array(
             cfg.get("mag_lever_arm_b", [0.0, 0.0, 0.0]), dtype=float
         )
+        self.sensor_extrinsics = load_extrinsics_map(cfg.get("sensor_extrinsics", {}) or {})
+        self.imu_extrinsic = self.sensor_extrinsics["imu"]
+        self.dvl_extrinsic = self.sensor_extrinsics["dvl"]
+        self.depth_extrinsic = self.sensor_extrinsics["depth"]
+        self.mag_extrinsic = self.sensor_extrinsics["mag"]
+        self._last_gyro_body = np.zeros(3, dtype=float)
 
         # NIS sliding-window + adaptive R (论文 §3.4.1)
         # nis_window_size=0 ⇒ disable window (no adaptive R, history still recorded if size>0)
@@ -337,6 +350,7 @@ class ES_EKF:
         dt = float(dt)
         acc_m = np.asarray(imu_acc_body, dtype=float)
         gyr_m = np.asarray(imu_gyro_body, dtype=float)
+        self._last_gyro_body = gyr_m.copy()
 
         omega = gyr_m - self.b_g
         dq = small_angle_quat(omega * dt)
@@ -435,8 +449,32 @@ class ES_EKF:
         h = r_nb.T @ self.v
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = r_nb.T
-        h_mat[:, 6:9] = -r_nb.T @ _skew(self.v)
+        h_mat[:, 6:9] = r_nb.T @ _skew(self.v)
         self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3), source="dvl_body")
+
+    def correct_dvl_sensor(self, dvl_vel_sensor, gyro_body=None):
+        """使用 DVL 传感器坐标系速度修正状态，包含旋转外参和杆臂项。"""
+        z = np.asarray(dvl_vel_sensor, dtype=float).reshape(3)
+        r_nb = quat_to_rotmat(self.q)
+        gyro = np.asarray(
+            self._last_gyro_body if gyro_body is None else gyro_body,
+            dtype=float,
+        ).reshape(3)
+        if not self._initialized and self.auto_init and self.use_first_dvl_for_init:
+            v_base_b = sensor_velocity_to_base(z, gyro, self.dvl_extrinsic)
+            self._auto_initialize(pos=self._init_pos.copy(), vel=r_nb @ v_base_b, source="dvl_sensor")
+        v_base_b = r_nb.T @ self.v
+        h = base_velocity_to_sensor(v_base_b, gyro, self.dvl_extrinsic)
+        h_mat = np.zeros((3, 15), dtype=float)
+        h_mat[:, 3:6] = self.dvl_extrinsic.rotation_b_to_s @ r_nb.T
+        h_mat[:, 6:9] = self.dvl_extrinsic.rotation_b_to_s @ (r_nb.T @ _skew(self.v))
+        self._correct(
+            z,
+            h,
+            h_mat,
+            (self.sigma_dvl ** 2) * np.eye(3),
+            source="dvl_sensor",
+        )
 
     def correct_dvl_world(self, dvl_vel_world):
         """使用世界系 DVL 速度修正滤波状态。"""
@@ -473,7 +511,7 @@ class ES_EKF:
         h = r_nb.T @ self.v
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = r_nb.T
-        h_mat[:, 6:9] = -r_nb.T @ _skew(self.v)
+        h_mat[:, 6:9] = r_nb.T @ _skew(self.v)
         self._correct(z, h, h_mat, r, source="dvl_body_ts")
 
     def correct_depth(self, depth_m):
@@ -484,6 +522,24 @@ class ES_EKF:
         h_mat = np.zeros((1, 15), dtype=float)
         h_mat[0, 2] = -1.0
         self._correct(np.array([z], dtype=float), np.array([h], dtype=float), h_mat, np.array([[self.sigma_depth ** 2]], dtype=float), source="depth")
+
+    def correct_depth_sensor(self, depth_m):
+        """使用安装在非零杆臂位置的深度传感器观测修正状态。"""
+        self._try_auto_init_from_depth(depth_m)
+        z = float(depth_m)
+        r_nb = quat_to_rotmat(self.q)
+        h = depth_at_sensor(self.p, r_nb, self.depth_extrinsic)
+        h_mat = np.zeros((1, 15), dtype=float)
+        h_mat[0, 0:3] = np.array([0.0, 0.0, -1.0], dtype=float)
+        lever_world = r_nb @ self.depth_extrinsic.translation_b_m
+        h_mat[0, 6:9] = np.array([0.0, 0.0, 1.0], dtype=float) @ _skew(lever_world)
+        self._correct(
+            np.array([z], dtype=float),
+            np.array([h], dtype=float),
+            h_mat,
+            np.array([[self.sigma_depth ** 2]], dtype=float),
+            source="depth_sensor",
+        )
 
     def correct_gps(self, gps_xy):
         """使用 GPS 平面位置观测修正滤波状态。"""

@@ -3,6 +3,9 @@
 **日期**: 2026-06-08  
 **目的**: 以新手视角按照文档契约执行完整流程，验证命令正确性并发现潜在问题。
 
+**阅读边界**: 本文件是 2026-06-08 的端到端执行日志，保留当时命令、路径偏差和问题定位。它不是最终论文结果表；正文引用请优先使用 `docs/thesis/paper/05_experiments_and_discussion.md` 与 `docs/thesis/paper/experiment_gap_and_next_plan.md`。
+
+
 ---
 
 ## Step 1: 编译项目

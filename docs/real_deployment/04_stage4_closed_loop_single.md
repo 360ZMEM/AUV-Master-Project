@@ -70,7 +70,7 @@ shell 在内部做：
 | Symptom | Likely Cause | Fix Step |
 |---------|--------------|----------|
 | AUV 不动 | AutonomyGuard 没解锁 | 看 `auto_activate.log`；确认 0xEE 心跳进入 [auv_bridge](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_bridge) |
-| 上下振荡 ±0.5 m | AMD 端本地 PID 太硬 | 在 Jetson 端降低 `Set_Course` 变化率（通过 `params.protocol_udp_arbiter.yaml` 的 `controller.depth.rate_limit`）|
+| 上下振荡 ±0.5 m | AMD 端本地 PID 太硬 | 在 Jetson 端降低 `Set_Course` 变化率；按 [07_param_diff_sim_vs_real.md](07_param_diff_sim_vs_real.md) §7 找到当前 target 的 brain params yaml 后修改 |
 | 响应慢半拍（>1s） | bridge 缓存太长 | 看 [bridge_node.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_bridge/auv_bridge/bridge_node.py) 的 `qos history depth` |
 | 直接漂走 | 极性错（S2 没做） | 立刻 Ctrl+C / kill_switch；回到 S2 |
 | stack 起来后立刻 ESTOP | guard_min_total_voltage_v 不匹配电池 | 看 `08_real_hardware_sop.md` Step 5 电压阈值 |
@@ -82,7 +82,7 @@ shell 在内部做：
 1. **kp 减半优先**：振荡 → kp 减半，复跑 30s；
 2. **再加 ki**：稳态误差 → ki 加 25%；
 3. **kd 不动**：除非有明显高频抖；
-4. 只动 [params.protocol_udp_arbiter.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/params.protocol_udp_arbiter.yaml) 的 `controller.{depth,yaw,speed}.{kp,ki,kd}`；不要动算法层。
+4. 只动当前 target 的 brain params yaml（映射见 [07_param_diff_sim_vs_real.md](07_param_diff_sim_vs_real.md) §7）的 `controller.{depth,yaw,speed}.{kp,ki,kd}`；不要动算法层。
 5. 完成后**回到 S3 重跑一次**，确认新参数没让 shadow RMSE 退化。
 
 参考既有调参表：[user-guide/08_real_hardware_sop.md](../user-guide/08_real_hardware_sop.md) Step 2 "控制器参数切换"。

@@ -37,12 +37,13 @@ rd_assert_prev_stage_done "S4_closed_loop_single"
 
 DURATION_S="${RD_DURATION_S:-60}"
 EXP_LOG="${RD_RUN_DIR}/experiment.log"
+BRAIN_PARAMS_FILE="$(rd_brain_params_file)"
 
 case "$RD_TARGET" in
   mock)
     # mock 路径：复用 start_experiment.sh —— 它已包含 PVS sim + brain stack + 录 bag
     if [[ "$RD_DRY_RUN" == "true" ]]; then
-      rd_log "  [dry-run] bash scripts/start_experiment.sh --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --auto-activate --duration ${DURATION_S}"
+      rd_log "  [dry-run] bash scripts/start_experiment.sh --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --brain-arg params_file:=${BRAIN_PARAMS_FILE} --auto-activate --duration ${DURATION_S}"
     else
       rd_log "step: start_experiment.sh (mock, ${DURATION_S}s)"
       ( cd "$RD_ROOT_DIR" && \
@@ -50,6 +51,7 @@ case "$RD_TARGET" in
           --sim-backend pvs \
           --bridge-backend protocol_udp \
           --arbiter-profile \
+          --brain-arg "params_file:=${BRAIN_PARAMS_FILE}" \
           --auto-activate \
           --duration "${DURATION_S}" ) > "$EXP_LOG" 2>&1
     fi
@@ -58,11 +60,12 @@ case "$RD_TARGET" in
   vxsim|real)
     rd_start_log_receiver_bg
     if [[ "$RD_DRY_RUN" == "true" ]]; then
-      rd_log "  [dry-run] start_lin_brain.sh stack --arbiter-profile + auto_activate_emu + ros2 bag"
+      rd_log "  [dry-run] start_lin_brain.sh stack --arbiter-profile params_file:=${BRAIN_PARAMS_FILE} + auto_activate_emu + ros2 bag"
     else
-      rd_log "step: launching stack (no sim, real/vxsim AMD on the wire)"
+      rd_log "step: launching stack (params=${BRAIN_PARAMS_FILE}, no sim, real/vxsim AMD on the wire)"
       ( cd "$RD_ROOT_DIR" && \
         timeout "${DURATION_S}" bash scripts/start_lin_brain.sh stack --arbiter-profile \
+          "params_file:=${BRAIN_PARAMS_FILE}" \
         > "${RD_RUN_DIR}/stack.log" 2>&1 ) &
       rd_track_bg_pid "$!"
       sleep 8

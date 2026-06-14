@@ -517,7 +517,8 @@ class MockAmdUdpServer:
 
         # DVL（多普勒速度测头）：身体坐标系前向速度
         dvl_ue = extract_body_velocity(state.get('DVLSensor', np.zeros(3)))
-        dvl_ned = body_vector_ue_to_ned(dvl_ue)  # 转换到 NED
+        dvl_frame = str(state.get('DVLFrame', 'body')).strip().lower()
+        dvl_ned = dvl_ue.astype(float) if dvl_frame == 'world' else body_vector_ue_to_ned(dvl_ue)
 
         # IMU 角速度提取
         gyro_ue = extract_gyro(state.get('IMUSensor', np.zeros(3)))
