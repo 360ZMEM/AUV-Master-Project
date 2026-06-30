@@ -38,7 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--main-result",
         type=Path,
-        default=PROJECT_ROOT / "results/control/terrain_following_20260610_175154",
+        default=PROJECT_ROOT / "results/control/terrain_following_20260619_222639",
         help="PID/MPC four-group terrain benchmark result directory.",
     )
     parser.add_argument(
@@ -58,6 +58,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=3.0,
         help="Target seabed clearance in meters.",
+    )
+    parser.add_argument(
+        "--warmup-skip-s",
+        type=float,
+        default=10.0,
+        help="Warm-up/dive transient to trim from t-z curves, consistent with summary statistics.",
     )
     parser.add_argument(
         "--terrain-config",
@@ -83,6 +89,19 @@ def fval(data: dict[str, str], key: str) -> float:
         return float(data.get(key, "nan"))
     except Exception:
         return math.nan
+
+
+def provenance_note(summaries: dict[str, dict[str, str]]) -> str:
+    """One-line data-provenance caption shared by the bar/safety figures."""
+    sources = sorted({(s.get("clearance_source", "") or "").strip() for s in summaries.values()})
+    sources = [s for s in sources if s]
+    pretty = {
+        "real_altitude": "real DVL altitude",
+        "terrain_cloud": "seabed point cloud",
+        "diag_constant_datum": "constant datum (legacy)",
+    }
+    label = ", ".join(pretty.get(s, s) for s in sources) if sources else "unknown"
+    return f"Clearance source: {label}; warm-up trimmed; truth = /auv/sensors/ground_truth"
 
 
 def read_digital_twin_config(path: Path) -> dict[str, float | int]:
@@ -172,6 +191,8 @@ def load_bag_for_phase(main_result: Path, phase: str) -> analyze_bag.BagData:
             analyze_bag.DEFAULT_SEABED_CLOUD_TOPIC,
             analyze_bag.DEFAULT_SEABED_CLOUD_THROTTLED_TOPIC,
         ),
+        altitude_topic=analyze_bag.DEFAULT_ALTITUDE_TOPIC,
+        controller_debug_topic="/auv/controller/debug",
         verbose=False,
     )
     analyze_bag.synthesize_diagnostics_from_odometry(data)
@@ -192,7 +213,15 @@ def plot_clearance_rmse(output_dir: Path, main_result: Path) -> None:
     fig, ax = plt.subplots(figsize=(7.2, 4.2))
     x = np.arange(len(labels))
     bars = ax.bar(x, rmse, color=colors, edgecolor="black", linewidth=0.7)
-    ax.axhline(0.1752, color="#2ca02c", linestyle="--", linewidth=1.2, label="PID terrain reference (0.175 m)")
+    pid_terrain_rmse = fval(summaries["pid_terrain"], "seabed_clearance_rmse_to_3m")
+    if math.isfinite(pid_terrain_rmse):
+        ax.axhline(
+            pid_terrain_rmse,
+            color="#2ca02c",
+            linestyle="--",
+            linewidth=1.2,
+            label=f"PID terrain reference ({pid_terrain_rmse:.3f} m)",
+        )
     ax.set_ylabel("Clearance RMSE to 3 m (m)")
     ax.set_title("Terrain-Following Clearance Error: PID/MPC x Baseline/Terrain")
     ax.set_xticks(x)
@@ -201,6 +230,7 @@ def plot_clearance_rmse(output_dir: Path, main_result: Path) -> None:
     for bar, value in zip(bars, rmse):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.03, f"{value:.3f}", ha="center", va="bottom", fontsize=9)
     ax.legend(frameon=False, loc="upper right")
+    fig.text(0.01, 0.005, provenance_note(summaries), fontsize=7.5, color="#555555", ha="left", va="bottom")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_clearance_rmse_pid_mpc")
     plt.close(fig)
@@ -228,8 +258,13 @@ def plot_clearance_safety(output_dir: Path, main_result: Path) -> None:
     ax.set_title("Clearance Distribution and Safety Margin")
     ax.set_xticks(x)
     ax.set_xticklabels(display)
-    ax.set_ylim(1.2, 5.2)
+    finite_upper = [m + s for m, s in zip(mean, std) if math.isfinite(m) and math.isfinite(s)]
+    finite_lower = [v for v in minv if math.isfinite(v)] + [1.5]
+    y_upper = max(finite_upper + [3.0]) + 0.6 if finite_upper else 5.2
+    y_lower = min(finite_lower) - 0.4
+    ax.set_ylim(y_lower, y_upper)
     ax.legend(frameon=False, ncol=2, loc="upper center")
+    fig.text(0.01, 0.005, provenance_note(summaries), fontsize=7.5, color="#555555", ha="left", va="bottom")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_clearance_safety_margin")
     plt.close(fig)
@@ -301,7 +336,11 @@ def plot_command_contract(output_dir: Path) -> None:
     plt.close(fig)
 
 
-def diagnostics_arrays(data: analyze_bag.BagData, target_clearance_m: float) -> dict[str, np.ndarray]:
+def diagnostics_arrays(
+    data: analyze_bag.BagData,
+    target_clearance_m: float,
+    warmup_skip_s: float = 0.0,
+) -> dict[str, np.ndarray]:
     diag = data.diagnostics
     if not diag.timestamps_ns:
         raise RuntimeError("No diagnostics samples available for t-z plotting.")
@@ -309,9 +348,31 @@ def diagnostics_arrays(data: analyze_bag.BagData, target_clearance_m: float) -> 
     t = analyze_bag.normalize_time_ns(diag.timestamps_ns, start_ns)
     depth = np.asarray(diag.depth_m, dtype=float)
     controller_target_depth = np.asarray(diag.target_depth_m, dtype=float)
-    clearance = np.asarray(diag.seabed_clearance_m, dtype=float)
+    # WP-D: clearance uses the P0-1 real-altitude / point-cloud口径 (resolve_clearance_series),
+    # NOT the localization constant-datum (seabed_depth_m=15.0 - depth) which forced a flat
+    # seabed and contradicted the 3D undulating surface. seabed_depth is derived as
+    # depth + real_clearance, so it now tracks the true terrain relief.
+    clearance, clearance_source = analyze_bag.resolve_clearance_series(data)
+    if clearance.shape[0] != depth.shape[0]:
+        clearance = np.asarray(diag.seabed_clearance_m, dtype=float)
+        clearance_source = "diag_constant_datum"
     seabed_depth = depth + clearance
     terrain_target_depth = seabed_depth - float(target_clearance_m)
+    # WP-D: trim warm-up/dive transient so the t-z curves share the same window
+    # as the summary statistics (compute_steady_state_mask, time mode).
+    mask = analyze_bag.compute_steady_state_mask(
+        diag,
+        warmup_skip_s=float(warmup_skip_s),
+        mode="time" if warmup_skip_s > 0.0 else "none",
+        target_clearance_m=float(target_clearance_m),
+    )
+    if mask.shape[0] == t.shape[0] and np.any(mask):
+        t = t[mask]
+        depth = depth[mask]
+        controller_target_depth = controller_target_depth[mask]
+        clearance = clearance[mask]
+        seabed_depth = seabed_depth[mask]
+        terrain_target_depth = terrain_target_depth[mask]
     return {
         "t": t,
         "depth": depth,
@@ -319,26 +380,35 @@ def diagnostics_arrays(data: analyze_bag.BagData, target_clearance_m: float) -> 
         "controller_target_depth": controller_target_depth,
         "clearance": clearance,
         "seabed_depth": seabed_depth,
+        "clearance_source": clearance_source,
     }
 
 
-def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: float) -> None:
+def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: float, warmup_skip_s: float = 0.0) -> None:
     plt = analyze_bag.plt
     phases = [("pid_terrain", "PID Terrain"), ("mpc_terrain", "MPC Terrain")]
     fig, axes = plt.subplots(2, 1, figsize=(8.0, 6.2), sharex=False)
     for ax, (phase, title) in zip(axes, phases):
-        arrays = diagnostics_arrays(load_bag_for_phase(main_result, phase), target_clearance_m)
+        arrays = diagnostics_arrays(load_bag_for_phase(main_result, phase), target_clearance_m, warmup_skip_s)
         t = arrays["t"]
-        ax.plot(t, arrays["seabed_depth"], color="#8c564b", linewidth=1.5, label="Seabed depth")
+        source_label = {
+            "real_altitude": "real DVL altitude",
+            "terrain_cloud": "seabed point cloud",
+            "diag_constant_datum": "constant datum (legacy)",
+        }.get(str(arrays.get("clearance_source", "")), str(arrays.get("clearance_source", "")))
+        ax.plot(t, arrays["seabed_depth"], color="#8c564b", linewidth=1.5, label=f"Seabed depth (depth + {source_label})")
         ax.plot(t, arrays["target_depth"], color="#2ca02c", linestyle="--", linewidth=1.4, label=f"Target depth (seabed - {target_clearance_m:.0f} m)")
         ax.plot(t, arrays["depth"], color="#1f77b4", linewidth=1.7, label="AUV depth")
         ax.fill_between(t, arrays["target_depth"] - 0.25, arrays["target_depth"] + 0.25, color="#2ca02c", alpha=0.12, label="+/-0.25 m target band")
-        ax.set_title(title)
+        ax.set_title(f"{title}  (clearance source: {source_label})")
         ax.set_ylabel("Depth positive down (m)")
         ax.invert_yaxis()
         ax.legend(frameon=False, loc="best")
     axes[-1].set_xlabel("Time (s)")
-    fig.suptitle("Terrain-Following t-z Tracking Curves", y=0.995, fontsize=14, fontweight="bold")
+    suptitle = "Terrain-Following t-z Tracking Curves"
+    if warmup_skip_s > 0.0:
+        suptitle += f" (warm-up {warmup_skip_s:.0f} s trimmed)"
+    fig.suptitle(suptitle, y=0.995, fontsize=14, fontweight="bold")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_tz_tracking_pid_mpc")
     plt.close(fig)
@@ -433,7 +503,7 @@ def main() -> None:
     plot_clearance_safety(args.output_dir, args.main_result)
     plot_ablation(args.output_dir, args.ablation_summary)
     plot_command_contract(args.output_dir)
-    plot_tz_tracking(args.output_dir, args.main_result, args.target_clearance_m)
+    plot_tz_tracking(args.output_dir, args.main_result, args.target_clearance_m, args.warmup_skip_s)
     plot_3d_terrain_trajectory(args.output_dir, args.main_result, args.terrain_config, args.target_clearance_m)
     print(args.output_dir)
 

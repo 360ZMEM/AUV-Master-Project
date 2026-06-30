@@ -1,8 +1,9 @@
 # 硕士论文实验体系 — 文档总览（thesis 板块）
 
 > **板块路径**：`docs/thesis/`
-> **定位**：把仓库内"通过仿真验证控制算法 / ES-EKF 正确性 / Jetson 部署可用性"全部成果整理为可直接服务于硕士论文 §1–§5 写作的文档族。
+> **定位（工程证据层 / 本树为"主"）**：把仓库内"通过仿真验证控制算法 / ES-EKF 正确性 / Jetson 部署可用性"全部成果整理为可直接服务于硕士论文 §1–§5 写作的文档族。
 > **写作模板**：参考 [docs/experiment/benchmark_test_log.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/experiment/benchmark_test_log.md) 的"新手 SOP + 真实日志 + 已知陷阱"风格。
+> **与 paper 树的主从关系（P2-b）**：本树（`docs/thesis/`）为**工程证据层（主，存放代码符号对照、真实数据、已知偏差）**；[docs/thesis/paper/INDEX.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/INDEX.md) 为**论文正文层（从，段落式叙述）**。写作先读 paper 树、查证回本树。
 
 ---
 
@@ -18,6 +19,10 @@
 | T6 | [05_scenario_recipes.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/05_scenario_recipes.md) | §5.2 | 9 个 scenario yaml 物理含义 + 覆盖矩阵 |
 | T7 | [06_jetson_deploy_emulated.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/06_jetson_deploy_emulated.md) | §5.5 | Jetson 仿真侧 CPU/MEM/IPOPT 时延 + 敏感性 |
 | T8 | [07_drift_log_and_known_issues.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/07_drift_log_and_known_issues.md) | 全文附录 | 文档偏差闭环 + 已知问题 + 未来工作 |
+| T9 | [08_terrain_following_pid_mpc_status.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/08_terrain_following_pid_mpc_status.md) | §5.5 控制 | 地形跟随 PID/MPC 状态 + §8 自洽闭环（datum 修复、真口径重跑、solve_time、WP-C、WP-E 公平口径、P1/P2 声明） |
+| T10 | [09_terrain_following_figures.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/09_terrain_following_figures.md) | §5.5 图像 | 地形跟随 6 图清单/caption + §0 真口径重生成更新（WP-D） |
+| T11 | [10_figure_review_and_offset_diagnosis.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/10_figure_review_and_offset_diagnosis.md) | §5.5 诊断 | 图像审查与轨迹偏移诊断 |
+| T12 | [11_transition_experiments_F1_F2_F3.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/11_transition_experiments_F1_F2_F3.md) | §2 / §3 | 三组过渡实验：F1 三相螺旋漏磁 / F2 标定敏感度 / F3 网络抖动边界 |
 
 ---
 
@@ -68,11 +73,18 @@
 | baseline 单次 RMSE/CEP50 | ✅ | [docs/experiment/benchmark_test_log.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/experiment/benchmark_test_log.md) |
 | MPC 三场景单次 | ✅ | 同上 |
 | BT vs FSM 单次 | ✅ | 同上 |
+| 地形跟随四相（真口径，n=1） | ✅ | `results/control/terrain_following_20260619_222639/`；T9 §8.2 |
+| 真 solve_time（系统级 + 微基准） | ✅ | T9 §8.3；`tools/mpc_solve_microbench.py` |
+| MPC x/y/yaw 公平口径 | ✅ | `results/control/mpc_xy_yaw_extreme/20260620_011831/`；T9 §8.7 |
+| F1 三相螺旋漏磁 | ✅ | `results/perception/helical_cable_magnetic_scan/20260620_013450/`；T12 |
+| F2 标定敏感度（3 seed） | ✅ | `results/es_ekf_extrinsics/20260620_012952/`；T12 |
+| F3 网络抖动边界（3 seed） | ✅ | `results/es_ekf_jitter_boundary/20260620_014529/`；T12 |
 | 多种子统计 (mean/std) | ⏳ smoke 待跑 | T3/T5 中标 TBD |
 | 多场景消融 (UA vs baseline) | ⏳ smoke 待跑 | T5 中标 TBD |
 | 参数敏感性 | ⏳ smoke 待跑 | T7 中标 TBD |
 | Jetson IPOPT 时延 | ⏳ 重跑 5 min | T7 中标 TBD |
 | EKF P 时序图 | ⏳ 离线后处理 | T4 中标 TBD |
 | NIS 时序+卡方阈值带 | ⏳ 离线后处理 | T4 中标 TBD |
+| 地形跟随多次重复（≥3，统计置信） | ⏳ 待补（当前 n=1） | T9 §8.2 诚实边界 |
 
 ⏳ 标记的项可由后续会话或外部环境跑数据后回填到对应 md，骨架已就绪。

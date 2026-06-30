@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import math
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -51,10 +52,12 @@ read_ros2_messages = None
 
 
 DEFAULT_ESTIMATED_TOPIC = "/auv/state/filtered"
+# P0-4: 四相统一真值源——优先 /auv/sensors/ground_truth（全相均存在、采样率最高），
+# 其后回退 truth_marker / state/truth，消除 baseline 相与 terrain 相 RMSE 口径不齐。
 DEFAULT_TRUTH_TOPICS = (
-    "/auv/state/truth",
-    "/auv/visual/truth_marker",
     "/auv/sensors/ground_truth",
+    "/auv/visual/truth_marker",
+    "/auv/state/truth",
 )
 DEFAULT_BT_STATUS_TOPIC = "/auv/bt_status"
 DEFAULT_DIAGNOSTICS_TOPIC = "/auv/diagnostics"
@@ -62,6 +65,7 @@ DEFAULT_MAGNETIC_TOPIC = "/auv/sensors/magnetic"
 DEFAULT_CABLE_MARKER_TOPIC = "/auv/visual/cable_marker"
 DEFAULT_SEABED_CLOUD_TOPIC = "/auv/visual/seabed_cloud"
 DEFAULT_SEABED_CLOUD_THROTTLED_TOPIC = "/auv/visual/seabed_cloud_throttled"
+DEFAULT_ALTITUDE_TOPIC = "/auv/sensors/altitude"
 
 
 def ensure_runtime_dependencies() -> None:
@@ -205,9 +209,13 @@ class BagData:
     bt_status: StringSeries = field(default_factory=StringSeries)
     diagnostics: DiagnosticsSeries = field(default_factory=DiagnosticsSeries)
     magnetic: ScalarSeries = field(default_factory=ScalarSeries)
+    altitude: ScalarSeries = field(default_factory=ScalarSeries)
+    solve_time: ScalarSeries = field(default_factory=ScalarSeries)
+    solve_status: StringSeries = field(default_factory=StringSeries)
     cable_points_xyz: np.ndarray | None = None
     terrain_points_xyz: np.ndarray | None = None
     truth_topic_used: str | None = None
+    solve_time_source: str | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -266,6 +274,16 @@ def parse_args() -> argparse.Namespace:
         help="Magnetic field vector topic.",
     )
     parser.add_argument(
+        "--topic-altitude",
+        default=DEFAULT_ALTITUDE_TOPIC,
+        help="DVL altitude (true seabed clearance) topic (std_msgs/Float32).",
+    )
+    parser.add_argument(
+        "--topic-controller-debug",
+        default="/auv/controller/debug",
+        help="Controller debug JSON String topic (carries solve_time_ms).",
+    )
+    parser.add_argument(
         "--allow-missing-truth",
         action="store_true",
         help="If set, skip the trajectory comparison figure when no truth source is available.",
@@ -274,6 +292,36 @@ def parse_args() -> argparse.Namespace:
         "--stats-only",
         action="store_true",
         help="Export statistics tables without generating figures.",
+    )
+    parser.add_argument(
+        "--warmup-skip-s",
+        type=float,
+        default=10.0,
+        help=(
+            "Skip the first N seconds of diagnostics (dive/warm-up transient) "
+            "before computing clearance/depth/speed statistics. Set 0 to disable."
+        ),
+    )
+    parser.add_argument(
+        "--warmup-mode",
+        choices=("time", "reach_target", "none"),
+        default="time",
+        help=(
+            "Steady-state selection: 'time' skips the first --warmup-skip-s seconds; "
+            "'reach_target' additionally waits until the AUV first settles near the "
+            "target clearance; 'none' keeps the full bag (legacy behaviour)."
+        ),
+    )
+    parser.add_argument(
+        "--control-mode",
+        choices=("auto", "baseline", "terrain"),
+        default="auto",
+        help=(
+            "Depth-control mode for metric semantics: 'terrain' (altitude-follow) "
+            "marks depth_error_rmse_m as N/A (it tracks clearance, not a fixed "
+            "depth); 'baseline' keeps depth_error as the headline; 'auto' keeps "
+            "the legacy depth_error headline."
+        ),
     )
     parser.add_argument(
         "--verbose",
@@ -413,6 +461,14 @@ def extract_pointcloud_xyz(msg) -> np.ndarray:
     return np.asarray(points[:, indices], dtype=float)
 
 
+def parse_json_payload(payload: str) -> dict:
+    try:
+        parsed = json.loads(payload)
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
 def parse_bt_markdown(markdown_text: str) -> str:
     for line in markdown_text.splitlines():
         stripped = line.strip()
@@ -433,6 +489,8 @@ def read_bag_data(
     magnetic_topic: str,
     cable_topic: str,
     terrain_topics: Sequence[str],
+    altitude_topic: str,
+    controller_debug_topic: str,
     verbose: bool,
 ) -> BagData:
     topics_to_read = {
@@ -441,10 +499,13 @@ def read_bag_data(
         diagnostics_topic,
         magnetic_topic,
         cable_topic,
+        altitude_topic,
+        controller_debug_topic,
         *terrain_topics,
         *truth_topics,
     }
     data = BagData()
+    truth_by_topic: dict[str, PositionSeries] = {topic: PositionSeries() for topic in truth_topics}
 
     for chunk in chunks:
         for decoded in read_ros2_messages(str(chunk), topics=topics_to_read):
@@ -457,11 +518,9 @@ def read_bag_data(
                 data.estimated.append(timestamp_ns, x, y, z)
                 continue
 
-            if topic in truth_topics:
+            if topic in truth_by_topic:
                 x, y, z = extract_xyz_from_message(msg)
-                data.truth.append(timestamp_ns, x, y, z)
-                if data.truth_topic_used is None:
-                    data.truth_topic_used = topic
+                truth_by_topic[topic].append(timestamp_ns, x, y, z)
                 continue
 
             if topic == bt_status_topic:
@@ -508,6 +567,29 @@ def read_bag_data(
                 data.magnetic.append(timestamp_ns, magnitude)
                 continue
 
+            if topic == altitude_topic:
+                value = getattr(msg, "data", None)
+                if value is not None:
+                    data.altitude.append(timestamp_ns, float(value))
+                continue
+
+            if topic == controller_debug_topic:
+                payload = parse_json_payload(str(getattr(msg, "data", "")))
+                solve_time = payload.get("solve_time_ms")
+                if solve_time is not None:
+                    try:
+                        data.solve_time.append(timestamp_ns, float(solve_time))
+                    except (TypeError, ValueError):
+                        pass
+                status = payload.get("solver_status")
+                if status:
+                    data.solve_status.append(timestamp_ns, str(status))
+                if data.solve_time_source is None:
+                    source = payload.get("solve_time_source")
+                    if source:
+                        data.solve_time_source = str(source)
+                continue
+
             if topic == cable_topic and data.cable_points_xyz is None:
                 cable_points = extract_marker_points(msg)
                 if cable_points.size:
@@ -519,6 +601,15 @@ def read_bag_data(
                 if terrain_points.size:
                     data.terrain_points_xyz = terrain_points
 
+    # 按 truth_topics 优先级（preferred 在前）选定唯一真值源，避免跨相口径不齐：
+    # 先前的实现把多个 truth topic 的样本混入同一序列，并以"先到者"记 topic_used。
+    for topic in truth_topics:
+        series = truth_by_topic.get(topic)
+        if series is not None and series.timestamps_ns:
+            data.truth = series
+            data.truth_topic_used = topic
+            break
+
     if verbose:
         print(f"[INFO] Read {len(chunks)} MCAP chunk(s)")
         print(f"[INFO] Estimated samples: {len(data.estimated.timestamps_ns)}")
@@ -526,6 +617,8 @@ def read_bag_data(
         print(f"[INFO] Diagnostics samples: {len(data.diagnostics.timestamps_ns)}")
         print(f"[INFO] BT status samples: {len(data.bt_status.timestamps_ns)}")
         print(f"[INFO] Magnetic samples: {len(data.magnetic.timestamps_ns)}")
+        print(f"[INFO] Altitude samples: {len(data.altitude.timestamps_ns)}")
+        print(f"[INFO] Solve-time samples: {len(data.solve_time.timestamps_ns)} (source={data.solve_time_source})")
         print(f"[INFO] Cable reference available: {data.cable_points_xyz is not None}")
         print(f"[INFO] Terrain cloud available: {data.terrain_points_xyz is not None}")
 
@@ -663,6 +756,50 @@ def nearest_terrain_depths(
         idx = int(np.argmin(d2))
         depths.append(float(-terrain_z_display[idx]))
     return np.asarray(depths, dtype=float)
+
+
+def resolve_clearance_series(
+    data: BagData,
+    *,
+    min_altitude_samples: int = 5,
+) -> tuple[np.ndarray, str]:
+    """Resolve true seabed clearance aligned to diagnostics timestamps, with provenance.
+
+    Priority (D4): real DVL altitude > terrain point-cloud derivation >
+    diagnostics constant-datum clearance. The constant-datum value published by
+    localization (seabed_depth_m=15.0 - depth) is a known bug; the DVL altitude
+    is the most direct ground truth of clearance.
+    """
+    diag_ts = np.asarray(data.diagnostics.timestamps_ns, dtype=np.int64)
+    if diag_ts.size == 0:
+        return np.zeros(0, dtype=float), "none"
+    diag_t = diag_ts.astype(np.float64) / 1e9
+
+    altitude = sort_scalar_series(data.altitude)
+    if len(altitude.timestamps_ns) >= int(min_altitude_samples):
+        alt_t = np.asarray(altitude.timestamps_ns, dtype=np.float64) / 1e9
+        alt_v = np.asarray(altitude.values, dtype=float)
+        resolved = interpolate_continuous(alt_t, alt_v, diag_t)
+        if np.any(np.isfinite(resolved)):
+            return resolved, "real_altitude"
+
+    if data.terrain_points_xyz is not None and data.estimated.timestamps_ns:
+        estimated = sort_position_series(data.estimated)
+        est_t = np.asarray(estimated.timestamps_ns, dtype=np.float64) / 1e9
+        est_x = interpolate_continuous(est_t, as_numpy(estimated.x), diag_t)
+        est_y = interpolate_continuous(est_t, as_numpy(estimated.y), diag_t)
+        est_z = interpolate_continuous(est_t, as_numpy(estimated.z), diag_t)
+        seabed_depth = nearest_terrain_depths(
+            terrain_points_xyz=data.terrain_points_xyz,
+            x_values=est_x.tolist(),
+            y_values=est_y.tolist(),
+        )
+        depth = -est_z
+        resolved = seabed_depth - depth
+        if np.any(np.isfinite(resolved)):
+            return resolved, "terrain_cloud"
+
+    return np.asarray(data.diagnostics.seabed_clearance_m, dtype=float), "diag_constant_datum"
 
 
 def synthesize_diagnostics_from_odometry(
@@ -913,41 +1050,88 @@ def compute_numeric_stats(values: Sequence[float], *, positive_only: bool = Fals
     return float(np.min(filtered)), float(np.max(filtered))
 
 
-def compute_depth_rmse(data: BagData) -> float:
-    diagnostics = np.asarray(data.diagnostics.depth_error_m, dtype=float)
-    valid = np.isfinite(diagnostics)
-    if not np.any(valid):
+def compute_steady_state_mask(
+    diagnostics: DiagnosticsSeries,
+    *,
+    warmup_skip_s: float,
+    mode: str,
+    target_clearance_m: float = 3.0,
+    reach_tol_m: float = 0.25,
+    clearance: Sequence[float] | None = None,
+) -> np.ndarray:
+    """Boolean mask (aligned with every diagnostics channel) selecting steady-state samples.
+
+    The dive/warm-up transient pollutes RMSE/std/min: e.g. the AUV descends from
+    the surface, briefly clipping a low clearance, while the steady cruise has a
+    near-zero std. Excluding the transient makes min/std/RMSE mutually consistent.
+    """
+    count = len(diagnostics.timestamps_ns)
+    if count == 0:
+        return np.zeros(0, dtype=bool)
+    mask = np.ones(count, dtype=bool)
+    if mode == "none":
+        return mask
+
+    times_s = normalize_time_ns(diagnostics.timestamps_ns, int(diagnostics.timestamps_ns[0]))
+    start_s = float(max(0.0, warmup_skip_s))
+
+    if mode == "reach_target":
+        source = diagnostics.seabed_clearance_m if clearance is None else clearance
+        clearance_arr = np.asarray(source, dtype=float)
+        within = np.isfinite(clearance_arr) & (np.abs(clearance_arr - float(target_clearance_m)) <= float(reach_tol_m))
+        reach_idx = int(np.argmax(within)) if np.any(within) else -1
+        if reach_idx >= 0:
+            start_s = max(start_s, float(times_s[reach_idx]))
+
+    mask = times_s >= start_s
+    if not np.any(mask):
+        # Never reaches steady state within the bag; keep full window to avoid empty stats.
+        return np.ones(count, dtype=bool)
+    return mask
+
+
+def _masked_finite(values: Sequence[float], mask: np.ndarray | None) -> np.ndarray:
+    array = np.asarray(values, dtype=float)
+    if mask is not None and mask.shape[0] == array.shape[0]:
+        array = array[mask]
+    return array[np.isfinite(array)]
+
+
+def compute_depth_rmse(data: BagData, mask: np.ndarray | None = None) -> float:
+    filtered = _masked_finite(data.diagnostics.depth_error_m, mask)
+    if filtered.size == 0:
         return float("nan")
-    filtered = diagnostics[valid]
     return float(np.sqrt(np.mean(filtered * filtered)))
 
 
-def compute_clearance_rmse(data: BagData, target_clearance_m: float = 3.0) -> float:
-    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
-    valid = np.isfinite(clearance)
-    if not np.any(valid):
+def compute_clearance_rmse(
+    clearance: Sequence[float],
+    target_clearance_m: float = 3.0,
+    mask: np.ndarray | None = None,
+) -> float:
+    filtered = _masked_finite(clearance, mask)
+    if filtered.size == 0:
         return float("nan")
-    error = clearance[valid] - float(target_clearance_m)
+    error = filtered - float(target_clearance_m)
     return float(np.sqrt(np.mean(error * error)))
 
 
-def compute_clearance_std(data: BagData) -> float:
-    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
-    valid = np.isfinite(clearance)
-    if not np.any(valid):
+def compute_clearance_std(clearance: Sequence[float], mask: np.ndarray | None = None) -> float:
+    filtered = _masked_finite(clearance, mask)
+    if filtered.size == 0:
         return float("nan")
-    return float(np.std(clearance[valid]))
+    return float(np.std(filtered))
 
 
 def compute_clearance_safety_violation_ratio(
-    data: BagData,
+    clearance: Sequence[float],
     min_clearance_m: float = 1.5,
+    mask: np.ndarray | None = None,
 ) -> float:
-    clearance = np.asarray(data.diagnostics.seabed_clearance_m, dtype=float)
-    valid = np.isfinite(clearance)
-    if not np.any(valid):
+    filtered = _masked_finite(clearance, mask)
+    if filtered.size == 0:
         return float("nan")
-    return float(np.mean(clearance[valid] < float(min_clearance_m)))
+    return float(np.mean(filtered < float(min_clearance_m)))
 
 
 def path_length(points_xyz: np.ndarray) -> float:
@@ -1029,32 +1213,105 @@ def compute_relative_localization_metric_rows(
     ]
 
 
-def compute_summary_metric_rows(data: BagData) -> list[tuple[str, float | str | bool | int]]:
+def compute_summary_metric_rows(
+    data: BagData,
+    *,
+    warmup_skip_s: float = 10.0,
+    warmup_mode: str = "time",
+    control_mode: str = "auto",
+) -> list[tuple[str, float | str | bool | int]]:
     diagnostics = sort_diagnostics_series(data.diagnostics)
     unique_state_labels = {
         label.strip()
         for label in [*diagnostics.current_behavior, *diagnostics.mode]
         if label.strip()
     }
+    total_sample_count = len(diagnostics.timestamps_ns)
+
+    clearance_resolved, clearance_source = resolve_clearance_series(data)
+
+    mask = compute_steady_state_mask(
+        diagnostics,
+        warmup_skip_s=warmup_skip_s,
+        mode=warmup_mode,
+        clearance=clearance_resolved if clearance_resolved.size else None,
+    )
+    steady_count = int(np.count_nonzero(mask)) if mask.size else 0
+
+    clearance_steady = _masked_finite(clearance_resolved, mask)
+    clearance_min = float(np.min(clearance_steady)) if clearance_steady.size else float("nan")
+    penetration_count = int(np.count_nonzero(clearance_steady <= 0.0)) if clearance_steady.size else 0
+
+    def masked_mean(values: Sequence[float]) -> float:
+        filtered = _masked_finite(values, mask)
+        return float(np.mean(filtered)) if filtered.size else float("nan")
+
+    # depth_error reported by /auv/diagnostics is computed against a stale setpoint
+    # target_depth (4.0 m); in altitude-follow it produces a misleading pseudo error.
+    depth_error_diag_rmse = compute_depth_rmse(data, mask)
+    is_terrain = control_mode == "terrain"
+    depth_error_headline = float("nan") if is_terrain else depth_error_diag_rmse
+
     return [
+        ("warmup_skip_s_applied", float(warmup_skip_s) if warmup_mode != "none" else 0.0),
+        ("warmup_mode", str(warmup_mode)),
+        ("control_mode", str(control_mode)),
+        ("clearance_source", clearance_source),
+        ("total_sample_count", total_sample_count),
+        ("steady_state_sample_count", steady_count),
         ("voltage_mean_v", float(np.nanmean(np.asarray(diagnostics.total_voltage_v, dtype=float))) if diagnostics.total_voltage_v else float("nan")),
         ("voltage_min_v", compute_numeric_stats(diagnostics.total_voltage_v)[0]),
         ("battery_low_ratio", compute_boolean_ratio(diagnostics.battery_low)),
         ("anomaly_ratio", compute_boolean_ratio(diagnostics.anomaly_detected)),
-        ("depth_error_rmse_m", compute_depth_rmse(data)),
-        ("depth_error_mean_abs_m", float(np.nanmean(np.abs(np.asarray(diagnostics.depth_error_m, dtype=float)))) if diagnostics.depth_error_m else float("nan")),
-        ("speed_mean_mps", float(np.nanmean(np.asarray(diagnostics.speed_mps, dtype=float))) if diagnostics.speed_mps else float("nan")),
-        ("speed_target_mean_mps", float(np.nanmean(np.asarray(diagnostics.target_speed_mps, dtype=float))) if diagnostics.target_speed_mps else float("nan")),
-        ("seabed_clearance_min_m", compute_numeric_stats(diagnostics.seabed_clearance_m, positive_only=True)[0]),
-        ("seabed_clearance_mean_m", float(np.nanmean(np.asarray(diagnostics.seabed_clearance_m, dtype=float))) if diagnostics.seabed_clearance_m else float("nan")),
-        ("seabed_clearance_std_m", compute_clearance_std(data)),
-        ("seabed_clearance_rmse_to_3m", compute_clearance_rmse(data, target_clearance_m=3.0)),
-        ("seabed_clearance_safety_violation_ratio_1p5m", compute_clearance_safety_violation_ratio(data, min_clearance_m=1.5)),
+        ("depth_error_rmse_m", depth_error_headline),
+        ("depth_error_rmse_diag_m", depth_error_diag_rmse),
+        ("depth_error_mean_abs_m", float(np.mean(np.abs(_masked_finite(diagnostics.depth_error_m, mask)))) if _masked_finite(diagnostics.depth_error_m, mask).size else float("nan")),
+        ("speed_mean_mps", masked_mean(diagnostics.speed_mps)),
+        ("speed_target_mean_mps", masked_mean(diagnostics.target_speed_mps)),
+        ("seabed_clearance_min_m", clearance_min),
+        ("seabed_penetration_sample_count", penetration_count),
+        ("seabed_clearance_mean_m", masked_mean(clearance_resolved)),
+        ("seabed_clearance_std_m", compute_clearance_std(clearance_resolved, mask)),
+        ("seabed_clearance_rmse_to_3m", compute_clearance_rmse(clearance_resolved, target_clearance_m=3.0, mask=mask)),
+        ("clearance_error_to_target_3m_rmse_m", compute_clearance_rmse(clearance_resolved, target_clearance_m=3.0, mask=mask)),
+        ("seabed_clearance_safety_violation_ratio_1p5m", compute_clearance_safety_violation_ratio(clearance_resolved, min_clearance_m=1.5, mask=mask)),
+        ("seabed_clearance_mean_diag_m", masked_mean(diagnostics.seabed_clearance_m)),
         ("seabed_proximity_ratio", compute_boolean_ratio(diagnostics.seabed_proximity_warning)),
         ("seabed_penetration_ratio", compute_boolean_ratio(diagnostics.seabed_penetration_warning)),
         ("high_priority_ratio", compute_boolean_ratio(diagnostics.high_priority)),
         ("state_transition_count", len(compute_state_transition_rows(data, int(np.min(all_timestamps(data))))) if diagnostics.timestamps_ns else 0),
         ("unique_state_count", len(unique_state_labels)),
+    ]
+
+
+def compute_solve_time_rows(data: BagData) -> list[tuple[str, float | str | int]]:
+    values = np.asarray(data.solve_time.values, dtype=float)
+    values = values[np.isfinite(values)]
+    count = int(values.size)
+
+    statuses = [s.strip() for s in data.solve_status.values if s.strip()]
+    status_count = len(statuses)
+    success = sum(1 for s in statuses if s == "Solve_Succeeded")
+    fallback_ratio = float(1.0 - success / status_count) if status_count else float("nan")
+
+    if count == 0:
+        return [
+            ("solve_time_mean_ms", float("nan")),
+            ("solve_time_p95_ms", float("nan")),
+            ("solve_time_max_ms", float("nan")),
+            ("solve_time_sample_count", 0),
+            ("solve_time_source", data.solve_time_source or ""),
+            ("solver_fallback_ratio", fallback_ratio),
+            ("solver_status_sample_count", status_count),
+        ]
+    return [
+        ("solve_time_mean_ms", float(np.mean(values))),
+        ("solve_time_p95_ms", float(np.percentile(values, 95))),
+        ("solve_time_max_ms", float(np.max(values))),
+        ("solve_time_sample_count", count),
+        ("solve_time_source", data.solve_time_source or ""),
+        ("solver_fallback_ratio", fallback_ratio),
+        ("solver_status_sample_count", status_count),
     ]
 
 
@@ -1064,6 +1321,9 @@ def export_statistics_tables(
     global_start_ns: int,
     rmse_m: float,
     output_dir: Path,
+    warmup_skip_s: float = 10.0,
+    warmup_mode: str = "time",
+    control_mode: str = "auto",
 ) -> list[Path]:
     summary_path = output_dir / "summary_statistics.csv"
     state_path = output_dir / "state_durations.csv"
@@ -1080,13 +1340,22 @@ def export_statistics_tables(
         ("diagnostics_sample_count", len(data.diagnostics.timestamps_ns)),
         ("bt_status_sample_count", len(data.bt_status.timestamps_ns)),
         ("magnetic_sample_count", len(data.magnetic.timestamps_ns)),
+        ("altitude_sample_count", len(data.altitude.timestamps_ns)),
         ("lateral_error_rmse_m", rmse_m),
         ("lateral_error_mean_abs_m", compute_lateral_mean_abs(data)),
         ("confidence_mean", compute_confidence_mean(data)),
         ("magnetic_peak_t", compute_magnetic_peak(data)),
     ]
     summary_rows.extend(compute_relative_localization_metric_rows(data, global_start_ns))
-    summary_rows.extend(compute_summary_metric_rows(data))
+    summary_rows.extend(
+        compute_summary_metric_rows(
+            data,
+            warmup_skip_s=warmup_skip_s,
+            warmup_mode=warmup_mode,
+            control_mode=control_mode,
+        )
+    )
+    summary_rows.extend(compute_solve_time_rows(data))
 
     with summary_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle)
@@ -1139,6 +1408,14 @@ def format_metric_label(metric: str) -> str:
         "diagnostics_sample_count": "Diagnostics sample count",
         "bt_status_sample_count": "BT status sample count",
         "magnetic_sample_count": "Magnetic sample count",
+        "altitude_sample_count": "Altitude sample count",
+        "warmup_skip_s_applied": "Warm-up skip applied (s)",
+        "warmup_mode": "Warm-up mode",
+        "control_mode": "Control mode",
+        "clearance_source": "Clearance source",
+        "total_sample_count": "Diagnostics total sample count",
+        "steady_state_sample_count": "Steady-state sample count",
+        "seabed_penetration_sample_count": "Seabed penetration sample count",
         "lateral_error_rmse_m": "Lateral error RMSE (m)",
         "lateral_error_mean_abs_m": "Lateral error mean abs. (m)",
         "confidence_mean": "Mean confidence",
@@ -1148,19 +1425,29 @@ def format_metric_label(metric: str) -> str:
         "battery_low_ratio": "Battery-low ratio",
         "anomaly_ratio": "Anomaly ratio",
         "depth_error_rmse_m": "Depth error RMSE (m)",
+        "depth_error_rmse_diag_m": "Depth error RMSE vs setpoint (diag, m)",
         "depth_error_mean_abs_m": "Depth error mean abs. (m)",
         "speed_mean_mps": "Mean speed (m/s)",
         "speed_target_mean_mps": "Target mean speed (m/s)",
         "seabed_clearance_min_m": "Minimum seabed clearance (m)",
         "seabed_clearance_mean_m": "Mean seabed clearance (m)",
+        "seabed_clearance_mean_diag_m": "Mean seabed clearance (diag datum, m)",
         "seabed_clearance_std_m": "Seabed clearance std. (m)",
         "seabed_clearance_rmse_to_3m": "Seabed clearance RMSE to 3 m (m)",
+        "clearance_error_to_target_3m_rmse_m": "Clearance error to target 3 m RMSE (m)",
         "seabed_clearance_safety_violation_ratio_1p5m": "Clearance <1.5 m ratio",
         "seabed_proximity_ratio": "Seabed proximity ratio",
         "seabed_penetration_ratio": "Seabed penetration ratio",
         "high_priority_ratio": "High-priority ratio",
         "state_transition_count": "State transition count",
         "unique_state_count": "Unique state count",
+        "solve_time_mean_ms": "MPC solve time mean (ms)",
+        "solve_time_p95_ms": "MPC solve time p95 (ms)",
+        "solve_time_max_ms": "MPC solve time max (ms)",
+        "solve_time_sample_count": "MPC solve time sample count",
+        "solve_time_source": "MPC solve time source",
+        "solver_fallback_ratio": "MPC solver fallback ratio",
+        "solver_status_sample_count": "MPC solver status sample count",
         "relative_loc_truth_net_displacement_xy_m": "Relative localization truth net displacement XY (m)",
         "relative_loc_truth_path_length_m": "Relative localization truth path length (m)",
         "relative_loc_constant_offset_3d_m": "Relative localization constant offset 3D (m)",
@@ -1193,6 +1480,7 @@ def format_metric_value(metric: str, value: object) -> str:
             "lateral_error_rmse_m",
             "lateral_error_mean_abs_m",
             "depth_error_rmse_m",
+            "depth_error_rmse_diag_m",
             "depth_error_mean_abs_m",
             "voltage_mean_v",
             "voltage_min_v",
@@ -1200,8 +1488,13 @@ def format_metric_value(metric: str, value: object) -> str:
             "speed_target_mean_mps",
             "seabed_clearance_min_m",
             "seabed_clearance_mean_m",
+            "seabed_clearance_mean_diag_m",
             "seabed_clearance_std_m",
             "seabed_clearance_rmse_to_3m",
+            "clearance_error_to_target_3m_rmse_m",
+            "solve_time_mean_ms",
+            "solve_time_p95_ms",
+            "solve_time_max_ms",
         }:
             return f"{numeric:.3f}"
         if metric == "confidence_mean":
@@ -1620,6 +1913,8 @@ def main() -> None:
         magnetic_topic=args.topic_magnetic,
         cable_topic=DEFAULT_CABLE_MARKER_TOPIC,
         terrain_topics=(DEFAULT_SEABED_CLOUD_TOPIC, DEFAULT_SEABED_CLOUD_THROTTLED_TOPIC),
+        altitude_topic=args.topic_altitude,
+        controller_debug_topic=args.topic_controller_debug,
         verbose=args.verbose,
     )
     synthesized_diagnostics = synthesize_diagnostics_from_odometry(data)
@@ -1638,6 +1933,9 @@ def main() -> None:
             global_start_ns=global_start_ns,
             rmse_m=rmse_m,
             output_dir=output_dir,
+            warmup_skip_s=args.warmup_skip_s,
+            warmup_mode=args.warmup_mode,
+            control_mode=args.control_mode,
         )
     )
 

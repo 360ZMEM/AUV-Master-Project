@@ -13,6 +13,7 @@ import argparse
 import csv
 import json
 import math
+import os
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -129,6 +130,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--topic-mpc-cmd", default=DEFAULT_MPC_CMD_TOPIC, help="MpcCmd control topic.")
     parser.add_argument("--topic-cmd-vel", default=DEFAULT_CMD_VEL_TOPIC, help="Twist fallback control topic.")
     parser.add_argument(
+        "--warmup-skip-s",
+        type=float,
+        default=float(os.environ.get("AUV_WARMUP_SKIP_S", "10.0")),
+        help=(
+            "Warm-up seconds skipped by analyze_bag.py before computing clearance/depth "
+            "statistics. Defaults to env AUV_WARMUP_SKIP_S or 10.0."
+        ),
+    )
+    parser.add_argument(
         "--merged-results-name",
         default="merged_control_results.csv",
         help="Filename for source sweep rows joined with control metrics.",
@@ -220,6 +230,7 @@ def ensure_summary_statistics(
     analysis_dir: Path,
     reuse_analysis: bool,
     skip_analyze_bag: bool,
+    warmup_skip_s: float,
 ) -> tuple[Path | None, str]:
     summary_path = analysis_dir / "summary_statistics.csv"
     if reuse_analysis and summary_path.exists():
@@ -236,6 +247,8 @@ def ensure_summary_statistics(
         str(analysis_dir),
         "--stats-only",
         "--allow-missing-truth",
+        "--warmup-skip-s",
+        str(warmup_skip_s),
     ]
     result = subprocess.run(cmd, cwd=str(PROJECT_ROOT), text=True, capture_output=True)
     if result.returncode != 0:
@@ -668,6 +681,7 @@ def main() -> None:
                 analysis_dir=analysis_dir,
                 reuse_analysis=args.reuse_analysis,
                 skip_analyze_bag=args.skip_analyze_bag,
+                warmup_skip_s=args.warmup_skip_s,
             )
             summary_metrics = read_summary_metrics(summary_path)
             topic_metrics = parse_control_topics(

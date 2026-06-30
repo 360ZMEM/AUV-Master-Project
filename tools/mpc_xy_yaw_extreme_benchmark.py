@@ -62,6 +62,7 @@ class MpcVariant:
 
 
 SCENARIOS = [
+    Scenario("s_turn_long_wave", duration_s=100.0, path_speed_mps=1.35, target_speed_mps=1.35, lookahead_pid_m=8.0),
     Scenario("s_turn_short_wave", duration_s=46.0, path_speed_mps=1.35, target_speed_mps=1.35, lookahead_pid_m=5.0),
     Scenario("chicane_90deg", duration_s=54.0, path_speed_mps=1.30, target_speed_mps=1.30, lookahead_pid_m=6.0),
     Scenario("hairpin_180deg", duration_s=64.0, path_speed_mps=1.20, target_speed_mps=1.20, lookahead_pid_m=6.0),
@@ -80,6 +81,12 @@ def make_path(scenario: Scenario, ds: float = 0.15) -> np.ndarray:
     if scenario.name == "s_turn_short_wave":
         x = np.arange(0.0, 58.0 + ds, ds)
         y = 4.8 * np.sin(2.0 * np.pi * x / 11.0)
+    elif scenario.name == "s_turn_long_wave":
+        # WP-E: 适度极端 S 弯（波长 60m，幅值 7m，>=2 周期）。
+        # 曲率半径 ≈ 13m > AUV 最小转弯半径 (~6.5m @1.35m/s, r_max=12°/s)，
+        # 因此可被优雅跟踪；与 s_turn_short_wave（半径 ~0.6m，必然饱和）形成对照。
+        x = np.arange(0.0, 130.0 + ds, ds)
+        y = 7.0 * np.sin(2.0 * np.pi * x / 60.0)
     elif scenario.name == "chicane_90deg":
         pts = [
             (0.0, 0.0),
@@ -301,8 +308,14 @@ def run_mpc(scenario: Scenario, path: np.ndarray, variant: MpcVariant, dt: float
     for _ in range(int(scenario.duration_s / dt)):
         idx = nearest_index(path, state[:2], idx)
         ref = np.zeros((6, optimizer.N + 1), dtype=float)
+        # Fair reference: anchor k=0 at the nearest path point (s_values[idx]) and
+        # advance along arc length at nominal speed over the horizon. This is the
+        # genuine MPC preview. An earlier "+2.0 m" constant downstream offset was
+        # removed because it shifted the whole reference (k=0 included) ahead of
+        # the nearest point, biasing the MPC to cut corners on curved paths and
+        # unfairly inflating its lateral RMSE versus the tangent/LOS baselines.
         for k in range(optimizer.N + 1):
-            sample = sample_by_s(path, s_values, s_values[idx] + 2.0 + k * scenario.path_speed_mps * variant.dt)
+            sample = sample_by_s(path, s_values, s_values[idx] + k * scenario.path_speed_mps * variant.dt)
             ref[:, k] = [sample[0], sample[1], 2.5, sample[3], sample[4], 0.0]
         try:
             tic = time.perf_counter()
@@ -370,6 +383,27 @@ def plot_case(output_dir: Path, scenario: Scenario, path: np.ndarray, pid: dict[
     fig.tight_layout()
     fig.savefig(output_dir / f"{scenario.name}_{variant.name}.png", dpi=180)
     plt.close(fig)
+
+
+def safe_reduction_pct(baseline: float, value: float, eps: float = 0.5, cap_pct: float = 1000.0) -> object:
+    """Percent reduction of `value` vs `baseline`, guarding degenerate cases.
+
+    Two guards return a string sentinel instead of a misleading number:
+      1. Near-zero baseline (|baseline| < eps): the percentage explodes from a
+         tiny denominator (previously produced figures like -8141%).
+      2. Implausibly large magnitude (|reduction| > cap_pct): even with a valid
+         denominator, a huge ratio means the two quantities are not comparable
+         in kind. E.g. the yaw-only baseline commands the exact path tangent
+         (near-perfect yaw by construction) while the MPC deliberately deviates
+         heading to correct cross-track, so a "yaw reduction vs yaw-only" of
+         -8141% penalises the MPC for doing its job. Report the ratio instead.
+    """
+    if not math.isfinite(baseline) or abs(baseline) < eps:
+        return f"N/A (baseline={baseline:.3g}<{eps})"
+    reduction = 100.0 * (1.0 - value / baseline)
+    if abs(reduction) > cap_pct:
+        return f"N/A (ratio={value / baseline:.1f}x, not comparable)"
+    return reduction
 
 
 def main() -> int:
@@ -447,11 +481,13 @@ def main() -> int:
             "pid_lateral_rmse_m",
             "los_lateral_rmse_m",
             "mpc_lateral_rmse_m",
-            "lateral_rmse_reduction_pct",
+            "lateral_rmse_reduction_vs_yaw_pct",
+            "lateral_rmse_reduction_vs_los_pct",
             "pid_yaw_rmse_deg",
             "los_yaw_rmse_deg",
             "mpc_yaw_rmse_deg",
-            "yaw_rmse_reduction_pct",
+            "yaw_rmse_reduction_vs_yaw_pct",
+            "yaw_rmse_reduction_vs_los_pct",
             "mpc_success_rate",
             "mpc_mean_solve_ms",
             "mpc_max_solve_ms",
@@ -474,11 +510,21 @@ def main() -> int:
                     "pid_lateral_rmse_m": pm["lateral_rmse_m"],
                     "los_lateral_rmse_m": lm["lateral_rmse_m"],
                     "mpc_lateral_rmse_m": mm["lateral_rmse_m"],
-                    "lateral_rmse_reduction_pct": 100.0 * (1.0 - mm["lateral_rmse_m"] / pm["lateral_rmse_m"]),
+                    "lateral_rmse_reduction_vs_yaw_pct": safe_reduction_pct(
+                        pm["lateral_rmse_m"], mm["lateral_rmse_m"], eps=0.05
+                    ),
+                    "lateral_rmse_reduction_vs_los_pct": safe_reduction_pct(
+                        lm["lateral_rmse_m"], mm["lateral_rmse_m"], eps=0.05
+                    ),
                     "pid_yaw_rmse_deg": pm["yaw_rmse_deg"],
                     "los_yaw_rmse_deg": lm["yaw_rmse_deg"],
                     "mpc_yaw_rmse_deg": mm["yaw_rmse_deg"],
-                    "yaw_rmse_reduction_pct": 100.0 * (1.0 - mm["yaw_rmse_deg"] / pm["yaw_rmse_deg"]),
+                    "yaw_rmse_reduction_vs_yaw_pct": safe_reduction_pct(
+                        pm["yaw_rmse_deg"], mm["yaw_rmse_deg"], eps=0.5
+                    ),
+                    "yaw_rmse_reduction_vs_los_pct": safe_reduction_pct(
+                        lm["yaw_rmse_deg"], mm["yaw_rmse_deg"], eps=0.5
+                    ),
                     "mpc_success_rate": mm["solve_success_rate"],
                     "mpc_mean_solve_ms": mm["mean_solve_ms"],
                     "mpc_max_solve_ms": mm["max_solve_ms"],

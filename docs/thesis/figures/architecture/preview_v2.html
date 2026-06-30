@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUV Architecture Figures v2 Preview</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f5f6f8;
+      color: #26323d;
+      font-family: "Noto Serif CJK SC", "Times New Roman", serif;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      text-align: center;
+    }
+    .subtitle {
+      margin: 0 0 28px;
+      text-align: center;
+      color: #667481;
+      font-size: 15px;
+    }
+    section {
+      margin: 28px 0 40px;
+      padding: 22px 24px 26px;
+      background: #ffffff;
+      border: 1px solid #d9e0e6;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(38, 50, 61, 0.06);
+    }
+    h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+    p {
+      margin: 0 0 18px;
+      color: #5c6b7a;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #e5e9ee;
+      border-radius: 10px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AUV 论文架构图 v2 预览</h1>
+    <p class="subtitle">用于检查紧凑性、结构美感、文字可读性与论文页面适配效果</p>
+
+    <section>
+      <h2>2.2.1 双脑异步硬件架构</h2>
+      <p>目标：一眼看清 Jetson 非实时高算力“大脑”和 PC104 硬实时“小脑”的解耦关系。</p>
+      <img src="auv_v2_dual_brain_async_hardware.png" alt="双脑异步硬件架构">
+    </section>
+
+    <section>
+      <h2>核心创新点：Uncertainty Highway</h2>
+      <p>目标：把不确定性从滤波器内部变量提升为贯穿估计、决策、控制和执行的系统级信号。</p>
+      <img src="auv_v2_uncertainty_highway.png" alt="不确定性流向图">
+    </section>
+
+    <section>
+      <h2>2.2.2 五层软件功能架构</h2>
+      <p>目标：写功能，不写文件名，用数学与逻辑职责表达软件分层。</p>
+      <img src="auv_v2_five_layer_functional_architecture.png" alt="五层软件功能架构">
+    </section>
+  </main>
+</body>
+</html>

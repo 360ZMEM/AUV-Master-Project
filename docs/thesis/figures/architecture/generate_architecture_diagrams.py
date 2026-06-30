@@ -415,6 +415,115 @@ def verification_to_deployment_ladder():
     write("auv_system_verification_deployment_ladder", cells)
 
 
+def dual_brain_async_hardware_v2():
+    cells = []
+    text(cells, "t1", "双脑异步硬件架构", 390, 20, 620, 42, True)
+    text(cells, "s1", "左脑负责高算力认知与规划，右脑负责硬实时执行与安全；二者通过轻量二进制协议解耦", 300, 66, 820, 34)
+
+    lane(cells, "jetson", "左大脑：Jetson Orin", 130, 145, 390, 505, "blue")
+    lane(cells, "pc104", "右小脑：PC104", 880, 145, 390, 505, "teal")
+    rect(cells, "boundary", "UDP 二进制协议边界\n72B 上行 / 145B 下行", 610, 145, 180, 505, "gray", extra="dashed=1;dashPattern=10 6;strokeWidth=3;fontStyle=1;")
+
+    rect(cells, "jet_env", "Ubuntu / ROS2\nNon-Real-Time", 75, 55, 240, 54, "gray", "jetson", extra="fontStyle=2;")
+    rect(cells, "brain", "非实时高算力大脑\n想：理解、决策、规划", 50, 130, 290, 70, "blue", "jetson", extra="fontSize=16;fontStyle=1;")
+    rect(cells, "perception", "感知估计\nES-EKF", 85, 245, 220, 56, "green", "jetson")
+    rect(cells, "decision", "任务决策\nBehavior Tree", 85, 330, 220, 56, "yellow", "jetson")
+    rect(cells, "planning", "路径生成\nUA-MPC", 85, 415, 220, 56, "purple", "jetson")
+
+    rect(cells, "vx_env", "VxWorks\nHard Real-Time", 75, 55, 240, 54, "gray", "pc104", extra="fontStyle=2;")
+    rect(cells, "cerebellum", "硬实时小脑 / 脊髓\n做：执行、保护、兜底", 50, 130, 290, 70, "teal", "pc104", extra="fontSize=16;fontStyle=1;")
+    rect(cells, "inner", "内环姿态控制\nPID", 85, 245, 220, 56, "green", "pc104")
+    rect(cells, "driver", "电机 / 舵机驱动\nDriver", 85, 330, 220, 56, "orange", "pc104")
+    rect(cells, "failsafe", "安全失联保护\nFailsafe Watchdog", 85, 415, 220, 56, "red", "pc104")
+
+    text(cells, "think", "高算力：估计 + 决策 + 优化", 175, 665, 310, 34)
+    text(cells, "act", "低延迟：内环 + 驱动 + 故障保护", 920, 665, 340, 34)
+
+    for spec in [
+        ("db1", "perception", "decision", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("db2", "decision", "planning", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("db3", "inner", "driver", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("db4", "driver", "failsafe", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("db5", "planning", "inner", "轻量控制意图", False, [(610, 560), (790, 560), (880, 418)], "exitX=1;entryX=0;"),
+        ("db6", "failsafe", "perception", "状态与健康反馈", True, [(790, 610), (610, 610), (520, 273)], "exitX=0;entryX=1;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_dual_brain_async_hardware", cells)
+
+
+def uncertainty_highway_v2():
+    cells = []
+    text(cells, "t1", "不确定性流向图：Uncertainty Highway", 300, 20, 800, 42, True)
+    text(cells, "s1", "不确定性不是滤波器内部变量，而是贯穿估计、决策、控制与执行的一等系统信号", 320, 66, 760, 34)
+
+    rect(cells, "disturb", "物理层干扰\nDVL 丢包 / 磁饱和 / 水流扰动", 85, 135, 250, 68, "red")
+    rect(cells, "dirty", "受污染传感输入\n时延 / 噪声 / 缺测", 385, 135, 250, 68, "orange")
+    rect(cells, "ekf", "状态估计层\nES-EKF", 685, 135, 230, 68, "green")
+    rect(cells, "uq", "不确定性量化\n协方差 → 置信度", 965, 135, 260, 68, "purple")
+
+    rect(cells, "highway", "Uncertainty Highway：置信度作为全局调度信号", 325, 285, 750, 62, "gray", extra="dashed=1;dashPattern=8 5;fontStyle=1;fontSize=16;")
+    rect(cells, "bt", "行为树决策层\n低置信触发降级 / 上浮 / 保守策略", 260, 455, 340, 78, "yellow")
+    rect(cells, "mpc", "安全控制层\n动态权重缩放 / 平滑惩罚约束", 800, 455, 340, 78, "blue")
+    rect(cells, "amd", "底层执行器\n安全平滑指令", 550, 655, 300, 70, "teal")
+
+    for spec in [
+        ("u1", "disturb", "dirty", "原始数据变脏", False, None, "exitX=1;entryX=0;"),
+        ("u2", "dirty", "ekf", "融合估计", False, None, "exitX=1;entryX=0;"),
+        ("u3", "ekf", "uq", "协方差", False, None, "exitX=1;entryX=0;"),
+        ("u4", "uq", "highway", "标量置信度", False, None, "exitX=0.5;exitY=1;entryX=0.82;entryY=0;"),
+        ("u5", "highway", "bt", "决策阈值", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;"),
+        ("u6", "highway", "mpc", "控制调度", False, None, "exitX=0.7;exitY=1;entryX=0.5;entryY=0;"),
+        ("u7", "bt", "amd", "安全模式", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
+        ("u8", "mpc", "amd", "平滑约束指令", False, None, "exitX=0.5;exitY=1;entryX=0.65;entryY=0;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_uncertainty_highway", cells)
+
+
+def five_layer_functional_architecture_v2():
+    cells = []
+    text(cells, "t1", "五层软件功能架构", 390, 20, 620, 42, True)
+    text(cells, "s1", "写功能，不写文件名：用数学与逻辑职责表达软件分层，而非实现清单", 380, 66, 660, 34)
+
+    for spec in [
+        ("l1", "系统入口与配置分发", 120, 125, 1160, 90, "blue"),
+        ("l2", "硬件 / 仿真双工适配层\nGeneric AUV Interface", 120, 235, 1160, 100, "teal"),
+        ("l3", "自治行为与安全治理层", 120, 355, 1160, 100, "yellow"),
+        ("l4", "数学模型与优化算法层", 120, 475, 1160, 110, "green"),
+        ("l5", "协议契约与物理约束层", 120, 605, 1160, 95, "purple"),
+    ]:
+        lane(cells, *spec)
+
+    for spec in [
+        ("a1", "实验模式选择\n仿真 / 协议 / 真机", 90, 36, 250, 40, "blue", "l1"),
+        ("a2", "参数一致性分发\n场景 / 控制 / 安全", 455, 36, 250, 40, "blue", "l1"),
+        ("a3", "运行生命周期管理\n启动 / 记录 / 收尾", 820, 36, 250, 40, "blue", "l1"),
+        ("b1", "虚实统一接口\n同一控制语义", 90, 44, 250, 44, "teal", "l2"),
+        ("b2", "坐标与时间对齐\n统一参考系", 455, 44, 250, 44, "teal", "l2"),
+        ("b3", "传感与执行抽象\n输入输出对偶", 820, 44, 250, 44, "teal", "l2"),
+        ("c1", "任务状态机\n阶段 / 模式 / 回退", 90, 44, 250, 44, "yellow", "l3"),
+        ("c2", "安全仲裁\n权限 / 急停 / 降级", 455, 44, 250, 44, "yellow", "l3"),
+        ("c3", "行为选择\n搜索 / 跟踪 / 保守", 820, 44, 250, 44, "yellow", "l3"),
+        ("d1", "运动学递推阵\n状态演化", 45, 46, 210, 46, "green", "l4"),
+        ("d2", "声学投影几何\n观测约束", 310, 46, 210, 46, "green", "l4"),
+        ("d3", "误差状态滤波\n不确定性传播", 575, 46, 210, 46, "green", "l4"),
+        ("d4", "非线性时域优化器\n安全平滑控制", 840, 46, 250, 46, "green", "l4"),
+        ("e1", "轻量通信契约\n最小字节边界", 145, 38, 250, 40, "purple", "l5"),
+        ("e2", "物理可行域\n限幅 / 死区 / 饱和", 455, 38, 250, 40, "purple", "l5"),
+        ("e3", "共享语义基座\n模式 / 状态 / 指令", 765, 38, 250, 40, "purple", "l5"),
+    ]:
+        rect(cells, *spec)
+
+    for spec in [
+        ("fl1", "a2", "b1", "配置约束", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("fl2", "b2", "c2", "运行态势", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("fl3", "c3", "d4", "目标与边界", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("fl4", "d3", "e2", "可行域约束", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_five_layer_functional_architecture", cells)
+
+
 def main() -> None:
     code_layer_architecture()
     runtime_dataflow()
@@ -424,6 +533,9 @@ def main() -> None:
     system_subsystem_organization()
     autonomy_functional_loop()
     verification_to_deployment_ladder()
+    dual_brain_async_hardware_v2()
+    uncertainty_highway_v2()
+    five_layer_functional_architecture_v2()
     for path in sorted(OUT.glob("*.drawio")):
         print(path)
 

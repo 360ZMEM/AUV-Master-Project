@@ -53,7 +53,7 @@
 | yaw smoothness | < 20°/s 峰值 |
 | control effort | 舵角变化率 < 2°/s |
 
-**当前状态**：MPC x/y/yaw 支线已有 `hairpin_180deg` 离线路径，显示 MPC 在该场景下横向误差改善约 38.56%。该场景的价值是测试控制和决策系统在大曲率边界下是否平滑降速、是否过冲、是否触发安全回退。
+**当前状态**：MPC x/y/yaw 支线已有 `hairpin_180deg` 离线路径，公平口径重跑（`20260620_011831`）显示 MPC 在该场景下横向 RMSE（2.277 m）相对 yaw-only/LOS 基线（均 4.69 m）改善约 51%（溯源见 [docs/thesis/08_terrain_following_pid_mpc_status.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/08_terrain_following_pid_mpc_status.md) §8.7；早先 38.56% 系 harness `+2.0 m` 偏置 bug 下的旧口径）。该场景的价值是测试控制和决策系统在大曲率边界下是否平滑降速、是否过冲、是否触发安全回退。
 
 ### 场景 3：`scenario_cable_slope_crossing`
 

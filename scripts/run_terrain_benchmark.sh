@@ -24,6 +24,7 @@ FEATURE_FLAGS_BACKUP="$BRAIN_CONFIG_DIR/.feature_flags_backup.yaml"
 
 DATA_ROOT=$(python3 -c "import sys; sys.path.append('$ROOT_DIR'); from common.env_utils import get_data_root; print(get_data_root())")
 LOG_ROOT="${AUV_EXPERIMENT_LOG_ROOT:-$DATA_ROOT/bags}"
+AUV_WARMUP_SKIP_S="${AUV_WARMUP_SKIP_S:-10}"
 
 DURATION=${1:-120}
 CONTROLLER_SET=${2:-both}
@@ -259,8 +260,15 @@ PY
     return
   fi
   echo "[$label] analyzing $mcap"
+  local control_mode="auto"
+  case "$label" in
+    *_terrain) control_mode="terrain" ;;
+    *_baseline) control_mode="baseline" ;;
+  esac
   python3 "$ROOT_DIR/tools/analyze_bag.py" "$mcap" \
-    --output-dir "$analysis_dir" 2>&1 \
+    --output-dir "$analysis_dir" \
+    --control-mode "$control_mode" \
+    --warmup-skip-s "$AUV_WARMUP_SKIP_S" 2>&1 \
     || echo "[WARN] $label analysis exited non-zero"
 }
 

@@ -12,6 +12,8 @@
   - 失效降级信号
 """
 
+import time
+
 import numpy as np
 import casadi as ca
 
@@ -386,12 +388,21 @@ class AUVMPCOptimizer:
                 opti.set_initial(self.U[:, k], u_guess)
 
         try:
+            t0 = time.perf_counter()
             sol = opti.solve()
+            wall_ms = (time.perf_counter() - t0) * 1000.0
             status = str(sol.stats()["return_status"])
-            solve_time_ms = float(sol.stats().get("t_proc_total", 0)) * 1000.0
+            ipopt_ms = float(sol.stats().get("t_proc_total", 0)) * 1000.0
+            if ipopt_ms > 0.0:
+                solve_time_ms = ipopt_ms
+                solve_time_source = "ipopt_t_proc"
+            else:
+                solve_time_ms = wall_ms
+                solve_time_source = "wall_perf_counter"
         except RuntimeError as e:
             status = f"FAILED: {str(e)}"
             solve_time_ms = 0.0
+            solve_time_source = "failed"
             raise RuntimeError(f"MPC solver failed: {status}") from e
 
         if status not in (
@@ -409,5 +420,6 @@ class AUVMPCOptimizer:
             "X_opt": np.array(X_opt),
             "solver_status": status,
             "solve_time_ms": solve_time_ms,
+            "solve_time_source": solve_time_source,
             "cost_value": cost_val,
         }

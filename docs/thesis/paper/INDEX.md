@@ -16,7 +16,11 @@
 | [02_system_design.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/02_system_design.md) | 第 2 章 | 任务需求、双脑架构、通信协议、声磁建模与标定框架 |
 | [03_state_estimation.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/03_state_estimation.md) | 第 3 章 | 异步同步、ES-EKF、声磁协同、自适应不确定性 |
 | [04_decision_and_control.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/04_decision_and_control.md) | 第 4 章 | 行为树、failsafe、PID/PVS、MPC/UA-MPC 与控制边界 |
-| [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) | 第 5 章 | 实验平台、指标、结果表、讨论与 Sim-to-Real 边界 |
+| [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) | 第 5 章（主） | 实验平台、指标、结果表、讨论与 Sim-to-Real 边界（5.1–5.8 主体） |
+| [05_experiments_and_discussion_continued.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion_continued.md) | 第 5 章（续写） | base 文件"5.5.3 之后"的续写（5.5.4–5.8，含 5.5.7 Terrain PID 多 seed 复验）。**与 base 文件存在 5.5.4–5.8 编号重叠，base 为主、本文件为补充续写**，引用以 base 为准、续写项以本文件为准 |
+
+> **05 章主从说明（P2-b）**：`05_experiments_and_discussion.md` 为**主文件**，`..._continued.md` 为其续写补充；两者在 5.5.4–5.8 编号上有重叠，写作时主体内容引用主文件、续写新增项（如多 seed 复验）引用续写文件，避免重复计入。
+> **三组过渡实验（F1/F2/F3）证据**见工程证据层 [docs/thesis/11_transition_experiments_F1_F2_F3.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/11_transition_experiments_F1_F2_F3.md)，对应第 2/3 章。
 
 按论文写作支撑用途组织的补充文档：
 

@@ -156,6 +156,11 @@ class ES_EKF:
         self.adaptive_r_scale_decay = float(cfg.get("adaptive_r_scale_decay", 0.95))
         self._adaptive_r_scale = 1.0
         self.nis_history: list = []  # entries: {"source", "dim", "nis"}
+        # 暴露最近一次观测更新的 Kalman 增益/创新协方差/创新向量，供离线诊断
+        # （如网络抖动边界分析）观察增益范数随时延退化的趋势。
+        self.last_K = None
+        self.last_S = None
+        self.last_innov = None
 
         self.auto_init = bool(cfg.get("auto_init", True))
         self.use_first_dvl_for_init = bool(cfg.get("use_first_dvl_for_init", True))
@@ -402,6 +407,9 @@ class ES_EKF:
         s = h_mat @ self.P @ h_mat.T + r_eff
         s_inv = np.linalg.pinv(s)
         k = self.P @ h_mat.T @ s_inv
+        self.last_K = k.copy()
+        self.last_S = s.copy()
+        self.last_innov = np.asarray(innov, dtype=float).copy()
         dx = k @ innov
         self._inject(dx)
         i = np.eye(15)

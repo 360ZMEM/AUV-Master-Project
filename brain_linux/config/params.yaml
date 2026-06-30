@@ -113,13 +113,25 @@ mpc:
   warm_start: true
   max_solve_time_ms: 50.0
   fail_safe_fallback: true
+  # WP-C C2 / P0-3 复核: 输出级深度积分补偿，作为鲁棒裕度而非修正实测漂移。
+  # z_cmd_out = z_opt + ki_z * clamp(∫(z_ref - z)dt, ±z_integral_clamp_m)
+  # P0-3 离线 A/B（tools/wp_c_depth_ab.py）结论: 现实浮力量级下 MPC heave 已把
+  # 稳态误差压到 sub-mm，ki_z 仅在极端模型失配（≈8×）时边际有用；plant 中性
+  # 时不引入偏置 → 良性，保留。
+  ki_z: 0.1
+  z_integral_clamp_m: 2.0
 
 mpc_model:
   mass_u: 50.0
   mass_w: 50.0
   drag_u: 12.0
   drag_w: 20.0
-  buoyancy_term: 0.0
+  # WP-C C1 / P0-3 复核: 模型级浮力补偿（NED 下 z+/w+ 向下，负值=上推）。
+  # 注意: 原"观测上漂≈0.02 m/s"依据已被 P0-3 推翻——真 bag 的 depth_m 为压力
+  # 派生（与 localization 常值 datum bug 无关），其"上漂"实为 terrain-following
+  # 与 baseline 缓慢收敛，非浮力漂移。保留 -0.5 作为良性鲁棒裕度: 离线 A/B 证明
+  # plant 中性时不引入稳态偏置，模型失配时抑制误差。
+  buoyancy_term: -0.5
   yaw_rate_gain: 8.0
   pitch_depth_gain: 0.8
   depth_to_heave_gain: 12.0

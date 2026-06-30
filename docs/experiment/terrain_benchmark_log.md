@@ -960,3 +960,21 @@ pkill -KILL -f "run_zenoh_bridge.py|sim_holoocean/apps/main.py|mock_amd_server|r
 
 ```
 results/control/terrain_following_<TS>/
+```
+
+---
+
+## 2026-06-20 真口径重跑闭环（自洽性提升阶段）
+
+> 详见工程证据层 [docs/thesis/08_terrain_following_pid_mpc_status.md §8](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/08_terrain_following_pid_mpc_status.md)。本条记录运行级要点。
+
+- **真口径结果目录**：`results/control/terrain_following_20260619_222639/`（取代旧 `20260610_175154`）。修复：度量层 datum bug（clearance 改读真 `/auv/sensors/altitude`，`clearance_source=real_altitude`）、terrain 模式 `depth_error_rmse_m` 标 N/A、truth-topic 四相统一 `/auv/sensors/ground_truth`、warm-up 跳过 10s。
+- **真测高**：四相 `seabed_clearance_mean_m` 落在 1.95–2.70m（不再 4.0m 常值 datum）；clearance 随真地形起伏。
+- **真 solve_time**：`/auv/controller/debug.solve_time_ms` 实测 mpc_baseline≈12.93ms、mpc_terrain≈10.59ms（旧 ≈0ms 系未抽取真字段）。
+- **solver_fallback**：mpc_terrain 14.3% 步触发 `FALLBACK_LAST_OUTPUT`（z_band/速率约束在 8m→3m 大失配下不可行），诚实记录。
+- **n=1 边界**：本基准每相单次运行，统计置信有限，后续补 ≥3 次重复。
+- **复现**：
+  ```bash
+  bash scripts/preflight_clean.sh --quiet
+  AUV_WARMUP_SKIP_S=10 bash scripts/run_terrain_benchmark.sh 60 both both_modes default
+  ```

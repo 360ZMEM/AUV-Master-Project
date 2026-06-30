@@ -46,5 +46,6 @@ auv_console_python/
 VXworks程序/
 csd_vx6.8*
 .auv_data/
+docs_pdf/
 # docs/thesis
 # docs/real_delpoyment

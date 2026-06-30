@@ -70,35 +70,23 @@
 
 | 实验 | 场景 | 算法 | seeds | 主指标 | 优先级 |
 |---|---|---|---:|---|---|
-| Baseline 重复统计 | baseline | ES-EKF / UA mode | 3 | XY RMSE, Z RMSE, CEP50 | 已完成 |
+| Baseline 重复统计 | baseline | ES-EKF / UA mode | 3 | XY RMSE, Z RMSE, CEP50 | 已完成第一轮 |
 | Terrain 低成本复验 | low/mid/high | PID terrain | 1/档 | clearance RMSE, min, violation | 已完成第一轮 |
-| Terrain 重复统计 | low/mid/high | PID terrain | 3/档 | clearance RMSE, min, violation | 已完成，主跑 + retry 合并口径 |
-| DVL dropout sweep | 10/30/60/90% | ES-EKF / UA mode | 3/档 | XY RMSE, Z RMSE, CEP50 | 已完成，控制侧聚合已补 |
-| Mag/Sonar/Combined sweep | light/heavy/sonar/combined | ES-EKF / UA mode | 3/场景 | XY RMSE, Z RMSE, CEP50 | 已完成，控制侧聚合已补 |
-| UA-MPC 主消融初版 | baseline + dvl_60 + combined | baseline-MPC / UA-MPC | 3/场景/模式 | XY RMSE, Z RMSE, CEP50 | 已完成 |
-| UA-MPC 控制侧消融 | baseline + dvl_60 + combined | baseline-MPC / UA-MPC | 3 | lateral RMSE, fallback rate, control effort | 已完成一轮；solve-time 字段补录但计时语义待确认 |
+| Terrain 重复统计 | low/mid/high | PID terrain | 3–5/档 | clearance RMSE, min, violation | 最高 |
+| DVL dropout sweep | 10/30/60/90% | ES-EKF / UA mode | 3/档 | XY RMSE, Z RMSE, CEP50 | 已完成第一轮 |
+| Mag/Sonar/Combined sweep | light/heavy/sonar/combined | ES-EKF / UA mode | 3/场景 | XY RMSE, Z RMSE, CEP50 | 已完成第一轮 |
+| UA-MPC 主消融初版 | baseline + dvl_60 + combined | baseline-MPC / UA-MPC | 3/场景/模式 | XY RMSE, Z RMSE, CEP50 | 已完成第一轮 |
+| UA-MPC 控制侧消融 | baseline + dvl_60 + combined | baseline-MPC / UA-MPC | 3–5 | lateral RMSE, fallback rate, control effort | 待补 |
 
 ### P2：模型与系统迁移
 
 | 实验 | 说明 | 优先级 |
 |---|---|---|
-| NIS/R 自适应触发率聚合 | P1 8 个 chaos 场景 3 seed 已完成批量聚合，含 real NIS、proxy NIS、R scale trigger ratio | 已完成 |
+| NIS/R 自适应触发率聚合 | baseline + chaos 场景的 NIS 曲线和触发统计 | 中 |
 | UA-MPC 参数灵敏度 | `low_conf_scale`、`sigma_xy_ref`、控制惩罚权重 | 中 |
 | Jetson 真机算力 | 重跑 CPU/MEM/IPOPT 求解时间 | 中 |
 | 磁场理论推导 | 三相交流、屏蔽因子、螺旋漏磁公式 | 中 |
 | 声呐几何标定 | 侧扫斜距公式、多径影响分析 | 中 |
-
-### P2-补充：代理电缆场景真实性
-
-现有 PVS chaos 更偏传感器和通信扰动。为补足“海缆巡检场景真实性”缺口，本轮采用可运行代理路线，不扩展 PVS 后端物理模型，而是通过 `cable_path`、`digital_twin`、`perception` 和 `pvs.current_speed_mps/current_direction_deg` 构造电缆几何、地形、弱观测和横流压力。
-
-| 实验 | 场景 | 算法 | seeds | 主指标 | 当前状态 |
-|---|---|---|---:|---|---|
-| 代理电缆核心 smoke | S-curve / slope crossing / combined extreme | baseline-MPC / UA-MPC | 1 | lateral RMSE, control rate RMS, safety violation | 已完成，`n=1` 只作可运行性证据 |
-| 代理电缆全量 smoke | S-curve / hairpin / slope crossing / buried gap / cross current / combined extreme | baseline-MPC / UA-MPC | 1 | lateral RMSE, fallback rate, control effort, safety violation | 已完成，12/12 ok，控制聚合 generated,12 |
-| 代理电缆统计版 | 同上 | baseline-MPC / UA-MPC | 3–5 | mean±std 控制性能与稳定性 | 待 smoke 通过后再做 |
-
-结论边界：代理电缆场景可用于控制性能、稳定性和场景链路验证，但不能等价为真实海试，也不能替代 10A 电缆台、HSF-500 埋深反演或真实声磁观测实验。
 
 ### P3：硬件和实验室电缆台
 
@@ -132,14 +120,14 @@ UA-MPC 主消融应至少包含 baseline-MPC 与 UA-MPC 在 baseline、`dvl_drop
 
 | 实验 | 场景 | 控制/估计算法 | seeds | 主指标 | 当前状态 |
 |---|---|---|---:|---|---|
-| ES-EKF 鲁棒性 | baseline + DVL/mag/sonar/combined | ES-EKF / Std-EKF / Raw DR | 3 | XY RMSE, Z RMSE, NIS | P1 UA-mode 已完成，NIS/R 已聚合；Std-EKF/Raw DR 仍可作为扩展 |
-| UA-MPC 主消融 | baseline + dvl_dropout_60 + combined_stress | baseline-MPC / UA-MPC | 3 | lateral RMSE, fallback rate | 已完成一轮；solve-time 计时语义待确认 |
-| Terrain 重复统计 | low/mid/high | PID terrain | 3 | clearance RMSE, min, violation | 已完成，需采用主跑 + retry 合并口径 |
-| 电缆极端场景 | S curve / hairpin / slope / buried gap / cross current / combined | baseline-MPC / UA-MPC | 1 起步 | cable offset RMSE, control stability | 3 核心已 smoke，6 全量计划执行 |
+| ES-EKF 鲁棒性 | baseline + DVL/mag/sonar/combined | ES-EKF / Std-EKF / Raw DR | 3–5 | XY RMSE, Z RMSE, NIS | 待补 |
+| UA-MPC 主消融 | baseline + dvl_dropout_60 + combined_stress | baseline-MPC / UA-MPC | 3–5 | lateral RMSE, fallback rate | 待补 |
+| Terrain 重复统计 | low/mid/high | PID terrain | 3–5 | clearance RMSE, min, violation | 待补 |
+| 电缆极端场景 | S curve / hairpin / buried gap | PID/LOS/MPC/UA-MPC | 3–5 | cable offset RMSE, route completion | 待设计 |
 | 硬件链路 | Jetson-AMD | UDP binary protocol | 3–5 | latency p50/p95, packet loss | 待现场 |
 | 电缆台 | 10A + HSF-500 | 声磁反演 | 3–5 | buried-depth error | 待实验 |
 | 协议偏差 | 7 处偏差 | — | — | 描述、来源、修复 | 待整理 |
 
 ## 当前可执行下一步
 
-如果只能再补一轮软件实验，建议把 6 个全量代理电缆场景从 `30s x seed0 x baseline/ua` smoke 扩到 3 seed mean±std。当前 smoke 已达到 12/12 ok，控制聚合 `generated,12`，具备进入统计版的基础。硬件实验仍应先写清方案、指标和验收标准，等现场条件具备后补数据。
+如果只能补一轮软件实验，建议优先执行 P1 中的 baseline 重复统计和 terrain PID low/mid/high 重复统计。这两组实验成本最低、对论文充分性提升最大。若时间允许，再补 DVL dropout 4 场景 sweep 和 baseline-MPC vs UA-MPC 的三场景对比。硬件实验可以先写清方案、指标和验收标准，等现场条件具备后补数据。

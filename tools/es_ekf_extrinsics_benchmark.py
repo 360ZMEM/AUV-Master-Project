@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--duration", type=float, default=120.0)
     parser.add_argument("--dt", type=float, default=0.05)
-    parser.add_argument("--seeds", default="0")
+    parser.add_argument("--seeds", default="0,1,2")
     parser.add_argument("--true-profile", default="light")
     parser.add_argument("--estimation-modes", default="none,calibrated,online_lite")
     parser.add_argument("--output-dir", type=Path, default=None)
@@ -139,6 +139,16 @@ def estimated_profile(truth: ExtrinsicsProfile, mode: str) -> ExtrinsicsProfile:
         return profile_by_name("none")
     if mode == "calibrated":
         return truth
+    if mode == "no_lever_arm":
+        # F2 消融：EKF 忽略 DVL 杆臂（translation 置 0），其余沿用真值标定。
+        # 隔离杆臂项 w×r 缺失对速度观测的影响。
+        dvl = SensorExtrinsics(np.zeros(3, dtype=float), truth.dvl.rotation_b_to_s.copy())
+        return ExtrinsicsProfile(f"{truth.name}_{mode}", dvl, truth.depth, truth.imu)
+    if mode == "no_mounting_angle":
+        # F2 消融：DVL 安装角引入 5° yaw 偏差，其余沿用真值标定。
+        # 隔离安装角误差对速度方向投影的影响。
+        dvl = apply_small_angle_error(truth.dvl, delta_rotation_rpy_deg=[0.0, 0.0, 5.0])
+        return ExtrinsicsProfile(f"{truth.name}_{mode}", dvl, truth.depth, truth.imu)
     if mode == "online_lite":
         dvl = apply_small_angle_error(
             truth.dvl,

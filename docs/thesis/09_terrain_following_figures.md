@@ -7,6 +7,20 @@
 
 ---
 
+## 0. 2026-06-20 真口径重生成更新（WP-D）
+
+> **重要**：下文 §1–§3 多处仍写 `20260610_175154` 路径，那是 datum bug 修复前的旧数据源。**6 张图已用 P0 真口径主结果 `results/control/terrain_following_20260619_222639/` 重新生成**，引用图像数据时以此为准。
+
+本次 WP-D 修复（见 08 文档 §8.1/§8.2）：
+
+- **clearance 真口径**：[plot_terrain_following_figures.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/plot_terrain_following_figures.py) `diagnostics_arrays` 改用 `resolve_clearance_series` 读真 altitude/点云（`clearance_source=real_altitude`），不再用常值 datum；`load_bag_for_phase` 补 `altitude_topic`/`controller_debug_topic` 参数（P0-1/P0-2 后原已坏）。
+- **2D 海底起伏修复**：`seabed_depth = depth + real_clearance` 现随真地形起伏（pid_terrain std=0.443、range[12.29,14.11]；mpc_terrain std=0.882、range[10.63,15.13]），彻底消除此前"2D 平直 vs 3D 起伏"矛盾。
+- **provenance 标注**：clearance RMSE 柱状图与安全裕度图新增 `provenance_note`（数据来源：real DVL altitude / warm-up trimmed 10s / truth=`/auv/sensors/ground_truth`）；t-z 图标题/图例标注 clearance source。
+- **诚实边界**：图像数据为 **n=1 单次运行**（见 08 文档 §8.2），caption 引用时须标注；ablation 图（Fig.5-3）数据为 low/mid/high 各单次。
+
+---
+
+
 ## 1. 统一生成命令
 
 所有地形跟随论文图像统一由以下脚本生成：

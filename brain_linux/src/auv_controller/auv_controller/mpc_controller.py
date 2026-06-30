@@ -133,6 +133,13 @@ class MPCController(BaseController):
         self._fail_safe_fallback = bool(mpc_cfg.get("fail_safe_fallback", True))
         self._fallback_thrust_percent = float(constraints_cfg.get("min_thrust_percent", 15.0))
 
+        # WP-C C2: 输出级深度积分补偿（抗稳态漂移），抗饱和 clamp。
+        self._ki_z = float(mpc_cfg.get("ki_z", 0.0))
+        self._integral_clamp_m = float(mpc_cfg.get("z_integral_clamp_m", 2.0))
+        self._z_integral = 0.0
+        self._min_z_cmd = float(constraints_cfg.get("min_z_cmd_m", 0.0))
+        self._max_z_cmd = float(constraints_cfg.get("max_z_cmd_m", 50.0))
+
         self._kinematics = AUVKinematicsModel(model_cfg)
         self._optimizer = AUVMPCOptimizer(
             self._kinematics,
@@ -144,6 +151,7 @@ class MPCController(BaseController):
 
         self._prev_U: np.ndarray | None = None
         self._solve_time_ms: float = 0.0
+        self._solve_time_source: str = "not_run"
         self._solver_status: str = "NOT_RUN"
         self._last_cost: float = 0.0
         self._confidence: float = 1.0
@@ -209,6 +217,8 @@ class MPCController(BaseController):
             if not self._fail_safe_fallback:
                 raise
             self._solver_status = f"FALLBACK: {exc}"
+            # WP-C C2: 求解失败时重置积分器，避免 windup。
+            self._z_integral = 0.0
             if self._last_output is not None:
                 self._last_output.debug["solver_status"] = "FALLBACK_LAST_OUTPUT"
                 self._last_output.debug["fallback_reason"] = str(exc)
@@ -226,6 +236,7 @@ class MPCController(BaseController):
                     "solver_status": "FALLBACK_SETPOINT",
                     "fallback_reason": str(exc),
                     "solve_time_ms": round((time.time() - t_start) * 1000.0, 2),
+                    "solve_time_source": "fallback_wall",
                     "confidence": round(confidence, 3),
                     "prediction_horizon": self._N,
                     "dt": self._dt,
@@ -234,6 +245,7 @@ class MPCController(BaseController):
 
         self._solve_time_ms = result["solve_time_ms"]
         self._solver_status = result["solver_status"]
+        self._solve_time_source = result.get("solve_time_source", "unknown")
         self._last_cost = result["cost_value"]
         self._prev_U = result["U_opt"].copy()
 
@@ -241,6 +253,21 @@ class MPCController(BaseController):
         psi_opt = float(U_first[0])
         z_opt = float(U_first[1])
         T_opt = float(U_first[2])
+
+        # WP-C C2: 输出级深度积分补偿。每帧累加深度误差（NED），抗饱和 clamp，
+        # 叠加到 MPC 的 z_cmd 上再 clip 到深度约束，消除残余稳态漂移。
+        z_cmd_raw = z_opt
+        ctrl_dt = float(setpoint.get("dt", self._dt))
+        if self._ki_z != 0.0:
+            self._z_integral += (target_depth - depth_ned) * ctrl_dt
+            self._z_integral = float(
+                np.clip(self._z_integral, -self._integral_clamp_m, self._integral_clamp_m)
+            )
+            z_cmd_out = z_cmd_raw + self._ki_z * self._z_integral
+            z_cmd_out = float(np.clip(z_cmd_out, self._min_z_cmd, self._max_z_cmd))
+        else:
+            z_cmd_out = z_cmd_raw
+        z_opt = z_cmd_out
 
         elapsed = (time.time() - t_start) * 1000.0
 
@@ -278,6 +305,7 @@ class MPCController(BaseController):
                 "controller_type": "MPC",
                 "solver_status": self._solver_status,
                 "solve_time_ms": round(self._solve_time_ms, 2),
+                "solve_time_source": self._solve_time_source,
                 "total_compute_ms": round(elapsed, 2),
                 "cost_value": round(self._last_cost, 4),
                 "confidence": round(confidence, 3),
@@ -288,6 +316,9 @@ class MPCController(BaseController):
                     "z_cmd_m": round(z_opt, 2),
                     "T_cmd_pct": round(T_opt, 2),
                 },
+                "z_cmd_raw": round(z_cmd_raw, 3),
+                "z_cmd_out": round(z_cmd_out, 3),
+                "z_integral": round(self._z_integral, 4),
                 "pred_trajectory": pred_trajectory,
                 "ref_trajectory": ref_traj_list,
             },
@@ -425,6 +456,7 @@ class MPCController(BaseController):
         self._solve_time_ms = 0.0
         self._solver_status = "NOT_RUN"
         self._last_cost = 0.0
+        self._z_integral = 0.0
 
     @property
     def solve_time_ms(self) -> float:

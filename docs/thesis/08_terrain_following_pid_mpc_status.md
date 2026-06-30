@@ -15,6 +15,8 @@
 
 ## 2. Terrain Benchmark 主结果
 
+> ⚠️ **本节表为 2026-06-10 旧口径（`20260610_175154`），已受 §8.1 度量 datum bug 污染（`clearance_mean≈4.0m` 系常值 datum 假象、`depth_error_rmse≈7m` 口径错误）。论文请引用 §8.2 的 P0 真口径重跑表（`20260619_222639`）。以下表保留仅作修复前后对比。**
+
 **结果目录**: `results/control/terrain_following_20260610_175154/`  
 **日志**: `/tmp/terrain_pid_mpc_60_mergedcfg.log`  
 **地形配置**: `config/bridge_params.protocol_udp.pvs.terrain.yaml`
@@ -141,6 +143,8 @@ MPC 深度控制不佳不是单一调参问题，而是以下因素叠加：
 
 ### 5.4 最新结果
 
+> ⚠️ **本表（`20260610_204314`）受 §8.7 所述 harness `+2.0m` 偏置 bug 影响，人为放大了 MPC 横向 RMSE，已被 §8.7 公平口径表（`20260620_011831`）取代。论文请引用 §8.7。**
+
 | 场景 | 最佳 MPC 变体 | PID yaw-only lateral RMSE | LOS lateral RMSE | MPC lateral RMSE | MPC 相对 yaw-only 改善 | PID yaw-only yaw RMSE | MPC yaw RMSE | MPC success | mean solve |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | `s_turn_short_wave` | `xy_v3_speed_flexible` | 2.5965m | 1.6574m | 1.6345m | 37.05% | 58.51° | 67.31° | 1.000 | 13.62ms |
@@ -185,3 +189,78 @@ MPC 支线结论需要限定：
 - **对照实验**: `MPC terrain` 说明已接入、可改善 baseline，但受执行链路和实时性限制，没有超过 PID/PVS。
 - **支线分析**: `MPC x/y/yaw extreme benchmark` 说明 MPC 在复杂平面路径预瞄和速度规划中有优势，但优势边界清晰。
 - **未来工作**: 若要让 MPC 成为主控制器，需要把 MPC 从 guidance-level 下沉到更接近舵面/动力学层，或显式建模 PVS 内环状态和执行器动态。
+
+---
+
+## 8. 自洽性提升闭环（2026-06-20 更新）
+
+> 本节记录"实验深入挑刺与自洽性提升"阶段的修复始末。**核心结论：早先 §2 的 terrain 主结果表（`20260610_175154`，`clearance_mean≈4.0m`、`depth_error_rmse≈7m`）受一个度量层 datum bug 污染，已被 P0 真口径重跑（`20260619_222639`）取代。** 控制器本身未发散，问题在分析/度量层。
+
+### 8.1 度量 datum bug 的发现与修复（P0-1）
+
+- **现象**：旧 summary 的 `seabed_clearance_mean_m≈4.0m`（远离 3m 目标）且四相高度一致、`depth_error_rmse_m≈7m` 巨大 → 被误读为"控制器跟踪失败/上漂"。
+- **根因**：[analyze_bag.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/analyze_bag.py) 离底高度此前回退到一个**常值 datum**（固定海底基准）而非真实测高，使 clearance 恒偏；`depth_error_rmse_m` 又对 terrain 模式按"绝对目标深度"评分（但 terrain 模式目标深度随海底动态变化，该口径无意义）。
+- **修复**：clearance 真值优先级改为 `real_altitude（/auv/sensors/altitude）> terrain_cloud（真点云）> diag_constant_datum`，并新增 `clearance_source` 审计字段；terrain 模式 `depth_error_rmse_m` 标 `nan`（N/A），另存 `depth_error_rmse_diag_m` 仅作审计。实测真测高 mean≈2.83m，证明此前 4.0m 系 datum 假象。
+
+### 8.2 P0 真口径重跑主结果（取代 §2 旧表）
+
+**结果目录**: `results/control/terrain_following_20260619_222639/`（warm-up 跳过 10s、truth-topic 四相统一 `/auv/sensors/ground_truth`、clearance 源 `real_altitude`）
+
+| 指标 | PID baseline | PID terrain | MPC baseline | MPC terrain |
+|---|---:|---:|---:|---:|
+| duration_s | 59.11 | 59.80 | 59.50 | 59.51 |
+| clearance_source | real_altitude | real_altitude | real_altitude | real_altitude |
+| seabed_clearance_min_m | 1.600 | 1.000 | 1.400 | 1.400 |
+| seabed_clearance_mean_m | 2.699 | 1.954 | 2.657 | 2.647 |
+| seabed_clearance_std_m | 0.470 | 0.442 | 0.495 | 0.500 |
+| seabed_clearance_rmse_to_3m | 0.558 | 1.136 | 0.602 | 0.612 |
+| depth_error_rmse_m | 6.493 | **N/A** | 6.427 | **N/A** |
+| depth_error_rmse_diag_m（仅审计） | 6.493 | 7.292 | 6.427 | 6.416 |
+| speed_mean_mps | 1.112 | 0.724 | 1.112 | 1.112 |
+| solve_time_mean_ms | nan | nan | 12.93 | 10.59 |
+| solver_fallback_ratio | nan | nan | 0.000 | **0.1429** |
+| truth_topic_used | ground_truth | ground_truth | ground_truth | ground_truth |
+
+> ⚠️ **n=1 诚实边界（P2-a）**：本地形基准每相为**单次运行**（[run_terrain_benchmark.sh](file:///home/auv_user/auv_ws/AUV-Master-Project/scripts/run_terrain_benchmark.sh) 仅 controllers×modes 循环、无重复/平均），统计置信有限，后续应补 ≥3 次重复给出 mean±std。引用本表时须标注 n=1。
+
+关键解读（真口径）：
+- 真测高下四相 `clearance_mean` 落在 1.95–2.70m，**不再是 4.0m 常值 datum**；clearance 随真地形起伏（`std≈0.44–0.50m`）。
+- terrain 模式主指标仍是 `seabed_clearance_rmse_to_3m`，`depth_error_rmse_m` 正确标 N/A。
+- 本次重跑中 PID/MPC terrain 的 clearance RMSE 接近（受 n=1 与本批配置影响），**不应过度解读相对优劣**；地形跟随能力的稳健结论以 low/mid/high ablation（§3）为准。
+
+### 8.3 真 solve_time 实测（P0-2）
+
+- **系统级**：rerun bag `/auv/controller/debug.solve_time_ms` 实测 mpc_baseline mean≈12.93ms、mpc_terrain mean≈10.59ms（此前 solve_time≈0ms 是未抽取真字段的假象）。
+- **微基准**：[tools/mpc_solve_microbench.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/mpc_solve_microbench.py) cold solver_internal mean≈10.77ms/p95≈11.35ms、warm≈4.88ms/p95≈5.0ms，与系统级 ≈10.6ms 互证。两口径自洽，论文 §5 统一引用真值。
+
+### 8.4 solver_fallback 14.3%（P0-1 副产物，诚实记录）
+
+mpc_terrain 相 **14.3% 步触发 `FALLBACK_LAST_OUTPUT`**。根因：`z_band=4.0m`/`delta_z_max_per_step=1.0m` 等带宽/速率约束在起始深度与目标差距过大（8m→3m）时求解不可行 → 与微基准 `--start-depth 8.0` 复现一致。这是 MPC 在大初始失配下的真实工程边界，须诚实记录而非隐藏。
+
+### 8.5 WP-C 深度补偿回查结论（P0-3，保留 + 重写注释）
+
+离线 A/B（[tools/wp_c_depth_ab.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/wp_c_depth_ab.py)）证明：现实浮力（−0.5~−2.0）A/B 均 sub-mm、plant 中性 A 不引入偏置、仅 8× 失配（−4.0）B 退化~14mm 而 A 保持 <1mm → WP-C 补偿为**良性鲁棒裕度**。原"≈0.02m/s 上漂"依据系 datum bug 误导，已推翻。**参数值不变**（`buoyancy_term=-0.5`/`ki_z=0.1`/`clamp=2.0`），仅将 [params.yaml L116-134](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/params.yaml#L116-L134) 注释重写为基于 A/B 实证的诚实物理依据。
+
+### 8.6 闭环 vs "开挂真值"澄清（D8）
+
+此前担忧的"控制器用了真值开挂"系误解。控制状态来源未改：估计链路正常走 ES-EKF/PVS，`/auv/sensors/ground_truth` **仅用于离线分析的误差评分基准**（truth-topic），不进入控制回路。本节仅作文档澄清，不改控制器状态来源。truth-topic 四相已统一到 `/auv/sensors/ground_truth`（P0-4，消除此前多 topic 混入 + first-arrived bug）。
+
+### 8.7 WP-E：平面路径公平口径结论（取代 §5.4 旧表）
+
+§5 的 MPC x/y/yaw 支线 harness 存在一个**真实不公平 bug**：`run_mpc` 参考构建含 `+2.0m` 常值下游偏置，把整条参考（含 k=0）推到最近点下游、迫使 MPC 切弯、人为放大其横向 RMSE；而两条 PID 基线（yaw-only 读精确最近切线、LOS 从当前位置前瞻）无此偏置 → 对比不公平。删除 `+2.0` 偏置（保留 `k*v*dt` 真预瞄项）后公平复跑（`20260620_011831`，5 variant 一致非偶然）：
+
+| 场景 | MPC best lateral | yaw-only | LOS | 结论 |
+|---|---:|---:|---:|---|
+| `s_turn_long_wave`（60m/7m） | **0.055m** | 0.093 | 1.047 | MPC 全胜（−41% / −95%） |
+| `hairpin_180deg` | **2.277m** | 4.69 | 4.69 | MPC 全胜（−51%） |
+| `s_turn_short_wave` | 1.655m | 2.597 | 1.657 | MPC −36% vs yaw-only、与 LOS 持平 |
+| `chicane_90deg` | 1.452m | 3.596 | **0.659m** | 诚实边界：直角 chicane 上 LOS 前瞻最优 |
+
+**诚实结论**：公平口径下 MPC 在长波 S 弯、急转 hairpin、短波 S 弯三类工况均优于或持平基线；唯直角 chicane 上 LOS 前瞻更贴合分段直线。早先"MPC 不普遍优于基线"的判断源自 harness 的 +2.0m 偏置 bug，修复后已被推翻——但 chicane 这一诚实边界予以保留，不做过度宣称。
+
+### 8.8 P1/P2 诚实边界声明汇总
+
+- **磁通道空（P1-a）**：地形跟随实验**不含磁场采集链路**（[run_terrain_benchmark.sh](file:///home/auv_user/auv_ws/AUV-Master-Project/scripts/run_terrain_benchmark.sh) 无磁 plumbing；summary `magnetic_sample_count=0`/`magnetic_peak_t=nan`）。这是设计如此，磁指纹证据见 F1 三相螺旋漏磁实验与论文第 3 章，不补采集。
+- **extrinsics seed（P1-b）**：[es_ekf_extrinsics_benchmark.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/es_ekf_extrinsics_benchmark.py) `--seeds` 默认已改为 `0,1,2`（3-seed 内建默认）；F2 结果按 3 seed 报告并附 `*_std`。
+- **n=1（P2-a）**：见 §8.2 警示——地形基准单次运行，须标注。
+- **双 INDEX 树（P2-b）**：`docs/thesis/INDEX.md`（工程证据层）与 `docs/thesis/paper/INDEX.md`（论文正文层）为两棵职责不同的平行树，已在各自 INDEX 标注主/从定位；`05_experiments_and_discussion.md` 与 `..._continued.md` 的续写关系已在 paper INDEX 标注。

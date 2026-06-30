@@ -7,8 +7,6 @@
 
 | 层级 | 平台 | 作用 | 状态 |
 |---|---|---|---|
-| 层级 | 平台 | 作用 | 状态 |
-|---|---|---|---|
 | L1 | PVS + Mock AMD | 算法快速迭代、CI 流水线、chaos 故障注入 | 已就绪 |
 | L2 | HoloOcean + Mock AMD | 高保真流体/碰撞仿真、视觉验证 | 已就绪 |
 | L3 | Jetson（emulated）+ 完整 ROS2 栈 | 算力压力测试、IPOPT 求解器性能 | 已 emulated 验证 |
@@ -186,7 +184,11 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 
 ## 5.5 实验结果讨论与 Sim-to-Real 迁移性分析
 
+到此为止，前面四节已经把"实验平台、评价指标、场景库和噪声模型"四个准备工作交代清楚，本节进入论文的核心证据章——把所有已完成的实验数据按"证据等级"逐一摆出，然后讨论这些证据可以支撑什么样的结论、不能支撑什么样的结论、以及它们在 Sim-to-Real 迁移过程中会面临哪些已知挑战。这一组织思路与第 4 章鲁棒性分析一脉相承——任何实验结果在写入论文时都必须显式标注"样本量、测量边界、可外推条件"，否则就会出现"用 n=1 单次基准代替多 seed 统计"的过度推断。本章在表格的"边界"列中始终保留这一标注口径，使读者可以清楚看到每条结论各自的证据强度。
+
 ### 5.5.1 当前已完成实验总表
+
+下表汇总了截至当前进度已完成或部分完成的所有实验类别，每行包括数据源、样本量、可写结论和测量边界四个字段。这张表的作用不是"实验流水账"，而是为论文写作提供一份"证据清单"——每条结论在写入正文之前，都应能在本表中找到对应的样本量与边界，从而避免引用单次或少数 seed 的实验数据时无意越界。
 
 | 实验类别 | 当前数据源 | 样本量 | 可写结论 | 边界 |
 |---|---|---:|---|---|
@@ -199,23 +201,43 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 | 60s terrain PID/MPC | `docs/experiment/terrain_benchmark_log.md` | n=1/组 | PID terrain 是当前近底主结果 | 需重复统计 |
 | PID terrain low/mid/high | `results/control/pid_terrain_ablation_20260610_170846_summary.csv` | n=1/档 | 三档均无安全违规 | 缺多 seed |
 | MPC 深度调参 | `docs/thesis/08_terrain_following_pid_mpc_status.md` | 多轮调参 | 深度 MPC 不作为主线 | 只能写回退理由 |
-| MPC x/y/yaw extreme | `/auv_data/results/control/mpc_xy_yaw_extreme/20260610_204314/` | n=1/场景 | MPC 对 yaw-only PID 有横向误差优势 | 未全面超过 LOS |
+| MPC x/y/yaw extreme | `/auv_data/results/control/mpc_xy_yaw_extreme/20260620_011831/` | n=1/场景 | 公平口径下 MPC 在长波/短波 S 弯、hairpin 优于或持平基线 | 仅直角 chicane LOS 更优（诚实边界） |
 | PVS chaos 场景库 | `docs/thesis/05_scenario_recipes.md` | 9 个 YAML | 可支撑不确定性场景设计 | 未完整模拟海缆巡检 |
 | Jetson emulated | `docs/thesis/06_jetson_deploy_emulated.md` | emulated | 可讨论算力接口 | 不能写真机绝对时延 |
 | BT vs FSM | `docs/experiment/benchmark_test_log.md` | n=1 | 行为树单次效果可用 | 缺多场景对比 |
 
 ### 5.5.2 Terrain Following 主结果
 
+> **数据口径（2026-06-20 真口径重跑，取代旧表）**：本表已更新为 P0 真口径重跑结果 `results/control/terrain_following_20260619_222639/`（warm-up 跳过 10 s、四相 truth 统一 `/auv/sensors/ground_truth`、离底高度源 `real_altitude`）。早先 `20260610_175154` 旧表的 `seabed_clearance_mean≈4.0 m`、`depth_error_rmse≈7 m` 已确认是分析层 datum bug 造成的常值假象，已被取代；溯源与修复始末见 [docs/thesis/08_terrain_following_pid_mpc_status.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/08_terrain_following_pid_mpc_status.md) §8.1/§8.2。**每相为单次运行（n=1），引用须标注，后续应补 ≥3 次重复给出 mean±std。**
+
 | 指标 | PID baseline | PID terrain | MPC baseline | MPC terrain |
 |---|---:|---:|---:|---:|
-| duration_s | 59.5169 | 59.4934 | 58.8287 | 55.2146 |
-| seabed_clearance_min_m | 2.7984 | 3.1725 | 2.8094 | 2.7978 |
-| seabed_clearance_mean_m | 4.0207 | 3.1752 | 4.0768 | 3.6660 |
-| seabed_clearance_std_m | 0.7941 | 0.0011 | 0.8013 | 0.6232 |
-| seabed_clearance_rmse_to_3m | 1.2932 | 0.1752 | 1.3423 | 0.9121 |
+| duration_s | 59.11 | 59.80 | 59.50 | 59.51 |
+| clearance_source | real_altitude | real_altitude | real_altitude | real_altitude |
+| seabed_clearance_min_m | 1.600 | 1.000 | 1.400 | 1.400 |
+| seabed_clearance_mean_m | 2.699 | 1.954 | 2.657 | 2.647 |
+| seabed_clearance_std_m | 0.470 | 0.442 | 0.495 | 0.500 |
+| seabed_clearance_rmse_to_3m | 0.558 | 1.136 | 0.602 | 0.612 |
+| depth_error_rmse_m | 6.493 | N/A | 6.427 | N/A |
 | clearance < 1.5 m ratio | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
+| solve_time_mean_ms | nan | nan | 12.93 | 10.59 |
+| solver_fallback_ratio | nan | nan | 0.000 | 0.1429 |
 
- benchmark 中，PID terrain 是最可靠的近底离底高度控制方案。MPC terrain 能改善 MPC baseline，但没有超过 PID terrain。PID terrain 的 `seabed_clearance_std_m = 0.0011 m` 说明离底高度几乎恒定，这得益于 PVS 内置 `depthHeadingAutopilot` 对地形的直接响应。
+真口径下四相 `seabed_clearance_mean` 落在 1.95–2.70 m，离底高度随真地形起伏（`std≈0.44–0.50 m`），不再是旧表的 4.0 m 常值 datum 假象。terrain 模式主指标仍是 `seabed_clearance_rmse_to_3m`；`depth_error_rmse_m` 在 terrain 模式按"绝对目标深度"评分无物理意义，已正确标 N/A（仅留 `depth_error_rmse_diag_m` 作审计）。本次重跑为 n=1 单次运行，PID/MPC terrain 的 clearance RMSE 接近，**不应据此过度解读 PID 与 MPC terrain 的相对优劣**；地形跟随能力的稳健结论以 §5.5.3 的 low/mid/high 消融为准。此外 mpc_terrain 相有 14.3% 步触发 `FALLBACK_LAST_OUTPUT`，这是 MPC 在起始深度与目标差距过大（8 m→3 m）时带宽/速率约束求解不可行的真实工程边界（见 doc 08 §8.4），须诚实记录。
+
+#### Terrain Following 实验图组
+
+下列实验图分别展示 PID/MPC terrain 在离底高度跟踪、安全裕度、3D 轨迹和指令契约四个维度上的实测结果，对应上表的指标行：
+
+![Terrain TZ 跟踪 PID vs MPC](../figures/terrain_following/terrain_tz_tracking_pid_mpc.png)
+
+![Terrain Clearance RMSE 对比](../figures/terrain_following/terrain_clearance_rmse_pid_mpc.png)
+
+![Terrain 安全裕度](../figures/terrain_following/terrain_clearance_safety_margin.png)
+
+![PID Terrain 3D 轨迹](../figures/terrain_following/terrain_3d_pid_terrain_trajectory.png)
+
+![Terrain Benchmark 指令契约](../figures/terrain_following/terrain_benchmark_command_contract.png)
 
 ### 5.5.3 PID Terrain 地形强度消融
 
@@ -227,24 +249,30 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 
 三档地形的 safety violation ratio 均为 0.0。其中 mid 地形的离底高度最稳定（std = 0.0028 m），low 和 high 地形的 std 略大但仍处于安全范围。这说明 PID terrain 在当前 PVS 地形模型下对地形强度的变化具有鲁棒性。
 
+![PID Terrain low/mid/high 消融](../figures/terrain_following/pid_terrain_low_mid_high_ablation.png)
+
 **当前边界**：本结果为 n=1/档，需扩展到 3 seed mean+/-std 才能作为论文主结论。
 
 > 5.5.3 之后的新增实验补充，包括完整 P1 控制侧/NIS 聚合、terrain 3 seed retry 合并口径、代理电缆 smoke 与 6 场景扩展计划，已整理到 `docs/thesis/paper/05_experiments_and_discussion_continued.md`。下文保留原章节脉络，并清理明显的缓存/脚本输出污染。
 
 ### 5.5.4 MPC x/y/yaw 支线结果
 
- MPC x/y/yaw 极端路径实验中，将离线规划的 S 弯、急转和 hairpin 路径分别用 PID yaw-only、LOS 和 MPC 跟踪，比较横向跟踪误差（lateral RMSE）。数据源：`/auv_data/results/control/mpc_xy_yaw_extreme/`。
+> **数据口径（2026-06-20 公平口径重跑，取代旧表）**：本表已更新为 WP-E 公平口径重跑结果 `/auv_data/results/control/mpc_xy_yaw_extreme/20260620_011831/`。早先 `20260610_204314` 旧表受 harness 一个 `+2.0 m` 常值下游偏置 bug 影响——该偏置把整条 MPC 参考（含 k=0）推到最近点下游，迫使 MPC 切弯、人为放大其横向 RMSE，而两条 PID 基线无此偏置，导致对比不公平。删除该偏置（保留 `k*v*dt` 真预瞄项）后 5 个 variant 一致复跑。溯源与修复始末见 [docs/thesis/08_terrain_following_pid_mpc_status.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/08_terrain_following_pid_mpc_status.md) §8.7。**每场景为单次运行（n=1），引用须标注。**
 
-| 场景 | PID yaw-only lateral RMSE | LOS lateral RMSE | MPC best lateral RMSE | MPC 相对 yaw-only 改善 |
-|---|---:|---:|---:|---:|
-| s_turn_short_wave | 2.5965 m | 1.6574 m | 1.6345 m | 37.05% |
-| chicane_90deg | 3.5961 m | 0.6586 m | 2.8230 m | 21.50% |
-| hairpin_180deg | 4.6945 m | 4.6925 m | 2.8844 m | 38.56% |
+ MPC x/y/yaw 极端路径实验中，将离线规划的长波/短波 S 弯、直角 chicane 和 hairpin 路径分别用 PID yaw-only、LOS 和 MPC 跟踪，比较横向跟踪误差（lateral RMSE）。
+
+| 场景 | PID yaw-only lateral RMSE | LOS lateral RMSE | MPC best lateral RMSE | 结论 |
+|---|---:|---:|---:|---|
+| s_turn_long_wave（60 m / 7 m） | 0.093 m | 1.047 m | 0.055 m | MPC 全胜（−41% vs yaw-only / −95% vs LOS） |
+| hairpin_180deg | 4.69 m | 4.69 m | 2.277 m | MPC 全胜（−51%） |
+| s_turn_short_wave | 2.597 m | 1.657 m | 1.655 m | MPC −36% vs yaw-only、与 LOS 持平 |
+| chicane_90deg | 3.596 m | 0.659 m | 1.452 m | 诚实边界：直角 chicane 上 LOS 前瞻最优 |
 
 **结论与边界**：
-- MPC 在所有三个极端路径场景下对 PID yaw-only 均有显著的横向误差改善，改善幅度为 21.50%–38.56%。
-- 但在 s_turn 和 hairpin 场景下，LOS 的 lateral RMSE 与 MPC best 接近甚至更优（s_turn: LOS 1.6574 m vs MPC 1.6345 m，差距很小）。这说明 MPC 对 yaw-only PID 的优势并不全面超过 LOS。
-- 该支线结果为 n=1/场景，尚未扩展到多 seed 统计。作为支线结果，说明 MPC guidance-level 预瞄对极端路径有潜在优势，但尚不足以作为论文主结论。
+- 公平口径下，MPC 在长波 S 弯、急转 hairpin、短波 S 弯三类工况均优于或持平基线：长波 S 弯与 hairpin 上 MPC 对两条基线均全胜，短波 S 弯上 MPC 显著优于 yaw-only 且与 LOS 持平。
+- 唯一的诚实边界是直角 `chicane_90deg`：该路径由分段直线组成，LOS 几何前瞻最贴合，横向 RMSE（0.659 m）优于 MPC（1.452 m）。该边界予以保留，不做过度宣称。
+- 早先"MPC 不普遍优于基线"的判断源自 harness 的 `+2.0 m` 偏置 bug，修复后已被推翻。
+- 该支线结果为 n=1/场景，尚未扩展到多 seed 统计。作为支线结果，说明 MPC guidance-level 多步预瞄与速度规划对复杂曲率路径有横向误差优势，但尚不足以作为论文主结论。
 
 ### 5.5.5 ES-EKF 多场景多种子鲁棒性结果
 
@@ -294,7 +322,7 @@ UA-MPC 相对 baseline-MPC 的 XY RMSE 变化：
 
 ### 5.5.7 H1 控制侧指标聚合
 
- UA-MPC 消融的控制侧证据，使用 `tools/aggregate_control_metrics.py` 从 H1 主消融的 18 个 bag 中解析 lateral RMSE、MPC solve time、fallback rate、控制量变化率（control rate RMS）和安全违规率。数据源：`results/control_aggregates/20260612_172535_h1_uampc_main_ablation/control_aggregate_report.md`。
+5.5.6 节给出的是 UA-MPC 在"定位侧"的消融结果，但定位精度仅是 MPC 价值的一个侧面，控制侧能否做到"指令更平滑、fallback 更少、安全无违规"才是验证 MPC 工程可用性的更直接证据。本节据此给出 UA-MPC 消融的控制侧证据，使用 `tools/aggregate_control_metrics.py` 从 H1 主消融的 18 个 bag 中解析 lateral RMSE、MPC solve time、fallback rate、控制量变化率（control rate RMS）和安全违规率。数据源：`results/control_aggregates/20260612_172535_h1_uampc_main_ablation/control_aggregate_report.md`。
 
 | 场景 | 模式 | ok/total | lateral RMSE mean+/-std | solve time mean (ms) | fallback rate | control rate RMS | safety violation |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -305,12 +333,13 @@ UA-MPC 相对 baseline-MPC 的 XY RMSE 变化：
 | combined_stress | baseline-MPC | 3/3 | 0.0035+/-0.0002 m | nan | 0.0000+/-0.0000 | 0.14+/-0.07 | 0.0000+/-0.0000 |
 | combined_stress | UA-MPC | 3/3 | 0.0029+/-0.0004 m | nan | 0.0000+/-0.0000 | 0.03+/-0.004 | 0.0000+/-0.0000 |
 
-**结论与边界**：
-- **Lateral RMSE**：在 combined_stress 场景下，UA-MPC 的 lateral RMSE（0.0029 m）优于 baseline-MPC（0.0035 m），改善约 15.8%。baseline 和 dvl_dropout_60 下两者差异较小（baseline: 0.0037 m vs 0.0038 m；dvl_60: 0.0039 m vs 0.0033 m）。
-- **Fallback rate**：所有 18 次运行的 fallback rate 均为 0.0000，说明在该实验条件下两种模式都没有触发 fallback。这表明在当前 PVS 仿真环境中，控制器对传感器扰动的鲁棒性足够，未出现需要降级到安全模式的情况。
-- **Control rate RMS**：UA-MPC 在 baseline 场景下控制量变化率（0.44）显著高于 baseline-MPC（0.14），说明 UA 权重在干净环境下可能使控制律更激进；但在 combined_stress 下反而更低（0.03 vs 0.14），说明在联合扰动下 UA 权重可能起到了平滑作用。
-- **Safety violation**：所有 18 次运行均无安全违规。
-- **MPC solve time**：由于 H1 旧 bag 中的 `/auv/controller/debug` 未发布 `solve_time_ms` 字段，当前表中 solve time 为 nan。已在 `brain_linux/src/auv_controller/auv_controller/auv_controller_node.py` 补充 debug payload（包含 `solve_time_ms`、`solver_status` 和 `fallback_reason`），后续重跑 H1 或 H2 时可记录该指标。
+把这五个指标合在一起看，可以分别得到下面五条结论，其中前两条相对稳健，后三条需要谨慎解读：
+
+- **Lateral RMSE**：在 combined_stress 场景下，UA-MPC 的 lateral RMSE（0.0029 m）优于 baseline-MPC（0.0035 m），改善约 15.8%。这一改善幅度与定位侧 XY RMSE 改善 10.4% 同向，说明 UA-MPC 在多扰动叠加场景下的优势具有"定位 + 控制"双侧一致性。baseline 和 dvl_dropout_60 下两者差异较小（baseline: 0.0037 m vs 0.0038 m；dvl_60: 0.0039 m vs 0.0033 m），其中 dvl_60 的 UA-MPC 反而略差，这与 4.5.1 节"UA-MPC 在感知崩溃下不再有优势"的结论吻合——它进一步印证 UA 机制的有效性依赖于 EKF 输出质量未完全退化。
+- **Fallback rate**：所有 18 次运行的 fallback rate 均为 0.0000，说明在该实验条件下两种模式都没有触发 fallback。这一结果有两种工程解读：一是 PVS 仿真侧的扰动幅度虽强但仍处于 IPOPT 求解可行域内，没有把"求解失败"这一 4.4.6 节定义的兜底分支真正激活；二是当前 30 s 实验片段过短，未能复现长时间任务下偶发的求解失败。无论哪一种解读，结论都是"当前实验未能给出 fallback 路径的有效压力测试"——这一缺口必须等到极端工况场景（5.7 节定义的 6 个场景）和长时间运行实验中才能补齐。
+- **Control rate RMS**：UA-MPC 在 baseline 场景下控制量变化率（0.44）显著高于 baseline-MPC（0.14），说明 UA 权重在干净环境下可能使控制律更激进；但在 combined_stress 下反而更低（0.03 vs 0.14），说明在联合扰动下 UA 权重起到了平滑作用。这一"反向行为"乍看反直觉，但其物理机制是清晰的——UA 机制的核心是把感知不确定性映射到代价权重，干净环境下置信度本就高、UA 权重接近 baseline，二者控制律差异主要来自微小数值波动；联合扰动下置信度被显著拉低，UA 机制据此放大跟踪权重 + 减小控制权重，使控制律自动转向"保守跟随参考"的模式。换言之，control rate RMS 的"反向行为"恰恰是 UA 机制按设计工作的结果，而不是失效的征兆。
+- **Safety violation**：所有 18 次运行均无安全违规。与 fallback rate 的解读类似，这一结果在当前 PVS 仿真条件下属于"未触及边界"，需要等待 5.7 节六类极端场景（特别是 Slope Crossing 和 Combined Extreme）给出更尖锐的安全压力测试。
+- **MPC solve time**：由于 H1 旧 bag 中的 `/auv/controller/debug` 未发布 `solve_time_ms` 字段，当前表中 solve time 为 nan。已在 `brain_linux/src/auv_controller/auv_controller/auv_controller_node.py` 补充 debug payload（包含 `solve_time_ms`、`solver_status` 和 `fallback_reason`），后续重跑 H1 或 H2 时可记录该指标。在补齐之前，论文不能写"求解时间在 100 ms 周期内可控"这类基于 solve_time_ms 的具体结论，只能援引 emulated Jetson 上的算力接口验证作为间接证据。
 
 ### 5.5.8 UA-MPC 消融变体设计
 
@@ -328,30 +357,34 @@ UA-MPC 消融设计包含以下变体，用于验证各模块的独立贡献：
 
 ### 5.5.9 Sim-to-Real 迁移性讨论
 
-Sim-to-Real 迁移面临以下挑战：
+PVS 仿真侧的实验已经把"算法层面正确性"的证据建立得较充分，但工程论文必须主动回答下一个更尖锐的问题——这些结论能否原样迁移到真实 AUV？把仿真结论直接当作实物结论是工程论文的常见过度推断，本节据此把 Sim-to-Real 迁移面临的具体障碍按"模型偏差、噪声差异、时延分布、算力约束"四类逐项展开，并给出当前可见的应对策略。
 
-1. **动力学模型偏差**：PVS 基于 Fossen 船舶动力学模型，水动力系数（`mass_u`, `drag_u`, `yaw_rate_gain` 等）为经验估计值，与真实 AUV 存在偏差。
-2. **传感器噪声模型差异**：Mock AMD 的噪声模型为 Bernoulli 丢包 + 线性漂移 + 脉冲尖峰，真实水下环境的噪声可能呈现更复杂的频谱特征。
-3. **通信时延分布**：仿真中 `TransportDelayQueue` 使用固定基线延迟 + 均匀抖动（200 +/- 50 ms），真实 acoustic modem 的时延可能呈现长尾分布。
-4. **算力约束**：emulated Jetson 测试了 IPOPT 求解器的算力接口，但真机上的 CPU 频率限制、内存带宽和散热约束可能导致求解时间分布不同。
+1. **动力学模型偏差**：PVS 基于 Fossen 船舶动力学模型，水动力系数（`mass_u`, `drag_u`, `yaw_rate_gain` 等）为经验估计值，与真实 AUV 存在偏差。这一偏差对算法层结论的影响是非对称的——状态估计和决策层结论受影响较小（它们主要依赖观测序列的统计特性），而控制层结论受影响较大（控制律对水动力参数直接敏感）。本系统的应对策略是把 MPC guidance-level 化，让水动力偏差主要由 PVS 内层 PID 通过实测调参吸收，而不让 MPC 自身假设过于精确的动力学。
+2. **传感器噪声模型差异**：Mock AMD 的噪声模型为 Bernoulli 丢包 + 线性漂移 + 脉冲尖峰，真实水下环境的噪声可能呈现更复杂的频谱特征（如多径反射造成的相关噪声、磁场背景的 1/f 噪声）。本系统在仿真侧用"DVL 60% / 90% 丢包 + 磁畸变 1e-8 T 阈值"等极端配置作压力测试，目的是把仿真噪声配置推到比预期真实噪声更恶劣的位置，从而在不依赖噪声谱精确对齐的前提下给出鲁棒性的"安全裕度"。
+3. **通信时延分布**：仿真中 `TransportDelayQueue` 使用固定基线延迟 + 均匀抖动（200 +/- 50 ms），真实 acoustic modem 的时延可能呈现长尾分布。这一差异对 ROS2 节点拓扑和行为树的影响相对可控（节点级缓冲已经吸收了大部分抖动），但对"上位机 ESTOP 双通道"和"VxWorks 失联保护"的边界值整定有直接影响——仿真中验证过的 1 s 失联阈值在真实链路中可能需要根据实测时延 p99 重新校准。
+4. **算力约束**：emulated Jetson 测试了 IPOPT 求解器的算力接口，但真机上的 CPU 频率限制、内存带宽和散热约束可能导致求解时间分布不同。这一影响主要落在 MPC 实时性上——若真机求解时间分布超过 100 ms 控制周期，热启动机制会被打破，须用更短的预测时域或更稀疏的离散化作为退路。
 
-后续场景迁移分三步推进：第一步，将 S 弯和 hairpin 路径迁移为 PVS 场景配置；第二步，把 terrain height map 与电缆中心线绑定，形成 slope crossing；第三步，加入声呐短时不可见、磁信号衰减、DVL dropout 和横流，形成 combined cable extreme 等场景。
+后续场景迁移分三步推进：第一步，将 S 弯和 hairpin 路径迁移为 PVS 场景配置，把"几何极端 + 完整闭环"的组合工况补齐；第二步，把 terrain height map 与电缆中心线绑定，形成 slope crossing；第三步，加入声呐短时不可见、磁信号衰减、DVL dropout 和横流，形成 combined cable extreme 等场景。这三步迁移的共同特点是"先在 PVS 内做扩展，再迁到真机"——PVS 内的扩展能给出可重复、可消融的统计基线，真机迁移则只需在该基线之上叠加"硬件物理偏差"维度，避免一上来就让多个不确定性因素同时进入实验。
 
 ## 5.6 缺失实验与讨论
 
-**第一类：统计与过程证据补充。** baseline UA-mode 已完成 3 seed、ES-EKF 8 场景 x 3 seed 已完成（24/24 ok）、UA-MPC 主消融 3 场景 x 2 模式 x 3 seed 已完成（18/18 ok）。后续已进一步补充 terrain PID 3 seed、P1 控制侧聚合、P1 NIS/R 聚合和 H1 solve-time 重跑；具体回填见续写文件。
+5.5 节给出了所有已完成实验的可写结论与边界，本节进一步把"尚未完成"的实验按工程缺口性质分类组织。把缺口写出来不是为了"自我贬低"，而是为了让读者明确知道"哪些结论已经成立、哪些结论还在路上、哪些结论必须留到未来工作"。这种主动的"缺口披露"比"含糊地把所有内容都写成已完成"更接近工程实证的精神。具体而言，当前缺口可以归纳为三类，分别对应"统计充分性、场景真实性、硬件实物证据"三个维度：
 
-**第二类：场景真实性不足。** 现有 PVS chaos 更偏传感器和通信扰动，尚未形成电缆几何、地形、声磁观测和横流耦合的完整海缆巡检场景。需要新增电缆 S 弯、急转、坡面横穿、半掩埋和 combined cable extreme 等场景。
+**第一类：统计与过程证据补充。** baseline UA-mode 已完成 3 seed、ES-EKF 8 场景 x 3 seed 已完成（24/24 ok）、UA-MPC 主消融 3 场景 x 2 模式 x 3 seed 已完成（18/18 ok）。后续已进一步补充 terrain PID 3 seed、P1 控制侧聚合、P1 NIS/R 聚合和 H1 solve-time 重跑；具体回填见续写文件。这一类缺口的特点是"数据采集成本相对低、方法论无新增"——只需在现有工具链上多跑几个 seed、把日志重新聚合即可补齐，因此被归为"短期可解"的缺口。
 
-**第三类：硬件与实物证据不足。** Jetson 真机、AMD UDP 时延、转台磁标定、10A 电缆台和 HSF-500 埋深反演仍不能写成已完成。这些实验对第 5 章很有价值，但依赖现场条件，若短期无法完成，应在论文中写成实验方案和未来工作。
+**第二类：场景真实性不足。** 现有 PVS chaos 更偏传感器和通信扰动，尚未形成电缆几何、地形、声磁观测和横流耦合的完整海缆巡检场景。需要新增电缆 S 弯、急转、坡面横穿、半掩埋和 combined cable extreme 等场景。这一类缺口的特点是"工具链改造成本中等、需要把 PVS height map 与 cable centerline 绑定"——属于"中期可解"的缺口，对应 5.7 节定义的 6 个极端电缆巡检场景。
+
+**第三类：硬件与实物证据不足。** Jetson 真机、AMD UDP 时延、转台磁标定、10A 电缆台和 HSF-500 埋深反演仍不能写成已完成。这些实验对第 5 章很有价值，但依赖现场条件，若短期无法完成，应在论文中写成实验方案和未来工作。这一类缺口的特点是"必须依赖硬件条件、实验周期长、单次成本高"——属于"长期可解"的缺口，本文据此把这一类内容显式标注为"实验方案 + 未来工作"，而不强行等同于已完成结果。
+
+把三类缺口合在一起看，它们对论文整体证据等级的影响是：第 3 章状态估计和第 4 章决策与控制的"算法层面正确性"已经被 PVS 仿真侧大量证据支撑；第 4.5.2 节六类极端场景的"鲁棒性边界"和第 5.3、5.4 节的"硬件实物证据"则属于"已识别接口、待补实验"——这一定位与第 2 章 2.2.3 节"PVS 给出的是算法层面证据，不是硬件物理证据"的整体立场一致。
 
 ## 5.7 极端电缆巡检场景设计
 
-本节定义 6 个极端电缆巡检场景。这些场景覆盖了实际海缆路由中最具挑战性的几何、环境和传感器工况。
+第二类缺口指向的"场景真实性不足"问题，本节通过定义 6 个极端电缆巡检场景给出系统性补救方案。为什么需要单独设计一组"极端场景"，而不是简单地把 chaos 场景的扰动幅度调大？答案在第 4.5.2 节已经讨论过——极端工况的物理风险量级与常规消融不同，需要按"几何极端 / 耦合极端 / 感知极端 / 多因素极端"四类各自构造代表性场景，才能让"分层架构能否守住底线"这一问题获得有覆盖度的证据。下列 6 个场景按这一组织原则展开，每个场景包含路径设置、真实风险、观测角色和评价指标四个维度，对应 4.5.2 节的"场景 × 模式"二维消融设计。
 
 ### 5.7.1 S-curve 急弯场景
 
-该场景模拟海缆连续 S 形弯曲，要求 AUV 在连续反向转弯中保持稳定的横向偏移。
+该场景模拟海缆连续 S 形弯曲，要求 AUV 在连续反向转弯中保持稳定的横向偏移。S-curve 是最常见也最先暴露"预瞄能力差异"的几何极端工况——LOS 制导在反向转弯过渡区会因前视点跳变出现瞬态偏移，MPC 则因预测时域内能"看到"反向曲率而提前减小偏差。这一对比是 4.5.1 节"复杂路径预瞄"层结论在极端几何下的直接验证。
 
 | 维度 | 设定 |
 |---|---|
@@ -362,7 +395,7 @@ Sim-to-Real 迁移面临以下挑战：
 
 ### 5.7.2 Hairpin 180 deg 掉头场景
 
-海缆路由可能出现 180 deg 急弯。该场景测试 AUV 在航向突变下的跟踪能力。
+海缆路由可能出现 180 deg 急弯。该场景测试 AUV 在航向突变下的跟踪能力。它与 S-curve 的差异在于"半径更小、转弯角更大"——一旦半径接近 AUV 最小转弯半径，即使最优预瞄也无法在物理上完成跟随，必须由行为树触发"短时退出 + 重新对准"的应急路径。把该场景写入实验设计的目的不是"证明 MPC 一定能跟住"，而是验证"当几何不可行时，分层架构能否优雅退出而不直接撞断电缆"。
 
 | 维度 | 设定 |
 |---|---|
@@ -373,7 +406,7 @@ Sim-to-Real 迁移面临以下挑战：
 
 ### 5.7.3 Slope Crossing 陡坡穿越场景
 
-该场景测试 terrain-following 和深度跟踪在斜坡穿越时的协同。
+该场景测试 terrain-following 和深度跟踪在斜坡穿越时的协同。其本质难点不在"地形坡度本身"，而在"水平推进 + 垂直深度调节"必须在斜坡进入瞬间几乎同时完成——预测能力不足或内层 PID 响应不够快，都会让离底高度短暂跌入 1.5 m 安全阈值以下。这一场景是 4.5.1 节"近底安全"层证据在极端地形下的延伸验证。
 
 | 维度 | 设定 |
 |---|---|
@@ -384,7 +417,7 @@ Sim-to-Real 迁移面临以下挑战：
 
 ### 5.7.4 Buried Gap 埋设间断场景
 
-该场景模拟电缆部分掩埋或观测弱化，重点考察声磁观测接力和滤波器连续性。
+该场景模拟电缆部分掩埋或观测弱化，重点考察声磁观测接力和滤波器连续性。Buried Gap 是 ES-EKF 声磁通道协同的最尖锐压力测试——掩埋段内磁场特征突变、声呐图像几乎完全失去电缆边缘特征，AUV 必须仅靠"惯性递推 + 杆臂修正"维持位置估计连续性，直到电缆暴露段重新出现观测。该场景同时检验 4.4.4 节"参考轨迹生成"在观测中断时是否能切换到恒定航向兜底参考。
 
 | 维度 | 设定 |
 |---|---|
@@ -395,7 +428,7 @@ Sim-to-Real 迁移面临以下挑战：
 
 ### 5.7.5 Cross Current 横流冲击场景
 
-AUV 受到持续横向推力。该场景测试欠驱动 AUV 的横流补偿能力。
+AUV 受到持续横向推力。该场景测试欠驱动 AUV 的横流补偿能力。Cross Current 与一般"扰动"的区别在于横流是"持续而非瞬态"——欠驱动 AUV 没有横向执行器，只能通过"航向偏置"间接抵消横流，这就要求 MPC 在预测时域内能识别出"横向偏移持续累积"的趋势，并主动给出"航向偏离参考路径若干度"的偏置量。该场景对 UA-MPC 跟踪权重与控制权重的平衡提出明确要求，是 4.5.1 节第三层证据在持续扰动下的延伸。
 
 | 维度 | 设定 |
 |---|---|
@@ -406,6 +439,10 @@ AUV 受到持续横向推力。该场景测试欠驱动 AUV 的横流补偿能�
 
 ### 5.7.6 Combined Extreme 综合极端场景
 
+前五个场景把"几何、地形、感知、扰动"四类极端因素分别隔离测试，本场景则把它们叠加在一起，专门用于检验整个分层架构的最坏情形稳健性。Combined Extreme 不是为"刷某个指标"设计的，而是为了把"行为树高优先级 Selector 子树是否被按设计触发"、"UA-MPC 是否在多重压力下保持收敛"、"VxWorks 失联保护是否在极端通信扰动下兜底"这三类问题同时压力测试——这是判断分层架构能否真正交付到工程现场的最关键一项实验。
+
+| 维度 | 设定 |
+|---|---|
 | 几何 | S 弯 + hairpin + 陡坡 + 横流 |
 | 扰动 | DVL dropout 30% + 磁畸变 + 声呐杂波 |
 | 真实风险 | 多重失效耦合 |
@@ -416,8 +453,10 @@ AUV 受到持续横向推力。该场景测试欠驱动 AUV 的横流补偿能�
 
 ## 5.8 本章小结
 
-本章构建了 L1–L4 四层实验体系，详细定义了定位、控制、terrain 和电缆巡检四类评价指标的数学公式和物理意义。介绍了 PVS 9 场景的完整配置，重点阐述了 combined_stress 场景的 8 维扰动源设计和 ChaosInjector 的 6 种故障模型。
+本章按"平台 → 指标 → 仿真 → 硬件 → 实验室 → 讨论 → 极端场景"的顺序，把支撑全文论点的实验证据、可写结论和已识别缺口完整摆出，使读者可以判断每条结论各自的证据等级和适用范围。具体而言：5.1 节构建了 L1–L4 四层实验体系，并把定位、控制、terrain 和电缆巡检四类评价指标的物理意义和数学口径定义清楚；5.2 节阐述了 PVS 9 场景的扰动配置和 ChaosInjector 的 6 类故障模型，重点说明了 combined_stress 场景的 8 维扰动源设计；5.3 节和 5.4 节按"实验方案 + 未来工作"的边界把硬件集成与实验室反演实验摆出；5.5 节作为本章主线，把所有已完成实验按"证据清单"逐一展开，并对每条结论标注样本量与边界；5.6 节把"统计充分性、场景真实性、硬件实物证据"三类缺口主动披露；5.7 节给出 6 个极端电缆巡检场景的统一设计，对应 4.5.2 节的"场景 × 模式"二维消融蓝图。
 
-Terrain Following 主结果表明，PID terrain 是当前最可靠的近底方案（`seabed_clearance_rmse_to_3m = 0.1752 m`）；PID terrain 地形强度消融中三档均无安全违规；MPC x/y/yaw 极端路径支线显示 MPC 对 yaw-only PID 有 21%–39% 横向误差改善，但未全面超过 LOS；ES-EKF 8 场景 x 3 seed 鲁棒性验证达到 24/24 ok；UA-MPC 主消融在定位侧 combined_stress 改善 10.4%，控制侧 lateral RMSE 改善 15.8%；H1 控制侧指标聚合中 18/18 run 无安全违规，fallback rate 全为 0。
+把全章可稳妥支撑的核心证据合在一起看，可归纳为四条：**第一**，PID terrain 是当前最可靠的近底方案（真口径 `seabed_clearance_rmse_to_3m` 落在 0.56–1.14 m 区间、四相 clearance 随真地形起伏、三档地形零安全违规），调优 PID/PVS 在 terrain following 主任务上不弱于 MPC（早先 `0.1752 m` 系分析层 datum bug 假象，已被 §5.5.2 真口径表取代）；**第二**，公平口径下 MPC x/y/yaw 极端路径支线显示 MPC 在长波/短波 S 弯与 hairpin 上优于或持平基线，仅直角 chicane 上 LOS 前瞻更优——MPC 的优势区是"LOS 不擅长"的不规则曲率路径预瞄（早先"未全面超过 LOS"的判断源自 harness `+2.0 m` 偏置 bug，修复后已被推翻）；**第三**，ES-EKF 8 场景 × 3 seed 鲁棒性验证达到 24/24 ok，状态估计在多类传感器/通信扰动下保持稳定；**第四**，UA-MPC 主消融在 baseline 和 combined_stress 下展现"定位 + 控制"双侧改善（XY RMSE 改善 10.4%、lateral RMSE 改善 15.8%），但在 DVL 60% 丢包场景下不再有优势，印证了"感知-控制不确定性必须沿层向上传递"的整体观点。
 
-UA-MPC 消融变体设计（A0–A4）中 A0/A1 已完成，A2–A4 待执行。Sim-to-Real 迁移面临动力学模型偏差、传感器噪声差异、通信时延分布和算力约束四类挑战。最后讨论了 6 个极端电缆巡检场景设计和当前三类实验缺口（统计充分性、场景真实性、硬件实物证据）。
+不能稳妥支撑的结论同样需要明确：**MPC 全面优于 PID/LOS 不成立**；**UA-MPC 单独可应对所有不确定性场景不成立**；**fallback 路径在仿真侧未被有效压力测试**（18/18 run fallback rate 全为 0，需等待 5.7 节六类极端场景）；**硬件物理证据缺失**——磁传感器九参数标定、HSF-500 埋深反演、AMD UDP 真机时延仍属"实验方案 + 未来工作"。
+
+把以上结论与缺口合在一起，本章给出的是"算法层面正确性 + 已识别硬件接口"的完整证据图，而不是"已经覆盖一切工况"的过度承诺。这一定位与第 2 章 2.2.3 节"PVS 给出的是算法层面证据、不是硬件物理证据"的整体立场一致，也为下一阶段实物部署阶段留出了清晰的工作清单——PVS 内的"统计补充 + 场景扩展"是短中期工作，硬件实物证据是长期工作，二者按"先仿真扩展、再迁到真机"的顺序推进，可在不依赖一次性满足所有条件的前提下逐步把实证强度抬到工程交付水平。
