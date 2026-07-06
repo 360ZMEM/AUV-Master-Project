@@ -25,12 +25,12 @@ ROS2 运行时不会把 `sensor_position_ned` 放入 `/auv/sensors/magnetic`。�
 
 为了提供 bag 级证明，`auv_bridge` 发布一个低频 JSON 状态话题：
 
-- 话题： `/auv/sensors/magnetic_extrinsics_status`
-- 类型： `std_msgs/String`
-- 源文件： `brain_linux/src/auv_bridge/auv_bridge/bridge_node.py`
-- 运行时配置： `bridge.magnetic_extrinsics_status`
-- 外参配置： `sensor_extrinsics_estimated.mag`
-- 来源追踪： `metadata.mag_extrinsics_source`
+- 话题：`/auv/sensors/magnetic_extrinsics_status`
+- 类型：`std_msgs/String`
+- 源文件：`brain_linux/src/auv_bridge/auv_bridge/bridge_node.py`
+- 运行时配置：`bridge.magnetic_extrinsics_status`
+- 外参配置：`sensor_extrinsics_estimated.mag`
+- 来源追踪：`metadata.mag_extrinsics_source`
 
 状态 payload 记录磁数据 key、ROS frame、估计平移/旋转、样本数，以及源 payload 中是否存在仅仿真使用的位置字段。它不得重新发布原始 `sensor_position_ned`，也不得导出 `sensor_extrinsics_truth`。
 
