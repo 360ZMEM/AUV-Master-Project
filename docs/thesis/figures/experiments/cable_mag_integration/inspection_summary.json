@@ -1,0 +1,39 @@
+{
+  "point_count": 1,
+  "burial_min_m": 1.4,
+  "burial_accuracy_target_m": 0.15,
+  "burial_accuracy_pass": true,
+  "max_route_offset_m": 0.5,
+  "average_confidence": 0.8,
+  "score_items": [
+    {
+      "item": "海缆埋深不足",
+      "level": "III",
+      "base_score": 8,
+      "weight": 2,
+      "score": 16
+    }
+  ],
+  "total_score": 16,
+  "worst_single_score": 16,
+  "state": "注意状态",
+  "source_tracking_jsonl": "/home/auv_user/auv_ws/AUV-Master-Project/results/cable_tracking/api_outputs.smoke.jsonl",
+  "implemented_items": [
+    "route_deviation",
+    "burial_profile",
+    "burial_accuracy",
+    "tracking_confidence"
+  ],
+  "simulatable_later_items": [
+    "cable_damage",
+    "armor_wear",
+    "foreign_object_entanglement"
+  ],
+  "external_input_items": [
+    "port_facility",
+    "terminal_equipment",
+    "manhole",
+    "grounding_box",
+    "family_defect"
+  ]
+}

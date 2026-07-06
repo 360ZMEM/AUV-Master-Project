@@ -16,10 +16,9 @@
 | [02_system_design.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/02_system_design.md) | 第 2 章 | 任务需求、双脑架构、通信协议、声磁建模与标定框架 |
 | [03_state_estimation.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/03_state_estimation.md) | 第 3 章 | 异步同步、ES-EKF、声磁协同、自适应不确定性 |
 | [04_decision_and_control.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/04_decision_and_control.md) | 第 4 章 | 行为树、failsafe、PID/PVS、MPC/UA-MPC 与控制边界 |
-| [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) | 第 5 章（主） | 实验平台、指标、结果表、讨论与 Sim-to-Real 边界（5.1–5.8 主体） |
-| [05_experiments_and_discussion_continued.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion_continued.md) | 第 5 章（续写） | base 文件"5.5.3 之后"的续写（5.5.4–5.8，含 5.5.7 Terrain PID 多 seed 复验）。**与 base 文件存在 5.5.4–5.8 编号重叠，base 为主、本文件为补充续写**，引用以 base 为准、续写项以本文件为准 |
+| [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) | 第 5 章 | 实验平台、指标、结果表、讨论与 Sim-to-Real 边界（5.1–5.8 全章，单文件） |
 
-> **05 章主从说明（P2-b）**：`05_experiments_and_discussion.md` 为**主文件**，`..._continued.md` 为其续写补充；两者在 5.5.4–5.8 编号上有重叠，写作时主体内容引用主文件、续写新增项（如多 seed 复验）引用续写文件，避免重复计入。
+> **05 章单文件说明（P2-b，已合并）**：原 `05_experiments_and_discussion.md`（主）+ `..._continued.md`（续写）双文件结构已合并为**单一主文件**。续写文件中的新增结果已按主题并入主文件对应子节——terrain PID 3 seed → §5.5.3、P1 NIS/R 聚合 → §5.5.5、P1 控制侧聚合与 H1 solve-time 重跑 → §5.5.7、代理电缆 6 场景 smoke → §5.7.7。主文件 §5.5.x 编号保持不变（03/04 章及 e2e 计划文档均按此编号交叉引用），不再存在双文件编号重叠问题。
 > **三组过渡实验（F1/F2/F3）证据**见工程证据层 [docs/thesis/11_transition_experiments_F1_F2_F3.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/11_transition_experiments_F1_F2_F3.md)，对应第 2/3 章。
 
 按论文写作支撑用途组织的补充文档：
@@ -28,6 +27,11 @@
 |---|---|
 | [experiment_gap_and_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/experiment_gap_and_next_plan.md) | 当前实验缺口、优先级和补实验计划 |
 | [pvs_extreme_cable_scenarios.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/pvs_extreme_cable_scenarios.md) | PVS 场景真实性、极端电缆巡检设计和 discrepancy 收敛 |
+| [e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md) | 端到端 distorted-prior 电缆探测验证专项计划（§5.5.11 第 (5) 条引用），闭合"clean-prior 端到端已闭环、distorted-prior 仅算法级验证"的缺口 |
+
+> **§5.5.10/§5.5.11 电缆探测证据分层（P2-c）**：`05_experiments_and_discussion.md` §5.5.10 为主仓 DL/T 1278 数字孪生验收（clean prior，3/3 ready/pass）；§5.5.11 把端到端电缆探测证据显式分层——主仓端到端运行的是同源 `AuvMagTrackingPipeline`（非代理），但只在 clean prior 下被激励，distorted-prior 失效/恢复边界为专用仓库 `AUV-Master-Mag` docs 28-30 的**算法级、n=1、纯仿真**证据（仅引用，不迁移）。写作时严禁把算法级 distorted-prior 结论表述为主仓端到端实测。
+
+> **上位机操作员工作流演示视频（答辩/附录）**：§5.5.10 末尾附上位机操作员工作流演示视频，由 [tools/record_console_operator_video.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/record_console_operator_video.py) 在 headless（`xvfb-run` + `QT_QPA_PLATFORM=offscreen`）下驱动真实 PySide6 `MainWindow`，用 run1 真实遥测 `tracking.jsonl` 逐帧回放电缆巡检监控面板并 `window.grab()` 后经 ffmpeg 编码 MP4（PIL 作 GIF 回退），产物在 `docs/thesis/figures/console_operator_video/`。**边界：真实遥测的离线回放演示（非现场实时会话），仅执行安全操作员动作、停用外发定时器不发包，末帧对应全程离窗后的 `NOT READY/FAIL` 状态。**
 
 ## 与工程证据层的关系
 
@@ -51,3 +55,6 @@
 | 硬件磁标定和 10A 电缆台 | 实物实验未执行 | 写成设计方案和未来工作 |
 | 9 个 PVS chaos = 完整海缆巡检 | 缺电缆几何、声磁耦合和横流 | 写成不确定性感知验证基础 |
 | n=1 实验 = 多种子统计 | 缺少 mean±std | 表格标题标注 n=1 |
+| 主仓端到端已验证 distorted-prior 鲁棒性 | 主仓端到端只跑 clean prior（`max_route_offset≈0`），无先验扰动 knob | 写成 clean-prior 端到端已闭环 + 引用 docs 28-30 算法级边界，见 §5.5.11 |
+| DL/T 1278 数字孪生验收 = 现场海试验收 | 确定性电缆先验、非真实检测噪声 | 写成 preliminary_acceptance_ready，见 §5.5.10 边界 |
+| 海缆 DL/T ready/pass = 全程通过 | 判定限有效巡检窗口，全程 readiness=limited | 写成"有效巡检窗口内通过"，见 §5.5.10 边界 3 |

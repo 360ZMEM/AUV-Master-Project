@@ -1,0 +1,15 @@
+{
+  "source_dir": "/home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/smoke",
+  "copied": [
+    "cable_ops_points.csv",
+    "burial_profile.csv",
+    "route_deviation.csv",
+    "inspection_summary.json",
+    "dlt1278_report.md"
+  ],
+  "generated": [
+    "01_cable_burial_profile.png",
+    "02_cable_route_deviation.png",
+    "03_cable_tracking_confidence.png"
+  ]
+}

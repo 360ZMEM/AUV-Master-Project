@@ -106,7 +106,10 @@ def _install_state_hooks(monkeypatch, *, heading_deg: float, dvl_speed_mps: floa
     monkeypatch.setattr(
         mock_amd_server_module,
         "pose_matrix_ue_to_ned",
-        lambda pose: {"rpy_ned": np.radians(np.array([0.0, 0.0, state_holder["heading_deg"]], dtype=float))},
+        lambda pose: {
+            "position_ned": np.array([0.0, 0.0, state_holder["depth_m"]], dtype=float),
+            "rpy_ned": np.radians(np.array([0.0, 0.0, state_holder["heading_deg"]], dtype=float)),
+        },
     )
     monkeypatch.setattr(
         mock_amd_server_module,
@@ -165,6 +168,95 @@ def test_init_enables_mock_components() -> None:
     assert server._delay_queue is not None
     assert server._sensor_cache is not None
     assert server._chaos is not None
+
+
+def test_protocol_logging_defaults_to_single_line_2hz() -> None:
+    config = _make_config()
+    config["bridge"]["protocol_udp"].update(
+        {
+            "log_ascii_format": True,
+            "log_every_n": 1,
+        }
+    )
+
+    server = MockAmdUdpServer(config, DummyCommandGuard())
+
+    assert server.log_rate_hz == 2.0
+    assert server.log_every_n == 25
+    assert server.log_ascii_format is False
+    assert server.allow_multiline_logs is False
+
+
+def test_protocol_logging_allows_explicit_multiline_debug() -> None:
+    config = _make_config()
+    config["bridge"]["protocol_udp"].update(
+        {
+            "log_rate_hz": 5.0,
+            "log_ascii_format": True,
+            "allow_multiline_logs": True,
+            "log_fixed_block_lines": 48,
+        }
+    )
+
+    server = MockAmdUdpServer(config, DummyCommandGuard())
+
+    assert server.log_every_n == 10
+    assert server.log_ascii_format is True
+
+
+def test_protocol_verbose_blocks_keep_fixed_line_count() -> None:
+    config = _make_config()
+    config["bridge"]["protocol_udp"].update(
+        {
+            "log_ascii_format": True,
+            "allow_multiline_logs": True,
+            "log_fixed_block_lines": 48,
+        }
+    )
+    server = MockAmdUdpServer(config, DummyCommandGuard())
+
+    uplink_packet = server._build_uplink_packet(
+        {
+            "auv0": {
+                "PoseSensor": np.eye(4, dtype=float),
+                "DVLSensor": np.zeros(3, dtype=float),
+                "DepthSensor": np.array([8.0], dtype=float),
+            }
+        },
+        1,
+        np.zeros(5, dtype=float),
+    )
+    downlink_packet = _make_downlink_packet()
+
+    assert len(server._format_fixed_verbose_packet(
+        uplink_packet,
+        label="mock-amd TX",
+        source="127.0.0.1:52365",
+        step=1,
+        mode_tag="AUTO",
+    ).splitlines()) == 48
+    assert len(server._format_fixed_verbose_packet(
+        downlink_packet,
+        label="mock-amd RX",
+        source="127.0.0.1:52365",
+        step=None,
+        mode_tag="RX",
+    ).splitlines()) == 48
+
+
+def test_protocol_rx_logging_is_rate_limited(monkeypatch) -> None:
+    config = _make_config()
+    config["bridge"]["protocol_udp"].update({"log_rate_hz": 2.0})
+    server = MockAmdUdpServer(config, DummyCommandGuard())
+
+    current_time = [1000.0]
+    monkeypatch.setattr(mock_amd_server_module.time, "time", lambda: current_time[0])
+
+    assert server._should_log_rx_packet() is True
+    current_time[0] = 1000.1
+    assert server._should_log_rx_packet() is False
+    current_time[0] = 1000.5
+    assert server._should_log_rx_packet() is True
 
 
 def test_poll_command_packet_drains_delayed_commands(monkeypatch) -> None:

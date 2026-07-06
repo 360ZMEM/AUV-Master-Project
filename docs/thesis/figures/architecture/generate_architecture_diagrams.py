@@ -9,15 +9,22 @@ from xml.sax.saxutils import escape
 OUT = Path(__file__).resolve().parent
 VERSION = "30.0.4"
 
-FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=14;fontColor=#2F3A45;"
-TITLE_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=22;fontStyle=1;fontColor=#26323D;"
-SUB_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=12;fontColor=#5C6B7A;"
+FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=14;fontColor=#26323D;"
+TITLE_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=24;fontStyle=1;fontColor=#1E2732;"
+SUB_FONT = "fontFamily=Noto Serif CJK SC,Times New Roman;fontSize=13;fontColor=#43525F;"
 EDGE = (
     "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;"
-    "html=1;strokeColor=#7E93A8;fontColor=#536577;fontSize=12;"
-    "endArrow=block;endFill=1;"
+    "html=1;strokeColor=#5F7690;fontColor=#3B4A57;fontSize=12;strokeWidth=2;"
+    "labelBackgroundColor=#F6F7F8;labelBorderColor=none;"
+    "endArrow=block;endFill=1;endSize=8;"
 )
 EDGE_DASH = EDGE + "dashed=1;dashPattern=6 4;"
+EDGE_BOLD = (
+    "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;"
+    "html=1;strokeColor=#2F4A63;fontColor=#1E2732;fontSize=13;fontStyle=1;strokeWidth=3;"
+    "labelBackgroundColor=#F6F7F8;labelBorderColor=none;"
+    "endArrow=block;endFill=1;endSize=10;"
+)
 
 PALETTE = {
     "blue": ("#EAF2F8", "#8AA9C4"),
@@ -39,7 +46,7 @@ def box_style(color: str = "blue", extra: str = "") -> str:
     fill, stroke = PALETTE[color]
     return (
         "rounded=1;whiteSpace=wrap;html=1;arcSize=12;"
-        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.5;spacing=8;"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=2;spacing=8;shadow=0;"
         f"{FONT}{extra}"
     )
 
@@ -47,9 +54,9 @@ def box_style(color: str = "blue", extra: str = "") -> str:
 def lane_style(color: str = "gray") -> str:
     fill, stroke = PALETTE[color]
     return (
-        "swimlane;whiteSpace=wrap;html=1;startSize=34;rounded=1;arcSize=8;"
-        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.5;"
-        f"collapsible=0;childLayout=none;{FONT}"
+        "swimlane;whiteSpace=wrap;html=1;startSize=36;rounded=1;arcSize=8;"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=2;"
+        f"collapsible=0;childLayout=none;{FONT}fontStyle=1;fontSize=15;"
     )
 
 
@@ -75,6 +82,32 @@ def rect(cells, id_, label, x, y, w, h, color="blue", parent="1", extra=""):
     )
 
 
+def diamond(cells, id_, label, x, y, w, h, color="yellow", parent="1", extra=""):
+    fill, stroke = PALETTE[color]
+    style = (
+        f"rhombus;whiteSpace=wrap;html=1;fillColor={fill};strokeColor={stroke};"
+        f"strokeWidth=2;{FONT}{extra}"
+    )
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{style}" vertex="1" '
+        f'parent="{parent}"><mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" '
+        f'as="geometry" /></mxCell>'
+    )
+
+
+def ellipse(cells, id_, label, x, y, w, h, color="blue", parent="1", extra=""):
+    fill, stroke = PALETTE[color]
+    style = (
+        f"ellipse;whiteSpace=wrap;html=1;fillColor={fill};strokeColor={stroke};"
+        f"strokeWidth=2;{FONT}{extra}"
+    )
+    cells.append(
+        f'<mxCell id="{id_}" value="{value(label)}" style="{style}" vertex="1" '
+        f'parent="{parent}"><mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" '
+        f'as="geometry" /></mxCell>'
+    )
+
+
 def lane(cells, id_, label, x, y, w, h, color="gray"):
     cells.append(
         f'<mxCell id="{id_}" value="{value(label)}" style="{lane_style(color)}" '
@@ -92,8 +125,9 @@ def text(cells, id_, label, x, y, w, h, title=False):
     )
 
 
-def edge(cells, id_, source, target, label="", dashed=False, points=None, extra=""):
-    style = (EDGE_DASH if dashed else EDGE) + extra
+def edge(cells, id_, source, target, label="", dashed=False, points=None, extra="", bold=False):
+    base = EDGE_BOLD if bold else (EDGE_DASH if dashed else EDGE)
+    style = base + extra
     if points:
         pts = "".join(f'<mxPoint x="{x}" y="{y}" />' for x, y in points)
         geometry = f'<mxGeometry relative="1" as="geometry"><Array as="points">{pts}</Array></mxGeometry>'
@@ -101,11 +135,11 @@ def edge(cells, id_, source, target, label="", dashed=False, points=None, extra=
         geometry = '<mxGeometry relative="1" as="geometry" />'
     cells.append(
         f'<mxCell id="{id_}" value="{value(label)}" style="{style}" edge="1" '
-        f'parent="1" source="{source}" target="{target}">{geometry}</mxCell>'
+        f'parent="{"1"}" source="{source}" target="{target}">{geometry}</mxCell>'
     )
 
 
-def write(name: str, cells, page_width=1400, page_height=900) -> None:
+def write(name: str, cells, page_width=1440, page_height=940) -> None:
     body = "\n        ".join(['<mxCell id="0" />', '<mxCell id="1" parent="0" />'] + cells)
     xml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="drawio" version="{VERSION}">
@@ -155,12 +189,45 @@ def code_layer_architecture():
         ("co3", "physics.py\n物理限幅 / 饱和日志", 755, 50, 240, 46, "purple", "l_common"),
     ]:
         rect(cells, *spec)
-    edge(cells, "e1", "app2", "if1", "组装后端", extra="exitX=0.5;exitY=1;entryX=0.25;entryY=0;")
-    edge(cells, "e2", "app3", "if3", "启动桥接", extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    edge(cells, "e3", "if2", "co3", "坐标/物理约束", extra="exitX=0.5;exitY=1;entryX=0.75;entryY=0;")
-    edge(cells, "e4", "if3", "co1", "协议编解码", extra="exitX=0.35;exitY=1;entryX=0.5;entryY=0;")
-    edge(cells, "e5", "beh2", "alg2", "保护控制器", extra="exitX=0.4;exitY=1;entryX=0.5;entryY=0;")
-    edge(cells, "e6", "alg2", "co3", "限幅", extra="exitX=0.5;exitY=1;entryX=0.35;entryY=0;")
+    edge(cells, "e1", "app2", "if1", "组装后端", extra="exitX=0.5;exitY=1;entryX=0.25;entryY=0;", bold=True)
+    edge(cells, "e2", "app3", "if3", "启动桥接", extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;", bold=True)
+    edge(
+        cells,
+        "e3",
+        "if2",
+        "co3",
+        "",
+        points=[(470, 700), (875, 700)],
+        extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;",
+    )
+    edge(
+        cells,
+        "e4",
+        "if3",
+        "co1",
+        "",
+        points=[(760, 490), (245, 490)],
+        extra="exitX=0.35;exitY=1;entryX=0.5;entryY=0;",
+        bold=True,
+    )
+    edge(
+        cells,
+        "e5",
+        "beh2",
+        "alg2",
+        "",
+        points=[(590, 510), (310, 510)],
+        extra="exitX=0.35;exitY=1;entryX=0;entryY=0.5;",
+    )
+    edge(
+        cells,
+        "e6",
+        "alg2",
+        "co3",
+        "",
+        points=[(500, 640), (875, 640)],
+        extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;",
+    )
     write("auv_code_layer_architecture", cells)
 
 
@@ -188,22 +255,22 @@ def runtime_dataflow():
     ]:
         rect(cells, *spec)
     for spec in [
-        ("se1", "st1", "st2", "ref", False, None, "exitX=1;entryX=0;"),
-        ("se2", "st2", "st3", "target", False, None, "exitX=1;entryX=0;"),
-        ("se3", "st3", "st4", "cmd[5]", False, None, "exitX=1;entryX=0;"),
-        ("se4", "st4", "st5", "safe cmd", False, None, "exitX=1;entryX=0;"),
-        ("se5", "st5", "st6", "readback", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0.5;"),
-        ("se6", "st6", "st2", "闭环反馈", True, [(380, 320)], "exitX=0;entryX=0.5;entryY=1;"),
-        ("be1", "br1", "br2", "raw state", False, None, "exitX=1;entryX=0;"),
-        ("be2", "br2", "br3", "NED + sensors", False, None, "exitX=1;entryX=0;"),
-        ("be3", "br3", "br4", "rt/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
-        ("be4", "br4", "br5", "/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
-        ("be5", "br5", "br6", "state + health", False, None, "exitX=0.65;exitY=1;entryX=0.65;entryY=0;"),
-        ("be6", "br6", "br7", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;"),
-        ("be7", "br5", "br7", "/auv/state/filtered", False, None, "exitX=0.35;exitY=1;entryX=0.65;entryY=0;"),
-        ("be8", "br7", "br8", "/cmd_vel / mpc_cmd", False, None, "exitX=0;entryX=1;"),
-        ("be9", "br8", "br3", "encode command", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
-        ("be10", "br3", "br1", "actuator command", True, [(250, 705)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("se1", "st1", "st2", "ref", False, None, "exitX=1;entryX=0;", True),
+        ("se2", "st2", "st3", "target", False, None, "exitX=1;entryX=0;", True),
+        ("se3", "st3", "st4", "cmd[5]", False, None, "exitX=1;entryX=0;", True),
+        ("se4", "st4", "st5", "safe cmd", False, None, "exitX=1;entryX=0;", True),
+        ("se5", "st5", "st6", "readback", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0.5;", False),
+        ("se6", "st6", "st2", "闭环反馈", True, [(360, 340), (360, 210)], "exitX=0;entryX=0.5;entryY=1;", False),
+        ("be1", "br1", "br2", "raw state", False, None, "exitX=1;entryX=0;", True),
+        ("be2", "br2", "br3", "NED + sensors", False, None, "exitX=1;entryX=0;", True),
+        ("be3", "br3", "br4", "rt/auv/sensors/*", False, None, "exitX=1;entryX=0;", True),
+        ("be4", "br4", "br5", "/auv/sensors/*", False, None, "exitX=1;entryX=0;", True),
+        ("be5", "br5", "br6", "state + health", False, None, "exitX=0.65;exitY=1;entryX=0.65;entryY=0;", False),
+        ("be6", "br6", "br7", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;", True),
+        ("be7", "br5", "br7", "/auv/state/filtered", False, None, "exitX=0.35;exitY=1;entryX=0.65;entryY=0;", False),
+        ("be8", "br7", "br8", "/cmd_vel / mpc_cmd", False, None, "exitX=0;entryX=1;", True),
+        ("be9", "br8", "br3", "encode command", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
+        ("be10", "br3", "br1", "actuator command", True, [(600, 750), (200, 750), (200, 555)], "exitX=0.15;exitY=1;entryX=0.5;entryY=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_runtime_dataflow", cells)
@@ -232,20 +299,20 @@ def ros2_node_topology():
     ]:
         rect(cells, *spec)
     for spec in [
-        ("r1", "ex1", "ex3", "raw sensor / cmd", False, None, "exitX=1;entryX=0;"),
-        ("r2", "ex2", "ex3", "manual / auth / estop", False, None, "exitX=1;entryX=0;"),
-        ("r3", "ex3", "n1", "/auv/sensors/*", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("r4", "n1", "n2", "/auv/sensors/*", False, None, "exitX=1;entryX=0;"),
-        ("r5", "n2", "n3", "/auv/state/filtered", False, None, "exitX=1;entryX=0;"),
-        ("r6", "n2", "n4", "state + health", False, None, "exitX=0.8;exitY=1;entryX=0.35;entryY=0;"),
-        ("r7", "n4", "n3", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;"),
-        ("r8", "n3", "n1", "/cmd_vel / mpc_cmd", True, [(400, 420)], "exitX=0;entryX=0.5;entryY=1;"),
-        ("r9", "n1", "ex3", "encoded control", True, None, "exitX=0.5;exitY=0;entryX=0.35;entryY=1;"),
-        ("r10", "n2", "n5", "state/status/bt", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;"),
-        ("r11", "n4", "n5", "bt_status", False, None, "exitX=0.3;exitY=1;entryX=0.8;entryY=0;"),
-        ("r12", "n5", "o1", "live view", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;"),
-        ("r13", "n1", "o2", "record topics", True, None, "exitX=0.55;exitY=1;entryX=0.5;entryY=0;"),
-        ("r14", "o2", "o3", "offline analysis", False, None, "exitX=1;entryX=0;"),
+        ("r1", "ex1", "ex3", "", False, [(380, 115), (920, 115)], "exitX=1;exitY=1;entryX=0;entryY=1;", True),
+        ("r2", "ex2", "ex3", "manual / auth / estop", False, None, "exitX=1;entryX=0;", False),
+        ("r3", "ex3", "n1", "/auv/sensors/*", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("r4", "n1", "n2", "/auv/sensors/*", False, None, "exitX=1;entryX=0;", True),
+        ("r5", "n2", "n3", "/auv/state/filtered", False, None, "exitX=1;entryX=0;", True),
+        ("r6", "n2", "n4", "state + health", False, None, "exitX=0.8;exitY=1;entryX=0.35;entryY=0;", False),
+        ("r7", "n4", "n3", "/auv/control/setpoint", False, None, "exitX=0;entryX=1;", True),
+        ("r8", "n3", "n1", "/cmd_vel / mpc_cmd", False, [(620, 425), (175, 425)], "exitX=0;exitY=1;entryX=0.5;entryY=1;", True),
+        ("r9", "n1", "ex3", "encoded control", True, [(50, 260)], "exitX=0;exitY=0.5;entryX=0.05;entryY=1;", False),
+        ("r10", "n2", "n5", "state/status/bt", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;", False),
+        ("r11", "n4", "n5", "bt_status", False, None, "exitX=0.3;exitY=1;entryX=0.8;entryY=0;", False),
+        ("r12", "n5", "o1", "live view", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;", False),
+        ("r13", "n1", "o2", "record topics", True, [(175, 640)], "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("r14", "o2", "o3", "offline analysis", False, None, "exitX=1;entryX=0;", False),
     ]:
         edge(cells, *spec)
     write("auv_ros2_node_topology", cells)
@@ -275,19 +342,19 @@ def safety_arbiter_deployment():
     ]:
         rect(cells, *spec)
     for spec in [
-        ("sa1", "pc1", "j1", "manual cmd / auth byte", False, None, "exitX=1;entryX=0;"),
-        ("sa2", "pc2", "j2", "freshness check", False, None, "exitX=1;entryX=0;"),
-        ("sa3", "pc3", "j3", "release authority", True, None, "exitX=1;entryX=0;"),
-        ("sa4", "a1", "j1", "uplink telemetry", False, [(1000, 150), (720, 150)], "exitX=0;entryX=1;"),
-        ("sa5", "j1", "j2", "request AUTONOMY", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("sa6", "j2", "j3", "guard pass / deny", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("sa7", "j5", "j4", "setpoint", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("sa8", "j4", "j3", "", False, None, "exitX=0;entryX=1;"),
-        ("sa9", "j3", "a2", "selected command", False, [(955, 475)], "exitX=1;entryX=0;"),
-        ("sa10", "j3", "j7", "timeout / ESTOP", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
-        ("sa11", "j7", "a2", "zero thrust", True, [(1000, 575)], "exitX=1;entryX=0.5;entryY=1;"),
-        ("sa12", "j6", "j3", "shadow only", True, None, "exitX=0;entryX=1;"),
-        ("sa13", "a3", "a2", "polarity accepted", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
+        ("sa1", "pc1", "j1", "manual cmd / auth byte", False, None, "exitX=1;entryX=0;", True),
+        ("sa2", "pc2", "j2", "freshness check", False, None, "exitX=1;entryX=0;", False),
+        ("sa3", "pc3", "j3", "release authority", True, None, "exitX=1;entryX=0;", False),
+        ("sa4", "a1", "j1", "上行遥测", False, [(1170, 165), (700, 165)], "exitX=0.5;exitY=0;entryX=1;entryY=0;", True),
+        ("sa5", "j1", "j2", "request AUTONOMY", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("sa6", "j2", "j3", "guard pass / deny", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("sa7", "j5", "j4", "setpoint", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("sa8", "j4", "j3", "", False, None, "exitX=0;entryX=1;", False),
+        ("sa9", "j3", "a2", "selected command", False, [(955, 500)], "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("sa10", "j3", "j7", "timeout / ESTOP", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;", False),
+        ("sa11", "j7", "a2", "zero thrust", True, [(920, 585), (1115, 585)], "exitX=1;exitY=0.5;entryX=0.5;entryY=1;", False),
+        ("sa12", "j6", "j3", "shadow only", True, None, "exitX=0;entryX=1;", False),
+        ("sa13", "a3", "a2", "polarity accepted", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_safety_arbiter_deployment", cells)
@@ -299,20 +366,20 @@ def system_capability_map():
     text(cells, "s1", "宏观视角：围绕自主水下任务，组织仿真、自治、上位机、观测、实验与真机部署能力", 330, 62, 760, 34)
     rect(cells, "core", "自主水下任务平台\n任务执行 / 安全控制 / 数据闭环", 550, 365, 300, 90, "blue")
     rect(cells, "sim", "仿真与环境子系统\n场景构建 / 传感器生成 / 执行器响应", 110, 150, 290, 78, "teal")
-    rect(cells, "autonomy", "自主决策与控制子系统\n状态估计 / 任务决策 / 运动控制", 555, 130, 290, 78, "green")
+    rect(cells, "autonomy", "自主决策与控制子系统\n状态估计 / 任务决策 / 运动控制", 555, 110, 290, 78, "green")
     rect(cells, "operator", "人机协同子系统\n遥控接管 / 自主授权 / 急停处置", 1000, 150, 290, 78, "orange")
     rect(cells, "obs", "可观测性子系统\n实时看板 / 运行日志 / 黑匣子记录", 1000, 555, 290, 78, "purple")
     rect(cells, "experiment", "实验验证子系统\n场景编排 / 指标评估 / 对比验证", 555, 600, 290, 78, "yellow")
     rect(cells, "deploy", "实物部署子系统\n分级试验 / 链路审计 / 安全回退", 110, 555, 290, 78, "red")
     for spec in [
-        ("c1", "sim", "core", "虚拟世界与传感输入", False, None, "exitX=1;entryX=0;"),
-        ("c2", "autonomy", "core", "自主能力", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("c3", "operator", "core", "人工监督与授权", False, None, "exitX=0;entryX=1;"),
-        ("c4", "core", "obs", "运行证据", False, None, "exitX=1;entryX=0;"),
-        ("c5", "core", "experiment", "实验数据", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("c6", "core", "deploy", "工程迁移", False, None, "exitX=0;entryX=1;"),
-        ("c7", "experiment", "sim", "场景反哺", True, [(320, 705), (320, 260)], "exitX=0;entryX=0.5;entryY=1;"),
-        ("c8", "obs", "operator", "态势反馈", True, [(1250, 330)], "exitX=0.5;exitY=0;entryX=0.5;entryY=1;"),
+        ("c1", "sim", "core", "仿真输入", False, [(255, 285), (470, 410)], "exitX=0.5;exitY=1;entryX=0;entryY=0.35;", True),
+        ("c2", "autonomy", "core", "自主能力", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("c3", "operator", "core", "人工授权", False, [(1145, 285), (930, 410)], "exitX=0.5;exitY=1;entryX=1;entryY=0.35;", True),
+        ("c4", "core", "obs", "运行证据", False, None, "exitX=1;entryX=0;", True),
+        ("c5", "core", "experiment", "实验数据", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("c6", "core", "deploy", "工程迁移", False, None, "exitX=0;entryX=1;", True),
+        ("c7", "experiment", "sim", "场景反哺", True, [(320, 715), (320, 250)], "exitX=0;entryX=0.5;entryY=1;", False),
+        ("c8", "obs", "operator", "态势反馈", True, [(1260, 340)], "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_system_capability_map", cells)
@@ -341,18 +408,18 @@ def system_subsystem_organization():
     ]:
         rect(cells, *spec)
     for spec in [
-        ("s1", "g1", "o3", "任务意图", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;"),
-        ("s2", "g2", "o5", "控制权约束", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
-        ("s3", "g3", "o1", "运行编排", False, None, "exitX=0.35;exitY=1;entryX=0.5;entryY=0;"),
-        ("s4", "o1", "o2", "感知输入", False, None, "exitX=1;entryX=0;"),
-        ("s5", "o2", "o3", "态势理解", False, None, "exitX=1;entryX=0;"),
-        ("s6", "o3", "o4", "行动目标", False, None, "exitX=1;entryX=0;"),
-        ("s7", "o5", "o4", "安全约束", False, None, "exitX=1;entryX=0.5;"),
-        ("s8", "o4", "w2", "控制作用", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("s9", "w2", "o1", "传感反馈", True, [(260, 590)], "exitX=0;entryX=0.5;entryY=1;"),
-        ("s10", "w1", "o1", "仿真替身", True, None, "exitX=0.5;exitY=0;entryX=0.35;entryY=1;"),
-        ("s11", "w3", "o2", "扰动与不确定性", True, None, "exitX=0.5;exitY=0;entryX=0.65;entryY=1;"),
-        ("s12", "o2", "g4", "观测证据", True, None, "exitX=0.35;exitY=0;entryX=0.5;entryY=1;"),
+        ("s1", "g1", "o3", "任务意图", False, None, "exitX=0.5;exitY=1;entryX=0.4;entryY=0;", False),
+        ("s2", "g2", "o5", "控制权约束", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;", True),
+        ("s3", "g3", "o1", "运行编排", False, None, "exitX=0.35;exitY=1;entryX=0.5;entryY=0;", False),
+        ("s4", "o1", "o2", "感知输入", False, None, "exitX=1;entryX=0;", True),
+        ("s5", "o2", "o3", "态势理解", False, None, "exitX=1;entryX=0;", True),
+        ("s6", "o3", "o4", "行动目标", False, None, "exitX=1;entryX=0;", True),
+        ("s7", "o5", "o4", "安全约束", False, None, "exitX=1;entryX=0.5;", True),
+        ("s8", "o4", "w2", "控制作用", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("s9", "w2", "o1", "传感反馈", True, [(230, 590), (230, 285)], "exitX=0;entryX=0.5;entryY=1;", False),
+        ("s10", "w1", "o1", "仿真替身", True, None, "exitX=0.5;exitY=0;entryX=0.35;entryY=1;", False),
+        ("s11", "w3", "o2", "扰动与不确定性", True, None, "exitX=0.5;exitY=0;entryX=0.65;entryY=1;", False),
+        ("s12", "o2", "g4", "观测证据", True, None, "exitX=0.35;exitY=0;entryX=0.5;entryY=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_system_subsystem_organization", cells)
@@ -371,16 +438,16 @@ def autonomy_functional_loop():
     rect(cells, "operator", "人工监督\n授权 / 接管 / 任务调整", 150, 510, 260, 66, "orange")
     rect(cells, "evidence", "运行证据\n记录 / 回放 / 评估", 560, 700, 280, 58, "purple")
     for spec in [
-        ("l1", "env", "sense", "传感观测", False, None, "exitX=0;entryX=0.5;entryY=0;"),
-        ("l2", "sense", "estimate", "信息融合", False, None, "exitX=1;entryX=0;"),
-        ("l3", "estimate", "decide", "态势输入", False, None, "exitX=1;entryX=0;"),
-        ("l4", "decide", "control", "行动目标", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0;"),
-        ("l5", "control", "env", "控制作用", False, [(455, 470), (455, 215)], "exitX=0.15;exitY=0;entryX=0.35;entryY=1;"),
-        ("l6", "operator", "safety", "授权与接管", False, None, "exitX=1;entryX=0;"),
-        ("l7", "safety", "control", "安全边界", False, None, "exitX=0;entryX=1;"),
-        ("l8", "estimate", "safety", "健康与风险", True, [(895, 405), (1110, 405)], "exitX=1;entryX=0.5;entryY=0;"),
-        ("l9", "control", "evidence", "执行记录", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("l10", "evidence", "operator", "复盘反馈", True, [(280, 740)], "exitX=0;entryX=0.5;entryY=1;"),
+        ("l1", "env", "sense", "传感观测", False, [(140, 143), (140, 335)], "exitX=0;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("l2", "sense", "estimate", "信息融合", False, None, "exitX=1;entryX=0;", True),
+        ("l3", "estimate", "decide", "态势输入", False, None, "exitX=1;entryX=0;", True),
+        ("l4", "decide", "control", "行动目标", False, None, "exitX=0.5;exitY=1;entryX=1;entryY=0;", True),
+        ("l5", "control", "env", "控制作用", False, [(520, 543), (520, 143)], "exitX=0;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("l6", "operator", "safety", "授权与接管", False, [(280, 620), (1100, 620)], "exitX=0.5;exitY=1;entryX=0.5;entryY=1;", False),
+        ("l7", "safety", "control", "安全边界", False, None, "exitX=0;entryX=1;", True),
+        ("l8", "estimate", "safety", "健康与风险", True, [(895, 405), (1110, 405)], "exitX=1;entryX=0.5;entryY=0;", False),
+        ("l9", "control", "evidence", "执行记录", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("l10", "evidence", "operator", "复盘反馈", True, [(280, 740)], "exitX=0;entryX=0.5;entryY=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_system_autonomy_functional_loop", cells)
@@ -408,9 +475,9 @@ def verification_to_deployment_ladder():
     ]:
         rect(cells, *spec)
     for i in range(1, 6):
-        edge(cells, f"pe{i}", f"p{i}", f"p{i+1}", "风险受控后升级", False, None, "exitX=1;entryX=0;")
-        edge(cells, f"g{i}", f"p{i}", f"g{i}", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    edge(cells, "g6edge", "p6", "g6", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+        edge(cells, f"pe{i}", f"p{i}", f"p{i+1}", "风险受控后升级", False, None, "exitX=1;entryX=0;", bold=True)
+        edge(cells, f"g{i}", f"p{i}", f"g{i}", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", bold=False)
+    edge(cells, "g6edge", "p6", "g6", "", True, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", bold=False)
     rect(cells, "guard", "统一原则\n先观测、再接管、再释放自主；任何阶段保留回退通道", 360, 245, 620, 58, "gray", "ladder")
     write("auv_system_verification_deployment_ladder", cells)
 
@@ -440,12 +507,12 @@ def dual_brain_async_hardware_v2():
     text(cells, "act", "低延迟：内环 + 驱动 + 故障保护", 920, 665, 340, 34)
 
     for spec in [
-        ("db1", "perception", "decision", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("db2", "decision", "planning", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("db3", "inner", "driver", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("db4", "driver", "failsafe", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("db5", "planning", "inner", "轻量控制意图", False, [(610, 560), (790, 560), (880, 418)], "exitX=1;entryX=0;"),
-        ("db6", "failsafe", "perception", "状态与健康反馈", True, [(790, 610), (610, 610), (520, 273)], "exitX=0;entryX=1;"),
+        ("db1", "perception", "decision", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("db2", "decision", "planning", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("db3", "inner", "driver", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("db4", "driver", "failsafe", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("db5", "planning", "inner", "轻量控制意图", False, [(610, 560), (790, 560), (880, 418)], "exitX=1;entryX=0;", True),
+        ("db6", "failsafe", "perception", "状态与健康反馈", True, [(790, 610), (610, 610), (520, 273)], "exitX=0;entryX=1;", False),
     ]:
         edge(cells, *spec)
     write("auv_v2_dual_brain_async_hardware", cells)
@@ -467,14 +534,14 @@ def uncertainty_highway_v2():
     rect(cells, "amd", "底层执行器\n安全平滑指令", 550, 655, 300, 70, "teal")
 
     for spec in [
-        ("u1", "disturb", "dirty", "原始数据变脏", False, None, "exitX=1;entryX=0;"),
-        ("u2", "dirty", "ekf", "融合估计", False, None, "exitX=1;entryX=0;"),
-        ("u3", "ekf", "uq", "协方差", False, None, "exitX=1;entryX=0;"),
-        ("u4", "uq", "highway", "标量置信度", False, None, "exitX=0.5;exitY=1;entryX=0.82;entryY=0;"),
-        ("u5", "highway", "bt", "决策阈值", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;"),
-        ("u6", "highway", "mpc", "控制调度", False, None, "exitX=0.7;exitY=1;entryX=0.5;entryY=0;"),
-        ("u7", "bt", "amd", "安全模式", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;"),
-        ("u8", "mpc", "amd", "平滑约束指令", False, None, "exitX=0.5;exitY=1;entryX=0.65;entryY=0;"),
+        ("u1", "disturb", "dirty", "原始数据变脏", False, None, "exitX=1;entryX=0;", False),
+        ("u2", "dirty", "ekf", "融合估计", False, None, "exitX=1;entryX=0;", True),
+        ("u3", "ekf", "uq", "协方差", False, None, "exitX=1;entryX=0;", True),
+        ("u4", "uq", "highway", "标量置信度", False, None, "exitX=0.5;exitY=1;entryX=0.82;entryY=0;", True),
+        ("u5", "highway", "bt", "决策阈值", False, None, "exitX=0.3;exitY=1;entryX=0.5;entryY=0;", True),
+        ("u6", "highway", "mpc", "控制调度", False, None, "exitX=0.7;exitY=1;entryX=0.5;entryY=0;", True),
+        ("u7", "bt", "amd", "安全模式", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;", True),
+        ("u8", "mpc", "amd", "平滑约束指令", False, None, "exitX=0.5;exitY=1;entryX=0.65;entryY=0;", True),
     ]:
         edge(cells, *spec)
     write("auv_v2_uncertainty_highway", cells)
@@ -515,13 +582,208 @@ def five_layer_functional_architecture_v2():
         rect(cells, *spec)
 
     for spec in [
-        ("fl1", "a2", "b1", "配置约束", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("fl2", "b2", "c2", "运行态势", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("fl3", "c3", "d4", "目标与边界", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
-        ("fl4", "d3", "e2", "可行域约束", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;"),
+        ("fl1", "a2", "b1", "配置约束", False, [(580, 225), (210, 225)], "exitX=0.5;exitY=1;entryX=0;entryY=0.5;", True),
+        ("fl2", "b2", "c2", "运行态势", False, [(580, 345), (430, 345), (430, 420)], "exitX=0.5;exitY=1;entryX=0;entryY=0.5;", True),
+        ("fl3", "c3", "d4", "目标与边界", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("fl4", "d3", "e2", "可行域约束", False, [(845, 670)], "exitX=1;exitY=0.5;entryX=1;entryY=0.5;", True),
     ]:
         edge(cells, *spec)
     write("auv_v2_five_layer_functional_architecture", cells)
+
+
+def behavior_tree_illustration():
+    cells = []
+    text(cells, "t1", "行为树决策核心示意", 390, 20, 620, 42, True)
+    text(cells, "s1", "任务分层：主选择器优先安全，然后任务序列；安全分支具备最高优先级，可打断正常任务", 300, 66, 820, 34)
+
+    rect(cells, "root", "Selector\n主根节点（优先级从左到右）", 560, 130, 320, 74, "purple", extra="fontStyle=1;fontSize=16;")
+
+    rect(cells, "safety_seq", "Sequence\n安全监督分支", 130, 260, 260, 66, "red", extra="fontStyle=1;")
+    rect(cells, "mission_seq", "Sequence\n任务执行分支", 610, 260, 260, 66, "yellow", extra="fontStyle=1;")
+    rect(cells, "idle", "Idle\n待机 / 记录", 1090, 275, 220, 56, "gray")
+
+    rect(cells, "s_low_batt", "Condition\n低电量 / 漏水 / 超时", 60, 405, 210, 60, "red")
+    rect(cells, "s_surface", "Action\n上浮返航 (Failsafe)", 290, 405, 210, 60, "red")
+
+    rect(cells, "m_pre", "Condition\n预检通过 / 授权 OK", 555, 405, 220, 60, "yellow")
+    rect(cells, "m_seq", "Sequence\n巡线 → 到点 → 拍照", 795, 405, 220, 60, "yellow")
+
+    rect(cells, "m_track", "Action\n巡线跟踪", 570, 540, 200, 56, "green")
+    rect(cells, "m_reach", "Action\n到点悬停", 790, 540, 200, 56, "green")
+    rect(cells, "m_shot", "Action\n拍照记录", 1010, 540, 200, 56, "green")
+
+    text(cells, "legend", "图例：菱形样式在此以 Sequence/Selector 语义体现；红色=安全分支，黄色=任务分支，绿色=末端动作", 130, 690, 1160, 34)
+
+    for spec in [
+        ("bt1", "root", "safety_seq", "优先级 1", False, None, "exitX=0.25;exitY=1;entryX=0.5;entryY=0;", True),
+        ("bt2", "root", "mission_seq", "优先级 2", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("bt3", "root", "idle", "回落", False, None, "exitX=0.85;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt4", "safety_seq", "s_low_batt", "检测", False, None, "exitX=0.25;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt5", "safety_seq", "s_surface", "触发", False, None, "exitX=0.75;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt6", "mission_seq", "m_pre", "校验", False, None, "exitX=0.25;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt7", "mission_seq", "m_seq", "展开", False, None, "exitX=0.75;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt8", "m_seq", "m_track", "step 1", False, None, "exitX=0.2;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt9", "m_seq", "m_reach", "step 2", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", False),
+        ("bt10", "m_seq", "m_shot", "step 3", False, None, "exitX=0.8;exitY=1;entryX=0.5;entryY=0;", False),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_behavior_tree_illustration", cells)
+
+
+def mission_state_machine():
+    cells = []
+    text(cells, "t1", "任务状态机 (Mission FSM)", 480, 20, 640, 42, True)
+    text(cells, "s1", "从空闲到全自主的运行阶段，每一步都有独立准入条件与回退回路", 460, 66, 720, 34)
+
+    states = [
+        ("st_idle",   "IDLE\n上电空闲",              60,  190, 180, 100, "gray"),
+        ("st_pre",    "PREFLIGHT\n预检 / 授权",      290, 190, 200, 100, "yellow"),
+        ("st_shadow", "SHADOW\n影子导航（不夺权）",   540, 190, 230, 100, "orange"),
+        ("st_single", "SINGLE_LOOP\n单回路闭环",      820, 190, 220, 100, "blue"),
+        ("st_full",   "FULL_AUTONOMY\n全自主任务",   1100, 190, 230, 100, "green"),
+        ("st_done",   "COMPLETE\n收尾 / 回收",       380, 540, 230, 100, "purple"),
+        ("st_hold",   "SAFE_HOLD\n安全保持 / 回退",  1100, 540, 230, 100, "red"),
+    ]
+    for spec in states:
+        ellipse(cells, *spec)
+
+    text(cells, "legend", "规则：任何一态在安全触发下都可直接迁移至 SAFE_HOLD；操作员可主动降级到 SHADOW；COMPLETE 后回到 IDLE", 100, 810, 1300, 40)
+
+    for spec in [
+        ("fs1", "st_idle",   "st_pre",    "操作员启动",   False, None, "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("fs2", "st_pre",    "st_shadow", "预检通过",     False, None, "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("fs3", "st_shadow", "st_single", "影子对齐 OK",  False, None, "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", True),
+        ("fs4", "st_single", "st_full",   "单点闭环稳定", False, None, "exitX=1;exitY=0.5;entryX=0;entryY=0.5;", True),
+        # 任务完成：st_full → st_done, 长横线走 y=470
+        ("fs5", "st_full",   "st_done",   "任务完成",     False,
+            [(1160, 470), (495, 470)], "exitX=0.25;exitY=1;entryX=0.5;entryY=0;", True),
+        # 安全触发：st_full → st_hold, 直下
+        ("fs6", "st_full",   "st_hold",   "安全触发",     False,
+            None, "exitX=0.85;exitY=1;entryX=0.85;entryY=0;", False),
+        # 偏差过大：st_single → st_hold, 走 y=400 轨道
+        ("fs7", "st_single", "st_hold",   "偏差过大",     True,
+            [(985, 400), (1215, 400)], "exitX=0.75;exitY=1;entryX=0.5;entryY=0;", False),
+        # 置信度不足：st_shadow → st_hold, 走 y=440 轨道，进入左上
+        ("fs8", "st_shadow", "st_hold",   "置信度不足",   True,
+            [(700, 440), (1150, 440)], "exitX=0.7;exitY=1;entryX=0.2;entryY=0;", False),
+        # 复位再预检：st_hold → st_pre, 底部 y=740
+        ("fs9", "st_hold",   "st_pre",    "复位再预检",   True,
+            [(1160, 740), (390, 740)], "exitX=0.25;exitY=1;entryX=0.5;entryY=1;", False),
+        # 回到空闲：st_done → st_idle, 底部 y=760
+        ("fs10", "st_done",  "st_idle",   "回到空闲",     True,
+            [(410, 760), (150, 760)], "exitX=0.15;exitY=1;entryX=0.5;entryY=1;", False),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_mission_state_machine", cells, page_width=1440, page_height=900)
+
+
+def emergency_transition():
+    cells = []
+    text(cells, "t1", "紧急情况下的状态切换与仲裁", 380, 20, 660, 42, True)
+    text(cells, "s1", "AUTONOMOUS 运行中一旦触发关键守卫，Arbiter 立即将控制权切换到 HOLD 或 REMOTE / SURFACE", 260, 66, 900, 34)
+
+    ellipse(cells, "auto", "AUTONOMOUS\n自主运行", 620, 130, 220, 100, "green", extra="fontStyle=1;fontSize=16;")
+
+    rect(cells, "g1", "通信丢失\nuplink age > τ", 100, 300, 220, 66, "red")
+    rect(cells, "g2", "EKF 发散\n协方差爆炸", 380, 300, 220, 66, "red")
+    rect(cells, "g3", "电量告警\nSOC < 阈值", 660, 300, 220, 66, "red")
+    rect(cells, "g4", "操作员 ESTOP\n地面站按下", 940, 300, 220, 66, "red")
+
+    diamond(cells, "arb", "Arbiter\n权限仲裁", 620, 440, 220, 110, "purple", extra="fontStyle=1;")
+
+    ellipse(cells, "hold", "SAFE_HOLD\n零推力保持", 130, 640, 220, 100, "gray")
+    ellipse(cells, "remote", "REMOTE\n交还操作员", 470, 640, 220, 100, "orange")
+    ellipse(cells, "surface", "SURFACE\n应急上浮", 810, 640, 220, 100, "yellow")
+    ellipse(cells, "kill", "KILL\n执行器截止", 1140, 640, 200, 100, "red")
+
+    text(cells, "legend", "阈值命中优先级：ESTOP > 通信丢失 > EKF 发散 > 电量告警；不同守卫映射到不同目标态", 130, 800, 1180, 34)
+
+    for spec in [
+        ("et1", "auto", "g1", "监听", True,
+            [(730, 260), (210, 260)], "exitX=0.15;exitY=1;entryX=0.5;entryY=0;", False),
+        ("et2", "auto", "g2", "监听", True,
+            [(730, 275), (490, 275)], "exitX=0.4;exitY=1;entryX=0.5;entryY=0;", False),
+        ("et3", "auto", "g3", "监听", True,
+            [(730, 275), (770, 275)], "exitX=0.6;exitY=1;entryX=0.5;entryY=0;", False),
+        ("et4", "auto", "g4", "监听", True,
+            [(730, 260), (1050, 260)], "exitX=0.85;exitY=1;entryX=0.5;entryY=0;", False),
+        ("et5", "g1", "arb", "触发", False,
+            [(210, 400), (630, 400)], "exitX=0.5;exitY=1;entryX=0.05;entryY=0.4;", True),
+        ("et6", "g2", "arb", "触发", False, None, "exitX=0.5;exitY=1;entryX=0.35;entryY=0;", True),
+        ("et7", "g3", "arb", "触发", False, None, "exitX=0.5;exitY=1;entryX=0.65;entryY=0;", True),
+        ("et8", "g4", "arb", "触发", False,
+            [(1050, 400), (830, 400)], "exitX=0.5;exitY=1;entryX=0.95;entryY=0.4;", True),
+        ("et9",  "arb", "hold",    "低电量 → 保持",     False,
+            [(660, 600), (240, 600)], "exitX=0.2;exitY=1;entryX=0.5;entryY=0;", True),
+        ("et10", "arb", "remote",  "通信丢失 → 遥控",   False,
+            [(700, 600), (580, 600)], "exitX=0.4;exitY=1;entryX=0.5;entryY=0;", True),
+        ("et11", "arb", "surface", "EKF 发散 → 上浮",   False,
+            [(760, 600), (920, 600)], "exitX=0.6;exitY=1;entryX=0.5;entryY=0;", True),
+        ("et12", "arb", "kill",    "ESTOP → 截止",      False,
+            [(800, 600), (1240, 600)], "exitX=0.8;exitY=1;entryX=0.5;entryY=0;", True),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_emergency_transition", cells, page_height=900)
+
+
+def mission_lifecycle_flow():
+    cells = []
+    text(cells, "t1", "任务完整生命周期泳道", 370, 20, 660, 42, True)
+    text(cells, "s1", "四方协同：操作员发起、Arbiter 授权、Brain 执行、AMD 反馈；红色为安全回退通道", 300, 66, 820, 34)
+
+    lane(cells, "op", "操作员 / 地面站", 90, 130, 1260, 130, "orange")
+    lane(cells, "arb", "Arbiter / 安全守卫", 90, 275, 1260, 130, "red")
+    lane(cells, "brain", "Brain / 决策与控制", 90, 420, 1260, 170, "blue")
+    lane(cells, "amd", "AMD / 执行与反馈", 90, 605, 1260, 130, "teal")
+
+    rect(cells, "op1", "任务发起\n加载 yaml", 50, 55, 190, 58, "yellow", "op")
+    rect(cells, "op2", "预检授权\n签发权限令牌", 275, 55, 190, 58, "yellow", "op")
+    rect(cells, "op3", "任务监视\n看板 / 视频", 500, 55, 190, 58, "purple", "op")
+    rect(cells, "op4", "干预窗口\n必要时接管", 725, 55, 190, 58, "orange", "op")
+    rect(cells, "op5", "任务收尾\n复盘 / 归档", 950, 55, 220, 58, "gray", "op")
+
+    rect(cells, "ar1", "权限锁定\n拒绝越权", 50, 50, 190, 58, "red", "arb")
+    rect(cells, "ar2", "AutonomyGuard\n通信 / 电压 / 置信度", 275, 50, 220, 58, "red", "arb")
+    rect(cells, "ar3", "权限迁移\nREMOTE → AUTONOMOUS", 525, 50, 240, 58, "purple", "arb")
+    rect(cells, "ar4", "回退触发\nEStop / 超时", 795, 50, 220, 58, "red", "arb")
+    rect(cells, "ar5", "结束确认\n关闭权限", 1045, 50, 190, 58, "gray", "arb")
+
+    rect(cells, "br1", "状态估计\nES-EKF 初始化", 50, 70, 200, 60, "green", "brain")
+    rect(cells, "br2", "行为树运行\n选择任务分支", 285, 70, 200, 60, "yellow", "brain")
+    rect(cells, "br3", "MPC 控制\n生成安全指令", 520, 70, 200, 60, "blue", "brain")
+    rect(cells, "br4", "健康自检\n置信度输出", 755, 70, 210, 60, "green", "brain")
+    rect(cells, "br5", "任务总结\n生成运行报告", 1000, 70, 210, 60, "purple", "brain")
+
+    rect(cells, "am1", "传感器上行\nDVL / IMU / DVL", 50, 50, 210, 58, "teal", "amd")
+    rect(cells, "am2", "执行下行\n5 通道指令", 300, 50, 210, 58, "teal", "amd")
+    rect(cells, "am3", "响应反馈\n姿态 / 位置", 550, 50, 210, 58, "teal", "amd")
+    rect(cells, "am4", "故障上报\n漏水 / 短路", 800, 50, 210, 58, "red", "amd")
+    rect(cells, "am5", "回收对接\n断开动力", 1050, 50, 210, 58, "gray", "amd")
+
+    for spec in [
+        ("ml1", "op1", "op2", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml2", "op2", "op3", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml3", "op3", "op4", "", False, None, "exitX=1;entryX=0;", False),
+        ("ml4", "op4", "op5", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml5", "op2", "ar2", "签发", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("ml6", "ar1", "ar2", "", False, None, "exitX=1;entryX=0;", False),
+        ("ml7", "ar2", "ar3", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml8", "ar3", "ar4", "", False, None, "exitX=1;entryX=0;", False),
+        ("ml9", "ar4", "ar5", "", False, None, "exitX=1;entryX=0;", False),
+        ("ml10", "ar3", "br2", "", False, [(610, 410), (470, 410)], "exitX=0.2;exitY=1;entryX=0.5;entryY=0;", True),
+        ("ml11", "br1", "br2", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml12", "br2", "br3", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml13", "br3", "br4", "", False, None, "exitX=1;entryX=0;", False),
+        ("ml14", "br4", "br5", "", False, None, "exitX=1;entryX=0;", True),
+        ("ml15", "br3", "am2", "", False, None, "exitX=0.5;exitY=1;entryX=0.5;entryY=0;", True),
+        ("ml16", "am1", "br1", "", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", True),
+        ("ml17", "am3", "br4", "", False, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
+        ("ml18", "am4", "ar4", "故障", True, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
+        ("ml19", "ar4", "op4", "告警", True, None, "exitX=0.5;exitY=0;entryX=0.5;entryY=1;", False),
+        ("ml20", "op5", "am5", "回收指令", False, [(1300, 630)], "exitX=1;exitY=0.5;entryX=1;entryY=0.5;", False),
+    ]:
+        edge(cells, *spec)
+    write("auv_v2_mission_lifecycle_flow", cells)
 
 
 def main() -> None:
@@ -536,6 +798,10 @@ def main() -> None:
     dual_brain_async_hardware_v2()
     uncertainty_highway_v2()
     five_layer_functional_architecture_v2()
+    behavior_tree_illustration()
+    mission_state_machine()
+    emergency_transition()
+    mission_lifecycle_flow()
     for path in sorted(OUT.glob("*.drawio")):
         print(path)
 

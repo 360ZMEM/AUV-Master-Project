@@ -1,0 +1,47 @@
+{
+  "scenario": "/home/auv_user/auv_ws/AUV-Master-Project/scenarios/scenario_mag_extrinsics_calibration.yaml",
+  "motion": "straight_turn_sway",
+  "duration_s": 120.0,
+  "dt_s": 0.1,
+  "samples_used": 1201,
+  "truth_translation_b_m": [
+    0.3,
+    0.0,
+    -0.05
+  ],
+  "initial_translation_b_m": [
+    0.2,
+    0.03,
+    -0.02
+  ],
+  "estimated_translation_b_m": [
+    0.30001230153357483,
+    0.002987455375084699,
+    -0.05274137855362218
+  ],
+  "truth_rotation_rpy_deg": [
+    0.0,
+    -0.0,
+    2.0
+  ],
+  "initial_rotation_rpy_deg": [
+    0.0,
+    -0.0,
+    0.5
+  ],
+  "estimated_rotation_rpy_deg": [
+    -0.04452959193786371,
+    -0.02273353925858613,
+    1.950417672250177
+  ],
+  "initial_translation_error_m": 0.10862780491200213,
+  "estimated_translation_error_m": 0.004054651319177813,
+  "initial_rotation_error_deg": 1.5,
+  "estimated_rotation_error_deg": 0.07041381675825568,
+  "translation_improvement_percent": 96.26739091113696,
+  "rotation_improvement_percent": 95.30574554944963,
+  "residual_start_m": 0.10862780491200213,
+  "residual_end_m": 0.004759259685613487,
+  "validation_status": "pass",
+  "industrial_note": "Simulated first-stage calibration verifies the file contract and error-reduction chain; real deployment still requires independent field calibration data."
+}

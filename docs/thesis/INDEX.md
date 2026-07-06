@@ -5,6 +5,8 @@
 > **写作模板**：参考 [docs/experiment/benchmark_test_log.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/experiment/benchmark_test_log.md) 的"新手 SOP + 真实日志 + 已知陷阱"风格。
 > **与 paper 树的主从关系（P2-b）**：本树（`docs/thesis/`）为**工程证据层（主，存放代码符号对照、真实数据、已知偏差）**；[docs/thesis/paper/INDEX.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/INDEX.md) 为**论文正文层（从，段落式叙述）**。写作先读 paper 树、查证回本树。
 
+| T16 | [16_cable_dlt1278_scoring_and_operator_products.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/16_cable_dlt1278_scoring_and_operator_products.md) | §5 / 工业部署附录 | DL/T 1278 风格评分实现、ready/pass 与扣分项关系、自动产物链和面向运维人员的 operator_view 图像 |
+
 ---
 
 ## 文档列表
@@ -23,6 +25,12 @@
 | T10 | [09_terrain_following_figures.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/09_terrain_following_figures.md) | §5.5 图像 | 地形跟随 6 图清单/caption + §0 真口径重生成更新（WP-D） |
 | T11 | [10_figure_review_and_offset_diagnosis.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/10_figure_review_and_offset_diagnosis.md) | §5.5 诊断 | 图像审查与轨迹偏移诊断 |
 | T12 | [11_transition_experiments_F1_F2_F3.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/11_transition_experiments_F1_F2_F3.md) | §2 / §3 | 三组过渡实验：F1 三相螺旋漏磁 / F2 标定敏感度 / F3 网络抖动边界 |
+| T13 | [12_cable_mag_dlt1278_fullflow.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/12_cable_mag_dlt1278_fullflow.md) | §5 / 工业部署附录 | 声磁电缆探测全流程、DL/T 1278 风格产物、指标有效性和工业结论边界 |
+| T14 | [14_cable_acceptance_multirun.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/14_cable_acceptance_multirun.md) | §5 / 工业部署附录 | 声磁电缆探测多次运行验收口径、单次报告字段和 pass ratio 聚合方法 |
+| T15 | [15_cable_zigzag_amplitude_tuning.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/15_cable_zigzag_amplitude_tuning.md) | §5 / 工业部署附录 | zig-zag 探针幅值动力学边界、有效巡检窗口、burial window30 调优和 120 s ready/pass 验收 run |
+| T16 | [16_cable_dlt1278_scoring_and_operator_products.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/16_cable_dlt1278_scoring_and_operator_products.md) | §5 / 工业部署附录 | DL/T 1278 风格评分实现、ready/pass 与扣分项关系、自动产物链和面向运维人员的 operator_view 图像 |
+| T16 | [16_cable_dlt1278_scoring_and_operator_products.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/16_cable_dlt1278_scoring_and_operator_products.md) | §5 / 工业部署附录 | DL/T 1278 风格评分实现、ready/pass 与扣分项关系、自动产物链和面向运维人员的 operator_view 图像 |
+| T16 | [16_cable_dlt1278_scoring_and_operator_products.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/16_cable_dlt1278_scoring_and_operator_products.md) | §5 / 工业部署附录 | DL/T 1278 风格评分实现、ready/pass 与扣分项关系、自动产物链和面向运维人员的 operator_view 图像 |
 
 ---
 
@@ -79,6 +87,11 @@
 | F1 三相螺旋漏磁 | ✅ | `results/perception/helical_cable_magnetic_scan/20260620_013450/`；T12 |
 | F2 标定敏感度（3 seed） | ✅ | `results/es_ekf_extrinsics/20260620_012952/`；T12 |
 | F3 网络抖动边界（3 seed） | ✅ | `results/es_ekf_jitter_boundary/20260620_014529/`；T12 |
+| 声磁电缆探测全流程 + DL/T 1278 产物 | ✅ 初步链路；工业结论 limited | `/auv_data/bags/20260705_213816/`；`results/cable_ops_report/fullflow_20260705_213816/`；T13 |
+| 声磁电缆探测多次验收聚合 | ⏳ 工具与口径已就绪，待 3 次 fullflow | `tools/aggregate_cable_acceptance_runs.py`；T14 |
+| 声磁电缆 zig-zag 幅值调优 | ✅ 1.5 m 推荐默认；window30 + preflight-clean 后 120 s 验收 ready/pass | `/auv_data/bags/20260705_235221/`；`results/cable_ops_report/acceptance_zigzag_1p5_window30_20260705_235221/`；T15 |
+| 声磁电缆 DL/T 1278 评分与运维图像 | ✅ ready/pass run 已生成评分文档、CSV/JSON/Markdown 报告、工程诊断图和 operator_view 运维图像 | `tools/dlt1278_cable_report.py`；`tools/plot_cable_operator_products.py`；T16 |
+| 声磁电缆 DL/T 1278 评分与运维图像 | ✅ ready/pass run 已生成评分文档、CSV/JSON/Markdown 报告、工程诊断图和 operator_view 运维图像 | `tools/dlt1278_cable_report.py`；`tools/plot_cable_operator_products.py`；T16 |
 | 多种子统计 (mean/std) | ⏳ smoke 待跑 | T3/T5 中标 TBD |
 | 多场景消融 (UA vs baseline) | ⏳ smoke 待跑 | T5 中标 TBD |
 | 参数敏感性 | ⏳ smoke 待跑 | T7 中标 TBD |

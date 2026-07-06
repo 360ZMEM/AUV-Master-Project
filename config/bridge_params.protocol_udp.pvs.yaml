@@ -12,6 +12,8 @@ simulation:
   frames_per_sec: false
   dt: 0.02
   max_steps: 0
+  realtime: true
+  time_scale: 1.0
 
 agent:
   type: TorpedoAUV
@@ -43,6 +45,11 @@ bridge:
   thrust_min: -100.0
   thrust_max: 100.0
   max_steps: 0
+  magnetic_extrinsics_status:
+    enabled: true
+    topic: /auv/sensors/magnetic_extrinsics_status
+    publish_period_s: 1.0
+    include_sim_position_hash: true
   protocol_udp:
     bind_host: 0.0.0.0
     bind_port: 52364
@@ -61,10 +68,13 @@ bridge:
     sniffer_mirror_host: 127.0.0.1
     sniffer_mirror_port: 52366
     log_packets: true
+    log_rate_hz: 2.0
     log_packet_hex: false
     log_ascii_format: true
+    allow_multiline_logs: true
+    log_fixed_block_lines: 48
     log_hex_bytes: 48
-    log_every_n: 1
+    log_every_n: 25
 
 zenoh:
   session: {}
@@ -107,6 +117,16 @@ cable_path:
     - [10.0, 2.0, 12.5]
     - [20.0, 5.0, 13.0]
     - [30.0, 8.0, 13.5]
+
+sensor_extrinsics_truth:
+  mag:
+    translation_b_m: [0.30, 0.00, -0.05]
+    rotation_rpy_deg: [0.0, 0.0, 2.0]
+
+sensor_extrinsics_estimated:
+  mag:
+    translation_b_m: [0.20, 0.03, -0.02]
+    rotation_rpy_deg: [0.0, 0.0, 0.5]
 
 perception:
   hvdc_current_amp: 500.0

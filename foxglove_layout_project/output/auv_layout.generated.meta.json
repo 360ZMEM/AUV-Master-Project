@@ -4,5 +4,5 @@
   "profile": "mentor-demo",
   "generatedBy": "foxglove_layout_project/generator/build_layout.py",
   "topicPrefix": "",
-  "layoutFile": "/home/gwxie/master_work-tmp/AUV_Master_Project/foxglove_layout_project/output/auv_layout.generated.json"
+  "layoutFile": "/home/auv_user/auv_ws/AUV-Master-Project/foxglove_layout_project/output/auv_layout.generated.json"
 }

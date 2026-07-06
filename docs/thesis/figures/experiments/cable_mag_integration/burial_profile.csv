@@ -1,0 +1,2 @@
+route_progress_m,burial_depth_m,burial_sigma_m,accuracy_target_m,accuracy_pass
+10.0,1.4,0.12,0.15,True

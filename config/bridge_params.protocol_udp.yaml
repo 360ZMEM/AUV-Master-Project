@@ -74,10 +74,13 @@ bridge:
     sniffer_mirror_host: 127.0.0.1
     sniffer_mirror_port: 52366
     log_packets: true
+    log_rate_hz: 2.0
     log_packet_hex: false
     log_ascii_format: true
+    allow_multiline_logs: true
+    log_fixed_block_lines: 48
     log_hex_bytes: 48
-    log_every_n: 1
+    log_every_n: 25
 
 zenoh:
   # Zenoh 通信相关配置：session 可留空采用默认连接参数。

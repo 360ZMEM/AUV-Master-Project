@@ -231,6 +231,7 @@ case "$MODE" in
       echo "[AUV][WARN] python package 'py_trees' is missing, disable decision node"
       STACK_ARGS+=("enable_decision:=false")
     fi
+    echo "[AUV] stack launch args: ${STACK_ARGS[*]} $*"
     ros2 launch "$BRAIN_DIR/launch/auv_stack.launch.py" "${STACK_ARGS[@]}" "$@"
     ;;
   *)

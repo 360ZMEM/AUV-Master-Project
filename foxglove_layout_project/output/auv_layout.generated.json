@@ -302,6 +302,101 @@
       "showXAxisLabels": true,
       "showYAxisLabels": true,
       "showPlotValuesInLegend": true
+    },
+    "Plot!cable_tracking": {
+      "title": "电缆跟踪核心量",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "m / confidence",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.cross_track_m",
+          "enabled": true,
+          "color": "#ffd166"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.burial_depth_m",
+          "enabled": true,
+          "color": "#66cc66"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.burial_sigma_m",
+          "enabled": true,
+          "color": "#ff6b6b"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.confidence",
+          "enabled": true,
+          "color": "#2ecc71"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!cable_quality": {
+      "title": "声磁质量与验收证据",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "SNR dB / confidence",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.magnetic_snr_db",
+          "enabled": true,
+          "color": "#f39c12"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.magnetic_confidence",
+          "enabled": true,
+          "color": "#2ecc71"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/tracking.confidence",
+          "enabled": true,
+          "color": "#2980b9"
+        }
+      ],
+      "sidebarDimension": 220,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 90.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "RawMessages!cable_tracking": {
+      "title": "电缆跟踪输出",
+      "topicPath": "/auv/cable/tracking",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "RawMessages!cable_diagnostics": {
+      "title": "电缆诊断/限幅",
+      "topicPath": "/auv/cable/diagnostics",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    },
+    "Markdown!dlt1278_summary": {
+      "renderMode": "message",
+      "messagePath": "/auv/cable/dlt1278_summary.data",
+      "fontSize": 14
     }
   },
   "globalVariables": {},
@@ -336,20 +431,45 @@
         "splitPercentage": 30
       },
       "second": {
-        "direction": "row",
+        "direction": "column",
         "first": {
-          "direction": "column",
-          "first": "Plot!tracking_error",
-          "second": "Plot!speed_control",
-          "splitPercentage": 54
+          "direction": "row",
+          "first": {
+            "direction": "column",
+            "first": "Plot!tracking_error",
+            "second": "Plot!speed_control",
+            "splitPercentage": 54
+          },
+          "second": {
+            "direction": "column",
+            "first": "3D!topview",
+            "second": {
+              "direction": "column",
+              "first": {
+                "direction": "row",
+                "first": "Plot!cable_tracking",
+                "second": "Plot!cable_quality",
+                "splitPercentage": 50
+              },
+              "second": {
+                "direction": "row",
+                "first": "RawMessages!cable_tracking",
+                "second": "RawMessages!cable_diagnostics",
+                "splitPercentage": 50
+              },
+              "splitPercentage": 52
+            },
+            "splitPercentage": 52
+          },
+          "splitPercentage": 58
         },
         "second": {
-          "direction": "column",
-          "first": "3D!topview",
-          "second": "Markdown!bt_status",
-          "splitPercentage": 52
+          "direction": "row",
+          "first": "Markdown!bt_status",
+          "second": "Markdown!dlt1278_summary",
+          "splitPercentage": 50
         },
-        "splitPercentage": 58
+        "splitPercentage": 82
       },
       "splitPercentage": 36
     },

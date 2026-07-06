@@ -25,6 +25,7 @@ _publish_command() 函数是桥接的核心输出接口，它根据当前的仲�
 
 from __future__ import annotations
 
+import hashlib
 import math
 import json
 import time
@@ -148,6 +149,8 @@ class AUVBridgeNode(Node):
 
         params_file = str(self.get_parameter('params_file').value)
         cfg = self._load_config(params_file)
+        self.config = cfg
+        self.params_file = params_file
         self.bridge_cfg = cfg.get('bridge', {})
 
         configured_backend = str(self.bridge_cfg.get('backend', '')).strip()
@@ -190,11 +193,28 @@ class AUVBridgeNode(Node):
         self.mission_command_pub = self.create_publisher(String, '/auv/mission_command', 10)
         self._current_bt_status = "IDLE"
         self.magnetic_pub = self.create_publisher(MagneticField, '/auv/sensors/magnetic', 10)
+        self.magnetic_msg_frame_id = 'auv/base_link'
+        mag_status_cfg = dict(self.bridge_cfg.get('magnetic_extrinsics_status', {}) or {})
+        self.mag_extrinsics_status_enabled = bool(mag_status_cfg.get('enabled', True))
+        self.mag_extrinsics_status_topic = str(
+            mag_status_cfg.get('topic', '/auv/sensors/magnetic_extrinsics_status')
+        )
+        self.mag_extrinsics_status_period_s = float(mag_status_cfg.get('publish_period_s', 1.0))
+        self.mag_extrinsics_status_include_hash = bool(mag_status_cfg.get('include_sim_position_hash', True))
+        self.mag_extrinsics_status_pub = (
+            self.create_publisher(String, self.mag_extrinsics_status_topic, 10)
+            if self.mag_extrinsics_status_enabled
+            else None
+        )
+        self._magnetic_sample_count = 0
+        self._last_mag_extrinsics_status_pub_ts = 0.0
+        self._mag_extrinsics_static_status = self._build_magnetic_extrinsics_static_status(cfg, params_file)
         self.shadow_cmd_pub = self.create_publisher(String, self.shadow_cmd_topic, 10)
         self.shadow_telemetry_pub = self.create_publisher(String, self.shadow_telemetry_topic, 10)
 
         self.create_subscription(Twist, '/cmd_vel', self._on_cmd_vel, 10)
         self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 10)
+        self.create_subscription(String, '/auv/cable/tracking', self._on_cable_tracking, 10)
 
         self.arbiter_status_pub = None
         self.command_arbiter: CommandArbiter | None = None
@@ -204,6 +224,7 @@ class AUVBridgeNode(Node):
             KEY_LEAK_LEVEL: 0,
         }
         self.latest_bridge_telemetry_payload: dict[str, Any] | None = None
+        self.latest_cable_monitor_payload: dict[str, Any] | None = None
         self.latest_protocol_telemetry_ts = 0.0
         self.last_arbiter_decision: ArbiterDecision | None = None
         self._command_keepalive_timer = None
@@ -253,6 +274,83 @@ class AUVBridgeNode(Node):
         with p.open('r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
         return data if isinstance(data, dict) else {}
+
+    @staticmethod
+    def _float_triplet(value: Any) -> list[float] | None:
+        if not (isinstance(value, list) and len(value) == 3):
+            return None
+        try:
+            return [float(item) for item in value]
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _sensor_position_hash(value: Any, *, quantization_m: float = 0.01) -> str | None:
+        triplet = AUVBridgeNode._float_triplet(value)
+        if triplet is None:
+            return None
+        quantized = [round(item / quantization_m) * quantization_m for item in triplet]
+        encoded = json.dumps(quantized, separators=(',', ':'), allow_nan=False).encode('utf-8')
+        return hashlib.sha256(encoded).hexdigest()[:16]
+
+    def _build_magnetic_extrinsics_static_status(self, cfg: dict[str, Any], params_file: str) -> dict[str, Any]:
+        estimated_map = cfg.get('sensor_extrinsics_estimated', {})
+        estimated_mag = estimated_map.get('mag', {}) if isinstance(estimated_map, dict) else {}
+        metadata = cfg.get('metadata', {}) if isinstance(cfg.get('metadata', {}), dict) else {}
+        translation = self._float_triplet(estimated_mag.get('translation_b_m')) if isinstance(estimated_mag, dict) else None
+        rotation = self._float_triplet(estimated_mag.get('rotation_rpy_deg')) if isinstance(estimated_mag, dict) else None
+        source = metadata.get('mag_extrinsics_source')
+        if source is None and (translation is not None or rotation is not None):
+            source = f'{params_file}#sensor_extrinsics_estimated.mag'
+        return {
+            'schema_version': 'mag_extrinsics_status.v1',
+            'sensor': 'mag',
+            'status_topic': self.mag_extrinsics_status_topic,
+            'magnetic_topic': '/auv/sensors/magnetic',
+            'magnetic_key': self.magnetic_key,
+            'bridge_backend': self.backend.value,
+            'magnetic_msg_frame_id': self.magnetic_msg_frame_id,
+            'uses_estimated_extrinsics': bool(translation is not None or rotation is not None),
+            'estimated_extrinsics_source': source,
+            'estimated_translation_b_m': translation,
+            'estimated_rotation_rpy_deg': rotation,
+            'truth_extrinsics_exported': False,
+            'deployment_note': (
+                'Status is a low-rate bag proof for the magnetic mount/extrinsics chain; '
+                'simulator-only sensor positions are not republished as raw ROS2 positions.'
+            ),
+        }
+
+    def _publish_magnetic_extrinsics_status(self, data: dict[str, Any], *, now: float | None = None) -> None:
+        pub = getattr(self, 'mag_extrinsics_status_pub', None)
+        if pub is None or not getattr(self, 'mag_extrinsics_status_enabled', False):
+            return
+        now = time.time() if now is None else float(now)
+        period_s = max(0.1, float(getattr(self, 'mag_extrinsics_status_period_s', 1.0)))
+        if now - float(getattr(self, '_last_mag_extrinsics_status_pub_ts', 0.0)) < period_s:
+            return
+        self._last_mag_extrinsics_status_pub_ts = now
+
+        sensor_position = data.get('sensor_position_ned')
+        has_sensor_position = self._float_triplet(sensor_position) is not None
+        payload = dict(self._mag_extrinsics_static_status)
+        payload.update(
+            {
+                'sample_count': int(getattr(self, '_magnetic_sample_count', 0)),
+                'payload_sensor_frame': str(data.get('sensor_frame', '')) or None,
+                'payload_has_sensor_position_ned': has_sensor_position,
+                'simulator_position_present': has_sensor_position,
+                'last_payload_frame_number': data.get(KEY_FRAME_NUMBER),
+                'last_payload_sim_time': data.get('sim_time'),
+                'last_payload_ts': data.get('ts'),
+                'status_wall_time_s': now,
+            }
+        )
+        if self.mag_extrinsics_status_include_hash and has_sensor_position:
+            payload['sensor_position_ned_hash_sha256_16'] = self._sensor_position_hash(sensor_position)
+            payload['sensor_position_hash_quantization_m'] = 0.01
+
+        pub.publish(String(data=json.dumps(payload, ensure_ascii=False, sort_keys=True, allow_nan=False)))
 
     def _create_transport(self, backend: BridgeBackend) -> BaseBridgeBackend:
         """根据配置选择具体传输后端实现。"""
@@ -766,13 +864,15 @@ class AUVBridgeNode(Node):
             magnetic_vec = data.get(KEY_B_NED, [0.0, 0.0, 0.0])
             if not (isinstance(magnetic_vec, list) and len(magnetic_vec) == 3):
                 return
+            self._magnetic_sample_count += 1
             msg = MagneticField()
             msg.header.stamp = self._make_header_stamp(data)
-            msg.header.frame_id = 'auv/base_link'
+            msg.header.frame_id = self.magnetic_msg_frame_id
             msg.magnetic_field.x = float(magnetic_vec[0])
             msg.magnetic_field.y = float(magnetic_vec[1])
             msg.magnetic_field.z = float(magnetic_vec[2])
             self.magnetic_pub.publish(msg)
+            self._publish_magnetic_extrinsics_status(data)
 
     def handle_protocol_telemetry(self, telemetry: ProtocolUplinkTelemetry) -> None:
         self._rx_count += 1
@@ -851,6 +951,8 @@ class AUVBridgeNode(Node):
 
         # 注入行为树状态
         bridge_payload['bt_status_markdown'] = self._current_bt_status
+        if self.latest_cable_monitor_payload is not None:
+            bridge_payload['cable_monitor'] = self.latest_cable_monitor_payload
 
         self.transport.publish_bridge_telemetry(bridge_payload)
         if self.passive_mode:
@@ -870,6 +972,54 @@ class AUVBridgeNode(Node):
     def update_bt_status(self, status_markdown: str) -> None:
         """更新行为树状态（由外部决策节点调用）。"""
         self._current_bt_status = status_markdown
+
+    def _on_cable_tracking(self, msg: String) -> None:
+        try:
+            payload = json.loads(msg.data)
+        except json.JSONDecodeError:
+            self.get_logger().warning('[bridge] invalid /auv/cable/tracking JSON')
+            return
+        if not isinstance(payload, dict):
+            return
+        self.latest_cable_monitor_payload = self._build_cable_monitor_payload(payload)
+
+    @staticmethod
+    def _build_cable_monitor_payload(payload: dict[str, Any]) -> dict[str, Any]:
+        keys = [
+            'industrial_ready',
+            'acceptance_flags',
+            'mode',
+            'cross_track_m',
+            'route_progress_m',
+            'burial_depth_m',
+            'burial_sigma_m',
+            'confidence',
+            'magnetic_snr_db',
+            'magnetic_confidence',
+            'industrial_acceptance_pass',
+        ]
+        monitor = {key: payload.get(key) for key in keys}
+        flags = monitor.get('acceptance_flags') or []
+        if not isinstance(flags, list):
+            flags = [str(flags)]
+        monitor['acceptance_flags'] = [str(item) for item in flags]
+        monitor['acceptance_flags_text'] = 'none' if not flags else ','.join(monitor['acceptance_flags'])
+        monitor['status_text'] = str(payload.get('diagnostics', {}).get('burial_status', 'unknown'))
+        dlt1278 = payload.get('dlt1278') if isinstance(payload.get('dlt1278'), dict) else {}
+        monitor['dlt1278_state'] = str(dlt1278.get('state', '--'))
+        monitor['dlt1278_total_score'] = dlt1278.get('total_score')
+        score_items = dlt1278.get('score_items') or []
+        if isinstance(score_items, list) and score_items:
+            monitor['dlt1278_score_items_text'] = '；'.join(
+                f"{item.get('item', '--')}({item.get('score', 0)}分)"
+                for item in score_items
+                if isinstance(item, dict)
+            )
+        else:
+            monitor['dlt1278_score_items_text'] = '无实时扣分项'
+        products = dlt1278.get('output_products') or []
+        monitor['dlt1278_products_text'] = ', '.join(str(item) for item in products[:4]) if products else '--'
+        return monitor
 
     def _on_stats_timer(self) -> None:
         if self._rx_count == 0:

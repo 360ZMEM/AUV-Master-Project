@@ -135,6 +135,9 @@ class HoloOceanPhysicsZenohBridge:
         # ────────────────────────────────────────
         self.rate_hz = float(config["bridge"]["rate_hz"])
         self.dt = 1.0 / max(1e-6, self.rate_hz)  # 单帧时间（秒）
+        sim_cfg = dict(config.get("simulation", {}) or {})
+        self.realtime = bool(sim_cfg.get("realtime", True))
+        self.time_scale = max(float(sim_cfg.get("time_scale", 1.0)), 1e-6)
 
         # ────────────────────────────────────────
         # 电缆和环境模拟
@@ -256,6 +259,8 @@ class HoloOceanPhysicsZenohBridge:
         # 步骤 3️⃣：高级物理计算
         # ────────────────────────────────────────
         pos_ned = tf["position_ned"]
+        mag_sensor_pos_ned = np.asarray(state.get("MagSensorPositionNED", pos_ned), dtype=float).reshape(3)
+        mag_sensor_frame = str(state.get("MagSensorFrame", "mag_link"))
 
         # 电缆几何：最近点和距离
         cable_p, cable_dist = self.cable.closest_point_and_distance(pos_ned)
@@ -263,7 +268,7 @@ class HoloOceanPhysicsZenohBridge:
         # Biot-Savart 磁场：HVDC 电缆的磁场贡献
         p_cfg = self.config["perception"]
         b_vec = compute_biot_savart_hvdc(
-            auv_pos_ned=pos_ned,
+            auv_pos_ned=mag_sensor_pos_ned,
             cable=self.cable,
             current_amp=float(p_cfg["hvdc_current_amp"]),
         )
@@ -381,6 +386,8 @@ class HoloOceanPhysicsZenohBridge:
             **base,
             KEY_B_NED: b_noisy.tolist(),
             KEY_B_NORM: float(np.linalg.norm(b_noisy)),
+            "sensor_frame": mag_sensor_frame,
+            "sensor_position_ned": mag_sensor_pos_ned.tolist(),
         }
 
         # 声纳：电缆检测
@@ -477,7 +484,7 @@ class HoloOceanPhysicsZenohBridge:
             # ────────────────────────────────────────
             step += 1
             elapsed = time.time() - loop_start
-            sleep_t = self.dt - elapsed
+            sleep_t = (self.dt / self.time_scale) - elapsed if self.realtime else 0.0
             if sleep_t > 0:
                 time.sleep(sleep_t)
 

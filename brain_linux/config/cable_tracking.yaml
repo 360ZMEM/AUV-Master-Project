@@ -1,0 +1,88 @@
+cable_tracking:
+  enabled: true
+  mission_types:
+    - CABLE_TRACKING
+    - CABLE_INSPECTION
+  auv_master_mag_root: AUV-Master-Mag
+  scenario_name: case1
+
+  prior:
+    format: yaml
+    path: ""
+    frame: local_ned
+    yaml_points_ned:
+      - [0.0, 0.0, -1.5]
+      - [50.0, 0.0, -1.5]
+      - [100.0, 10.0, -1.6]
+    burial_depth_m: null
+    # Optional distorted-prior injection for end-to-end robustness testing.
+    # Default disabled -> clean-prior behaviour (§5.5.10) is unchanged.
+    # When enabled, applies a static pose warp S·R(theta0)·P + t0 to the prior
+    # (docs 28 表1, step 2 only; no dynamic drift channel). tier presets:
+    # light|mid|heavy; explicit translation/rotation/scale override the tier.
+    pose_error:
+      enabled: false
+      tier: mid
+      translation_xy_m: [0.0, 7.5]
+      rotation_deg: 3.0
+      scale_xy: [0.99, 1.0]
+
+  control:
+    publish_setpoint: true
+    default_depth_m: 12.0
+    default_speed_mps: 0.8
+    min_speed_mps: 0.3
+    max_speed_mps: 1.1
+    setpoint_timeout_s: 0.5
+    bridge_backend: protocol_udp
+    control_mode_byte: 238
+    sine_period_s: 0.0
+    high_priority: false
+
+  zigzag_limits:
+    auto_limit: true
+    max_heading_delta_deg: 25.0
+    max_yaw_rate_deg_s: 12.0
+    min_turn_radius_m: 6.0
+    max_lateral_speed_mps: 0.45
+
+  zigzag_probe:
+    enabled: true
+    lateral_amplitude_m: 1.5
+    wavelength_m: 24.0
+    phase_offset_deg: 0.0
+    max_probe_heading_deg: 25.0
+
+  magnetic:
+    sample_rate_hz: 50.0
+    block_size: 8
+    sensor_frame: mag_link
+
+  quality:
+    enable_magnetic_quality: true
+    enable_burial_inversion: true
+    # Online prior-alignment correction from a magnetic-derived cross-track
+    # observation (y=(B_down/B_perp)*d). Default disabled -> clean-prior /
+    # §5.5.10 acceptance behaviour is unchanged. Enable only in distorted-prior
+    # closed-loop recovery experiments.
+    enable_online_prior_alignment: false
+    magnetic_noise_floor_nt: 0.05
+    burial_coupling_constant_nt_m_per_a_rms: 11.4329
+    burial_current_rms_a: 100.0
+    burial_altitude_m: 6.0
+    burial_snr_gate_db: 6.0
+    burial_min_strength_nt: 1.0
+    burial_min_samples: 20
+    burial_window_samples: 30
+    burial_max_lateral_offset_m: 1.0
+    confidence_min_ready: 0.65
+    route_offset_ready_m: 2.0
+
+  acceptance:
+    max_route_offset_m: 2.0
+    mean_route_offset_m: 1.0
+    min_confidence: 0.65
+    max_burial_sigma_m: 0.15
+    max_burial_sigma_over_limit_ratio: 0.05
+    min_valid_burial_ratio: 0.8
+    min_tracking_samples: 300

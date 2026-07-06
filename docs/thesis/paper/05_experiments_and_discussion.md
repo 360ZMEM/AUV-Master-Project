@@ -1,5 +1,4 @@
 # 第 5 章：实验与结果讨论
-<!-- continuation: docs/thesis/paper/05_experiments_and_discussion_continued.md -->
 
 ## 5.1 实验平台方案与评价指标定义
 
@@ -13,6 +12,8 @@
 | L4 | 真机 Jetson + AMD/VxWorks + 传感器 | 实物部署、真网络时延、硬件标定 | 待执行 |
 
 实验由 `scripts/start_experiment.sh` 和 `scripts/run_experiment_runner.py` 管理。实验运行器支持三种模式：`all`（全部场景顺序执行）、`single`（单场景执行）和 `list`（指定场景列表执行）。每个实验生成独立的 `summary.csv`，包含定位、控制和安全指标。
+
+在 L1–L4 之外，§5.5.11(3e) 补充了一个不依赖 PVS 六自由度动力学的**解耦轻量 ROS2 闭环**（Direction A）：出厂 `cable_tracking_node` 按真实部署契约消费磁场/里程计输入、在线先验修正在部署门面内被满足物理前提的磁观测接受、控制输出经 `/auv/control/setpoint` 回到外部运动学闭环，并可录制为 Foxglove 巡检视频。据此**算法实机部署接口与闭环数据契约**可判为已成立；但它仍是轻量闭环，不替代 L4 真机验收——L4 状态保持"待执行"。
 
 ### 5.1.2 评价指标的数学定义与物理意义
 
@@ -152,7 +153,7 @@ Mock AMD 子系统通过三大模块模拟真实水下通信和传感不确定�
 
 ## 5.3 硬件系统集成与物理标定实验
 
-> **本章大部分实验尚未执行，以下内容按"设计方案和未来工作"书写，不作为已完成结果。**
+> **本节实验分两类：§5.3.1（双脑 UDP 实时性）与 §5.3.3（故障注入自救）仍按"设计方案和未来工作"书写，不作为已完成结果；§5.3.2（磁传感器杆臂/安装角标定）已完成一轮"仿真标定验证"，作为已完成结果写入，但其边界仍是仿真标定 scaffold、非真机转台外场标定。**
 
 ### 5.3.1 "双脑"通信链路与实时性压力测试
 
@@ -162,11 +163,26 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 
 > **表格占位符**：实物部署阶段需补充 Jetson-AMD UDP 通信时延统计表（p50/p95/p99、丢包率、序列号跳变次数）。
 
-### 5.3.2 基于高精度转台的磁传感器九参数在线标定
+### 5.3.2 磁传感器杆臂/安装角标定（仿真标定验证）
 
-磁传感器标定需要同时估计硬铁（permanent magnetization）和软铁（induced magnetization）干扰。标定过程需要在高精度转台上旋转 AUV，记录磁场各向异性响应，拟合软铁矩阵和硬磁偏置。
+磁传感器标定需要同时估计传感器相对载体的杆臂（`translation_b_m`）与安装角（`rotation_rpy_deg`），使磁场采样点从"载体基准位置"正确外推到"传感器世界坐标"。真机场景需在高精度转台上旋转 AUV 拟合软铁矩阵与硬磁偏置；在实物转台就位之前，本节先给出一轮**仿真标定验证**——用数字孪生真值外参生成磁采样、从有偏初值跑标定脚本收敛，验证"杆臂改正链路与文件契约成立"。全流程记录见 [13_mag_lever_arm_correction_validation.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/13_mag_lever_arm_correction_validation.md)。
 
-> **表格占位符**：实物部署阶段需补充转台标定前后的磁场残差对比表和九参数标定结果。
+标定采用 truth/estimated 双配置模型：`sensor_extrinsics_truth.mag`（仿真真值，`translation_b_m=[0.30,0.00,-0.05]`、`rotation_rpy_deg=[0,0,2.0]`）只用于数字孪生生成传感器观测；`sensor_extrinsics_estimated.mag`（部署侧估计值，有偏初值 `[0.20,0.03,-0.02]`/`[0,0,0.5]`）由标定输出替换。标定脚本 `tools/mag_extrinsics_calibration_run.py` 在 120 s / 1201 样本上从有偏初值收敛，产物落于 `results/mag_extrinsics/fullflow_20260705_2145/`。
+
+| 指标 | 初值 | 估计后 | 改善 |
+|---|---:|---:|---:|
+| translation error | 0.1086 m | 0.0041 m | 96.27 % |
+| rotation error | 1.5000 deg | 0.0704 deg | 95.31 % |
+| 残差（residual start→end） | 0.1086 m | 0.0048 m | — |
+| validation status | — | pass | — |
+
+下列两图分别给出标定过程的残差收敛曲线与平移/旋转误差下降对比，对应上表指标行：
+
+![磁外参标定残差收敛](../figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.png)
+
+![磁外参误差下降对比](../figures/experiments/mag_lever_arm_fullflow_20260705_2145/02_mag_extrinsics_error_reduction.png)
+
+**结论与边界**：本轮完成了从配置、仿真采样、模拟标定到估计配置应用的端到端验证，平移误差由 0.1086 m 降至 0.0041 m、安装角误差由 1.5000 deg 降至 0.0704 deg（validation status=pass），说明当前软件链路具备承载实际杆臂标定结果的工程能力；应用脚本只写新配置、不覆盖原始部署配置，满足部署安全要求；配套 bag proof（`/auv/sensors/magnetic_extrinsics_status` 低频记录 estimated 外参与来源，未在线导出 truth）离线校验为 pass。**必须保留的边界：这是仿真标定 scaffold，不是真机高精度转台的外场标定，也未估计完整硬铁/软铁九参数——它证明"杆臂改正链路与文件契约成立"，不能替代真实磁传感器安装误差的外场标定。九参数硬铁/软铁在线标定仍属实物部署阶段的未来工作。**
 
 ### 5.3.3 故障注入自救逻辑验证
 
@@ -197,14 +213,20 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 | Mag/Sonar/Combined 4 场景 3 seed | `log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv` | n=3/场景 | 四场景均 3/3 ok，支撑第 3 章鲁棒性 | XY RMSE 非单调 |
 | UA-MPC 主消融（定位） | `log/thesis_sweep/20260612_172535_h1_uampc_main_ablation/results.csv` | 3 场景 x 2 模式 x 3 seed | baseline/combined UA-MPC 定位改善，dvl_60 无优势 | offline EKF 指标 |
 | H1 控制侧指标聚合 | `results/control_aggregates/20260612_172535_h1_uampc_main_ablation/` | 3 场景 x 2 模式 x 3 seed | lateral RMSE、control rate RMS、fallback rate 已闭环 | solve time 为 nan |
+| H1 solve-time 重跑 + P1 控制侧聚合 | `results/control_aggregates/20260613_173559_h1_..._solvetime/`、`..._20260612_170618_p1_sensor_3seed/` | H1 3×2×3 + P1 8×3 | solve-time 字段已补录、P1 全 8 场景 generated,24、fallback/safety 全 0（见 §5.5.7） | solve time 恒 0 ms（计时语义待确认） |
+| P1 NIS/自适应 R 聚合 | `results/uncertainty_aggregates/20260612_170618_p1_sensor_3seed/` | 8 场景 x 3 seed | 自适应 R 全场景被触发（r_scale_max=5.0、trigger 0.24–0.36），协方差一致性侧证据（见 §5.5.5） | real NIS 依赖 ground truth，属离线量 |
 | baseline 定位/控制/决策 | `docs/experiment/benchmark_test_log.md` | n=1 | 工具链和单次基准可用 | 不能替代多 seed |
 | 60s terrain PID/MPC | `docs/experiment/terrain_benchmark_log.md` | n=1/组 | PID terrain 是当前近底主结果 | 需重复统计 |
-| PID terrain low/mid/high | `results/control/pid_terrain_ablation_20260610_170846_summary.csv` | n=1/档 | 三档均无安全违规 | 缺多 seed |
+| PID terrain low/mid/high（3 seed 复验） | `results/control/terrain_pid_seed_sweep_20260613_162512_terrain_pid_3seed/` + low/mid retry | n=3/档 | 三档均 3/3 ok、零安全违规、clearance RMSE 0.59–0.71 m（近底安全主结论，见 §5.5.3） | low/mid 含 retry 合并 seed |
 | MPC 深度调参 | `docs/thesis/08_terrain_following_pid_mpc_status.md` | 多轮调参 | 深度 MPC 不作为主线 | 只能写回退理由 |
 | MPC x/y/yaw extreme | `/auv_data/results/control/mpc_xy_yaw_extreme/20260620_011831/` | n=1/场景 | 公平口径下 MPC 在长波/短波 S 弯、hairpin 优于或持平基线 | 仅直角 chicane LOS 更优（诚实边界） |
+| 磁传感器杆臂/安装角标定（仿真） | `results/mag_extrinsics/fullflow_20260705_2145/` | n=1 全流程 | 杆臂改正链路与文件契约成立，平移误差降 96.27%、旋转降 95.31%、status=pass（见 §5.3.2） | 仿真标定 scaffold、非真机转台、未估九参数 |
+| 代理电缆 6 场景 smoke | `log/proxy_cable_sweep/20260613_182825_cable_proxy_full6_smoke/` | 6 场景 x 2 模式 x seed0 | 12/12 ok、控制闭环压力测试链路可跑通（见 §5.7.7） | 仅 seed0（n=1），不能写统计优劣 |
 | PVS chaos 场景库 | `docs/thesis/05_scenario_recipes.md` | 9 个 YAML | 可支撑不确定性场景设计 | 未完整模拟海缆巡检 |
 | Jetson emulated | `docs/thesis/06_jetson_deploy_emulated.md` | emulated | 可讨论算力接口 | 不能写真机绝对时延 |
 | BT vs FSM | `docs/experiment/benchmark_test_log.md` | n=1 | 行为树单次效果可用 | 缺多场景对比 |
+| 海缆 DL/T 1278 数字孪生验收 | `results/cable_ops_report/acceptance_multirun_fresh_20260706/` | 3 次 fresh run | runtime topic→bag→评分产物全链路闭环，3/3 ready/pass、preliminary_acceptance_ready=True | 数字孪生确定性电缆先验，非真实检测噪声；见 §5.5.10 边界 |
+| Direction A 解耦轻量闭环 | `results/cable_ops_report/direction_a_decoupled/20260706_221801/` | n=1 smoke | 满足磁观测前提时在线先验修正被真实观测接受（observed/accepted=1.0），算法实机部署接口成立（见 §5.5.11(3e)） | 轻量运动学闭环、无地磁背景/检测噪声/硬件时延/六自由度水动力 |
 
 ### 5.5.2 Terrain Following 主结果
 
@@ -251,9 +273,15 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 
 ![PID Terrain low/mid/high 消融](../figures/terrain_following/pid_terrain_low_mid_high_ablation.png)
 
-**当前边界**：本结果为 n=1/档，需扩展到 3 seed mean+/-std 才能作为论文主结论。
+**当前边界（已由 3 seed 复验取代）**：上表 low/mid/high 消融为 n=1/档，仅作单次基准。为使其进入论文统计表，本轮追加 low/mid/high × seed 0,1,2 复验，并对 low/mid 的落盘失败 seed 各做一次 retry，最终合并口径如下（数据源 `results/control/terrain_pid_seed_sweep_20260613_162512_terrain_pid_3seed/` 及 low/mid retry 目录）：
 
-> 5.5.3 之后的新增实验补充，包括完整 P1 控制侧/NIS 聚合、terrain 3 seed retry 合并口径、代理电缆 smoke 与 6 场景扩展计划，已整理到 `docs/thesis/paper/05_experiments_and_discussion_continued.md`。下文保留原章节脉络，并清理明显的缓存/脚本输出污染。
+| terrain | ok/total | clearance RMSE mean+/-std | clearance mean+/-std | min clearance mean+/-std | violation < 1.5 m |
+|---|---:|---:|---:|---:|---:|
+| low | 3/3 | 0.5868+/-0.1116 m | 3.5461+/-0.1455 m | 3.2594+/-0.3881 m | 0.0000 |
+| mid | 3/3 | 0.7094+/-0.0015 m | 3.7094+/-0.0015 m | 3.7083+/-0.0018 m | 0.0000 |
+| high | 3/3 | 0.6102+/-0.0810 m | 3.5830+/-0.1117 m | 3.2283+/-0.2053 m | 0.0000 |
+
+三档地形 3/3 完成、均无 `<1.5 m` 安全违规，`clearance RMSE` 落在 0.59–0.71 m，说明 PID terrain 在当前 PVS 地形模型下具有稳定的近底安全性——这一 3 seed mean±std 结论可作为论文近底安全的主结论。**脚注边界**：low/mid 的 3 seed 由主跑成功 seed 与 retry 成功 seed 合并得到，retry 原因是 bag/analysis 落盘不稳定，非算法闭环失败。
 
 ### 5.5.4 MPC x/y/yaw 支线结果
 
@@ -274,6 +302,18 @@ UDP 二进制协议：下行帧 `$CKTH`（72 B）携带工作模式、任务指�
 - 早先"MPC 不普遍优于基线"的判断源自 harness 的 `+2.0 m` 偏置 bug，修复后已被推翻。
 - 该支线结果为 n=1/场景，尚未扩展到多 seed 统计。作为支线结果，说明 MPC guidance-level 多步预瞄与速度规划对复杂曲率路径有横向误差优势，但尚不足以作为论文主结论。
 
+#### MPC x/y/yaw 极端路径轨迹图组
+
+下列四图为四类极端路径在公平口径（`20260620_011831`）下的 XY 轨迹跟踪实测，与上表横向 RMSE 逐行对应，可直观看到 MPC 相对 PID yaw-only / LOS 的贴合差异（第 4 章 §5.5.4 表亦引用同批产物）：
+
+![长波 S 弯 XY 轨迹](../figures/experiments/control_mpc_xy_yaw_extreme/s_turn_long_wave_xy_v4_short_realtime.png)
+
+![短波 S 弯 XY 轨迹](../figures/experiments/control_mpc_xy_yaw_extreme/s_turn_short_wave_xy_v3_speed_flexible.png)
+
+![Hairpin 180° 掉头 XY 轨迹](../figures/experiments/control_mpc_xy_yaw_extreme/hairpin_180deg_xy_v3_speed_flexible.png)
+
+![直角 chicane XY 轨迹（诚实边界：LOS 前瞻最优）](../figures/experiments/control_mpc_xy_yaw_extreme/chicane_90deg_xy_v1_balanced.png)
+
 ### 5.5.5 ES-EKF 多场景多种子鲁棒性结果
 
 C0–C5 低成本验证后，进一步扩展到 8 个 PVS chaos 场景 x 3 seed（共 24 次运行），用于验证 ES-EKF 在多种传感器/通信扰动下的定位鲁棒性。数据源：`log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv`。
@@ -293,6 +333,26 @@ C0–C5 低成本验证后，进一步扩展到 8 个 PVS chaos 场景 x 3 seed�
 - 8 个场景均达到 100% 成功率（24/24 ok），说明 ES-EKF 在 DVL 丢包（10%–90%）、磁畸变、声呐杂波及联合扰动下均能稳定输出定位结果。
 - XY RMSE 不严格按扰动强度单调变化。例如 dvl_dropout_60 的 XY RMSE（2.89 m）低于 dvl_dropout_30（3.37 m），combined_stress（3.27 m）低于 sonar_clutter（3.27 m）和 mag_distortion_heavy（3.42 m）。这说明 30 s 片段、seed 初始化和观测时序对结果有显著影响，不宜将单次或少数场景的数值差异过度解读为"扰动强度的单调响应"。
 - 本表指标来自 `tools/offline_ekf_benchmark.py`（offline EKF），反映的是状态估计误差，不直接等价于控制侧 lateral RMSE 或轨迹跟踪性能。
+
+**（补）P1 NIS 与自适应 R 触发统计（ES-EKF 协方差一致性）**
+
+上表验证了 ES-EKF 在多扰动下的定位精度，但"协方差是否与实际误差匹配、自适应 R 机制是否在高扰动场景被真正触发"需要 NIS 与 R-scale 统计进一步佐证。本轮对 P1 sweep 的 8 场景 × 3 seed 做了 NIS/R 批量聚合，数据源 `results/uncertainty_aggregates/20260612_170618_p1_sensor_3seed/`（`summary_by_scenario_mode.csv` / `aggregate_report.md`）：
+
+| 场景 | ok/total | real NIS mean | real NIS p95 | R scale mean | R scale max | R trigger ratio |
+|---|---:|---:|---:|---:|---:|---:|
+| dvl_dropout_10 | 3/3 | 4.1234 | 20.4055 | 1.6653 | 5.0000 | 0.3024 |
+| dvl_dropout_30 | 3/3 | 3.8250 | 20.0011 | 1.6916 | 5.0000 | 0.2945 |
+| dvl_dropout_60 | 3/3 | 4.5086 | 21.0347 | 1.8582 | 5.0000 | 0.3610 |
+| dvl_dropout_90 | 3/3 | 3.8798 | 19.3713 | 1.5311 | 5.0000 | 0.2355 |
+| mag_distortion_light | 3/3 | 3.3565 | 19.4340 | 1.5275 | 5.0000 | 0.2379 |
+| mag_distortion_heavy | 3/3 | 4.4912 | 20.5991 | 1.8050 | 5.0000 | 0.3482 |
+| sonar_clutter | 3/3 | 3.8976 | 20.0328 | 1.6470 | 5.0000 | 0.2845 |
+| combined_stress | 3/3 | 3.9854 | 19.7641 | 1.6847 | 5.0000 | 0.2946 |
+
+**结论与边界**：
+- `r_scale_max` 在全部 8 场景恒达 5.0、`r_scale_trigger_ratio` 落在 0.2355–0.3610，说明自适应 R 机制在 chaos 场景中确实被激活；其中 DVL dropout 60%（0.3610）与 mag_distortion_heavy（0.3482）触发率最高，符合"高扰动场景下测量协方差应上调"的设计预期。
+- real NIS mean 落在 3.36–4.51（观测维度量级），p95 落在 19.4–21.0，可作为 §5.5.5 定位鲁棒性的协方差一致性侧证据。
+- **边界**：本表 real NIS 依赖 ground truth，属离线评估量；真机在线诊断应以 DVL/depth proxy NIS 为准（proxy NIS 更接近可在线获取的创新量）。因此本表用于"离线协方差一致性核查"，不能直接写成"在线 NIS 监控已验证"。
 
 ### 5.5.6 UA-MPC 主消融结果（定位侧）
 
@@ -339,7 +399,24 @@ UA-MPC 相对 baseline-MPC 的 XY RMSE 变化：
 - **Fallback rate**：所有 18 次运行的 fallback rate 均为 0.0000，说明在该实验条件下两种模式都没有触发 fallback。这一结果有两种工程解读：一是 PVS 仿真侧的扰动幅度虽强但仍处于 IPOPT 求解可行域内，没有把"求解失败"这一 4.4.6 节定义的兜底分支真正激活；二是当前 30 s 实验片段过短，未能复现长时间任务下偶发的求解失败。无论哪一种解读，结论都是"当前实验未能给出 fallback 路径的有效压力测试"——这一缺口必须等到极端工况场景（5.7 节定义的 6 个场景）和长时间运行实验中才能补齐。
 - **Control rate RMS**：UA-MPC 在 baseline 场景下控制量变化率（0.44）显著高于 baseline-MPC（0.14），说明 UA 权重在干净环境下可能使控制律更激进；但在 combined_stress 下反而更低（0.03 vs 0.14），说明在联合扰动下 UA 权重起到了平滑作用。这一"反向行为"乍看反直觉，但其物理机制是清晰的——UA 机制的核心是把感知不确定性映射到代价权重，干净环境下置信度本就高、UA 权重接近 baseline，二者控制律差异主要来自微小数值波动；联合扰动下置信度被显著拉低，UA 机制据此放大跟踪权重 + 减小控制权重，使控制律自动转向"保守跟随参考"的模式。换言之，control rate RMS 的"反向行为"恰恰是 UA 机制按设计工作的结果，而不是失效的征兆。
 - **Safety violation**：所有 18 次运行均无安全违规。与 fallback rate 的解读类似，这一结果在当前 PVS 仿真条件下属于"未触及边界"，需要等待 5.7 节六类极端场景（特别是 Slope Crossing 和 Combined Extreme）给出更尖锐的安全压力测试。
-- **MPC solve time**：由于 H1 旧 bag 中的 `/auv/controller/debug` 未发布 `solve_time_ms` 字段，当前表中 solve time 为 nan。已在 `brain_linux/src/auv_controller/auv_controller/auv_controller_node.py` 补充 debug payload（包含 `solve_time_ms`、`solver_status` 和 `fallback_reason`），后续重跑 H1 或 H2 时可记录该指标。在补齐之前，论文不能写"求解时间在 100 ms 周期内可控"这类基于 solve_time_ms 的具体结论，只能援引 emulated Jetson 上的算力接口验证作为间接证据。
+- **MPC solve time**：上表来自 H1 旧 bag，其 `/auv/controller/debug` 未发布 `solve_time_ms` 字段，故 solve time 为 nan。已在 `brain_linux/src/auv_controller/auv_controller/auv_controller_node.py` 补充 debug payload（含 `solve_time_ms`、`solver_status`、`fallback_reason`）并重跑 H1（见下方"solve-time 重跑"表）。重跑后字段可被聚合工具读取，但当前值为 0 ms，说明字段填充或计时语义仍需确认。因此论文不能把 0 ms 写成真实求解性能，也不能写"求解时间在 100 ms 周期内可控"这类具体结论，只能写成"solve-time 字段已补录、计时语义待确认"，并援引 emulated Jetson 上的算力接口验证作为间接证据。
+
+**（补）H1 solve-time 重跑与 P1 全场景控制侧聚合**
+
+为闭合上表两处缺口——solve-time 字段缺失、控制侧只覆盖 H1 三场景——本轮做了两件事。其一，H1 主消融带新 debug payload 重跑（`log/thesis_sweep/20260613_173559_h1_uampc_main_ablation_solvetime/`、`results/control_aggregates/20260613_173559_h1_uampc_main_ablation_solvetime/`）：
+
+| 场景 | 模式 | ok/total | lateral RMSE mean+/-std | fallback rate | control rate RMS | solve time mean |
+|---|---|---:|---:|---:|---:|---:|
+| baseline | baseline-MPC | 3/3 | 0.00604+/-0.00009 m | 0.2991+/-0.0015 | 0.0608+/-0.0027 | 0 ms |
+| baseline | UA-MPC | 3/3 | 0.00599+/-0.00007 m | 0.6345+/-0.0053 | 0.1511+/-0.0116 | 0 ms |
+| dvl_dropout_60 | baseline-MPC | 3/3 | 0.00620+/-0.00037 m | 0.3423+/-0.0510 | 0.0785+/-0.0346 | 0 ms |
+| dvl_dropout_60 | UA-MPC | 3/3 | 0.00612+/-0.00009 m | 0.6308+/-0.0076 | 0.1459+/-0.0231 | 0 ms |
+| combined_stress | baseline-MPC | 3/3 | 0.00813+/-0.00069 m | 0.3081+/-0.0274 | 0.0705+/-0.0238 | 0 ms |
+| combined_stress | UA-MPC | 3/3 | 0.00755+/-0.00014 m | 0.6470+/-0.0192 | 0.2578+/-0.1317 | 0 ms |
+
+重跑口径下 solve-time 字段已可被聚合读取但恒为 0 ms（计时语义待确认，不能写成求解性能）；fallback rate 在此重跑口径下非零（baseline-MPC 约 0.30、UA-MPC 约 0.63），与前一版 H1 bag 的全 0 不同，说明 fallback 统计对 bag/字段版本敏感，两版结论需分别标注口径、不可混用。从控制侧看，UA-MPC 在 combined_stress 的 lateral RMSE（0.00755 m）低于 baseline-MPC（0.00813 m），但其 fallback rate 与 control rate RMS 更高——更稳妥的结论是"UA-MPC 在部分复杂扰动下可能改善横向跟踪误差，但当前权重映射会抬高降级/高优先级状态比例与控制变化率，需后续参数灵敏度实验验证"。
+
+其二，把控制侧聚合从 H1 三场景扩到 P1 全部 8 chaos 场景 × 3 seed（`results/control_aggregates/20260612_170618_p1_sensor_3seed/`）：控制侧状态计数为 `generated,24`（8 场景 × 3 seed 均生成控制指标）；旧 P1 bag 的 solve time 仍为 nan，但 lateral RMSE、fallback rate、control rate RMS、safety violation 可用，且**全部 8 个 P1 场景的 fallback rate 与 safety violation rate 均为 0**。这与 §5.5.7 上表 H1 三场景一致，进一步印证"当前 PVS chaos 幅度虽强但未把 fallback/安全兜底分支压到激活"这一缺口判断（需 §5.7 极端场景与长时任务补齐）。
 
 ### 5.5.8 UA-MPC 消融变体设计
 
@@ -366,13 +443,181 @@ PVS 仿真侧的实验已经把"算法层面正确性"的证据建立得较充�
 
 后续场景迁移分三步推进：第一步，将 S 弯和 hairpin 路径迁移为 PVS 场景配置，把"几何极端 + 完整闭环"的组合工况补齐；第二步，把 terrain height map 与电缆中心线绑定，形成 slope crossing；第三步，加入声呐短时不可见、磁信号衰减、DVL dropout 和横流，形成 combined cable extreme 等场景。这三步迁移的共同特点是"先在 PVS 内做扩展，再迁到真机"——PVS 内的扩展能给出可重复、可消融的统计基线，真机迁移则只需在该基线之上叠加"硬件物理偏差"维度，避免一上来就让多个不确定性因素同时进入实验。
 
+### 5.5.10 海缆巡检 DL/T 1278 数字孪生验收结果
+
+前面 5.6/5.7 讨论的"代理电缆巡检"是从控制侧压力测试的角度（lateral RMSE、control rate RMS）验证闭环可运行性。本小节报告一条独立、更高保真的证据链：在数字孪生后端上运行完整的海缆巡检任务，通过运行时 `/auv/cable/tracking` topic 落盘 MCAP bag，再经 `extract_cable_tracking_jsonl.py → dlt1278_cable_report.py` 得到 DL/T 1278 风格评分与工业验收判定，最后用 `aggregate_cable_acceptance_runs.py` 对多次 run 聚合。评分链路与阈值定义见 [16_cable_dlt1278_scoring_and_operator_products.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/16_cable_dlt1278_scoring_and_operator_products.md)。此前该链路只有单次有效 run（`n=1`，仅作 smoke），本轮在清理孤立进程栈、恢复干净 ROS 域后补跑了 3 次 realtime（`sim-time-scale=1`）验收 run，使其能进入"多 run 聚合结论"。
+
+**验收处理参数（canonical）**：`--inspection-require-burial-ready --inspection-max-route-progress-m 50 --inspection-max-abs-cross-track-m 2.0 --max-burial-sigma-over-limit-ratio 0.05 --start-health-sample-count 30 --start-max-route-progress-m 20 --start-max-abs-cross-track-m 5`。
+
+**（0）单次 fullflow 初步样张（n=1，`limited`，先于多 run 聚合）**
+
+在补跑 3 次验收 run 之前，本链路先完成过一次 120 s 全流程初步运行（`/auv_data/bags/20260705_213816/`，全流程记录见 [12_cable_mag_dlt1278_fullflow.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/12_cable_mag_dlt1278_fullflow.md)），用于证明"PVS 磁力计→protocol_udp side-channel→ROS2 cable tracking→control setpoint→rosbag→离线 DL/T 产物"这条工程链路整体打通。该次 run 的指标本身仅为初步样张：平均 confidence 全程固定 0.5（标记 `constant_tracking_confidence`）、最大 route offset 14.717 m、缺 `burial_sigma_m` 无法判定 0.15 m 精度，工业结论可用性判为 `limited`。下列 7 图即该次初步 fullflow 的产物图组（埋深剖面、路由偏移、跟踪置信度、估计电缆平面轨迹、制导航向、制导可行性指标、路由偏移分布）：
+
+![电缆埋深剖面（初步样张）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/01_cable_burial_profile.png)
+
+![电缆路由偏移（初步样张）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/02_cable_route_deviation.png)
+
+![电缆跟踪置信度（初步样张，全程常值 0.5）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/03_cable_tracking_confidence.png)
+
+![估计电缆平面轨迹（初步样张）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/04_cable_track_xy.png)
+
+![电缆制导航向（初步样张）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/05_cable_guidance_heading.png)
+
+![制导可行性指标（初步样张）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/06_guidance_feasibility_metrics.png)
+
+![路由偏移分布（初步样张，max≈14.7 m）](../figures/experiments/cable_mag_integration/fullflow_20260705_213816/07_route_offset_distribution.png)
+
+**边界（必须与上图同时引用）**：本组图来自单次（`n=1`）初步 fullflow，只能证明工程链路打通与产物格式成立，其 `limited` 状态源于置信度常值、route offset 偏大、`burial_sigma_m` 缺失——不能作为验收结论。下文 (1)(2) 报告的 3 次 fresh run（引入 quality/acceptance 层后）才是可进入"多 run 聚合结论"的证据。
+
+**（1）3 次 fresh run 逐行结果**
+
+| run | 目录 | 原始/有效/排除样本 | readiness / pass | DL/T 状态 | total / worst | burial_min (m) | sigma 超限比 | conf_p05 | start_health |
+|---|---|---:|---|---|---:|---:|---:|---:|---|
+| 1 | `acceptance_fresh1_20260706_135331/` | 1237 / 770 / 467 | ready / pass | 注意状态 | 24 / 16 | -5.921 | 0.0143 (11) | ≈1.000 | PASS |
+| 2 | `acceptance_fresh2_20260706_135757/` | 1231 / 774 / 457 | ready / pass | 注意状态 | 24 / 16 | -5.920 | 0.0039 (3) | ≈1.000 | PASS |
+| 3 | `acceptance_fresh3_20260706_140156/` | 1246 / 790 / 456 | ready / pass | 注意状态 | 24 / 16 | -5.921 | 0.0089 (7) | ≈1.000 | PASS |
+
+三次 run 的排除样本构成一致：均为"离开 50 m 巡检窗口"（`after_inspection_window` 437–448）、"埋深 warm-up 未就绪"（`burial_not_ready` 恒为 19）和"越出路由走廊"（`outside_route_corridor` 234–245）三类，说明窗口化剔除的是末段到达终点后的 hold/drift 与起步 warm-up，而非"裁剪到通过"。三次 run 的 DL/T 风格评分完全一致（total=24、worst=16、注意状态），扣分项均为"海缆埋深不足（III，16 分）"与"埋深估计精度未达 0.15 m（II，8 分）"；数据质量标记也一致（`constant_tracking_confidence`、`acceptance_flags_present`）。
+
+**（2）多 run 聚合结论**
+
+聚合产物：`results/cable_ops_report/acceptance_multirun_fresh_20260706/`（`acceptance_runs_report.md` / `.csv` / `.json`）。
+
+| 聚合字段 | 值 |
+|---|---:|
+| run_count / pass_count | 3 / 3 |
+| pass_ratio | 1.000 |
+| readiness 分布 | `{ready: 3}` |
+| preliminary_acceptance_ready | True（min_runs=3, min_pass_ratio=0.67） |
+| valid_burial_ratio 最小值 | 1.000 |
+| confidence_p05 最小值 | ≈1.000 |
+| max_route_offset 均值/最大 | ≈7.1e-15 m |
+
+3/3 run 达到 `ready/pass`，聚合口径满足"≥3 run 且 pass_ratio≥0.67"，因此 `preliminary_acceptance_ready=True`。这里的"preliminary"限定词是刻意保留的：它表示"在数字孪生证据链上，多次 run 的证据完整性、起点健康、窗口有效性与工程阈值均一致通过"，而非"通过现场海试验收"。
+
+**（3）产物图组**
+
+DL/T 1278 风格评分卡（三次 run，均为 total=24 / 注意状态，扣分项一致）：
+
+![DL/T 1278 评分卡 run1](../figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.png)
+
+![DL/T 1278 评分卡 run2](../figures/cable_acceptance/cable_dlt1278_scorecard_fresh2.png)
+
+![DL/T 1278 评分卡 run3](../figures/cable_acceptance/cable_dlt1278_scorecard_fresh3.png)
+
+面向运维的验收汇总与电缆平面图（run1）：
+
+![运维验收汇总](../figures/cable_acceptance/operator_acceptance_summary_fresh1.png)
+
+![运维电缆平面图](../figures/cable_acceptance/operator_cable_map_fresh1.png)
+
+有效巡检窗口时间线与埋深不确定度诊断（run1）：
+
+![巡检窗口时间线](../figures/cable_acceptance/inspection_window_timeline_fresh1.png)
+
+![埋深 sigma 窗口诊断](../figures/cable_acceptance/burial_sigma_window_diagnosis_fresh1.png)
+
+电缆跟踪动态轨迹末帧（run1，完整动图见 `../figures/cable_acceptance/cable_tracking_dynamic_fresh1.gif`，诚实呈现全程含 50 m 后离窗漂移）：
+
+![电缆跟踪动态末帧](../figures/cable_acceptance/cable_tracking_dynamic_fresh1_last_frame.png)
+
+面向答辩/附录的上位机操作员工作流演示视频（由 [tools/record_console_operator_video.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/record_console_operator_video.py) headless 生成，MP4 见 `../figures/console_operator_video/`，末帧如下）。该视频在离屏（`QT_QPA_PLATFORM=offscreen`）模式下驱动真实 PySide6 上位机 `MainWindow`，用 run1 的真实遥测 `tracking.jsonl`（1237 样本）逐帧回放电缆巡检监控面板（结论/偏移/埋深/进度、置信度/SNR、DL/T 状态与扣分项、验收标志、产物链），仅执行安全操作员动作（航点/任务/消息 tab 切换、选点开关、遥测刷新），并停用外发定时器杜绝发包。**边界：这是真实遥测的离线回放演示，用于展示上位机运维界面与产物呈现，非现场实时操作会话，末帧对应 run1 全程离窗后的 `NOT READY/FAIL` 状态（与边界 3 的窗口化说明一致）。**
+
+![上位机操作员工作流末帧](../figures/console_operator_video/console_operator_workflow_20260706_151721_lastframe.png)
+
+**（4）证据边界（必须与上述结论同时引用）**
+
+1. **确定性电缆先验，非真实检测噪声。** 三次 run 的 `max_route_offset≈7.1e-15 m`（数值上为零）、`confidence_p05≈1.0` 且 `confidence_span≈2e-16`，这是因为数字孪生后端提供的是确定性电缆中心线先验，跟踪置信度近乎常量（对应 `constant_tracking_confidence` 标记）。真实声磁检测会引入非零、时变的路由偏差与置信度波动，因此这些近零指标只能证明"链路闭环与评分逻辑正确"，不能作为真实检测精度结论。
+2. **埋深扣分源自数字孪生几何设定。** 三次 run 的 `burial_min≈-5.92 m` 低于埋深目标（`burial_target=1.5 m`），触发"海缆埋深不足"扣分，同时存在少量样本 `burial_sigma>0.15 m` 触发"埋深精度未达 0.15 m"扣分。这两项扣分反映的是数字孪生的电缆几何/埋深设定，而非真实海缆状态评估。
+3. **窗口化 ready/pass 与全程 run 的区别。** ready/pass 判定针对的是有效巡检窗口（≈770–790 点）；同一 run 的全程统计（`full_run_summary`，含末段离窗漂移）为 `readiness=limited / pass=false`（如 run1 全程 `max_route_offset=4.40 m`、`mean=0.80 m`）。论文引用"验收通过"时必须限定为"有效巡检窗口内"，全程未窗口化数据不通过验收。
+4. **单一时段、单一数字孪生场景。** 3 次 run 为同一数字孪生场景下的连续重复，用于验证链路可重复性与评分一致性，不等价于多天、多海况、多电缆几何的现场验收。真实工程验收还需接入 5.4 节规划的 10 A 电缆台与 HSF-500 埋深反演证据。
+
+综上，本小节可写入论文的结论是："声磁电缆巡检的运行时 topic→bag→DL/T 1278 风格评分→工业验收→多 run 聚合全链路已闭环，在数字孪生确定性先验下 3/3 run 达到 ready/pass、`preliminary_acceptance_ready=True`"；不可越界写成"通过真实海缆检测精度验收"或"通过现场 DL/T 1278 验收"。
+
+### 5.5.11 端到端工业电缆探测的证据分层：主仓 clean-prior 闭环与算法级 distorted-prior 鲁棒性边界
+
+§5.5.10 报告的 DL/T 1278 验收，是主仓端到端链路在**一种先验条件**下的结果。本小节要回答一个更结构性的问题：主仓端到端跑的"电缆探测算法"究竟是什么、它在什么先验条件下被激励、以及"先验带偏差时算法能承受多大失效边界"这一工业最关心的问题目前由哪一层证据支撑。把这三件事讲清楚，是为了避免把"算法在专用磁探测仓库里被扫描出来的鲁棒性边界"误当成"主仓端到端已实测的鲁棒性"。
+
+**（1）主仓端到端运行的是真实声磁跟踪算法，而非占位代理。** 主仓电缆巡检运行时节点 [cable_tracking_node.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/cable_tracking_node.py) 通过 `ensure_auv_master_mag_on_path()` 把专用磁探测仓库 `AUV-Master-Mag` 挂到 `sys.path`，直接 `import` 并实例化其部署 API 中的 `AuvMagTrackingPipeline`、`DeploymentPerceptionConfig`、`MagneticInput/NavigationInput/SonarInput`，每帧（约 0.1 s）调用 `pipeline.step_with_guidance(...)` 推进跟踪，并把结果通过 `/auv/cable/tracking` topic 发布（字段含 `cross_track_m`、`route_progress_m`、`burial_depth_m`、`burial_sigma_m`、`confidence`、`magnetic_snr_db`、`quality_flags`、`acceptance_flags`、`industrial_ready`）。这与 docs 28/29 方法论篇描述的两级估计、主动感知激励、几何安全约束是**同一套算法实现**——即"仿真实物代码同源"架构下，主仓端到端消费的正是专用仓库导出的部署 API，而非另写一份简化代理。因此 §5.5.10 的 DL/T 结果是真实算法的端到端结果，这一点可以明确写入论文。
+
+**（2）主仓端到端当前只在 clean prior 下被激励。** 主仓电缆巡检配置 [cable_tracking.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/cable_tracking.yaml) 使用 `scenario_name: case1`，先验航线由 `prior.yaml_points_ned`（`[[0,0,-1.5],[50,0,-1.5],[100,10,-1.6]]`）直接给出；先验适配器 [cable_prior_adapter.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/cable_prior_adapter.py) 从该配置构造 `CableMap` 时**从不施加平移/旋转/缩放**，节点与配置也**不暴露先验偏差档位（light/mid/heavy）或位姿误差注入 knob**。这一点由 §5.5.10 的运行时证据直接印证：三次 fresh run 的 `max_route_offset≈7.1e-15 m`（数值为零），说明控制器消费的参考航线与数字孪生真值电缆几乎重合——即端到端跑的是 docs 28 §2.3.1 三步构造链中"未施加静态位姿扭曲、也未叠加旋转慢漂"的干净先验。**结论：主仓端到端已闭环并达到 DL/T ready/pass 的，是 clean-prior 条件下的端到端证据。**
+
+**（3）distorted-prior 的失效边界：算法级 sub-repo 扫描（已有）+ 主仓端到端开环回放（本次新增）双层证据。** 此前 distorted-prior 的失效/恢复机制**只**由算法级 sub-repo 扫描证明；本次专项通过"回放驱动端到端"harness 把先验偏差**首次在主仓端到端 ROS 链路中激励**，据此把本条从"仅算法级引用"升级为"算法级引用 + 主仓端到端开环实测"两层证据。
+
+**（3a）算法级 sub-repo 扫描（引用，n=1，纯仿真）。** docs 28-30 报告的一系列"工业最关心"的鲁棒性结论——先验偏差三档承受边界、纯磁失效时序、最小可承受曲率半径、留一法机制分解、跨 lane 压力扫描——均来自专用磁探测仓库 `AUV-Master-Mag` 的离线场景扫描（`tools/radius_boundary_sweep.py`、`ablation_sweep.py`、`lane_shortcut_stress_sweep.py` 等），其证据等级为**算法级、单次复现（n=1）、纯仿真**。这些结论应作为"同源算法在专用仓库中已验证的鲁棒性边界"被**引用**，而非被改写成主仓端到端实测。为保持主仓论文自包含性与"不迁移"约束，这里只给出结论摘要与来源指针，原始叙述与插图仍留在专用仓库文档中：
+
+| 算法级结论（sub-repo，n=1，纯仿真） | 关键量化 | 来源（不迁移，仅引用） |
+|---|---|---|
+| 先验偏差三档承受边界 | light `t0=(0,3.0)m/θ0=1.5°`、mid `(0,7.5)/3.0°`、heavy `(0,10.0)/5.0°`；连续声呐中/重档触发跨 lane 跳变（约 77.6/80.0 m），声呐中断全档通过 | [28_声磁协同方法论合龙.md](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/docs/28_声磁协同方法论合龙.md) 表1、[29_声磁协同实验设计与结果.md](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/docs/29_声磁协同实验设计与结果.md) §3.1/§3.5 |
+| 纯磁失效时序（关闭在线先验修正） | 重档先验下横偏漂移至 30–40 m，约 2119 s 处触发 +57.5 m 跨 lane 跳变，健康分 81.3→40.8、完成度 0.995→0.747 | docs 29 §3.7，图 `fig_b1_failure_timeseries` |
+| 纯磁最小可承受曲率半径 | 30 m（= 环境硬下限）之前无失效边界，最大跳变 0.1–0.2 m、完成度 0.960–0.974；瓶颈在电缆几何物理下限而非纯磁感知 | docs 29 §3.8/§3.11，图 `fig_b2_radius_boundary` |
+| 留一法机制分解 | 载荷机制（关闭即失败）：在线先验修正、自适应 zig-zag；冗余安全网（该 maze 正则下关闭无影响）：进度窗口投影、磁路径观测 | docs 29 §3.9，图 `fig_b3_ablation_health` |
+| 跨 lane 压力扫描与 map-frame 解耦 | 关闭在线先验修正在 70/50 m lane spacing 触发 724.1/686.4 m 大跳变、任务失败；同一消融下 D4 map-frame 投影跳变仍约 0.2 m；baseline `PriorAlignmentState` 累计约 7.53 m/-3.18° 物理配准修正 | docs 29 §3.12，图 `fig_d4_prior_alignment_decoupling` |
+| zig-zag 埋深估计达标潜力 | 0–20° 初始 sweep 未达标；调优后 1.0/1.5/2.0 m 埋深在 36°/32°/25° 达 0.124/0.079/0.123 m cycle MAE（DL/T 参考 0.15 m 目标线） | docs 29 §3.10，图 `fig_zigzag_burial_*` |
+
+**（3b）主仓端到端开环回放实测（本次新增，仍为数字孪生、确定性偏差）。** 为把 distorted prior **首次在主仓端到端 ROS 链路中激励**，本次专项在 [cable_prior_adapter.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/cable_prior_adapter.py) 增加了默认关闭的先验位姿误差注入 hook（登记见 [e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md) §3.1），并用"回放驱动端到端"harness 复现失效边界：由于本环境未部署活体仿真后端（HoloOcean/PVS 未安装），无法起真正的闭环 fresh run，故采用 `ros2 bag play` 只回放 §5.5.10 三次 clean-prior fresh run 已录制的**输入** topic（`/auv/state/filtered`、`/auv/sensors/magnetic`、`/auv/mission_command` 等），喂给运行同源 `AuvMagTrackingPipeline` 的真实 `cable_tracking_node`，再录制新产生的 `/auv/cable/tracking` 走既有 DL/T 验收流水。该 harness 的正确性由 clean 回归验证：`enabled:false` 回放逐位复现原始 fresh run（`max_route_offset≈7.1e-15 m`、771 窗口点、pass/ready），证明估计是录制 nav+mag 输入的纯函数。在此基础上对 `mid`/`heavy` 两档各跑 3 次（跨 3 个不同源 bag realization，n=3/档），结果如下：
+
+| tier（静态位姿扭曲） | 全程 route offset max/mean/p95（m） | 起始横偏（m，阈值 5.0） | 验收窗口内点数 | 单 run DL/T | 聚合 `preliminary_acceptance_ready` |
+|---|---|---|---|---|---|
+| clean（回归基准） | 4.40 / 0.88 / 4.08（窗口内 ≈7.1e-15） | 0.0 ✓ | 771 | pass / ready | True（3/3，§5.5.10） |
+| mid `t0=(0,7.5)m/θ0=3.0°/S=(0.99,1.0)` | 15.36–15.50 / 10.40–10.49 / 14.96–15.10 | 7.88–7.92 ✗ | 0 | fail / invalid | **False（0/3）** |
+| heavy `t0=(0,10.0)m/θ0=5.0°/S=(0.98,1.0)` | 20.24–20.40 / 14.26–14.38 / 19.78–19.94 | 10.61–10.70 ✗ | 0 | fail / invalid | **False（0/3）** |
+
+三点端到端实测发现：（i）**方向上与算法级扫描一致**——先验偏差越大，route offset 越大、验收越难通过（clean→mid→heavy 全程 max offset 单调升至约 15 m、20 m），端到端链路确实把 distorted prior 的压力传导到了 DL/T 评分与工业验收判定。（ii）**跨 realization 离散极小**（mid 三次 max offset 15.36/15.39/15.50，heavy 20.24/20.27/20.40），说明这是先验几何偏差的确定性后果，而非随机噪声。（iii）**失效通道是"起始横偏超限 + 全程横偏未被吸收"**：mid/heavy 起始 30 帧横偏即达 7.9/10.7 m，超过 start-health 的 5.0 m 门限（`start_cross_track_too_large`），且全程逐帧 `prior_alignment_residual_m == cross_track_m`，即在线先验修正未能把偏差收敛回验收走廊（`max_abs_cross_track=2.0 m`），故窗口内有效点数为 0、readiness 判为 `invalid`。
+
+**关键机制边界（必须显式声明，避免误读）：本次端到端为开环回放，非闭环导航恢复。** 车辆轨迹被 clean-prior 录制**固定**，distorted prior 只改变参考航线，不会重新操舵车辆去贴合被扭曲的先验；因此 `PriorAlignmentState` 的在线修正**得不到闭环激励**，横偏被"冻结"在开环几何差上单调累积，无法复现 docs 29 中"在线修正把 offset 收敛回廊道"的恢复行为。这与 docs 29 的失效模式也**不同源**：docs 29 是 serpentine 迷宫（lane 间距 100 m），失效模式是**跨 lane 跳变**（route-progress jump > 25 m）；主仓 `case1` 是短 ~100 m 三点路径、**无相邻 lane**，故"跨 lane 跳变"这一失效在主仓根本不会发生，本次观测到的是**开环横偏累积**这一不同机制。据此，本次端到端结果可写成"distorted prior 在主仓端到端链路中被激励，并确定性地把 DL/T 验收从 clean 的 pass/ready 推翻为 mid/heavy 的 fail/invalid"，**不可**写成"主仓端到端已复现算法级承受/恢复边界"——闭环恢复能力仍只有算法级 sub-repo 证据。
+
+**（3c）主仓端到端闭环 fresh run 实测（本次新增，PVS 活体仿真后端就位后补做）。** 前述 (3b) 的开环回放遗留的"剩余唯一未闭合项"——在带活体仿真的**闭环** fresh run 下检验在线先验修正能否吸收横偏——本次在 PVS（PythonVehicleSimulator，REMUS 100 六自由度刚体动力学）后端就位后已执行。harness（[run_cable_closedloop_distorted.sh](file:///home/auv_user/auv_ws/AUV-Master-Project/scripts/run_cable_closedloop_distorted.sh)）用与 §5.5.10 clean fresh run **完全一致**的 PVS 配方（`--sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --protocol-control-mode-byte 238 --bag-profile cable_acceptance`），仅把 `cable_tracking_config` 指向 mid/heavy 的 `pose_error` 变体（canonical 配置保持 clean 不动），mid/heavy 各跑 3 次真闭环 fresh run（n=3/档，每 run 约 140 s、1220+ 帧 `/auv/cable/tracking`）。闭环基线有效性先由 clean 复现确认（723 帧、`max_route_offset≈7.1e-15 m`、pass/ready，与原始 clean fresh run 一致）。distorted 结果如下：
+
+| tier（闭环 fresh run） | 全程 route offset max/mean/p95（m） | 起始横偏（m，阈值 5.0） | 验收窗口内点数 | conf p05 | 聚合 `preliminary_acceptance_ready` |
+|---|---|---|---|---|---|
+| mid `t0=(0,7.5)m/θ0=3.0°/S=(0.99,1.0)` | 15.27–15.31 / 10.28–10.31 / 14.51–14.55 | 7.93–7.95 ✗ | 0 | 0.732 | **False（0/3，invalid×3）** |
+| heavy `t0=(0,10.0)m/θ0=5.0°/S=(0.98,1.0)` | 20.09–20.11 / 14.09–14.11 / 19.22–19.24 | 10.67–10.69 ✗ | 0 | 0.701 | **False（0/3，invalid×3）** |
+
+闭环实测三点发现：（i）**闭环确实"闭上了"，非开环冻结**——逐帧 `guidance.desired_heading_deg` 与 `raw_desired_heading_deg` 平均相差 17–20°（峰值约 47–50°），mid ≈970/1223 帧、heavy ≈1046/1223 帧发生了实质操舵修正，说明车辆在 PVS 物理回路里被真实重新操舵，而非 (3b) 的固定轨迹回放。（ii）**结果与开环回放几乎重合**（闭环 mid max≈15.3 m vs 开环 15.4 m；闭环 heavy max≈20.1 m vs 开环 20.3 m），跨 3 次 realization 离散极小，仍确定性 0/3 fail/invalid。（iii）**根因是主仓部署路径未接入在线先验修正估计器**：ROS 节点 [cable_tracking_node.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/cable_tracking_node.py) 消费的是同源部署门面 [AuvMagTrackingPipeline](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/src/auv_mag_tracking/api/pipeline.py)，其 `step()` 把车辆位置投影到**被扭曲后的** `CableMap`（`nearest_point_on_polyline`），并**不实例化** docs 28/29 §2 里的在线 `PriorAlignmentEstimator`（该估计器只存在于离线 `orchestrator.py` 路径）；`prior_alignment_residual_m` 在 [deployment_quality.py](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/src/auv_mag_tracking/api/deployment_quality.py#L134) 中按构造定义为 `abs(route_distance_m)`，即恒等于到（偏差）先验的横距。因此闭环里车辆被**忠实操舵去贴合被扭曲的先验航线**，相对真值电缆的横偏当然不被吸收——这不是"在线修正尝试恢复但失败"，而是"部署门面根本没接入在线修正，闭环恢复能力在出厂 ROS 节点中缺席"。这个发现比 (3b) 更进一步、也更可操作：要闭合恢复缺口，必须把离线 `PriorAlignmentEstimator` 接进部署门面并让其在线更新 `CableMap`，而非仅靠调参。
+
+**（3d）把在线先验修正接进部署门面后的 PVS 闭环复验（本次新增，对应剩余项 (a)；结论为诚实的负结果）。** 按 (3c) 指出的方向，本次把离线 `PriorAlignmentEstimator` 接进部署门面 [AuvMagTrackingPipeline](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/src/auv_mag_tracking/api/pipeline.py)（默认关闭、门控开关 `enable_online_prior_alignment`，`main.py` 与 §5.5.10 clean-prior 行为逐位不变）。因闭环 ROS 节点不订阅 sonar、缺独立于先验的真值电缆观测，采用**磁导出横偏观测**作为独立观测源：以电缆走向为参考把磁异常向量分解为电缆垂直水平分量 `B_perp` 与竖直分量 `B_down`，同一线电流驱动两者、比值消去电流，按无限长直线模型 `y=(B_down/B_perp)·d`（`d`=航高+标称埋深）反演带符号横偏，构造 `observed_point_xy` 喂在线 `PriorAlignmentEstimator` 累积平移/旋转修正并重建投影 cache。用与 (3c) **完全一致**的 PVS 配方，仅在 mid/heavy 的 `quality` 段打开 `enable_online_prior_alignment`，mid/heavy 各跑 3 次真闭环 fresh run（n=3/档，每 run 约 1220 帧）。
+
+结果为**诚实的负结果，且与 (3c) 结论一致**：（i）在线修正确实被**实例化并激励**——`prior_alignment_connected/online=True` 全程、`prior_alignment_observed` 约 1204/1223 帧、横偏拟合质量 `cross_track_quality` 中位数达 1.0（远超 `min_confidence=0.35` 门限）。（ii）但**在线修正累积平移恒为 0**——EKF 残差门 `max_residual_m=18.0 m` 把 **1204/1204 帧观测全部拒绝**（`reason_code=2`，residual_norm 中位数约 29.7 m），故 `translation_norm≡0`、投影 cache 从未被修正；全程 route offset 与 (3c) 关闭修正时**几乎逐位重合**（mid max 15.27–15.31 m、heavy max 20.09–20.18 m），仍确定性 0/3 invalid。（iii）**拒绝的根因是 PVS 仿真磁场几何违反了直线埋缆反演模型的前置假设**：反演出的横偏恒为约 −34…−45 m（真值几何横偏仅约 −10 m），系统性放大约 4–5 倍。直接从 bag 复算证实——PVS 端 `mock_amd` 用于产磁的电缆几何（[bridge_params.protocol_udp.pvs.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/config/bridge_params.protocol_udp.pvs.yaml#L114-L119)：NED 深度约 12–13.5 m）与**车辆几乎同深**（车体 NED z≈12 m），并非"埋于车体正下方 `d≈7.5 m`"；实测磁场因此 **Bz 主导**（`Bz/By≈−5`），与"车在缆正上方、By 主导"的直线模型正好相反，比值反演给出的 `y/d` 被严重偏置。换言之，磁导出横偏观测在该 PVS 场景下**不满足其物理前提**，这是观测源问题、而非 EKF 或接线问题——EKF 残差门"正确地"把这些越界观测挡在了外面。
+
+**由此得到的分层结论**：剩余项 (a) 的**部署门面接线本身已打通并经单测覆盖**（禁用时逐位回归、启用时能把注入的合成横偏累积吸收、reset 可恢复 base 先验，见 [test_api_online_prior_alignment.py](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/tests/test_api_online_prior_alignment.py)），但在**当前 PVS 闭环 fresh run 中未能复现闭环恢复**——因为该仿真后端的产磁电缆与车辆近乎共面，磁导出横偏观测的直线埋缆假设不成立。这把 (3c) 的"部署门面未接入在线修正"缺口，细化为两个更具体的子缺口：其一，部署门面已接入在线修正（本次完成），但其**磁观测前提要求缆在车体下方一定埋深**，需要产磁几何与巡检位形匹配的场景才能激励；其二，需要一个磁观测前提成立（缆在车下 `d` 米）的 PVS 场景（或改用不依赖直线假设的观测反演）来真正复验闭环恢复。**不得据此写成"在线修正在主仓闭环中已复现恢复"，也不得写成"在线修正失败"——准确表述是"接线已通、单测已过；当前 PVS 场景几何不满足磁横偏观测前提，故闭环恢复在该场景下未获激励"。**
+
+（附带的独立观察，供 (3c) "闭环确实闭上了"一句加注）：本次复核 6 个闭环 bag 的 `/auv/state/filtered` 里程计发现，PVS mock 车体的 Y 与 yaw 在全程 2604 帧里**恒为 0.0**、仅沿 +x 以 0.5–0.96 m/s 前进，尽管节点确有发布非平凡的 `target_heading_rad`（峰值约 0.13 rad）与 `target_y_m`（峰值约 14.8 m）。即当前 PVS mock 后端**未对横向/艏向设定值产生实际位形响应**。故 (3c) 中"车辆被真实重新操舵 17–20°"应理解为**制导指令层**发生了修正，而非**车体位形**被真实横向操舵；这也是 (3c)/(3d) route offset 始终等于开环几何差的另一独立原因。此项与"部署门面是否接入在线修正"正交，属 PVS mock 车辆动力学响应缺口，一并记入剩余项。
+
+**（3e）满足磁观测前提的解耦轻量闭环（本次新增，Direction A；结论为算法实机部署接口可用）。** 为区分"当前 PVS 产磁几何不满足磁横偏观测前提"与"部署算法本身是否可在线闭环"，本次新增一个不依赖 PVS 动力学的轻量 ROS2 闭环节点 [decoupled_cable_sim_node.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/decoupled_cable_sim_node.py)，并配套 Direction A 配置 [cable_tracking_direction_a.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/config/cable_tracking_direction_a.yaml) 与录包脚本 [run_direction_a_decoupled_cable_sim.sh](file:///home/auv_user/auv_ws/AUV-Master-Project/scripts/run_direction_a_decoupled_cable_sim.sh)。该节点只承担仿真外壳：消费出厂 `cable_tracking_node` 发布的 `/auv/control/setpoint`，用简单运动学积分车辆位姿，发布 `/auv/state/filtered`、`/auv/sensors/magnetic`、`/auv/mission_command` 与 Foxglove marker；磁场仍调用 PVS/HoloOcean 侧同一个 `compute_biot_savart_hvdc` 纯函数，但把真值直缆布置在磁传感器正下方约 `d=7.5 m`，使 `B_perp=By` 主导并满足 `y=(B_down/B_perp)·d` 的直线埋缆观测前提。短闭环 smoke 结果显示，在线先验修正被真实观测激励并接受：`prior_alignment_observed=true`、`prior_alignment_accepted=true`、`reason_code=1`、`cross_track_quality≈0.998`；8 s MCAP 验证包已生成于 [direction_a_decoupled/20260706_221801/rosbag/rosbag_0.mcap](file:///home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/direction_a_decoupled/20260706_221801/rosbag/rosbag_0.mcap)，包内包含 odometry、magnetic、setpoint、tracking JSON、真值电缆、扭曲先验与车辆轨迹 marker，可直接用于 Foxglove 电缆巡检视频录制。
+
+下图从 Direction A 录制包提取 `/auv/cable/diagnostics` 逐帧诊断，绘制在线先验修正的接受时序：左上为带符号横偏（先验 vs 磁观测），右上为累积平移/旋转修正量，左下为横偏拟合质量 `cross_track_quality` 相对 `min_confidence=0.35` 门限，右下为逐帧接受标志与航向修正量。全程 `observed=1.000`、`accepted=1.000`、垂直分离 `vsep=7.50 m`、拟合质量≈1.0、累积平移非零——即满足磁观测前提时，在线修正在部署 ROS 闭环中被真实观测持续接受、并把修正量累积回投影 cache（与 (3d) 因近共面几何被 EKF 残差门 100% 拒绝形成直接对照）：
+
+![Direction A 在线先验修正接受时序](../figures/cable_acceptance/direction_a_online_prior_alignment.png)
+
+| Direction A 关键量（解耦轻量闭环） | 值 | 与 (3d) PVS 闭环对照 |
+|---|---:|---|
+| 磁观测被激励 `observed` | 1.000 | (3d) 1204/1223 帧也被激励 |
+| 在线修正被接受 `accepted` | 1.000 | (3d) 0/1204（残差门全拒） |
+| 拒绝原因 `reason_code` | 1（accepted） | (3d) 恒为 2（残差超限） |
+| 横偏拟合质量 `cross_track_quality` | ≈1.0（门限 0.35） | (3d) 中位数 1.0 但仍被拒 |
+| 垂直分离 `vsep` | 7.50 m（缆在车下） | (3d) ≈0 m（缆车近共面） |
+| 累积平移修正 `translation_norm` | 非零（cache 被修正） | (3d) ≡0（cache 未被修正） |
+
+**该结果的意义是分层的。** 对"算法实机部署"而言，答案可以从"待证"修订为**是（限定为算法部署接口与闭环运行形态）**：出厂 ROS 节点已按真实部署契约消费原始磁场和里程计输入，在线先验修正已在部署门面内被实例化并由满足物理前提的磁观测接受，控制输出经 `/auv/control/setpoint` 回到外部运动学闭环，且全链路可录制为 Foxglove 巡检视频。这说明 AUV-Master-Mag 的部署 API 已具备迁入实机管理框架的接口闭环条件，不再只是离线 `main_viz.py`/`orchestrator.py` 仿真路径。对"实物部署验收"而言，答案仍不能写成是：Direction A 仍是无地磁背景、无真实检测噪声、无硬件时延/标定误差、无六自由度水动力的轻量闭环，不能替代真机 Jetson+AMD+磁传感器+水池/外场实验。因此准确表述应为："算法实机部署接口与闭环数据契约已成立；硬件实物验收证据仍待补。"
+
+**（4）算法实机部署与实物验收的分层判定（本小节的核心诚实声明，按 (3b) 开环 + (3c) PVS 闭环 + (3d) 接线后 PVS 复验 + (3e) 解耦轻量闭环四重证据修订）。** 直接回答"当前端到端证据，在实物部署中是否可接受"：**算法实机部署接口可判为是；可交付实物部署验收仍为否。** 这里的"是"限定在算法部署层：同源 `AuvMagTrackingPipeline` 已通过出厂 ROS 节点消费原始磁场/里程计输入、在线修正默认关闭但可配置开启、可产生控制设定值并闭环驱动车辆运动模型，且在满足磁观测前提的 Direction A 场景中已被真实观测接受；这里的"否"指尚不可作为现场硬件或工业验收的充分证据。理由分三段：
+
+- **已经补上的两环**：其一，distorted prior 已在主仓端到端链路中被激励（(3b) 开环 + (3c) 闭环均把 mid/heavy 先验几何偏差**确定性地**传导为 route offset 增长约 15/20 m 并把工业验收从 clean 的 pass/ready 推翻为 fail/invalid，0/3）。其二，"闭环 fresh run 是否改变结论"这一 (3b) 遗留问题已由 (3c) 实测回答——**不改变**：即使制导指令层发生了修正（17–20° 平均航向指令差），横偏仍确定性累积到全程偏差量级，闭环与开环结果几乎重合。
+- **(3c)→(3d) 把失效的真正性质逐层澄清**：(3c) 时部署门面 [AuvMagTrackingPipeline](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/src/auv_mag_tracking/api/pipeline.py) 尚**未接入**在线 `PriorAlignmentEstimator`；(3d) 本次已把它接进部署门面（默认关闭、单测覆盖禁用时逐位回归 + 启用时能吸收合成横偏），但在当前 PVS 闭环下**仍未复现恢复**，根因转为**磁导出横偏观测的直线埋缆前提不成立**——PVS 产磁电缆与车辆近乎共面（缆非在车下 `d≈7.5 m`），反演横偏被系统性放大约 4–5 倍（约 −40 m vs 真值 −10 m），EKF 残差门（`max_residual_m=18.0 m`）正确拒绝了全部 1204/1204 帧越界观测。故 docs 29 里"在线修正把 offset 收敛回廊道"的恢复能力，代码上**已可在部署门面实例化**，但尚未在任何满足其观测前提的**部署路径闭环场景**中被激励。
+- **仍然缺的环（为何实物验收仍为否）**：Direction A 已把 (i) 中"满足磁观测前提时在线修正能否在部署 ROS 闭环被激励"这一点补上，但它仍是轻量运动学闭环，而非 PVS 六自由度或真机闭环。要把结论继续提升为可交付实物部署验收，仍须补齐三项：(i) 在 PVS 中构造同样满足磁观测前提（缆埋于车体下方 `d` 米、By 主导）的闭环场景，或改用不依赖直线假设的观测反演，使 PVS 复验不再受近共面产磁几何误导；(ii) 修复 PVS mock 车体对横向/艏向设定值的位形响应（当前 Y/yaw 恒为 0.0，见 (3d) 附注），使制导修正能转化为真实横向操舵；(iii) 补充真实检测噪声、多种子统计、硬件实物三环。真实海缆巡检中操作员图纸必带系统性平移/旋转/缩放误差与航位漂移（docs 28 §2.3.1），而"带硬件误差和真实噪声时部署路径能否稳定闭环恢复"这一现场验收问题，仍需硬件证据支撑。
+
+因此，当前结论应写成"clean-prior 端到端已闭环达标 + distorted-prior 已在端到端开环与 PVS 闭环链路被激励并确定性触发失效 + 在线先验修正已接入部署门面（默认关闭、单测已过）+ 在满足磁观测前提的解耦轻量闭环中，在线修正已被真实观测接受并可产出 Foxglove 巡检视频"。据此，**算法实机部署接口可写为已成立**；距离"可交付实物部署验收"仍差**满足磁观测前提的 PVS 六自由度闭环场景（或非直线观测反演）+ 修复 PVS mock 车体位形响应 + 真实检测噪声 + 多种子统计 + 硬件实物**这几环。
+
+**（5）下一步计划的执行进度与剩余缺口（独立文档）。** 端到端 distorted-prior 验证的可执行路线记于独立计划文档 [docs/thesis/paper/e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md)。截至本次专项，该计划 §4 步骤已推进如下：**步骤 2（在主仓 [cable_prior_adapter.py](file:///home/auv_user/auv_ws/AUV-Master-Project/brain_linux/src/auv_control/auv_decision_ros/cable_prior_adapter.py) 加默认关闭的先验位姿误差注入 hook）✓ 完成**；**步骤 3（clean 回归确认 `enabled:false` 时 `max_route_offset≈0` 未变）✓ 完成**；**步骤 4（mid/heavy 各 ≥3 次端到端 run + DL/T 聚合）先以开环回放完成（见 (3b)），后在 PVS 活体仿真后端就位后以真闭环 fresh run 复做（见 (3c)）✓ 完成**；**步骤 5（对照 docs 29 并修订 (4) 判定）即本次写入 ✓ 完成**。**(3b) 遗留的"剩余唯一未闭合项"——带活体仿真的闭环 fresh run 验证恢复能力——已由 (3c) 闭合**：闭环下制导指令层被真实修正（17–20° 平均航向指令差），但结果与开环几乎重合、仍 0/3 fail/invalid，且定位根因为**主仓出厂 ROS 部署门面 `AuvMagTrackingPipeline` 未接入在线 `PriorAlignmentEstimator`**（在线修正只在离线 `orchestrator.py`）。**新剩余项 (a) 已进一步分两层推进**：第一层，(3d) 已把离线 `PriorAlignmentEstimator` 接进部署门面（默认关闭、门控 `enable_online_prior_alignment`），并用磁导出横偏观测喂在线修正，接线本身经单测覆盖；但当前 PVS 产磁几何近共面，直线埋缆前提不成立，闭环恢复在 PVS 中仍为负结果。第二层，(3e) 已用满足磁观测前提的解耦轻量闭环补上"算法部署接口是否可在线激励"这一证据：在线修正被真实观测接受、控制设定值回到外部运动学闭环、并生成可用于 Foxglove 视频的 MCAP。因此，**算法实机部署接口可写为已成立**；剩余项不再是"算法能否接进 ROS 部署门面"，而是：（a1-PVS）把满足磁观测前提的产磁几何迁回 PVS 六自由度闭环，或采用不依赖直线假设的观测反演；（a2）修复 PVS mock 车体对横向/艏向设定值的位形响应；（b）真实检测噪声；（c）多种子统计；（d）硬件实物。论文正文对端到端电缆探测的鲁棒性声称，应限定为"算法实机部署接口与闭环数据契约已成立，且可产出 Foxglove 巡检视频；硬件实物验收仍待补"，不得把 Direction A 轻量闭环写成 PVS 六自由度或现场真机验收。
+
 ## 5.6 缺失实验与讨论
 
 5.5 节给出了所有已完成实验的可写结论与边界，本节进一步把"尚未完成"的实验按工程缺口性质分类组织。把缺口写出来不是为了"自我贬低"，而是为了让读者明确知道"哪些结论已经成立、哪些结论还在路上、哪些结论必须留到未来工作"。这种主动的"缺口披露"比"含糊地把所有内容都写成已完成"更接近工程实证的精神。具体而言，当前缺口可以归纳为三类，分别对应"统计充分性、场景真实性、硬件实物证据"三个维度：
 
-**第一类：统计与过程证据补充。** baseline UA-mode 已完成 3 seed、ES-EKF 8 场景 x 3 seed 已完成（24/24 ok）、UA-MPC 主消融 3 场景 x 2 模式 x 3 seed 已完成（18/18 ok）。后续已进一步补充 terrain PID 3 seed、P1 控制侧聚合、P1 NIS/R 聚合和 H1 solve-time 重跑；具体回填见续写文件。这一类缺口的特点是"数据采集成本相对低、方法论无新增"——只需在现有工具链上多跑几个 seed、把日志重新聚合即可补齐，因此被归为"短期可解"的缺口。
+**第一类：统计与过程证据补充。** baseline UA-mode 已完成 3 seed、ES-EKF 8 场景 x 3 seed 已完成（24/24 ok）、UA-MPC 主消融 3 场景 x 2 模式 x 3 seed 已完成（18/18 ok）。后续已进一步补充 terrain PID 3 seed（见 §5.5.3）、P1 控制侧聚合与 H1 solve-time 重跑（见 §5.5.7）、P1 NIS/R 聚合（见 §5.5.5）。这一类缺口的特点是"数据采集成本相对低、方法论无新增"——只需在现有工具链上多跑几个 seed、把日志重新聚合即可补齐，因此被归为"短期可解"的缺口。
 
-**第二类：场景真实性不足。** 现有 PVS chaos 更偏传感器和通信扰动，尚未形成电缆几何、地形、声磁观测和横流耦合的完整海缆巡检场景。需要新增电缆 S 弯、急转、坡面横穿、半掩埋和 combined cable extreme 等场景。这一类缺口的特点是"工具链改造成本中等、需要把 PVS height map 与 cable centerline 绑定"——属于"中期可解"的缺口，对应 5.7 节定义的 6 个极端电缆巡检场景。
+**第二类：场景真实性不足。** 现有 PVS chaos 更偏传感器和通信扰动，尚未形成电缆几何、地形、声磁观测和横流耦合的完整海缆巡检场景。需要新增电缆 S 弯、急转、坡面横穿、半掩埋和 combined cable extreme 等场景。这一类缺口的特点是"工具链改造成本中等、需要把 PVS height map 与 cable centerline 绑定"——属于"中期可解"的缺口，对应 5.7 节定义的 6 个极端电缆巡检场景。当前已用可运行代理路线完成这 6 个场景的 seed0 smoke（12/12 ok，见 §5.7.7），证明控制闭环压力测试链路可跑通；仍待补的是"扩到 3 seed 给出 mean±std"与"完整声磁耦合数字孪生场景"两步。
 
 **第三类：硬件与实物证据不足。** Jetson 真机、AMD UDP 时延、转台磁标定、10A 电缆台和 HSF-500 埋深反演仍不能写成已完成。这些实验对第 5 章很有价值，但依赖现场条件，若短期无法完成，应在论文中写成实验方案和未来工作。这一类缺口的特点是"必须依赖硬件条件、实验周期长、单次成本高"——属于"长期可解"的缺口，本文据此把这一类内容显式标注为"实验方案 + 未来工作"，而不强行等同于已完成结果。
 
@@ -451,12 +696,53 @@ AUV 受到持续横向推力。该场景测试欠驱动 AUV 的横流补偿能�
 
 > **表格占位符**：正式论文中需补充极端场景的实验结果表，包括各场景的路由完成率、最大横向偏移、安全违规次数和控制平滑度。
 
+### 5.7.7 代理电缆巡检环境与低成本 smoke 结果
+
+前六节把 6 个极端电缆场景的设计口径写清楚，但 PVS 后端尚未原生支持"电缆几何 + 地形 + 声磁 + 横流"耦合场景。为在不重写 PVS 后端的前提下先取得"这一组场景可运行、能产出控制侧指标"的初步证据，本轮采用**可运行代理路线**——通过场景 YAML 中 `cable_path.points_ned`（电缆中心线几何）、`digital_twin.terrain_noise_*`/`terrain_slope_deg`（近底地形复杂度）、`perception.noise`/`perception.sonar`（声磁观测质量）、`pvs.current_speed_mps`/`current_direction_deg`（横流压力）四组字段组合，把上述 6 个极端场景表达为代理场景并跑 smoke。
+
+**（1）3 个核心代理场景 smoke（seed0）**
+
+先验证 3 个核心代理场景（S 弯、坡面穿越、综合极端）链路可跑通。运行路径 `log/proxy_cable_sweep/20260613_171423_cable_proxy_smoke/` 与 `results/control_aggregates/20260613_171423_cable_proxy_smoke/`（slope crossing UA 的落盘失败 seed 单条 retry，`..._20260613_180210_cable_slope_crossing_ua_retry/`）：
+
+| 场景 | 模式 | 聚合状态 | lateral RMSE | control rate RMS | safety violation |
+|---|---|---:|---:|---:|---:|
+| cable_s_curve_proxy | baseline | 1/1 | 2.0428 m | 0.1108 | 0.0000 |
+| cable_s_curve_proxy | UA-MPC | 1/1 | 2.0886 m | 0.1988 | 0.0000 |
+| cable_slope_crossing_proxy | baseline | 1/1 | 1.4483 m | 0.9864 | 0.0000 |
+| cable_slope_crossing_proxy | UA-MPC | 1/1 retry | 1.4479 m | 25.2183 | 0.0000 |
+| combined_cable_extreme_proxy | baseline | 1/1 | 3.8501 m | 1.4724 | 0.0000 |
+| combined_cable_extreme_proxy | UA-MPC | 1/1 | 4.3672 m | 8.9076 | 0.0000 |
+
+**（2）6 场景全量代理 smoke（seed0）**
+
+3 核心场景跑通后扩展为 6 个全量代理场景（对应 §5.7.1–§5.7.6），执行命令与验收口径见 `tools/run_proxy_cable_sweep.py --scenarios cable_s_curve_proxy,cable_hairpin_proxy,cable_slope_crossing_proxy,cable_buried_gap_proxy,cable_cross_current_proxy,combined_cable_extreme_proxy --seeds 0 --mpc-modes baseline,ua --duration 30 --label cable_proxy_full6_smoke`。运行路径 `log/proxy_cable_sweep/20260613_182825_cable_proxy_full6_smoke/` 与 `results/control_aggregates/20260613_182825_cable_proxy_full6_smoke/`，运行状态 12/12 ok、控制聚合状态 `generated,12`：
+
+| 场景 | 模式 | lateral RMSE | control rate RMS | safety violation |
+|---|---|---:|---:|---:|
+| cable_s_curve_proxy | baseline | 2.1037 m | 0.1599 | 0.0000 |
+| cable_s_curve_proxy | UA-MPC | 2.0761 m | 0.0158 | 0.0000 |
+| cable_hairpin_proxy | baseline | 1.9935 m | 0.4418 | 0.0000 |
+| cable_hairpin_proxy | UA-MPC | 1.8406 m | 1.0908 | 0.0000 |
+| cable_slope_crossing_proxy | baseline | 1.3978 m | 0.6837 | 0.0000 |
+| cable_slope_crossing_proxy | UA-MPC | 1.4551 m | 9.7474 | 0.0000 |
+| cable_buried_gap_proxy | baseline | 1.4863 m | 0.4732 | 0.0000 |
+| cable_buried_gap_proxy | UA-MPC | 1.4465 m | 1.0797 | 0.0000 |
+| cable_cross_current_proxy | baseline | 5.2688 m | 0.2583 | 0.0000 |
+| cable_cross_current_proxy | UA-MPC | 5.1426 m | 0.8937 | 0.0000 |
+| combined_cable_extreme_proxy | baseline | 4.2081 m | 1.5455 | 0.0000 |
+| combined_cable_extreme_proxy | UA-MPC | 4.0706 m | 6.2097 | 0.0000 |
+
+**结论与边界**：
+- 6 个代理电缆场景均能生成非空 MCAP 与控制侧指标（12/12 ok），说明"极端电缆场景的控制闭环压力测试"链路可运行。横流场景（`cable_cross_current_proxy` lateral RMSE 约 5.1–5.3 m）与 combined extreme（约 4.1–4.2 m）的横向偏差明显大于其余场景，符合其作为控制压力场景的定位。
+- **边界（必须与上表同时引用）**：每个"场景 × 模式"组合仅 seed0（`n=1` smoke），**不能写成 baseline-MPC 与 UA-MPC 的统计优劣**。UA-MPC 在多个场景 lateral RMSE 略低，但在 slope crossing、hairpin、combined extreme 的 control rate RMS 明显升高（9.7474 / 1.0908 / 6.2097），故只能写成"可运行压力测试 + 待统计趋势"。下一步不是直接写强结论，而是按成功率决定是否把通过的场景扩到 3 seed 给出 mean±std。
+- 这一组代理场景是"低成本可运行替身"，用于验证控制闭环在极端几何/横流下不崩溃，**不等价于真实海试**，也不替代 §5.7.1–§5.7.6 设计口径要求的完整声磁耦合数字孪生场景。
+
 ## 5.8 本章小结
 
-本章按"平台 → 指标 → 仿真 → 硬件 → 实验室 → 讨论 → 极端场景"的顺序，把支撑全文论点的实验证据、可写结论和已识别缺口完整摆出，使读者可以判断每条结论各自的证据等级和适用范围。具体而言：5.1 节构建了 L1–L4 四层实验体系，并把定位、控制、terrain 和电缆巡检四类评价指标的物理意义和数学口径定义清楚；5.2 节阐述了 PVS 9 场景的扰动配置和 ChaosInjector 的 6 类故障模型，重点说明了 combined_stress 场景的 8 维扰动源设计；5.3 节和 5.4 节按"实验方案 + 未来工作"的边界把硬件集成与实验室反演实验摆出；5.5 节作为本章主线，把所有已完成实验按"证据清单"逐一展开，并对每条结论标注样本量与边界；5.6 节把"统计充分性、场景真实性、硬件实物证据"三类缺口主动披露；5.7 节给出 6 个极端电缆巡检场景的统一设计，对应 4.5.2 节的"场景 × 模式"二维消融蓝图。
+本章按"平台 → 指标 → 仿真 → 硬件 → 实验室 → 讨论 → 极端场景"的顺序，把支撑全文论点的实验证据、可写结论和已识别缺口完整摆出，使读者可以判断每条结论各自的证据等级和适用范围。具体而言：5.1 节构建了 L1–L4 四层实验体系，并把定位、控制、terrain 和电缆巡检四类评价指标的物理意义和数学口径定义清楚；5.2 节阐述了 PVS 9 场景的扰动配置和 ChaosInjector 的 6 类故障模型，重点说明了 combined_stress 场景的 8 维扰动源设计；5.3 节把双脑通信、磁传感器杆臂标定和故障自救三类硬件集成实验摆出，其中 §5.3.2 磁杆臂标定已完成一轮仿真标定验证（平移误差降 96.27%、旋转降 95.31%、status=pass，边界为仿真 scaffold 非真机转台），5.4 节按"实验方案 + 未来工作"边界给出实验室反演实验；5.5 节作为本章主线，把所有已完成实验按"证据清单"逐一展开（含 ES-EKF 鲁棒性、NIS/自适应 R 一致性、UA-MPC 定位/控制侧消融、DL/T 1278 数字孪生验收、以及 §5.5.11 端到端电缆探测的分层证据到 Direction A 解耦轻量闭环），并对每条结论标注样本量与边界；5.6 节把"统计充分性、场景真实性、硬件实物证据"三类缺口主动披露；5.7 节给出 6 个极端电缆巡检场景的统一设计（§5.7.1–§5.7.6）并补上代理场景 seed0 smoke 结果（§5.7.7，12/12 ok），对应 4.5.2 节的"场景 × 模式"二维消融蓝图。
 
-把全章可稳妥支撑的核心证据合在一起看，可归纳为四条：**第一**，PID terrain 是当前最可靠的近底方案（真口径 `seabed_clearance_rmse_to_3m` 落在 0.56–1.14 m 区间、四相 clearance 随真地形起伏、三档地形零安全违规），调优 PID/PVS 在 terrain following 主任务上不弱于 MPC（早先 `0.1752 m` 系分析层 datum bug 假象，已被 §5.5.2 真口径表取代）；**第二**，公平口径下 MPC x/y/yaw 极端路径支线显示 MPC 在长波/短波 S 弯与 hairpin 上优于或持平基线，仅直角 chicane 上 LOS 前瞻更优——MPC 的优势区是"LOS 不擅长"的不规则曲率路径预瞄（早先"未全面超过 LOS"的判断源自 harness `+2.0 m` 偏置 bug，修复后已被推翻）；**第三**，ES-EKF 8 场景 × 3 seed 鲁棒性验证达到 24/24 ok，状态估计在多类传感器/通信扰动下保持稳定；**第四**，UA-MPC 主消融在 baseline 和 combined_stress 下展现"定位 + 控制"双侧改善（XY RMSE 改善 10.4%、lateral RMSE 改善 15.8%），但在 DVL 60% 丢包场景下不再有优势，印证了"感知-控制不确定性必须沿层向上传递"的整体观点。
+把全章可稳妥支撑的核心证据合在一起看，可归纳为五条：**第一**，PID terrain 是当前最可靠的近底方案（真口径 `seabed_clearance_rmse_to_3m` 落在 0.56–1.14 m 区间、四相 clearance 随真地形起伏、三档地形 3 seed 复验零安全违规），调优 PID/PVS 在 terrain following 主任务上不弱于 MPC（早先 `0.1752 m` 系分析层 datum bug 假象，已被 §5.5.2 真口径表取代）；**第二**，公平口径下 MPC x/y/yaw 极端路径支线显示 MPC 在长波/短波 S 弯与 hairpin 上优于或持平基线，仅直角 chicane 上 LOS 前瞻更优——MPC 的优势区是"LOS 不擅长"的不规则曲率路径预瞄（早先"未全面超过 LOS"的判断源自 harness `+2.0 m` 偏置 bug，修复后已被推翻）；**第三**，ES-EKF 8 场景 × 3 seed 鲁棒性验证达到 24/24 ok，且 NIS/自适应 R 聚合显示 r_scale 在全场景被触发（r_scale_max=5.0、trigger 0.24–0.36），状态估计在多类传感器/通信扰动下保持稳定且协方差一致性可核查；**第四**，UA-MPC 主消融在 baseline 和 combined_stress 下展现"定位 + 控制"双侧改善（XY RMSE 改善 10.4%、lateral RMSE 改善 15.8%），但在 DVL 60% 丢包场景下不再有优势，印证了"感知-控制不确定性必须沿层向上传递"的整体观点；**第五**，声磁电缆探测端到端已把证据分层讲清——clean-prior 端到端达 DL/T ready/pass（3/3、preliminary_acceptance_ready=True），distorted-prior 已在开环回放与 PVS 闭环中被激励并确定性触发失效，在线先验修正已接入部署门面，并在满足磁观测前提的 Direction A 解耦轻量闭环中被真实观测接受、可产出 Foxglove 巡检视频，**据此"算法实机部署接口与闭环数据契约"可判为已成立**。
 
-不能稳妥支撑的结论同样需要明确：**MPC 全面优于 PID/LOS 不成立**；**UA-MPC 单独可应对所有不确定性场景不成立**；**fallback 路径在仿真侧未被有效压力测试**（18/18 run fallback rate 全为 0，需等待 5.7 节六类极端场景）；**硬件物理证据缺失**——磁传感器九参数标定、HSF-500 埋深反演、AMD UDP 真机时延仍属"实验方案 + 未来工作"。
+不能稳妥支撑的结论同样需要明确：**MPC 全面优于 PID/LOS 不成立**；**UA-MPC 单独可应对所有不确定性场景不成立**；**fallback 路径在仿真侧未被有效压力测试**（18/18 run fallback rate 全为 0，需等待 5.7 节六类极端场景）；**代理电缆 6 场景仅 seed0 smoke，不能写成 baseline/UA 统计优劣**；**"可交付实物部署验收"仍为否**——Direction A 仍是轻量运动学闭环，尚缺满足磁观测前提的 PVS 六自由度闭环场景（或非直线观测反演）、PVS mock 车体横向/艏向位形响应修复、真实检测噪声、多种子统计与硬件实物；**硬件物理证据缺失**——磁传感器九参数标定、HSF-500 埋深反演、AMD UDP 真机时延仍属"实验方案 + 未来工作"。
 
 把以上结论与缺口合在一起，本章给出的是"算法层面正确性 + 已识别硬件接口"的完整证据图，而不是"已经覆盖一切工况"的过度承诺。这一定位与第 2 章 2.2.3 节"PVS 给出的是算法层面证据、不是硬件物理证据"的整体立场一致，也为下一阶段实物部署阶段留出了清晰的工作清单——PVS 内的"统计补充 + 场景扩展"是短中期工作，硬件实物证据是长期工作，二者按"先仿真扩展、再迁到真机"的顺序推进，可在不依赖一次性满足所有条件的前提下逐步把实证强度抬到工程交付水平。

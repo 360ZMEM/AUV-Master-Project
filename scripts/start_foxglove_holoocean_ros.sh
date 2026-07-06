@@ -26,6 +26,12 @@ SCRIPTS_DIR="$ROOT_DIR/scripts"
 BRAIN_DIR="$ROOT_DIR/brain_linux"
 WORKSPACE_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
 FOXGLOVE_SDK_ROS_DIR="${FOXGLOVE_SDK_ROS_DIR:-$WORKSPACE_ROOT/foxglove-sdk/ros}"
+RUN_DIR="${AUV_RUN_DIR:-}"
+CHILD_LOG_DIR=""
+if [[ -n "$RUN_DIR" ]]; then
+  CHILD_LOG_DIR="$RUN_DIR/child_logs"
+  mkdir -p "$CHILD_LOG_DIR"
+fi
 
 SIM_MODE="both"
 BRAIN_MODE="stack"
@@ -231,19 +237,38 @@ fi
 echo "[AUV] starting HoloOcean + bridge simulation via start_lin_sim.sh (${SIM_MODE})..."
 # NOTE: do NOT use setsid here — keep children in this script's process group so the
 # parent (start_experiment.sh) can kill -- -<pgid> and reach every descendant.
-bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" "${SIM_ARGS[@]}" &
+if [[ -n "$CHILD_LOG_DIR" ]]; then
+  SIM_LOG="$CHILD_LOG_DIR/sim_launcher.log"
+  echo "[AUV] simulation stdout/stderr -> $SIM_LOG"
+  bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" "${SIM_ARGS[@]}" >"$SIM_LOG" 2>&1 &
+else
+  bash "$SCRIPTS_DIR/start_lin_sim.sh" "$SIM_MODE" "${SIM_ARGS[@]}" &
+fi
 SIM_PID=$!
 
 if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
   echo "[AUV] starting foxglove_bridge on ws://0.0.0.0:8765..."
-  (
-    set +u
-    source /opt/ros/humble/setup.bash
-    source "$BRAIN_DIR/install/setup.bash"
-    source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
-    set -u
-    exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
-  ) &
+  if [[ -n "$CHILD_LOG_DIR" ]]; then
+    FOXGLOVE_LOG="$CHILD_LOG_DIR/foxglove_bridge.log"
+    echo "[AUV] foxglove_bridge stdout/stderr -> $FOXGLOVE_LOG"
+    (
+      set +u
+      source /opt/ros/humble/setup.bash
+      source "$BRAIN_DIR/install/setup.bash"
+      source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      set -u
+      exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+    ) >"$FOXGLOVE_LOG" 2>&1 &
+  else
+    (
+      set +u
+      source /opt/ros/humble/setup.bash
+      source "$BRAIN_DIR/install/setup.bash"
+      source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      set -u
+      exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+    ) &
+  fi
   BRIDGE_PID=$!
 else
   echo "[AUV][WARN] foxglove_bridge not started because install/local_setup.bash was not found"
@@ -253,14 +278,23 @@ echo "[AUV] waiting ${SIM_DELAY_S}s before starting ROS2 brain..."
 sleep "$SIM_DELAY_S"
 
 echo "[AUV] starting ROS2 brain via start_lin_brain.sh (${BRAIN_MODE})..."
-bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}" &
+if [[ -n "$CHILD_LOG_DIR" ]]; then
+  BRAIN_LOG="$CHILD_LOG_DIR/brain_launcher.log"
+  echo "[AUV] brain stdout/stderr -> $BRAIN_LOG"
+  bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}" >"$BRAIN_LOG" 2>&1 &
+else
+  bash "$SCRIPTS_DIR/start_lin_brain.sh" "$BRAIN_MODE" "${BRAIN_ARGS[@]}" "${VIZ_ARGS[@]}" &
+fi
 BRAIN_PID=$!
 
-# Wait on whichever child exits first; cleanup() (via traps) handles the rest.
-WAIT_PIDS=("$SIM_PID" "$BRAIN_PID")
-if [[ -n "${BRIDGE_PID:-}" ]]; then
-  WAIT_PIDS+=("$BRIDGE_PID")
-fi
+# The experiment wrapper owns the wall-clock duration.  PVS/mock simulation
+# helpers may finish their finite scenario before the brain-side nodes have
+# produced enough ROS evidence, so the unified launcher must not tear the stack
+# down just because the sim helper returned.
+WAIT_PIDS=("$BRAIN_PID")
+# foxglove_bridge is a visualization sidecar. Port conflicts or browser-side
+# bridge crashes must not tear down sim/brain long-running experiments.
+# cleanup() still stops it when the launcher exits.
 EXIT_PID=""
 wait -n -p EXIT_PID "${WAIT_PIDS[@]}" 2>/dev/null
 EXIT_CODE=$?

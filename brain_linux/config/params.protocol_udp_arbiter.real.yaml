@@ -17,6 +17,11 @@ bridge:
   dvl_key: rt/auv/sensors/dvl
   depth_key: rt/auv/sensors/depth
   magnetic_key: rt/auv/sensors/magnetic
+  magnetic_extrinsics_status:
+    enabled: true
+    topic: /auv/sensors/magnetic_extrinsics_status
+    publish_period_s: 1.0
+    include_sim_position_hash: false
   arbiter:
     enabled: true
     arbiter_status_topic: /auv/arbiter/status
@@ -40,6 +45,14 @@ bridge:
     main_motor_rpm_scale: 15.0
     side_motor_rpm: 0
     zenoh_side_channel_enabled: true
+
+sensor_extrinsics_estimated:
+  mag:
+    translation_b_m: [0.30001230153357483, 0.002987455375084699, -0.05274137855362218]
+    rotation_rpy_deg: [-0.04452959193786371, -0.02273353925858613, 1.950417672250177]
+
+metadata:
+  mag_extrinsics_source: results/mag_extrinsics/fullflow_20260705_2145/estimated_extrinsics.yaml
 
 controller:
   control_rate_hz: 20.0

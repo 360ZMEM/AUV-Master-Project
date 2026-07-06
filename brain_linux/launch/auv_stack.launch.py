@@ -116,12 +116,48 @@ def generate_nodes(context, *args, **kwargs):
         ],
     )
 
+    cable_tracking = Node(
+        package='auv_decision_ros',
+        executable='cable_tracking_node',
+        name='auv_cable_tracking_node',
+        condition=IfCondition(LaunchConfiguration('enable_cable_tracking')),
+        output='screen',
+        parameters=[
+            {
+                'config_file': LaunchConfiguration('cable_tracking_config'),
+                'enabled': LaunchConfiguration('enable_cable_tracking'),
+            }
+        ],
+    )
+
+    cable_mission_autostart = Node(
+        package='auv_decision_ros',
+        executable='cable_mission_autostart_node',
+        name='auv_cable_mission_autostart_node',
+        condition=IfCondition(LaunchConfiguration('enable_cable_mission_autostart')),
+        output='screen',
+        parameters=[
+            {
+                'mission_type': LaunchConfiguration('cable_mission_type'),
+                'target_depth': LaunchConfiguration('cable_mission_target_depth'),
+                'target_speed_mps': LaunchConfiguration('cable_mission_target_speed_mps'),
+                'start_delay_s': LaunchConfiguration('cable_mission_start_delay_s'),
+                'publish_duration_s': LaunchConfiguration('cable_mission_publish_duration_s'),
+                'publish_rate_hz': LaunchConfiguration('cable_mission_publish_rate_hz'),
+                'publish_general_mission': LaunchConfiguration('cable_mission_publish_general'),
+                'publish_cable_mission': LaunchConfiguration('cable_mission_publish_cable'),
+            }
+        ],
+    )
+
     return [
         bridge,
         TimerAction(period=2.0, actions=[localization]),
         TimerAction(period=3.0, actions=[viz_bridge]),
         TimerAction(period=4.0, actions=[controller]),
         TimerAction(period=6.0, actions=[decision]),
+        TimerAction(period=7.0, actions=[cable_tracking]),
+        TimerAction(period=8.0, actions=[cable_mission_autostart]),
     ]
 
 def generate_launch_description() -> LaunchDescription:
@@ -180,6 +216,72 @@ def generate_launch_description() -> LaunchDescription:
         'enable_decision',
         default_value='true',
         description='Enable decision node',
+    )
+
+    enable_cable_tracking_arg = DeclareLaunchArgument(
+        'enable_cable_tracking',
+        default_value='false',
+        description='Enable AUV-Master-Mag cable tracking adapter node',
+    )
+
+    cable_tracking_config_arg = DeclareLaunchArgument(
+        'cable_tracking_config',
+        default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'cable_tracking.yaml'),
+        description='YAML config file for cable_tracking_node',
+    )
+
+    enable_cable_mission_autostart_arg = DeclareLaunchArgument(
+        'enable_cable_mission_autostart',
+        default_value='false',
+        description='Automatically publish a cable tracking mission command for full-flow experiments',
+    )
+
+    cable_mission_type_arg = DeclareLaunchArgument(
+        'cable_mission_type',
+        default_value='CABLE_TRACKING',
+        description='Mission type published by cable_mission_autostart_node',
+    )
+
+    cable_mission_target_depth_arg = DeclareLaunchArgument(
+        'cable_mission_target_depth',
+        default_value='12.0',
+        description='Cable mission target depth in meters',
+    )
+
+    cable_mission_target_speed_arg = DeclareLaunchArgument(
+        'cable_mission_target_speed_mps',
+        default_value='0.8',
+        description='Cable mission target speed in meters per second',
+    )
+
+    cable_mission_start_delay_arg = DeclareLaunchArgument(
+        'cable_mission_start_delay_s',
+        default_value='2.0',
+        description='Delay before cable mission autostart begins publishing',
+    )
+
+    cable_mission_publish_duration_arg = DeclareLaunchArgument(
+        'cable_mission_publish_duration_s',
+        default_value='90.0',
+        description='Duration for repeated cable mission autostart publishing',
+    )
+
+    cable_mission_publish_rate_arg = DeclareLaunchArgument(
+        'cable_mission_publish_rate_hz',
+        default_value='2.0',
+        description='Cable mission autostart publish rate',
+    )
+
+    cable_mission_publish_general_arg = DeclareLaunchArgument(
+        'cable_mission_publish_general',
+        default_value='true',
+        description='Publish cable autostart mission to /auv/mission_command',
+    )
+
+    cable_mission_publish_cable_arg = DeclareLaunchArgument(
+        'cable_mission_publish_cable',
+        default_value='true',
+        description='Publish cable autostart mission to /auv/cable/mission_command',
     )
 
     protocol_control_mode_byte_arg = DeclareLaunchArgument(
@@ -379,6 +481,17 @@ def generate_launch_description() -> LaunchDescription:
             enable_localization_arg,
             enable_controller_arg,
             enable_decision_arg,
+            enable_cable_tracking_arg,
+            cable_tracking_config_arg,
+            enable_cable_mission_autostart_arg,
+            cable_mission_type_arg,
+            cable_mission_target_depth_arg,
+            cable_mission_target_speed_arg,
+            cable_mission_start_delay_arg,
+            cable_mission_publish_duration_arg,
+            cable_mission_publish_rate_arg,
+            cable_mission_publish_general_arg,
+            cable_mission_publish_cable_arg,
             protocol_control_mode_byte_arg,
             main_motor_rpm_scale_arg,
             enable_viz_bridge_arg,

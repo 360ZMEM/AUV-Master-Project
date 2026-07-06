@@ -35,6 +35,23 @@ class TopicConfig:
     ground_truth: str = "/auv/sensors/ground_truth"
     magnetic: str = "/auv/sensors/magnetic"
     sonar: str = "/auv/sensors/sonar"
+    cable_tracking: str = "/auv/cable/tracking"
+    cable_diagnostics: str = "/auv/cable/diagnostics"
+    dlt1278_summary: str = "/auv/cable/dlt1278_summary"
+    dlt1278_state: str = "/auv/cable/dlt1278_state"
+    dlt1278_total_score: str = "/auv/cable/dlt1278_total_score"
+    cable_industrial_acceptance_pass: str = "/auv/cable/industrial_acceptance_pass"
+    cable_industrial_ready: str = "/auv/cable/industrial_ready"
+    cable_mode: str = "/auv/cable/mode"
+    cable_acceptance_flags: str = "/auv/cable/acceptance_flags"
+    cable_status_text: str = "/auv/cable/status_text"
+    cable_cross_track: str = "/auv/cable/cross_track_m"
+    cable_route_progress: str = "/auv/cable/route_progress_m"
+    cable_burial_depth: str = "/auv/cable/burial_depth_m"
+    cable_burial_sigma: str = "/auv/cable/burial_sigma_m"
+    cable_confidence: str = "/auv/cable/confidence"
+    cable_magnetic_snr: str = "/auv/cable/magnetic_snr_db"
+    cable_magnetic_confidence: str = "/auv/cable/magnetic_confidence"
 
     seabed_cloud: str = "/auv/visual/seabed_cloud"
     seabed_mesh: str = "/auv/visual/seabed_mesh"
@@ -64,6 +81,13 @@ class PlotFieldConfig:
     diagnostic_depth_error: str = "depth_error_m"
     diagnostic_lateral_error: str = "lateral_error_m"
     diagnostic_magnetic_magnitude: str = "magnetic_magnitude"
+    cable_cross_track: str = "cross_track_m"
+    cable_burial_depth: str = "burial_depth_m"
+    cable_burial_sigma: str = "burial_sigma_m"
+    cable_confidence: str = "confidence"
+    cable_route_progress: str = "route_progress_m"
+    cable_magnetic_snr: str = "magnetic_snr_db"
+    cable_magnetic_confidence: str = "magnetic_confidence"
 
 
 @dataclass(frozen=True)
@@ -155,6 +179,23 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         ground_truth=_join(config.ground_truth),
         magnetic=_join(config.magnetic),
         sonar=_join(config.sonar),
+        cable_tracking=_join(config.cable_tracking),
+        cable_diagnostics=_join(config.cable_diagnostics),
+        dlt1278_summary=_join(config.dlt1278_summary),
+        dlt1278_state=_join(config.dlt1278_state),
+        dlt1278_total_score=_join(config.dlt1278_total_score),
+        cable_industrial_acceptance_pass=_join(config.cable_industrial_acceptance_pass),
+        cable_industrial_ready=_join(config.cable_industrial_ready),
+        cable_mode=_join(config.cable_mode),
+        cable_acceptance_flags=_join(config.cable_acceptance_flags),
+        cable_status_text=_join(config.cable_status_text),
+        cable_cross_track=_join(config.cable_cross_track),
+        cable_route_progress=_join(config.cable_route_progress),
+        cable_burial_depth=_join(config.cable_burial_depth),
+        cable_burial_sigma=_join(config.cable_burial_sigma),
+        cable_confidence=_join(config.cable_confidence),
+        cable_magnetic_snr=_join(config.cable_magnetic_snr),
+        cable_magnetic_confidence=_join(config.cable_magnetic_confidence),
         seabed_cloud=_join(config.seabed_cloud),
         seabed_mesh=_join(config.seabed_mesh),
         cable_marker=_join(config.cable_marker),

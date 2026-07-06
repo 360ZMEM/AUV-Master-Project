@@ -24,6 +24,9 @@ setup(
         'console_scripts': [
             'decision_node = auv_decision_ros.decision_node:main',
             'mock_sensor_input = auv_decision_ros.mock_sensor_input:main',
+            'cable_tracking_node = auv_decision_ros.cable_tracking_node:main',
+            'cable_mission_autostart_node = auv_decision_ros.cable_mission_autostart_node:main',
+            'decoupled_cable_sim_node = auv_decision_ros.decoupled_cable_sim_node:main',
         ],
     },
 )

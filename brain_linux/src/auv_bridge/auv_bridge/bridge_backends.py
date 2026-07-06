@@ -187,6 +187,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self.pc_cmd_raw_key = str(arbiter_cfg.get('pc_cmd_raw_key', 'rt/pc/cmd_raw'))
         self.telemetry_key = str(arbiter_cfg.get('telemetry_key', 'rt/auv/telemetry'))
         self.viz_internal_key = str(arbiter_cfg.get('viz_internal_key', 'rt/auv/viz/internal'))
+        self.magnetic_key = str(bridge_cfg.get('magnetic_key', 'rt/auv/sensors/magnetic'))
         self._frame_counter = 0
         self._socket: socket.socket | None = None
         self._recv_thread: threading.Thread | None = None
@@ -199,6 +200,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self._on_link_failure_callback = None
         self._on_link_recovery_callback = None
         self._mock_amd_clock_start_s = time.monotonic()
+        self._magnetic_side_channel_count = 0
 
     def open(self) -> None:
         """打开 UDP 套接字并启动接收线程。"""
@@ -301,9 +303,28 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         zcfg = zenoh.Config()
         self._session = zenoh.open(zcfg)
         self._subscribers.append(self._session.declare_subscriber(self.pc_cmd_raw_key, self._on_pc_raw_sample))
+        self._subscribers.append(self._session.declare_subscriber(self.magnetic_key, self._on_magnetic_sample))
+        self.node.get_logger().info(
+            f'[bridge] protocol_udp side-channel subscribed magnetic_key={self.magnetic_key}'
+        )
         self._publishers[self.telemetry_key] = self._session.declare_publisher(self.telemetry_key)
         self._publishers[self.viz_internal_key] = self._session.declare_publisher(self.viz_internal_key)
         self._publishers[Z_PATH_MOCK_AMD_TIME] = self._session.declare_publisher(Z_PATH_MOCK_AMD_TIME)
+
+    def _on_magnetic_sample(self, sample) -> None:
+        """Forward magnetic JSON side-channel data that is not present in protocol frames."""
+        payload_bytes = sample.payload.to_bytes() if hasattr(sample.payload, 'to_bytes') else bytes(sample.payload)
+        try:
+            data = json.loads(payload_bytes.decode('utf-8'))
+        except Exception:
+            return
+        self._magnetic_side_channel_count += 1
+        if self._magnetic_side_channel_count == 1 or self._magnetic_side_channel_count % 100 == 0:
+            self.node.get_logger().info(
+                '[bridge] protocol_udp side-channel magnetic sample '
+                f'count={self._magnetic_side_channel_count} keys={sorted(data.keys())}'
+            )
+        self.node.handle_json_sensor_payload(self.magnetic_key, data)
 
     def _on_pc_raw_sample(self, sample) -> None:
         """处理来自 PC 原始控制通道的输入并转发给桥接节点。"""

@@ -45,7 +45,7 @@ if str(PVS_ROOT) not in sys.path:
 
 from python_vehicle_simulator.lib.gnc import Rzyx, attitudeEuler
 from python_vehicle_simulator.vehicles.remus100 import remus100
-from common.sensor_extrinsics import base_velocity_to_sensor, load_extrinsics_map
+from common.sensor_extrinsics import base_position_to_sensor_world, base_velocity_to_sensor, load_extrinsics_map
 from ocean_current_model import OceanCurrentModel
 
 
@@ -211,6 +211,7 @@ class PVSSimWrapper:
         self.imu_truth_extrinsic = self.sensor_extrinsics_truth["imu"]
         self.dvl_truth_extrinsic = self.sensor_extrinsics_truth["dvl"]
         self.depth_truth_extrinsic = self.sensor_extrinsics_truth["depth"]
+        self.mag_truth_extrinsic = self.sensor_extrinsics_truth["mag"]
         self.dvl_measurement_frame = str(
             self.config.get("perception", {}).get("dvl_measurement_frame", "world")
         ).strip().lower()
@@ -467,6 +468,11 @@ class PVSSimWrapper:
             dvl_output = vel_world_ned
         depth_sensor_ned = position_ned + self._build_rotation_matrix_ned() @ self.depth_truth_extrinsic.translation_b_m
         depth_m = float(depth_sensor_ned[2])
+        mag_sensor_ned = base_position_to_sensor_world(
+            position_ned,
+            self._build_rotation_matrix_ned(),
+            self.mag_truth_extrinsic,
+        )
         # 注意：NED的Z轴向下为正，vel_world_ned[2]应该为正表示下沉
         
         return {
@@ -476,6 +482,8 @@ class PVSSimWrapper:
                 "DVLFrame": self.dvl_measurement_frame,
                 "IMUSensor": np.concatenate([accel_ue, gyro_ue]),
                 "DepthSensor": np.array([float(depth_m)], dtype=float),
+                "MagSensorPositionNED": np.asarray(mag_sensor_ned, dtype=float),
+                "MagSensorFrame": "mag_link",
             }
         }
 

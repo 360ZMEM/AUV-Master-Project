@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-07-06T15:17:41",
+  "qt_platform": "offscreen",
+  "tracking_jsonl": "/home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/acceptance_fresh1_20260706_135331/tracking.jsonl",
+  "telemetry_rows": 1237,
+  "frames_rendered": 150,
+  "fps": 12,
+  "mp4_path": "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/console_operator_video/console_operator_workflow_20260706_151721.mp4",
+  "gif_path": "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/console_operator_video/console_operator_workflow_20260706_151721.gif",
+  "last_frame_png": "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/console_operator_video/console_operator_workflow_20260706_151721_lastframe.png",
+  "dangerous_actions_executed": false,
+  "safe_actions": [
+    "tab:航点规划/任务配置/消息",
+    "button:开始选点",
+    "button:结束选点",
+    "cable_monitor 遥测刷新"
+  ],
+  "dangerous_controls_not_clicked": [
+    "紧急切断 ESTOP",
+    "解除急停",
+    "请求自主",
+    "手动接管",
+    "任务开启",
+    "任务取消",
+    "下发任务",
+    "连接 Zenoh"
+  ],
+  "tx_timer_stopped": true,
+  "before_selecting_waypoint": false,
+  "after_selecting_waypoint": false
+}

@@ -1,0 +1,47 @@
+{
+  "point_count": 866,
+  "burial_min_m": 1.5,
+  "burial_accuracy_target_m": 0.15,
+  "burial_accuracy_pass": null,
+  "max_route_offset_m": 14.716646300223722,
+  "mean_route_offset_m": 3.875750148386636,
+  "average_confidence": 0.5,
+  "confidence_span": 0.0,
+  "data_quality_flags": [
+    "missing_burial_uncertainty",
+    "constant_tracking_confidence",
+    "large_route_offset"
+  ],
+  "industrial_conclusion_readiness": "limited",
+  "score_items": [
+    {
+      "item": "海缆位移",
+      "level": "II",
+      "base_score": 4,
+      "weight": 2,
+      "score": 8
+    }
+  ],
+  "total_score": 8,
+  "worst_single_score": 8,
+  "state": "正常状态",
+  "source_tracking_jsonl": "/home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/fullflow_20260705_213816/tracking.jsonl",
+  "implemented_items": [
+    "route_deviation",
+    "burial_profile",
+    "burial_accuracy",
+    "tracking_confidence"
+  ],
+  "simulatable_later_items": [
+    "cable_damage",
+    "armor_wear",
+    "foreign_object_entanglement"
+  ],
+  "external_input_items": [
+    "port_facility",
+    "terminal_equipment",
+    "manhole",
+    "grounding_box",
+    "family_defect"
+  ]
+}

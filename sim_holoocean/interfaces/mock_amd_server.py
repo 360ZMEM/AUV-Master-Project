@@ -31,6 +31,8 @@ for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common']:
 from common.protocol import (
     build_uplink_packet,
     parse_downlink_packet,
+    KEY_B_NED,
+    KEY_B_NORM,
     KEY_CABLE_CLOSEST_NED,
     KEY_CABLE_DISTANCE_M,
     KEY_POSITION_NED,
@@ -44,6 +46,7 @@ from mock_amd_chaos import ChaosInjector, ChaosProfile
 from mock_amd_delay import TransportDelayQueue
 from mock_amd_sensor_cache import SensorSampleCache, SensorSnapshot
 from frame_transform import body_vector_ue_to_ned, pose_matrix_ue_to_ned
+from perception_engine import CablePath, compute_biot_savart_hvdc, inject_gaussian_noise
 from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocity, extract_depth, extract_gyro, get_agent_state
 from ocean_current_model import OceanCurrentModel
 from synthetic_sensors import VirtualEnvironment
@@ -91,6 +94,9 @@ class MockAmdUdpServer:
         # ────────────────────────────────────────
         self.rate_hz = float(config['bridge']['rate_hz'])
         self.dt = 1.0 / max(1e-6, self.rate_hz)  # 单帧时间，秒
+        cable_points = (config.get('cable_path', {}) or {}).get('points_ned')
+        self.cable = CablePath(cable_points) if cable_points else None
+        self.perception_cfg = dict(config.get('perception', {}) or {})
 
         protocol_cfg = config['bridge'].get('protocol_udp', {})
 
@@ -130,10 +136,19 @@ class MockAmdUdpServer:
         # 日志输出模式
         self.log_packets = bool(protocol_cfg.get('log_packets', True))           # 是否打印协议包
         self.log_raw_format = bool(protocol_cfg.get('log_raw_format', False))    # 原始紧凑格式
-        self.log_ascii_format = bool(protocol_cfg.get('log_ascii_format', False)) # 详细 ASCII 格式
+        self.allow_multiline_logs = bool(protocol_cfg.get('allow_multiline_logs', False))
+        self.log_ascii_format = (
+            bool(protocol_cfg.get('log_ascii_format', False)) and self.allow_multiline_logs
+        )  # 详细 ASCII 格式；默认禁止进入主实验输出
         self.log_packet_hex = bool(protocol_cfg.get('log_packet_hex', False))    # 是否包含十六进制数据
         self.log_hex_bytes = int(protocol_cfg.get('log_hex_bytes', 48))          # 十六进制显示的字节数
-        self.log_every_n = max(1, int(protocol_cfg.get('log_every_n', 1)))       # 每 N 帧打印一次
+        self.log_fixed_block_lines = max(1, int(protocol_cfg.get('log_fixed_block_lines', 48)))
+        self.log_rate_hz = float(protocol_cfg.get('log_rate_hz', 2.0) or 0.0)
+        if self.log_rate_hz > 0.0:
+            self.log_every_n = max(1, int(round(self.rate_hz / self.log_rate_hz)))
+        else:
+            self.log_every_n = max(1, int(protocol_cfg.get('log_every_n', 1)))   # 每 N 帧打印一次
+        self._last_rx_log_wall = 0.0
 
         mock_cfg = dict(config.get('mock_amd', {}) or {})
 
@@ -429,7 +444,7 @@ class MockAmdUdpServer:
                 continue
 
             # 日志输出
-            if self.log_packets:
+            if self.log_packets and self._should_log_rx_packet():
                 if self.log_raw_format:
                     # 紧凑原始格式（单行，方便脚本解析）
                     print(
@@ -441,15 +456,13 @@ class MockAmdUdpServer:
                     )
                 elif self.log_ascii_format:
                     # 详细 ASCII 格式（多行，便于人工阅读）
-                    print(
-                        format_protocol_packet_ascii(
-                            ready_packet,
-                            label='mock-amd RX',
-                            source=f'{ready_addr[0]}:{ready_addr[1]}',
-                            include_timestamp=True,
-                        )
-                    )
-                    print()  # 空行分隔
+                    print(self._format_fixed_verbose_packet(
+                        ready_packet,
+                        label='mock-amd RX',
+                        source=f'{ready_addr[0]}:{ready_addr[1]}',
+                        step=None,
+                        mode_tag="RX",
+                    ), flush=True)
                 else:
                     # 单行摘要格式（默认，包含关键信息和可选十六进制）
                     print(
@@ -457,7 +470,7 @@ class MockAmdUdpServer:
                             ready_packet,
                             label='mock-amd RX',
                             source=f'{ready_addr[0]}:{ready_addr[1]}',
-                            color=True,
+                            color=False,
                             include_hex=self.log_packet_hex,
                             max_hex_bytes=self.log_hex_bytes,
                             main_motor_rpm_scale=self.main_motor_rpm_scale,
@@ -539,14 +552,9 @@ class MockAmdUdpServer:
         base_roll_deg = float(rpy_deg[0])                         # 横滚角
         base_dvl_speed_mps = float(dvl_ned[0])                   # 前向速度
 
-        # 磁力计数据（可选）
-        mag_state = state.get('magnetic') or state.get('MagneticSensor') or state.get('mag')
-        mag_payload = None
-        if isinstance(mag_state, dict):
-            mag_payload = {
-                'B_ned': list(mag_state.get('B_ned', [0.0, 0.0, 0.0])),
-                'B_norm': float(mag_state.get('B_norm', 0.0)),
-            }
+        # 磁力计数据（可选）：PVS/protocol_udp 路径复用与 Zenoh JSON 路径相同的
+        # 电缆磁场模型；采样位置优先使用已做杆臂改正的 MagSensorPositionNED。
+        mag_payload = self._build_magnetic_payload(state, step, tf["position_ned"])
 
         # ────────────────────────────────────────
         # 步骤 2：构造原始传感器状态
@@ -691,6 +699,66 @@ class MockAmdUdpServer:
         except Exception as exc:
             print(f"[mock-amd][warn] GT publish failed at step={step}: {exc}")
 
+    def _build_magnetic_payload(self, state, step: int, fallback_pos_ned) -> dict | None:
+        mag_state = state.get('magnetic') or state.get('MagneticSensor') or state.get('mag')
+        if isinstance(mag_state, dict):
+            b_ned = mag_state.get(KEY_B_NED, mag_state.get('B_ned', [0.0, 0.0, 0.0]))
+            return {
+                KEY_B_NED: list(np.asarray(b_ned, dtype=float).reshape(3)),
+                KEY_B_NORM: float(mag_state.get(KEY_B_NORM, mag_state.get('B_norm', 0.0))),
+            }
+
+        if self.cable is None or not self.perception_cfg:
+            return None
+
+        try:
+            mag_sensor_pos_ned = np.asarray(
+                state.get('MagSensorPositionNED', fallback_pos_ned),
+                dtype=float,
+            ).reshape(3)
+            b_vec = compute_biot_savart_hvdc(
+                auv_pos_ned=mag_sensor_pos_ned,
+                cable=self.cable,
+                current_amp=float(self.perception_cfg["hvdc_current_amp"]),
+            )
+            noise_cfg = dict(self.perception_cfg.get("noise", {}) or {})
+            b_noisy = inject_gaussian_noise(
+                b_vec,
+                noise_cfg.get("magnetic_sigma", [0.0, 0.0, 0.0]),
+            )
+            return {
+                KEY_B_NED: np.asarray(b_noisy, dtype=float).reshape(3).tolist(),
+                KEY_B_NORM: float(np.linalg.norm(b_noisy)),
+            }
+        except Exception as exc:
+            if step % max(1, int(self.rate_hz)) == 0:
+                print(f"[mock-amd][warn] magnetic payload build failed at step={step}: {exc}")
+            return None
+
+    def _publish_magnetic_zenoh(self, state, step: int):
+        if self.zbridge is None:
+            return
+        try:
+            agent_state = get_agent_state(state, self.agent_name)
+            pose = agent_state['PoseSensor']
+            tf = pose_matrix_ue_to_ned(pose)
+            sim_time = float(step) * self.dt
+            mag_payload = self._build_magnetic_payload(agent_state, step, tf["position_ned"])
+            if mag_payload is None:
+                return
+            payload = {
+                **enrich_meta({}, step=int(step), sim_time=sim_time, ts=sim_time),
+                **mag_payload,
+            }
+            topic = self.zbridge.get_uplink_topic("magnetic")
+            ok, errors = validate_sensor_payload(topic, payload)
+            if not ok:
+                print(f"[mock-amd][warn] invalid magnetic payload: {errors}")
+                return
+            self.zbridge.publish("magnetic", payload)
+        except Exception as exc:
+            print(f"[mock-amd][warn] magnetic publish failed at step={step}: {exc}")
+
     def run_forever(self):
         """
         启动 Mock AMD 服务器的主运行循环 - 持续仿真、通信、故障注入。
@@ -796,23 +864,20 @@ class MockAmdUdpServer:
                         )
                     elif self.log_ascii_format:
                         # 详细 ASCII 格式
-                        print(
-                            format_protocol_packet_ascii(
-                                packet,
-                                label='mock-amd TX',
-                                source=f'{self.last_client_addr[0]}:{self.last_client_addr[1]}',
-                                include_timestamp=True,
-                            )
-                        )
-                        print(f'step={step:06d} mode={"AUTO" if is_autonomy_mode else "MANUAL"}')
-                        print()  # 空行分隔
+                        print(self._format_fixed_verbose_packet(
+                            packet,
+                            label='mock-amd TX',
+                            source=f'{self.last_client_addr[0]}:{self.last_client_addr[1]}',
+                            step=step,
+                            mode_tag="AUTO" if is_autonomy_mode else "MANUAL",
+                        ), flush=True)
                     else:
                         # 单行摘要格式
                         uplink_log = format_protocol_packet(
                             packet,
                             label='mock-amd TX',
                             source=f'{self.last_client_addr[0]}:{self.last_client_addr[1]}',
-                            color=True,
+                            color=False,
                             include_hex=self.log_packet_hex,
                             max_hex_bytes=self.log_hex_bytes,
                             main_motor_rpm_scale=self.main_motor_rpm_scale,
@@ -833,6 +898,7 @@ class MockAmdUdpServer:
             # ────────────────────────────────────────
             if self.zbridge is not None:
                 self._publish_ground_truth_zenoh(state, step)
+                self._publish_magnetic_zenoh(state, step)
 
             # ────────────────────────────────────────
             # 速率控制：维持 rate_hz
@@ -848,6 +914,48 @@ class MockAmdUdpServer:
             # ────────────────────────────────────────
             if self.config['bridge'].get('max_steps', 0) > 0 and step >= int(self.config['bridge']['max_steps']):
                 break
+
+    def _should_log_rx_packet(self) -> bool:
+        if self.log_rate_hz <= 0.0:
+            return True
+        now = time.time()
+        min_interval_s = 1.0 / max(self.log_rate_hz, 1.0e-6)
+        if now - self._last_rx_log_wall < min_interval_s:
+            return False
+        self._last_rx_log_wall = now
+        return True
+
+    def _format_fixed_verbose_packet(
+        self,
+        packet: bytes,
+        *,
+        label: str,
+        source: str,
+        step: int | None,
+        mode_tag: str,
+    ) -> str:
+        lines = format_protocol_packet_ascii(
+            packet,
+            label=label,
+            source=source,
+            include_timestamp=True,
+        ).splitlines()
+        runtime_lines = [
+            "",
+            "RUNTIME:",
+            f"  Step: {step:06d}" if step is not None else "  Step: --",
+            f"  Mode: {mode_tag}",
+        ]
+        if lines and set(lines[-1]) == {"="}:
+            lines = lines[:-1] + runtime_lines + [lines[-1]]
+        else:
+            lines.extend(runtime_lines)
+
+        if len(lines) < self.log_fixed_block_lines:
+            tail = lines[-1:] if lines else []
+            body = lines[:-1] if tail else lines
+            lines = body + [""] * (self.log_fixed_block_lines - len(lines)) + tail
+        return "\n".join(lines)
 
     def _extract_target_depth_from_downlink(self) -> float:
         """

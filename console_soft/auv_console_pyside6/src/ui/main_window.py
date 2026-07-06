@@ -596,6 +596,34 @@ class MainWindow(QMainWindow):
         conf_group.setLayout(conf_layout)
         layout.addWidget(conf_group, stretch=0)
 
+        # 6. 电缆巡检监控：只显示从 cable tracking JSON 中提取的关键字段
+        cable_group = QGroupBox("电缆巡检监控")
+        cable_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        cable_layout = QVBoxLayout()
+        self.lbl_cable_ready = QLabel("结论: --")
+        self.lbl_cable_ready.setStyleSheet("color: #aaa; font-size: 15px; font-weight: bold;")
+        self.lbl_cable_metrics = QLabel("偏移/埋深/进度: --")
+        self.lbl_cable_metrics.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_quality = QLabel("置信度/SNR: --")
+        self.lbl_cable_quality.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_dlt = QLabel("DL/T状态/总分: --")
+        self.lbl_cable_dlt.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_score_items = QLabel("扣分项: --")
+        self.lbl_cable_score_items.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_flags = QLabel("验收标志: --")
+        self.lbl_cable_flags.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_products = QLabel("产物链: --")
+        self.lbl_cable_products.setStyleSheet("color: #aaa; font-size: 10px;")
+        cable_layout.addWidget(self.lbl_cable_ready)
+        cable_layout.addWidget(self.lbl_cable_metrics)
+        cable_layout.addWidget(self.lbl_cable_quality)
+        cable_layout.addWidget(self.lbl_cable_dlt)
+        cable_layout.addWidget(self.lbl_cable_score_items)
+        cable_layout.addWidget(self.lbl_cable_flags)
+        cable_layout.addWidget(self.lbl_cable_products)
+        cable_group.setLayout(cable_layout)
+        layout.addWidget(cable_group, stretch=1)
+
         return bar
 
     def create_menu_bar(self):
@@ -1094,10 +1122,70 @@ class MainWindow(QMainWindow):
                 self.lbl_confidence.setStyleSheet("color: #ffaa00; font-size: 16px; font-weight: bold;")
             else:
                 self.lbl_confidence.setStyleSheet("color: #00cc66; font-size: 16px; font-weight: bold;")
+        if isinstance(payload.get('cable_monitor'), dict):
+            self.update_cable_monitor_display(payload['cable_monitor'])
         self.update_arbiter_feedback(
             str(payload.get('auto_state', '--')),
             str(payload.get('deny_reason', 'NONE')),
         )
+
+    def update_cable_monitor_display(self, monitor: dict):
+        """Update cable inspection summary from bridge side-channel telemetry."""
+        if not isinstance(monitor, dict):
+            return
+
+        def fmt(value, digits=2):
+            if value is None:
+                return "--"
+            try:
+                return f"{float(value):.{digits}f}"
+            except (TypeError, ValueError):
+                return str(value)
+
+        ready = bool(monitor.get('industrial_ready', False))
+        acceptance_pass = bool(monitor.get('industrial_acceptance_pass', ready))
+        mode = str(monitor.get('mode', '--'))
+        flags = str(monitor.get('acceptance_flags_text', '--'))
+        if ready:
+            pass_text = "PASS" if acceptance_pass else "FAIL"
+            self.lbl_cable_ready.setText(f"结论: READY/{pass_text} | {mode}")
+            self.lbl_cable_ready.setStyleSheet("color: #00cc66; font-size: 15px; font-weight: bold;")
+        else:
+            pass_text = "PASS" if acceptance_pass else "FAIL"
+            self.lbl_cable_ready.setText(f"结论: NOT READY/{pass_text} | {mode}")
+            self.lbl_cable_ready.setStyleSheet("color: #ff4444; font-size: 15px; font-weight: bold;")
+
+        self.lbl_cable_metrics.setText(
+            "偏移/埋深/进度: "
+            f"{fmt(monitor.get('cross_track_m'))} m / "
+            f"{fmt(monitor.get('burial_depth_m'))} m / "
+            f"{fmt(monitor.get('route_progress_m'), 1)} m"
+        )
+        self.lbl_cable_quality.setText(
+            "置信度/SNR: "
+            f"{fmt(monitor.get('confidence'), 3)} / "
+            f"{fmt(monitor.get('magnetic_snr_db'), 1)} dB / "
+            f"mag {fmt(monitor.get('magnetic_confidence'), 3)}"
+        )
+        dlt_state = str(monitor.get('dlt1278_state', '--'))
+        dlt_score = fmt(monitor.get('dlt1278_total_score'), 0)
+        self.lbl_cable_dlt.setText(f"DL/T状态/总分: {dlt_state} / {dlt_score}")
+        if dlt_state in ('异常状态', '严重状态'):
+            self.lbl_cable_dlt.setStyleSheet("color: #ff4444; font-size: 11px; font-weight: bold;")
+        elif dlt_state == '注意状态':
+            self.lbl_cable_dlt.setStyleSheet("color: #ffaa00; font-size: 11px; font-weight: bold;")
+        elif dlt_state == '正常状态':
+            self.lbl_cable_dlt.setStyleSheet("color: #00cc66; font-size: 11px;")
+        else:
+            self.lbl_cable_dlt.setStyleSheet("color: #ddd; font-size: 11px;")
+
+        self.lbl_cable_score_items.setText(f"扣分项: {monitor.get('dlt1278_score_items_text', '--')}")
+        self.lbl_cable_flags.setText(f"验收标志: {flags}")
+        if flags and flags != 'none':
+            self.lbl_cable_flags.setStyleSheet("color: #ffaa00; font-size: 11px; font-weight: bold;")
+        else:
+            self.lbl_cable_flags.setStyleSheet("color: #00cc66; font-size: 11px;")
+        self.lbl_cable_products.setText(f"产物链: {monitor.get('dlt1278_products_text', '--')}")
 
     def update_arbiter_state_display(self, payload: dict):
         """Update arbiter labels and status bar from side-channel state view."""
