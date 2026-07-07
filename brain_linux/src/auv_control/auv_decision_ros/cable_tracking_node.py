@@ -20,7 +20,7 @@ import yaml
 
 from auv_interfaces.msg import ArbiterStatus, Setpoint
 
-from .cable_guidance_limits import GuidanceLimitConfig, ZigzagProbeConfig, apply_zigzag_probe, limit_guidance
+from .cable_guidance_limits import GuidanceLimitConfig, ZigzagProbeConfig, apply_zigzag_probe, limit_guidance, wrap_deg
 from .cable_prior_adapter import ensure_auv_master_mag_on_path, load_cable_map_from_config
 
 
@@ -91,6 +91,7 @@ class CableTrackingNode(Node):
         scenarios = build_default_scenarios()
         scenario_name = str(self.config.get("scenario_name", "case1"))
         scenario = scenarios.get(scenario_name, next(iter(scenarios.values())))
+        self._apply_scenario_overrides(scenario, self.config.get("scenario_overrides", {}) or {})
         self.quality_cfg = dict(self.config.get("quality", {}) or {})
         self.acceptance_cfg = dict(self.config.get("acceptance", {}) or {})
         self.pipeline = AuvMagTrackingPipeline(
@@ -101,6 +102,7 @@ class CableTrackingNode(Node):
 
         self.mission_types = set(self.config.get("mission_types", ["CABLE_TRACKING", "CABLE_INSPECTION"]))
         self.control_cfg = dict(self.config.get("control", {}) or {})
+        self.recovery_cfg = dict(self.config.get("recovery_guidance", {}) or {})
         self.mag_cfg = dict(self.config.get("magnetic", {}) or {})
         self.limit_cfg = GuidanceLimitConfig.from_mapping(self.config.get("zigzag_limits", {}) or {})
         self.probe_cfg = ZigzagProbeConfig.from_mapping(self.config.get("zigzag_probe", {}) or {})
@@ -110,6 +112,10 @@ class CableTrackingNode(Node):
         self.latest_arbiter: ArbiterStatus | None = None
         self._missing_input_logged = False
         self._publish_count = 0
+        self._recovery_guidance_active = False
+        self._recovery_guidance_streak = 0
+        self._inspection_hold_active = False
+        self._inspection_hold_streak = 0
 
         self.pub_setpoint = self.create_publisher(Setpoint, "/auv/control/setpoint", 10)
         self.pub_tracking = self.create_publisher(String, "/auv/cable/tracking", 10)
@@ -153,6 +159,13 @@ class CableTrackingNode(Node):
             f"enabled={self.probe_cfg.enabled} amplitude_m={self.probe_cfg.lateral_amplitude_m:.2f} "
             f"wavelength_m={self.probe_cfg.wavelength_m:.2f}"
         )
+        if bool(self.recovery_cfg.get("enabled", False)):
+            self.get_logger().info(
+                "cable recovery guidance enabled "
+                f"enter_abs_cross_track_m={self.recovery_cfg.get('enter_abs_cross_track_m', 3.0)} "
+                f"exit_abs_cross_track_m={self.recovery_cfg.get('exit_abs_cross_track_m', 1.0)} "
+                f"max_correction_deg={self.recovery_cfg.get('max_correction_deg', 55.0)}"
+            )
 
     def _build_deployment_config(self, config_cls):
         fields = getattr(config_cls, "__dataclass_fields__", {})
@@ -168,6 +181,19 @@ class CableTrackingNode(Node):
             return {}
         payload = yaml.safe_load(config_file.read_text(encoding="utf-8")) or {}
         return dict(payload.get("cable_tracking", payload) or {})
+
+    def _apply_scenario_overrides(self, scenario, overrides: dict[str, Any]) -> None:
+        """Apply explicit experiment-only overrides to AUV-Master-Mag scenario config."""
+        if not isinstance(overrides, dict):
+            return
+        for section_name in ("tracking", "vehicle"):
+            section = getattr(scenario, section_name, None)
+            values = overrides.get(section_name, {}) or {}
+            if section is None or not isinstance(values, dict):
+                continue
+            for key, value in values.items():
+                if hasattr(section, str(key)):
+                    setattr(section, str(key), value)
 
     def _on_odom(self, msg: Odometry) -> None:
         self.latest_odom = msg
@@ -248,29 +274,55 @@ class CableTrackingNode(Node):
             target_depth_m=target_depth,
             speed_mps=requested_speed,
         )
-        probe = apply_zigzag_probe(
-            base_heading_deg=guidance.desired_heading_deg,
-            route_progress_m=tracking.route_progress_m,
-            speed_mps=guidance.speed_mps,
-            probe_config=self.probe_cfg,
-            limit_config=self.limit_cfg,
-        )
-        guidance.desired_heading_deg = probe.desired_heading_deg
-        guidance.zigzag_width_m = probe.requested_lateral_amplitude_m
-        guidance.diagnostics.update(
-            {
-                "zigzag_probe_active": probe.active,
-                "zigzag_probe_lateral_amplitude_m": probe.requested_lateral_amplitude_m,
-                "zigzag_probe_wavelength_m": probe.wavelength_m,
-                "zigzag_probe_phase_rad": probe.phase_rad,
-                "zigzag_probe_heading_bias_deg": probe.heading_bias_deg,
-                "zigzag_probe_required_peak_heading_deg": probe.required_peak_heading_deg,
-                "zigzag_probe_required_min_turn_radius_m": probe.required_min_turn_radius_m,
-                "zigzag_probe_required_peak_lateral_speed_mps": probe.required_peak_lateral_speed_mps,
-                "zigzag_probe_dynamics_feasible": probe.dynamics_feasible,
-                "zigzag_probe_feasibility_reasons": list(probe.feasibility_reasons),
-            }
-        )
+        recovery_active = self._apply_recovery_guidance(tracking, guidance)
+        inspection_hold_active = self._update_inspection_hold(tracking)
+        if (
+            (recovery_active and bool(self.recovery_cfg.get("disable_zigzag", True)))
+            or inspection_hold_active
+        ):
+            guidance.zigzag_width_m = 0.0
+            guidance.diagnostics.update(
+                {
+                    "zigzag_probe_active": False,
+                    "zigzag_probe_suppressed_by_recovery": recovery_active,
+                    "zigzag_probe_suppressed_by_inspection_hold": inspection_hold_active,
+                    "zigzag_probe_lateral_amplitude_m": 0.0,
+                    "zigzag_probe_wavelength_m": self.probe_cfg.wavelength_m,
+                    "zigzag_probe_phase_rad": 0.0,
+                    "zigzag_probe_heading_bias_deg": 0.0,
+                    "zigzag_probe_required_peak_heading_deg": 0.0,
+                    "zigzag_probe_required_min_turn_radius_m": float("inf"),
+                    "zigzag_probe_required_peak_lateral_speed_mps": 0.0,
+                    "zigzag_probe_dynamics_feasible": True,
+                    "zigzag_probe_feasibility_reasons": [],
+                }
+            )
+        else:
+            probe = apply_zigzag_probe(
+                base_heading_deg=guidance.desired_heading_deg,
+                route_progress_m=tracking.route_progress_m,
+                speed_mps=guidance.speed_mps,
+                probe_config=self.probe_cfg,
+                limit_config=self.limit_cfg,
+            )
+            guidance.desired_heading_deg = probe.desired_heading_deg
+            guidance.zigzag_width_m = probe.requested_lateral_amplitude_m
+            guidance.diagnostics.update(
+                {
+                    "zigzag_probe_active": probe.active,
+                    "zigzag_probe_suppressed_by_recovery": False,
+                    "zigzag_probe_suppressed_by_inspection_hold": False,
+                    "zigzag_probe_lateral_amplitude_m": probe.requested_lateral_amplitude_m,
+                    "zigzag_probe_wavelength_m": probe.wavelength_m,
+                    "zigzag_probe_phase_rad": probe.phase_rad,
+                    "zigzag_probe_heading_bias_deg": probe.heading_bias_deg,
+                    "zigzag_probe_required_peak_heading_deg": probe.required_peak_heading_deg,
+                    "zigzag_probe_required_min_turn_radius_m": probe.required_min_turn_radius_m,
+                    "zigzag_probe_required_peak_lateral_speed_mps": probe.required_peak_lateral_speed_mps,
+                    "zigzag_probe_dynamics_feasible": probe.dynamics_feasible,
+                    "zigzag_probe_feasibility_reasons": list(probe.feasibility_reasons),
+                }
+            )
         limited = limit_guidance(
             desired_heading_deg=guidance.desired_heading_deg,
             current_heading_deg=nav.heading_deg,
@@ -534,6 +586,104 @@ class CableTrackingNode(Node):
 
     def _publish_diag(self, payload: dict[str, Any]) -> None:
         self.pub_diagnostics.publish(String(data=json.dumps(_json_safe(payload), ensure_ascii=False, allow_nan=False)))
+
+    def _update_inspection_hold(self, tracking) -> bool:
+        cfg = dict(self.config.get("inspection_hold", {}) or {})
+        if not bool(cfg.get("enabled", False)):
+            self._inspection_hold_active = False
+            self._inspection_hold_streak = 0
+            return False
+        enter_cross_track = float(cfg.get("enter_abs_cross_track_m", 2.0))
+        consecutive_required = max(1, int(cfg.get("enter_consecutive_samples", 20)))
+        abs_cross_track = abs(float(tracking.cross_track_m))
+        burial_ready = tracking.burial_sigma_m is not None
+        if abs_cross_track <= enter_cross_track and burial_ready:
+            self._inspection_hold_streak += 1
+        else:
+            self._inspection_hold_streak = 0
+        if self._inspection_hold_streak >= consecutive_required:
+            self._inspection_hold_active = True
+        tracking.diagnostics.update(
+            {
+                "inspection_hold_enabled": True,
+                "inspection_hold_active": self._inspection_hold_active,
+                "inspection_hold_streak": self._inspection_hold_streak,
+                "inspection_hold_enter_abs_cross_track_m": enter_cross_track,
+                "inspection_hold_enter_consecutive_samples": consecutive_required,
+            }
+        )
+        return self._inspection_hold_active
+
+    def _apply_recovery_guidance(self, tracking, guidance) -> bool:
+        """Temporarily prioritize line reacquisition before DL/T inspection."""
+        if not bool(self.recovery_cfg.get("enabled", False)):
+            self._recovery_guidance_active = False
+            self._recovery_guidance_streak = 0
+            guidance.diagnostics.update(
+                {
+                    "recovery_guidance_enabled": False,
+                    "recovery_guidance_active": False,
+                    "recovery_guidance_streak": 0,
+                }
+            )
+            return False
+
+        signed_cross_track = tracking.diagnostics.get("signed_cross_track_m")
+        if signed_cross_track is None:
+            signed_cross_track = tracking.diagnostics.get("prior_alignment_prior_cross_track_m")
+        try:
+            signed_cross_track = float(signed_cross_track)
+        except (TypeError, ValueError):
+            signed_cross_track = float(tracking.cross_track_m)
+        abs_cross_track = abs(signed_cross_track)
+
+        enter = float(self.recovery_cfg.get("enter_abs_cross_track_m", 3.0))
+        exit_threshold = float(self.recovery_cfg.get("exit_abs_cross_track_m", 1.0))
+        exit_streak_required = max(1, int(self.recovery_cfg.get("exit_consecutive_samples", 30)))
+        if abs_cross_track <= exit_threshold:
+            self._recovery_guidance_streak += 1
+        else:
+            self._recovery_guidance_streak = 0
+
+        if self._recovery_guidance_active:
+            if self._recovery_guidance_streak >= exit_streak_required:
+                self._recovery_guidance_active = False
+        elif abs_cross_track >= enter:
+            self._recovery_guidance_active = True
+            self._recovery_guidance_streak = 0
+
+        raw_heading_correction = float(guidance.diagnostics.get("heading_correction_deg", 0.0) or 0.0)
+        cable_heading_deg = wrap_deg(float(guidance.desired_heading_deg) - raw_heading_correction)
+        applied_correction = raw_heading_correction
+        if self._recovery_guidance_active:
+            gain = float(self.recovery_cfg.get("gain_deg_per_m", 6.0))
+            max_correction = float(self.recovery_cfg.get("max_correction_deg", 55.0))
+            applied_correction = float(np.clip(-gain * signed_cross_track, -max_correction, max_correction))
+            guidance.desired_heading_deg = wrap_deg(cable_heading_deg + applied_correction)
+            if "speed_mps" in self.recovery_cfg:
+                guidance.speed_mps = float(
+                    np.clip(
+                        float(self.recovery_cfg["speed_mps"]),
+                        float(self.control_cfg.get("min_speed_mps", 0.3)),
+                        float(self.control_cfg.get("max_speed_mps", 1.1)),
+                    )
+                )
+
+        guidance.diagnostics.update(
+            {
+                "recovery_guidance_enabled": True,
+                "recovery_guidance_active": self._recovery_guidance_active,
+                "recovery_guidance_streak": self._recovery_guidance_streak,
+                "recovery_guidance_enter_abs_cross_track_m": enter,
+                "recovery_guidance_exit_abs_cross_track_m": exit_threshold,
+                "recovery_guidance_exit_consecutive_samples": exit_streak_required,
+                "recovery_guidance_abs_cross_track_m": abs_cross_track,
+                "recovery_guidance_signed_cross_track_m": signed_cross_track,
+                "recovery_guidance_cable_heading_deg": cable_heading_deg,
+                "recovery_guidance_heading_correction_deg": applied_correction,
+            }
+        )
+        return self._recovery_guidance_active
 
 
 def main() -> None:

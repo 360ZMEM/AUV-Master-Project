@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import math
+from types import SimpleNamespace
 
+from auv_bridge.arbiter import ArbiterDecision
 from auv_bridge.bridge_node import AUVBridgeNode
-from common.enums import BridgeBackend, ControlModeByte, WorkInstruction
-from common.protocol import KEY_BOTTOM, KEY_LEFT, KEY_RIGHT, KEY_THRUST, KEY_TOP
+from common.enums import ArbiterMode, ArbiterSource, BridgeBackend, ControlModeByte, WorkInstruction
+from common.protocol import KEY_BOTTOM, KEY_CONTROL_MODE_BYTE, KEY_LEFT, KEY_ORIENTATION_DEG, KEY_RIGHT, KEY_THRUST, KEY_TOP, KEY_WORK_INSTRUCTION
 
 
 class _DummyPublisher:
@@ -57,3 +60,34 @@ def test_passive_mode_publishes_shadow_command_instead_of_transport() -> None:
     assert snapshot["orientation_deg"] == 12.5
     assert snapshot["payload"][KEY_RIGHT] == 1.0
     assert snapshot["payload"][KEY_THRUST] == 5.0
+
+
+def test_autonomous_arbiter_uses_setpoint_heading_not_pc_heartbeat_zero() -> None:
+    node = AUVBridgeNode.__new__(AUVBridgeNode)
+    node.passive_mode = False
+    node.backend = BridgeBackend.PROTOCOL_UDP
+    node.latest_setpoint = SimpleNamespace(target_heading_rad=math.radians(-5.0))
+    node.transport = _DummyTransport()
+    node._publish_arbiter_status = lambda guard_decision=None: None
+
+    decision = ArbiterDecision(
+        active_arbiter=ArbiterMode.AUTONOMOUS,
+        arbiter_source=ArbiterSource.JETSON_MPC,
+        command_payload={
+            KEY_CONTROL_MODE_BYTE: int(ControlModeByte.JETSON_PROTOCOL),
+            KEY_WORK_INSTRUCTION: int(WorkInstruction.AUTONOMOUS_CONTROL),
+            KEY_ORIENTATION_DEG: 0.0,
+            KEY_THRUST: 10.0,
+        },
+        mpc_command_valid=True,
+        manual_override_active=False,
+    )
+
+    node._publish_arbiter_decision(decision)
+
+    assert len(node.transport.calls) == 1
+    payload, control_mode_byte, work_instruction, orientation_deg = node.transport.calls[0]
+    assert control_mode_byte == int(ControlModeByte.JETSON_PROTOCOL)
+    assert work_instruction == int(WorkInstruction.AUTONOMOUS_CONTROL)
+    assert orientation_deg == 355.0
+    assert payload[KEY_ORIENTATION_DEG] == 355.0

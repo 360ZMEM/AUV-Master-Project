@@ -33,7 +33,7 @@ run() {
   set +e
   AUV_SKIP_BRAIN_BUILD=1 AUV_LAUNCH_OUTPUT_MODE=log timeout "$TIMEOUT_S" \
     bash "$ROOT_DIR/scripts/start_experiment.sh" \
-      --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile \
+      --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --auto-activate \
       --protocol-control-mode-byte 238 --skip-layout --preflight-clean \
       --bag-profile cable_acceptance --bag-storage mcap --bag-finalize 18 \
       --duration "$DURATION" \

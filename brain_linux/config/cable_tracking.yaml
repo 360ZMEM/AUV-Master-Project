@@ -39,6 +39,20 @@ cable_tracking:
     sine_period_s: 0.0
     high_priority: false
 
+  recovery_guidance:
+    # Default disabled: clean-prior acceptance runs keep the original route
+    # projection guidance. Distorted-prior PVS recovery experiments can enable
+    # this block in their throwaway config to reacquire the cable before DL/T
+    # inspection scoring starts.
+    enabled: false
+    enter_abs_cross_track_m: 3.0
+    exit_abs_cross_track_m: 1.0
+    exit_consecutive_samples: 30
+    gain_deg_per_m: 6.0
+    max_correction_deg: 55.0
+    speed_mps: 0.6
+    disable_zigzag: true
+
   zigzag_limits:
     auto_limit: true
     max_heading_delta_deg: 25.0

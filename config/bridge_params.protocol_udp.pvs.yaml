@@ -129,6 +129,7 @@ sensor_extrinsics_estimated:
     rotation_rpy_deg: [0.0, 0.0, 0.5]
 
 perception:
+  dvl_measurement_frame: sensor
   hvdc_current_amp: 500.0
   noise:
     magnetic_sigma: [1.0e-8, 1.0e-8, 1.0e-8]
@@ -143,6 +144,9 @@ perception:
 
 pvs:
   control_mode: stepInput
+  autonomy_motion_model: kinematic_setpoint
+  kinematic_max_yaw_rate_deg_s: 12.0
+  kinematic_depth_time_constant_s: 4.0
   initial_depth_m: 12.0
   initial_heading_deg: 0.0
   initial_speed_mps: 0.5
@@ -155,3 +159,6 @@ pvs:
   max_command_rpm: 1525.0
   current_speed_mps: 0.5
   current_direction_deg: 0.0
+
+localization:
+  use_imu_orientation_measurement: true

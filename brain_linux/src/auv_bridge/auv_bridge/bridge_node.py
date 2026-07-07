@@ -669,6 +669,9 @@ class AUVBridgeNode(Node):
         control_mode_byte = int(payload.get(KEY_CONTROL_MODE_BYTE, int(ControlModeByte.REMOTE_CONTROL)))
         work_instruction = int(payload.get(KEY_WORK_INSTRUCTION, int(WorkInstruction.NONE)))
         orientation_deg = float(payload.get(KEY_ORIENTATION_DEG, self._resolve_target_heading_deg()))
+        if decision.active_arbiter == ArbiterMode.AUTONOMOUS and self.latest_setpoint is not None:
+            orientation_deg = self._resolve_target_heading_deg()
+            payload[KEY_ORIENTATION_DEG] = orientation_deg
         if self.passive_mode:
             self._publish_shadow_snapshot(
                 kind='arbiter',
@@ -696,7 +699,7 @@ class AUVBridgeNode(Node):
         """解析当前目标航向角（度）。"""
         if self.latest_setpoint is None:
             return 0.0
-        return math.degrees(float(self.latest_setpoint.target_heading_rad))
+        return math.degrees(float(self.latest_setpoint.target_heading_rad)) % 360.0
 
     def _record_latency(self, payload: dict[str, Any]) -> None:
         """统计控制命令从生成到发送的延迟。"""

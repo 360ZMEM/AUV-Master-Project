@@ -105,6 +105,16 @@
 - **分层结论**：剩余项 (a) 的**部署门面接线已打通并经单测覆盖**，但在**当前 PVS 闭环 fresh run 中未复现恢复**（该后端产磁电缆与车辆近乎共面，直线埋缆假设不成立）。**准确表述：接线已通、单测已过；当前 PVS 场景几何不满足磁横偏观测前提，故闭环恢复在该场景下未获激励。不得写成"在线修正在主仓闭环中已复现恢复"，也不得写成"在线修正失败"。**
 - **由此细化的新剩余项**：（a1）需要一个磁观测前提成立（缆埋于车体下方 `d` 米、By 主导）的 PVS 闭环场景，或改用不依赖直线假设的观测反演，来真正激励已接入的在线修正并复验恢复；（a2）修复 PVS mock 车体对横向/艏向设定值的位形响应（当前 Y/yaw 恒为 0.0）；（b）真实检测噪声；（c）多种子统计；（d）硬件实物。
 
+### 4.3 剩余项 (a1)/(a2) 执行结果（2026-07-07 更新；结论为正结果，不覆盖 §4.2 负结果）
+
+按 §4.2 细化的 (a1)/(a2) 推进，对应 §5.5.11 新增子节 (3f)。**本节是对 §4.2 (3d) 负结果的新增与抬升，不覆盖也不改写 §4.2 原文**——(3d) "当时 PVS 产磁几何不满足前提→100% 拒绝" 仍是真实历史。
+
+- **(a1) 满足磁观测前提的产磁几何迁回 PVS ✓ 闭合**：不另起轻量外壳，而是把满足直线埋缆前提的产磁几何直接迁回 PVS 六自由度闭环——[bridge_params.protocol_udp.pvs.yaml](file:///home/auv_user/auv_ws/AUV-Master-Project/config/bridge_params.protocol_udp.pvs.yaml) 把真值直缆布置于磁传感器下方、垂直分离 `d≈7.5 m`，使 `B_perp=By` 主导、恢复 `y=(B_down/B_perp)·d` 直线埋缆前提。迁回后逐帧诊断显示磁导出横偏观测**不再被残差门拒绝**：6 个 run `prior_alignment_observed/accepted`≈1200/1220 帧（接受率约 98%）、`reason_code=1`（ACCEPTED，(3d) 恒为 2）、`vsep` 中位 7.53 m（(3d)≈0）、`cross_track_quality` 中位 1.0、`translation_norm` 峰值 5.8–9.1 m（(3d)≡0）；heavy run1 磁导出横偏 −2.22 m 与真值 −2.15 m 逐帧吻合（(3d) 被放大 4–5 倍到约 −40 m）。这坐实 (3d) 负结果**根因确为观测前提不成立、非接线/EKF bug**。
+- **(a2) PVS mock 车体位形响应 ✓ 闭合**：`pvs:` 段加 `autonomy_motion_model: kinematic_setpoint`（`kinematic_max_yaw_rate_deg_s: 12.0`、`kinematic_depth_time_constant_s: 4.0`），使车体对横向/艏向设定值产生真实位形响应。heavy 起始横偏约 −10.25 m 在约 12 s 内收敛进 ±3.4 m 廊道并保持，全程 `|heading_correction_deg|>1°` 占 1112/1219 帧——即车体被真实横向操舵去贴合修正后的先验，而非 (3c)/(3d) 中冻结在开环几何差上。
+- **PVS 闭环验收结果（n=3/档，正结果）**：在验收窗口（recovery gate 起、50 m 巡检窗口内、burial-ready）内，mid/heavy 全部 6 个 run 通过工业验收，聚合 `preliminary_acceptance_ready=True`（数据源 [_agg_mid_recovery](file:///home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/closedloop_e2e/_agg_mid_recovery/acceptance_runs_summary.json)/[_agg_heavy_recovery](file:///home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/closedloop_e2e/_agg_heavy_recovery/acceptance_runs_summary.json)）：mid max_route_offset≤3.395 m、mean≤2.412 m；heavy max≤3.394 m、mean≤2.318 m；两档 `valid_burial_ratio=1.0`、`burial_sigma_over_limit_ratio=0`、`confidence_p05≥0.902`。作为同源对照，在线修正**关闭**的 6 个 baseline run（`*_prioroff`）：mid/heavy 全程 max_route_offset 约 15.3/20.1 m、验收窗口内点数为 0、0/3 invalid，与 (3c) 关闭修正时逐位重合。
+- **达标是"物理/控制修正"而非"放宽阈值"**：首轮 full run 未整体通过（mid 2/3、heavy 1/3），两类失败根因均在物理/控制层修正：其一 heavy `burial_sigma_over_limit`——低磁强（250–350 nT）在 `slant_range=K·I_rms/B` 反推 90–140 m 伪深埋污染 IQR sigma，修复是在 [burial_inversion.py](file:///home/auv_user/auv_ws/AUV-Master-Project/AUV-Master-Mag/src/auv_mag_tracking/perception/burial_inversion.py) 新增 `burial_max_depth_m` 物理门控（distorted 设 10 m）挡掉物理不可行深埋（回归测试 15 passed），修复后 6 run `valid_burial=1.0`、`sigma_over=0`；其二 mid 样本不足与 `mean_route_offset` 越限——源自 `zigzag_limits.auto_limit` 与 PVS 目标航向语义不匹配的振荡与 zigzag 摆幅过大，修复是关闭 `auto_limit`、`lateral_amplitude_m` 1.0→0.6、`gain` 3.5。corridor 敏感性后取满足样本充足与三项指标同时达标的**较小**值 3.4 m（不放到 5 m），并缩短 heavy burial fusion 窗口（`min_samples 20→10`、`window 30→15`）。
+- **分层结论**：剩余项 **(a1)/(a2) 已由 (3f) 闭合**——在满足磁观测前提的 PVS 六自由度闭环中，在线先验修正被真实接受、闭环恢复被首次复现、mid/heavy 各 3/3 达 ready/pass。**准确表述：在满足磁观测前提的 PVS 六自由度闭环中，在线修正被真实接受并首次复现闭环恢复；不得写成"通过真实海缆检测精度验收"或"距离实物验收已无缺口"。** 剩余未闭合项仅余：（b）真实检测噪声；（c）多种子统计（当前 n=3/档）；（d）硬件实物。
+
 ## 5. 诚实边界（本专项完成后仍须保留的标注）
 
 - 端到端 distorted-prior run 仍为数字孪生、确定性先验偏差，**非真实检测噪声**；不可写成真机实测。
@@ -112,6 +122,7 @@
 - 若采用 3.1（仅静态扭曲），须注明"未复现旋转慢漂/导航漂移动态通道"，与 sub-repo 完整三步链的差异如实记录。
 - n 值如实标注；未做多种子前不得写成统计显著。
 - 剩余项 (a) 磁导出横偏观测基于**无限长直线埋缆模型 + 已知电缆走向**假设，要求缆埋于车体下方一定深度（By 主导）；当前 PVS 场景产磁缆与车近乎共面（Bz 主导），该前提不成立，故 (3d) 为负结果——接线已通但恢复未在该场景复现，不得表述为"闭环恢复已复现"。
+- (3f)（§4.3）已把 (a1)/(a2) 闭合：迁回满足磁观测前提的产磁几何（缆在车下 `d≈7.5 m`、By 主导）+ 修复 PVS mock 车体位形响应（`autonomy_motion_model: kinematic_setpoint`），在 PVS 六自由度闭环中首次复现闭环恢复、mid/heavy 各 3/3 ready/pass。**但 (3f) 仅新增/抬升、不覆盖 (3d) 负结果**；其达标限定在数字孪生确定性先验、静态位姿扭曲、缆在车下满足前提、窗口内判定（全程含末段离窗漂移仍为 `limited`）、n=3/档，仍缺真实检测噪声、多种子统计与硬件实物，不得写成"通过真实海缆检测精度验收"。
 
 ## 6. 与主仓约束的一致性检查
 

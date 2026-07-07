@@ -34,6 +34,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--inspection-max-route-progress-m", type=float, default=None)
     parser.add_argument("--inspection-max-abs-cross-track-m", type=float, default=None)
     parser.add_argument("--inspection-require-burial-ready", action="store_true")
+    parser.add_argument("--recovery-start-max-abs-cross-track-m", type=float, default=None)
+    parser.add_argument("--recovery-start-require-burial-ready", action="store_true")
+    parser.add_argument("--recovery-start-consecutive-samples", type=int, default=1)
+    parser.add_argument(
+        "--inspection-route-progress-origin",
+        choices=("absolute", "recovery"),
+        default="absolute",
+        help="Interpret inspection route-progress limits from run start or recovery-gate start.",
+    )
     parser.add_argument("--start-health-sample-count", type=int, default=0)
     parser.add_argument("--start-max-route-progress-m", type=float, default=None)
     parser.add_argument("--start-max-abs-cross-track-m", type=float, default=None)
@@ -101,7 +110,7 @@ def _float_or_none(value: Any) -> float | None:
 
 def _inspection_exclusion_reasons(row: dict[str, Any], args: argparse.Namespace) -> list[str]:
     reasons: list[str] = []
-    progress = _float_or_none(row.get("route_progress_m"))
+    progress = _float_or_none(row.get("_inspection_route_progress_m", row.get("route_progress_m")))
     if args.inspection_min_route_progress_m is not None:
         if progress is None:
             reasons.append("missing_route_progress")
@@ -121,6 +130,83 @@ def _inspection_exclusion_reasons(row: dict[str, Any], args: argparse.Namespace)
     if bool(args.inspection_require_burial_ready) and row.get("burial_sigma_m") is None:
         reasons.append("burial_not_ready")
     return reasons
+
+
+def _recovery_gate_summary(rows: list[dict[str, Any]], args: argparse.Namespace) -> dict[str, Any]:
+    max_cross_track = args.recovery_start_max_abs_cross_track_m
+    require_burial_ready = bool(args.recovery_start_require_burial_ready)
+    consecutive_required = max(1, int(args.recovery_start_consecutive_samples or 1))
+    enabled = max_cross_track is not None or require_burial_ready
+    if not enabled:
+        return {
+            "enabled": False,
+            "pass": True,
+            "start_index": 0,
+            "start_route_progress_m": None,
+            "start_time_s": None,
+            "consecutive_required": consecutive_required,
+            "max_abs_cross_track_m": max_cross_track,
+            "require_burial_ready": require_burial_ready,
+            "reasons": [],
+        }
+
+    streak = 0
+    best_streak = 0
+    cross_track_reached = max_cross_track is None
+    burial_ready_reached = not require_burial_ready
+    for index, row in enumerate(rows):
+        row_ok = True
+        cross_track = _float_or_none(row.get("cross_track_m"))
+        if max_cross_track is not None:
+            if cross_track is None or abs(cross_track) > float(max_cross_track):
+                row_ok = False
+            else:
+                cross_track_reached = True
+        if require_burial_ready:
+            if row.get("burial_sigma_m") is None:
+                row_ok = False
+            else:
+                burial_ready_reached = True
+        if row_ok:
+            streak += 1
+        else:
+            streak = 0
+        best_streak = max(best_streak, streak)
+        if streak >= consecutive_required:
+            start_index = index - consecutive_required + 1
+            start_row = rows[start_index]
+            return {
+                "enabled": True,
+                "pass": True,
+                "start_index": start_index,
+                "start_route_progress_m": _float_or_none(start_row.get("route_progress_m")),
+                "start_time_s": _float_or_none(start_row.get("time_s")),
+                "consecutive_required": consecutive_required,
+                "max_abs_cross_track_m": max_cross_track,
+                "require_burial_ready": require_burial_ready,
+                "best_consecutive_samples": best_streak,
+                "reasons": [],
+            }
+
+    reasons: list[str] = []
+    if not cross_track_reached:
+        reasons.append("recovery_cross_track_not_reached")
+    if not burial_ready_reached:
+        reasons.append("recovery_burial_not_ready")
+    if best_streak < consecutive_required:
+        reasons.append("recovery_consecutive_samples_not_reached")
+    return {
+        "enabled": True,
+        "pass": False,
+        "start_index": None,
+        "start_route_progress_m": None,
+        "start_time_s": None,
+        "consecutive_required": consecutive_required,
+        "max_abs_cross_track_m": max_cross_track,
+        "require_burial_ready": require_burial_ready,
+        "best_consecutive_samples": best_streak,
+        "reasons": reasons,
+    }
 
 
 def _start_health_summary(rows: list[dict[str, Any]], args: argparse.Namespace) -> dict[str, Any]:
@@ -317,10 +403,27 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = _read_jsonl(tracking_path)
     start_health = _start_health_summary(rows, args)
+    recovery_gate = _recovery_gate_summary(rows, args)
+    recovery_start_index = recovery_gate.get("start_index")
+    recovery_start_progress = recovery_gate.get("start_route_progress_m")
     annotated_rows = []
-    for row in rows:
+    for index, row in enumerate(rows):
         annotated = dict(row)
-        reasons = _inspection_exclusion_reasons(row, args)
+        recovery_reasons = []
+        if recovery_gate["enabled"]:
+            if recovery_start_index is None:
+                recovery_reasons.append("recovery_gate_not_reached")
+            elif index < int(recovery_start_index):
+                recovery_reasons.append("before_recovery_gate")
+        if (
+            args.inspection_route_progress_origin == "recovery"
+            and recovery_start_progress is not None
+            and row.get("route_progress_m") is not None
+        ):
+            annotated["_inspection_route_progress_m"] = (
+                float(row["route_progress_m"]) - float(recovery_start_progress)
+            )
+        reasons = recovery_reasons + _inspection_exclusion_reasons(annotated, args)
         annotated["inspection_window_valid"] = not reasons
         annotated["inspection_window_reasons"] = reasons
         annotated_rows.append(annotated)
@@ -408,6 +511,7 @@ def main() -> None:
                 "excluded_point_count": len(rows) - len(inspection_rows),
                 "min_route_progress_m": args.inspection_min_route_progress_m,
                 "max_route_progress_m": args.inspection_max_route_progress_m,
+                "route_progress_origin": args.inspection_route_progress_origin,
                 "max_abs_cross_track_m": args.inspection_max_abs_cross_track_m,
                 "require_burial_ready": bool(args.inspection_require_burial_ready),
                 "exclusion_reason_counts": _counter_to_dict(
@@ -432,6 +536,7 @@ def main() -> None:
                 "data_quality_flags": full_run_summary["data_quality_flags"],
             },
             "start_health": start_health,
+            "recovery_gate": recovery_gate,
         }
     )
     summary["acceptance_checks"]["start_health"] = bool(start_health["pass"])
@@ -481,12 +586,25 @@ def main() -> None:
         f"- Pass: {summary['start_health']['pass']}",
         f"- Reasons: {summary['start_health']['reasons'] or 'none'}",
         "",
+        "## Recovery Gate",
+        f"- Enabled: {summary['recovery_gate']['enabled']}",
+        f"- Pass: {summary['recovery_gate']['pass']}",
+        f"- Start index: {summary['recovery_gate']['start_index']}",
+        f"- Start route progress: {summary['recovery_gate']['start_route_progress_m']}",
+        f"- Start time: {summary['recovery_gate']['start_time_s']}",
+        f"- Max abs cross-track: {summary['recovery_gate']['max_abs_cross_track_m']}",
+        f"- Require burial ready: {summary['recovery_gate']['require_burial_ready']}",
+        f"- Consecutive required: {summary['recovery_gate']['consecutive_required']}",
+        f"- Best consecutive samples: {summary['recovery_gate'].get('best_consecutive_samples')}",
+        f"- Reasons: {summary['recovery_gate']['reasons'] or 'none'}",
+        "",
         "## Inspection Window",
         f"- Raw point count: {summary['inspection_window']['raw_point_count']}",
         f"- Inspection point count: {summary['inspection_window']['inspection_point_count']}",
         f"- Excluded point count: {summary['inspection_window']['excluded_point_count']}",
         f"- Min route progress: {summary['inspection_window']['min_route_progress_m']}",
         f"- Max route progress: {summary['inspection_window']['max_route_progress_m']}",
+        f"- Route progress origin: {summary['inspection_window']['route_progress_origin']}",
         f"- Max abs cross-track: {summary['inspection_window']['max_abs_cross_track_m']}",
         f"- Require burial ready: {summary['inspection_window']['require_burial_ready']}",
         f"- Exclusion reasons: {summary['inspection_window']['exclusion_reason_counts'] or 'none'}",

@@ -27,7 +27,7 @@
 |---|---|
 | [experiment_gap_and_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/experiment_gap_and_next_plan.md) | 当前实验缺口、优先级和补实验计划 |
 | [pvs_extreme_cable_scenarios.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/pvs_extreme_cable_scenarios.md) | PVS 场景真实性、极端电缆巡检设计和 discrepancy 收敛 |
-| [e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md) | 端到端 distorted-prior 电缆探测验证专项计划（§5.5.11 第 (5) 条引用），闭合"clean-prior 端到端已闭环、distorted-prior 仅算法级验证"的缺口 |
+| [e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md) | 端到端 distorted-prior 电缆探测验证专项计划（§5.5.11 第 (5) 条引用），闭合"clean-prior 端到端已闭环、distorted-prior 仅算法级验证"的缺口；§4 已推进到 (3f)——在满足磁观测前提的 PVS 六自由度闭环中首次复现闭环恢复，剩余项 (a1-PVS)/(a2) 已闭合，仅余真实噪声/多种子/硬件 |
 
 > **§5.5.10/§5.5.11 电缆探测证据分层（P2-c）**：`05_experiments_and_discussion.md` §5.5.10 为主仓 DL/T 1278 数字孪生验收（clean prior，3/3 ready/pass）；§5.5.11 把端到端电缆探测证据显式分层——主仓端到端运行的是同源 `AuvMagTrackingPipeline`（非代理），但只在 clean prior 下被激励，distorted-prior 失效/恢复边界为专用仓库 `AUV-Master-Mag` docs 28-30 的**算法级、n=1、纯仿真**证据（仅引用，不迁移）。写作时严禁把算法级 distorted-prior 结论表述为主仓端到端实测。
 
@@ -58,3 +58,4 @@
 | 主仓端到端已验证 distorted-prior 鲁棒性 | 主仓端到端只跑 clean prior（`max_route_offset≈0`），无先验扰动 knob | 写成 clean-prior 端到端已闭环 + 引用 docs 28-30 算法级边界，见 §5.5.11 |
 | DL/T 1278 数字孪生验收 = 现场海试验收 | 确定性电缆先验、非真实检测噪声 | 写成 preliminary_acceptance_ready，见 §5.5.10 边界 |
 | 海缆 DL/T ready/pass = 全程通过 | 判定限有效巡检窗口，全程 readiness=limited | 写成"有效巡检窗口内通过"，见 §5.5.10 边界 3 |
+| PVS 闭环恢复 = 通过真实海缆检测精度验收 | (3f) 为数字孪生确定性先验、静态位姿扭曲、缆在车下满足观测前提、窗口内判定、n=3/档 | 写成"满足磁观测前提的 PVS 六自由度闭环中在线修正被真实接受、首次复现闭环恢复、mid/heavy 各 3/3 ready/pass；仍缺真实噪声/多种子/硬件"，见 §5.5.11(3f) 及其关键边界 |

@@ -38,10 +38,13 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PVS_ROOT = PROJECT_ROOT.parent / "PythonVehicleSimulator-master" / "src"
+INTERFACES_ROOT = PROJECT_ROOT / "sim_holoocean" / "interfaces"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 if str(PVS_ROOT) not in sys.path:
     sys.path.insert(0, str(PVS_ROOT))
+if str(INTERFACES_ROOT) not in sys.path:
+    sys.path.insert(0, str(INTERFACES_ROOT))
 
 from python_vehicle_simulator.lib.gnc import Rzyx, attitudeEuler
 from python_vehicle_simulator.vehicles.remus100 import remus100
@@ -173,6 +176,7 @@ class PVSSimWrapper:
         self.reference_speed_rpm_slope = float(self.pvs_cfg.get("reference_speed_rpm_slope", 581.0))
         self.reference_speed_rpm_offset = float(self.pvs_cfg.get("reference_speed_rpm_offset", -115.0))
         self.reference_rpm_min = float(self.pvs_cfg.get("reference_rpm_min", 300.0))
+        self.reference_speed_mps = float(self.initial_speed_mps)
 
         # ────────────────────────────────────────
         # 命令到执行器映射
@@ -180,6 +184,14 @@ class PVSSimWrapper:
         # 推力百分比 → RPM：rpm = thrust_percent * scale
         self.command_thrust_rpm_scale = float(self.pvs_cfg.get("command_thrust_rpm_scale", 15.0))
         self.max_command_rpm = float(self.pvs_cfg.get("max_command_rpm", 1525.0))
+        self.autonomy_motion_model = str(self.pvs_cfg.get("autonomy_motion_model", "native")).strip().lower()
+        self.kinematic_max_yaw_rate_rad_s = math.radians(
+            float(self.pvs_cfg.get("kinematic_max_yaw_rate_deg_s", 12.0))
+        )
+        self.kinematic_depth_time_constant_s = max(
+            0.05,
+            float(self.pvs_cfg.get("kinematic_depth_time_constant_s", 4.0)),
+        )
 
         # ────────────────────────────────────────
         # 海流和噪声参数
@@ -237,6 +249,7 @@ class PVSSimWrapper:
         self.reference_depth_m = float(self.initial_depth_m)
         self.reference_heading_deg = float(self.initial_heading_deg)
         self.reference_rpm = float(self.reference_rpm)
+        self.reference_speed_mps = float(self.initial_speed_mps)
 
 
     def set_reference(self, *, depth_m: float, heading_rad: float, speed_mps: float | None = None) -> None:
@@ -261,6 +274,7 @@ class PVSSimWrapper:
         self.reference_depth_m = float(depth_m)
         self.reference_heading_deg = float(math.degrees(float(heading_rad)))
         if speed_mps is not None:
+            self.reference_speed_mps = max(0.0, float(speed_mps))
             mapped_rpm = self.reference_speed_rpm_slope * float(speed_mps) + self.reference_speed_rpm_offset
             self.reference_rpm = float(
                 np.clip(
@@ -273,6 +287,42 @@ class PVSSimWrapper:
             self.vehicle.ref_z = self.reference_depth_m
             self.vehicle.ref_psi = self.reference_heading_deg
             self.vehicle.ref_n = float(self.reference_rpm)
+
+    def _step_kinematic_autonomy(self) -> dict:
+        """Advance a lightweight setpoint-driven kinematic model.
+
+        This path is intentionally simple: it mirrors the Direction A decoupled
+        closure so protocol_udp/PVS autonomy can produce observable x/y/yaw/depth
+        motion even when the installed PVS package stays in step-input mode.
+        """
+        target_heading_rad = math.radians(float(self.reference_heading_deg))
+        heading_error_rad = (target_heading_rad - float(self.eta[5]) + math.pi) % (2.0 * math.pi) - math.pi
+        yaw_rate_rad_s = float(
+            np.clip(
+                heading_error_rad / max(self.dt, 1.0e-6),
+                -self.kinematic_max_yaw_rate_rad_s,
+                self.kinematic_max_yaw_rate_rad_s,
+            )
+        )
+        self.prev_nu = self.nu.copy()
+        self.eta[5] = float((float(self.eta[5]) + yaw_rate_rad_s * self.dt + math.pi) % (2.0 * math.pi) - math.pi)
+
+        speed_mps = max(0.0, float(self.reference_speed_mps))
+        depth_error_m = float(self.reference_depth_m) - float(self.eta[2])
+        depth_rate_mps = depth_error_m / self.kinematic_depth_time_constant_s
+
+        self.nu[:] = 0.0
+        self.nu[0] = speed_mps
+        self.nu[2] = depth_rate_mps
+        self.nu[5] = yaw_rate_rad_s
+
+        self.eta = attitudeEuler(self.eta, self.nu, self.dt)
+        self.eta[3] = 0.0
+        self.eta[4] = 0.0
+        self.step_index += 1
+        self.u_actual[:] = 0.0
+        self.u_actual[2] = float(self.reference_rpm)
+        return self._build_state()
 
     def open(self):
         """
@@ -519,6 +569,12 @@ class PVSSimWrapper:
             raise RuntimeError("PVS wrapper is not open")
 
         mode = self.control_mode.strip().lower()
+        if (
+            self.autonomy_motion_model in {"kinematic_setpoint", "kinematic", "lightweight"}
+            and mode in {"depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"}
+        ):
+            return self._step_kinematic_autonomy()
+
         if mode in {"depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"}:
             self._apply_autopilot_params()
             u_control = self.vehicle.depthHeadingAutopilot(self.eta, self.nu, self.dt)

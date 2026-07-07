@@ -175,11 +175,16 @@ class AUVLocalizationNode(Node):
 
         cfg = self._load_config(self.params_file)
         ekf_cfg = cfg.get('ekf', {})
+        localization_cfg = dict(cfg.get('localization', {}) or {})
+        self.use_imu_orientation_measurement = bool(
+            localization_cfg.get('use_imu_orientation_measurement', False)
+        )
 
         self.filter = ES_EKF(ekf_cfg)
 
         self._last_imu = np.zeros(3, dtype=float)
         self._last_gyro = np.zeros(3, dtype=float)
+        self._last_imu_orientation = None
         self._last_dvl = None
         self._last_depth = None
         self._last_imu_ts = 0.0
@@ -240,6 +245,7 @@ class AUVLocalizationNode(Node):
             f'publish_sensor_status={self.publish_sensor_status}, '
             f'publish_raw_state={self.publish_raw_state}, '
             f'raw_state_topic={self.raw_state_topic}, '
+            f'use_imu_orientation_measurement={self.use_imu_orientation_measurement}, '
             f'seabed_depth_m={self.seabed_depth_m}, '
             f'seabed_proximity_margin_m={self.seabed_proximity_margin_m}, '
             f'battery_low_voltage_threshold={self.battery_low_voltage_threshold}, '
@@ -268,6 +274,18 @@ class AUVLocalizationNode(Node):
             msg.angular_velocity.y,
             msg.angular_velocity.z,
         ], dtype=float)
+        quat = np.array(
+            [
+                msg.orientation.w,
+                msg.orientation.x,
+                msg.orientation.y,
+                msg.orientation.z,
+            ],
+            dtype=float,
+        )
+        quat_norm = float(np.linalg.norm(quat))
+        if quat_norm > 1.0e-6:
+            self._last_imu_orientation = quat / quat_norm
         # 严格保存消息的 Header Stamp，用于后续状态发布
         self._last_imu_header_stamp = msg.header.stamp
         self._last_imu_ts = float(msg.header.stamp.sec) + float(msg.header.stamp.nanosec) * 1e-9
@@ -404,10 +422,13 @@ class AUVLocalizationNode(Node):
         odom.pose.pose.position.x = float(state['p'][0])
         odom.pose.pose.position.y = float(state['p'][1])
         odom.pose.pose.position.z = float(state['p'][2])
-        odom.pose.pose.orientation.w = float(state['q'][0])
-        odom.pose.pose.orientation.x = float(state['q'][1])
-        odom.pose.pose.orientation.y = float(state['q'][2])
-        odom.pose.pose.orientation.z = float(state['q'][3])
+        orientation_q = state['q']
+        if self.use_imu_orientation_measurement and self._last_imu_orientation is not None:
+            orientation_q = self._last_imu_orientation
+        odom.pose.pose.orientation.w = float(orientation_q[0])
+        odom.pose.pose.orientation.x = float(orientation_q[1])
+        odom.pose.pose.orientation.y = float(orientation_q[2])
+        odom.pose.pose.orientation.z = float(orientation_q[3])
         odom.twist.twist.linear.x = float(state['v'][0])
         odom.twist.twist.linear.y = float(state['v'][1])
         odom.twist.twist.linear.z = float(state['v'][2])
@@ -421,10 +442,10 @@ class AUVLocalizationNode(Node):
             transform.transform.translation.x = float(state['p'][0])
             transform.transform.translation.y = float(state['p'][1])
             transform.transform.translation.z = float(state['p'][2])
-            transform.transform.rotation.w = float(state['q'][0])
-            transform.transform.rotation.x = float(state['q'][1])
-            transform.transform.rotation.y = float(state['q'][2])
-            transform.transform.rotation.z = float(state['q'][3])
+            transform.transform.rotation.w = float(orientation_q[0])
+            transform.transform.rotation.x = float(orientation_q[1])
+            transform.transform.rotation.y = float(orientation_q[2])
+            transform.transform.rotation.z = float(orientation_q[3])
             self.tf_broadcaster.sendTransform(transform)
 
     def _on_timer(self) -> None:
