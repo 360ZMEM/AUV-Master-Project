@@ -218,6 +218,78 @@ python3 -m foxglove_layout_project.generator.build_layout --pretty
 本轮验证生成：
 
 ```text
+
+## 10. 3f 回放可视化修复与 2D 俯视图补充（2026-07-09）
+
+针对 `docs/thesis/paper/05_experiments_and_discussion.md` 中 3f 正结果对应的 fresh run：
+
+```text
+/auv_data/bags/20260709_134856/rosbag
+```
+
+本轮补充了一个 replay sidecar：
+
+```bash
+source /opt/ros/humble/setup.bash
+source brain_linux/install/local_setup.bash
+python3 tools/replay_visual_overlay_bridge.py
+```
+
+用途：
+
+- 为只含 `/auv/state/filtered` 的 3f bag 恢复 `/auv/visual/*` 视觉话题；
+- 在 replay 过程中把 `dlt1278_summary` 中沿用旧口径的“总分”文案重写为“扣分合计”；
+- 补发：
+  - `/auv/visual/auv_body`
+  - `/auv/visual/history_trail`
+  - `/auv/visual/cable_marker`
+  - `/auv/visual/view_range`
+  - `/auv/visual/seabed_mesh`
+  - `/auv/visual/scale_bar`
+
+Foxglove 1366 layout 当前结论：
+
+- `acceptance-1366` 已恢复稳定俯视显示：
+  - 电缆先验线
+  - AUV 本体箭头
+  - 历史轨迹
+  - 视距圈
+  - 地形背景
+  - `10 m` 比例尺
+- `topview` 采用 `perspective=false`，用于低视差验收态观察。
+- `pilot-1366` 与 `acceptance-1366` 现共享同一套 3D topic 契约与地形/比例尺能力。
+
+典型截图：
+
+- `results/visual_feedback/3f_visual_audit_20260709/foxglove/acceptance_1366_terrain_scale.png`
+
+新增离线 2D 俯视图脚本：
+
+```bash
+python3 tools/plot_replay_top_view.py \
+  --bag /auv_data/bags/20260709_134856/rosbag \
+  --tracking-config results/cable_ops_report/replay_e2e/_configs/heavy.yaml \
+  --output results/visual_feedback/3f_visual_audit_20260709/foxglove/replay_top_view.png \
+  --title '3f Cable Replay Top View'
+```
+
+2D 俯视图产物：
+
+- `results/visual_feedback/3f_visual_audit_20260709/foxglove/replay_top_view.png`
+- `results/visual_feedback/3f_visual_audit_20260709/foxglove/replay_top_view.json`
+
+图中包含：
+
+- cable prior
+- AUV trajectory
+- start / latest
+- heading arrow
+- `10 m` scale bar
+
+说明：
+
+- 当前 3D 中的海底层为 replay 验证所用的轻量 proxy mesh，用于恢复空间语义与展示完整度；
+- 它不是原始高保真 seabed point cloud 的等价替代，但足以支撑本轮 3f 可视化审计与答辩展示预演。
 foxglove_layout_project/output/auv_layout.generated.1783260962.json
 tmp/foxglove_layout/auv_layout.generated.json
 ```
@@ -948,7 +1020,7 @@ tmp/foxglove_layout/auv_layout.acceptance_1366.json
 
 - `Indicator!cable_pass`：工业验收 PASS/FAIL。
 - `Indicator!dlt1278_state`：正常/注意/异常/严重状态。
-- `Gauge!dlt1278_score`：DL/T 风格总分。
+- `Gauge!dlt1278_score`：旧版 DL/T 风格总分表述，当前已弃用并转为“扣分合计”语义。
 - `Markdown!dlt1278_summary`：扣分项、ready/pass 和产物链摘要。
 
 `acceptance-1366` 新增同一组 DL/T 状态看板，并继续保留趋势曲线和 RawMessages 证据区。
@@ -958,7 +1030,7 @@ tmp/foxglove_layout/auv_layout.acceptance_1366.json
 - `bridge_node` 将 `dlt1278` 摘要并入 Zenoh `rt/auv/telemetry` 的 `cable_monitor`。
 - PySide6 底部“电缆巡检监控”卡片新增：
   - `READY/PASS` 或 `NOT READY/FAIL`
-  - DL/T 状态/总分
+  - DL/T 状态/扣分合计
   - 实时扣分项
   - 产物链摘要
 
@@ -1050,7 +1122,7 @@ after.truthVisible=false
 
 目标：
 
-- 验证 PySide6 上位机新增的“电缆巡检监控”卡片可以显示 DL/T 1278 风格状态、总分、扣分项和产物链。
+- 验证 PySide6 上位机新增的“电缆巡检监控”卡片可以显示 DL/T 1278 风格状态、扣分合计、扣分项和产物链。
 - 验证无桌面会话下仍可通过 Qt offscreen 渲染截图。
 - 验证安全模拟点按链路仍可用，且不触碰 ESTOP、自主授权、任务下发、通信连接等高风险按钮。
 
@@ -1105,7 +1177,7 @@ status_message=地图选点模式已开启 - 请在地图上点击添加航点
 结论: READY/PASS | track
 偏移/埋深/进度: 0.42 m / 1.42 m / 58.7 m
 置信度/SNR: 0.956 / 87.3 dB / mag 0.931
-DL/T状态/总分: 注意状态 / 24
+DL/T状态/扣分合计: 注意状态 / 24
 扣分项: 海缆埋深不足(16分)；埋深估计精度未达 0.15m(8分)
 验收标志: none
 产物链: tracking.jsonl, inspection_summary.json, dlt1278_report.md, operator_view/*.png

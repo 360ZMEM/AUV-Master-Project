@@ -9,7 +9,7 @@
 - `industrial_conclusion_readiness`: `ready`
 - `industrial_acceptance_pass`: `true`
 - DL/T 风格状态: `注意状态`
-- DL/T 风格总分: `24`
+- DL/T 风格扣分合计: `24`
 
 这里有两个不同层级：
 
@@ -208,7 +208,7 @@ python3 tools/plot_cable_operator_products.py \
   ![运维埋深条带图](../../results/cable_ops_report/acceptance_zigzag_1p5_window30_20260705_235221/operator_view/02_operator_burial_strip.png)
 - 沿 route progress 的横向偏差，含 2 m 阈值线：
   ![运维路由偏差图](../../results/cable_ops_report/acceptance_zigzag_1p5_window30_20260705_235221/operator_view/03_operator_route_deviation.png)
-- ready/pass、DL/T 风格状态、总分、扣分项、验收检查汇总：
+- ready/pass、DL/T 风格状态、扣分合计、扣分项、验收检查汇总：
   ![运维验收摘要图](../../results/cable_ops_report/acceptance_zigzag_1p5_window30_20260705_235221/operator_view/04_operator_acceptance_summary.png)
 - `operator_products_manifest.json`：记录输入报告目录、生成文件和结论摘要。
 

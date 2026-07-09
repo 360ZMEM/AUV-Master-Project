@@ -16,7 +16,7 @@ python -m foxglove_layout_project.generator.build_layout --pretty
 - 电缆跟踪曲线：来自 `/auv/cable/tracking` 的 cross-track、埋深和跟踪置信度。
 - 电缆跟踪原始数据：`AUV-Master-Mag` 适配器输出的完整 JSON。
 - 电缆诊断原始数据：限幅原因、fallback 状态、磁数据使用情况和路由诊断。
-- DL/T 摘要：当 `/auv/cable/dlt1278_summary` 发布时，显示面向运维人员的评分摘要。
+- DL/T 摘要：当 `/auv/cable/dlt1278_summary` 发布时，显示面向运维人员的扣分摘要；在 3f replay 场景中，`tools/replay_visual_overlay_bridge.py` 会把旧 bag 中的“总分”文案重写成“扣分合计”。
 
 ## AI 反馈闭环
 

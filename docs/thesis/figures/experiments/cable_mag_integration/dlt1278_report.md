@@ -3,8 +3,8 @@
 - 来源：`/home/auv_user/auv_ws/AUV-Master-Project/results/cable_tracking/api_outputs.smoke.jsonl`
 - 点数量：1
 - 评估状态：注意状态
-- 总分：16
-- 最差单项分：16
+- 扣分合计：16
+- 最大单项扣分：16
 - 最大路由偏差：0.500 m
 - 最小埋深：1.4
 - 埋深精度目标：0.15 m

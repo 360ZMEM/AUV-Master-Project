@@ -561,7 +561,7 @@ class CableTrackingNode(Node):
         products = ", ".join(str(item) for item in (summary.get("output_products") or [])[:4])
         return (
             f"DL/T 1278风格状态: {summary.get('state', '无效数据')} | "
-            f"总分: {int(summary.get('total_score', 0) or 0)} | "
+            f"扣分合计: {int(summary.get('total_score', 0) or 0)} | "
             f"ready: {summary.get('industrial_conclusion_readiness', '--')} | "
             f"pass: {bool(summary.get('industrial_acceptance_pass', False))}\n"
             f"扣分项: {item_text}\n"

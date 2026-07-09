@@ -112,7 +112,7 @@ def main() -> None:
             "| 优先级 | 建议文件名 | 来源 | 目的 | 当前处理方式 |",
             "|---|---|---|---|---|",
             "| P0 | `cable_acceptance_multirun_summary.png` | 3 次 fresh ready/pass run 聚合 | 证明工业验收不是单次偶然 | 待多 run 后生成 |",
-            "| P0 | `cable_dlt1278_score_breakdown.png` | `inspection_summary.json` | 展示 DL/T 风格扣分项、总分、状态 | `tools/plot_cable_dlt1278_scorecard.py` |",
+            "| P0 | `cable_dlt1278_score_breakdown.png` | `inspection_summary.json` | 展示 DL/T 风格扣分项、扣分合计、状态 | `tools/plot_cable_dlt1278_scorecard.py` |",
             "| P0 | `cable_tracking_dynamic.gif` | `tracking.jsonl` | 展示电缆跟踪、埋深、置信度随路由推进 | `tools/make_cable_tracking_gif.py` |",
             "| P0 | `cable_operator_map.png` | `operator_view/01_operator_cable_map.png` | 面向运维人员的电缆地图 | 已有 `plot_cable_operator_products.py` |",
             "| P0 | `cable_burial_strip.png` | `operator_view/02_operator_burial_strip.png` | 埋深与 sigma 验收带 | 已有 `plot_cable_operator_products.py` |",

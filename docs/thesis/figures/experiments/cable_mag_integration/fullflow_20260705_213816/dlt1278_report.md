@@ -3,8 +3,8 @@
 - 来源：`/home/auv_user/auv_ws/AUV-Master-Project/results/cable_ops_report/fullflow_20260705_213816/tracking.jsonl`
 - 点数量：866
 - 评估状态：正常状态
-- 总分：8
-- 最差单项分：8
+- 扣分合计：8
+- 最大单项扣分：8
 - 最大路由偏差：14.717 m
 - 平均路由偏差：3.876 m
 - 最小埋深：1.5

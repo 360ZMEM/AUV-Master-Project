@@ -38,6 +38,7 @@ class TopicConfig:
     cable_tracking: str = "/auv/cable/tracking"
     cable_diagnostics: str = "/auv/cable/diagnostics"
     dlt1278_summary: str = "/auv/cable/dlt1278_summary"
+    dlt1278_summary_rewritten: str = "/auv/cable/dlt1278_summary_rewritten"
     dlt1278_state: str = "/auv/cable/dlt1278_state"
     dlt1278_total_score: str = "/auv/cable/dlt1278_total_score"
     cable_industrial_acceptance_pass: str = "/auv/cable/industrial_acceptance_pass"
@@ -60,6 +61,7 @@ class TopicConfig:
     truth_pose: str = "/auv/visual/truth_marker"
     history_trail: str = "/auv/visual/history_trail"
     view_range: str = "/auv/visual/view_range"
+    scale_bar: str = "/auv/visual/scale_bar"
     mock_scene: str = "/auv/mock/scene"
 
 
@@ -182,6 +184,7 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         cable_tracking=_join(config.cable_tracking),
         cable_diagnostics=_join(config.cable_diagnostics),
         dlt1278_summary=_join(config.dlt1278_summary),
+        dlt1278_summary_rewritten=_join(config.dlt1278_summary_rewritten),
         dlt1278_state=_join(config.dlt1278_state),
         dlt1278_total_score=_join(config.dlt1278_total_score),
         cable_industrial_acceptance_pass=_join(config.cable_industrial_acceptance_pass),
@@ -203,6 +206,7 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         truth_pose=_join(config.truth_pose),
         history_trail=_join(config.history_trail),
         view_range=_join(config.view_range),
+        scale_bar=_join(config.scale_bar),
         mock_scene=_join(config.mock_scene),
     )
 

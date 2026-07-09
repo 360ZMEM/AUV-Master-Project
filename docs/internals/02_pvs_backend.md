@@ -86,6 +86,28 @@ PVS内置自动驾驶仪接受高层目标指令：
 
 此模式适用于验证制导算法（如LOS），无需关心底层控制细节。
 
+### 模式三：kinematic_setpoint（运动学设定值，轻量位形响应）
+
+前两种模式走完整 6-DOF 刚体动力学积分。但在电缆巡检闭环等场景中，我们只需要车体对**高层横向/艏向/深度设定值**产生可观测的位形响应，不必依赖执行器动态与水动力细节。为此新增第三条路径 `autonomy_motion_model: kinematic_setpoint`（实现于 `pvs_sim_wrapper.py` 的 `_step_kinematic_autonomy()`）：
+
+```
+目标 [reference_heading, reference_depth, reference_speed]
+        │
+        ▼
+  航向误差 → yaw_rate（限幅 kinematic_max_yaw_rate_deg_s）→ 更新 eta[5]
+  深度误差 → depth_rate = depth_error / kinematic_depth_time_constant_s → nu[2]
+  前进速度 → nu[0] = reference_speed
+        │
+        ▼
+  attitudeEuler() 积分运动学（roll/pitch 强制归零）
+```
+
+该模式**镜像 Direction A 解耦轻量闭环的语义**：让 protocol_udp/PVS 自主路径能产生可观测的 x/y/yaw/depth 运动，即使安装的 PVS 包停留在 step-input 模式也不受影响。
+
+引入动机（(3f) 直接依赖）：§5.5.11 (3d) 附注发现 PVS mock 车体的 Y/yaw 全程恒为 0.0——制导层虽发布非平凡目标航向，车体位形却不响应，导致横偏无法被真实横向操舵吸收。启用本模式后，heavy 起始横偏约 −10.25 m 在约 12 s 内收敛进 ±3.4 m 廊道并保持，即车体被真实横向操舵去贴合修正后的先验。原理链见 [12_cable_tracking_mag_integration.md](12_cable_tracking_mag_integration.md)。
+
+激活条件：`autonomy_motion_model` ∈ `{kinematic_setpoint, kinematic, lightweight}`。
+
 ---
 
 ## 每步积分流程
@@ -147,6 +169,9 @@ tau_hydro = f(nu_r) # 水动力基于相对速度计算
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `pvs.control_mode` | 控制模式选择 | `stepInput` |
+| `pvs.autonomy_motion_model` | 自主运动模型（`native`/`kinematic_setpoint`） | `native` |
+| `pvs.kinematic_max_yaw_rate_deg_s` | 运动学模式最大 yaw rate | `12.0` |
+| `pvs.kinematic_depth_time_constant_s` | 运动学模式深度一阶时间常数 | `4.0` |
 | `pvs.initial_state.position` | 初始位置 [x,y,z] | `[0, 0, -5]` |
 | `pvs.initial_state.attitude` | 初始姿态 [r,p,y] | `[0, 0, 0]` |
 | `pvs.rpm_max` | 最大螺旋桨转速 | `1525` |

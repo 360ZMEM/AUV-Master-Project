@@ -195,7 +195,7 @@ python3 tools/plot_cable_tracking_fullflow.py \
 | minimum burial depth | 1.5 m | 当前为先验/固定输出，不能证明埋深估计闭环有效 |
 | burial accuracy pass | null | 缺少 `burial_sigma_m`，无法判定 0.15 m 精度 |
 | zigzag limited samples | 526 / 866 | guidance 限幅实际生效 |
-| DL/T 风格总分 | 8 | 触发“海缆位移”II 类扣分 |
+| DL/T 风格扣分合计 | 8 | 触发“海缆位移”II 类扣分 |
 | DL/T 风格状态 | 正常状态 | 这是当前简化评分映射的结果，不应单独作为工业最终结论 |
 | 工业结论可用性 | limited | 报告结构完整，但证据项仍不足 |
 

@@ -93,7 +93,7 @@ def test_dlt1278_summary_text_contains_operator_fields():
     text = node._build_dlt1278_summary_text(summary)
 
     assert "DL/T 1278风格状态: 注意状态" in text
-    assert "总分: 24" in text
+    assert "扣分合计: 24" in text
     assert "pass: True" in text
     assert "海缆埋深不足(III, 16分)" in text
     assert "验收标志: none" in text

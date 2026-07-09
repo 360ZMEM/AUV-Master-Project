@@ -23,13 +23,14 @@ def _build_message_path(*, topic: str, field: str | None = None) -> str:
     return f"{topic}.{field}"
 
 
-def _build_plot_series(*, topic: str, value: str, color: str) -> dict[str, Any]:
-    return {
+def _build_plot_series(*, topic: str, value: str, color: str, label: str | None = None) -> dict[str, Any]:
+    return _compact_dict({
         "timestampMethod": "receiveTime",
         "value": f"{topic}.{value}",
         "enabled": True,
         "color": color,
-    }
+        "label": label,
+    })
 
 
 def _build_plot_config(
@@ -161,13 +162,14 @@ def _build_3d_config(*, topics: TopicConfig, include_map_layer: bool, mentor_mod
         # truth arrow, and body marker together can look like violent jitter
         # when those sources are in different coordinate origins or update at
         # different rates. The hidden layers remain available for manual debug.
-        topics.state_filtered: {"visible": False, "type": "arrow", "axisScale": 1.5, "color": COLORS.state_3d},
-        topics.auv_body: {"visible": True, "type": "cylinder", "axisScale": 1.0, "color": COLORS.auv_body_3d},
+        topics.state_filtered: {"visible": False, "type": "arrow", "axisScale": 5.0, "color": COLORS.auv_body_3d},
+        topics.auv_body: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": COLORS.auv_body_3d},
         topics.truth_pose: {"visible": False, "type": "arrow", "axisScale": 1.8, "color": COLORS.truth_3d},
         topics.seabed_mesh: {"visible": True, "color": COLORS.terrain_3d, "showOutlines": True},
         topics.cable_marker: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.cable_3d},
         topics.history_trail: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.trail_3d},
         topics.view_range: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.range_3d},
+        topics.scale_bar: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ffffff"},
     }
 
     layers: dict[str, Any] = {}
@@ -179,7 +181,7 @@ def _build_3d_config(*, topics: TopicConfig, include_map_layer: bool, mentor_mod
             "distance": camera_distance,
             "perspective": True,
             "phi": 60,
-            "target": [0, 0, -5],
+            "target": [50, 15, -2],
             "targetOffset": [0, 0, 0],
             "targetOrientation": [0, 0, 0, 1],
             "thetaOffset": 38 if mentor_mode else 45,
@@ -188,8 +190,8 @@ def _build_3d_config(*, topics: TopicConfig, include_map_layer: bool, mentor_mod
             "far": 5000,
         },
         "followMode": "follow-none",
-        "followTf": "auv_base_link",
-        "fixedFrame": "map",
+        "followTf": "world",
+        "fixedFrame": "world",
         "scene": _compact_dict({
             "syncCamera": False,
             "backgroundColor": COLORS.scene_background if mentor_mode else None,
@@ -212,10 +214,10 @@ def _build_3d_config(*, topics: TopicConfig, include_map_layer: bool, mentor_mod
 def _build_top_view_config(*, topics: TopicConfig) -> dict[str, Any]:
     return {
         "cameraState": {
-            "distance": 90,
+            "distance": 70,
             "perspective": False,
             "phi": 0,
-            "target": [0, 0, -5],
+            "target": [50, 15, 0],
             "targetOffset": [0, 0, 0],
             "targetOrientation": [0, 0, 0, 1],
             "thetaOffset": 0,
@@ -224,8 +226,8 @@ def _build_top_view_config(*, topics: TopicConfig) -> dict[str, Any]:
             "far": 5000,
         },
         "followMode": "follow-none",
-        "followTf": "auv_base_link",
-        "fixedFrame": "map",
+        "followTf": "world",
+        "fixedFrame": "world",
         "scene": {
             "syncCamera": False,
             "backgroundColor": COLORS.scene_background,
@@ -246,11 +248,14 @@ def _build_top_view_config(*, topics: TopicConfig) -> dict[str, Any]:
             "visible": True,
         },
         "topics": {
-            topics.auv_body: {"visible": True, "type": "cylinder", "axisScale": 1.0, "color": COLORS.auv_body_3d},
+            topics.state_filtered: {"visible": False, "type": "arrow", "axisScale": 5.0, "color": COLORS.auv_body_3d},
+            topics.auv_body: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": COLORS.auv_body_3d},
             topics.truth_pose: {"visible": False, "type": "arrow", "axisScale": 1.6, "color": COLORS.truth_3d},
+            topics.seabed_mesh: {"visible": True, "color": COLORS.terrain_3d, "showOutlines": True},
             topics.cable_marker: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.cable_3d},
             topics.history_trail: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.trail_3d},
             topics.view_range: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.range_3d},
+            topics.scale_bar: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ffffff"},
         },
         "layers": {},
     }
@@ -522,7 +527,7 @@ def _build_mentor_demo_layout(*, topics: TopicConfig, include_map_layer: bool) -
         cable_tracking_key: _build_raw_config(topic_path=topics.cable_tracking, title="电缆跟踪输出"),
         cable_diag_key: _build_raw_config(topic_path=topics.cable_diagnostics, title="电缆诊断/限幅"),
         dlt_summary_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.dlt1278_summary, field=DISPLAY_FIELDS.string_data),
+            message_path=_build_message_path(topic=topics.dlt1278_summary_rewritten, field=DISPLAY_FIELDS.string_data),
             font_size=14,
         ),
     }
@@ -578,19 +583,15 @@ def _build_pilot_1366_layout(*, topics: TopicConfig, include_map_layer: bool) ->
     """
     three_d_key = "3D!main"
     mode_key = "Markdown!mode"
-    confidence_key = "Gauge!confidence"
-    confidence_text_key = "Markdown!confidence_text"
-    power_key = "Markdown!power"
     cable_ready_key = "Indicator!cable_ready"
     cable_pass_key = "Indicator!cable_pass"
     dlt_state_key = "Indicator!dlt1278_state"
-    dlt_score_key = "Gauge!dlt1278_score"
     cable_status_key = "Markdown!cable_status"
     cable_flags_key = "Markdown!cable_flags"
     dlt_summary_key = "Markdown!dlt1278_summary"
     cable_confidence_key = "Gauge!cable_confidence"
-    error_key = "Plot!tracking_error"
-    speed_key = "Plot!speed_control"
+    cable_plot_key = "Plot!cable_tracking"
+    cable_quality_key = "Plot!cable_quality"
     cable_tracking_key = "RawMessages!cable_tracking"
 
     config_by_id: dict[str, dict[str, Any]] = {
@@ -599,124 +600,104 @@ def _build_pilot_1366_layout(*, topics: TopicConfig, include_map_layer: bool) ->
             message_path=_build_message_path(topic=topics.setpoint, field=DISPLAY_FIELDS.setpoint_mode),
             font_size=26,
         ),
-        confidence_key: _build_gauge_config(
-            title="定位置信度",
-            path=_build_message_path(topic=topics.status, field=DISPLAY_FIELDS.status_confidence),
-            min_value=0.0,
-            max_value=1.0,
-            style="bar",
-        ),
-        confidence_text_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.confidence_text, field=DISPLAY_FIELDS.string_data),
-            font_size=20,
-        ),
-        power_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.power_text, field=DISPLAY_FIELDS.string_data),
-            font_size=18,
-        ),
         cable_ready_key: _build_indicator_config(
-            title="电缆巡检 Ready",
+            title="电缆巡检结论",
             path=_build_message_path(topic=topics.cable_industrial_ready, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value=True, label="READY", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value=False, label="NOT READY", color=COLORS.status_error),
+                _build_indicator_rule(raw_value=True, label="具备稳定巡检条件", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="尚需恢复到电缆廊道", color=COLORS.status_error),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
-            font_size=20,
+            fallback_label="等待巡检结论",
+            font_size=22,
         ),
         cable_pass_key: _build_indicator_config(
-            title="工业验收 Pass",
+            title="工业验收结果",
             path=_build_message_path(topic=topics.cable_industrial_acceptance_pass, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value=True, label="PASS", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value=False, label="FAIL", color=COLORS.status_error),
+                _build_indicator_rule(raw_value=True, label="工业部署可接受", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="工业部署暂不建议", color=COLORS.status_error),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
-            font_size=20,
+            fallback_label="等待验收结果",
+            font_size=22,
         ),
         dlt_state_key: _build_indicator_config(
-            title="DL/T状态",
+            title="DL/T 1278 状态",
             path=_build_message_path(topic=topics.dlt1278_state, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value="正常状态", label="正常", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value="注意状态", label="注意", color=COLORS.status_warn),
-                _build_indicator_rule(raw_value="异常状态", label="异常", color=COLORS.status_error),
-                _build_indicator_rule(raw_value="严重状态", label="严重", color=COLORS.mode_emergency),
+                _build_indicator_rule(raw_value="正常状态", label="DL/T低风险状态", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value="注意状态", label="DL/T注意状态", color=COLORS.status_warn),
+                _build_indicator_rule(raw_value="异常状态", label="DL/T异常需处置", color=COLORS.status_error),
+                _build_indicator_rule(raw_value="严重状态", label="DL/T严重需停检", color=COLORS.mode_emergency),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
+            fallback_label="等待DL/T状态",
             font_size=20,
-        ),
-        dlt_score_key: _build_gauge_config(
-            title="DL/T总分",
-            path=_build_message_path(topic=topics.dlt1278_total_score, field=DISPLAY_FIELDS.string_data),
-            min_value=0.0,
-            max_value=100.0,
-            style="bar",
-            reverse=True,
         ),
         cable_status_key: _build_markdown_config(
             message_path=_build_message_path(topic=topics.cable_status_text, field=DISPLAY_FIELDS.string_data),
-            font_size=15,
+            font_size=17,
         ),
         cable_flags_key: _build_markdown_config(
             message_path=_build_message_path(topic=topics.cable_acceptance_flags, field=DISPLAY_FIELDS.string_data),
             font_size=18,
         ),
         dlt_summary_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.dlt1278_summary, field=DISPLAY_FIELDS.string_data),
-            font_size=14,
+            message_path=_build_message_path(topic=topics.dlt1278_summary_rewritten, field=DISPLAY_FIELDS.string_data),
+            font_size=13,
         ),
         cable_confidence_key: _build_gauge_config(
-            title="电缆置信度",
+            title="电缆置信度（越高越可靠）",
             path=_build_message_path(topic=topics.cable_confidence, field=DISPLAY_FIELDS.string_data),
             min_value=0.0,
             max_value=1.0,
             style="bar",
         ),
-        error_key: _build_plot_config(
-            title="跟踪误差",
-            y_axis_label="误差 (m)",
+        cable_plot_key: _build_plot_config(
+            title="跟踪证据：黄=横偏 蓝=埋深 红=σ 绿=置信度",
+            y_axis_label="m / confidence",
             series=[
-                _build_plot_series(topic=topics.diagnostics, value=PLOT_FIELDS.diagnostic_depth_error, color=COLORS.depth_error),
-                _build_plot_series(topic=topics.diagnostics, value=PLOT_FIELDS.diagnostic_lateral_error, color=COLORS.lateral_error),
+                _build_plot_series(topic=topics.cable_cross_track, value=PLOT_FIELDS.scalar_data, color="#ffd166", label="横向偏移"),
+                _build_plot_series(topic=topics.cable_burial_depth, value=PLOT_FIELDS.scalar_data, color="#4dabf7", label="埋深估计"),
+                _build_plot_series(topic=topics.cable_burial_sigma, value=PLOT_FIELDS.scalar_data, color="#ff6b6b", label="埋深不确定度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#51cf66", label="综合置信度"),
             ],
             following_view_width=90.0,
-            sidebar_dimension=150,
+            show_legend=False,
+            sidebar_dimension=120,
         ),
-        speed_key: _build_plot_config(
-            title="速度闭环",
-            y_axis_label="速度 (m/s)",
+        cable_quality_key: _build_plot_config(
+            title="声磁质量：橙=SNR 紫=磁置信度 青=综合置信度",
+            y_axis_label="SNR dB / confidence",
             series=[
-                _build_plot_series(topic=topics.dvl, value=PLOT_FIELDS.dvl_speed_x, color=COLORS.speed_actual),
-                _build_plot_series(topic=topics.setpoint, value=PLOT_FIELDS.setpoint_speed, color=COLORS.speed_target),
+                _build_plot_series(topic=topics.cable_magnetic_snr, value=PLOT_FIELDS.scalar_data, color="#ff922b", label="磁信噪比"),
+                _build_plot_series(topic=topics.cable_magnetic_confidence, value=PLOT_FIELDS.scalar_data, color="#9775fa", label="磁置信度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#22b8cf", label="综合置信度"),
             ],
-            min_y_value=0.0,
-            max_y_value=1.0,
             following_view_width=90.0,
-            sidebar_dimension=150,
+            show_legend=False,
+            sidebar_dimension=120,
         ),
         cable_tracking_key: _build_raw_config(topic_path=topics.cable_tracking, title="电缆 ready/pass JSON"),
     }
 
     status_grid = _split(
         "row",
-        _split("column", mode_key, confidence_text_key, 48),
-        _split("column", confidence_key, power_key, 56),
-        46,
+        mode_key,
+        cable_confidence_key,
+        50,
     )
     cable_summary = _split(
         "column",
-        _split("row", _split("row", cable_ready_key, cable_pass_key, 50), _split("row", dlt_state_key, dlt_score_key, 50), 52),
+        _split("row", _split("row", cable_ready_key, cable_pass_key, 50), dlt_state_key, 66),
         _split("row", cable_status_key, _split("column", cable_flags_key, dlt_summary_key, 36), 56),
-        44,
+        50,
     )
-    trend_band = _split("row", speed_key, error_key, 50)
+    trend_band = _split("row", cable_plot_key, cable_quality_key, 50)
     main_column = _split("column", cable_summary, trend_band, 62)
     situational_column = _split("column", three_d_key, _split("column", status_grid, cable_tracking_key, 52), 50)
 
@@ -739,100 +720,88 @@ def _build_acceptance_1366_layout(*, topics: TopicConfig, include_map_layer: boo
     cable_ready_key = "Indicator!cable_ready"
     cable_pass_key = "Indicator!cable_pass"
     dlt_state_key = "Indicator!dlt1278_state"
-    dlt_score_key = "Gauge!dlt1278_score"
     dlt_summary_key = "Markdown!dlt1278_summary"
     cable_status_key = "Markdown!cable_status"
     cable_flags_key = "Markdown!cable_flags"
-    bt_status_key = "Markdown!bt_status"
 
     config_by_id: dict[str, dict[str, Any]] = {
         top_view_key: _build_top_view_config(topics=topics),
         cable_plot_key: _build_plot_config(
-            title="电缆跟踪核心量",
+            title="跟踪证据：黄=横偏 蓝=埋深 红=σ 绿=置信度",
             y_axis_label="m / confidence",
             series=[
-                _build_plot_series(topic=topics.cable_cross_track, value=PLOT_FIELDS.scalar_data, color=COLORS.lateral_error),
-                _build_plot_series(topic=topics.cable_burial_depth, value=PLOT_FIELDS.scalar_data, color=COLORS.depth_target),
-                _build_plot_series(topic=topics.cable_burial_sigma, value=PLOT_FIELDS.scalar_data, color=COLORS.depth_error),
-                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color=COLORS.confidence_high),
+                _build_plot_series(topic=topics.cable_cross_track, value=PLOT_FIELDS.scalar_data, color="#ffd166", label="横向偏移"),
+                _build_plot_series(topic=topics.cable_burial_depth, value=PLOT_FIELDS.scalar_data, color="#4dabf7", label="埋深估计"),
+                _build_plot_series(topic=topics.cable_burial_sigma, value=PLOT_FIELDS.scalar_data, color="#ff6b6b", label="埋深不确定度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#51cf66", label="综合置信度"),
             ],
             following_view_width=120.0,
-            sidebar_dimension=180,
+            show_legend=False,
+            sidebar_dimension=150,
         ),
         cable_quality_key: _build_plot_config(
-            title="声磁质量与验收证据",
+            title="声磁质量：橙=SNR 紫=磁置信度 青=综合置信度",
             y_axis_label="SNR dB / confidence",
             series=[
-                _build_plot_series(topic=topics.cable_magnetic_snr, value=PLOT_FIELDS.scalar_data, color=COLORS.status_warn),
-                _build_plot_series(topic=topics.cable_magnetic_confidence, value=PLOT_FIELDS.scalar_data, color=COLORS.confidence_high),
-                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color=COLORS.mode_tracking),
+                _build_plot_series(topic=topics.cable_magnetic_snr, value=PLOT_FIELDS.scalar_data, color="#ff922b", label="磁信噪比"),
+                _build_plot_series(topic=topics.cable_magnetic_confidence, value=PLOT_FIELDS.scalar_data, color="#9775fa", label="磁置信度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#22b8cf", label="综合置信度"),
             ],
             following_view_width=120.0,
-            sidebar_dimension=180,
+            show_legend=False,
+            sidebar_dimension=150,
         ),
         cable_tracking_key: _build_raw_config(topic_path=topics.cable_tracking, title="电缆跟踪输出"),
         cable_diag_key: _build_raw_config(topic_path=topics.cable_diagnostics, title="电缆诊断/限幅"),
         cable_ready_key: _build_indicator_config(
-            title="工业结论",
+            title="电缆巡检结论",
             path=_build_message_path(topic=topics.cable_industrial_ready, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value=True, label="READY", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value=False, label="NOT READY", color=COLORS.status_error),
+                _build_indicator_rule(raw_value=True, label="具备稳定巡检条件", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="尚需恢复到电缆廊道", color=COLORS.status_error),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
-            font_size=20,
+            fallback_label="等待巡检结论",
+            font_size=22,
         ),
         cable_pass_key: _build_indicator_config(
-            title="工业验收",
+            title="工业验收结果",
             path=_build_message_path(topic=topics.cable_industrial_acceptance_pass, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value=True, label="PASS", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value=False, label="FAIL", color=COLORS.status_error),
+                _build_indicator_rule(raw_value=True, label="工业部署可接受", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="工业部署暂不建议", color=COLORS.status_error),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
-            font_size=20,
+            fallback_label="等待验收结果",
+            font_size=22,
         ),
         dlt_state_key: _build_indicator_config(
-            title="DL/T状态",
+            title="DL/T 1278 状态",
             path=_build_message_path(topic=topics.dlt1278_state, field=DISPLAY_FIELDS.string_data),
             style="background",
             rules=[
-                _build_indicator_rule(raw_value="正常状态", label="正常", color=COLORS.status_ok),
-                _build_indicator_rule(raw_value="注意状态", label="注意", color=COLORS.status_warn),
-                _build_indicator_rule(raw_value="异常状态", label="异常", color=COLORS.status_error),
-                _build_indicator_rule(raw_value="严重状态", label="严重", color=COLORS.mode_emergency),
+                _build_indicator_rule(raw_value="正常状态", label="DL/T低风险状态", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value="注意状态", label="DL/T注意状态", color=COLORS.status_warn),
+                _build_indicator_rule(raw_value="异常状态", label="DL/T异常需处置", color=COLORS.status_error),
+                _build_indicator_rule(raw_value="严重状态", label="DL/T严重需停检", color=COLORS.mode_emergency),
             ],
             fallback_color=COLORS.status_idle,
-            fallback_label="NO DATA",
+            fallback_label="等待DL/T状态",
             font_size=20,
         ),
-        dlt_score_key: _build_gauge_config(
-            title="DL/T总分",
-            path=_build_message_path(topic=topics.dlt1278_total_score, field=DISPLAY_FIELDS.string_data),
-            min_value=0.0,
-            max_value=100.0,
-            style="bar",
-            reverse=True,
-        ),
         dlt_summary_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.dlt1278_summary, field=DISPLAY_FIELDS.string_data),
-            font_size=14,
+            message_path=_build_message_path(topic=topics.dlt1278_summary_rewritten, field=DISPLAY_FIELDS.string_data),
+            font_size=13,
         ),
         cable_status_key: _build_markdown_config(
             message_path=_build_message_path(topic=topics.cable_status_text, field=DISPLAY_FIELDS.string_data),
-            font_size=15,
+            font_size=18,
         ),
         cable_flags_key: _build_markdown_config(
             message_path=_build_message_path(topic=topics.cable_acceptance_flags, field=DISPLAY_FIELDS.string_data),
             font_size=18,
-        ),
-        bt_status_key: _build_markdown_config(
-            message_path=_build_message_path(topic=topics.bt_status, field=DISPLAY_FIELDS.string_data),
-            font_size=14,
         ),
     }
 
@@ -841,15 +810,15 @@ def _build_acceptance_1366_layout(*, topics: TopicConfig, include_map_layer: boo
     status_row = _split(
         "row",
         _split("row", cable_ready_key, cable_pass_key, 50),
-        _split("row", dlt_state_key, dlt_score_key, 50),
+        dlt_state_key,
         48,
     )
     text_row = _split("row", cable_status_key, _split("column", cable_flags_key, dlt_summary_key, 34), 58)
     evidence_column = _split(
         "column",
-        _split("column", status_row, text_row, 42),
-        _split("column", plot_row, _split("column", raw_row, bt_status_key, 74), 42),
-        34,
+        _split("column", status_row, text_row, 50),
+        _split("column", plot_row, raw_row, 78),
+        46,
     )
 
     return {

@@ -598,22 +598,26 @@ class MainWindow(QMainWindow):
 
         # 6. 电缆巡检监控：只显示从 cable tracking JSON 中提取的关键字段
         cable_group = QGroupBox("电缆巡检监控")
-        cable_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        cable_group.setMinimumWidth(560)
+        cable_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 14px; color: #f0f0f0; }")
         cable_layout = QVBoxLayout()
+        cable_layout.setSpacing(2)
         self.lbl_cable_ready = QLabel("结论: --")
-        self.lbl_cable_ready.setStyleSheet("color: #aaa; font-size: 15px; font-weight: bold;")
+        self.lbl_cable_ready.setStyleSheet("color: #aaa; font-size: 18px; font-weight: bold;")
         self.lbl_cable_metrics = QLabel("偏移/埋深/进度: --")
-        self.lbl_cable_metrics.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_metrics.setStyleSheet("color: #f0f0f0; font-size: 13px;")
         self.lbl_cable_quality = QLabel("置信度/SNR: --")
-        self.lbl_cable_quality.setStyleSheet("color: #ddd; font-size: 11px;")
-        self.lbl_cable_dlt = QLabel("DL/T状态/总分: --")
-        self.lbl_cable_dlt.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_quality.setStyleSheet("color: #f0f0f0; font-size: 13px;")
+        self.lbl_cable_dlt = QLabel("DL/T状态/扣分合计: --")
+        self.lbl_cable_dlt.setStyleSheet("color: #f0f0f0; font-size: 14px; font-weight: bold;")
         self.lbl_cable_score_items = QLabel("扣分项: --")
-        self.lbl_cable_score_items.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_score_items.setWordWrap(True)
+        self.lbl_cable_score_items.setStyleSheet("color: #f0f0f0; font-size: 12px;")
         self.lbl_cable_flags = QLabel("验收标志: --")
-        self.lbl_cable_flags.setStyleSheet("color: #ddd; font-size: 11px;")
+        self.lbl_cable_flags.setStyleSheet("color: #f0f0f0; font-size: 12px;")
         self.lbl_cable_products = QLabel("产物链: --")
-        self.lbl_cable_products.setStyleSheet("color: #aaa; font-size: 10px;")
+        self.lbl_cable_products.setWordWrap(True)
+        self.lbl_cable_products.setStyleSheet("color: #d8d8d8; font-size: 11px;")
         cable_layout.addWidget(self.lbl_cable_ready)
         cable_layout.addWidget(self.lbl_cable_metrics)
         cable_layout.addWidget(self.lbl_cable_quality)
@@ -622,7 +626,7 @@ class MainWindow(QMainWindow):
         cable_layout.addWidget(self.lbl_cable_flags)
         cable_layout.addWidget(self.lbl_cable_products)
         cable_group.setLayout(cable_layout)
-        layout.addWidget(cable_group, stretch=1)
+        layout.addWidget(cable_group, stretch=2)
 
         return bar
 
@@ -1149,11 +1153,11 @@ class MainWindow(QMainWindow):
         if ready:
             pass_text = "PASS" if acceptance_pass else "FAIL"
             self.lbl_cable_ready.setText(f"结论: READY/{pass_text} | {mode}")
-            self.lbl_cable_ready.setStyleSheet("color: #00cc66; font-size: 15px; font-weight: bold;")
+            self.lbl_cable_ready.setStyleSheet("color: #00e676; font-size: 18px; font-weight: bold;")
         else:
             pass_text = "PASS" if acceptance_pass else "FAIL"
             self.lbl_cable_ready.setText(f"结论: NOT READY/{pass_text} | {mode}")
-            self.lbl_cable_ready.setStyleSheet("color: #ff4444; font-size: 15px; font-weight: bold;")
+            self.lbl_cable_ready.setStyleSheet("color: #ff5555; font-size: 18px; font-weight: bold;")
 
         self.lbl_cable_metrics.setText(
             "偏移/埋深/进度: "
@@ -1169,22 +1173,22 @@ class MainWindow(QMainWindow):
         )
         dlt_state = str(monitor.get('dlt1278_state', '--'))
         dlt_score = fmt(monitor.get('dlt1278_total_score'), 0)
-        self.lbl_cable_dlt.setText(f"DL/T状态/总分: {dlt_state} / {dlt_score}")
+        self.lbl_cable_dlt.setText(f"DL/T状态/扣分合计: {dlt_state} / {dlt_score}")
         if dlt_state in ('异常状态', '严重状态'):
-            self.lbl_cable_dlt.setStyleSheet("color: #ff4444; font-size: 11px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet("color: #ff5555; font-size: 14px; font-weight: bold;")
         elif dlt_state == '注意状态':
-            self.lbl_cable_dlt.setStyleSheet("color: #ffaa00; font-size: 11px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet("color: #ffcc33; font-size: 14px; font-weight: bold;")
         elif dlt_state == '正常状态':
-            self.lbl_cable_dlt.setStyleSheet("color: #00cc66; font-size: 11px;")
+            self.lbl_cable_dlt.setStyleSheet("color: #00e676; font-size: 14px; font-weight: bold;")
         else:
-            self.lbl_cable_dlt.setStyleSheet("color: #ddd; font-size: 11px;")
+            self.lbl_cable_dlt.setStyleSheet("color: #f0f0f0; font-size: 14px; font-weight: bold;")
 
         self.lbl_cable_score_items.setText(f"扣分项: {monitor.get('dlt1278_score_items_text', '--')}")
         self.lbl_cable_flags.setText(f"验收标志: {flags}")
         if flags and flags != 'none':
-            self.lbl_cable_flags.setStyleSheet("color: #ffaa00; font-size: 11px; font-weight: bold;")
+            self.lbl_cable_flags.setStyleSheet("color: #ffcc33; font-size: 12px; font-weight: bold;")
         else:
-            self.lbl_cable_flags.setStyleSheet("color: #00cc66; font-size: 11px;")
+            self.lbl_cable_flags.setStyleSheet("color: #00e676; font-size: 12px; font-weight: bold;")
         self.lbl_cable_products.setText(f"产物链: {monitor.get('dlt1278_products_text', '--')}")
 
     def update_arbiter_state_display(self, payload: dict):

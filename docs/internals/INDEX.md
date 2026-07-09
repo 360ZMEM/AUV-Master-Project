@@ -21,3 +21,5 @@
 | 09 | es_ekf.md | ES-EKF误差状态卡尔曼滤波 |
 | 10 | behavior_tree.md | 行为树决策引擎架构 |
 | 11 | [experiment_state_machine.md](11_experiment_state_machine.md) | start_experiment.sh 编排状态机：进程拓扑、时序图、trap 路径 |
+| 12 | [cable_tracking_mag_integration.md](12_cable_tracking_mag_integration.md) | 电缆跟踪磁探测集成：在线先验修正、磁导出横偏观测、PVS 闭环恢复原理 |
+| 13 | [mag_lever_arm_calibration.md](13_mag_lever_arm_calibration.md) | 磁强计杆臂标定：外参配置模型与 bag 级证明 |
