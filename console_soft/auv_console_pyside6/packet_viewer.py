@@ -269,14 +269,14 @@ class PacketEntry:
             'meaning': '接收报文标识 (0x24 0x41 0x55 0x56 0x91)'
         })
 
-        # Packet length
+        # Packet length / fifth header byte
         length = data.get('length', 145)
         fields.append({
-            'offset': 5,
-            'name': '数据长度',
+            'offset': 4,
+            'name': '头字节/长度',
             'bytes': 1,
             'value': length,
-            'meaning': f'数据载荷字节数'
+            'meaning': 'ASCII日志首字段；二进制帧中为 $AUV 后的 0x91'
         })
 
         # Frame number
@@ -310,62 +310,101 @@ class PacketEntry:
             'meaning': f'{mode_names[mode] if mode < 5 else "未知"} (0x{mode:02X})'
         })
 
-        # Status flags
-        flags = data.get('status_flags', 0)
+        for key, name, offset in [
+            ('depth_protect_1', '深度保护1', 8),
+            ('depth_protect_2', '深度保护2', 10),
+            ('bottom_protect_1', '离底保护1', 12),
+            ('bottom_protect_2', '离底保护2', 14),
+            ('remain_time', '预设时间', 16),
+        ]:
+            value = data.get(key, 0)
+            fields.append({
+                'offset': offset,
+                'name': name,
+                'bytes': 2,
+                'value': value,
+                'meaning': f'ASCII固定字段，原始值 {value}'
+            })
+
+        work_cmd = data.get('work_instruction', 0)
         fields.append({
-            'offset': 9,
-            'name': '状态标志',
+            'offset': 22,
+            'name': '工作指令',
             'bytes': 1,
-            'value': f'0x{flags:02X}',
-            'meaning': f'状态位 (0x{flags & 0xFF:08b})'
+            'value': f'0x{work_cmd:02X}',
+            'meaning': 'ASCII固定字段'
         })
 
-        # Depth
+        for key, name, offset in [
+            ('motor1', '主推进器1', 23),
+            ('motor2', '主推进器2', 25),
+            ('rudder_lh', '左水平舵', 27),
+            ('rudder_rh', '右水平舵', 29),
+            ('rudder_uv', '上垂直舵', 31),
+            ('rudder_lv', '下垂直舵', 33),
+        ]:
+            value = data.get(key, 0)
+            meaning = f'角度 ({value/10.0:.1f}°)' if key.startswith('rudder_') else f'转速 ({value} rpm)'
+            fields.append({
+                'offset': offset,
+                'name': name,
+                'bytes': 2,
+                'value': value,
+                'meaning': meaning
+            })
+
+        pressure = data.get('internal_pressure_raw', 0)
+        fields.append({
+            'offset': 35,
+            'name': '舱体内压',
+            'bytes': 2,
+            'value': pressure,
+            'meaning': f'压力 ({pressure * 0.001:.3f} psi)，由 txt[19] 定界'
+        })
+
+        temp = data.get('internal_temp_raw', 0)
+        fields.append({
+            'offset': 37,
+            'name': '舱体温度',
+            'bytes': 1,
+            'value': temp,
+            'meaning': f'温度原始值 {temp}，由 txt[20] 定界'
+        })
+
         depth = data.get('depth', 0)
         fields.append({
-            'offset': 10,
+            'offset': 38,
             'name': '当前深度',
             'bytes': 2,
             'value': depth,
-            'meaning': f'深度 ({depth/10.0:.1f}m)'
+            'meaning': f'深度 ({depth/10.0:.1f}m)，由 txt[21] 定界'
         })
 
-        # Heading
-        heading = data.get('heading', 0)
-        fields.append({
-            'offset': 12,
-            'name': '当前航向',
-            'bytes': 2,
-            'value': heading,
-            'meaning': f'航向角 ({heading/10.0:.1f}°)'
-        })
+        status_candidate = data.get('status_candidate')
+        if status_candidate is not None:
+            fields.append({
+                'offset': '未知',
+                'name': '状态候选',
+                'bytes': '-',
+                'value': status_candidate,
+                'meaning': 'txt[38] 常见为 0/256/1280；尚不能可靠绑定到异常位图'
+            })
 
-        # GPS coordinates
         lon = data.get('longitude', 0)
         lat = data.get('latitude', 0)
         fields.append({
-            'offset': 14,
+            'offset': 94,
             'name': '经度',
             'bytes': 4,
             'value': lon,
-            'meaning': f'经度×1000000 ({lon/1000000:.6f}°)'
+            'meaning': f'GPS样经度×1000000 ({lon/1000000:.6f}°)，按数值范围识别'
         })
         fields.append({
-            'offset': 18,
+            'offset': 98,
             'name': '纬度',
             'bytes': 4,
             'value': lat,
-            'meaning': f'纬度×1000000 ({lat/1000000:.6f}°)'
-        })
-
-        # Speed
-        speed = data.get('speed', 0)
-        fields.append({
-            'offset': 22,
-            'name': '对地速度',
-            'bytes': 2,
-            'value': speed,
-            'meaning': f'速度 ({speed/10.0:.1f}kn)' if speed != -1800 else '无效'
+            'meaning': f'GPS样纬度×1000000 ({lat/1000000:.6f}°)，按数值范围识别'
         })
 
         # Checksum
@@ -592,102 +631,52 @@ class PacketFileParser:
         Example: 145 3 1 0 0 0 0 0 0 0 0 180 -180 180 -180 0 0 0 203 140 1714 ...
         """
         try:
-            # Remove control characters first
-            line_clean = ''.join(c for c in line if ord(c) >= 32)
-
-            parts = line_clean.split()
-            if len(parts) < 4:
+            # 日志行是“协议字段值列表”，不是原始 145 字节。
+            # 这里仅解析由 VxWorks ToUI12 字段顺序和样本日志共同定界的字段。
+            parts = [int(x) for x in re.findall(r'-?\d+', line)]
+            if len(parts) < 22:
                 return None
 
             data = {}
+            data['length'] = parts[0]
+            data['frame'] = parts[1]
+            data['address'] = parts[2]
+            data['mode'] = parts[3]
 
-            # Based on observed format:
-            # pos 0: 145 (data_length)
-            # pos 1: frame number
-            # pos 2: address
-            # pos 3: work_mode
-            # pos 4-10: zeros (depth/bottom protection, preset time, spares)
-            # pos 11-14: 4 rudder angles (180, -180, 180, -180)
-            # pos 15-20: zeros, 203, 140, 1714, zeros...
-            # pos 21-26: zeros
-            # pos 27-28: GPS coordinates (115368621 22754909)
+            fixed_map = {
+                'depth_protect_1': 4,
+                'depth_protect_2': 5,
+                'bottom_protect_1': 6,
+                'bottom_protect_2': 7,
+                'remain_time': 8,
+                'work_instruction': 9,
+                'motor1': 10,
+                'motor2': 11,
+                'rudder_lh': 12,
+                'rudder_rh': 13,
+                'rudder_uv': 14,
+                'rudder_lv': 15,
+                # txt[16:18] 在样本中为预留/未知字段，暂不绑定协议含义。
+                'internal_pressure_raw': 19,
+                'internal_temp_raw': 20,
+                'depth': 21,
+                # txt[38] 在样本中出现 0/256/1280，但不能可靠等价为异常位图。
+                'status_candidate': 38,
+            }
+            for key, pos in fixed_map.items():
+                if pos < len(parts):
+                    data[key] = parts[pos]
 
-            idx = 0
-
-            # Data length
-            if idx < len(parts) and parts[idx].isdigit():
-                data['length'] = int(parts[idx])
-            idx += 1
-
-            # Frame number
-            if idx < len(parts) and parts[idx].isdigit():
-                data['frame'] = int(parts[idx])
-            idx += 1
-
-            # Address
-            if idx < len(parts) and parts[idx].isdigit():
-                data['address'] = int(parts[idx])
-            idx += 1
-
-            # Work mode
-            if idx < len(parts) and parts[idx].isdigit():
-                data['mode'] = int(parts[idx])
-            idx += 1
-
-            # Skip zeros (protection parameters etc.)
-            while idx < len(parts) and parts[idx] == '0':
-                idx += 1
-
-            # Rudder angles (4 values if present)
-            if idx + 3 < len(parts):
-                try:
-                    rh1 = int(parts[idx])
-                    rh2 = int(parts[idx + 1])
-                    rh3 = int(parts[idx + 2])
-                    rh4 = int(parts[idx + 3])
-                    # Check if these look like rudder angles (-1800 to 1800 range)
-                    if all(-1800 <= x <= 1800 for x in [rh1, rh2, rh3, rh4]):
-                        data['rudder_lh'] = rh1
-                        data['rudder_rh'] = rh2
-                        data['rudder_uv'] = rh3
-                        data['rudder_lv'] = rh4
-                        idx += 4
-                except ValueError:
-                    pass
-
-            # Scan for GPS coordinates (large numbers > 10,000,000)
-            for i in range(idx, len(parts)):
-                if parts[i].lstrip('-').isdigit():
-                    val = int(parts[i])
-                    # Longitude: 70-140°E range
-                    if 70000000 < val < 140000000 and 'longitude' not in data:
-                        data['longitude'] = val
-                    # Latitude: 10-55°N range
-                    elif 10000000 < val < 55000000 and 'latitude' not in data:
-                        data['latitude'] = val
-
-            # Depth: look after rudder angles (position 15+)
-            # Format shows depth appears after pressure/temp fields
-            # Based on analysis: pressure(203), temp(140), depth(1714)
-            if 'depth' not in data:
-                for i in range(15, min(30, len(parts))):
-                    if parts[i].lstrip('-').isdigit() and parts[i] != '0':
-                        val = int(parts[i])
-                        # Realistic depth: 1-500 meters = 100-50000 cm
-                        # Exclude small values that could be pressure/temp (100-1000 range)
-                        if 1000 <= val <= 50000:
-                            data['depth'] = val
-                            break
-
-            # Heading: typically not stored in this text format
-            # Most AUV packets don't include heading in the compressed format
-            # Skip heading detection to avoid false positives from rudder angles
+            for val in parts:
+                if 70000000 < val < 140000000 and 'longitude' not in data:
+                    data['longitude'] = val
+                elif 10000000 < val < 55000000 and 'latitude' not in data:
+                    data['latitude'] = val
 
             # Checksum (hex value at end)
             for part in reversed(parts):
-                if re.match(r'^[0-9a-fA-F]{2}$', part):
-                    data['checksum'] = int(part, 16)
-                    break
+                if 0 <= part <= 0xFF:
+                    data.setdefault('checksum', part)
 
             return data if len(data) > 3 else None
 

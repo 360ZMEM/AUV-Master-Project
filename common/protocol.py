@@ -286,8 +286,9 @@ class ProtocolUplinkTelemetry:
       - depth_m: 深度 (m)
       - {total_voltage_v,total_current_a,soc,soh}: 电源状态
       - {gps,dvl,dead_reckoning}_{lon,lat,speed}: 位置估计与速度
-      - {device_power_status, operation_feedback, task_status}: 状态字节
-      - {depth_alarm, bottom_alarm, system_alarm}: 告警标志
+      - {device_power_status, operation_feedback, task_status}: 状态字
+      - {sys,dev,bms,dev_detail}_abnorm_info: VxWorks 32-bit 异常字
+      - {depth_alarm, bottom_alarm, system_alarm}: 兼容旧接口的告警字节
     
     坐标系统：
       - heading_deg: 相对北 (0~360°)
@@ -332,6 +333,11 @@ class ProtocolUplinkTelemetry:
     system_alarm: int
     depth_alarm: int
     bottom_alarm: int
+    # VxWorks 上行异常位图，offset 126/130/134/138，各 32-bit 大端序
+    sys_abnorm_info: int = 0
+    dev_abnorm_info: int = 0
+    bms_abnorm_info: int = 0
+    dev_abnorm_detail: int = 0
     # DVL Body Frame 三轴速度 (m/s)，从 Para5/6/7 解析
     dvl_body_x_mps: float = 0.0
     dvl_body_y_mps: float = 0.0
@@ -904,6 +910,10 @@ def build_bridge_telemetry_payload(
         "system_alarm": int(telemetry.system_alarm),
         "depth_alarm": int(telemetry.depth_alarm),
         "bottom_alarm": int(telemetry.bottom_alarm),
+        "sys_abnorm_info": int(telemetry.sys_abnorm_info),
+        "dev_abnorm_info": int(telemetry.dev_abnorm_info),
+        "bms_abnorm_info": int(telemetry.bms_abnorm_info),
+        "dev_abnorm_detail": int(telemetry.dev_abnorm_detail),
     }
 
     active_arbiter_value = _enum_value(active_arbiter)
@@ -1198,7 +1208,7 @@ def parse_downlink_packet(
     
     数据映射示例：
       - offset 5: frame_number (uint8)
-      - offset 29-30: right_fin_deg (int16 ÷ 10)
+      - offset 29-30: right_fin_deg (int16 ÷ 10，下行设定角)
       - offset 23-24: main_motor_rpm (int16)，thrust_percent = RPM / scale
     
     @throws ValueError 若帧合法性检查失败（长度错误、校验和错误、帧头/尾错误）
@@ -1300,7 +1310,7 @@ def build_uplink_packet(
     @param [in] control_mode_byte 当前控制模式字节
     @param [in] work_instruction 当前工作指令
     @param [in] main_motor_rpm / side_motor_rpm 两个推进马达的转速 (RPM)
-    @param [in] {left,right,top,bottom}_fin_deg 舵叶偏角 (°)
+    @param [in] {left,right,top,bottom}_fin_deg 上行舵叶反馈偏角 (整数 °，与 VxWorks ToUI12_*_Rud_Angle 对齐)
     @param [in] orientation_deg / {heading,pitch,roll}_deg 姿态角
     @param [in] depth_m 当前深度 (m)
     @param [in] {gps,dvl}_* GPS 和多普勒速度计数据
@@ -1351,10 +1361,10 @@ def build_uplink_packet(
 
     struct.pack_into(">h", packet, 23, _clamp_int(main_motor_rpm, -32768, 32767))
     struct.pack_into(">h", packet, 25, _clamp_int(side_motor_rpm, -32768, 32767))
-    struct.pack_into(">h", packet, 27, _clamp_int(round(left_fin_deg * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 29, _clamp_int(round(right_fin_deg * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 31, _clamp_int(round(top_fin_deg * 10.0), -32768, 32767))
-    struct.pack_into(">h", packet, 33, _clamp_int(round(bottom_fin_deg * 10.0), -32768, 32767))
+    struct.pack_into(">h", packet, 27, _clamp_int(round(left_fin_deg), -32768, 32767))
+    struct.pack_into(">h", packet, 29, _clamp_int(round(right_fin_deg), -32768, 32767))
+    struct.pack_into(">h", packet, 31, _clamp_int(round(top_fin_deg), -32768, 32767))
+    struct.pack_into(">h", packet, 33, _clamp_int(round(bottom_fin_deg), -32768, 32767))
     struct.pack_into(">H", packet, 35, _clamp_int(round(orientation_deg * 10.0), 0, 65535))
 
     struct.pack_into(">i", packet, 40, parameters[0])
@@ -1465,10 +1475,10 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         work_instruction=int(packet[22]),
         main_motor_rpm=struct.unpack(">h", packet[23:25])[0],
         side_motor_rpm=struct.unpack(">h", packet[25:27])[0],
-        right_fin_deg=struct.unpack(">h", packet[29:31])[0] * 0.1,
-        top_fin_deg=struct.unpack(">h", packet[31:33])[0] * 0.1,
-        left_fin_deg=struct.unpack(">h", packet[27:29])[0] * 0.1,
-        bottom_fin_deg=struct.unpack(">h", packet[33:35])[0] * 0.1,
+        right_fin_deg=float(struct.unpack(">h", packet[29:31])[0]),
+        top_fin_deg=float(struct.unpack(">h", packet[31:33])[0]),
+        left_fin_deg=float(struct.unpack(">h", packet[27:29])[0]),
+        bottom_fin_deg=float(struct.unpack(">h", packet[33:35])[0]),
         orientation_deg=struct.unpack(">H", packet[35:37])[0] * 0.1,
         internal_pressure_psi=struct.unpack(">h", packet[35:37])[0] * 0.001,
         internal_temp_c=struct.unpack("b", bytes((packet[37],)))[0],
@@ -1494,6 +1504,10 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         system_alarm=int(packet[127]),
         depth_alarm=int(packet[128]),
         bottom_alarm=int(packet[129]),
+        sys_abnorm_info=struct.unpack(">I", packet[126:130])[0],
+        dev_abnorm_info=struct.unpack(">I", packet[130:134])[0],
+        bms_abnorm_info=struct.unpack(">I", packet[134:138])[0],
+        dev_abnorm_detail=struct.unpack(">I", packet[138:142])[0],
         # Para5-7: DVL Body Frame (mm/s → m/s, ÷1000)
         dvl_body_x_mps=struct.unpack(">h", packet[56:58])[0] * 0.001,
         dvl_body_y_mps=struct.unpack(">h", packet[58:60])[0] * 0.001,

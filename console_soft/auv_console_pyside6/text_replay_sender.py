@@ -181,8 +181,10 @@ class TextPacketReplaySender:
         Binary format per protocol: 145 bytes at specific offsets
         """
         try:
-            parts = line.split()
-            if len(parts) < 4:
+            # 文本日志是字段值列表，不是原始字节流。仅恢复可由 VxWorks
+            # ToUI12 顺序和样本日志共同定界的字段，未知字段保持为 0。
+            parts = [int(x) for x in re.findall(r'-?\d+', line)]
+            if len(parts) < 22:
                 return None
 
             # Create 145-byte packet
@@ -191,68 +193,57 @@ class TextPacketReplaySender:
             # Frame header (bytes 0-4): $AUV + 0x91
             packet[0:5] = b'\x24\x41\x55\x56\x91'
 
-            # Parse basic fields (fixed positions at start)
-            idx = 0
+            def put_u8(offset, value):
+                packet[offset] = value & 0xFF
 
-            # Data length (byte 5): should be 145
-            if idx < len(parts) and parts[idx].isdigit():
-                packet[5] = int(parts[idx]) & 0xFF
-            idx += 1
+            def put_i8(offset, value):
+                packet[offset] = value & 0xFF
 
-            # Frame number (byte 6)
-            if idx < len(parts) and parts[idx].isdigit():
-                packet[6] = int(parts[idx]) & 0xFF
-            idx += 1
+            def put_u16(offset, value):
+                packet[offset:offset + 2] = int(value).to_bytes(2, byteorder='big', signed=False)
 
-            # Address (byte 7)
-            if idx < len(parts) and parts[idx].isdigit():
-                packet[7] = int(parts[idx]) & 0xFF
-            idx += 1
+            def put_i16(offset, value):
+                packet[offset:offset + 2] = int(value).to_bytes(2, byteorder='big', signed=True)
 
-            # Work mode (byte 8)
-            if idx < len(parts) and parts[idx].isdigit():
-                packet[8] = int(parts[idx]) & 0xFF
-            idx += 1
+            def put_i32(offset, value):
+                packet[offset:offset + 4] = int(value).to_bytes(4, byteorder='big', signed=True)
 
-            # Scan through remaining fields for key data
-            while idx < len(parts):
-                part = parts[idx]
+            # txt[0] 是二进制 header 的第 5 字节 0x91；frame/address/mode 从 txt[1:4] 开始。
+            put_u8(4, parts[0])
+            put_u8(5, parts[1])
+            put_u8(6, parts[2])
+            put_u8(7, parts[3])
 
-                if not part.lstrip('-').isdigit():
-                    idx += 1
-                    continue
+            fixed_u16 = [(8, 4), (10, 5), (12, 6), (14, 7), (16, 8)]
+            for offset, pos in fixed_u16:
+                if pos < len(parts):
+                    put_u16(offset, max(0, min(parts[pos], 0xFFFF)))
 
-                val = int(part)
+            if len(parts) > 9:
+                put_u8(22, parts[9])
+            if len(parts) > 10:
+                put_i16(23, parts[10])
+            if len(parts) > 11:
+                put_i16(25, parts[11])
 
-                # GPS Longitude (bytes 94-97): 70-140°E range
-                if 70000000 < val < 140000000:
-                    packet[94:98] = val.to_bytes(4, byteorder='big', signed=True)
+            for offset, pos in [(27, 12), (29, 13), (31, 14), (33, 15)]:
+                if pos < len(parts):
+                    put_i16(offset, parts[pos])
 
-                # GPS Latitude (bytes 98-101): 10-55°N range
-                elif 10000000 < val < 55000000:
-                    packet[98:102] = val.to_bytes(4, byteorder='big', signed=True)
+            # 样本日志中 txt[19:22] 与 VxWorks offset 35/37/38 的 Pres/Temp/Depth 对齐。
+            if len(parts) > 19:
+                put_i16(35, parts[19])
+            if len(parts) > 20:
+                put_i8(37, parts[20])
+            if len(parts) > 21:
+                put_u16(38, max(0, min(parts[21], 0xFFFF)))
 
-                # Depth (bytes 38-39): 0-50000 cm range
-                elif 0 <= val <= 50000 and packet[38:40] == b'\x00\x00':
-                    packet[38:40] = val.to_bytes(2, byteorder='big', signed=False)
-
-                # Pressure (bytes 35-36): 0-100000 range (MPa×1000)
-                elif 0 <= val <= 100000 and packet[35:37] == b'\x00\x00':
-                    packet[35:37] = val.to_bytes(2, byteorder='big', signed=False)
-
-                # Rudder angles (bytes 27-34): -1800 to 1800 range
-                elif -1800 <= val <= 1800:
-                    # Find next empty rudder slot
-                    if packet[27:29] == b'\x00\x00':
-                        packet[27:29] = val.to_bytes(2, byteorder='big', signed=True)
-                    elif packet[29:31] == b'\x00\x00':
-                        packet[29:31] = val.to_bytes(2, byteorder='big', signed=True)
-                    elif packet[31:33] == b'\x00\x00':
-                        packet[31:33] = val.to_bytes(2, byteorder='big', signed=True)
-                    elif packet[33:35] == b'\x00\x00':
-                        packet[33:35] = val.to_bytes(2, byteorder='big', signed=True)
-
-                idx += 1
+            # GPS 样经纬度只能按数值范围恢复；无法从文本日志区分所有位置字段。
+            for val in parts:
+                if 70000000 < val < 140000000 and packet[94:98] == b'\x00\x00\x00\x00':
+                    put_i32(94, val)
+                elif 10000000 < val < 55000000 and packet[98:102] == b'\x00\x00\x00\x00':
+                    put_i32(98, val)
 
             # Calculate checksum (byte 142): sum of bytes 0-141
             checksum = sum(packet[0:142]) & 0xFF

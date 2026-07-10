@@ -87,10 +87,10 @@ def test_bridge_telemetry_payload_adds_arbiter_metadata() -> None:
             work_instruction=int(WorkInstruction.AUTONOMOUS_CONTROL),
             main_motor_rpm=180,
             side_motor_rpm=21,
-            left_fin_deg=1.2,
-            right_fin_deg=-2.3,
-            top_fin_deg=3.4,
-            bottom_fin_deg=-4.5,
+            left_fin_deg=12.0,
+            right_fin_deg=-23.0,
+            top_fin_deg=34.0,
+            bottom_fin_deg=-45.0,
             depth_m=8.6,
             heading_deg=91.2,
             pitch_deg=-3.1,
@@ -115,10 +115,10 @@ def test_bridge_telemetry_payload_adds_arbiter_metadata() -> None:
     assert payload[KEY_FRAME_NUMBER] == 7
     assert payload[KEY_CONTROL_MODE_BYTE] == int(ControlModeByte.JETSON_PROTOCOL)
     assert payload[KEY_WORK_INSTRUCTION] == int(WorkInstruction.AUTONOMOUS_CONTROL)
-    assert math.isclose(payload[KEY_LEFT], 1.2)
-    assert math.isclose(payload[KEY_RIGHT], -2.3)
-    assert math.isclose(payload[KEY_TOP], 3.4)
-    assert math.isclose(payload[KEY_BOTTOM], -4.5)
+    assert math.isclose(payload[KEY_LEFT], 12.0)
+    assert math.isclose(payload[KEY_RIGHT], -23.0)
+    assert math.isclose(payload[KEY_TOP], 34.0)
+    assert math.isclose(payload[KEY_BOTTOM], -45.0)
     assert math.isclose(payload[KEY_DEPTH_M], 8.6)
     assert payload[KEY_ACTIVE_ARBITER] == ArbiterMode.AUTONOMOUS.value
     assert payload[KEY_ARBITER_SOURCE] == ArbiterSource.JETSON_MPC.value
@@ -219,10 +219,10 @@ def test_uplink_endianness() -> None:
         work_instruction=0x87,
         main_motor_rpm=123,
         side_motor_rpm=-45,
-        left_fin_deg=1.2,
-        right_fin_deg=-2.3,
-        top_fin_deg=3.4,
-        bottom_fin_deg=-4.5,
+        left_fin_deg=12.0,
+        right_fin_deg=-23.0,
+        top_fin_deg=34.0,
+        bottom_fin_deg=-45.0,
         orientation_deg=87.6,
         depth_m=12.3,
         heading_deg=123.4,
@@ -253,6 +253,10 @@ def test_uplink_endianness() -> None:
     assert len(packet) == 145
     assert packet[0:5] == b"$AUV\x91"
     assert packet[35:37] == (9876).to_bytes(2, "big")
+    assert packet[27:29] == (12).to_bytes(2, "big", signed=True)
+    assert packet[29:31] == (-23).to_bytes(2, "big", signed=True)
+    assert packet[31:33] == (34).to_bytes(2, "big", signed=True)
+    assert packet[33:35] == (-45).to_bytes(2, "big", signed=True)
     assert packet[72:74] == (1234).to_bytes(2, "big", signed=True)
     assert packet[74:76] == (-123).to_bytes(2, "big", signed=True)
     assert packet[76:78] == (456).to_bytes(2, "big", signed=True)
@@ -370,10 +374,10 @@ def test_uplink_roundtrip() -> None:
         work_instruction=int(WorkInstruction.AUTONOMOUS_CONTROL),
         main_motor_rpm=180,
         side_motor_rpm=21,
-        left_fin_deg=1.2,
-        right_fin_deg=-2.3,
-        top_fin_deg=3.4,
-        bottom_fin_deg=-4.5,
+        left_fin_deg=12.0,
+        right_fin_deg=-23.0,
+        top_fin_deg=34.0,
+        bottom_fin_deg=-45.0,
         orientation_deg=42.0,
         depth_m=8.6,
         heading_deg=91.2,
@@ -409,10 +413,10 @@ def test_uplink_roundtrip() -> None:
     assert parsed.work_instruction == int(WorkInstruction.AUTONOMOUS_CONTROL)
     assert parsed.main_motor_rpm == 180
     assert parsed.side_motor_rpm == 21
-    assert math.isclose(parsed.left_fin_deg, 1.2)
-    assert math.isclose(parsed.right_fin_deg, -2.3)
-    assert math.isclose(parsed.top_fin_deg, 3.4)
-    assert math.isclose(parsed.bottom_fin_deg, -4.5)
+    assert math.isclose(parsed.left_fin_deg, 12.0)
+    assert math.isclose(parsed.right_fin_deg, -23.0)
+    assert math.isclose(parsed.top_fin_deg, 34.0)
+    assert math.isclose(parsed.bottom_fin_deg, -45.0)
     assert math.isclose(parsed.internal_pressure_psi, 9.876, abs_tol=0.001)
     assert math.isclose(parsed.orientation_deg, 987.6)
     assert parsed.internal_temp_c == -6
