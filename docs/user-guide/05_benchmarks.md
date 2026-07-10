@@ -45,7 +45,7 @@ results/
 ### 命令行入口
 
 ```bash
-# 主基准脚本：PID + MPC 三场景同时测试
+# 控制器模块入口（当前是库模块；2026-06-18 验证：直接执行会 exit 0 但不产出报告）
 python tools/control_benchmark_module.py --output-dir results/control/<run_name>
 
 # 替代入口（测试套件风格）
@@ -88,6 +88,7 @@ python tools/mpc_test.py
 
 ### 依赖与注意事项
 
+- 2026-06-18 验证：`tools/control_benchmark_module.py` 当前缺少 CLI main，不能作为可引用的一键产出入口；请使用 `tests/benchmark_pid_vs_mpc.py` 或补齐模块 CLI 后再归档结果。
 - `mpc_test.py` 依赖 `/root/PythonVehicleSimulator/src`（硬编码路径）
 - 依赖 CasADi + IPOPT（`pip install casadi`）
 - MPC/PID 测试无需 rosbag 输入，完全独立运行
@@ -131,6 +132,8 @@ python tests/benchmark_bt_vs_fsm.py
 
 - 依赖 `brain_linux/src/auv_decision/` 下的引擎模块（需 colcon build 后 PYTHONPATH 正确）
 - 依赖 `mccabe` 包（`pip install mccabe`）
+- 默认输出会写入 `$AUV_DATA_ROOT`；若当前用户无 `/auv_data` 写权限，先设置 `AUV_DATA_ROOT=$PWD/.auv_data`
+- 2026-06-18 验证：本机 matplotlib 版本不接受 `Axes.boxplot(tick_labels=...)`，需改为兼容旧版本的 `labels=...` 后才能产出图表
 - 此测试无需 rosbag 输入，纯内存计算
 
 ---
@@ -275,6 +278,60 @@ python tools/analyze_bag.py <bag_path>/*.mcap --output-dir ./figures
 # 离线轨迹动画（无需HoloOcean）
 python tools/replay_mcap_video.py <bag>.mcap --output replay.gif --fps 24
 ```
+
+### HoloOcean 后端 smoke 契约
+
+HoloOcean 适合做短时高保真可视化、答辩视频和 MCAP 展示素材，不建议直接替代 PVS 做大规模多 seed sweep。当前建议先跑 15-30s smoke，确认 ROS topic 与分析工具契约，再决定是否扩展到正式实验。
+
+```bash
+# 仅验证 HoloOcean 仿真本体能进入主循环
+bash scripts/start_lin_sim.sh sim --sim-backend holoocean
+
+# 录制一个可供 ES-EKF/可视化工具消费的短 MCAP
+AUV_DATA_ROOT=$PWD/.auv_data \
+SIM_DELAY_S=3 \
+bash scripts/start_experiment.sh \
+  --sim-backend holoocean \
+  --bridge-backend zenoh_json \
+  --duration 15 \
+  --record-bag \
+  --bag-storage mcap \
+  --wait-before-record 1 \
+  --brain-ready-topic /auv/sensors/imu \
+  --brain-ready-timeout 45 \
+  --skip-layout
+
+# 对 HoloOcean MCAP 运行定位 benchmark
+python tools/offline_ekf_benchmark.py \
+  --input .auv_data/bags/<run_id>/rosbag/rosbag_0.mcap \
+  --output-dir results/localization/holoocean_smoke_<date>
+```
+
+注意事项：
+- `start_foxglove_holoocean_ros.sh` 默认 `SIM_DELAY_S=10`。短实验若不覆盖该变量，brain 可能在实验结束前才启动，导致 bag 缺 `/auv/sensors/*`。
+- HoloOcean + Zenoh 当前会发布 `/auv/sensors/ground_truth`、`imu`、`dvl`、`depth`，可被 `offline_ekf_benchmark.py` 消费。
+- `rt/auv/sensors/altitude` 和 `rt/auv/sensors/forward_sonar` 已在 `common.protocol.REQUIRED_BY_TOPIC` 登记；若仍出现 unsupported topic，优先检查运行环境是否加载了最新源码/安装包。
+- HoloOcean MCAP 的坐标转换参数仍需按结果复核。2026-06-18 smoke 中默认转换得到较小 Z RMSE，但 `--no-coordinate-transform` 会出现约 24m Z 误差，说明 truth/滤波输出的 Z 语义仍需统一确认。
+
+### HoloOcean 可视化生成
+
+```bash
+# 使用已有 MCAP 生成曲线动画
+python tools/capture_holoocean_video.py \
+  --mcap-input <bag>.mcap \
+  --mcap-render-mode curves \
+  --output log/holoocean_curves.mp4 \
+  --format mp4
+
+# 同时生成曲线、agent 视角和 viewport 视角
+python tools/capture_holoocean_video.py \
+  --mcap-input <bag>.mcap \
+  --mcap-render-all \
+  --mcap-render-all-dir log/replays \
+  --format mp4
+```
+
+已有产物表明该链路可以生成毕设展示素材，例如 `log/mcap_bundle_curves.mp4`、`log/mcap_bundle_holoocean_agent.mp4`、`log/mcap_bundle_holoocean_viewport.mp4`。正式答辩素材建议固定一条 60-120s MCAP 后再批量导出三类视频。
 
 ### 输出路径
 

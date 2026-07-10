@@ -249,6 +249,40 @@ def load_frame_transform_module():
     return mod
 
 
+def _position_to_ned(pos: np.ndarray, frame: str) -> np.ndarray:
+    """Normalize a 3D position into benchmark NED (z positive down)."""
+    pos = np.asarray(pos, dtype=float).reshape(3)
+    if frame == "ned":
+        return pos
+    if frame in ("ros-up", "ue"):
+        return np.array([pos[0], pos[1], -pos[2]], dtype=float)
+    raise ValueError(f"Unsupported position frame: {frame}")
+
+
+def _ned_to_ros_up(pos_ned: np.ndarray) -> np.ndarray:
+    """Convert benchmark NED position to ES-EKF internal ROS-up convention."""
+    pos_ned = np.asarray(pos_ned, dtype=float).reshape(3)
+    return np.array([pos_ned[0], pos_ned[1], -pos_ned[2]], dtype=float)
+
+
+def _resolve_truth_frame(topic: str, msg: Any, requested_frame: str) -> str:
+    if requested_frame != "auto":
+        return requested_frame
+    if hasattr(msg, "position_ned"):
+        return "ned"
+    # ROS Pose/Marker topics emitted by auv_viz_bridge are display-frame
+    # messages with z-up positions. Raw custom payloads expose position_ned.
+    if topic == "/auv/visual/truth_marker":
+        return "ros-up"
+    return "ros-up"
+
+
+def _resolve_sensor_frame(requested_frame: str) -> str:
+    if requested_frame == "auto":
+        return "ned"
+    return requested_frame
+
+
 def read_mcap_sensor_data(
     mcap_path: Path,
     imu_topic: str,
@@ -257,9 +291,12 @@ def read_mcap_sensor_data(
     truth_topics: list[str],
     dvl_frame: str,
     apply_coord_transform: bool,
+    truth_frame: str = "auto",
+    sensor_frame: str = "auto",
     verbose: bool = False,
 ) -> tuple[list[ImuSample], list[DvlSample], list[DepthSample], list[TruthSample]]:
     ft = load_frame_transform_module()
+    sensor_frame_resolved = _resolve_sensor_frame(sensor_frame)
     mcap_file = resolve_mcap_input(mcap_path)
     topics_to_read = {imu_topic, dvl_topic, depth_topic, *truth_topics}
     imu_samples: list[ImuSample] = []
@@ -284,7 +321,7 @@ def read_mcap_sensor_data(
                 msg.angular_velocity.y,
                 msg.angular_velocity.z,
             ], dtype=float)
-            if apply_coord_transform and ft is not None:
+            if sensor_frame_resolved == "ue" and apply_coord_transform and ft is not None:
                 acc = ft.body_vector_ue_to_ned(acc)
                 gyro = ft.body_vector_ue_to_ned(gyro)
             imu_samples.append(ImuSample(ts_ns, acc, gyro))
@@ -296,7 +333,7 @@ def read_mcap_sensor_data(
                 msg.twist.linear.y,
                 msg.twist.linear.z,
             ], dtype=float)
-            if dvl_frame == "body" and apply_coord_transform and ft is not None:
+            if dvl_frame == "body" and sensor_frame_resolved == "ue" and apply_coord_transform and ft is not None:
                 vel = ft.body_vector_ue_to_ned(vel)
             dvl_samples.append(DvlSample(ts_ns, vel))
             continue
@@ -311,12 +348,12 @@ def read_mcap_sensor_data(
             pos = np.array([x, y, z], dtype=float)
             quat = extract_orientation_wxyz(msg)
             quat_arr = np.array(quat, dtype=float) if quat is not None else None
-            if apply_coord_transform and ft is not None:
-                pos = ft.ue_position_to_ned(pos)
-                if quat_arr is not None:
-                    rpy_ue = _quat_to_euler(quat_arr)
-                    rpy_ned = ft.ue_rpy_to_ned(rpy_ue)
-                    quat_arr = _euler_to_quat(rpy_ned)
+            truth_frame_resolved = _resolve_truth_frame(topic, msg, truth_frame)
+            pos = _position_to_ned(pos, truth_frame_resolved)
+            if truth_frame_resolved == "ue" and apply_coord_transform and ft is not None and quat_arr is not None:
+                rpy_ue = _quat_to_euler(quat_arr)
+                rpy_ned = ft.ue_rpy_to_ned(rpy_ue)
+                quat_arr = _euler_to_quat(rpy_ned)
             truth_samples.append(TruthSample(ts_ns, pos, quat_arr))
             if truth_topic_found is None:
                 truth_topic_found = topic
@@ -1023,7 +1060,12 @@ def parse_args() -> argparse.Namespace:
                         help="Dead Reckoning 模式 (默认: dvl_world，与 DVL world frame 数据一致)")
     parser.add_argument("--dr-gyro-bias-z", type=float, default=0.0,
                         help="DR yaw 积分使用的 gyro_z bias (rad/s, 默认: 0.0)")
-    parser.add_argument("--no-coordinate-transform", action="store_true", help="跳过 UE4->NED 坐标系转换 (假设数据已是 NED)")
+    parser.add_argument("--no-coordinate-transform", action="store_true",
+                        help="兼容旧参数：禁用 UE->NED 向量/姿态转换；truth 仍会按 --truth-frame 归一化到 NED")
+    parser.add_argument("--truth-frame", choices=["auto", "ned", "ros-up", "ue"], default="auto",
+                        help="Ground truth 位置坐标语义；HoloOcean ROS PoseStamped 用 ros-up，Zenoh position_ned 用 ned，默认 auto")
+    parser.add_argument("--sensor-frame", choices=["auto", "ned", "ue"], default="auto",
+                        help="IMU/DVL 向量坐标语义；项目 ROS /auv/sensors/* 契约为 NED，默认 auto=ned")
     parser.add_argument("--ekf-config", type=Path, default=Path(DEFAULT_EKF_CONFIG), help=f"EKF 参数 YAML (默认: {DEFAULT_EKF_CONFIG})")
     parser.add_argument(
         "--estimated-extrinsics-yaml",
@@ -1225,6 +1267,8 @@ def main() -> None:
         truth_topics=truth_topic_list,
         dvl_frame=args.dvl_frame,
         apply_coord_transform=apply_transform,
+        truth_frame=args.truth_frame,
+        sensor_frame=args.sensor_frame,
         verbose=args.verbose,
     )
 
@@ -1277,15 +1321,18 @@ def main() -> None:
         gyro_bias_z=float(args.dr_gyro_bias_z),
     )
 
-    ekf_cfg_aligned = ekf_cfg.copy()
-    ekf_cfg_aligned["init_pos"] = init_pos.tolist()
-    ekf_cfg_aligned["init_vel"] = ekf_cfg.get("init_vel", [0.0, 0.0, 0.0])
-    ekf_cfg_aligned["auto_init"] = True
-    ekf_cfg_aligned["use_first_dvl_for_init"] = True
-    ekf_cfg_aligned["use_first_depth_for_init"] = True
+    std_ekf_cfg = ekf_cfg.copy()
+    std_ekf_cfg["init_pos"] = init_pos.tolist()
+    std_ekf_cfg["init_vel"] = ekf_cfg.get("init_vel", [0.0, 0.0, 0.0])
+    std_ekf_cfg["auto_init"] = True
+    std_ekf_cfg["use_first_dvl_for_init"] = True
+    std_ekf_cfg["use_first_depth_for_init"] = True
 
-    std_ekf_engine = StandardEKFEngine(ekf_cfg_aligned)
-    es_ekf_engine = EseKfEngine(ekf_cfg_aligned, auto_init=True)
+    es_ekf_cfg = std_ekf_cfg.copy()
+    es_ekf_cfg["init_pos"] = _ned_to_ros_up(init_pos).tolist()
+
+    std_ekf_engine = StandardEKFEngine(std_ekf_cfg)
+    es_ekf_engine = EseKfEngine(es_ekf_cfg, auto_init=True)
 
     if args.verbose:
         print("  Dead Reckoning engine: OK")

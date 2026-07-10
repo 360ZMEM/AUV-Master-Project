@@ -149,6 +149,7 @@ def run_one(
     sim_backend: str,
     record_format: str,
     extra_start_args: list[str],
+    benchmark_frame_args: list[str],
     skip_benchmark: bool,
     dry_run: bool,
     param_overrides: dict[str, float] | None = None,
@@ -339,6 +340,7 @@ def run_one(
         str(mcap),
         "--output-dir",
         str(bench_dir),
+        *benchmark_frame_args,
     ]
     try:
         with open(bench_log, "w", encoding="utf-8") as logf:
@@ -417,6 +419,29 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Run the experiments but skip offline_ekf_benchmark analysis.",
     )
     p.add_argument(
+        "--benchmark-coordinate-transform",
+        choices=["auto", "on", "off"],
+        default="auto",
+        help=(
+            "Coordinate-transform mode forwarded to offline_ekf_benchmark. "
+            "auto keeps the legacy vector transform for PVS but disables it for "
+            "HoloOcean; truth/sensor frame normalization is still controlled by "
+            "--benchmark-truth-frame/--benchmark-sensor-frame."
+        ),
+    )
+    p.add_argument(
+        "--benchmark-truth-frame",
+        choices=["auto", "ned", "ros-up", "ue"],
+        default="auto",
+        help="Ground-truth position frame forwarded to offline_ekf_benchmark.",
+    )
+    p.add_argument(
+        "--benchmark-sensor-frame",
+        choices=["auto", "ned", "ue"],
+        default="auto",
+        help="IMU/DVL vector frame forwarded to offline_ekf_benchmark.",
+    )
+    p.add_argument(
         "--dry-run", action="store_true",
         help="Print what would run without executing.",
     )
@@ -428,6 +453,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
              "Overrides are forwarded to MPC node via env AUV_MPC_PARAM_OVERRIDES.",
     )
     return p.parse_args(argv)
+
+
+def build_benchmark_frame_args(args: argparse.Namespace) -> list[str]:
+    """Build frame-semantics args for offline_ekf_benchmark.
+
+    HoloOcean ROS truth topics are display-frame ROS z-up, while project sensor
+    topics are NED. The fixed benchmark logic should always receive explicit
+    frame semantics so a formal sweep cannot silently fall back to old Z
+    assumptions.
+    """
+    frame_args = [
+        "--truth-frame",
+        args.benchmark_truth_frame,
+        "--sensor-frame",
+        args.benchmark_sensor_frame,
+    ]
+    coord_mode = args.benchmark_coordinate_transform
+    if coord_mode == "auto":
+        coord_mode = "off" if args.sim_backend == "holoocean" else "on"
+    if coord_mode == "off":
+        frame_args.append("--no-coordinate-transform")
+    return frame_args
 
 
 def parse_param_grid(spec: str | None) -> list[dict[str, float]]:
@@ -482,6 +529,7 @@ def main(argv: list[str] | None = None) -> int:
     resolved = [(name, resolve_scenario(name)) for name in scenarios]
     param_combos = parse_param_grid(args.param_grid)
     param_keys = sorted({k for c in param_combos for k in c.keys()})
+    benchmark_frame_args = build_benchmark_frame_args(args)
 
     stamp = time.strftime("%Y%m%d_%H%M%S")
     label = f"_{args.label}" if args.label else ""
@@ -501,6 +549,10 @@ def main(argv: list[str] | None = None) -> int:
         "sim_backend": args.sim_backend,
         "record_format": args.record_format,
         "start_args": args.start_arg,
+        "benchmark_coordinate_transform": args.benchmark_coordinate_transform,
+        "benchmark_truth_frame": args.benchmark_truth_frame,
+        "benchmark_sensor_frame": args.benchmark_sensor_frame,
+        "benchmark_frame_args": benchmark_frame_args,
         "param_grid": args.param_grid,
         "param_combos": param_combos,
         "argv": sys.argv,
@@ -550,6 +602,7 @@ def main(argv: list[str] | None = None) -> int:
                             sim_backend=args.sim_backend,
                             record_format=args.record_format,
                             extra_start_args=args.start_arg,
+                            benchmark_frame_args=benchmark_frame_args,
                             skip_benchmark=args.skip_benchmark,
                             dry_run=args.dry_run,
                             param_overrides=combo if combo else None,

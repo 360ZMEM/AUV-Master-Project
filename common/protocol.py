@@ -57,8 +57,10 @@ Z_PATH_GROUND_TRUTH = "rt/auv/sensors/ground_truth"  # 地面真值（仅仿真�
 Z_PATH_IMU = "rt/auv/sensors/imu"  # 惯性测量单元（加速度、角速度 NED）
 Z_PATH_DVL = "rt/auv/sensors/dvl"  # 多普勒速度计（水体相对速度 NED）
 Z_PATH_DEPTH = "rt/auv/sensors/depth"  # 深度传感器
+Z_PATH_ALTITUDE = "rt/auv/sensors/altitude"  # 离底高度传感器
 Z_PATH_MAGNETIC = "rt/auv/sensors/magnetic"  # 磁传感器（地磁场）
 Z_PATH_SONAR = "rt/auv/sensors/sonar"  # 声纳传感器
+Z_PATH_FORWARD_SONAR = "rt/auv/sensors/forward_sonar"  # 前视声呐地形预瞄
 
 # 可视化主题（用于 Foxglove 3D 场景、轨迹显示等）
 Z_PATH_SEABED_CLOUD = "rt/auv/visual/seabed_cloud"  # 海床点云（来自声纳或视觉）
@@ -94,6 +96,7 @@ KEY_VEL_NED = "vel_ned"  # 速度 [m/s]，NED 坐标系
 
 # 深度与结构
 KEY_DEPTH_M = "depth_m"  # 深度 (m)
+KEY_ALTITUDE_M = "altitude_m"  # 离底高度 (m)
 KEY_CONFIDENCE = "confidence"  # 测量置信度 (0-1)
 KEY_LEAK_LEVEL = "leak_level"  # 漏水等级
 KEY_TOTAL_VOLTAGE_V = "total_voltage_v"  # 总电压 (V)
@@ -104,6 +107,8 @@ KEY_B_NORM = "B_norm"  # 磁场模值 (T)
 
 # 声纳与可视化数据
 KEY_SONAR_BINS = "bins"  # 声纳扫描数据 (bin 数组)
+KEY_SLOPE = "slope"  # 前视声呐估计的地形坡度 dz/dx
+KEY_LOOKAHEAD_M = "lookahead_m"  # 前视距离 (m)
 KEY_POINTS_NED = "points_ned"  # 3D 点集 [[x,y,z], ...]
 KEY_TRAIL_NED = "trail_ned"  # 轨迹点集 [[x,y,z], ...]
 KEY_CENTER_NED = "center_ned"  # 圆心位置 [x,y,z]
@@ -341,8 +346,10 @@ REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_IMU: (KEY_ACCEL_NED, KEY_GYRO_NED),
     Z_PATH_DVL: (KEY_VEL_NED,),
     Z_PATH_DEPTH: (KEY_DEPTH_M,),
+    Z_PATH_ALTITUDE: (KEY_ALTITUDE_M,),
     Z_PATH_MAGNETIC: (KEY_B_NED, KEY_B_NORM),
     Z_PATH_SONAR: (KEY_SONAR_BINS,),
+    Z_PATH_FORWARD_SONAR: (KEY_SLOPE, KEY_LOOKAHEAD_M),
     Z_PATH_SEABED_CLOUD: (KEY_POINTS_NED,),
     Z_PATH_CABLE_MARKER: (KEY_POINTS_NED,),
     Z_PATH_TRUTH_POSE: (KEY_POSITION_NED, KEY_RPY_NED),
@@ -536,6 +543,10 @@ def validate_sensor_payload(topic: str, payload: Any) -> tuple[bool, list[str]]:
         if KEY_DEPTH_M in payload and not _is_number(payload[KEY_DEPTH_M]):
             errors.append("depth_m must be a number")
 
+    elif topic == Z_PATH_ALTITUDE:
+        if KEY_ALTITUDE_M in payload and not _is_number(payload[KEY_ALTITUDE_M]):
+            errors.append("altitude_m must be a number")
+
     elif topic == Z_PATH_MAGNETIC:
         if KEY_B_NED in payload and not _is_number_list(payload[KEY_B_NED], length=3):
             errors.append("B_ned must be list[3] of numbers")
@@ -545,6 +556,12 @@ def validate_sensor_payload(topic: str, payload: Any) -> tuple[bool, list[str]]:
     elif topic == Z_PATH_SONAR:
         if KEY_SONAR_BINS in payload and not _is_number_list(payload[KEY_SONAR_BINS]):
             errors.append("bins must be list of numbers")
+
+    elif topic == Z_PATH_FORWARD_SONAR:
+        if KEY_SLOPE in payload and not _is_number(payload[KEY_SLOPE]):
+            errors.append("slope must be a number")
+        if KEY_LOOKAHEAD_M in payload and not _is_number(payload[KEY_LOOKAHEAD_M]):
+            errors.append("lookahead_m must be a number")
 
     elif topic == Z_PATH_SEABED_CLOUD:
         if KEY_POINTS_NED in payload and not _is_point_list(payload[KEY_POINTS_NED]):
