@@ -626,9 +626,6 @@ class AUVBridgeNode(Node):
 
     def _build_degraded_payload(self, *, ts: float) -> dict[str, Any]:
         """构建降级安全包（上位机失联时使用）"""
-        # PC104 bench: even degraded zero-actuator packets must preserve
-        # configured protection parameters; clearing them to zero overwrites
-        # board-side shadow safety settings.
         return {
             KEY_FRAME_NUMBER: 0,
             KEY_OBJ_ADDRESS: self.protocol_obj_address,
@@ -641,15 +638,15 @@ class AUVBridgeNode(Node):
             KEY_BOTTOM: 0.0,
             KEY_SIDE_MOTOR_RPM: 0,
             KEY_ORIENTATION_DEG: 0.0,
-            KEY_DEPTH_PROTECT_PARAMS: self.default_remote_depth_protect_params,
-            KEY_BOTTOM_PROTECT_PARAMS: self.default_remote_bottom_protect_params,
-            KEY_PRESET_TIME_TENTHS_MIN: self.default_remote_preset_time_tenths_min,
+            KEY_DEPTH_PROTECT_PARAMS: (0, 0),
+            KEY_BOTTOM_PROTECT_PARAMS: (0, 0),
+            KEY_PRESET_TIME_TENTHS_MIN: 0,
             KEY_SPARE_PARAMS: (0, 0),
             KEY_PARAMETERS: (0,) * 12,
             KEY_TS: ts,
         }
 
-    def _zero_command_payload(self) -> dict[str, Any]:
+    def _zero_command_payload(self) -> dict[str, float]:
         """构造零控制输出，作为超时或空闲时的安全兜底。"""
         return {
             KEY_RIGHT: 0.0,
@@ -657,9 +654,6 @@ class AUVBridgeNode(Node):
             KEY_LEFT: 0.0,
             KEY_BOTTOM: 0.0,
             KEY_THRUST: 0.0,
-            KEY_DEPTH_PROTECT_PARAMS: self.default_remote_depth_protect_params,
-            KEY_BOTTOM_PROTECT_PARAMS: self.default_remote_bottom_protect_params,
-            KEY_PRESET_TIME_TENTHS_MIN: self.default_remote_preset_time_tenths_min,
             'ts': time.time(),
         }
 

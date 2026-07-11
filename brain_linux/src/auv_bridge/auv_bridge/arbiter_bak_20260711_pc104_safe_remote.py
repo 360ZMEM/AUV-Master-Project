@@ -77,20 +77,9 @@ class CommandArbiter:
     """
 
     def __init__(self, *, mpc_timeout_s: float = 0.5, default_obj_address: int = 1,
-                 pc_timeout_s: float = 1.5, pc_soft_warning_s: float = 1.0,
-                 default_depth_protect_params: tuple[int, int] = (0, 0),
-                 default_bottom_protect_params: tuple[int, int] = (0, 0),
-                 default_preset_time_tenths_min: int = 0) -> None:
+                 pc_timeout_s: float = 1.5, pc_soft_warning_s: float = 1.0) -> None:
         self.mpc_timeout_s = float(mpc_timeout_s)
         self.default_obj_address = int(default_obj_address)
-        # /**
-        #  * @brief PC104 空板实物联调可配置默认 remote 保护参数，避免 idle 包清零安全阈值。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        self.default_depth_protect_params = self._coerce_u16_pair(default_depth_protect_params)
-        self.default_bottom_protect_params = self._coerce_u16_pair(default_bottom_protect_params)
-        self.default_preset_time_tenths_min = max(0, min(65535, int(default_preset_time_tenths_min)))
         # 新增：分层超时机制（Tiered Watchdog）
         self.pc_timeout_s = float(pc_timeout_s)            # 1.5s Hard ESTOP
         self.pc_soft_warning_s = float(pc_soft_warning_s)  # 1.0s Soft Warning
@@ -210,15 +199,9 @@ class CommandArbiter:
                 KEY_BOTTOM: float(self._last_pc_raw.get(KEY_BOTTOM, 0.0)),
                 KEY_SIDE_MOTOR_RPM: int(self._last_pc_raw.get(KEY_SIDE_MOTOR_RPM, 0)),
                 KEY_ORIENTATION_DEG: float(self._last_pc_raw.get(KEY_ORIENTATION_DEG, 0.0)),
-                KEY_DEPTH_PROTECT_PARAMS: self._last_pc_raw.get(
-                    KEY_DEPTH_PROTECT_PARAMS, self.default_depth_protect_params
-                ),
-                KEY_BOTTOM_PROTECT_PARAMS: self._last_pc_raw.get(
-                    KEY_BOTTOM_PROTECT_PARAMS, self.default_bottom_protect_params
-                ),
-                KEY_PRESET_TIME_TENTHS_MIN: self._last_pc_raw.get(
-                    KEY_PRESET_TIME_TENTHS_MIN, self.default_preset_time_tenths_min
-                ),
+                KEY_DEPTH_PROTECT_PARAMS: self._last_pc_raw.get(KEY_DEPTH_PROTECT_PARAMS, (0, 0)),
+                KEY_BOTTOM_PROTECT_PARAMS: self._last_pc_raw.get(KEY_BOTTOM_PROTECT_PARAMS, (0, 0)),
+                KEY_PRESET_TIME_TENTHS_MIN: self._last_pc_raw.get(KEY_PRESET_TIME_TENTHS_MIN, 0),
                 KEY_SPARE_PARAMS: self._last_pc_raw.get(KEY_SPARE_PARAMS, (0, 0)),
                 KEY_PARAMETERS: self._last_pc_raw.get(KEY_PARAMETERS, (0,) * 12),
                 KEY_TS: self._last_pc_raw.get(KEY_TS, stamp),
@@ -295,24 +278,13 @@ class CommandArbiter:
             KEY_THRUST: 0.0,
             KEY_SIDE_MOTOR_RPM: 0,
             KEY_ORIENTATION_DEG: 0.0,
-            KEY_DEPTH_PROTECT_PARAMS: self.default_depth_protect_params,
-            KEY_BOTTOM_PROTECT_PARAMS: self.default_bottom_protect_params,
-            KEY_PRESET_TIME_TENTHS_MIN: self.default_preset_time_tenths_min,
+            KEY_DEPTH_PROTECT_PARAMS: (0, 0),
+            KEY_BOTTOM_PROTECT_PARAMS: (0, 0),
+            KEY_PRESET_TIME_TENTHS_MIN: 0,
             KEY_SPARE_PARAMS: (0, 0),
             KEY_PARAMETERS: (0,) * 12,
             KEY_TS: payload_ts,
         }
-
-    @staticmethod
-    def _coerce_u16_pair(value: Any) -> tuple[int, int]:
-        try:
-            first, second = value
-        except (TypeError, ValueError):
-            first, second = 0, 0
-        return (
-            max(0, min(65535, int(first))),
-            max(0, min(65535, int(second))),
-        )
 
     @staticmethod
     def _coerce_remote_payload(payload: dict[str, Any]) -> dict[str, Any]:

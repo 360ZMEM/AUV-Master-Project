@@ -1,0 +1,131 @@
+# PC104 real-hardware parameters for arbiter-enabled protocol_udp stack.
+#
+# Direct-link topology:
+#   host  192.168.0.11:21
+#   PC104 192.168.0.101:21
+#
+# This profile defaults to passive_mode for receive/topic smoke tests. Disable
+# passive_mode only after the zero-thrust UDP path and actuator safety state are
+# confirmed for the current bench setup.
+
+bridge:
+  backend: protocol_udp
+  passive_mode: true
+  command_publish_hz: 10.0
+  protocol_control_mode_byte: 238
+  protocol_work_instruction: 0
+  protocol_send_zero_on_idle: true
+  main_motor_rpm_scale: 15.0
+  downlink_cmd_key: rt/auv/control/cmd_vel
+  shadow_cmd_topic: /auv/bridge/shadow_cmd
+  shadow_telemetry_topic: /auv/bridge/shadow_telemetry
+  imu_key: rt/auv/sensors/imu
+  dvl_key: rt/auv/sensors/dvl
+  depth_key: rt/auv/sensors/depth
+  magnetic_key: rt/auv/sensors/magnetic
+  magnetic_extrinsics_status:
+    enabled: true
+    topic: /auv/sensors/magnetic_extrinsics_status
+    publish_period_s: 1.0
+    include_sim_position_hash: true
+  arbiter:
+    enabled: true
+    arbiter_status_topic: /auv/arbiter/status
+    sensor_status_topic: /auv/sensors/status
+    mpc_topic: /auv/control/mpc_cmd
+    pc_cmd_raw_key: rt/pc/cmd_raw
+    telemetry_key: rt/auv/telemetry
+    viz_internal_key: rt/auv/viz/internal
+    mpc_timeout_s: 0.5
+    guard_min_total_voltage_v: 47.0
+    guard_min_confidence: 0.5
+    guard_max_uplink_age_ms: 200.0
+  protocol_udp:
+    local_host: 0.0.0.0
+    local_port: 21
+    remote_host: 192.168.0.101
+    remote_port: 21
+    socket_timeout_s: 0.1
+    recv_buffer_size: 2048
+    obj_address: 1
+    main_motor_rpm_scale: 15.0
+    side_motor_rpm: 0
+    zenoh_side_channel_enabled: true
+
+sensor_extrinsics_estimated:
+  mag:
+    translation_b_m: [0.30001230153357483, 0.002987455375084699, -0.05274137855362218]
+    rotation_rpy_deg: [-0.04452959193786371, -0.02273353925858613, 1.950417672250177]
+
+metadata:
+  mag_extrinsics_source: results/mag_extrinsics/fullflow_20260705_2145/estimated_extrinsics.yaml
+
+controller:
+  control_rate_hz: 20.0
+  bypass_ekf: false
+  filtered_state_topic: /auv/state/filtered
+  raw_state_topic: /auv/state/raw_dr
+
+limits:
+  fin_deg_max: 30.0
+  thrust_min: -100.0
+  thrust_max: 100.0
+
+control:
+  target_u: 1.1
+  u0: 1.0
+  u_min: 0.6
+  feedforward_trim_deg: -1.5
+  attitude_guard:
+    enable: true
+    roll_deg_max: 120.0
+    pitch_deg_max: 45.0
+    recovery_target_pitch_deg: 0.0
+    recovery_thrust: 20.0
+  depth:
+    kp: 0.30
+    ki: 0.01
+    kd: 0.0
+    integral_limit: 4.0
+    target_pitch_deg_max: 15.0
+    target_pitch_rate_limit_deg_s: 8.0
+  pitch:
+    kp: 6.5
+    ki: 0.15
+    kd: 2.2
+    integral_limit: 45.0
+  yaw:
+    kp: 9.0
+    ki: 0.12
+    kd: 1.4
+    integral_limit: 45.0
+  speed:
+    kp: 28.0
+    ki: 1.4
+    kd: 3.0
+    integral_limit: 55.0
+    feedforward:
+      a: 2.497183
+      b: 27.729751
+      c: 0.546851
+
+ekf:
+  gravity: 9.81
+  sigma_acc: 0.08
+  sigma_gyro: 0.01
+  sigma_ba: 0.001
+  sigma_bg: 0.0005
+  sigma_dvl: 0.03
+  sigma_depth: 0.05
+  sigma_gps_xy: 0.5
+  imu_acc_is_linear: true
+  init_pos: [0.0, 0.0, 0.0]
+  init_vel: [0.0, 0.0, 0.0]
+  init_quat_wxyz: [1.0, 0.0, 0.0, 0.0]
+  init_ba: [0.0, 0.0, 0.0]
+  init_bg: [0.0, 0.0, 0.0]
+  init_P_diag: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+
+localization:
+  publish_raw_state: true
+  raw_state_topic: /auv/state/raw_dr

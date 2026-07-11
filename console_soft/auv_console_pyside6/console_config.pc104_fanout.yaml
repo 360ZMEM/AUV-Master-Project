@@ -1,0 +1,36 @@
+# AUV 上位机 PC104 fan-out 并发调试配置文件
+#
+# fan-out 是唯一绑定 192.168.0.11:21 的进程。
+# PySide6 只绑定本机高端口，避免与 ROS2 bridge 抢占 21/udp。
+
+zenoh:
+  router_ip: "127.0.0.1"
+  router_port: 7447
+  mode: "client"
+
+udp:
+  local_ip: "127.0.0.1"
+  local_port: 52366
+  amd_ip: "127.0.0.1"
+  amd_port: 52364
+
+packet:
+  obj_address: 1
+  work_mode: 1
+  depth_proprotect_param1: 500
+  depth_proprotect_param2: 29
+  bottom_proprotect_param1: 300
+  bottom_proprotect_param2: 200
+  preset_time: 10
+
+communication:
+  heartbeat_hz: 5.0
+  pc_timeout_s: 1.5
+  soft_warning_s: 1.0
+
+defaults:
+  work_mode: 1
+  target_depth_m: 5.0
+  track_distance_m: 500.0
+  task_timeout_s: 1200
+  mission_type: "CABLE_TRACKING"

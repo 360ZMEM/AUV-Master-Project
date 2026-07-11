@@ -6,7 +6,6 @@ Python/PySide6 implementation of C# Windows Forms AUV Console
 
 import sys
 import os
-import argparse
 
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
@@ -19,27 +18,8 @@ from src.threads.udp_receiver_thread import UDPReceiverThread
 from src.protocol.packet_builder import PacketBuilder
 
 
-def parse_app_args(argv):
-    # /**
-    #  * @brief 允许实物联调显式选择 console_config.pc104.yaml，默认启动路径保持不变。
-    #  * @date 2026-07-11
-    #  * @author 清华 AUV 课题组
-    #  */
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument(
-        "--config",
-        dest="config_file",
-        default=None,
-        help="Path to console YAML config, e.g. console_config.pc104.yaml",
-    )
-    return parser.parse_known_args(argv)
-
-
 def main():
     """Main application entry point"""
-    args, qt_args = parse_app_args(sys.argv[1:])
-    sys.argv = [sys.argv[0]] + qt_args
-
     # Enable high DPI scaling
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
@@ -51,7 +31,7 @@ def main():
     app.setOrganizationName("AUV Control System")
 
     # Create main window
-    main_window = MainWindow(config_file=args.config_file)
+    main_window = MainWindow()
     main_window.show()
 
     # Start UDP receiver thread

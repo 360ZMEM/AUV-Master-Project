@@ -1,0 +1,39 @@
+# AUV 上位机 PC104 直连配置文件 (console_config.pc104.yaml)
+# Direct-link topology: host 192.168.0.11 <-> PC104 192.168.0.101
+# 注意：local_port=21 需要 root 权限或放宽低端口绑定策略。
+zenoh:
+  router_ip: "127.0.0.1"
+  router_port: 7447
+  mode: "client"
+
+# UDP 直连 AMD (向后兼容，MANUAL 模式下使用)
+udp:
+  local_ip: "192.168.0.11"
+  amd_ip: "192.168.0.101"
+  amd_port: 21
+  local_port: 21
+
+# `$CKTH` packet overrides for the current burned PC104 image.
+# Vehicle_No was read back as 1 during Telnet HIL on 2026-07-11.
+packet:
+  obj_address: 1
+  work_mode: 1
+  depth_proprotect_param1: 500
+  depth_proprotect_param2: 29
+  bottom_proprotect_param1: 300
+  bottom_proprotect_param2: 200
+  preset_time: 10
+
+# 通信参数
+communication:
+  heartbeat_hz: 5.0       # 心跳频率 (5Hz = 200ms)
+  pc_timeout_s: 1.5       # 上位机失联超时 (秒)
+  soft_warning_s: 1.0     # 软警告阈值 (秒)
+
+# 默认工作参数
+defaults:
+  work_mode: 1              # 1=SEND_ONLY, 2=SEND_RETURN
+  target_depth_m: 5.0
+  track_distance_m: 500.0
+  task_timeout_s: 1200
+  mission_type: "CABLE_TRACKING"

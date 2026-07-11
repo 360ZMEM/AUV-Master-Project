@@ -13,7 +13,6 @@ from __future__ import annotations
 from auv_bridge.arbiter import CommandArbiter
 from common.enums import ArbiterMode, ArbiterSource, ControlModeByte, WorkInstruction
 from common.protocol import (
-    KEY_BOTTOM_PROTECT_PARAMS,
     KEY_BOTTOM,
     KEY_CONTROL_MODE_BYTE,
     KEY_DEPTH_PROTECT_PARAMS,
@@ -21,7 +20,6 @@ from common.protocol import (
     KEY_OBJ_ADDRESS,
     KEY_ORIENTATION_DEG,
     KEY_PARAMETERS,
-    KEY_PRESET_TIME_TENTHS_MIN,
     KEY_RIGHT,
     KEY_SIDE_MOTOR_RPM,
     KEY_THRUST,
@@ -224,25 +222,3 @@ def test_force_remote_rewrites_autonomous_request_to_remote() -> None:
     assert decision.command_payload[KEY_WORK_INSTRUCTION] == int(WorkInstruction.NONE)
     assert decision.command_payload[KEY_RIGHT] == 7.0
     assert decision.command_payload[KEY_THRUST] == 3.0
-
-
-def test_default_remote_payload_can_preserve_pc104_bench_safety_params() -> None:
-    arbiter = CommandArbiter(
-        mpc_timeout_s=0.5,
-        default_obj_address=1,
-        default_depth_protect_params=(500, 29),
-        default_bottom_protect_params=(300, 200),
-        default_preset_time_tenths_min=10,
-    )
-
-    decision = arbiter.decide(now=60.0)
-
-    assert decision.active_arbiter == ArbiterMode.REMOTE
-    assert decision.arbiter_source == ArbiterSource.NONE
-    assert decision.command_payload[KEY_OBJ_ADDRESS] == 1
-    assert decision.command_payload[KEY_CONTROL_MODE_BYTE] == int(ControlModeByte.REMOTE_CONTROL)
-    assert decision.command_payload[KEY_WORK_INSTRUCTION] == int(WorkInstruction.NONE)
-    assert decision.command_payload[KEY_DEPTH_PROTECT_PARAMS] == (500, 29)
-    assert decision.command_payload[KEY_BOTTOM_PROTECT_PARAMS] == (300, 200)
-    assert decision.command_payload[KEY_PRESET_TIME_TENTHS_MIN] == 10
-    assert decision.command_payload[KEY_THRUST] == 0.0

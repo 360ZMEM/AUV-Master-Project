@@ -1,0 +1,65 @@
+# PC104 fan-out profile for concurrent ROS2 + PySide6 debugging.
+#
+# Topology:
+#   PC104                 192.168.0.101:21
+#   fan-out real port     192.168.0.11:21
+#   fan-out cmd ingress   127.0.0.1:52364
+#   ROS2 local endpoint   127.0.0.1:52365
+#
+# The fan-out process is the only process that should bind the host 21/udp.
+
+bridge:
+  backend: protocol_udp
+  passive_mode: true
+  command_publish_hz: 10.0
+  protocol_control_mode_byte: 238
+  protocol_work_instruction: 0
+  protocol_send_zero_on_idle: true
+  main_motor_rpm_scale: 15.0
+  downlink_cmd_key: rt/auv/control/cmd_vel
+  shadow_cmd_topic: /auv/bridge/shadow_cmd
+  shadow_telemetry_topic: /auv/bridge/shadow_telemetry
+  imu_key: rt/auv/sensors/imu
+  dvl_key: rt/auv/sensors/dvl
+  depth_key: rt/auv/sensors/depth
+  magnetic_key: rt/auv/sensors/magnetic
+  magnetic_extrinsics_status:
+    enabled: true
+    topic: /auv/sensors/magnetic_extrinsics_status
+    publish_period_s: 1.0
+    include_sim_position_hash: true
+  arbiter:
+    enabled: true
+    arbiter_status_topic: /auv/arbiter/status
+    sensor_status_topic: /auv/sensors/status
+    mpc_topic: /auv/control/mpc_cmd
+    pc_cmd_raw_key: rt/pc/cmd_raw
+    telemetry_key: rt/auv/telemetry
+    viz_internal_key: rt/auv/viz/internal
+    mpc_timeout_s: 0.5
+    default_remote_payload:
+      depth_protect_params: [500, 29]
+      bottom_protect_params: [300, 200]
+      preset_time_tenths_min: 10
+    guard_min_total_voltage_v: 47.0
+    guard_min_confidence: 0.5
+    guard_max_uplink_age_ms: 200.0
+  protocol_udp:
+    local_host: 127.0.0.1
+    local_port: 52365
+    remote_host: 127.0.0.1
+    remote_port: 52364
+    socket_timeout_s: 0.1
+    recv_buffer_size: 2048
+    obj_address: 1
+    main_motor_rpm_scale: 15.0
+    side_motor_rpm: 0
+    zenoh_side_channel_enabled: true
+
+sensor_extrinsics_estimated:
+  mag:
+    translation_b_m: [0.0, 0.0, 0.0]
+    rotation_rpy_deg: [0.0, 0.0, 0.0]
+
+metadata:
+  profile: pc104_fanout

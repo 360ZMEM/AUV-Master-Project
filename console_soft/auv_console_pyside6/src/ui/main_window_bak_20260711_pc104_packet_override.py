@@ -500,41 +500,6 @@ class MainWindow(QMainWindow):
         )
         return port_config
 
-    def apply_console_packet_config(self, params: dict, console_cfg: dict):
-        # /**
-        #  * @brief 允许 PC104 profile 覆盖目标板号和工作模式，避免 legacy param.txt 误投帧。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        packet_cfg = console_cfg.get('packet', {}) if console_cfg else {}
-        if not packet_cfg:
-            return params
-
-        key_map = {
-            'obj_address': 'obj_address',
-            'work_mode': 'work_mode',
-            'depth_proprotect_param1': 'depth_proprotect_param1',
-            'depth_proprotect_param2': 'depth_proprotect_param2',
-            'bottom_proprotect_param1': 'bottom_proprotect_param1',
-            'bottom_proprotect_param2': 'bottom_proprotect_param2',
-            'preset_time': 'preset_time',
-            'spare_param1': 'spare_param1',
-            'spare_param2': 'spare_param2',
-            'return_longitude': 'return_longitude',
-            'return_latitude': 'return_latitude',
-        }
-        for yaml_key, param_key in key_map.items():
-            if yaml_key in packet_cfg:
-                params[param_key] = int(packet_cfg[yaml_key])
-
-        print(
-            "[config] Packet 配置覆盖: "
-            f"obj_address={params.get('obj_address')}, "
-            f"work_mode={params.get('work_mode')}, "
-            f"depth_para1={params.get('depth_proprotect_param1')}"
-        )
-        return params
-
     def create_bottom_control_bar(self) -> QWidget:
         """创建底部控制台 - 最高优先级操作区"""
         bar = QWidget()
@@ -819,7 +784,6 @@ class MainWindow(QMainWindow):
 
         # Load parameters
         params = self.config_manager.load_parameters()
-        params = self.apply_console_packet_config(params, console_cfg)
         self.preferences = Preferences(**params)
 
         # Update UI with parameters

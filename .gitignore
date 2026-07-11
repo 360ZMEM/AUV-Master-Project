@@ -54,3 +54,5 @@ docs_pdf/
 # docs/thesis
 # docs/real_delpoyment
 tmp/
+docs/real_experiment/
+# !docs/real_experiment/debug-pc104-telnet-udp.md

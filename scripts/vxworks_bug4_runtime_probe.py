@@ -81,6 +81,10 @@ class VxShell:
 
     def lkup(self, symbol: str) -> int | None:
         out = self.cmd(f'lkup "{symbol}"', wait=0.35)
+        for line in out.splitlines():
+            parts = line.split()
+            if len(parts) >= 2 and parts[0] == symbol and re.fullmatch(r"0x[0-9a-fA-F]+", parts[1]):
+                return int(parts[1], 16)
         matches = re.findall(r"0x[0-9a-fA-F]+", out)
         if not matches:
             return None
@@ -154,7 +158,7 @@ def _print_commands(symbols: dict[str, int | None], offsets: Offsets) -> None:
         print(f"  *(unsigned int*)0x{current + offsets.current_depth:x}=0x41200000  /* Current_Dep=10.0f */")
     if ui:
         print(f"  *(unsigned short*)0x{ui + offsets.ui_depth_para1:x}=5")
-        print(f"  *(short*)0x{ui + offsets.ui_motor1:x}=300")
+        print(f"  *(unsigned short*)0x{ui + offsets.ui_motor1:x}=300")
         print(f"  *(short*)0x{ui + offsets.ui_lh_angle:x}=-20")
         print(f"  *(short*)0x{ui + offsets.ui_rh_angle:x}=-20")
     print("  semGive(semEmergencyTask)")
@@ -227,7 +231,7 @@ def _shadow_override(sh: VxShell, symbols: dict[str, int | None], offsets: Offse
     print("\n[SHADOW] 运行时写 UI shadow, 再调用 Remote_Assignment(&Instruction_To_FMCU)")
     if channel:
         sh.write_u8(channel, 0x02)
-    sh.write_s16(ui + offsets.ui_motor1, 300)
+    sh.write_u16(ui + offsets.ui_motor1, 300)
     sh.write_s16(ui + offsets.ui_lh_angle, -20)
     sh.write_s16(ui + offsets.ui_rh_angle, -20)
     sh.cmd("Remote_Assignment(&Instruction_To_FMCU)", wait=0.45)
@@ -287,7 +291,7 @@ def _restore_runtime(sh: VxShell, symbols: dict[str, int | None], offsets: Offse
         if "ui_depth_para1" in snap:
             sh.write_u16(ui + offsets.ui_depth_para1, snap["ui_depth_para1"])
         if "ui_motor1" in snap:
-            sh.write_s16(ui + offsets.ui_motor1, snap["ui_motor1"])
+            sh.write_u16(ui + offsets.ui_motor1, snap["ui_motor1"] & 0xFFFF)
         if "ui_lh_angle" in snap:
             sh.write_s16(ui + offsets.ui_lh_angle, snap["ui_lh_angle"])
         if "ui_rh_angle" in snap:

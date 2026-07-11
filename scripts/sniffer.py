@@ -75,6 +75,7 @@ def main() -> int:
            按 Ctrl-C 或 SIGTERM 信号时会正常关闭 socket；包计数在信号处理前都会检查；
            ASCII 模式默认包含时间戳和源地址缩写，可用 --no-timestamp 禁用
     """
+    args = parse_args()
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((args.bind_host, args.bind_port))
 

@@ -184,21 +184,6 @@ class AUVBridgeNode(Node):
         self.shadow_telemetry_topic = str(self.get_parameter('shadow_telemetry_topic').value)
         protocol_udp_cfg = self.bridge_cfg.get('protocol_udp', {})
         self.protocol_obj_address = int(protocol_udp_cfg.get('obj_address', 1))
-        default_remote_cfg = dict(self.arbiter_cfg.get('default_remote_payload', {}) or {})
-        # /**
-        #  * @brief PC104 非 passive 短测前从 profile 注入安全默认保护参数。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        self.default_remote_depth_protect_params = self._coerce_int_pair(
-            default_remote_cfg.get('depth_protect_params', (0, 0))
-        )
-        self.default_remote_bottom_protect_params = self._coerce_int_pair(
-            default_remote_cfg.get('bottom_protect_params', (0, 0))
-        )
-        self.default_remote_preset_time_tenths_min = int(
-            default_remote_cfg.get('preset_time_tenths_min', 0)
-        )
 
         self.imu_pub = self.create_publisher(Imu, '/auv/sensors/imu', 10)
         self.dvl_pub = self.create_publisher(TwistStamped, '/auv/sensors/dvl', 10)
@@ -250,9 +235,6 @@ class AUVBridgeNode(Node):
                 default_obj_address=self.protocol_obj_address,
                 pc_timeout_s=float(self.arbiter_cfg.get('pc_timeout_s', 1.5)),
                 pc_soft_warning_s=float(self.arbiter_cfg.get('pc_soft_warning_s', 1.0)),
-                default_depth_protect_params=self.default_remote_depth_protect_params,
-                default_bottom_protect_params=self.default_remote_bottom_protect_params,
-                default_preset_time_tenths_min=self.default_remote_preset_time_tenths_min,
             )
             self.autonomy_guard = AutonomyGuard(
                 min_total_voltage_v=self.guard_min_total_voltage_v,
@@ -301,14 +283,6 @@ class AUVBridgeNode(Node):
             return [float(item) for item in value]
         except (TypeError, ValueError):
             return None
-
-    @staticmethod
-    def _coerce_int_pair(value: Any) -> tuple[int, int]:
-        try:
-            first, second = value
-        except (TypeError, ValueError):
-            first, second = 0, 0
-        return int(first), int(second)
 
     @staticmethod
     def _sensor_position_hash(value: Any, *, quantization_m: float = 0.01) -> str | None:
@@ -626,9 +600,6 @@ class AUVBridgeNode(Node):
 
     def _build_degraded_payload(self, *, ts: float) -> dict[str, Any]:
         """构建降级安全包（上位机失联时使用）"""
-        # PC104 bench: even degraded zero-actuator packets must preserve
-        # configured protection parameters; clearing them to zero overwrites
-        # board-side shadow safety settings.
         return {
             KEY_FRAME_NUMBER: 0,
             KEY_OBJ_ADDRESS: self.protocol_obj_address,
@@ -641,15 +612,15 @@ class AUVBridgeNode(Node):
             KEY_BOTTOM: 0.0,
             KEY_SIDE_MOTOR_RPM: 0,
             KEY_ORIENTATION_DEG: 0.0,
-            KEY_DEPTH_PROTECT_PARAMS: self.default_remote_depth_protect_params,
-            KEY_BOTTOM_PROTECT_PARAMS: self.default_remote_bottom_protect_params,
-            KEY_PRESET_TIME_TENTHS_MIN: self.default_remote_preset_time_tenths_min,
+            KEY_DEPTH_PROTECT_PARAMS: (0, 0),
+            KEY_BOTTOM_PROTECT_PARAMS: (0, 0),
+            KEY_PRESET_TIME_TENTHS_MIN: 0,
             KEY_SPARE_PARAMS: (0, 0),
             KEY_PARAMETERS: (0,) * 12,
             KEY_TS: ts,
         }
 
-    def _zero_command_payload(self) -> dict[str, Any]:
+    def _zero_command_payload(self) -> dict[str, float]:
         """构造零控制输出，作为超时或空闲时的安全兜底。"""
         return {
             KEY_RIGHT: 0.0,
@@ -657,9 +628,6 @@ class AUVBridgeNode(Node):
             KEY_LEFT: 0.0,
             KEY_BOTTOM: 0.0,
             KEY_THRUST: 0.0,
-            KEY_DEPTH_PROTECT_PARAMS: self.default_remote_depth_protect_params,
-            KEY_BOTTOM_PROTECT_PARAMS: self.default_remote_bottom_protect_params,
-            KEY_PRESET_TIME_TENTHS_MIN: self.default_remote_preset_time_tenths_min,
             'ts': time.time(),
         }
 

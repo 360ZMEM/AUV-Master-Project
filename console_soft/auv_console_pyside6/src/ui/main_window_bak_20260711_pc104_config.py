@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
     C# Reference: Form1.cs lines 1-2299
     """
 
-    def __init__(self, config_file=None):
+    def __init__(self):
         super().__init__()
 
         # Data structures
@@ -46,7 +46,6 @@ class MainWindow(QMainWindow):
         self.estop_locked = False                  # ESTOP 显式锁死标志
         self.last_command_ts = 0.0                 # 最后发送命令时间戳
         self.zenoh_router_ip = "127.0.0.1"         # Zenoh Router IP (从配置文件加载)
-        self.config_file_override = config_file    # 可选：实物联调用 YAML 配置文件
         self.config_path = None                    # 配置文件路径
         self.gps_queue = GPSQueue()
         self.dead_reckoning_queue = GPSQueue()
@@ -443,97 +442,18 @@ class MainWindow(QMainWindow):
         widget.setLayout(layout)
         return widget
 
-    def resolve_console_config_path(self) -> Path:
-        # /**
-        #  * @brief 支持 PC104 实物联调时显式选择独立 YAML，避免覆盖默认 mock 配置。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        config_root = Path(__file__).parent.parent.parent
-        if not self.config_file_override:
-            return config_root / "console_config.yaml"
-
-        config_file = Path(self.config_file_override).expanduser()
-        if config_file.is_absolute():
-            return config_file
-        return config_root / config_file
-
     def load_console_config(self) -> dict:
-        """加载上位机 YAML 配置文件，默认 console_config.yaml"""
+        """加载上位机配置文件 console_config.yaml"""
         try:
-            config_file = self.resolve_console_config_path()
+            config_file = Path(__file__).parent.parent.parent / "console_config.yaml"
             self.config_path = config_file
             if config_file.exists():
                 import yaml
                 with open(config_file, 'r', encoding='utf-8') as f:
-                    config = yaml.safe_load(f) or {}
-                print(f"[config] 已加载上位机配置: {config_file}")
-                return config
-            print(f"[config] 配置文件不存在: {config_file}")
+                    return yaml.safe_load(f) or {}
         except Exception as exc:
             print(f"[config] 加载配置文件失败: {exc}")
         return {}
-
-    def apply_console_udp_config(self, port_config: dict, console_cfg: dict):
-        # /**
-        #  * @brief 将 YAML 的 UDP 字段同步到真实通信端口配置，供 PC104 直连 profile 使用。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        udp_cfg = console_cfg.get('udp', {}) if console_cfg else {}
-        if not udp_cfg:
-            return port_config
-
-        if 'local_ip' in udp_cfg:
-            port_config['console_ip'] = str(udp_cfg['local_ip'])
-        if 'local_port' in udp_cfg:
-            port_config['console_port'] = int(udp_cfg['local_port'])
-        if 'amd_ip' in udp_cfg:
-            port_config['auv_ip'] = str(udp_cfg['amd_ip'])
-        if 'amd_port' in udp_cfg:
-            port_config['auv_port'] = int(udp_cfg['amd_port'])
-
-        print(
-            "[config] UDP 配置覆盖: "
-            f"{port_config['console_ip']}:{port_config['console_port']} -> "
-            f"{port_config['auv_ip']}:{port_config['auv_port']}"
-        )
-        return port_config
-
-    def apply_console_packet_config(self, params: dict, console_cfg: dict):
-        # /**
-        #  * @brief 允许 PC104 profile 覆盖目标板号和工作模式，避免 legacy param.txt 误投帧。
-        #  * @date 2026-07-11
-        #  * @author 清华 AUV 课题组
-        #  */
-        packet_cfg = console_cfg.get('packet', {}) if console_cfg else {}
-        if not packet_cfg:
-            return params
-
-        key_map = {
-            'obj_address': 'obj_address',
-            'work_mode': 'work_mode',
-            'depth_proprotect_param1': 'depth_proprotect_param1',
-            'depth_proprotect_param2': 'depth_proprotect_param2',
-            'bottom_proprotect_param1': 'bottom_proprotect_param1',
-            'bottom_proprotect_param2': 'bottom_proprotect_param2',
-            'preset_time': 'preset_time',
-            'spare_param1': 'spare_param1',
-            'spare_param2': 'spare_param2',
-            'return_longitude': 'return_longitude',
-            'return_latitude': 'return_latitude',
-        }
-        for yaml_key, param_key in key_map.items():
-            if yaml_key in packet_cfg:
-                params[param_key] = int(packet_cfg[yaml_key])
-
-        print(
-            "[config] Packet 配置覆盖: "
-            f"obj_address={params.get('obj_address')}, "
-            f"work_mode={params.get('work_mode')}, "
-            f"depth_para1={params.get('depth_proprotect_param1')}"
-        )
-        return params
 
     def create_bottom_control_bar(self) -> QWidget:
         """创建底部控制台 - 最高优先级操作区"""
@@ -813,13 +733,11 @@ class MainWindow(QMainWindow):
 
         # Load port configuration first (needed for both modes)
         port_config = self.config_manager.load_port_config()
-        port_config = self.apply_console_udp_config(port_config, console_cfg)
         port_config['zenoh_side_channel'] = self.config_manager.load_side_channel_config()
         self.comm_manager.initialize(port_config)
 
         # Load parameters
         params = self.config_manager.load_parameters()
-        params = self.apply_console_packet_config(params, console_cfg)
         self.preferences = Preferences(**params)
 
         # Update UI with parameters
