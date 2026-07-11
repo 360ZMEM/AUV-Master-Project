@@ -38,13 +38,17 @@ docs_old/
 # foxglove
 # foxglove_layout_project/
 CLAUDE.*
-.trae/
-
+# .trae/
+.trae/documents/old/
 # 三个附属文件夹
 标准文档/
 auv_console_python/
 VXworks程序/
 csd_vx6.8*
+!csd_vx6.8_lastest/
+csd_vx6.8_lastest/*.o
+csd_vx6.8_lastest/default/
+csd_vx6.8_lastest/XML/
 .auv_data/
 docs_pdf/
 # docs/thesis

@@ -16,7 +16,7 @@
 
 网络拓扑:
     PC (192.168.0.11) ──UDP:21──> VxWorks (192.168.0.101)
-    PC <──UDP:52365── VxWorks (上行状态帧)
+    PC <──UDP:21───── VxWorks (上行状态帧, 当前 docker compose 映射)
     PC <──UDP:52367── VxWorks (UdpLogger 日志)
 """
 
@@ -49,7 +49,7 @@ UPLINK_HEADER = b"$AUV\x91"
 VXWORKS_IP = "192.168.0.101"
 VXWORKS_PORT = 21
 LOG_PORT = 52367
-UPLINK_PORT = 52365
+UPLINK_PORT = 21
 
 
 # ---------------------------------------------------------------------------
@@ -182,9 +182,17 @@ def decode_sys_abnorm(value: int) -> list[str]:
 class UDPTransceiver:
     """管理与 VxWorks 的 UDP 通信。"""
 
-    def __init__(self, vxworks_ip: str = VXWORKS_IP, bind_ip: str = "0.0.0.0"):
+    def __init__(
+        self,
+        vxworks_ip: str = VXWORKS_IP,
+        bind_ip: str = "0.0.0.0",
+        uplink_port: int = UPLINK_PORT,
+        log_port: int = LOG_PORT,
+    ):
         self.vxworks_ip = vxworks_ip
         self.bind_ip = bind_ip
+        self.uplink_port = uplink_port
+        self.log_port = log_port
         self._frame_counter = 0
         self._last_uplink: UplinkStatus | None = None
         self._log_lines: list[str] = []
@@ -194,16 +202,16 @@ class UDPTransceiver:
         # 下行发送 socket (目标: VxWorks:21)
         self._tx_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        # 上行接收 socket (监听: 52365)
+        # 上行接收 socket (默认监听: 21/udp, 对齐当前 docker compose 端口映射)
         self._rx_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._rx_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._rx_sock.bind((bind_ip, UPLINK_PORT))
+        self._rx_sock.bind((bind_ip, uplink_port))
         self._rx_sock.settimeout(1.0)
 
-        # 日志接收 socket (监听: 52367)
+        # 日志接收 socket (默认监听: 52367/udp)
         self._log_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._log_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._log_sock.bind((bind_ip, LOG_PORT))
+        self._log_sock.bind((bind_ip, log_port))
         self._log_sock.settimeout(1.0)
 
     def start(self):
@@ -289,16 +297,40 @@ class UDPTransceiver:
 class VxWorksShell:
     """通过 telnet 连接 VxWorks shell 并执行命令。"""
 
-    def __init__(self, host: str, port: int = 23, timeout: float = 5.0):
+    def __init__(
+        self,
+        host: str,
+        port: int = 23,
+        username: str = "target",
+        password: str = "password",
+        timeout: float = 5.0,
+    ):
         self.host = host
         self.port = port
+        self.username = username
+        self.password = password
         self.timeout = timeout
         self._tn: telnetlib.Telnet | None = None
 
     def connect(self) -> bool:
         try:
             self._tn = telnetlib.Telnet(self.host, self.port, self.timeout)
-            self._tn.read_until(b"->", timeout=self.timeout)
+            banner = self._tn.read_until(b"->", timeout=1.0)
+            if b"->" in banner:
+                return True
+
+            # VxWorks telnetd may require username/password before shell prompt.
+            if b"login" in banner.lower() or b"username" in banner.lower():
+                self._tn.write((self.username + "\n").encode("ascii"))
+                banner += self._tn.read_until(b"assword", timeout=self.timeout)
+
+            if b"assword" in banner.lower():
+                self._tn.write((self.password + "\n").encode("ascii"))
+
+            shell_prompt = self._tn.read_until(b"->", timeout=self.timeout)
+            if b"->" not in shell_prompt:
+                print("  [ERROR] Telnet 已连接, 但未看到 VxWorks shell 提示符 '->'")
+                return False
             return True
         except Exception as e:
             print(f"  [ERROR] Telnet 连接失败: {e}")
@@ -923,7 +955,7 @@ def parse_args() -> argparse.Namespace:
 示例:
   python scripts/vxworks_safety_hil.py --mode auto-udp
   python scripts/vxworks_safety_hil.py --mode guided
-  python scripts/vxworks_safety_hil.py --mode telnet --host 192.168.0.101
+  python scripts/vxworks_safety_hil.py --mode telnet --host 192.168.0.101 --telnet-user target --telnet-password password
         """,
     )
     parser.add_argument(
@@ -943,10 +975,32 @@ def parse_args() -> argparse.Namespace:
         help="本地绑定地址 (默认: 0.0.0.0)",
     )
     parser.add_argument(
+        "--uplink-port",
+        type=int,
+        default=UPLINK_PORT,
+        help=f"$AUV 上行状态帧监听端口 (默认: {UPLINK_PORT}, 对齐 compose 的 21/udp)",
+    )
+    parser.add_argument(
+        "--log-port",
+        type=int,
+        default=LOG_PORT,
+        help=f"UdpLogger 日志监听端口 (默认: {LOG_PORT})",
+    )
+    parser.add_argument(
         "--telnet-port",
         type=int,
         default=23,
         help="Telnet 端口 (默认: 23)",
+    )
+    parser.add_argument(
+        "--telnet-user",
+        default="target",
+        help="Telnet 用户名 (默认: target)",
+    )
+    parser.add_argument(
+        "--telnet-password",
+        default="password",
+        help="Telnet 密码 (默认: password)",
     )
     return parser.parse_args()
 
@@ -961,18 +1015,28 @@ def main() -> int:
 
     # 初始化 UDP 收发
     try:
-        udp = UDPTransceiver(vxworks_ip=args.host, bind_ip=args.bind)
+        udp = UDPTransceiver(
+            vxworks_ip=args.host,
+            bind_ip=args.bind,
+            uplink_port=args.uplink_port,
+            log_port=args.log_port,
+        )
         udp.start()
     except OSError as e:
         print(f"[ERROR] UDP 初始化失败: {e}")
-        print("  提示: 确保端口 52365/52367 未被占用 (关闭其他 sniffer/log_receiver)")
+        print(f"  提示: 确保端口 {args.uplink_port}/{args.log_port} 未被占用 (关闭其他 sniffer/log_receiver)")
         return 1
 
     shell = None
 
     if args.mode == "telnet":
-        print(f"\n连接 Telnet: {args.host}:{args.telnet_port}...")
-        shell = VxWorksShell(args.host, args.telnet_port)
+        print(f"\n连接 Telnet: {args.host}:{args.telnet_port} (user={args.telnet_user})...")
+        shell = VxWorksShell(
+            args.host,
+            args.telnet_port,
+            username=args.telnet_user,
+            password=args.telnet_password,
+        )
         if not shell.connect():
             print("  Telnet 连接失败, 回退到 guided 模式")
             args.mode = "guided"

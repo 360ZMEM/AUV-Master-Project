@@ -1,0 +1,5 @@
+C:/WindRiver_6.8.3_x86/vxworks-6.8/target/config/BSP/KEY/vxbI8042Kbd.o
+../comDrv.o
+../canDrv.o
+../sjaDrv.o
+../mspCom.o
