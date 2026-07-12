@@ -1,6 +1,8 @@
 # AUV Master Project
 
-自主水下机器人（AUV）硕士研究项目。集成了仿真环境、ROS2 决策控制栈、上位机系统和可视化工具链，支持从纯仿真到实物测试的完整开发流程。
+自主水下机器人（AUV）硕士研究项目。集成了 PVS/HoloOcean 仿真、ROS2 决策控制栈、上位机系统和可视化工具链，支持从数字孪生、电缆巡检仿真到实物部署的完整开发流程。
+
+当前主线已在 **Jetson Orin NX 25W / 8 核** 上复核：PVS + `protocol_udp` + ROS2 brain stack + cable tracking + rosbag 链路可以运行，60 s smoke 生成约 59.4 s 有效 bag。
 
 ---
 
@@ -12,27 +14,48 @@
 git submodule update --init --recursive
 ```
 
-## 30 秒上手
+## Jetson 60 秒 Smoke
 
 ```bash
-cd scripts
-bash start_experiment.sh --sim-backend pvs --duration 120
+AUV_SKIP_BRAIN_BUILD=1 bash scripts/start_experiment.sh \
+  --preflight-clean \
+  --sim-backend pvs \
+  --bridge-backend protocol_udp \
+  --arbiter-profile \
+  --duration 60 \
+  --record-bag \
+  --bag-profile cable_acceptance \
+  --wait-before-record 8 \
+  --bag-finalize 15 \
+  --auto-activate \
+  --skip-layout \
+  --brain-arg enable_cable_tracking:=true \
+  --brain-arg enable_cable_mission_autostart:=true \
+  --brain-arg cable_tracking_config:=/home/auv_dev/AUV-Master-Project/brain_linux/config/cable_tracking.yaml
 ```
 
-这会启动一个 120 秒的 PVS 仿真实验，自动录制 rosbag，输出到 `$AUV_DATA_ROOT/bags/YYYYMMDD_HHMMSS/`。
+这会启动 PVS/protocol_udp 电缆巡检 smoke，自动录制 rosbag，输出到 `$AUV_DATA_ROOT/bags/YYYYMMDD_HHMMSS/`。
 
-分析数据：
+检查 bag：
+
 ```bash
-python tools/analyze_bag.py <bag路径>/*.mcap --output-dir ./figures
+source /opt/ros/humble/setup.bash
+ros2 bag info /auv_data/bags/<TS>/rosbag
 ```
 
-实时可视化：浏览器打开 Foxglove → 连接 `ws://localhost:8765`
+通过条件：`/auv/sensors/magnetic`、`/auv/cable/tracking`、`/auv/control/setpoint` 三类 topic 均有非零消息。
 
 ---
 
 ## 文档入口
 
 > **从这里开始 → [docs/INDEX.md](docs/INDEX.md)**
+
+仓库级接手入口：
+
+- [AGENTS.md](AGENTS.md) - AI/开发者协作协议、主线命令速记、禁止过度结论清单
+- [prompt.md](prompt.md) - 下一轮 AI 接手提示词
+- [docs/JETSON_DEPLOYMENT_CONTEXT.md](docs/JETSON_DEPLOYMENT_CONTEXT.md) - Jetson Orin NX 上的仿真电缆巡检、全链路仿真测试、依赖状态、性能结论和边界
 
 文档分为两条线：
 
@@ -102,14 +125,24 @@ start_experiment.sh            ← 顶层：实验录制入口
 ## 典型使用场景
 
 ```bash
-# PVS 快速实验（最轻量，推荐日常使用）
-bash scripts/start_experiment.sh --sim-backend pvs --duration 120
+# Jetson 本机可运行性 smoke（推荐先跑）
+AUV_SKIP_BRAIN_BUILD=1 bash scripts/start_experiment.sh \
+  --preflight-clean --sim-backend pvs --bridge-backend protocol_udp \
+  --arbiter-profile --duration 60 --record-bag --bag-profile cable_acceptance \
+  --wait-before-record 8 --bag-finalize 15 --auto-activate --skip-layout \
+  --brain-arg enable_cable_tracking:=true \
+  --brain-arg enable_cable_mission_autostart:=true \
+  --brain-arg cable_tracking_config:=/home/auv_dev/AUV-Master-Project/brain_linux/config/cable_tracking.yaml
 
-# HoloOcean 完整 3D 仿真
-bash scripts/start_experiment.sh --duration 120
+# PVS 快速实验
+bash scripts/start_experiment.sh --sim-backend pvs --duration 120
 
 # 模拟真机通信协议
 bash scripts/start_experiment.sh --sim-backend pvs --bridge-backend protocol_udp --arbiter-profile --duration 120
+
+# distorted-prior 闭环恢复（耗时，需先确认 smoke）
+bash scripts/run_cable_closedloop_distorted.sh
+bash scripts/score_cable_closedloop_recovery_runs.sh
 
 # 透明度三级基准测试
 bash scripts/run_transparency_level_benchmark.sh
@@ -124,6 +157,8 @@ python tests/benchmark_pid_vs_mpc.py
 python tools/offline_ekf_benchmark.py --input <bag>.mcap --output-dir ./results
 ```
 
+注意：当前 Jetson 环境未安装 `holoocean` 和 `casadi`。HoloOcean 3D 仿真、CasADi/MPC 相关路径需要单独补依赖后再宣称可运行。
+
 ---
 
 ## 主线配置文件（必须关心的 4 个）
@@ -137,17 +172,22 @@ python tools/offline_ekf_benchmark.py --input <bag>.mcap --output-dir ./results
 
 ---
 
-## 当前状态
+## Jetson 当前状态
 
 | 功能 | 状态 |
 |------|------|
-| PVS 轻量仿真 | 完成 |
-| HoloOcean 3D 仿真 | 完成 |
+| Jetson Orin NX 25W / 8 核 | 已确认 |
+| PVS 轻量仿真 | 可运行 |
+| PVS + protocol_udp 电缆巡检 smoke | 可运行；60 s bag 约 59.4 s 有效数据 |
+| `/auv/sensors/magnetic` side-channel | 可运行；最新 smoke 2704 条 |
+| `/auv/cable/tracking` | 可运行；最新 smoke 452 条 |
+| `/auv/control/setpoint` | 可运行；最新 smoke 891 条 |
+| HoloOcean 3D 仿真 | 当前 Jetson 缺 `holoocean`，未确认 |
 | Zenoh JSON 桥接 | 完成 |
 | Protocol UDP 桥接 | 完成 |
 | ROS2 决策栈 (5节点) | 完成 |
 | 级联 PID 控制器 | 完成 |
-| MPC 控制器 | 完成 |
+| MPC 控制器 | 代码存在；当前 Jetson 缺 `casadi`，相关路径需补依赖 |
 | ES-EKF 定位 | 完成 (RMSE 1.5m) |
 | 行为树决策 | 完成 |
 | 仲裁器安全机制 | 完成 |
@@ -155,6 +195,21 @@ python tools/offline_ekf_benchmark.py --input <bag>.mcap --output-dir ./results
 | 上位机 (PySide6) | 完成 |
 | Foxglove 可视化 | 完成 |
 | 真机部署 | 配置就绪，待实物对接 |
+
+### Jetson 性能结论
+
+最新 25W/8 核 smoke：
+
+| 指标 | 结果 |
+|---|---:|
+| 命令总墙钟 | 1m19.947s |
+| bag 时长 | 59.406705384s |
+| bag 消息数 | 21048 |
+| bag 大小 | 5.7 MiB |
+
+结论：业务段接近 1:1；第一次 20 s smoke 失败主要因为前序 `colcon build` 占用窗口，不是 PVS/cable tracking 依赖缺失。正式实验建议先完成构建，然后使用 `AUV_SKIP_BRAIN_BUILD=1`。
+
+CPU 余量仍偏紧。正式 benchmark 前建议关闭 Firefox/桌面可视化负载，并考虑禁用非必要 viz bridge。当前还存在一个收尾脚本问题：`start_foxglove_holoocean_ros.sh` cleanup 阶段可能报 `BRIDGE_PID: unbound variable`，不影响本次 bag 产物，但需要后续修复。
 
 ---
 

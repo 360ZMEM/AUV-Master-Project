@@ -8,6 +8,7 @@
 
 | 读者角色 | 起点 | 说明 |
 |----------|------|------|
+| **Jetson 新接手 / AI 协作** | [JETSON_DEPLOYMENT_CONTEXT.md](JETSON_DEPLOYMENT_CONTEXT.md) | Jetson Orin NX 主线、仿真电缆巡检、全链路仿真测试、依赖与性能边界 |
 | **新用户 / 实验操作者** | 明线 `user-guide/` | 了解系统由哪些模块构成、每个模块怎么用、前置条件和操作步骤 |
 | **开发者 / 维护者** | 暗线 `internals/` | 深入系统内部原理、数据流架构、各子系统协作机制 |
 

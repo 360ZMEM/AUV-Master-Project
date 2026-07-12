@@ -56,6 +56,28 @@ sudo apt-get install -y \
 | `nlohmann-json3-dev`              | JSON 处理库依赖                    |
 | `fonts-wqy-zenhei`                  | 中文字体，用于 matplotlib 图表显示 |
 
+Jetson Orin NX 实物调试和文档构建建议额外安装：
+
+```bash
+sudo apt-get install -y \
+    telnet \
+    expect \
+    tcpdump \
+    screen \
+    minicom \
+    jq \
+    pandoc \
+    wkhtmltopdf
+```
+
+| 包名 | 说明 |
+|---|---|
+| `telnet` / `expect` | VxWorks shell 手工连接和自动化 probe 辅助 |
+| `tcpdump` | PC104/fan-out UDP 链路现场抓包 |
+| `screen` / `minicom` | 串口和底层设备交互 |
+| `jq` | JSON 日志和配置快速检查 |
+| `pandoc` / `wkhtmltopdf` | `scripts/build_docs_pdf.sh` 文档 PDF 生成 |
+
 ### 3. 安装 Python 依赖
 
 **重要提示**: 使用系统 Python，避免使用 conda 环境！
@@ -93,6 +115,56 @@ which python3  # 应该输出 /usr/bin/python3
 | `pyserial`                   | Python 串口通信库，用于硬件设备连接                                         |
 | `configobj`                  | 配置文件解析库，支持嵌套配置结构                                            |
 | `scapy`                      | 网络数据包处理库，用于底层协议调试和网络分析                                 |
+
+Jetson 上若需要 MPC、磁探测扫参和视频/离线回放工具，建议全局安装到系统 Python，使普通用户和 `sudo /usr/bin/python3` 都可见：
+
+```bash
+sudo -H /usr/bin/python3 -m pip install \
+    "numpy==1.24.4" \
+    "casadi==3.7.2" \
+    "tqdm" \
+    "imageio" \
+    "moviepy==1.0.3" \
+    "rosbags" \
+    "openpyxl" \
+    "cffi"
+```
+
+| 包名 | 说明 |
+|---|---|
+| `casadi` | MPC / NMPC 求解和 `tools/mpc_*` 工具 |
+| `tqdm` | `AUV-Master-Mag` 扫参和可视化进度条 |
+| `imageio` / `moviepy` | 视频生成、GIF/MP4 回放和演示素材 |
+| `rosbags` | 非 ROS2 CLI 路径的 bag 读取支线工具 |
+| `openpyxl` | 表格导出和 Excel 兼容分析 |
+| `cffi` | 补齐 `pynacl` 等底层包的运行依赖 |
+
+版本约束说明：
+
+- Jetson Ubuntu 22.04 的 `scipy`、`pandas`、`matplotlib`、`cv2` 多数来自系统二进制包，不能让 pip 把全局 `numpy` 升到 2.x，否则会触发 NumPy 1.x/2.x ABI 不兼容。
+- `moviepy==1.0.3` 用于避免新版 `moviepy 2.x` 拉高到 `numpy>=1.25`。
+- `holoocean` 仍按官方安装流程单独处理，不建议混入 Jetson PVS 主线快速安装。
+
+如果 pip 报 `Temporary failure in name resolution`，优先检查 DNS，而不是反复换源：
+
+```bash
+resolvectl status
+getent hosts pypi.org
+getent hosts pypi.tuna.tsinghua.edu.cn
+
+# 临时修复示例，链路名按本机实际情况替换，例如 usb2
+sudo resolvectl dns usb2 223.5.5.5 8.8.8.8
+sudo resolvectl domain usb2 '~.'
+```
+
+可用 pip 源示例：
+
+```bash
+sudo -H /usr/bin/python3 -m pip install \
+  -i https://pypi.tuna.tsinghua.edu.cn/simple \
+  --trusted-host pypi.tuna.tsinghua.edu.cn \
+  "numpy==1.24.4" "moviepy==1.0.3"
+```
 
 
 ### 4. 设置 Foxglove SDK ROS 工作区
@@ -293,4 +365,3 @@ which ffmpeg
 安装完成后，继续阅读：
 
 - [第一次运行](03_first_run.md) - 启动第一个仿真
-
