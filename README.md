@@ -4,6 +4,14 @@
 
 ---
 
+## 子仓库
+
+下面的命令可以把磁场探测专属模块加入到仓库：
+
+```bash
+git submodule update --init --recursive
+```
+
 ## 30 秒上手
 
 ```bash
