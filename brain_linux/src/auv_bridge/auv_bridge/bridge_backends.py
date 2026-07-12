@@ -28,6 +28,56 @@ from common.protocol import (
 import time
 
 
+def _load_zenoh_session_mapping(raw: Any) -> dict[str, Any]:
+    """Normalize optional Zenoh session config from YAML or JSON text."""
+    if raw is None:
+        return {}
+    if isinstance(raw, dict):
+        return dict(raw)
+    if isinstance(raw, str) and raw.strip():
+        try:
+            parsed = json.loads(raw)
+        except Exception:
+            return {}
+        return dict(parsed) if isinstance(parsed, dict) else {}
+    return {}
+
+
+def _build_zenoh_session_config(*configs: dict[str, Any]) -> dict[str, Any]:
+    """Build explicit Zenoh router/client config while preserving peer defaults."""
+    session_cfg: dict[str, Any] = {}
+    router_ip = ""
+    router_port = 7447
+
+    for cfg in configs:
+        if not isinstance(cfg, dict):
+            continue
+        session_cfg.update(_load_zenoh_session_mapping(cfg.get('zenoh_session_json')))
+        session_cfg.update(_load_zenoh_session_mapping(cfg.get('zenoh_session_config')))
+
+        nested = cfg.get('zenoh')
+        if isinstance(nested, dict):
+            session_cfg.update(_load_zenoh_session_mapping(nested.get('session_json')))
+            session_cfg.update(_load_zenoh_session_mapping(nested.get('session_config')))
+            router_ip = str(nested.get('router_ip', router_ip) or router_ip)
+            router_port = int(nested.get('router_port', router_port))
+
+        router_ip = str(cfg.get('zenoh_router_ip', router_ip) or router_ip)
+        router_port = int(cfg.get('zenoh_router_port', router_port))
+
+    if router_ip and 'connect/endpoints' not in session_cfg:
+        session_cfg.setdefault('mode', 'client')
+        session_cfg['connect/endpoints'] = [f'tcp/{router_ip}:{router_port}']
+
+    return session_cfg
+
+
+def _apply_zenoh_session_config(zcfg: Any, session_cfg: dict[str, Any]) -> None:
+    """Apply a normalized session mapping to a zenoh.Config object."""
+    for key, value in session_cfg.items():
+        zcfg.insert_json5(str(key), json.dumps(value, ensure_ascii=False))
+
+
 class BaseBridgeBackend(ABC):
     """桥接后端抽象接口。
 
@@ -83,6 +133,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
         self._session = None
         self._subscribers = []
         self._publishers: dict[str, Any] = {}
+        self.zenoh_session_config = _build_zenoh_session_config(bridge_cfg)
 
     def open(self) -> None:
         """建立 Zenoh 会话并订阅仿真传感器主题。"""
@@ -92,6 +143,7 @@ class TopicBridgeBackend(BaseBridgeBackend):
             raise RuntimeError('zenoh python package is required for auv_bridge') from exc
 
         zcfg = zenoh.Config()
+        _apply_zenoh_session_config(zcfg, self.zenoh_session_config)
         self._session = zenoh.open(zcfg)
         self._publishers[self.cmd_key] = self._session.declare_publisher(self.cmd_key)
         self._subscribers.append(self._session.declare_subscriber(self.imu_key, self._make_cb(self.imu_key)))
@@ -184,6 +236,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
         self.side_motor_rpm = int(protocol_cfg.get('side_motor_rpm', 0))
         arbiter_cfg = bridge_cfg.get('arbiter', {})
         self.zenoh_side_channel_enabled = bool(protocol_cfg.get('zenoh_side_channel_enabled', False))
+        self.zenoh_session_config = _build_zenoh_session_config(bridge_cfg, protocol_cfg)
         self.pc_cmd_raw_key = str(arbiter_cfg.get('pc_cmd_raw_key', 'rt/pc/cmd_raw'))
         self.telemetry_key = str(arbiter_cfg.get('telemetry_key', 'rt/auv/telemetry'))
         self.viz_internal_key = str(arbiter_cfg.get('viz_internal_key', 'rt/auv/viz/internal'))
@@ -301,6 +354,7 @@ class ProtocolBridgeBackend(BaseBridgeBackend):
             return
 
         zcfg = zenoh.Config()
+        _apply_zenoh_session_config(zcfg, self.zenoh_session_config)
         self._session = zenoh.open(zcfg)
         self._subscribers.append(self._session.declare_subscriber(self.pc_cmd_raw_key, self._on_pc_raw_sample))
         self._subscribers.append(self._session.declare_subscriber(self.magnetic_key, self._on_magnetic_sample))

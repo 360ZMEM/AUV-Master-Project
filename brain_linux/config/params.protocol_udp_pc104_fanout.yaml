@@ -55,6 +55,12 @@ bridge:
     main_motor_rpm_scale: 15.0
     side_motor_rpm: 0
     zenoh_side_channel_enabled: true
+    # Explicit router/client topology for PC104 deployment. This keeps the
+    # side channel deterministic when a separated console PC joins via router.
+    zenoh_session_json:
+      mode: client
+      connect/endpoints:
+        - tcp/127.0.0.1:7447
 
 sensor_extrinsics_estimated:
   mag:

@@ -1,10 +1,17 @@
-# AUV 上位机 PC104 fan-out 并发调试配置文件
+# AUV 上位机 PC104 远端 fan-out 配置文件
 #
-# fan-out 是唯一绑定 192.168.0.11:21 的进程。
-# PySide6 只绑定本机高端口，避免与 ROS2 bridge 抢占 21/udp。
+# 拓扑:
+#   PC104                  192.168.0.101:21
+#   运行本仓库平台/fan-out   192.168.0.11:21, 52364/udp, 7447/tcp
+#   上位机 PC               192.168.0.12:52366
+#
+# 适用场景:
+#   PySide6 上位机运行在独立 PC，上位机不直接绑定 PC104 21/udp，
+#   而是经 192.168.0.11 上的 fan-out 收发 UDP，并经 Zenoh router
+#   获得完整自主/仲裁/任务语义功能。
 
 zenoh:
-  router_ip: "127.0.0.1"
+  router_ip: "192.168.0.11"
   router_port: 7447
   mode: "client"
   enabled: true
@@ -16,9 +23,9 @@ zenoh:
   subscribe_viz_internal: false
 
 udp:
-  local_ip: "127.0.0.1"
+  local_ip: "192.168.0.12"
   local_port: 52366
-  amd_ip: "127.0.0.1"
+  amd_ip: "192.168.0.11"
   amd_port: 52364
 
 packet:

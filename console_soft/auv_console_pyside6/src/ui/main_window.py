@@ -46,6 +46,7 @@ class MainWindow(QMainWindow):
         self.estop_locked = False                  # ESTOP 显式锁死标志
         self.last_command_ts = 0.0                 # 最后发送命令时间戳
         self.zenoh_router_ip = "127.0.0.1"         # Zenoh Router IP (从配置文件加载)
+        self.zenoh_router_port = 7447              # Zenoh Router Port (从配置文件加载)
         self.config_file_override = config_file    # 可选：实物联调用 YAML 配置文件
         self.config_path = None                    # 配置文件路径
         self.gps_queue = GPSQueue()
@@ -500,6 +501,44 @@ class MainWindow(QMainWindow):
         )
         return port_config
 
+    def apply_console_zenoh_config(self, side_channel_cfg: dict, console_cfg: dict):
+        # /**
+        #  * @brief 将 YAML 的 Zenoh 字段同步到 side channel 配置，支持上位机跨 PC 部署。
+        #  * @date 2026-07-12
+        #  * @author 清华 AUV 课题组
+        #  */
+        zenoh_cfg = console_cfg.get('zenoh', {}) if console_cfg else {}
+        if not zenoh_cfg:
+            return side_channel_cfg
+
+        updated = dict(side_channel_cfg)
+        for key in (
+            'enabled',
+            'pc_cmd_raw_key',
+            'telemetry_key',
+            'viz_internal_key',
+            'publish_cmd_raw',
+            'subscribe_bridge_telemetry',
+            'subscribe_viz_internal',
+        ):
+            if key in zenoh_cfg:
+                updated[key] = zenoh_cfg[key]
+
+        router_ip = str(zenoh_cfg.get('router_ip', self.zenoh_router_ip))
+        router_port = int(zenoh_cfg.get('router_port', self.zenoh_router_port))
+        session = dict(updated.get('session', {}) or {})
+        if router_ip:
+            session.setdefault('mode', str(zenoh_cfg.get('mode', 'client')))
+            session.setdefault('connect/endpoints', [f'tcp/{router_ip}:{router_port}'])
+        updated['session'] = session
+
+        print(
+            "[config] Zenoh 配置覆盖: "
+            f"enabled={updated.get('enabled')}, router={router_ip}:{router_port}, "
+            f"pc_cmd_raw_key={updated.get('pc_cmd_raw_key')}"
+        )
+        return updated
+
     def apply_console_packet_config(self, params: dict, console_cfg: dict):
         # /**
         #  * @brief 允许 PC104 profile 覆盖目标板号和工作模式，避免 legacy param.txt 误投帧。
@@ -801,6 +840,7 @@ class MainWindow(QMainWindow):
         if console_cfg:
             zenoh_cfg = console_cfg.get('zenoh', {})
             self.zenoh_router_ip = zenoh_cfg.get('router_ip', '127.0.0.1')
+            self.zenoh_router_port = int(zenoh_cfg.get('router_port', 7447))
             self.edit_zenoh_ip.setText(self.zenoh_router_ip)
             defaults = console_cfg.get('defaults', {})
             self.spin_target_depth.setValue(defaults.get('target_depth_m', 5.0))
@@ -814,7 +854,8 @@ class MainWindow(QMainWindow):
         # Load port configuration first (needed for both modes)
         port_config = self.config_manager.load_port_config()
         port_config = self.apply_console_udp_config(port_config, console_cfg)
-        port_config['zenoh_side_channel'] = self.config_manager.load_side_channel_config()
+        side_channel_cfg = self.config_manager.load_side_channel_config()
+        port_config['zenoh_side_channel'] = self.apply_console_zenoh_config(side_channel_cfg, console_cfg)
         self.comm_manager.initialize(port_config)
 
         # Load parameters
@@ -1518,11 +1559,11 @@ class MainWindow(QMainWindow):
             self.zenoh_router_ip = ip
             try:
                 # 尝试通过 side channel 连接到指定 IP
-                self.comm_manager.connect_zenoh_to_ip(ip)
-                self.lbl_zenoh_status.setText(f"状态: 已连接 ({ip})")
+                self.comm_manager.connect_zenoh_to_ip(ip, self.zenoh_router_port)
+                self.lbl_zenoh_status.setText(f"状态: 已连接 ({ip}:{self.zenoh_router_port})")
                 self.lbl_zenoh_status.setStyleSheet("color: #00cc66;")
                 self.btn_zenoh_connect.setText("断开 Zenoh")
-                self.append_message("链路", f"Zenoh 已连接到 {ip}:7447")
+                self.append_message("链路", f"Zenoh 已连接到 {ip}:{self.zenoh_router_port}")
                 self.status_bar.showMessage(f"Zenoh 已连接到 {ip}", 3000)
             except Exception as exc:
                 self.append_message("链路", f"Zenoh 连接失败: {exc}")
