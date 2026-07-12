@@ -1,0 +1,3 @@
+[submodule "AUV-Master-Mag"]
+	path = AUV-Master-Mag
+	url = https://github.com/360ZMEM/AUV-Master-Mag
