@@ -44,12 +44,14 @@ class Offsets:
     """Runtime offsets observed or derived for the current PC104 image."""
 
     current_mode: int = 0x02
+    current_work_cmd: int = 0x18
     current_depth: int = 0x34
     current_pitch: int = 0x6C
     current_dvl_velocity_kn: int = 0x7C
 
     ui_ctrl_mode: int = 0x07
     ui_depth_para1: int = 0x08
+    ui_work_cmd: int = 0x16
 
     dvl_bd_height: int = 0x18
     dvl_bd_check: int = 0x20
@@ -238,15 +240,23 @@ def _snapshot(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets) -> 
     if current:
         for key, off in (
             ("current_mode", offsets.current_mode),
+            ("current_work_cmd", offsets.current_work_cmd),
             ("current_depth", offsets.current_depth),
             ("current_pitch", offsets.current_pitch),
             ("current_dvl_velocity_kn", offsets.current_dvl_velocity_kn),
         ):
-            value = sh.read_u32(current + off) if key != "current_mode" else sh.read_u8(current + off)
+            if key in {"current_mode", "current_work_cmd"}:
+                value = sh.read_u8(current + off)
+            else:
+                value = sh.read_u32(current + off)
             if value is not None:
                 snap[key] = value
     if ui:
-        for key, off in (("ui_ctrl", offsets.ui_ctrl_mode), ("ui_para1", offsets.ui_depth_para1)):
+        for key, off in (
+            ("ui_ctrl", offsets.ui_ctrl_mode),
+            ("ui_para1", offsets.ui_depth_para1),
+            ("ui_work_cmd", offsets.ui_work_cmd),
+        ):
             value = sh.read_u16(ui + off) if key == "ui_para1" else sh.read_u8(ui + off)
             if value is not None:
                 snap[key] = value
@@ -268,8 +278,9 @@ def _restore(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets, snap
     if sys_abn and "sys" in snap:
         sh.write_u32(sys_abn, snap["sys"])
     if current:
-        if "current_mode" in snap:
-            sh.write_u8(current + offsets.current_mode, snap["current_mode"])
+        for key, off in (("current_mode", offsets.current_mode), ("current_work_cmd", offsets.current_work_cmd)):
+            if key in snap:
+                sh.write_u8(current + off, snap[key])
         for key, off in (
             ("current_depth", offsets.current_depth),
             ("current_pitch", offsets.current_pitch),
@@ -282,6 +293,8 @@ def _restore(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets, snap
             sh.write_u8(ui + offsets.ui_ctrl_mode, snap["ui_ctrl"])
         if "ui_para1" in snap:
             sh.write_u16(ui + offsets.ui_depth_para1, snap["ui_para1"])
+        if "ui_work_cmd" in snap:
+            sh.write_u8(ui + offsets.ui_work_cmd, snap["ui_work_cmd"])
     if dvl:
         if "dvl_height" in snap:
             sh.write_u32(dvl + offsets.dvl_bd_height, snap["dvl_height"])
@@ -300,7 +313,9 @@ def _prepare_common(sh: VxShell, symbols: dict[str, int | None], offsets: Offset
     current = _require(symbols, "Current_State")
     ui = _require(symbols, "UI_WIFI_Instruction")
     sh.write_u8(current + offsets.current_mode, 0xEE)
+    sh.write_u8(current + offsets.current_work_cmd, 0x00)
     sh.write_u8(ui + offsets.ui_ctrl_mode, 0xEE)
+    sh.write_u8(ui + offsets.ui_work_cmd, 0x00)
     sh.write_float(current + offsets.current_depth, 15.0)
     sh.write_float(current + offsets.current_pitch, 0.0)
     sh.write_float(current + offsets.current_dvl_velocity_kn, 3.0)
@@ -347,6 +362,7 @@ def _read_observables(
         print(
             "  Current_State:"
             f" mode={_fmt(sh.read_u8(current + offsets.current_mode))}"
+            f" work=0x{(sh.read_u8(current + offsets.current_work_cmd) or 0):02x}"
             f" dep={_fmt(sh.read_float(current + offsets.current_depth))}"
             f" pitch={_fmt(sh.read_float(current + offsets.current_pitch))}"
             f" dvl_kn={_fmt(sh.read_float(current + offsets.current_dvl_velocity_kn))}"
@@ -356,6 +372,7 @@ def _read_observables(
             "  UI_WIFI:"
             f" ctrl={_fmt(sh.read_u8(ui + offsets.ui_ctrl_mode))}"
             f" para1={_fmt(sh.read_u16(ui + offsets.ui_depth_para1))}"
+            f" work=0x{(sh.read_u8(ui + offsets.ui_work_cmd) or 0):02x}"
         )
     if ins:
         print(

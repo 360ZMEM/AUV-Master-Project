@@ -56,3 +56,4 @@ docs_pdf/
 tmp/
 docs/real_experiment/
 # !docs/real_experiment/debug-pc104-telnet-udp.md
+!docs/real_experiment/20260715_pc104_sync_and_vxworks_plan_update.md

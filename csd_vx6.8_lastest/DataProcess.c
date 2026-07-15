@@ -594,6 +594,21 @@ void Current_state(_Current_State *temp)
 		temp->Current_Cmd_State= Cmd_State_Judgement;
 		temp->Current_Sail_State= Sail_State_Judgement;
 		temp->Current_Sys_Abnorm_Inf= Sys_Abnorm_Inf_Judgement;
+		/**
+		 * @brief Mirror software depth-protection bits into the exported state snapshot.
+		 * @note  Runtime evidence shows the self-rescue execution chain can close while
+		 *        Sys_Abnorm_Inf_Judgement is observed as 0x00000000. Export the depth
+		 *        protection bits from the authoritative counters so UI/$AUV keeps the
+		 *        same software alarm semantics as EmergencyTask.
+		 */
+		if(Depth_Exceed_FromUI12_Depth_Para1 >= 10)
+		{
+			temp->Current_Sys_Abnorm_Inf |= 0x00000200;
+		}
+		if(Depth_Exceed_FromUI12_Depth_Para2 >= 10)
+		{
+			temp->Current_Sys_Abnorm_Inf |= 0x00000400;
+		}
 		temp->Current_Dev_Abnorm_Inf= Dev_Abnorm_Inf_Judgement;
 		temp->Current_BMS_Abnorm_Inf= BMS_Abnorm_Inf_Judgement;
 		temp->Current_Dev_Abnorm_Inf_Detail= Dev_Abnorm_Inf_Detail_Judgement;
@@ -2639,15 +2654,18 @@ void Unpack_Data_From_UI12_WIFI(u8 *temp_buf)
     }
 }
 
+static u8 g_remote_assignment_output_override = 0;
 
-
-
-
+void Remote_Assignment_Set_Output_Override(u8 enable)
+{
+	g_remote_assignment_output_override = enable;
+}
 
 void Remote_Assignment(_To_MCUFD *temp)
 {
 	char array[500] = {0};
 	char *ptr = array;
+	u8 preserve_existing_output = 0;
 	
 	
 	((*temp).McuFD_Msg_Num)++;
@@ -2675,76 +2693,92 @@ void Remote_Assignment(_To_MCUFD *temp)
 	if(Initialization_Flag == false)
 	{
 		strncpy((*temp).McuFD_Action_Cmd, "DZ", 2);			
-	}	
+	}
 
-	if(UI_Channel_Selection_Down == 0x01)
+	if(g_remote_assignment_output_override != 0)
 	{
-		(*temp).McuFD_Motor1_Set_Speed = UI_LORA_Instruction.FromUI12_Motor_Speed1;
+		/**
+		 * @brief Preserve already computed actuator outputs for one emergency send.
+		 * @note  EmergencyTask computes authoritative motor/rudder values first. The
+		 *        normal Remote_Assignment path rebuilds these fields from UI shadow
+		 *        commands, which overwrites self-rescue outputs. Consume the override
+		 *        flag once so regular remote packets keep their original behavior.
+		 */
+		preserve_existing_output = 1;
+		g_remote_assignment_output_override = 0;
 	}
-	if(UI_Channel_Selection_Down == 0x02)
-	{
-		(*temp).McuFD_Motor1_Set_Speed = UI_WIFI_Instruction.FromUI12_Motor_Speed1;
-	}	
-	
-	if(UI_Channel_Selection_Down == 0x01)
-	{
-		(*temp).McuFD_Motor2_Set_Speed = UI_LORA_Instruction.FromUI12_Motor_Speed2;
-	}
-	if(UI_Channel_Selection_Down == 0x02)
-	{
-		(*temp).McuFD_Motor2_Set_Speed = UI_WIFI_Instruction.FromUI12_Motor_Speed2;
-	}	
-		
-	if(UI_Channel_Selection_Down == 0x01)
-	{
-	    (*temp).McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location - (UI_LORA_Instruction.FromUI12_RCD_LH_Set_Rud_Angle) * 4096/360);		
-	}
-	if(UI_Channel_Selection_Down == 0x02)
-	{
-		(*temp).McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location - (UI_WIFI_Instruction.FromUI12_RCD_LH_Set_Rud_Angle) * 4096/360);
-	}	
-			
-	if(UI_Channel_Selection_Down == 0x01)
-	{
-	    (*temp).McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + (UI_LORA_Instruction.FromUI12_RCD_RH_Set_Rud_Angle) * 4096/360);
-	}
-	if(UI_Channel_Selection_Down == 0x02)
-	{
-		(*temp).McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + (UI_WIFI_Instruction.FromUI12_RCD_RH_Set_Rud_Angle) * 4096/360);
-	}	
-				
-	if(Course_Keep_Flag == false)
+
+	if(preserve_existing_output == 0)
 	{
 		if(UI_Channel_Selection_Down == 0x01)
 		{
-			(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (UI_LORA_Instruction.FromUI12_RCD_UV_Set_Rud_Angle) * 4096/360);
-			(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (UI_LORA_Instruction.FromUI12_RCD_LV_Set_Rud_Angle) * 4096/360);
-		}	
-		
+			(*temp).McuFD_Motor1_Set_Speed = UI_LORA_Instruction.FromUI12_Motor_Speed1;
+		}
 		if(UI_Channel_Selection_Down == 0x02)
 		{
-			(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (UI_WIFI_Instruction.FromUI12_RCD_UV_Set_Rud_Angle) * 4096/360);
-			(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (UI_WIFI_Instruction.FromUI12_RCD_LV_Set_Rud_Angle) * 4096/360);
-		}			
+			(*temp).McuFD_Motor1_Set_Speed = UI_WIFI_Instruction.FromUI12_Motor_Speed1;
+		}	
 		
-	}
-	
-	if(Course_Keep_Flag == true)
-	{
-		/*�Ա�*/
 		if(UI_Channel_Selection_Down == 0x01)
 		{
-			Course_set_angle = UI_LORA_Instruction.FromUI12_Set_Course;
+			(*temp).McuFD_Motor2_Set_Speed = UI_LORA_Instruction.FromUI12_Motor_Speed2;
+		}
+		if(UI_Channel_Selection_Down == 0x02)
+		{
+			(*temp).McuFD_Motor2_Set_Speed = UI_WIFI_Instruction.FromUI12_Motor_Speed2;
+		}	
+			
+		if(UI_Channel_Selection_Down == 0x01)
+		{
+		    (*temp).McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location - (UI_LORA_Instruction.FromUI12_RCD_LH_Set_Rud_Angle) * 4096/360);		
+		}
+		if(UI_Channel_Selection_Down == 0x02)
+		{
+			(*temp).McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location - (UI_WIFI_Instruction.FromUI12_RCD_LH_Set_Rud_Angle) * 4096/360);
+		}	
+				
+		if(UI_Channel_Selection_Down == 0x01)
+		{
+		    (*temp).McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + (UI_LORA_Instruction.FromUI12_RCD_RH_Set_Rud_Angle) * 4096/360);
+		}
+		if(UI_Channel_Selection_Down == 0x02)
+		{
+			(*temp).McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + (UI_WIFI_Instruction.FromUI12_RCD_RH_Set_Rud_Angle) * 4096/360);
+		}	
+					
+		if(Course_Keep_Flag == false)
+		{
+			if(UI_Channel_Selection_Down == 0x01)
+			{
+				(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (UI_LORA_Instruction.FromUI12_RCD_UV_Set_Rud_Angle) * 4096/360);
+				(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (UI_LORA_Instruction.FromUI12_RCD_LV_Set_Rud_Angle) * 4096/360);
+			}	
+			
+			if(UI_Channel_Selection_Down == 0x02)
+			{
+				(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (UI_WIFI_Instruction.FromUI12_RCD_UV_Set_Rud_Angle) * 4096/360);
+				(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (UI_WIFI_Instruction.FromUI12_RCD_LV_Set_Rud_Angle) * 4096/360);
+			}			
+			
 		}
 		
-		if(UI_Channel_Selection_Down == 0x02)
+		if(Course_Keep_Flag == true)
 		{
-			Course_set_angle = UI_WIFI_Instruction.FromUI12_Set_Course;
-		}	
-		Course_Keep_UV_Set_Rud_Angle=Course_Keep_Algorithm(Course_set_angle, Current_State.Current_IMU_Heading, IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[2]);/*Ԥ����д,Ҫ�޸�*/
-		Course_Keep_LV_Set_Rud_Angle=Course_Keep_Algorithm(Course_set_angle, Current_State.Current_IMU_Heading, IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[2]);/*Ԥ����д,Ҫ�޸�*/		
-		(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (Course_Keep_UV_Set_Rud_Angle) * 4096/360);
-		(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (Course_Keep_LV_Set_Rud_Angle) * 4096/360);
+			/*�Ա�*/
+			if(UI_Channel_Selection_Down == 0x01)
+			{
+				Course_set_angle = UI_LORA_Instruction.FromUI12_Set_Course;
+			}
+			
+			if(UI_Channel_Selection_Down == 0x02)
+			{
+				Course_set_angle = UI_WIFI_Instruction.FromUI12_Set_Course;
+			}	
+			Course_Keep_UV_Set_Rud_Angle=Course_Keep_Algorithm(Course_set_angle, Current_State.Current_IMU_Heading, IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[2]);/*Ԥ����д,Ҫ�޸�*/
+			Course_Keep_LV_Set_Rud_Angle=Course_Keep_Algorithm(Course_set_angle, Current_State.Current_IMU_Heading, IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[2]);/*Ԥ����д,Ҫ�޸�*/		
+			(*temp).McuFD_UV_Set_Rud_Location = (u16)(UV_Ref_Location - (Course_Keep_UV_Set_Rud_Angle) * 4096/360);
+			(*temp).McuFD_LV_Set_Rud_Location = (u16)(LV_Ref_Location + (Course_Keep_LV_Set_Rud_Angle) * 4096/360);
+		}
 	}	
 	
 				

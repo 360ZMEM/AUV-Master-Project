@@ -20,6 +20,18 @@ void EmergencyTask(void);
 void Emergency_Level1(void);
 void Emergency_Level2(void);
 void Emergency_Level3(void);
+extern void Remote_Assignment_Set_Output_Override(u8 enable);
+
+static void Emergency_Remote_Assignment(_To_MCUFD *temp)
+{
+	/**
+	 * @brief Send one emergency frame without letting Remote_Assignment rebuild outputs from UI shadow.
+	 * @note  This is used by software self-rescue paths whose actuator outputs are already computed in
+	 *        Instruction_To_FMCU and must not be overwritten by stale UI/LORA motor or rudder commands.
+	 */
+	Remote_Assignment_Set_Output_Override(1);
+	Remote_Assignment(temp);
+}
 
 
 u16 Not_Recv_From_WIFI_No = 0;
@@ -126,7 +138,7 @@ void EmergencyTask(void)
                         UI_LORA_Instruction.FromUI12_Motor_Speed1 = 300;
                         UI_LORA_Instruction.FromUI12_RCD_LH_Set_Rud_Angle = -20;
                         UI_LORA_Instruction.FromUI12_RCD_RH_Set_Rud_Angle = -20;
-	        	Remote_Assignment(&Instruction_To_FMCU);
+	        	Emergency_Remote_Assignment(&Instruction_To_FMCU);
 	        }
 	        
 	        /*�1�7�1�7�1�7�1�7�1�7�1�7�1�7�Ԅ1�7�1�7�7�2�1�7�1�7�1�7�1�7�1�7�1�71�1�7�1�7�1�7�1�7�1�7�1�7�1�7�1�7�0�5�1�7�1�7,�1�7�1�7�0�9�1�7�1�7*/
@@ -157,7 +169,7 @@ void EmergencyTask(void)
                         UI_LORA_Instruction.FromUI12_RCD_RH_Set_Rud_Angle = -20;
 	        	
 	        	EL_Power_Control(Power_ON);
-	        	Remote_Assignment(&Instruction_To_FMCU);
+	        	Emergency_Remote_Assignment(&Instruction_To_FMCU);
 	        }
 
 	        /**
@@ -1444,7 +1456,7 @@ void Pool_Safety_Check(void)
 		/* �����ϸ��� */
 		Instruction_To_FMCU.McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location + 20.0f * 4096/360);
 		Instruction_To_FMCU.McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location - 20.0f * 4096/360);
-		Remote_Assignment(&Instruction_To_FMCU);
+		Emergency_Remote_Assignment(&Instruction_To_FMCU);
 		Sys_Abnorm_Inf_Judgement |= 0x00008000;  /* Bit15: ˮ����ȳ��� */
 		return;
 	}
@@ -1454,7 +1466,7 @@ void Pool_Safety_Check(void)
 	{
 		Instruction_To_FMCU.McuFD_Motor1_Set_Speed = 0;
 		Instruction_To_FMCU.McuFD_Motor2_Set_Speed = 0;
-		Remote_Assignment(&Instruction_To_FMCU);
+		Emergency_Remote_Assignment(&Instruction_To_FMCU);
 		Sys_Abnorm_Inf_Judgement |= 0x00010000;  /* Bit16: ˮ��Pitch���� */
 		return;
 	}
@@ -1464,7 +1476,7 @@ void Pool_Safety_Check(void)
 	{
 		Instruction_To_FMCU.McuFD_Motor1_Set_Speed = 0;
 		Instruction_To_FMCU.McuFD_Motor2_Set_Speed = 0;
-		Remote_Assignment(&Instruction_To_FMCU);
+		Emergency_Remote_Assignment(&Instruction_To_FMCU);
 		Sys_Abnorm_Inf_Judgement |= 0x00020000;  /* Bit17: ˮ��Roll���� */
 		return;
 	}
@@ -1543,7 +1555,7 @@ void Seafloor_Grounding_Arbitration(void)
 				Instruction_To_FMCU.McuFD_LH_Set_Rud_Location = (u16)(LH_Ref_Location - safe_up_rudder * 4096/360);
 				Instruction_To_FMCU.McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + safe_up_rudder * 4096/360);
 				Instruction_To_FMCU.McuFD_Motor1_Set_Speed = 300;
-				Remote_Assignment(&Instruction_To_FMCU);
+				Emergency_Remote_Assignment(&Instruction_To_FMCU);
 			}
 		}
 		return;
@@ -1628,7 +1640,7 @@ void Seafloor_Grounding_Arbitration(void)
 		Instruction_To_FMCU.McuFD_RH_Set_Rud_Location = (u16)(RH_Ref_Location + pull_up_rudder * 4096/360);
 		
 		/* ����Ӱ��ģʽ����, ֱ�ӷ��� MCU */
-		Remote_Assignment(&Instruction_To_FMCU);
+		Emergency_Remote_Assignment(&Instruction_To_FMCU);
 	}
 	else
 	{

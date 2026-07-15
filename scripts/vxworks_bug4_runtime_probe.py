@@ -32,8 +32,10 @@ class Offsets:
     """Runtime offsets observed on the current PC104 image."""
 
     current_depth: int = 0x34
+    current_work_cmd: int = 0x18
     ui_ctrl_mode: int = 0x07
     ui_depth_para1: int = 0x08
+    ui_work_cmd: int = 0x16
     ui_motor1: int = 0x18
     ui_lh_angle: int = 0x1C
     ui_rh_angle: int = 0x1E
@@ -156,8 +158,10 @@ def _print_commands(symbols: dict[str, int | None], offsets: Offsets) -> None:
     to_mcu = symbols.get("to_MCU_buf")
     if current:
         print(f"  *(unsigned int*)0x{current + offsets.current_depth:x}=0x41200000  /* Current_Dep=10.0f */")
+        print(f"  *(unsigned char*)0x{current + offsets.current_work_cmd:x}=0  /* Current_Work_Cmd=0x00 */")
     if ui:
         print(f"  *(unsigned short*)0x{ui + offsets.ui_depth_para1:x}=5")
+        print(f"  *(unsigned char*)0x{ui + offsets.ui_work_cmd:x}=0  /* UI work_cmd=0x00 */")
         print(f"  *(unsigned short*)0x{ui + offsets.ui_motor1:x}=300")
         print(f"  *(short*)0x{ui + offsets.ui_lh_angle:x}=-20")
         print(f"  *(short*)0x{ui + offsets.ui_rh_angle:x}=-20")
@@ -185,9 +189,16 @@ def _read_observables(sh: VxShell, symbols: dict[str, int | None], offsets: Offs
             "  UI_WIFI shadow:"
             f" ctrl={_fmt(sh.read_u8(ui_addr + offsets.ui_ctrl_mode))}"
             f" depth_para1={_fmt(sh.read_u16(ui_addr + offsets.ui_depth_para1))}"
+            f" work_cmd=0x{(sh.read_u8(ui_addr + offsets.ui_work_cmd) or 0):02x}"
             f" motor1={_fmt(sh.read_s16(ui_addr + offsets.ui_motor1))}"
             f" lh_angle={_fmt(sh.read_s16(ui_addr + offsets.ui_lh_angle))}"
             f" rh_angle={_fmt(sh.read_s16(ui_addr + offsets.ui_rh_angle))}"
+        )
+    if current := symbols.get("Current_State"):
+        print(
+            "  Current_State:"
+            f" work_cmd=0x{(sh.read_u8(current + offsets.current_work_cmd) or 0):02x}"
+            f" depth={_fmt_hex(sh.read_u32(current + offsets.current_depth))}"
         )
 
     if ins_addr:
@@ -206,7 +217,43 @@ def _read_observables(sh: VxShell, symbols: dict[str, int | None], offsets: Offs
             print("  判定: final frame still contains Motor1=00000")
 
 
-def _trigger_bug4(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets, cycles: int, suspend: bool) -> None:
+def _read_cycle_summary(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets, idx: int, cycles: int) -> None:
+    sys_addr = symbols.get("Sys_Abnorm_Inf_Judgement")
+    ex_addr = symbols.get("Depth_Exceed_FromUI12_Depth_Para1")
+    ui_addr = symbols.get("UI_WIFI_Instruction")
+    current = symbols.get("Current_State")
+    to_mcu_addr = symbols.get("to_MCU_buf")
+
+    sys_val = sh.read_u32(sys_addr) if sys_addr else None
+    ex_val = sh.read_u16(ex_addr) if ex_addr else None
+    ui_work = sh.read_u8(ui_addr + offsets.ui_work_cmd) if ui_addr else None
+    cur_work = sh.read_u8(current + offsets.current_work_cmd) if current else None
+    tobuf = sh.read_string(to_mcu_addr, "TOBUF") if to_mcu_addr else ""
+
+    motor_hint = "NA"
+    if ",00300," in tobuf:
+        motor_hint = "00300"
+    elif ",00000," in tobuf:
+        motor_hint = "00000"
+
+    print(
+        f"  cycle {idx}/{cycles}:"
+        f" depth_exceed={_fmt(ex_val)}"
+        f" sys={_fmt_hex(sys_val)}"
+        f" ui_work=0x{(ui_work or 0):02x}"
+        f" current_work=0x{(cur_work or 0):02x}"
+        f" tobuf_motor1={motor_hint}"
+    )
+
+
+def _trigger_bug4(
+    sh: VxShell,
+    symbols: dict[str, int | None],
+    offsets: Offsets,
+    cycles: int,
+    suspend: bool,
+    observe_each_cycle: bool,
+) -> None:
     current = _require(symbols, "Current_State")
     ui = _require(symbols, "UI_WIFI_Instruction")
     ex = _require(symbols, "Depth_Exceed_FromUI12_Depth_Para1")
@@ -218,10 +265,15 @@ def _trigger_bug4(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets,
     print("\n[TRIGGER] 注入 Current_Dep=10.0, Depth_Para1=5, 连续触发 EmergencyTask")
     sh.write_u16(ex, 0)
     sh.write_u16(ui + offsets.ui_depth_para1, 5)
+    sh.write_u8(ui + offsets.ui_work_cmd, 0)
+    sh.write_u8(current + offsets.current_work_cmd, 0)
     sh.write_u32(current + offsets.current_depth, 0x41200000)
     for idx in range(cycles):
         sh.cmd("semGive(semEmergencyTask)", wait=0.18)
-        print(f"  semGive #{idx + 1}/{cycles}")
+        if observe_each_cycle:
+            _read_cycle_summary(sh, symbols, offsets, idx + 1, cycles)
+        else:
+            print(f"  semGive #{idx + 1}/{cycles}")
 
 
 def _shadow_override(sh: VxShell, symbols: dict[str, int | None], offsets: Offsets) -> None:
@@ -256,9 +308,13 @@ def _snapshot_runtime(sh: VxShell, symbols: dict[str, int | None], offsets: Offs
         value = sh.read_u32(current + offsets.current_depth)
         if value is not None:
             snap["current_depth_raw"] = value
+        value = sh.read_u8(current + offsets.current_work_cmd)
+        if value is not None:
+            snap["current_work_cmd"] = value
     if ui:
         fields = {
             "ui_depth_para1": sh.read_u16(ui + offsets.ui_depth_para1),
+            "ui_work_cmd": sh.read_u8(ui + offsets.ui_work_cmd),
             "ui_motor1": sh.read_s16(ui + offsets.ui_motor1),
             "ui_lh_angle": sh.read_s16(ui + offsets.ui_lh_angle),
             "ui_rh_angle": sh.read_s16(ui + offsets.ui_rh_angle),
@@ -287,9 +343,13 @@ def _restore_runtime(sh: VxShell, symbols: dict[str, int | None], offsets: Offse
     print("\n[CLEANUP] best-effort restore touched runtime values")
     if current and "current_depth_raw" in snap:
         sh.write_u32(current + offsets.current_depth, snap["current_depth_raw"])
+    if current and "current_work_cmd" in snap:
+        sh.write_u8(current + offsets.current_work_cmd, snap["current_work_cmd"])
     if ui:
         if "ui_depth_para1" in snap:
             sh.write_u16(ui + offsets.ui_depth_para1, snap["ui_depth_para1"])
+        if "ui_work_cmd" in snap:
+            sh.write_u8(ui + offsets.ui_work_cmd, snap["ui_work_cmd"])
         if "ui_motor1" in snap:
             sh.write_u16(ui + offsets.ui_motor1, snap["ui_motor1"] & 0xFFFF)
         if "ui_lh_angle" in snap:
@@ -317,9 +377,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--execute", action="store_true", help="Actually write runtime values and trigger semEmergencyTask")
     parser.add_argument("--no-suspend-main", action="store_true", help="Do not suspend MainCtrlTask during trigger-bug4")
+    parser.add_argument(
+        "--observe-each-cycle",
+        action="store_true",
+        help="Print a compact summary after each semGive while triggering BUG-4",
+    )
     parser.add_argument("--cycles", type=int, default=13, help="EmergencyTask trigger cycles for BUG-4")
     parser.add_argument("--current-depth-offset", type=lambda x: int(x, 0), default=Offsets.current_depth)
+    parser.add_argument("--current-work-cmd-offset", type=lambda x: int(x, 0), default=Offsets.current_work_cmd)
     parser.add_argument("--ui-depth-para1-offset", type=lambda x: int(x, 0), default=Offsets.ui_depth_para1)
+    parser.add_argument("--ui-work-cmd-offset", type=lambda x: int(x, 0), default=Offsets.ui_work_cmd)
     parser.add_argument("--ui-motor1-offset", type=lambda x: int(x, 0), default=Offsets.ui_motor1)
     parser.add_argument("--ui-lh-angle-offset", type=lambda x: int(x, 0), default=Offsets.ui_lh_angle)
     parser.add_argument("--ui-rh-angle-offset", type=lambda x: int(x, 0), default=Offsets.ui_rh_angle)
@@ -330,7 +397,9 @@ def main() -> int:
     args = parse_args()
     offsets = Offsets(
         current_depth=args.current_depth_offset,
+        current_work_cmd=args.current_work_cmd_offset,
         ui_depth_para1=args.ui_depth_para1_offset,
+        ui_work_cmd=args.ui_work_cmd_offset,
         ui_motor1=args.ui_motor1_offset,
         ui_lh_angle=args.ui_lh_angle_offset,
         ui_rh_angle=args.ui_rh_angle_offset,
@@ -364,7 +433,14 @@ def main() -> int:
         try:
             if args.probe in ("trigger-bug4", "both"):
                 main_suspended = not args.no_suspend_main
-                _trigger_bug4(sh, symbols, offsets, args.cycles, suspend=main_suspended)
+                _trigger_bug4(
+                    sh,
+                    symbols,
+                    offsets,
+                    args.cycles,
+                    suspend=main_suspended,
+                    observe_each_cycle=args.observe_each_cycle,
+                )
                 _read_observables(sh, symbols, offsets, "AFTER TRIGGER-BUG4")
 
             if args.probe in ("shadow-override", "both"):
