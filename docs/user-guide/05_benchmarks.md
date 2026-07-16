@@ -169,7 +169,7 @@ python tools/analyze_turning_convergence.py \
 | CEP50 (m) | 50% 圆概率误差 |
 | Max Drift (m) | 最大漂移量 |
 
-### 当前最终结果
+### 历史结果（`dvl_fixed_final`，⚠️ 不作学术结论）
 
 路径：`results/localization/dvl_fixed_final/`
 
@@ -179,7 +179,12 @@ python tools/analyze_turning_convergence.py \
 | Std EKF | **0.915 m** | 11.994 m | 0.790 m | 1.604 m |
 | ES-EKF | 0.949 m | 11.990 m | 0.833 m | 1.649 m |
 
-**结论**：DVL 坐标系修复后，EKF XY 精度达亚米级 (0.9m)，相比 Raw DR 改善 95%。
+> **⚠️ 负结果注记（禁止引入学位论文正文）**：本表**不可作为 ES-EKF/Std-EKF 优越性证据**，原因有三：
+> 1. **深度维彻底失败**：三种算法 Z RMSE 均约 12 m（深度维全崩），"XY 达亚米级"只是隐藏了深度维失败后的片面数字；
+> 2. **数据不同源、单 bag 无种子**：该 bag 与其余 Step（如 Step 3）不同源，无多种子统计，不满足可复算要求；
+> 3. **脚手架伪影**：巨大的 Raw DR XY 误差（17.7 m）与"改善 95%"来自三引擎初始化口径不一致（DR 用 truth 起点、ES-EKF 首帧自对齐并手动翻 Z）造成的系统性初始偏移伪影，而非真实性能差异。
+>
+> **可信结论请以公平口径重算为准**：统一三引擎初始化（同一 truth 起点、同一 frame、无首帧自对齐）后，8 场景×3 种子共 24 次运行的水平 RMSE 为 Raw DR $3.197$ m、Std EKF $3.196$ m、ES-EKF $3.200$ m，**三者统计等价**（水平不可观、绝对位置无量测项，属结构性可观性边界）；深度 RMSE 分别为 $0.025/0.110/0.203$ m，12 m 恒偏伪影已消除。见 `tools/run_tri_estimator_fair_benchmark.py` 与 `docs/thesis/figures/experiments/tri_estimator_fair/`。
 
 ### 依赖与注意事项
 

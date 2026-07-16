@@ -10,8 +10,10 @@ hairpins, and short-wavelength S-turns.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import math
+import statistics
 import sys
 import time
 from dataclasses import dataclass
@@ -23,30 +25,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-def _apply_zh_style() -> None:
-    """图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII。"""
-    import os
-    import matplotlib.font_manager as fm
-
-    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(zh_font):
-        fm.fontManager.addfont(zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
-    else:
-        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-    plt.rcParams["axes.unicode_minus"] = False
-    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 11})
-
-
-_apply_zh_style()
-
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from algorithm.auv_mpc_controller import AUVKinematicsModel, AUVMPCOptimizer  # noqa: E402
 from common.env_utils import get_output_dir  # noqa: E402
+from tools import thesis_plot_style as tps  # noqa: E402
+
+# 统一论文图样式（27 号文 P1-4：中文字体 / 黑白可辨 / 300 dpi）。import 时即生效。
+tps.apply_thesis_style()
 
 
 def wrap_angle(angle: float | np.ndarray) -> float | np.ndarray:
@@ -77,6 +64,59 @@ class MpcVariant:
     psi_band_deg: float
     min_thrust: float
     yaw_rate_gain: float
+
+
+@dataclass(frozen=True)
+class Disturbance:
+    """Per-run controlled perturbation for multi-seed statistics.
+
+    All three controllers in one seed share the same realisation, so the
+    comparison stays fair: the disturbance is an external condition, not a
+    controller-specific handicap. When ``seed is None`` every field is zero and
+    the plant is bit-for-bit identical to the deterministic ``n=1`` baseline,
+    which keeps the archived single-run figures/tables reproducible.
+
+    - ``current_x/current_y``: steady cross-flow (m/s) that preview control is
+      expected to reject, matching the thesis narrative on cross-flow rejection.
+    - ``lateral_offset``: initial lateral placement error (m) normal to the
+      path tangent at the start point.
+    - ``yaw_noise_std``: per-step white heading process noise (rad).
+    """
+
+    current_x: float = 0.0
+    current_y: float = 0.0
+    lateral_offset: float = 0.0
+    yaw_noise_std: float = 0.0
+
+    @property
+    def is_zero(self) -> bool:
+        return (
+            self.current_x == 0.0
+            and self.current_y == 0.0
+            and self.lateral_offset == 0.0
+            and self.yaw_noise_std == 0.0
+        )
+
+
+def sample_disturbance(rng: np.random.Generator | None) -> Disturbance:
+    """Draw a controlled disturbance; ``None`` rng yields the zero disturbance.
+
+    Magnitudes are deliberately modest so the closed loop stays inside the
+    kinematics envelope (max speed 1.8 m/s, yaw rate 12 deg/s): a cross-flow up
+    to ~0.15 m/s (~11% of the 1.35 m/s nominal speed), a start offset up to
+    ~0.8 m, and small heading jitter. The point is a repeatable spread across
+    seeds, not to break the loop.
+    """
+    if rng is None:
+        return Disturbance()
+    angle = rng.uniform(-math.pi, math.pi)
+    speed = rng.uniform(0.05, 0.15)
+    return Disturbance(
+        current_x=speed * math.cos(angle),
+        current_y=speed * math.sin(angle),
+        lateral_offset=rng.uniform(-0.8, 0.8),
+        yaw_noise_std=math.radians(rng.uniform(0.0, 1.5)),
+    )
 
 
 SCENARIOS = [
@@ -175,16 +215,29 @@ def sample_by_s(path: np.ndarray, s_values: np.ndarray, s_query: float) -> np.nd
     return np.asarray(cols, dtype=float)
 
 
-def plant_step(state: np.ndarray, psi_cmd: float, thrust_pct: float, dt: float, yaw_rate_gain: float = 8.0) -> np.ndarray:
+def plant_step(
+    state: np.ndarray,
+    psi_cmd: float,
+    thrust_pct: float,
+    dt: float,
+    yaw_rate_gain: float = 8.0,
+    disturbance: Disturbance | None = None,
+    rng: np.random.Generator | None = None,
+) -> np.ndarray:
     x, y, z, psi, u, w = state
     yaw_err = float(wrap_angle(psi_cmd - psi))
     r = np.clip(yaw_rate_gain * yaw_err, -math.radians(12.0), math.radians(12.0))
     thrust = max(0.0, float(thrust_pct))
     du = (thrust - 12.0 * u * abs(u)) / 50.0
     u_next = float(np.clip(u + dt * du, 0.25, 1.8))
+    if disturbance is not None and rng is not None and disturbance.yaw_noise_std > 0.0:
+        r += float(rng.normal(0.0, disturbance.yaw_noise_std)) / max(dt, 1e-6)
     psi_next = float(wrap_angle(psi + dt * r))
     x_next = x + dt * u_next * math.cos(psi_next)
     y_next = y + dt * u_next * math.sin(psi_next)
+    if disturbance is not None:
+        x_next += dt * disturbance.current_x
+        y_next += dt * disturbance.current_y
     return np.array([x_next, y_next, z, psi_next, u_next, w], dtype=float)
 
 
@@ -208,9 +261,26 @@ def path_metrics(states: np.ndarray, path: np.ndarray) -> dict[str, float]:
     }
 
 
-def run_pid_los(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> dict[str, object]:
+def initial_state(scenario: Scenario, path: np.ndarray, disturbance: Disturbance | None = None) -> np.ndarray:
+    """Start state at the path origin, optionally displaced normal to the tangent."""
+    psi0 = float(path[0, 3])
+    x0, y0 = float(path[0, 0]), float(path[0, 1])
+    if disturbance is not None and disturbance.lateral_offset != 0.0:
+        # Normal to the start tangent is (psi0 + pi/2).
+        x0 += -disturbance.lateral_offset * math.sin(psi0)
+        y0 += disturbance.lateral_offset * math.cos(psi0)
+    return np.array([x0, y0, 2.5, psi0, scenario.target_speed_mps, 0.0], dtype=float)
+
+
+def run_pid_los(
+    scenario: Scenario,
+    path: np.ndarray,
+    dt: float = 0.1,
+    disturbance: Disturbance | None = None,
+    rng: np.random.Generator | None = None,
+) -> dict[str, object]:
     s_values = cumulative_s(path)
-    state = np.array([path[0, 0], path[0, 1], 2.5, path[0, 3], scenario.target_speed_mps, 0.0], dtype=float)
+    state = initial_state(scenario, path, disturbance)
     idx = 0
     states = []
     psi_cmds = []
@@ -223,7 +293,7 @@ def run_pid_los(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> dict[s
         states.append(state.copy())
         psi_cmds.append(psi_cmd)
         thrusts.append(thrust)
-        state = plant_step(state, psi_cmd, thrust, dt)
+        state = plant_step(state, psi_cmd, thrust, dt, disturbance=disturbance, rng=rng)
     states_arr = np.asarray(states)
     metrics = path_metrics(states_arr, path)
     metrics.update(
@@ -232,15 +302,24 @@ def run_pid_los(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> dict[s
             "cmd_smoothness_deg2": float(np.var(np.rad2deg(np.unwrap(psi_cmds)))),
             "solve_success_rate": 1.0,
             "mean_solve_ms": 0.0,
+            "p50_solve_ms": 0.0,
+            "p95_solve_ms": 0.0,
+            "p99_solve_ms": 0.0,
             "max_solve_ms": 0.0,
         }
     )
     return {"states": states_arr, "psi_cmds": np.asarray(psi_cmds), "thrusts": np.asarray(thrusts), "metrics": metrics}
 
 
-def run_pid_yaw_only(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> dict[str, object]:
+def run_pid_yaw_only(
+    scenario: Scenario,
+    path: np.ndarray,
+    dt: float = 0.1,
+    disturbance: Disturbance | None = None,
+    rng: np.random.Generator | None = None,
+) -> dict[str, object]:
     """Yaw-only PID baseline: follows local tangent at fixed speed, no x/y preview."""
-    state = np.array([path[0, 0], path[0, 1], 2.5, path[0, 3], scenario.target_speed_mps, 0.0], dtype=float)
+    state = initial_state(scenario, path, disturbance)
     idx = 0
     states = []
     psi_cmds = []
@@ -252,7 +331,7 @@ def run_pid_yaw_only(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> d
         states.append(state.copy())
         psi_cmds.append(psi_cmd)
         thrusts.append(thrust)
-        state = plant_step(state, psi_cmd, thrust, dt)
+        state = plant_step(state, psi_cmd, thrust, dt, disturbance=disturbance, rng=rng)
     states_arr = np.asarray(states)
     metrics = path_metrics(states_arr, path)
     metrics.update(
@@ -261,6 +340,9 @@ def run_pid_yaw_only(scenario: Scenario, path: np.ndarray, dt: float = 0.1) -> d
             "cmd_smoothness_deg2": float(np.var(np.rad2deg(np.unwrap(psi_cmds)))),
             "solve_success_rate": 1.0,
             "mean_solve_ms": 0.0,
+            "p50_solve_ms": 0.0,
+            "p95_solve_ms": 0.0,
+            "p99_solve_ms": 0.0,
             "max_solve_ms": 0.0,
         }
     )
@@ -312,10 +394,17 @@ def build_optimizer(variant: MpcVariant) -> AUVMPCOptimizer:
     )
 
 
-def run_mpc(scenario: Scenario, path: np.ndarray, variant: MpcVariant, dt: float = 0.1) -> dict[str, object]:
+def run_mpc(
+    scenario: Scenario,
+    path: np.ndarray,
+    variant: MpcVariant,
+    dt: float = 0.1,
+    disturbance: Disturbance | None = None,
+    rng: np.random.Generator | None = None,
+) -> dict[str, object]:
     s_values = cumulative_s(path)
     optimizer = build_optimizer(variant)
-    state = np.array([path[0, 0], path[0, 1], 2.5, path[0, 3], scenario.target_speed_mps, 0.0], dtype=float)
+    state = initial_state(scenario, path, disturbance)
     idx = 0
     prev_u = None
     states = []
@@ -353,7 +442,7 @@ def run_mpc(scenario: Scenario, path: np.ndarray, variant: MpcVariant, dt: float
         states.append(state.copy())
         psi_cmds.append(psi_cmd)
         thrusts.append(thrust)
-        state = plant_step(state, psi_cmd, thrust, dt, yaw_rate_gain=variant.yaw_rate_gain)
+        state = plant_step(state, psi_cmd, thrust, dt, yaw_rate_gain=variant.yaw_rate_gain, disturbance=disturbance, rng=rng)
     states_arr = np.asarray(states)
     metrics = path_metrics(states_arr, path)
     success = [s in ("Solve_Succeeded", "Search_Direction_Becomes_Too_Small") for s in statuses]
@@ -363,6 +452,9 @@ def run_mpc(scenario: Scenario, path: np.ndarray, variant: MpcVariant, dt: float
             "cmd_smoothness_deg2": float(np.var(np.rad2deg(np.unwrap(psi_cmds)))),
             "solve_success_rate": float(np.mean(success)),
             "mean_solve_ms": float(np.mean(solve_ms)),
+            "p50_solve_ms": float(np.percentile(solve_ms, 50)) if solve_ms else 0.0,
+            "p95_solve_ms": float(np.percentile(solve_ms, 95)) if solve_ms else 0.0,
+            "p99_solve_ms": float(np.percentile(solve_ms, 99)) if solve_ms else 0.0,
             "max_solve_ms": float(np.max(solve_ms)),
         }
     )
@@ -381,9 +473,12 @@ def plot_case(output_dir: Path, scenario: Scenario, path: np.ndarray, pid: dict[
     mpc_states = mpc["states"]
     assert isinstance(pid_states, np.ndarray)
     assert isinstance(mpc_states, np.ndarray)
+    # 黑白可辨：参考路径黑虚线；PID/MPC 各取 line_style（线型+marker+色），去色仍可分。
+    pid_ls = tps.line_style(0)
+    mpc_ls = tps.line_style(1)
     axes[0].plot(path[:, 0], path[:, 1], "k--", linewidth=1.5, label="参考路径")
-    axes[0].plot(pid_states[:, 0], pid_states[:, 1], color="#c44e52", label="PID 仅艏向·定速")
-    axes[0].plot(mpc_states[:, 0], mpc_states[:, 1], color="#4c72b0", label=f"MPC {variant.name}")
+    axes[0].plot(pid_states[:, 0], pid_states[:, 1], markevery=25, label="PID 仅艏向·定速", **pid_ls)
+    axes[0].plot(mpc_states[:, 0], mpc_states[:, 1], markevery=25, label=f"MPC {variant.name}", **mpc_ls)
     axes[0].set_aspect("equal", adjustable="box")
     axes[0].set_title(f"{scenario.name}：x/y 路径跟踪")
     axes[0].set_xlabel("x（m）")
@@ -391,15 +486,15 @@ def plot_case(output_dir: Path, scenario: Scenario, path: np.ndarray, pid: dict[
     axes[0].grid(True, alpha=0.3)
     axes[0].legend()
 
-    axes[1].plot(np.rad2deg(np.unwrap(pid["psi_cmds"])), color="#c44e52", label="PID psi_cmd")
-    axes[1].plot(np.rad2deg(np.unwrap(mpc["psi_cmds"])), color="#4c72b0", label="MPC psi_cmd")
+    axes[1].plot(np.rad2deg(np.unwrap(pid["psi_cmds"])), markevery=25, label="PID psi_cmd", **pid_ls)
+    axes[1].plot(np.rad2deg(np.unwrap(mpc["psi_cmds"])), markevery=25, label="MPC psi_cmd", **mpc_ls)
     axes[1].set_title("制导艏向指令")
     axes[1].set_xlabel("步")
     axes[1].set_ylabel("艏向指令（deg）")
     axes[1].grid(True, alpha=0.3)
     axes[1].legend()
     fig.tight_layout()
-    fig.savefig(output_dir / f"{scenario.name}_{variant.name}.png", dpi=180)
+    tps.save_figure(fig, output_dir / f"{scenario.name}_{variant.name}")
     plt.close(fig)
 
 
@@ -424,9 +519,13 @@ def safe_reduction_pct(baseline: float, value: float, eps: float = 0.5, cap_pct:
     return reduction
 
 
-def main() -> int:
-    out = get_output_dir("results/control/mpc_xy_yaw_extreme")
-    out.mkdir(parents=True, exist_ok=True)
+def run_deterministic_pass(out: Path) -> dict[str, tuple[MpcVariant, dict[str, object], dict[str, object]]]:
+    """Original deterministic ``n=1`` benchmark. Bit-identical to the archived run.
+
+    Returns the per-scenario frozen best variant (plus its MPC/PID results) so a
+    subsequent multi-seed pass can reuse the same variant selection instead of
+    re-cherry-picking a variant per seed.
+    """
     figures = out / "figures"
     figures.mkdir(parents=True, exist_ok=True)
 
@@ -508,6 +607,9 @@ def main() -> int:
             "yaw_rmse_reduction_vs_los_pct",
             "mpc_success_rate",
             "mpc_mean_solve_ms",
+            "mpc_p50_solve_ms",
+            "mpc_p95_solve_ms",
+            "mpc_p99_solve_ms",
             "mpc_max_solve_ms",
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -545,6 +647,9 @@ def main() -> int:
                     ),
                     "mpc_success_rate": mm["solve_success_rate"],
                     "mpc_mean_solve_ms": mm["mean_solve_ms"],
+                    "mpc_p50_solve_ms": mm["p50_solve_ms"],
+                    "mpc_p95_solve_ms": mm["p95_solve_ms"],
+                    "mpc_p99_solve_ms": mm["p99_solve_ms"],
                     "mpc_max_solve_ms": mm["max_solve_ms"],
                 }
             )
@@ -552,6 +657,201 @@ def main() -> int:
     print(f"[OK] output: {out}")
     print(f"[OK] summary: {summary_csv}")
     print(f"[OK] comparison: {comparison_csv}")
+    return best_by_scenario
+
+
+# Dedicated offset so the heading-noise stream is reproducible AND identical for
+# all three controllers within one seed (fair comparison), while independent of
+# the disturbance-parameter draw.
+_NOISE_STREAM_OFFSET = 100_003
+
+
+def run_multiseed(
+    out: Path,
+    seeds: list[int],
+    best_by_scenario: dict[str, tuple[MpcVariant, dict[str, object], dict[str, object]]],
+) -> None:
+    """Multi-seed statistical pass under controlled cross-flow + offset + jitter.
+
+    The MPC variant per scenario is frozen to the deterministic best (no per-seed
+    cherry-picking). Each seed draws one disturbance realisation shared by all
+    three controllers, and all three run on an identical heading-noise stream.
+    Aggregates mean/std of lateral and yaw RMSE across seeds.
+    """
+    raw_rows: list[dict[str, object]] = []
+    per_key: dict[tuple[str, str], dict[str, list[float]]] = {}
+
+    for scenario in SCENARIOS:
+        path = make_path(scenario)
+        frozen_variant = best_by_scenario[scenario.name][0]
+        for seed in seeds:
+            param_rng = np.random.default_rng(seed)
+            dist = sample_disturbance(param_rng)
+
+            def noise_rng() -> np.random.Generator:
+                return np.random.default_rng(seed + _NOISE_STREAM_OFFSET)
+
+            controllers = {
+                "pid_yaw_only_fixed_speed": run_pid_yaw_only(scenario, path, disturbance=dist, rng=noise_rng()),
+                "pid_los_fixed_speed": run_pid_los(scenario, path, disturbance=dist, rng=noise_rng()),
+                "mpc_preview_speed": run_mpc(scenario, path, frozen_variant, disturbance=dist, rng=noise_rng()),
+            }
+            print(f"[SEED {seed}] {scenario.name} / mpc={frozen_variant.name}", flush=True)
+            for controller, result in controllers.items():
+                m = result["metrics"]
+                assert isinstance(m, dict)
+                raw_rows.append(
+                    {
+                        "scenario": scenario.name,
+                        "controller": controller,
+                        "variant": frozen_variant.name if controller == "mpc_preview_speed" else "baseline",
+                        "seed": seed,
+                        "lateral_rmse_m": m["lateral_rmse_m"],
+                        "lateral_p95_m": m["lateral_p95_m"],
+                        "yaw_rmse_deg": m["yaw_rmse_deg"],
+                        "solve_success_rate": m["solve_success_rate"],
+                        "mean_solve_ms": m["mean_solve_ms"],
+                        "p50_solve_ms": m["p50_solve_ms"],
+                        "p95_solve_ms": m["p95_solve_ms"],
+                        "p99_solve_ms": m["p99_solve_ms"],
+                        "max_solve_ms": m["max_solve_ms"],
+                        "current_x_mps": dist.current_x,
+                        "current_y_mps": dist.current_y,
+                        "lateral_offset_m": dist.lateral_offset,
+                        "yaw_noise_std_deg": math.degrees(dist.yaw_noise_std),
+                    }
+                )
+                bucket = per_key.setdefault(
+                    (scenario.name, controller),
+                    {"lateral_rmse_m": [], "yaw_rmse_deg": [],
+                     "p50_solve_ms": [], "p95_solve_ms": [], "p99_solve_ms": []},
+                )
+                bucket["lateral_rmse_m"].append(float(m["lateral_rmse_m"]))
+                bucket["yaw_rmse_deg"].append(float(m["yaw_rmse_deg"]))
+                bucket["p50_solve_ms"].append(float(m["p50_solve_ms"]))
+                bucket["p95_solve_ms"].append(float(m["p95_solve_ms"]))
+                bucket["p99_solve_ms"].append(float(m["p99_solve_ms"]))
+
+    raw_csv = out / "multiseed_raw.csv"
+    with raw_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "scenario",
+                "controller",
+                "variant",
+                "seed",
+                "lateral_rmse_m",
+                "lateral_p95_m",
+                "yaw_rmse_deg",
+                "solve_success_rate",
+                "mean_solve_ms",
+                "p50_solve_ms",
+                "p95_solve_ms",
+                "p99_solve_ms",
+                "max_solve_ms",
+                "current_x_mps",
+                "current_y_mps",
+                "lateral_offset_m",
+                "yaw_noise_std_deg",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(raw_rows)
+
+    def _stats(values: list[float]) -> tuple[float, float]:
+        mean = statistics.fmean(values)
+        std = statistics.stdev(values) if len(values) > 1 else 0.0
+        return mean, std
+
+    summary_csv = out / "multiseed_summary.csv"
+    with summary_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "scenario",
+                "controller",
+                "n_seeds",
+                "lateral_rmse_mean_m",
+                "lateral_rmse_std_m",
+                "yaw_rmse_mean_deg",
+                "yaw_rmse_std_deg",
+                "p50_solve_ms_mean",
+                "p50_solve_ms_std",
+                "p95_solve_ms_mean",
+                "p95_solve_ms_std",
+                "p99_solve_ms_mean",
+                "p99_solve_ms_std",
+            ],
+        )
+        writer.writeheader()
+        for scenario in SCENARIOS:
+            for controller in ("pid_yaw_only_fixed_speed", "pid_los_fixed_speed", "mpc_preview_speed"):
+                bucket = per_key[(scenario.name, controller)]
+                lat_mean, lat_std = _stats(bucket["lateral_rmse_m"])
+                yaw_mean, yaw_std = _stats(bucket["yaw_rmse_deg"])
+                p50_mean, p50_std = _stats(bucket["p50_solve_ms"])
+                p95_mean, p95_std = _stats(bucket["p95_solve_ms"])
+                p99_mean, p99_std = _stats(bucket["p99_solve_ms"])
+                writer.writerow(
+                    {
+                        "scenario": scenario.name,
+                        "controller": controller,
+                        "n_seeds": len(bucket["lateral_rmse_m"]),
+                        "lateral_rmse_mean_m": round(lat_mean, 4),
+                        "lateral_rmse_std_m": round(lat_std, 4),
+                        "yaw_rmse_mean_deg": round(yaw_mean, 4),
+                        "yaw_rmse_std_deg": round(yaw_std, 4),
+                        "p50_solve_ms_mean": round(p50_mean, 4),
+                        "p50_solve_ms_std": round(p50_std, 4),
+                        "p95_solve_ms_mean": round(p95_mean, 4),
+                        "p95_solve_ms_std": round(p95_std, 4),
+                        "p99_solve_ms_mean": round(p99_mean, 4),
+                        "p99_solve_ms_std": round(p99_std, 4),
+                    }
+                )
+
+    # Console digest: MPC vs the two baselines, mean +/- std of lateral RMSE.
+    print("\n[MULTISEED] lateral RMSE mean +/- std (m) over "
+          f"{len(seeds)} seeds; MPC variant frozen per scenario")
+    for scenario in SCENARIOS:
+        pid = per_key[(scenario.name, "pid_yaw_only_fixed_speed")]["lateral_rmse_m"]
+        los = per_key[(scenario.name, "pid_los_fixed_speed")]["lateral_rmse_m"]
+        mpc = per_key[(scenario.name, "mpc_preview_speed")]["lateral_rmse_m"]
+        pm, ps = _stats(pid)
+        lm, ls = _stats(los)
+        mm, ms = _stats(mpc)
+        print(f"  {scenario.name:20s} pid={pm:6.3f}+/-{ps:5.3f}  "
+              f"los={lm:6.3f}+/-{ls:5.3f}  mpc={mm:6.3f}+/-{ms:5.3f}")
+    print(f"[OK] multiseed raw: {raw_csv}")
+    print(f"[OK] multiseed summary: {summary_csv}")
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--seeds",
+        type=str,
+        default="",
+        help=(
+            "Comma-separated integer seeds enabling the multi-seed statistical pass "
+            "under controlled cross-flow/offset/heading-jitter. Omit for the "
+            "bit-identical deterministic n=1 benchmark."
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    out = get_output_dir("results/control/mpc_xy_yaw_extreme")
+    out.mkdir(parents=True, exist_ok=True)
+
+    best_by_scenario = run_deterministic_pass(out)
+
+    seeds = [int(s) for s in args.seeds.split(",") if s.strip()]
+    if seeds:
+        run_multiseed(out, seeds, best_by_scenario)
     return 0
 
 

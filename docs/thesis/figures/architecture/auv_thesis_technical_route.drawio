@@ -1,54 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2026-08-06T00:00:00.000Z" agent="draw.io" version="30.3.14">
-  <diagram id="thesis-technical-route" name="Page-1">
-    <mxGraphModel dx="1440" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1440" pageHeight="940" math="0" shadow="0">
+<mxfile host="drawio" version="30.3.14">
+  <diagram name="auv_thesis_technical_route">
+    <mxGraphModel dx="1200" dy="720" grid="1" gridSize="10" guides="1"
+      tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"
+      pageWidth="1380" pageHeight="690" math="0" shadow="0">
       <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-        <mxCell id="2" value="本文技术路线" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=28;fontStyle=1;fontColor=#1F2937;" vertex="1" parent="1">
-          <mxGeometry x="420" y="20" width="600" height="50" as="geometry"/>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="requirement"
+          value="&lt;b&gt;自主海缆巡检需求&lt;/b&gt;&lt;br&gt;行业标准约束 · 近底安全 · 多源感知退化"
+          style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAF2F8;strokeColor=#5F8FB8;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=20;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="350" y="30" width="680" height="82" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="面向复杂海况的自主海缆巡检需求&#xa;行业标准约束 · 近底安全 · 多源感知退化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF2F8;strokeColor=#2E75B6;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="360" y="100" width="720" height="85" as="geometry"/>
+        <mxCell id="system"
+          value="&lt;b&gt;双脑异步系统集成&lt;/b&gt;&lt;br&gt;Jetson 感知决策 + VxWorks 硬实时执行&lt;br&gt;虚实统一接口与安全闭环"
+          style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EEF6EF;strokeColor=#6E9F78;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=19;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="35" y="220" width="390" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="双脑异步系统集成&#xa;Jetson 感知决策 + VxWorks 硬实时执行&#xa;虚实统一接口与安全闭环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAD3;strokeColor=#548235;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="90" y="290" width="370" height="125" as="geometry"/>
+        <mxCell id="estimation"
+          value="&lt;b&gt;声磁协同状态估计&lt;/b&gt;&lt;br&gt;ES-EKF · 时空标定 · 自适应协方差&lt;br&gt;协方差 → 置信度"
+          style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF7E8;strokeColor=#C69B42;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=19;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="495" y="220" width="390" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="声磁协同状态估计&#xa;ES-EKF · 时空标定 · 自适应观测协方差&#xa;协方差 → 置信度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#BF9000;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="535" y="290" width="370" height="125" as="geometry"/>
+        <mxCell id="control"
+          value="&lt;b&gt;分层决策与不确定性感知控制&lt;/b&gt;&lt;br&gt;行为树调度 · 主动探查 · UA-MPC&lt;br&gt;安全仲裁与降级"
+          style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FBEFE5;strokeColor=#C9824D;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=19;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="955" y="220" width="390" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="分层决策与不确定性感知控制&#xa;行为树调度 · 之字形搜索 · UA-MPC&#xa;安全仲裁与降级/自救" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4D6;strokeColor=#C55A11;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="980" y="290" width="370" height="125" as="geometry"/>
+        <mxCell id="validation"
+          value="&lt;b&gt;多层验证与边界分析&lt;/b&gt;&lt;br&gt;算法仿真 · 系统集成 · 故障注入 · 硬件证据"
+          style="shape=trapezoid;perimeter=trapezoidPerimeter;fixedSize=1;direction=north;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F2EDF7;strokeColor=#8F78AF;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=20;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="350" y="445" width="680" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="多层验证与边界分析&#xa;PVS 算法验证 · HoloOcean 集成验证 · 故障注入&#xa;硬件物理证据与 Sim-to-Real 迁移边界" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E4DFEC;strokeColor=#8064A2;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="360" y="570" width="720" height="105" as="geometry"/>
+        <mxCell id="goal"
+          value="&lt;b&gt;可解释、可验证、可迁移的 AUV 自主海缆巡检方法体系&lt;/b&gt;"
+          style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAF2F8;strokeColor=#5F8FB8;strokeWidth=2.6;spacing=8;fontFamily=Songti SC;fontSize=20;fontColor=#26323D;"
+          vertex="1" parent="1">
+          <mxGeometry x="300" y="590" width="780" height="72" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="目标：形成可解释、可验证、可迁移的 AUV 自主海缆巡检方法体系" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDEBF7;strokeColor=#2F5597;strokeWidth=3;fontFamily=Times New Roman;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="280" y="780" width="880" height="75" as="geometry"/>
+        <mxCell id="e1" value="系统支撑"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;fontFamily=Songti SC;fontSize=18;fontStyle=1;fontColor=#25384A;labelBackgroundColor=#FFFFFF;endArrow=block;endFill=1;endSize=10;exitX=0.25;exitY=1;entryX=0.5;entryY=0;"
+          edge="1" parent="1" source="requirement" target="system">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="系统支撑" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.31;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="4">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e2" value="感知基础"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;fontFamily=Songti SC;fontSize=18;fontStyle=1;fontColor=#25384A;labelBackgroundColor=#FFFFFF;endArrow=block;endFill=1;endSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;"
+          edge="1" parent="1" source="requirement" target="estimation">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="10" value="感知基础" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="5">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e3" value="控制约束"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;fontFamily=Songti SC;fontSize=18;fontStyle=1;fontColor=#25384A;labelBackgroundColor=#FFFFFF;endArrow=block;endFill=1;endSize=10;exitX=0.75;exitY=1;entryX=0.5;entryY=0;"
+          edge="1" parent="1" source="requirement" target="control">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="11" value="控制约束" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.69;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="6">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e4" value="置信度"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;fontFamily=Songti SC;fontSize=18;fontStyle=1;fontColor=#25384A;labelBackgroundColor=#FFFFFF;endArrow=block;endFill=1;endSize=10;exitX=1;entryX=0;"
+          edge="1" parent="1" source="estimation" target="control">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="12" value="状态与置信度" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="6">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="validation_left" value=""
+          style="ellipse;html=1;opacity=0;fillOpacity=0;strokeOpacity=0;resizable=0;movable=0;connectable=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="469" y="444" width="2" height="2" as="geometry" />
         </mxCell>
-        <mxCell id="13" value="系统、算法与控制验证" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="7">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="validation_mid" value=""
+          style="ellipse;html=1;opacity=0;fillOpacity=0;strokeOpacity=0;resizable=0;movable=0;connectable=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="689" y="444" width="2" height="2" as="geometry" />
         </mxCell>
-        <mxCell id="14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="7">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="validation_right" value=""
+          style="ellipse;html=1;opacity=0;fillOpacity=0;strokeOpacity=0;resizable=0;movable=0;connectable=1;"
+          vertex="1" parent="1">
+          <mxGeometry x="909" y="444" width="2" height="2" as="geometry" />
         </mxCell>
-        <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="6" target="7">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e5" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;endArrow=block;endFill=1;endSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0.5;entryPerimeter=0;"
+          edge="1" parent="1" source="system" target="validation_left">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="230" y="390" />
+              <mxPoint x="470" y="390" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-        <mxCell id="16" value="验证结论与迁移边界" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7" target="8">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e6" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;endArrow=block;endFill=1;endSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0.5;entryPerimeter=0;"
+          edge="1" parent="1" source="estimation" target="validation_mid">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value=""
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;endArrow=block;endFill=1;endSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0.5;entryPerimeter=0;"
+          edge="1" parent="1" source="control" target="validation_right">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1150" y="390" />
+              <mxPoint x="910" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="验证结论与迁移边界"
+          style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#536F87;strokeWidth=3.2;fontFamily=Songti SC;fontSize=18;fontStyle=1;fontColor=#25384A;labelBackgroundColor=#FFFFFF;endArrow=block;endFill=1;endSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;"
+          edge="1" parent="1" source="validation" target="goal">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

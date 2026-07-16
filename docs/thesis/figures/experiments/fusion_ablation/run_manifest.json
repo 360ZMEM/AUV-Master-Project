@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment_id": "fusion_ablation_acoustic_magnetic",
+  "created_at_utc": "2026-08-20T11:16:42.281346+00:00",
+  "runner": "tools/run_fusion_ablation.py",
+  "argv": [
+    "tools/run_fusion_ablation.py",
+    "--output-dir",
+    "docs/thesis/figures/experiments/fusion_ablation",
+    "--seeds",
+    "0,1,2",
+    "--duration",
+    "120"
+  ],
+  "data_layer": "numerical_synthetic_trajectory",
+  "matrix": {
+    "arms": [
+      "1_imu_dvl",
+      "2_imu_dvl_mag",
+      "3_imu_dvl_sonar",
+      "4_imu_dvl_mag_sonar",
+      "5_fusion_fixed_r",
+      "6_fusion_adaptive_r"
+    ],
+    "scenarios": [
+      "baseline",
+      "sonar_occlusion",
+      "mag_weak",
+      "em_noise",
+      "current",
+      "combined"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "duration_s": 120.0,
+  "repository": {
+    "commit": "b9dd38a983d5129717d65f881020735c1f202c43",
+    "submodules": [
+      {
+        "path": "AUV-Master-Mag",
+        "commit": "12e1884b59737dbe14e83c825b6cea9bb3c7a4bb",
+        "status_prefix": "1"
+      },
+      {
+        "path": "hardware_wrappers/fangkong_adc",
+        "commit": "44397848bd11befb380da19af44b200088b3f2c5",
+        "status_prefix": " "
+      }
+    ],
+    "worktree_state": "not_evaluated",
+    "worktree_note": "Global dirty-state probing is skipped because this workspace requires an unavailable git-lfs filter. Artifact hashes and config snapshots remain authoritative."
+  },
+  "config_snapshots": [],
+  "required_artifacts": [
+    "run_manifest.json",
+    "config_snapshot/",
+    "metrics.csv",
+    "status.json",
+    "failure_events.csv",
+    "environment.txt",
+    "report.md",
+    "figures/"
+  ],
+  "experiment": {
+    "sonar_role": "perception_confidence_input_not_ekf_measurement",
+    "magnetic_model": "linearised_biot_savart_depth_equivalent (§3.3.3 / R19)",
+    "burial_inversion_note": "straight-conductor common-scale simplification (03 号文 §3.3)",
+    "current_model": "crossflow_standoff -> magnetic_slant_distance_bias (欠驱动横向站位偏移, 见 _crossflow_standoff_m)"
+  }
+}

@@ -83,7 +83,9 @@ python3 tools/offline_ekf_benchmark.py \
 | Std EKF | 4.378 m | 0.005 m | 4.106 m | 6.703 m |
 | ES-EKF | 4.375 m | 0.005 m | 4.102 m | 6.697 m |
 
-**注意**: ES-EKF 未显著优于 Dead Reckoning，这是因为此 MCAP 中 ground truth 来自 `/auv/visual/truth_marker`（10Hz），与 DVL 存在系统性初始偏移，导致 EKF 校正反而引入误差。使用 DVL 坐标系修复后的数据（`dvl_fixed_final`）可获得正确结果。
+**注意**: ES-EKF 未显著优于 Dead Reckoning，这是因为此 MCAP 中 ground truth 来自 `/auv/visual/truth_marker`（10Hz），与 DVL 存在系统性初始偏移，导致 EKF 校正反而引入误差。
+
+> **⚠️ 负结果注记（禁止引入学位论文正文）**：早先用作"修复参照"的 `dvl_fixed_final` 结果（Std/ES-EKF XY≈0.9 m、"改善 95%"）**不可作学术结论**——该 bag 三算法 Z RMSE 均约 12 m（深度维全崩被隐藏）、数据不同源、单 bag 无种子，且"改善 95%"实为三引擎初始化口径不一致（DR 用 truth 起点、ES-EKF 首帧自对齐并手动翻 Z）造成的脚手架伪影。可信结论以公平口径重算（`tools/run_tri_estimator_fair_benchmark.py`）为准：统一初始化后 24 次运行水平 RMSE 三者统计等价（3.197/3.196/3.200 m，属结构性可观性边界），深度 12 m 恒偏伪影已消除。
 
 **注意事项**:
 - `--output-dir` 传相对路径时输出到项目内（如 `results/localization/...`）

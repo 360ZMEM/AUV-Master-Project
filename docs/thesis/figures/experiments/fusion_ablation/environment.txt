@@ -1,0 +1,6 @@
+captured_at_utc=2026-08-20T11:16:42.339082+00:00
+hostname=dec4919033bf
+platform=Linux-6.12.76-linuxkit-aarch64-with-glibc2.35
+python=3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]
+executable=/usr/bin/python3
+cwd=/home/auv_user/auv_ws/AUV-Master-Project

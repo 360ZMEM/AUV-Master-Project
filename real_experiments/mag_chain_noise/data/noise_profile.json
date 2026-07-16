@@ -1,0 +1,22 @@
+{
+  "background_record_count": 2,
+  "total_background_duration_s": 13.104,
+  "default_background_records": [
+    "1780675809_291477.npz",
+    "1780676130_241387.npz"
+  ],
+  "median_lockin_45_vector_nt": 2.584071653674807,
+  "median_lockin_50_vector_nt": 169.283816084235,
+  "median_high_band_asd_nt_sqrt_hz": 0.13338239423839837,
+  "concatenated_detrended_axis_rms_nt": [
+    82.46244317572811,
+    74.29997504709014,
+    100.63241961089892
+  ],
+  "concatenated_detrended_vector_rms_nt": 149.8246465146921,
+  "notes": [
+    "Dorm-room background/noise captures; 50 Hz mains is an environmental interference term.",
+    "Use 45 Hz for controlled target injection to stay separated from the 50 Hz mains component.",
+    "This is a full-chain replay profile, not a metrology-grade laboratory noise floor."
+  ]
+}

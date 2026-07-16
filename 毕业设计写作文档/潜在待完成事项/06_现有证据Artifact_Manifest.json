@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-12T16:25:23.952771+00:00",
+  "generated_at_utc": "2026-08-13T09:48:11.046324+00:00",
   "catalog_path": "毕业设计写作文档/潜在待完成事项/06_现有证据Artifact_Manifest.catalog.json",
-  "catalog_sha256": "4727a59689ef3cca799b26e81c3e1d5efda7605b046a6e44ccb44605a1fb16c1",
+  "catalog_sha256": "1d7b3210ee817d711740dce03246abbb64651353b3a572a8a5ed092a53b6e01e",
   "grade_definitions": {
     "A": "原始输入、配置/运行清单、分析代码和机器可读结果均可访问，且生成版本可追溯。",
     "B": "原始输入和机器可读结果可访问，但历史 commit、配置快照或标准化摘要至少缺一项。",
@@ -10,7 +10,7 @@
     "D": "只有计划、接口或未经数据支撑的声明，不能作为实验结论。"
   },
   "repository": {
-    "current_commit": "6e91f369ad5ec77dcdf937bc836b807fdf6deef7",
+    "current_commit": "b9dd38a983d5129717d65f881020735c1f202c43",
     "worktree_state": "not_evaluated",
     "note": "This is the manifest-generation revision, not the historical experiment revision unless an experiment manifest records it. Global dirty-state probing is intentionally skipped because this workspace requires an unavailable git-lfs filter; catalogued artifacts are verified by their own SHA256 values.",
     "submodules": [
@@ -52,13 +52,13 @@
       "present_file_count": 15,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 13549150,
+      "total_bytes": 13113116,
       "role_counts": {
         "build_product": 1,
         "build_recipe": 1,
         "source": 13
       },
-      "artifact_digest_sha256": "e21ebf4cf3300bae2ad3b8ead42d385ee90ff603aba58d4dd7298e03c2d57342",
+      "artifact_digest_sha256": "e44b00ac3f23ee80ad6caefa76a536bc135fd146b2e4a2aa084941926930d7bd",
       "files": [
         {
           "path": "thuthesis/Makefile",
@@ -70,7 +70,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2853,
-          "mtime_utc": "2026-08-12T13:35:03.147167+00:00",
+          "mtime_utc": "2026-08-13T02:37:49.873979+00:00",
           "sha256": "8f690738f5d94802a31d1bc696717a1582c8d5dcef646b87181748decc52e9b7"
         },
         {
@@ -82,9 +82,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 13060900,
-          "mtime_utc": "2026-08-12T16:15:46.200822+00:00",
-          "sha256": "b1427d4532f6b4d2895f7313e696255df8fc8c171ffe65e144573e46317227fd"
+          "size_bytes": 12620731,
+          "mtime_utc": "2026-08-13T08:02:25.565681+00:00",
+          "sha256": "e448eb2ec0f17903be6e49d112b148474e96a48fdad42e0a0607a233d1a48450"
         },
         {
           "path": "thuthesis/auv-thesis.tex",
@@ -96,7 +96,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 758,
-          "mtime_utc": "2026-08-12T13:35:02.751700+00:00",
+          "mtime_utc": "2026-08-13T02:37:49.670873+00:00",
           "sha256": "fb04a7d45a59d7f192900ae2074b77d65fee40d0f6a8174f40933c36a14041a9"
         },
         {
@@ -109,7 +109,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2424,
-          "mtime_utc": "2026-08-12T13:35:02.861138+00:00",
+          "mtime_utc": "2026-08-13T02:37:49.678068+00:00",
           "sha256": "a2520966d784a348a2fc7dd036c0015bc162221a7760c159117c2cd6d94aed62"
         },
         {
@@ -121,9 +121,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 10513,
-          "mtime_utc": "2026-08-12T13:54:28.010394+00:00",
-          "sha256": "4c256c9a130949d73b3eaf3b9411019a00821035d58edb6be08bf6291e42a9d8"
+          "size_bytes": 10743,
+          "mtime_utc": "2026-08-13T08:01:57.118620+00:00",
+          "sha256": "bd3834e003c046bfdeaa4865fe00e3fd60d25b10da5597530d285c04aa899066"
         },
         {
           "path": "thuthesis/data/auv-acknowledgements.tex",
@@ -135,7 +135,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 132,
-          "mtime_utc": "2026-08-12T13:35:02.952159+00:00",
+          "mtime_utc": "2026-08-13T02:37:49.702698+00:00",
           "sha256": "768718739811c6c7306ecc0de32c5d66dbeaa5914b3a60fadd807c89483f2fa4"
         },
         {
@@ -148,7 +148,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 27006,
-          "mtime_utc": "2026-08-12T16:14:34.451603+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.510411+00:00",
           "sha256": "3263b8cb1bacfa2e231c8a083c86390e684f4ad09fe2793e1e6fae7ca34729e8"
         },
         {
@@ -160,9 +160,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 35384,
-          "mtime_utc": "2026-08-12T13:54:28.055264+00:00",
-          "sha256": "afce531e45583d5519847178461f1fd96c7b305fcb027c5e8fc033c983308bc7"
+          "size_bytes": 35344,
+          "mtime_utc": "2026-08-13T04:49:29.834471+00:00",
+          "sha256": "3fdfe3b6de870be11a7b0669de0ef30335e48441a079a1cc122279502dc6876c"
         },
         {
           "path": "thuthesis/data/auv-chap02.tex",
@@ -173,9 +173,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 70591,
-          "mtime_utc": "2026-08-12T15:41:43.045928+00:00",
-          "sha256": "3d1540113008c8e28f14ad5215adbec53b6a4cefbb4d0d60553d1878d98c4903"
+          "size_bytes": 71022,
+          "mtime_utc": "2026-08-13T06:17:11.594552+00:00",
+          "sha256": "49f54c7ae58c3e68e89fe1caff78695a30ef7b50ab86f8445ecb750c14d8bfa2"
         },
         {
           "path": "thuthesis/data/auv-chap03.tex",
@@ -186,9 +186,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 52250,
-          "mtime_utc": "2026-08-12T15:41:02.159219+00:00",
-          "sha256": "74c963e2195aa7b3319d95e069ef1e8ef5f4e6ef4d10ba7fa434c3173fe65f3a"
+          "size_bytes": 51689,
+          "mtime_utc": "2026-08-13T06:17:11.796911+00:00",
+          "sha256": "a0911ccfac8571b77f698cb73bb8d2e01dd4c828af271b89d8251d6d0e1260f6"
         },
         {
           "path": "thuthesis/data/auv-chap04.tex",
@@ -199,9 +199,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 64890,
-          "mtime_utc": "2026-08-12T15:06:57.885121+00:00",
-          "sha256": "15bb6ba0d252a2f828b2fecdde4253abc9f335b5ac4ec3e499712b37f1ab990f"
+          "size_bytes": 64744,
+          "mtime_utc": "2026-08-13T07:20:28.809509+00:00",
+          "sha256": "5b819a7ba4c4b82a8a45053034dbf50de8f7e035e7eb2e1616d0eaac07fd85c8"
         },
         {
           "path": "thuthesis/data/auv-chap05.tex",
@@ -212,9 +212,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 147795,
-          "mtime_utc": "2026-08-12T16:06:06.580061+00:00",
-          "sha256": "f57d20f3d13d8a31db38a431e2f6b293556725d8b6691f4f7eccda1af14ecdf4"
+          "size_bytes": 151573,
+          "mtime_utc": "2026-08-13T07:56:25.702912+00:00",
+          "sha256": "d0e3cd99c49691d75c81c804f4b3b89e55c732a51105aa65d524887c06197cd3"
         },
         {
           "path": "thuthesis/data/auv-chap06.tex",
@@ -225,9 +225,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 10562,
-          "mtime_utc": "2026-08-12T15:06:57.931328+00:00",
-          "sha256": "0f50d2d8271a5b8d5ec8b9834c0bcbf52cffba164a45f7384c23e1ef2623fbb7"
+          "size_bytes": 11005,
+          "mtime_utc": "2026-08-13T07:57:36.965988+00:00",
+          "sha256": "a18c144bbd1d23417b961fd652cc181f1015475dcba1b20a2d783d38162de59f"
         },
         {
           "path": "thuthesis/data/auv-denotation.tex",
@@ -239,7 +239,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 3806,
-          "mtime_utc": "2026-08-12T13:35:03.140003+00:00",
+          "mtime_utc": "2026-08-13T02:37:49.869425+00:00",
           "sha256": "a0cd635d1069f035d2115e1b837b098ba498cadf633bf3a4954aef92d167d464"
         },
         {
@@ -291,7 +291,7 @@
       "present_file_count": 27,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 1194305,
+      "total_bytes": 1197292,
       "role_counts": {
         "figure": 5,
         "postprocess_code": 6,
@@ -299,7 +299,7 @@
         "run_index": 10,
         "verification_report": 5
       },
-      "artifact_digest_sha256": "d06ffaab3a84285562cbcfd66c3979cb57975b3e512fcc683bb5e753ada4b389",
+      "artifact_digest_sha256": "ea21e9b5645fb21903cd3f9a4f62d8d31d3953442fab8735ea65d3ba5c9293f7",
       "files": [
         {
           "path": "AUV-Master-Mag/docs/28_声磁协同方法论合龙.md",
@@ -545,7 +545,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2172,
-          "mtime_utc": "2026-08-12T15:40:16.123086+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.403414+00:00",
           "sha256": "080b0eb6d6e3e7efcfa821ed3e973dfe6c50df060b6aa75656cc37fc04bcfdbb"
         },
         {
@@ -558,7 +558,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 3097,
-          "mtime_utc": "2026-08-12T16:06:48.617850+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.449381+00:00",
           "sha256": "c6b55003737836bfdb229e875a4121c89ae9b9934f7bd660efac663864fee99a"
         },
         {
@@ -610,7 +610,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 6417,
-          "mtime_utc": "2026-08-12T15:39:20.850251+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.871834+00:00",
           "sha256": "0595b7a4f51fb95fa2591ce92b0fdbdfd9b1bc894b48577c8ce4a789f97c9a3f"
         },
         {
@@ -623,7 +623,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 14371,
-          "mtime_utc": "2026-08-12T16:00:04.324821+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.887589+00:00",
           "sha256": "9aa0e4c2a77f91e05d552684fb8e5b55a524d95a2d4343e6c5ecb19ea95f2641"
         },
         {
@@ -636,7 +636,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 6130,
-          "mtime_utc": "2026-08-12T15:34:48.825498+00:00",
+          "mtime_utc": "2026-08-13T06:17:11.902044+00:00",
           "sha256": "999fb21fb5a6bb6ce67a4e0e42a05a758d013f59b34092a9407654892efcd9f4"
         },
         {
@@ -648,9 +648,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 28711,
-          "mtime_utc": "2026-08-12T16:15:12.870251+00:00",
-          "sha256": "a032a3d34b3a73406e08f6dbd891d4c36e4392cb0a0fa044deca71709f7bdde6"
+          "size_bytes": 31698,
+          "mtime_utc": "2026-08-13T06:17:11.960491+00:00",
+          "sha256": "cc71630ede2eb2a30dccc5563486279998c02381c9c786a96aee5d4285117fe4"
         }
       ]
     },
@@ -1752,7 +1752,7 @@
       "present_file_count": 91,
       "raw_reference_count": 24,
       "raw_reference_present_count": 24,
-      "total_bytes": 58386883,
+      "total_bytes": 58389456,
       "role_counts": {
         "analysis_code": 2,
         "authority_report": 2,
@@ -1765,7 +1765,7 @@
         "run_manifest": 1,
         "runner_code": 1
       },
-      "artifact_digest_sha256": "852bd15f27022fa65ee510c3224e9727bbfd88e273a52c370719e407d52f4373",
+      "artifact_digest_sha256": "ca4748fc63be1117dd397cd2fbfb7132a388668897c5fb48c6497715a863e726",
       "files": [
         {
           "path": "/auv_data/bags/20260612_170618/rosbag/rosbag_0.mcap",
@@ -2946,9 +2946,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 12417,
-          "mtime_utc": "2026-08-10T13:24:43.288204+00:00",
-          "sha256": "d563159d2871d5fc6ea7b2160cdd984060b0420231b1b1a9f4e83bf9e3e4349b"
+          "size_bytes": 14990,
+          "mtime_utc": "2026-08-13T08:55:08.644331+00:00",
+          "sha256": "93e98968ddd635dad1bd90f21319a4a94fb2e3aee2a2b8f2f40a74b948b5d769"
         }
       ]
     },
@@ -17367,6 +17367,482 @@
           "size_bytes": 12805,
           "mtime_utc": "2026-07-05T12:18:59.095191+00:00",
           "sha256": "0aba1d353d9493a8c3d8ea237c7ba2cb19f09730219adb83dce01290e4b8fd7d"
+        }
+      ]
+    },
+    {
+      "id": "CONTROL-MPC-EXTREME-E1-MULTISEED",
+      "title": "MPC 极端平面路径多种子统计验证",
+      "data_layer": "deterministic_guidance_offline_closed_loop_multiseed",
+      "evidence_grade": "B",
+      "declared_status": "complete_with_scope_boundaries",
+      "sample_scope": "长波/短波 S 弯、90° 直角折弯、180° 发卡 4 场景 x 仅航向 PID/PID-LOS/预瞄 MPC 3 控制器 x 5 seed；受控扰动（恒定横流≤0.15 m/s、初始横向偏移≤0.8 m、逐步艏向白噪声≤1.5°）；离线制导闭环，不依赖历史 bag",
+      "claims_supported": [
+        "把原 n=1 极端路径结论升级为 n=5 统计：长波 S 弯 MPC 横向 RMSE 0.133±0.034 m vs PID-LOS 1.146±0.148 m，均值±1σ 区间互不重叠，MPC 全胜",
+        "180° 发卡掉头 MPC 2.363±0.234 m vs PID-LOS 4.246±0.459 m，区间互不重叠，MPC 全胜",
+        "短波 S 弯 MPC 1.824±0.190 m 与 PID-LOS 1.672±0.043 m 统计持平，二者均优于仅航向 PID 2.725±0.315 m",
+        "同一 seed 下三控制器共享同一扰动实现与噪声流以保证公平，MPC 变体冻结为确定性通道选出的 best 以防逐 seed 樱桃摘取",
+        "不传 --seeds 时 plant 逐字节复现旧 n=1（PID/LOS 位精确，MPC 仅 IPOPT ~1e-6 浮点噪声、三位小数不变），向后兼容归档"
+      ],
+      "claim_boundaries": [
+        "90° 直角折弯 PID-LOS 1.003±0.513 m 最优、MPC 未领先，作为诚实边界保留，不外推为 MPC 全场景最优",
+        "该结论为离线制导闭环 + 简化艏向一阶动力学代理，非 PVS 六自由度或原生声磁闭环，也非真机",
+        "扰动为受控合成（恒定横流+初始偏移+艏向白噪声），不代表真实海流谱与传感噪声",
+        "n=5 种子为统计充分性下界，非大样本蒙特卡洛"
+      ],
+      "provenance_gaps": [
+        "源 run 落在 AUV_DATA_ROOT 隔离目录（.auv_data_e1/results/control/mpc_xy_yaw_extreme/20260813_151303），不随仓库同步；仓库内仅保留 multiseed_summary.csv/multiseed_raw.csv 派生产物",
+        "该场景族缺少与真机或 PVS 原生闭环的横向 RMSE 交叉核对"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 5,
+      "present_file_count": 5,
+      "raw_reference_count": 0,
+      "raw_reference_present_count": 0,
+      "total_bytes": 82454,
+      "role_counts": {
+        "audit_report": 1,
+        "authority_report": 1,
+        "machine_metrics": 1,
+        "machine_summary": 1,
+        "runner_code": 1
+      },
+      "artifact_digest_sha256": "bb1d5524c9475af4977b905b0764b8797e92fed32c9c00c7ebe52e02e24357c6",
+      "files": [
+        {
+          "path": "docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/_SOURCE.md",
+          "roles": [
+            "authority_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2436,
+          "mtime_utc": "2026-08-13T07:18:45.342248+00:00",
+          "sha256": "4c91e3f76c775e22101ddc908ea96db5bff1eba716f62c1b5ed42e6ed4a7df77"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/multiseed_raw.csv",
+          "roles": [
+            "machine_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 11650,
+          "mtime_utc": "2026-08-13T07:18:18.485643+00:00",
+          "sha256": "148fe72056104885cadfa3461633a7ed491495b91f207fcbaa39f2b05a215f9f"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/multiseed_summary.csv",
+          "roles": [
+            "machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 924,
+          "mtime_utc": "2026-08-13T07:18:18.483461+00:00",
+          "sha256": "806789bd818d392e238e8e1a729002d4e9b11f2dbde839e42cef8f0dec7f91e0"
+        },
+        {
+          "path": "tools/mpc_xy_yaw_extreme_benchmark.py",
+          "roles": [
+            "runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 33132,
+          "mtime_utc": "2026-08-13T07:09:46.775115+00:00",
+          "sha256": "482300dbdebc4eed70af330971b65f7db2f5e4c501227b9a4486c647089e2210"
+        },
+        {
+          "path": "毕业设计写作文档/潜在待完成事项/24_ESEKF声张核验与全文愿景证据强度审计.md",
+          "roles": [
+            "audit_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 34312,
+          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
+          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
+        }
+      ]
+    },
+    {
+      "id": "ESTIMATOR-E2-TRI-ESTIMATOR-FAIR",
+      "title": "三估计器公平初始化对比重算（O-1 修复后）",
+      "data_layer": "offline_estimator_comparison_fair_init",
+      "evidence_grade": "B",
+      "declared_status": "complete_with_observability_boundary",
+      "sample_scope": "P1 sensor sweep 同源 8 场景 x 3 seed = 24 个 bag；Raw DR / Std EKF / ES-EKF 三引擎；fair 与 legacy-auto 双口径对照；每 run 30 s",
+      "claims_supported": [
+        "统一三引擎初始化口径（同一 truth 起点位姿、同一 NED frame、去除手动翻 Z）后，24 次运行水平 RMSE 统计等价：Raw DR 3.197±0.695 m、Std EKF 3.196±0.692 m、ES-EKF 3.200±0.692 m，±1σ 完全重叠",
+        "深度维 12 m 恒偏伪影已消除，Z RMSE 落到 0.025/0.110/0.203 m 量级；Raw DR 因直接透传深度计读数、不做协方差融合而 Z RMSE 最小",
+        "legacy-auto 口径下 ES-EKF 水平 3.187 m 的微优被证实为首帧自对齐伪影，公平口径下消失，从根上消除 23 号 §8.1 的排序矛盾与开发文档 dvl_fixed_final 不自洽",
+        "水平三方等价属结构性可观性边界：观测仅 DVL(测速)+depth(测 z)，x/y 无绝对位置量测项，correct_gps 未接入，任何滤波器都退化为速度积分漂移",
+        "O-1 只改 benchmark 脚手架（新增 --es-ekf-init、收敛内联翻 Z 为具名 _ros_up_to_ned），不动 algorithm/es_ekf.py 主线算法"
+      ],
+      "claim_boundaries": [
+        "水平等价不可通过调 R 突破，须引入绝对横向观测（USBL/GPS/声磁绝对定位）才能改变阶数，属论文展望（O-5）",
+        "深度维 Std/ES-EKF 略大于 Raw DR 属协方差整定口径问题（深度 R 偏小、DVL R 过保守），非算法精度结论，可整定项见 O-3/O-4（须批准）",
+        "离线滤波误差不等于控制侧 RMSE；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声"
+      ],
+      "provenance_gaps": [
+        "逐 run 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e2_tri_estimator_fair），不随仓库同步；仓库内保留 summary/raw/pooled 派生产物与 legacy-auto 对照",
+        "尚未在 O-3/O-4 分源协方差整定后重算以验证深度维一致性改善"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 12,
+      "present_file_count": 12,
+      "raw_reference_count": 0,
+      "raw_reference_present_count": 0,
+      "total_bytes": 141825,
+      "role_counts": {
+        "audit_report": 1,
+        "authority_report": 1,
+        "core_benchmark_code": 1,
+        "machine_aggregated": 1,
+        "machine_aggregated_control": 1,
+        "machine_metrics": 1,
+        "machine_metrics_control": 1,
+        "machine_summary": 1,
+        "machine_summary_control": 1,
+        "run_index": 1,
+        "runner_code": 1,
+        "test_code": 1
+      },
+      "artifact_digest_sha256": "c699b856536cd10d356debfcefacf795c616c9917be78930eab6ca934caf92dc",
+      "files": [
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/_SOURCE.md",
+          "roles": [
+            "authority_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3531,
+          "mtime_utc": "2026-08-13T07:55:45.157109+00:00",
+          "sha256": "55e90912755f6c3459b2b1ca3ec9b776e0c0d1e41d1436771e04de3b0a141da8"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_pooled.json",
+          "roles": [
+            "machine_aggregated"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 790,
+          "mtime_utc": "2026-08-13T07:37:55.982686+00:00",
+          "sha256": "863a2ca50c99ae106ab8e64b451e64721f4338df7006a01b76a55d368fb6ef66"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_raw.csv",
+          "roles": [
+            "machine_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3999,
+          "mtime_utc": "2026-08-13T07:37:55.980104+00:00",
+          "sha256": "4f6ed31d7c2a1d825a1ea0d09a757e44ffc9d4cb39d2275b5736b35435282040"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_summary.csv",
+          "roles": [
+            "machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1748,
+          "mtime_utc": "2026-08-13T07:37:55.981468+00:00",
+          "sha256": "750c8f3837a1c6cb7f6ba0e3192bf33c79d19197c2338379f426928b02c79be8"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_legacy-auto_pooled.json",
+          "roles": [
+            "machine_aggregated_control"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 779,
+          "mtime_utc": "2026-08-13T07:39:04.672861+00:00",
+          "sha256": "b17821ab3177f131fe9c6eff8466f4c043e480096d8a66c0bc45a7bd0b2846e8"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_legacy-auto_raw.csv",
+          "roles": [
+            "machine_metrics_control"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3999,
+          "mtime_utc": "2026-08-13T07:39:04.671034+00:00",
+          "sha256": "df1db6b23f7aebd49cadf924a5f33c75d46b7ff7600850f434d028a9ec2f395b"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_legacy-auto_summary.csv",
+          "roles": [
+            "machine_summary_control"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1748,
+          "mtime_utc": "2026-08-13T07:39:04.671661+00:00",
+          "sha256": "0f13f14c6ac126e9881cd7d823edf029bbb33d0f00904c7e7af910ea3f599c8b"
+        },
+        {
+          "path": "log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 8502,
+          "mtime_utc": "2026-06-12T09:24:34.692298+00:00",
+          "sha256": "021965d32db74c79532954eacf1fe13b03ec57177eaf40c740c3a5724494b8cf"
+        },
+        {
+          "path": "tests/test_offline_ekf_frame_semantics.py",
+          "roles": [
+            "test_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1904,
+          "mtime_utc": "2026-07-10T14:55:08.022638+00:00",
+          "sha256": "34553d9c6ca51c7134e7a4d3a167636385620576f8ce1faa46d1d7eecda7079a"
+        },
+        {
+          "path": "tools/offline_ekf_benchmark.py",
+          "roles": [
+            "core_benchmark_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 71960,
+          "mtime_utc": "2026-08-13T07:35:05.124331+00:00",
+          "sha256": "77dee0a8fde9a2d18676fb1bd16ed690b27efe5b4d659a633a6ef0df58bd8ede"
+        },
+        {
+          "path": "tools/run_tri_estimator_fair_benchmark.py",
+          "roles": [
+            "runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 8553,
+          "mtime_utc": "2026-08-13T07:37:05.430035+00:00",
+          "sha256": "cef3053df46c8a671fca9f0f72d406390b330be2d6f41eac86bab47578dfaeb3"
+        },
+        {
+          "path": "毕业设计写作文档/潜在待完成事项/24_ESEKF声张核验与全文愿景证据强度审计.md",
+          "roles": [
+            "audit_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 34312,
+          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
+          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
+        }
+      ]
+    },
+    {
+      "id": "ESTIMATOR-E3-COVARIANCE-AB",
+      "title": "分源自适应 R 协方差整定 A/B（O-3/O-4，独立对照，不改主线默认）",
+      "data_layer": "offline_covariance_consistency_ab",
+      "evidence_grade": "B",
+      "declared_status": "complete_with_structural_dvl_floor",
+      "sample_scope": "P1 sensor sweep 同源 8 场景 x 3 seed = 24 个 bag；三臂 A_baseline_default / B_per_source_gating / C_per_source_tuned；与 §5.5.5 分源 NIS 审计逐量测同口径重算（深度 17630 事件、DVL 17613 事件/臂）",
+      "claims_supported": [
+        "baseline 臂不传任何覆盖开关即逐字节复现正文引用口径（深度 NIS/自由度 7.205、DVL 0.119），证明 A/B 与正文同口径、既有 24 矩阵与 ESKF-NIS-8X3 产物不失效、不回改",
+        "O-3 分源门控消除跨源污染：DVL 实际 R 缩放由 baseline 的 1.69x（上调占比 0.30）落回 1.000x（上调占比 0），全局机制把深度失配施加到 DVL 的伪影被切断",
+        "O-4 深度参数整定把负结果翻正：sigma_depth 0.05->0.12 后深度 NIS/自由度 7.205->3.280、95% 带覆盖率 0.561->0.735、上界超限率 0.416->0.215，逐 run 稳健（深度 3.21±1.27、覆盖率 0.739±0.072，n=24）",
+        "整定仅经 tools/uncertainty_metrics.py 新增 CLI 覆盖开关（--sigma-dvl/--sigma-depth/--adaptive-r-mode/--adaptive-r-normalized-threshold）在实验进程内改写口径，algorithm/es_ekf.py 与 brain_linux/config/params.yaml 默认协方差不变",
+        "新增 applied_r_scale 列如实记录 per_source 模式下逐源实际生效的 R 缩放，弥补 r_scale_after_update 在 per_source 恒为 1.0 而低估分源缩放的问题；既有列数值逐字节不变"
+      ],
+      "claim_boundaries": [
+        "DVL 过保守（NIS/自由度约 0.05）是结构性下界而非可整定项：自适应 R 仅膨胀（下界 1.0x），分源门控下 DVL 从不触发上调；根治须下调 DVL 名义协方差 sigma_dvl 本身（属改主线默认），本独立实验刻意不做，如实记为下界",
+        "整定臂为独立对照口径，未回写 es_ekf.py/params.yaml 默认，正文主结论不依赖 B/C 臂；C 臂 sigma_depth=0.12 未在闭环控制侧验证一致性收益",
+        "离线逐量测重算 NIS 不等于在线控制侧协方差一致性；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声"
+      ],
+      "provenance_gaps": [
+        "逐 bag 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e3_covariance_ab），不随仓库同步；仓库内保留 summary/raw/pooled/comparison 派生产物",
+        "整定后的默认协方差若要进入主线需单独批准并重跑既有 24 矩阵，本条目不含该主线变更"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 9,
+      "present_file_count": 9,
+      "raw_reference_count": 0,
+      "raw_reference_present_count": 0,
+      "total_bytes": 154928,
+      "role_counts": {
+        "audit_report": 1,
+        "authority_report": 1,
+        "core_metric_code": 1,
+        "figure": 1,
+        "machine_aggregated": 1,
+        "machine_metrics": 1,
+        "machine_summary": 1,
+        "run_index": 1,
+        "runner_code": 1
+      },
+      "artifact_digest_sha256": "8c9887b8bee4239e8f02e31eb919694ad13ed1bfe0349db981051ff9f9f3cf8c",
+      "files": [
+        {
+          "path": "docs/thesis/figures/experiments/covariance_ab/_SOURCE.md",
+          "roles": [
+            "authority_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 0,
+          "mtime_utc": "2026-08-13T09:47:32.802014+00:00",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_comparison.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 72081,
+          "mtime_utc": "2026-08-13T09:06:16.810209+00:00",
+          "sha256": "6309cbf713a9ef44d3efe3164a1eed5720d6b8c18c4a0d15aec21da02a501e2e"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_pooled.json",
+          "roles": [
+            "machine_aggregated"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1115,
+          "mtime_utc": "2026-08-13T09:03:50.478715+00:00",
+          "sha256": "5417b14c07892c9d5bb9fbe40ff9a8aeb52cb76410e39cf29d1800e1fab93adb"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_raw.csv",
+          "roles": [
+            "machine_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 11456,
+          "mtime_utc": "2026-08-13T09:03:50.472198+00:00",
+          "sha256": "071532b80c8efa8f178ce01ebf01bf1b59c9813dfef201cddccbe18b87463065"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_summary.csv",
+          "roles": [
+            "machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 516,
+          "mtime_utc": "2026-08-13T09:03:50.477389+00:00",
+          "sha256": "de538e5386cf89b1ce5a111f443549c9d40bf0cb8bad9b55606940449c83fa9f"
+        },
+        {
+          "path": "log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 8502,
+          "mtime_utc": "2026-06-12T09:24:34.692298+00:00",
+          "sha256": "021965d32db74c79532954eacf1fe13b03ec57177eaf40c740c3a5724494b8cf"
+        },
+        {
+          "path": "tools/run_es_ekf_covariance_ab.py",
+          "roles": [
+            "runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 11956,
+          "mtime_utc": "2026-08-13T09:33:30.654233+00:00",
+          "sha256": "c003848bdf845041ec8bdfd7581b52cf1cf5b3861adff9a1497411e0c004e432"
+        },
+        {
+          "path": "tools/uncertainty_metrics.py",
+          "roles": [
+            "core_metric_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 14990,
+          "mtime_utc": "2026-08-13T08:55:08.644331+00:00",
+          "sha256": "93e98968ddd635dad1bd90f21319a4a94fb2e3aee2a2b8f2f40a74b948b5d769"
+        },
+        {
+          "path": "毕业设计写作文档/潜在待完成事项/24_ESEKF声张核验与全文愿景证据强度审计.md",
+          "roles": [
+            "audit_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 34312,
+          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
+          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
         }
       ]
     }

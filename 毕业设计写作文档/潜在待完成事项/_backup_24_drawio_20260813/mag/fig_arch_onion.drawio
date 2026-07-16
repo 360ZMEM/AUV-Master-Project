@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="onion-architecture">
+    <mxGraphModel dx="1100" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="2" value="磁缆跟踪系统分层架构（洋葱模型）与每帧闭环数据流" style="text;html=1;align=center;verticalAlign=middle;fontSize=28;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="16" width="760" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="4" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#999999;strokeWidth=1.5;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="70" as="sourcePoint" />
+            <mxPoint x="20" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="10" value="可视化 / 编排层" style="swimlane;horizontal=0;startSize=30;html=1;whiteSpace=wrap;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1;fontColor=#1f3a5f;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="740" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="主循环编排&#xa;（main_viz）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" vertex="1" parent="10">
+          <mxGeometry x="30" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="实时多面板可视化&#xa;（visualization）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" vertex="1" parent="10">
+          <mxGeometry x="265" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="传感器源 / 感知驱动&#xa;（SensorSource·driver）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" vertex="1" parent="10">
+          <mxGeometry x="500" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="20" value="控制决策层" style="swimlane;horizontal=0;startSize=30;html=1;whiteSpace=wrap;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;fontColor=#274d20;" vertex="1" parent="1">
+          <mxGeometry x="30" y="180" width="740" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="任务状态机&#xa;（mission_manager）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" vertex="1" parent="20">
+          <mxGeometry x="30" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="ZigZag 运动控制器&#xa;（controller）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" vertex="1" parent="20">
+          <mxGeometry x="265" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="探测爆发子状态机&#xa;（probe_burst_manager）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" vertex="1" parent="20">
+          <mxGeometry x="500" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="30" value="感知融合层" style="swimlane;horizontal=0;startSize=30;html=1;whiteSpace=wrap;rounded=0;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16;fontStyle=1;fontColor=#6b5610;" vertex="1" parent="1">
+          <mxGeometry x="30" y="300" width="740" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="磁感知编排&#xa;（MagneticCable&#xa;Perception）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=14;" vertex="1" parent="30">
+          <mxGeometry x="45" y="28" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="滤波·峰值·磁矢量&#xa;（filters·peaks·vector）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" vertex="1" parent="30">
+          <mxGeometry x="225" y="34" width="155" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="中心线拟合·局部路径&#xa;（fitter·local_path）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" vertex="1" parent="30">
+          <mxGeometry x="390" y="34" width="165" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="横偏·埋深·重捕·置信度&#xa;（cross_track·…）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" vertex="1" parent="30">
+          <mxGeometry x="565" y="34" width="160" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="40" value="环境与物理层" style="swimlane;horizontal=0;startSize=30;html=1;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=#999999;fontSize=16;fontStyle=1;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="30" y="420" width="740" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="电缆环境·磁场正演&#xa;（environment）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=15;" vertex="1" parent="40">
+          <mxGeometry x="30" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="几何·投影·拟合工具&#xa;（math_utils）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=15;" vertex="1" parent="40">
+          <mxGeometry x="265" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="路线先验 / 走廊&#xa;（routes）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=15;" vertex="1" parent="40">
+          <mxGeometry x="500" y="34" width="210" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="50" value="传感器模拟层" style="swimlane;horizontal=0;startSize=30;html=1;whiteSpace=wrap;rounded=0;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;fontColor=#4a2f57;" vertex="1" parent="1">
+          <mxGeometry x="30" y="540" width="740" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="磁力计&#xa;（magnetometer）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=15;" vertex="1" parent="50">
+          <mxGeometry x="20" y="34" width="165" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="惯导 / IMU&#xa;（navigation·IMU）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=15;" vertex="1" parent="50">
+          <mxGeometry x="200" y="34" width="165" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="声呐&#xa;（sonar）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=15;" vertex="1" parent="50">
+          <mxGeometry x="380" y="34" width="165" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="54" value="埋深观测&#xa;（burial depth）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=15;" vertex="1" parent="50">
+          <mxGeometry x="560" y="34" width="165" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="90" value="每帧闭环（约 20 Hz）" style="text;html=1;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="810" y="38" width="180" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="100" value="① 传感器采样 poll" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="70" width="180" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="101" value="② 信号特征 signal_driver" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="176" width="180" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="102" value="③ 感知更新 perception" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="282" width="180" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="103" value="④ 任务决策 mission" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="388" width="180" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="104" value="⑤ 控制指令 controller" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="494" width="180" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="105" value="⑥ 载体推进 backend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="810" y="600" width="180" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="110" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="100" target="101">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="111" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="101" target="102">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="112" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="102" target="103">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="113" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="103" target="104">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="114" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="104" target="105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="115" value="反馈" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#b85450;dashed=1;fontColor=#b85450;fontSize=15;" edge="1" parent="1" source="105" target="100">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1040" y="623" />
+              <mxPoint x="1040" y="93" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="caption_auto_20260806" value="图注：磁缆跟踪系统按传感器模拟、环境物理、感知融合、控制决策与可视化编排分层；右侧给出约 20 Hz 的外层闭环。" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Noto Serif CJK SC;fontSize=16;fontColor=#4B5563;spacingLeft=8;spacingRight=8;" vertex="1" parent="1">
+          <mxGeometry x="20" y="680" width="950" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

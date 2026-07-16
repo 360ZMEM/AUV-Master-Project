@@ -3,11 +3,21 @@
 > 本文件是 `AGENTS.md` 分流后的 **macwin 侧主索引**（`uname` 返回 Darwin / 命令不存在时读本文件）。
 > **每次上下文清理/重置后，即使不是第一次进入，也必须完整读完本文件**，以在不重复探索的前提下恢复目标与约束。
 > 维护约定：既要「概括」又要「行号对应」（`文件#Lxx-Lyy`），便于精准跳读；发现新关键位置随时补行号。高度专业化子内容分流到子文档并在此登记路径（**不得在仓库根目录新建散文件**）。
-> 最后更新：2026-08-13（完成 TMR8637 性能参数拆表、传输/噪声曲线精简及 179 页联合编译验收；保留方法引用归属与中文破折号审计结论）。
+> 最后更新：2026-08-18（**事实源正式切换为 LaTeX**，见下方 §0.1；进入论文压缩阶段，计划见 [25_论文压缩计划.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/潜在待完成事项/25_论文压缩计划.md)）。
+
+---
+
+> ## 0.1 事实源（Source of Truth）— 已切换为 LaTeX（★铁律，2026-08-18 确认）
+> **自迁移完成后，LaTeX 是论文唯一权威事实源，Markdown 降级为只读历史参照。**
+> - **权威事实源**：`thuthesis/data/auv-chap01.tex … auv-chap06.tex` + `thuthesis/data/auv-appendix-a.tex` + `auv-abstract.tex`/`auv-denotation.tex`。所有正文/表格/公式/图注的修改**只改这些 `.tex`**（文件头已注明 *"Authoritative thesis source; edit this TeX file directly."*）。
+> - **只读历史参照**：`docs/thesis/paper/*.md`（canonical Markdown）**不再回写、不再作为生成源**，仅供追溯早期措辞。**严禁**用 Markdown 覆盖或"重新生成"任何 `.tex`。
+> - **不再运行 Markdown→LaTeX 生成器与新鲜度门禁**：`tools/sync_latex_references.py` 仅保留 references.bib 的字节一致副本同步功能，不再从 Markdown 生成正文。
+> - **本条覆盖并取代**下文 §2 原则 9 与 §0「维护边界」中"Markdown 为内容事实源 / 由 canonical Markdown 确定性生成"的旧表述（保留原文仅为历史留痕，实际以本条为准）。
+> - 图像资产仍以 `docs/thesis/figures/` 为唯一可提交源；被删/降级图的源路径写入各图组 `_SOURCE.md`/Artifact Manifest 以保可追溯。
 
 ---
 > 当前 LaTeX 状态（2026-08-13）：附录 A 已完成学术化重组，连续结果图已完成紧凑排版，第 4--6 章公式符号已完成学术化；第 1、2、3、5、6 章 canonical 已完成 TMR8637、SK2301、“新息”及关键概念顺序规范化；第 5.1 节已从证据边界概述重写为仿真实施架构、单次闭环生命周期、多场景跑批组织与评价口径；UA-MPC、ES-EKF、DLIA、LOS、组合导航结构和声磁接力的引用归属已按“本文方法—理论基础/启发”分离，LaTeX 正文中的插入式双破折号已清零；TMR8637 随附资料已完成原图归档、参数拆表和曲线裁剪，编号 6# 模组报告核验为 200 pT/√Hz @ 1 Hz、约 20--30 pT/√Hz @ 50 Hz，完整测量链仍待实测；论文联合构建为 179 页 A4。
-> 维护边界：第 1–6 章继续由 canonical Markdown 确定性生成；`thuthesis/data/auv-appendix-a.tex` 改为人工维护的学术出版视图，不再参与 Markdown→LaTeX 生成和新鲜度门禁。
+> 维护边界〔**2026-08-18 更新，以 §0.1 为准**〕：~~第 1–6 章继续由 canonical Markdown 确定性生成~~ → **现全书第 1–6 章及附录 A 均改为直接手改 `.tex`，不再由 Markdown 生成、不再跑新鲜度门禁**（详见 §0.1）。`docs/thesis/paper/*.md` 仅作只读历史参照。
 > 验收记录：[附录A_LaTeX学术化重组验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/附录A_LaTeX学术化重组验收_20260808.md)。
 > 图页验收：[连续结果图与正文共存排版验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/连续结果图与正文共存排版验收_20260808.md)。
 > 符号验收：[第三章后LaTeX公式符号学术化验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/第三章后LaTeX公式符号学术化验收_20260808.md)。
@@ -76,7 +86,7 @@
 6. **图片一律 markdown 相对路径引用**；占位符对 Ctrl/Cmd+F 友好（唯一、可检索）。
 7. **落盘前缀 / 分流规范**：旧 AI 初稿 `01_`…；新写作 `01new_`…；专业化内容分流子目录并在此登记；**不在根目录建散文件**。
 8. **文献落盘**：PDF → `毕业设计写作文档/参考文献/文献PDF/`；bibtex / GB/T 文本 → `毕业设计写作文档/参考文献/文献引用信息/`。引用信息目录已有总索引、分主题记录和 canonical `references.bib`；PDF 目录当前为空。
-9. **一份事实、两种出版视图**：章节迁移验收前，`docs/thesis/paper/*.md` 是内容事实源；`thuthesis/` 与 `thubeamer-1.2/` 是论文/答辩出版视图。禁止两边独立修改同一事实，图片只以 `docs/thesis/figures/` 为可提交资产源。
+9. **⚠️〔已被 §0.1 取代〕一份事实、两种出版视图**：~~章节迁移验收前，`docs/thesis/paper/*.md` 是内容事实源~~。**现行以 §0.1 为准：LaTeX 是唯一事实源，Markdown 只读历史参照。** 图片仍只以 `docs/thesis/figures/` 为可提交资产源。
 
 ---
 

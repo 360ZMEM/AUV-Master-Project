@@ -1,0 +1,19 @@
+% 自动生成 by tools/build_thesis_data_tables.py（27 号文 P2-3）。请勿手工编辑：重跑脚本刷新。
+% 源产物：docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/best_comparison.csv
+\begin{longtable}[]{@{}>{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}>{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}>{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}>{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}>{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}@{}}
+\caption{模型预测控制极端平面路径公平口径结果}\label{tab:ch05-mpc-extreme-paths}\tabularnewline
+\toprule\noalign{}
+场景 & 仅航向 PID 横向 RMSE & LOS 横向 RMSE & MPC 最优横向 RMSE & 结论 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+场景 & 仅航向 PID 横向 RMSE & LOS 横向 RMSE & MPC 最优横向 RMSE & 结论 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+长波 S 弯（60 m / 7 m） & 0.093 m & 1.047 m & 0.055 m & MPC 均优（较仅航向 41\%、较 LOS 95\%） \\
+发卡 180° 掉头 & 4.695 m & 4.692 m & 2.277 m & MPC 均优（52\%） \\
+短波 S 弯 & 2.597 m & 1.657 m & 1.655 m & MPC 较仅航向 36\%、与 LOS 持平 \\
+直角折弯 & 3.596 m & 0.659 m & 1.452 m & 诚实边界：直角折弯上 LOS 前瞻最优 \\
+\end{longtable}

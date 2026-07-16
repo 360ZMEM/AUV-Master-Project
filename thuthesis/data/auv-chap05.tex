@@ -2,9 +2,11 @@
 % Authoritative thesis source; edit this TeX file directly.
 % Legacy Markdown material is reference-only and must not overwrite this file.
 
-\chapter{实验与结果讨论}
+\chapter{仿真实验与结果分析}
 
 \section{仿真实施架构与评价口径}\label{sec:ch05-5-1}
+
+本章的目的是在纯仿真与数字孪生条件下，围绕第 1.4 节确立的``声磁协同状态估计、感知不确定性驱动控制、行为树安全决策''三条主线，通过多场景、多随机种子、多失效模式与多控制器消融实验，验证所提方法在设定扰动条件下的相对有效性并界定其适用边界。为使每条结论都能追溯到具体实验条件，本章的评价体系沿四个维度组织：其一是仿真任务定义，即海缆自主巡检从搜索、捕获到沿线跟踪的闭环任务与终止判据（§\ref{sec:ch05-5-1-2}、§\ref{sec:ch05-5-2}）；其二是场景、传感器与扰动建模，即海流、传感器退化、通信故障与磁/声观测噪声的可控注入（§\ref{sec:ch05-5-2}、§\ref{sec:ch05-5-2-3}）；其三是对比方法与消融设置，即固定权重与不确定性感知控制、单模态与声磁融合、行为树与状态机在同源同种子下的成对比较（§\ref{sec:ch05-5-1-3}、§\ref{sec:ch05-5-5}）；其四是评价指标，即定位、控制、地形跟随与巡检四类可复现量化指标（§\ref{sec:ch05-5-1-4}）。本章所有统计结论均限定于仿真口径，其证据强度与向真机迁移的剩余验证集中于 §\ref{sec:ch05-5-5-9} 与 §\ref{sec:ch05-5-6} 讨论。
 
 第 2 章已经说明系统由仿真后端、通信接口、状态估计、任务决策和控制执行等模块构成，第 3、4 章则分别给出了状态估计与决策控制算法。本节不再重复这些模块的设计原理，而回答一个不同的问题：上述模块如何在实验中被组织成可重复运行、可施加受控扰动并能形成可审计证据的闭环。为此，本文把仿真实施划分为运行编排、在线闭环和证据生成三个相互解耦的部分。
 
@@ -107,7 +109,7 @@
 
 数据处理采用``在线记录、离线评分、跨运行聚合''三级结构。在线阶段只记录原始时序和运行状态，不在控制回路内计算最终论文指标；离线阶段从真值、估计、控制和诊断序列计算单次定位误差、协方差一致性、控制平滑度、回退率和安全违规率；聚合阶段再按场景、模式与种子给出均值、标准差、分位数或成功比例。海缆巡检专项在此通用链路上增加逐帧跟踪记录、行业标准评分和多次运行验收聚合，但仍遵守由运行上下文、闭环记录到离线判定的统一数据契约。
 
-因此，PVS 主链、HoloOcean 专项验证、解耦轻量闭环和后续真机实验不是四套互不相干的实验程序，而是共享上层算法接口与证据生成方式、替换不同物理后端或执行接口的验证路径。当前第 5 章的统计结论主要来自 PVS 主链；HoloOcean、轻量闭环和硬件实验各自承担的补充作用与外推边界在 §5.5.9 和 §5.5.11 统一讨论，不在本节反复展开。
+因此，PVS 主链、HoloOcean 专项验证、解耦轻量闭环和后续真机实验不是四套互不相干的实验程序，而是共享上层算法接口与证据生成方式、替换不同物理后端或执行接口的验证路径。当前第 5 章的统计结论主要来自 PVS 主链；HoloOcean、轻量闭环和硬件实验各自承担的补充作用与外推边界在 §\ref{sec:ch05-5-5-9} 和 §\ref{sec:ch05-5-5-11} 统一讨论，不在本节反复展开。
 
 \subsection{评价指标的数学定义与物理意义}\label{sec:ch05-5-1-4}
 
@@ -147,7 +149,7 @@ r_{\Delta u}
 
 \subsection{复杂海底电缆巡检场景构建}\label{sec:ch05-5-2-1}
 
-仿真场景库由两层组成。第一层覆盖干净基线、四档多普勒计程仪（DVL）丢包、两档磁畸变、声呐杂波和综合压力，用于传感器与通信不确定性验证；第二层面向海缆巡检，把电缆几何、地形与埋设、声磁量测噪声和横流拆成可独立控制的原生因子，并与完整控制栈可运行的六类代理场景并存。第一层配置汇总如下，第二层的正式统计与 truth/measurement 隔离契约见第 5.7 节（场景因子与名义强度见附录 A.1）：
+仿真场景库由两层组成。第一层覆盖干净基线、四档多普勒计程仪（DVL）丢包、两档磁畸变、声呐杂波和综合压力，用于传感器与通信不确定性验证；第二层面向海缆巡检，把电缆几何、地形与埋设、声磁量测噪声和横流拆成可独立控制的原生因子，并与完整控制栈可运行的六类代理场景并存。第一层配置汇总如下，第二层的正式统计与真值和量测的隔离契约见 §\ref{sec:ch05-5-7}（场景因子与名义强度见附录 A.1）：
 
 \begin{longtable}[]{@{}llll@{}}
 \caption{仿真场景库及扰动配置}\label{tab:ch05-scenarios}\tabularnewline
@@ -182,370 +184,11 @@ DVL 丢包·极重度 & DVL 丢包 & 90\% & 极重度速度观测丢失 \\
 
 模拟上位机子系统通过三个解耦模块再现真实水下通信与传感的不确定性：一个传输延迟队列模拟非确定性通信延迟（约 200 ms 基线时延叠加 50 ms 抖动），一个采样缓存模块模拟多速率传感器采样（惯性器件约 100 Hz、深度约 50 Hz、磁力计约 20 Hz、DVL 约 6 Hz），一个故障注入器负责各类失效。故障注入器覆盖 DVL 冻结、惯性器件慢漂移、深度尖峰、磁力计饱和、总线丢包与数据包乱序六类典型退化，其实现方式与典型参数整理于附录 A.2。硬件测量给出了仿真参数的两个现实锚点：编号 6\# TMR8637 随附报告给出三轴 200 pT/\(\sqrt{\text{Hz}}\) @ 1 Hz 与约 20--30 pT/\(\sqrt{\text{Hz}}\) @ 50 Hz；SK2301 短接实验则给出 16.877--18.342 bit 的噪声 ENOB 和 45 Hz 窄带等效噪声。二者分别约束传感器本体与数采子链的噪声量级，使后续实测噪声回放能够从参数化高斯退化过渡到真实频谱输入。
 
-\section{硬件系统集成与物理标定实验}\label{sec:ch05-5-3}
+\section{状态估计仿真}\label{sec:ch05-5-5}
 
-硬件证据沿通信接口、传感器本体、数采子链和空间标定四个层次组织。这样的分层使每项结果对应明确的物理对象，同时保持从传感器输出到状态估计输入的连续链路。
+前两节交代了仿真实施架构、运行生命周期、评价口径与场景库，本节起进入全文的核心证据部分。为避免把分散的单点实验平铺成流水账，本章把仿真证据归并为三条相互独立、各自封闭的主线依次展开：状态估计仿真（本节）、控制与安全仿真（§\ref{sec:ch05-5-ctrl}）、端到端海缆巡检数字孪生仿真（§\ref{sec:ch05-e2e}）。每条主线只保留主结果表、结论叙述与一句指向证据边界总表（§\ref{sec:ch05-5-6}）的限定，过程性与分源诊断细节收进主表或随附录归档；面向实物的硬件与实验室证据及迁移路径另集中于 §\ref{sec:ch05-5-3}。这一组织延续第 4 章的鲁棒性分析口径：任何结果在写入论文时都显式标注样本量、测量边界与可外推条件，使读者能清楚看到每条结论各自的证据强度，避免``用单次基准代替多种子统计''的过度推断。
 
-\subsection{``双脑''通信链路与实时性压力测试}\label{sec:ch05-5-3-1}
-
-Jetson 与上位机之间的二进制通信链路需要在实物环境下测试真实时延与丢包率，当前的仿真等效测试仅验证了协议解析的正确性与软件栈的算力约束。该链路的下行帧携带工作模式、任务指令、舵角、推力与一组可调浮点参数，上行帧携带姿态、卫星定位、三轴速度、深度、电压、温度、漏水与故障位图（学术数据契约见附录 A.6）。在上位机端与 VxWorks 端的独立开发过程中已发现若干处协议偏差，包括帧头长度、压力与航向字段的错位、深度缩放因子的不一致、舵角类型与符号约定的差异等，这些偏差已在仿真期通过协议单元测试闭环，但实物部署时仍需逐一复核。真实链路的时延统计（各分位数、丢包率、序列号跳变次数）须留待实物部署阶段补充。
-
-\subsection{TMR8637 本体与 SK2301 数采链噪声表征}\label{sec:ch05-5-3-2}
-
-随实物 TMR8637 提供的编号 6\# 模组纸质测试报告构成了当前第一份直接面向该三轴模组的硬件文档证据。报告中的三轴测试汇总给出 X、Y、Z 轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性，三轴在 1 Hz 处的磁场噪声谱密度均为 200 pT/\(\sqrt{\text{Hz}}\)。完整性能参数见表~\ref{tab:ch02-tmr8637-test-data}，三轴传输特性与电压/磁场噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
-
-磁场噪声谱采用双对数坐标，横轴覆盖约 0.1 Hz 至 10 kHz，纵轴单位为 pT/\(\sqrt{\text{Hz}}\)。50 Hz 位于 10 Hz 与 100 Hz 主刻度之间，按三轴曲线线宽读取约为 20--30 pT/\(\sqrt{\text{Hz}}\)，即约 \(2\times10^1\ \text{pT}/\sqrt{\text{Hz}}\) 量级。由于现有证据是纸质曲线扫描件而非数值数据导出，本文把``约 20 pT/\(\sqrt{\text{Hz}}\)''作为中心近似，并采用 20--30 pT/\(\sqrt{\text{Hz}}\) 区间完成保守计算，不报告虚假的个位精度。
-
-按 \(\sigma_B\approx S_B(50\text{ Hz})\sqrt{B_{\mathrm{ENBW}}}\) 估算，若只考虑模组本体噪声，要使 \(\sigma_B\leq0.05\text{ nT}\)，20--30 pT/\(\sqrt{\text{Hz}}\) 区间对应的带宽上限为 6.25--2.78 Hz；按 30 pT/\(\sqrt{\text{Hz}}\) 的区间上界作最保守设计时，应满足 \(B_{\mathrm{ENBW}}\leq2.78\text{ Hz}\)。第 3.2.3 节采用的四阶 Butterworth 低通在 \(f_c=0.5\text{ Hz}\) 时对应 \(B_{\mathrm{ENBW}}\approx0.513\text{ Hz}\)，由此得到模组本体 RMS 噪声约 0.014--0.022 nT，低于 0.05 nT 系统目标。
-
-在传感器本体证据之外，本文对 SK2301 的 CH4 差分输入进行了短接噪声测试。2000 Hz 直接采样的 RMS 噪声为 \(47.974\ \mu\text{V}\)，噪声 ENOB 为 16.877 bit；将硬件采样率提高到 16 kHz，并以 OSR=8 块平均恢复 2 kHz 输出后，RMS 噪声降至 \(17.375\ \mu\text{V}\)，ENOB 提升到 18.342 bit。图~\ref{fig:ch05-adc-enob-osr}显示各采样率下 ENOB 随 OSR 的变化基本重合，实测 1.440 bit 增益接近白噪声理论值 1.500 bit，表明超采样收益具有稳定的统计来源，而不是单次偶然波动。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.88\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入下噪声 ENOB 随非重叠块平均过采样率的变化}]{hardware/adc_enob/ch4_enob_vs_osr.png}
-\caption{SK2301 短接输入噪声 ENOB 与过采样率的关系}\label{fig:ch05-adc-enob-osr}
-\end{figure}
-\FloatBarrier
-
-频谱结果见图~\ref{fig:ch05-adc-noise-asd}。不同采样率下宽带噪声底随采样率提高而下降，同时保留若干窄带尖峰；这解释了 OSR 增益为何接近但略低于理想白噪声模型，也说明继续提高平均长度最终会受到相关噪声与窄带干扰限制。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.88\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入在不同采样率下的电压幅度谱密度}]{hardware/adc_enob/ch4_noise_spectral_density.png}
-\caption{SK2301 短接输入噪声的幅度谱密度}\label{fig:ch05-adc-noise-asd}
-\end{figure}
-\FloatBarrier
-
-按 \(20\text{ mV}/\mu\text{T}\) 名义灵敏度换算，在 16 kHz 采样、OSR=8 和 1 s 45 Hz 正交解调条件下，ADC 子链的等效磁噪声为 \(0.0230\text{ nT}\) 矢量 RMS，I/Q 单分量 \(3\sigma\) 为 \(0.0514\text{ nT}\)。因此，本实验支持的结论是：低成本 24 bit ADC 虽只有约 16.88 bit 的原始宽带 ENOB，但通过超采样与相干积分可进入 0.05 nT 灵敏度量级。灵敏度描述规定带宽和判据下的最小可辨变化；绝对精度还取决于可溯源真值、TMR 本征噪声、模拟前端、温漂和标定误差，二者在本文中不作等同。
-
-\subsection{磁传感器杆臂/安装角标定（仿真标定验证）}\label{sec:ch05-5-3-3}
-
-磁传感器标定需要同时估计传感器相对载体的安装位置偏移（杆臂）与安装角，使磁场采样点能从载体基准位置正确外推到传感器的世界坐标。真机场景需在高精度转台上旋转 AUV 以拟合软铁矩阵与硬磁偏置；在实物转台就位之前，本节先给出一轮\textbf{仿真标定验证}，以数字孪生真值外参生成磁采样，再从一个带偏差的初值运行标定流程使其收敛，用以验证``杆臂改正链路与文件契约成立''。标定采用真值/估计双配置模型：真值外参仅用于数字孪生生成传感器观测，带偏差的估计外参则由标定输出替换。在约 120 秒、一千二百余个样本上，标定从有偏初值收敛，结果如下：
-
-\begin{longtable}[]{@{}lrrr@{}}
-\caption{磁传感器杆臂与安装角仿真标定结果}\label{tab:ch05-mag-calibration}\tabularnewline
-\toprule\noalign{}
-指标 & 初值 & 估计后 & 改善 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-指标 & 初值 & 估计后 & 改善 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-平移误差 & 0.1086 m & 0.0041 m & 96.27 \% \\
-安装角误差 & 1.5000° & 0.0704° & 95.31 \% \\
-残差（首→末） & 0.1086 m & 0.0048 m & ： \\
-验证状态 & ： & 通过 & ： \\
-\end{longtable}
-
-图~\ref{fig:ch05-mag-residual}和图~\ref{fig:ch05-mag-error-reduction}分别给出标定过程的残差收敛曲线与平移/旋转误差下降对比，对应上表指标行：
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}]{experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.png}
-\caption{磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}\label{fig:ch05-mag-residual}
-\end{figure}
-\FloatBarrier
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={磁外参平移/安装角误差下降对比（平移 0.1086→0.0041 m、安装角 1.5000→0.0704 deg，仿真标定，\(n=1\)）}]{experiments/mag_lever_arm_fullflow_20260705_2145/02_mag_extrinsics_error_reduction.png}
-\caption{磁外参平移/安装角误差下降对比（平移 0.1086→0.0041 m、安装角 1.5000→0.0704 deg，仿真标定，\(n=1\)）}\label{fig:ch05-mag-error-reduction}
-\end{figure}
-\FloatBarrier
-
-本轮从配置、仿真采样、模拟标定到估计配置应用形成完整闭环，平移误差由 0.1086 m 降至 0.0041 m、安装角误差由 1.5000° 降至 0.0704°，说明杆臂改正链路与文件契约能够承载标定结果。该组数值来自仿真外参标定，用于验证方法和软件闭环；真机九参数与安装外参的计量标定统一列入第 5.6 节。
-
-\subsection{故障注入自救逻辑验证}\label{sec:ch05-5-3-4}
-
-故障注入自救逻辑采用等价规则完成统计对照：1000 次持续漏水用于响应延迟，100 条阈值噪声序列用于颤振，500 次低电压、漏水和近底穿越组合故障用于遗漏与死锁判定。两种决策架构均保持 100 ms 紧急响应和 100\% 组合故障生存率，证据只用于决策核心逻辑，不外推为通信链路或执行机构的系统级响应。
-
-\section{实验室近底巡检模拟与反演精度分析}\label{sec:ch05-5-4}
-
-\subsection{45 Hz 电缆与位姿联合实验}\label{sec:ch05-5-4-1}
-
-实验采用可控 45 Hz 电流激励直导线，并同步记录 TMR8637/SK2301 三轴电压与双 ArUco 相对位姿。ADC 以 2000 Hz 采样，共获得 106821 个时刻样本；位姿日志覆盖 832 帧，按 1 s 锁相窗口和 0.05 s 步长完成时间对齐后得到 777 个有效磁场--位姿配对点。黄金电阻两端电压为 \(7.56\text{ V RMS}\)，电阻为 \(4.09\ \Omega\)，对应电流 \(1.8484\text{ A RMS}\) 和 \(2.6140\text{ A}\) 峰值。由于锁相输出采用正弦峰值口径，固定电流模型使用后者。
-
-三轴复 I/Q 与位姿的联合处理保留了幅值、方向和公共相位。图~\ref{fig:ch05-joint-trajectory}将 45 Hz 磁场模量映射到传感器运动轨迹，显示靠近拟合电缆区域时同频响应显著增强。连续运动使单个三轴传感器在空间上形成合成阵列，从而为电缆方向和相对位置提供超出单点观测的几何约束。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.76\linewidth,height=\textheight,keepaspectratio,alt={TMR 运动轨迹及其 45 Hz 磁场模量空间分布}]{experiments/magnetic_joint/trajectory_colored_by_b.png}
-\caption{TMR 运动轨迹与 45 Hz 磁场模量空间分布}\label{fig:ch05-joint-trajectory}
-\end{figure}
-\FloatBarrier
-
-\subsection{三轴复 I/Q 的 Biot--Savart 联合反演}\label{sec:ch05-5-4-2}
-
-对电缆轴单位向量 \(\boldsymbol{u}\)、轴线上一点 \(\boldsymbol{p}_0\) 和传感器位置 \(\boldsymbol{p}\)，采用无限长直导线模型
-
-\[
-\boldsymbol{B}(\boldsymbol{p})
-=\frac{\mu_0 I}{2\pi}
-\frac{\boldsymbol{u}\times\boldsymbol{\rho}}{\|\boldsymbol{\rho}\|^2},
-\qquad
-\boldsymbol{\rho}
-=(\boldsymbol{p}-\boldsymbol{p}_0)
--[(\boldsymbol{p}-\boldsymbol{p}_0)\cdot\boldsymbol{u}]\boldsymbol{u}.
-\]
-
-模型不预设电缆方向和位置，而是以多起点非线性最小二乘同时估计直线的四个可辨识几何自由度与公共复尺度。自由复尺度拟合得到复数 \(R^2=0.8792\)、等效峰值电流 2.8789 A；固定峰值电流为实测 2.6140 A 时，复数 \(R^2=0.8711\)。图~\ref{fig:ch05-joint-complex-fit}给出三轴同相与正交分量的测量--模型对照。相较仅拟合非负模量，复 I/Q 保留了场方向符号和公共参考相位，使不同轴上的峰谷与换向能够共同约束几何。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.96\linewidth,height=\textheight,keepaspectratio,alt={三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型拟合结果}]{experiments/magnetic_joint/complex_iq_fit.png}
-\caption{三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型联合拟合}\label{fig:ch05-joint-complex-fit}
-\end{figure}
-\FloatBarrier
-
-为区分真实模型失配与优化器不可辨识，本文另以未知轴向、未知位置和未知复相位的合成数据执行同一拟合流程，得到轴向一致性 0.99999999、线位置误差 \(5.34\times10^{-6}\text{ m}\) 和复数 \(R^2=0.9999878\)。因此，真实数据中约 0.87--0.88 的拟合水平主要反映杆臂旋转、通道复增益和无限长直导线近似等模型因素，而不是局部优化失败。该实验验证了移动单三轴磁传感器结合位姿与复锁相恢复电缆相对几何的可行性；绝对埋深精度和多芯回流模型的验证集中列入第 5.6 节。
-
-\section{实验结果讨论与仿真到实物的迁移性分析}\label{sec:ch05-5-5}
-
-至此，前面四节已经交代了仿真实施架构、运行生命周期、评价口径、场景库、故障注入以及硬件与实验室验证安排，本节进入全文的核心证据章，把所有已完成实验按统一数据契约逐一摆出，讨论它们能支撑什么结论、不能支撑什么结论，以及在仿真到实物迁移过程中会面临哪些已知挑战。这一组织思路与第 4 章的鲁棒性分析一脉相承：任何实验结果在写入论文时都必须显式标注样本量、测量边界与可外推条件，否则就会出现``用单次基准代替多种子统计''的过度推断。本章在每张表的边界一栏中始终保留这一标注口径，使读者可以清楚看到每条结论各自的证据强度。
-
-\subsection{当前已完成实验总表}\label{sec:ch05-5-5-1}
-
-下表汇总截至当前进度已完成或部分完成的所有实验类别，每行给出样本量、可写结论与测量边界三项。这张表的作用不是实验流水账，而是为论文写作提供一份``证据清单''，每条结论在写入正文之前，都应能在本表中找到对应的样本量与边界，从而避免在引用少数种子的实验数据时无意越界（各行对应的样本量与证据边界见附录 A.7）：
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3077}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}@{}}
-\caption{已完成实验及证据边界汇总}\label{tab:ch05-evidence-inventory}\tabularnewline
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-实验类别
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-样本量
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-可写结论
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-边界
-\end{minipage} \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-实验类别
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-样本量
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-可写结论
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-边界
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-基线定位（多种子） & \(n=3\) & 基线定位指标均值\allowbreak{}±标准差可用 & 仅限 30 s 片段 \\
-DVL 丢包四档（多种子） & \(n=3\)/档 & 四档均三次全部成功，支撑第 3 章鲁棒性 & 仅限定位指标 \\
-磁畸变/声呐/综合四场景（多种子） & \(n=3\)/场景 & 四场景均三次全部成功，支撑第 3 章鲁棒性 & 水平面 RMSE 非单调 \\
-不确定性感知控制主消融（定位） & 3 场景×2 模式×3 种子 & 基线与综合压力下定位改善，重度丢包无优势 & 离线滤波指标 \\
-主消融控制侧指标 & 3 场景×2 模式×3 种子 & 横向 RMSE、控制变化率、回退率与非零求解时间均可观测 & 历史失败帧耗时字段不可与当前口径混用 \\
-UA-MPC 机制消融与迭代上限对照 & P-1/P-2/H4 多档对照 & sigmoid 控制代价降权是可解性与横向精度主贡献 & 单纯提高迭代上限会阻塞控制周期 \\
-分源 NIS 审计 & 8 场景×3 种子，35243 次量测更新 & 深度与 DVL 一致性偏差方向相反（见 §5.5.5） & 历史混合阈值只作操作性触发 \\
-ES-EKF 五分钟时序敏感性 & 3 场景×5 种子×2 相位，30 次运行 & 成对噪声下隔离 0/100 ms DVL 相位效应（见 §5.5.5） & 离线动力学；无持续绝对水平位置观测 \\
-实测背景噪声回放 & 同协方差高斯/实测回放×5 种子 & 均值接近，实测时序显著增大跨 seed 离散（见 §5.5.5） & 3.92 s 记录循环，不支持长时平稳性 \\
-滤波策略与时间戳基线 & 3 场景×6 策略×5 种子，90 次运行 & Huber 更新显著抑制脉冲异常；分源 R 避免跨源混合（见 §5.5.5） & 离线动力学；时间戳膨胀不等同延迟状态更新 \\
-基线定位/控制/决策 & \(n=1\) & 工具链与单次基准可用 & 不能替代多种子 \\
-地形跟随 PID/MPC & \(n=1\)/组 & PID 地形跟随是当前近底主结果 & 需重复统计 \\
-PID 地形跟随三档（多种子复验） & \(n=3\)/档 & 三档均三次全部成功、零安全违规、离底 RMSE 0.59--0.71 m（见 §5.5.3） & 部分档合并了重跑种子 \\
-深度 MPC 调参 & 多轮调参 & 深度 MPC 不作为主线 & 只能写回退理由 \\
-MPC 极端平面路径 & \(n=1\)/场景 & 公平口径下 MPC 在多数极端路径优于或持平基线 & 仅直角路径 LOS 更优（诚实边界） \\
-TMR8637 随附测试报告 & 1 份报告/编号 6\# 模组三轴 & 1 Hz 为 200 pT/\(\sqrt{\text{Hz}}\)，50 Hz 约 20--30 pT/\(\sqrt{\text{Hz}}\)；模组本体具备窄带噪声裕度（见 §5.3.2） & 供应方随附单件报告，非本文独立复测，非完整采集链 \\
-SK2301 短接 ENOB 与 45 Hz 锁相 & 4 档采样率×10 s，最高 160000 样本 & ENOB 16.877--18.342 bit；45 Hz 矢量 RMS 0.0230 nT（见 §5.3.2） & ADC 子链灵敏度，不等同整机绝对精度 \\
-45 Hz 电缆--TMR--ArUco 联合反演 & 106821 ADC 样本，777 对齐点 & 复 I/Q 自由/固定电流拟合 \(R^2=0.8792/0.8711\)（见 §5.4） & 直导线与公共复尺度模型 \\
-磁传感器杆臂/安装角标定（仿真） & \(n=1\) 全流程 & 杆臂改正链路与文件契约成立，平移降 96.27\%、旋转降 95.31\%、通过（见 §5.3.3） & 仿真标定框架、非真机转台、未估九参数 \\
-代理电缆六场景正式矩阵 & 6 场景×2 模式×3 种子 & 36/36 完成、fallback 为 0；conservative UA 将全局控制变化率 RMS 由 0.247 降至 0.085（见 §5.7.7） & 横向 RMSE 未系统改善；代理配置不代表原生声磁闭环 \\
-CBF 安全过滤 low/mid/high 三种子矩阵 & low/mid/high \(\times\) 3 seed \(\times\) PID/MPC，各约 60 s & 18/18 run 有效；最小净空 2.70--2.90 m，1.5 m 低净空违规率和穿底率均为 0；MPC fallback 为 0，solver p95 最大 23.84 ms（见 §5.7.7） & manual setpoint/kinematic proxy；不代表 native PVS 或所有极端场景 \\
-原生电缆因子生成器 & 16 组合×2 种子，32 次契约验证 & 几何、地形、实测噪声与横流可独立开关，truth/measurement 隔离 & 生成器验证，不替代控制闭环因子交互实验 \\
-R22 原生因子闭环全矩阵 & \(2^4\) 组合×3 seed×2 模式，96 次 20 s & 96/96 有效，fallback 与安全违规均为 0；最坏横向 p95 为 1.716 m，最小净空 2.536 m；solver p95 最大 24.02 ms（见 §5.7.7） & 离线 simulation\_proxy；非 native PVS/真机物理时延 \\
-R22 60 s 全因子长时复核 & \(2^4\) 组合×3 seed×2 模式，96 次 60 s & 96/96 有效，fallback 与安全违规均为 0；最坏横向 p95 为 2.176 m，最小净空 2.384 m；solver p95 最大 14.93 ms（见 §5.7.7） & 未触发路径终点；仍非 native PVS/真机 \\
-R22 地形+横流 120 s 终端边界测试 & 4 组合×3 seed×2 模式，24 次 120 s & 24/24 有效，安全违规为 0；全窗口最坏横向 p95 为 6.839 m；终端审计显示活动巡缆段 p95 最大 2.152 m、终端尾段 p95 最大 7.703 m；UA fallback 最大 0.113（见 §5.7.7） & 终端任务边界；不能写成活动段跟踪崩溃或长航时定点保持 \\
-R22 120 s 任务层终端退出验证 & 同上，到达路径末端即退出 & 24/24 有效且均到达路径末端；退出后最坏横向 p95 为 2.152 m，UA fallback 最大 0.018；solver p95/max 最大 22.99/53.27 ms（见 §5.7.7） & 消除终端尾段指标污染；不代表定点保持或 native PVS \\
-native PVS 执行链 smoke & 约 50 s constant-depth/heading protocol\_udp 仿真 & 审计通过；depthHeadingAutopilot+native 配置，AUTO 日志 149 次，kinematic log 为 0；setpoint/mpc/state 分别 245/720/998 帧，solver p95/max 为 19.32/20.40 ms（见 §5.7.7） & 执行链证据；非 R22 性能矩阵、真机或海试 \\
-PC104 UDP 时序探针 & 30 s host-relay 安全零推力实机记录 & 下行 300 帧进入 relay，解析 450 帧 \texttt{\$AUV} 上行；到达频率约 15.0 Hz，p50/p95/p99 间隔约为 58.0/85.7/85.9 ms，parse error 为 0 & 只报告到达间隔/抖动；无共享时钟或 firmware echo 时不作单向物理延迟结论 \\
-行为树 vs 状态机 & 1000 次延迟、100 条噪声序列、500 次组合故障 & 等价规则下响应和生存率相同；迟滞去抖降低颤振 & 结论限于决策核心仿真 \\
-海缆行业标准数字孪生验收 & 3 次全新运行 & 全链路闭环、三次全部就绪且通过（见 §5.5.10） & 数字孪生确定性先验，非真实检测噪声 \\
-解耦轻量闭环 & 单次冒烟验证（\(n=1\)） & 满足磁观测前提时在线先验修正被真实观测接受，算法实机部署接口成立（见 §5.5.11） & 轻量运动学闭环，无地磁背景/检测噪声/硬件时延/六自由度水动力 \\
-六自由度闭环偏差先验恢复 & 中/重档各 3 次全新运行 & 在线修正被真实接受、闭环恢复首次复现，中/重档各三次全部就绪通过（见 §5.5.11） & 数字孪生确定性先验、静态位姿扭曲、缆在车下满足前提、窗口内判定、每档三种子 \\
-\end{longtable}
-
-\subsection{地形跟随主结果}\label{sec:ch05-5-5-2}
-
-\begin{quote}
-\textbf{数据口径（真口径重跑，取代旧表）}：本表为真口径重跑结果（跳过起始 10 s 预热、四相统一取真值离底高度）。早先旧表约 4.0 m 的常值离底与约 7 m 的深度误差，已确认是分析层基准错误造成的常值假象，已被取代；样本量与适用边界见附录 A.7。\textbf{每相为单次运行（\(n=1\)），引用须标注，后续应补至少三次重复给出均值\allowbreak{}±标准差。}
-\end{quote}
-
-\begin{longtable}[]{@{}lrrrr@{}}
-\caption{地形跟随真口径主结果（每组单次运行）}\label{tab:ch05-terrain-main}\tabularnewline
-\toprule\noalign{}
-指标 & PID 基线 & PID 地形 & MPC 基线 & MPC 地形 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-指标 & PID 基线 & PID 地形 & MPC 基线 & MPC 地形 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-时长（s） & 59.11 & 59.80 & 59.50 & 59.51 \\
-最小离底高度（m） & 1.600 & 1.000 & 1.400 & 1.400 \\
-平均离底高度（m） & 2.699 & 1.954 & 2.657 & 2.647 \\
-离底高度标准差（m） & 0.470 & 0.442 & 0.495 & 0.500 \\
-相对 3 m 目标 RMSE（m） & 0.558 & 1.136 & 0.602 & 0.612 \\
-深度误差 RMSE（m） & 6.493 & N/A & 6.427 & N/A \\
-离底 \textless{} 1.5 m 比例 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-\end{longtable}
-
-真口径下四相的平均离底高度落在 1.95--2.70 m，离底高度随真地形起伏（标准差约 0.44--0.50 m），不再是旧表的 4.0 m 常值假象。地形模式的主指标是相对目标高度的离底 RMSE；深度误差 RMSE 在地形模式下按绝对目标深度评分已无物理意义，故正确标为不适用。本次重跑为单次运行，PID 与 MPC 地形跟随的离底 RMSE 接近，\textbf{不应据此过度解读两者的相对优劣}；地形跟随能力的稳健结论以 §5.5.3 的三档消融为准。此外 MPC 地形相有约 14.3\% 的步触发``保持上次输出''的回退，这是 MPC 在起始深度与目标差距过大（约 8 m 降到 3 m）时带宽/速率约束求解不可行的真实工程边界，须诚实记录。
-
-\subsubsection{地形跟随实验图组}\label{sec:ch05-terrain-figures}
-
-图~\ref{fig:ch05-terrain-tracking}与图~\ref{fig:ch05-terrain-safety-margin}分别展示 PID/MPC 地形跟随的离底高度跟踪与安全裕度，对应上表的离底高度与违规行；离底 RMSE 四组对比、PID 三维轨迹与指令契约示意图为同组 \(n=1\) 支撑材料，随附录 A.7/Artifact Manifest 归档，其中``MPC 未优于 PID''这一诚实边界已在上表与 \S\ref{sec:ch05-5-6} 中记录，主文不再逐图展开：
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}]{terrain_following/terrain_tz_tracking_pid_mpc.pdf}
-\caption{地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}\label{fig:ch05-terrain-tracking}
-\end{figure}
-\FloatBarrier
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={地形跟踪安全裕度（离底高度对安全阈值的裕度，PVS 基准，\(n=1\)）}]{terrain_following/terrain_clearance_safety_margin.pdf}
-\caption{地形跟踪安全裕度（离底高度对安全阈值的裕度，PVS 基准，\(n=1\)）}\label{fig:ch05-terrain-safety-margin}
-\end{figure}
-\FloatBarrier
-
-\subsection{PID 地形跟随的地形强度消融}\label{sec:ch05-5-5-3}
-
-为把上一节的单次基准提升为可进入论文统计表的结论，本节对低、中、高三档地形强度各跑三个随机种子复验，并对其中两档落盘失败的种子各做一次重跑，最终合并口径如下（部分档的三种子由主跑成功种子与重跑成功种子合并得到，重跑原因是记录落盘不稳定而非算法闭环失败）：
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1304}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}@{}}
-\caption{PID 地形跟随三档多种子消融结果}\label{tab:ch05-terrain-ablation}\tabularnewline
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-地形强度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-成功/总数
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-离底 RMSE（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-平均离底（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-最小离底（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-\textless{} 1.5 m 违规
-\end{minipage} \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-地形强度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-成功/总数
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-离底 RMSE（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-平均离底（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-最小离底（均值\allowbreak{}±标准差）
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-\textless{} 1.5 m 违规
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-低 & 3/3 & 0.587\allowbreak{}±0.112 m & 3.546\allowbreak{}±0.146 m & 3.259\allowbreak{}±0.388 m & 0.0000 \\
-中 & 3/3 & 0.709\allowbreak{}±0.002 m & 3.709\allowbreak{}±0.002 m & 3.708\allowbreak{}±0.002 m & 0.0000 \\
-高 & 3/3 & 0.610\allowbreak{}±0.081 m & 3.583\allowbreak{}±0.112 m & 3.228\allowbreak{}±0.205 m & 0.0000 \\
-\end{longtable}
-
-三档地形均三次全部完成、无一例低于 1.5 m 的安全违规，离底 RMSE 落在 0.59--0.71 m 区间，说明 PID 地形跟随在当前地形模型下具有稳定的近底安全性，这一均值\allowbreak{}±标准差结论可作为论文近底安全的主结论。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={PID 地形跟踪低/中/高增益消融（PVS 基准，\(n=1\)/档）}]{terrain_following/pid_terrain_low_mid_high_ablation.pdf}
-\caption{PID 地形跟踪低/中/高增益消融（PVS 基准，\(n=1\)/档）}\label{fig:ch05-terrain-pid-ablation}
-\end{figure}
-\FloatBarrier
-
-\subsection{MPC 极端平面路径支线结果}\label{sec:ch05-5-5-4}
-
-\begin{quote}
-\textbf{数据口径（公平口径重跑，取代旧表）}：本表为删除测试脚手架中一处常值下游偏置后的公平口径重跑结果。该偏置曾把整条 MPC 参考推向最近点下游、迫使 MPC 切弯并人为放大其横向误差，而两条 PID 基线不受影响，导致对比不公平；删除该偏置（保留真实预瞄项）后各变体一致复跑。样本量与适用边界见附录 A.7。\textbf{每场景为单次运行（\(n=1\)），引用须标注。}
-\end{quote}
-
-本组实验把离线规划的长波与短波 S 弯、直角折弯与发卡掉头四类极端路径，分别交给仅调航向的 PID、视线制导（LOS）与 MPC 跟踪，比较横向跟踪误差。作为对照基线，LOS 的几何前视形式沿用经典制导方法\cite{breivik2005guidance,fossen2015los}，结果如下：
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}@{}}
-\caption{模型预测控制极端平面路径公平口径结果}\label{tab:ch05-mpc-extreme-paths}\tabularnewline
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-场景
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-仅航向 PID 横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-LOS 横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-MPC 最优横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-结论
-\end{minipage} \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-场景
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-仅航向 PID 横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-LOS 横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-MPC 最优横向 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-结论
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-长波 S 弯（60 m / 7 m） & 0.093 m & 1.047 m & 0.055 m & MPC 全胜（较仅航向 −41\%、较 LOS −95\%） \\
-发卡 180° 掉头 & 4.69 m & 4.69 m & 2.277 m & MPC 全胜（−51\%） \\
-短波 S 弯 & 2.597 m & 1.657 m & 1.655 m & MPC 较仅航向 −36\%、与 LOS 持平 \\
-直角折弯 & 3.596 m & 0.659 m & 1.452 m & 诚实边界：直角折弯上 LOS 前瞻最优 \\
-\end{longtable}
-
-\textbf{结论与边界}：公平口径下，MPC 在长波 S 弯、发卡掉头、短波 S 弯三类工况均优于或持平基线，长波 S 弯与发卡掉头上对两条基线均全胜，短波 S 弯上显著优于仅航向 PID 且与 LOS 持平。唯一的诚实边界是直角折弯：该路径由分段直线组成，视线制导的几何前瞻最贴合，横向 RMSE（0.659 m）优于 MPC（1.452 m），此边界予以保留、不作过度宣称。早先``MPC 未普遍优于基线''的判断源自测试脚手架的偏置错误，修复后已被推翻。该支线为单次运行、尚未扩展到多种子统计，说明 MPC 制导层的多步预瞄与速度规划对复杂曲率路径有横向误差优势，但尚不足以作为论文主结论。
-
-\subsubsection{MPC 极端路径轨迹图组}\label{sec:ch05-mpc-extreme-figures}
-
-图~\ref{fig:ch05-mpc-long-s}以长波 S 弯为代表，给出公平口径下的平面轨迹跟踪实测：MPC 的多步预瞄使其明显贴合参考路径，横向 RMSE 较 LOS 降低约 95\%，直观印证上表结论。短波 S 弯、发卡 180° 掉头与直角折弯三类轨迹图为同组 \(n=1\) 支线，随附录 A.7/Artifact Manifest 归档，其横向 RMSE 已在上表逐行列出，其中直角折弯的 LOS 前瞻更优边界并入 \S\ref{sec:ch05-5-6}，主文不再逐图展开：
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.80\linewidth,height=\textheight,keepaspectratio,alt={制导层 MPC 长波 S 弯 XY 轨迹跟踪（PVS 极端路径基准，\(n=1\)）}]{experiments/control_mpc_xy_yaw_extreme/s_turn_long_wave_xy_v4_short_realtime.png}
-\caption{制导层 MPC 长波 S 弯 XY 轨迹跟踪（PVS 极端路径基准，\(n=1\)）}\label{fig:ch05-mpc-long-s}
-\end{figure}
-\FloatBarrier
+本节聚焦状态估计主线。围绕第 3 章定义的误差状态扩展卡尔曼滤波，本节在多扰动场景与多随机种子下考察其定位鲁棒性、分源一致性与长时程/时序敏感性，界定其正贡献与结构性可观性边界。
 
 \subsection{误差状态扩展卡尔曼滤波的多场景多种子鲁棒性结果}\label{sec:ch05-5-5-5}
 
@@ -603,29 +246,46 @@ DVL 丢包 90\% & 3/3 & 3.55\allowbreak{}±0.23 m & 0.19\allowbreak{}±0.04 m & 
 综合压力 & 3/3 & 3.27\allowbreak{}±1.09 m & 0.20\allowbreak{}±0.02 m & 3.28\allowbreak{}±1.09 m & 3.28\allowbreak{}±1.09 m \\
 \end{longtable}
 
-\textbf{结论与边界}：八个场景全部达到 100\% 成功率（二十四次运行全部完成），说明误差状态扩展卡尔曼滤波在 DVL 丢包（10\%--90\%）、磁畸变、声呐杂波及联合扰动下均能稳定输出定位结果。值得注意的是，水平面 RMSE 并不严格随扰动强度单调变化，例如重度 DVL 丢包（60\%）的水平 RMSE 反而低于中度（30\%），综合压力也低于声呐杂波与重度磁畸变。这说明 30 秒片段、种子初始化与观测时序对结果有显著影响，不宜把少数场景的数值差异过度解读为``扰动强度的单调响应''。此外本表指标来自离线滤波评估，反映的是状态估计误差，不直接等价于控制侧的横向 RMSE 或轨迹跟踪性能。
+\textbf{结论与边界}：八个场景全部达到 100\% 成功率（二十四次运行全部完成），说明误差状态扩展卡尔曼滤波在 DVL 丢包（10\%--90\%）、磁畸变、声呐杂波及联合扰动下均能稳定输出定位结果。水平面 RMSE 并不严格随扰动强度单调变化，例如重度 DVL 丢包（60\%）的水平 RMSE 反而低于中度（30\%），综合压力也低于声呐杂波与重度磁畸变。这说明 30 秒片段、种子初始化与观测时序对结果有显著影响，不宜把少数场景的数值差异过度解读为``扰动强度的单调响应''。此外本表指标来自离线滤波评估，反映的是状态估计误差，不直接等价于控制侧的横向 RMSE 或轨迹跟踪性能。
 
-定位误差之外，本文对同一批八场景三种子的每次真实量测更新重新计算标准 NIS，并按观测源与自由度分别聚合。共获得 35243 个事件，其中深度一维更新 17630 次，DVL 三维更新 17613 次。分源结果如下：
+定位误差之外，本文对同一批八场景三种子的每次真实量测更新重新计算标准 NIS，并按观测源与自由度分别聚合，共获得 35243 个事件（深度一维更新 17630 次、DVL 三维更新 17613 次）。在此基线诊断之上，进一步做一次\textbf{分源一致性校准 A/B 独立对照}，检验``按观测源归一化''这一处置的实际收益；校准仅通过离线诊断工具的命令行开关在本对照实验进程内改写协方差与自适应口径，\textbf{不改动滤波器与部署配置的默认协方差}，故基线臂逐位复现基线诊断值，既有二十四次矩阵结论不被回改。分源标准 NIS 与三臂校准结果见表~\ref{tab:ch05-nis-covariance-ab}。
 
-\begin{longtable}[]{@{}lrrrrr@{}}
-\caption{按观测源与自由度聚合的标准 NIS 结果}\label{tab:ch05-nis-covariance}\tabularnewline
-\toprule\noalign{}
-观测源 & 自由度 & 事件数 & NIS/自由度均值 & 95\%带覆盖率 & 上界超限率 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-观测源 & 自由度 & 事件数 & NIS/自由度均值 & 95\%带覆盖率 & 上界超限率 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-深度 & 1 & 17630 & 7.205 & 0.561 & 0.416 \\
-DVL 世界系速度 & 3 & 17613 & 0.119 & 0.553 & 0.000 \\
-\end{longtable}
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
+\caption{分源标准 NIS 与一致性校准 A/B（独立对照，不改主线默认协方差）}\label{tab:ch05-nis-covariance-ab}\label{tab:ch05-nis-covariance}
+\begin{tabular}{@{}p{0.18\linewidth}p{0.15\linewidth}
+  >{\raggedleft\arraybackslash}p{0.15\linewidth}
+  >{\raggedleft\arraybackslash}p{0.16\linewidth}
+  >{\raggedleft\arraybackslash}p{0.13\linewidth}
+  >{\raggedleft\arraybackslash}p{0.14\linewidth}@{}}
+\toprule
+整定臂 & 观测源（自由度） & NIS/自由度均值 & 95\%带覆盖率 & 上界超限率 & 实际 R 缩放均值 \\
+\midrule
+基线（默认全局） & 深度（1 维） & 7.205 & 0.561 & 0.416 & 1.678 \\
+基线（默认全局） & DVL（3 维） & 0.119 & 0.553 & 0.000 & 1.691 \\
+分源门控 & 深度（1 维） & 8.126 & 0.567 & 0.410 & 2.914 \\
+分源门控 & DVL（3 维） & 0.055 & 0.231 & 0.000 & 1.000 \\
+分源门控+深度整定 & 深度（1 维） & 3.285 & 0.737 & 0.214 & 2.659 \\
+分源门控+深度整定 & DVL（3 维） & 0.050 & 0.222 & 0.000 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-两类观测呈现方向相反的协方差失配。深度 NIS/自由度显著高于理论期望 1，且约 41.6\% 的事件超过 95\% 卡方上界，表明深度观测噪声或模型误差被低估；DVL 的 NIS/自由度仅为 0.119，且没有上界超限，表明其协方差设置过于保守。二者不能通过混合平均相互抵消。现有自适应机制在两类观测上的 R 缩放触发率均约 0.30，说明操作性触发确实发生，但历史实现把一维与三维原始 NIS 放入同一窗口并与固定阈值比较，因此不具有统一卡方检验语义。这个负结果不改变二十四次运行均保持估计连续性的事实，却明确指出后续自适应 R 应按观测源分别使用 NIS/自由度或 p 值归一化；相应处置集中在第 5.6 节。
+基线诊断即暴露两类观测方向相反的协方差失配：深度 NIS/自由度 $7.205$ 远高于理论期望 1、约 $41.6\%$ 事件超 $95\%$ 卡方上界，说明深度观测噪声或模型误差被低估；DVL 仅 $0.119$ 且无上界超限，说明其协方差设置过于保守，二者不能通过混合平均相互抵消。分源门控（仅换机制、参数不变）切断历史全局尺度对 DVL 的跨源污染：DVL 实际 R 缩放由基线约 $1.69$ 倍落回下界 $1.000$ 倍、上调事件占比由 $0.30$ 归零，证实``一维与三维原始 NIS 混入同一窗口''确会造成跨源尺度串扰。在此基础上把深度观测标准差由 $0.05$ 整定为 $0.12$，深度 NIS/自由度由 $7.205$ 降至 $3.285$、$95\%$ 带覆盖率由 $0.561$ 升至 $0.737$、上界超限率由 $0.416$ 降至 $0.214$（二十四次运行逐次稳健，深度 NIS/自由度 $3.21\pm1.30$、覆盖率 $0.741\pm0.073$），深度协方差从``显著低估''整定到接近卡方带内。DVL 一侧的过保守则\textbf{不是可整定项而是结构性下界}：自适应机制只允许膨胀 R（下界 $1.0$ 倍），分源门控下 DVL 从不触发上调，其 NIS/自由度仍约 $0.05$，要根治须直接下调 DVL 名义协方差本身、属改动主线默认口径的动作，故在本独立对照中如实保留为下界而不强行拉高。该负结果不改变二十四次运行均保持估计连续性的事实，但明确指出后续自适应 R 应按观测源分别以 NIS/自由度或 p 值归一化；相应处置见 \S\ref{sec:ch05-5-6}，校准脚本与聚合产物见附录及成果清单，主线默认协方差留待批准后统一整定并重跑矩阵。
 
-短时多场景结果表明观测时序可能掩盖扰动强度的主效应，R18 因此把实验时长扩展到 300 s，并对基线、60\% DVL 丢包与综合压力三类场景各取五个种子。每个场景内再设置 0 ms 与 100 ms 两种 DVL 相位；两档均为 5 Hz，且同一 seed 逐样本复用完全相同的 IMU、DVL 和深度噪声，因而相位档之间的差异只来自观测落在预测周期中的位置。表~\ref{tab:ch05-r18-long-horizon}显示，误差随评估时长显著累积，并且 100 ms 相位变化足以改变场景间排序。以基线为例，300 s 平均三维 RMSE 从 45.07 m 增至 105.72 m，同 seed 两相位绝对差的均值为 75.13 m；综合压力与重度丢包的相位差均值分别为 37.42 m 和 28.40 m。该结果支持``时序是独立实验变量''，不支持用丢包比例单独预测长期定位误差。
+协方差整定改善的是\textbf{一致性}（NIS 落回卡方带内）而非\textbf{水平点位精度}，这一点可由一次独立的噪声参数敏感性探针进一步佐证。本文在单个离线数据包上对四个滤波器噪声标准差（$\sigma_{\mathrm{DVL}}$、$\sigma_{\mathrm{acc}}$、$\sigma_{\mathrm{depth}}$、$\sigma_{\mathrm{gyro}}$）与初始协方差尺度做逐参数扫描并统计其与水平 RMSE 的皮尔逊相关系数，结果见图~\ref{fig:ch05-eskf-param-sensitivity}。在覆盖 $0.1$--$10$ 倍基线的整个扫描网格上，水平 RMSE 始终停留在 $9.06$ m 量级，相对基线的最大偏移不足 $22$ mm；四个参数中仅 $\sigma_{\mathrm{DVL}}$ 与水平 RMSE 强相关（皮尔逊系数 $0.779$），其余三者相关系数绝对值均小于 $0.07$、近乎与误差无关。这与上文``水平不可观''的判断一致：$\sigma_{\mathrm{DVL}}$ 之所以是唯一敏感参数，恰因为多普勒测速是水平方向唯一的信息来源，调节它改变的是速度积分的信任度而非漂移的可抑制性；一旦缺少绝对横向观测，任何噪声整定都无法把水平 RMSE 拉出速度积分漂移的量级。需要说明的是，该敏感性探针为\textbf{单包（$n=1$）离线扫描}，仅作机制佐证，水平精度的多种子统计主结果仍以表~\ref{tab:ch05-eskf-robustness} 与下文公平口径三估计器对比为准。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={ES-EKF 噪声参数敏感性：左图为四个噪声参数与水平 RMSE 的皮尔逊相关系数排序，仅 DVL 强相关；右图为单参数扫描下水平 RMSE 相对基线的偏移，全程不足 22 mm}]{experiments/state_estimation/eskf_param_sensitivity.png}
+\caption{ES-EKF 噪声参数敏感性（单包离线扫描，$n=1$）：（左）各噪声参数与水平 RMSE 的皮尔逊相关系数，仅 $\sigma_{\mathrm{DVL}}$ 强相关；（右）单参数扫描下水平 RMSE 相对基线的偏移，全程停留在 $9.06$ m 量级}\label{fig:ch05-eskf-param-sensitivity}
+\end{figure}
+
+为在方法上诚实地界定误差状态扩展卡尔曼滤波相对纯航位推算与标准扩展卡尔曼滤波的位置，本文对同一批八场景三种子的二十四个数据包做公平口径三估计器对比。此前对比脚本存在初始化口径不一致的缺陷：纯航位推算与标准滤波从真值起点出发，而误差状态滤波用首帧多普勒测速与深度自对齐并附加一处手动坐标翻转，制造出系统性初始偏移伪影，既是历史``误差状态优于标准滤波优于纯航位推算''排序结论的来源，也是某组开发数据出现深度维约 12 m 恒定偏差的根因。本文统一三引擎的初始化口径（同一真值起点位姿、同一北东地坐标系、去除手动翻转），仅修改离线对比脚本而不改动滤波器算法本身，重算得到：二十四次运行的水平面 RMSE 分别为纯航位推算 $3.197$ m、标准滤波 $3.196$ m、误差状态滤波 $3.200$ m，三者在均值加减一倍标准差区间上完全重叠、统计等价；深度维的 12 m 恒定偏差在统一口径后消失，三引擎深度 RMSE 回落到 $0.025/0.110/0.203$ m 量级。这一结果给出两个可作主结论的判断。其一，水平精度的三方等价不是实现缺陷而是\textbf{结构性可观性边界}：本系统的观测仅含多普勒测速（测速度）与深度（测 \(z\)），水平位置 \(x/y\) 没有任何绝对量测项，绝对水平定位在信息上不可观，任何滤波器都退化为速度积分漂移，调节量测噪声只改变对速度的信任度而不能抑制漂移（这与 R18 长时程中误差随时长单调累积、且随观测相位而非协方差整定显著变化的现象一致）。因此本文不声张误差状态滤波在水平精度上优于纯航位推算，要获得水平精度增益必须引入绝对横向观测（如超短基线或声磁绝对定位），属可观性问题而非调参问题。其二，深度维纯航位推算 RMSE 最小仅因其直接透传深度计读数、不做协方差融合，标准与误差状态滤波略大的深度 RMSE 来自上文分源 NIS 审计揭示的协方差整定口径（深度 R 偏小、DVL R 过保守），属可整定项而非精度结论。据此，误差状态扩展卡尔曼滤波在本文中的正贡献应界定为多扰动下维持估计连续、传播协方差、支持分源一致性诊断与脉冲鲁棒抑制，而非点位精度领先；该公平口径对比数据可复算，脚本与聚合产物见附录及成果清单。
+
+短时多场景结果表明观测时序可能掩盖扰动强度的主效应，R18 因此把实验时长扩展到 300 s，并对基线、60\% DVL 丢包与综合压力三类场景各取五个种子。每个场景内再设置 0 ms 与 100 ms 两种 DVL 相位；两档均为 5 Hz，且同一种子逐样本复用完全相同的 IMU、DVL 和深度噪声，因而相位档之间的差异只来自观测落在预测周期中的位置。表~\ref{tab:ch05-r18-long-horizon}显示，误差随评估时长显著累积，并且 100 ms 相位变化足以改变场景间排序。以基线为例，300 s 平均三维 RMSE 从 45.07 m 增至 105.72 m，同种子两相位绝对差的均值为 75.13 m；综合压力与重度丢包的相位差均值分别为 37.42 m 和 28.40 m。该结果支持``时序是独立实验变量''，不支持用丢包比例单独预测长期定位误差。
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{0.13\linewidth}
@@ -652,14 +312,9 @@ DVL 丢包 60\% & 100 ms & \(6.57\pm3.34\) & \(22.67\pm10.84\) & \(93.80\pm37.81
 综合压力 & 0 ms & \(7.32\pm5.31\) & \(22.63\pm11.11\) & \(82.45\pm41.61\) & \(155.51\pm53.49\) \\
 综合压力 & 100 ms & \(10.08\pm6.05\) & \(30.10\pm10.76\) & \(91.82\pm22.19\) & \(154.26\pm51.00\) \\
 \end{longtable}
+R18 的可视化曲线与同源结果文件随图组来源记录归档，正文不再重复展示。
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={R18 五分钟 ES-EKF 观测时序与评估时长敏感性；左图为最长 DVL 空窗与 300 s 三维 RMSE，右图为 60、120 和 300 s 误差随时长增长}]{experiments/state_estimation/r18_timing_duration_sensitivity.png}
-\caption{R18 长时段与观测时序敏感性（每场景、每相位五个种子）}\label{fig:ch05-r18-timing-duration}
-\end{figure}
-
-R19 则将参数化噪声替换为实测背景回放。源记录包含 7839 个 2 kHz 三轴样本，时长 3.9195 s；各轴按独立灵敏度由电压换算为磁场后只减去均值，保留轴间相关、块间漂移与频谱。三轴 RMS 分别为 147.49、123.03 和 151.90 nT，相关系数为 0.996--1.000，主峰均位于 50.01 Hz。对照噪声采用相同三轴协方差的多元高斯分布，但删除时间相关；两种噪声各以五个 seed 作用于同一磁距离观测模型，结果见表~\ref{tab:ch05-r19-noise-replay}。
+R19 则将参数化噪声替换为实测背景回放。源记录包含 7839 个 2 kHz 三轴样本，时长 3.9195 s；各轴按独立灵敏度由电压换算为磁场后只减去均值，保留轴间相关、块间漂移与频谱。三轴 RMS 分别为 147.49、123.03 和 151.90 nT，相关系数为 0.996--1.000，主峰均位于 50.01 Hz。对照噪声采用相同三轴协方差的多元高斯分布，但删除时间相关；两种噪声各以五个种子作用于同一磁距离观测模型，结果见表~\ref{tab:ch05-r19-noise-replay}。
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{0.18\linewidth}
@@ -670,11 +325,11 @@ R19 则将参数化噪声替换为实测背景回放。源记录包含 7839 个 
   >{\raggedleft\arraybackslash}p{0.14\linewidth}@{}}
 \caption{R19 同协方差高斯噪声与实测背景回放对照}\label{tab:ch05-r19-noise-replay}\tabularnewline
 \toprule\noalign{}
-噪声输入 & 运行数 & 距离 RMSE（m） & RMSE 跨 seed 标准差 & 距离绝对误差 p95（m） & 磁 NIS 均值 \\
+噪声输入 & 运行数 & 距离 RMSE（m） & RMSE 跨种子标准差 & 距离绝对误差 p95（m） & 磁 NIS 均值 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-噪声输入 & 运行数 & 距离 RMSE（m） & RMSE 跨 seed 标准差 & 距离绝对误差 p95（m） & 磁 NIS 均值 \\
+噪声输入 & 运行数 & 距离 RMSE（m） & RMSE 跨种子标准差 & 距离绝对误差 p95（m） & 磁 NIS 均值 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -683,15 +338,10 @@ R19 则将参数化噪声替换为实测背景回放。源记录包含 7839 个 
 实测三轴回放 & 5 & 0.1323 & 0.0171 & 0.2346 & \(0.445\pm0.111\) \\
 \end{longtable}
 
-两种输入的平均距离误差和平均 NIS 接近，说明仅从均值看，协方差匹配高斯已能近似该短记录的总体噪声量级；但实测回放的距离 RMSE 跨 seed 标准差约为高斯对照的 29 倍，磁 NIS 标准差约为 26 倍。因而实测时间结构的主要影响不是系统性抬高均值，而是引入相位相关的运行间离散。该记录以约 3.92 s 为周期循环，结论严格限定为``实测噪声回放''，不能升级为长时平稳性或完整 Sim-to-Real 证据。
+两种输入的平均距离误差和平均 NIS 接近，说明仅从均值看，协方差匹配高斯已能近似该短记录的总体噪声量级；但实测回放的距离 RMSE 跨种子标准差约为高斯对照的 29 倍，磁 NIS 标准差约为 26 倍。因而实测时间结构的主要影响不是系统性抬高均值，而是引入相位相关的运行间离散。该记录以约 3.92 s 为周期循环，结论严格限定为``实测噪声回放''，不能升级为长时平稳性或完整 Sim-to-Real 证据。
+R19 的均值对照图与同源结果文件随图组来源记录归档，正文以表~\ref{tab:ch05-r19-noise-replay} 为准。
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.90\linewidth,height=\textheight,keepaspectratio,alt={R19 同协方差高斯噪声与实测三轴背景回放的磁距离 RMSE 和磁 NIS 均值对比；均值接近，但实测回放跨 seed 离散更大}]{experiments/state_estimation/r19_gaussian_vs_measured_replay.png}
-\caption{R19 参数化高斯与实测背景回放的均值对照（各五个种子）}\label{fig:ch05-r19-noise-replay}
-\end{figure}
-
-在上述分源诊断基础上，R20 使用同一运动轨迹、同一逐样本噪声和相同五个 seed，对标准 EKF、ES-EKF 固定 R、历史全局自适应 R、分源自适应 R、分源 R 加 Huber 更新，以及加入时间戳噪声膨胀的 Huber 更新作 90 次对照。名义场景中各 ES-EKF 变体的三维 RMSE 均为 0.0251 m，说明新增机制在无异常时没有改变基线；脉冲异常与 100 ms 延迟异常的结果见表~\ref{tab:ch05-r20-filter-strategy}。
+在上述分源诊断基础上，R20 使用同一运动轨迹、同一逐样本噪声和相同五个种子，对标准 EKF、ES-EKF 固定 R、历史全局自适应 R、分源自适应 R、分源 R 加 Huber 更新，以及加入时间戳噪声膨胀的 Huber 更新作 90 次对照。名义场景中各 ES-EKF 变体的三维 RMSE 均为 0.0251 m，说明新增机制在无异常时没有改变基线；脉冲异常与 100 ms 延迟异常的结果见表~\ref{tab:ch05-r20-filter-strategy}。
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{0.22\linewidth}
@@ -719,107 +369,205 @@ ES-EKF 固定 R & 1.1722 & 1.1763 & 60.969 & 0.527 \\
 \end{longtable}
 
 异常场景中，历史全局缩放把不同观测源的失配混入同一尺度，三维 RMSE 反而由固定 R 的约 1.17 m 增至约 1.64 m；分源缩放避免了跨源污染，但仅靠窗口调节仍不能处理单帧脉冲。Huber 更新在约 9.8\% 的 DVL 更新上激活，把脉冲和延迟异常 RMSE 分别降至 0.2440 m 和 0.2463 m，较对应固定 R 下降约 79\%。这证明即时鲁棒权重是本组改善的主要来源，而不是自适应窗口本身。与此同时，Huber 方案的 DVL NIS/自由度仍为 2.77、95\%带覆盖率仅约 0.18，说明误差改善并不等于协方差已校准。仅按 100 ms 时间差膨胀观测噪声又把 RMSE 增至 0.2927 m，未解决陈旧观测对应旧状态这一结构问题；真正的时间戳插值或延迟状态更新仍是必要的独立机制。
+R20 的策略对照图与同源结果文件随图组来源记录归档，正文以表~\ref{tab:ch05-r20-filter-strategy} 和上述机理归因为准。
+\FloatBarrier
+
+\section{控制与安全仿真}\label{sec:ch05-5-ctrl}
+
+第二条主线考察控制与安全。状态估计给出可信的位姿与不确定度之后，控制与安全层要回答的是：在地形起伏、极端路径几何、感知质量波动与横流冲击下，制导—控制—安全过滤链路能否保持跟踪精度、控制平滑与近底安全底线。本节依次给出地形跟随、极端平面路径、不确定性感知控制主消融与机制归因、六类极端场景的代理闭环矩阵以及 CBF 近底安全过滤等证据，其中体量最大的原生因子全矩阵与 CBF 地形矩阵完整数值随附录归档，正文保留结论与边界指针。
+
+\subsection{地形跟随主结果}\label{sec:ch05-5-5-2}
+
+本表为真口径重跑结果（跳过起始 10 s 预热、四相统一取真值离底高度）；早先旧表约 4.0 m 常值离底与约 7 m 深度误差已确认为分析层基准错误造成的常值假象并被取代，样本量与适用边界见附录 A.7。每相为单次运行（\(n=1\)），引用须标注，后续应补至少三次重复给出均值\allowbreak{}±标准差。
+
+\begin{longtable}[]{@{}lrrrr@{}}
+\caption{地形跟随真口径主结果（每组单次运行）}\label{tab:ch05-terrain-main}\tabularnewline
+\toprule\noalign{}
+指标 & PID 基线 & PID 地形 & MPC 基线 & MPC 地形 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+指标 & PID 基线 & PID 地形 & MPC 基线 & MPC 地形 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+时长（s） & 59.11 & 59.80 & 59.50 & 59.51 \\
+最小离底高度（m） & 1.600 & 1.000 & 1.400 & 1.400 \\
+平均离底高度（m） & 2.699 & 1.954 & 2.657 & 2.647 \\
+离底高度标准差（m） & 0.470 & 0.442 & 0.495 & 0.500 \\
+相对 3 m 目标 RMSE（m） & 0.558 & 1.136 & 0.602 & 0.612 \\
+深度误差 RMSE（m） & 6.493 & N/A & 6.427 & N/A \\
+离底 \textless{} 1.5 m 比例 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\end{longtable}
+
+真口径下四相的平均离底高度落在 1.95--2.70 m，离底高度随真地形起伏（标准差约 0.44--0.50 m），不再是旧表的 4.0 m 常值假象。地形模式的主指标是相对目标高度的离底 RMSE；深度误差 RMSE 在地形模式下按绝对目标深度评分已无物理意义，故正确标为不适用。本次重跑为单次运行，PID 与 MPC 地形跟随的离底 RMSE 接近，\textbf{不应据此过度解读两者的相对优劣}；地形跟随能力的稳健结论以 §\ref{sec:ch05-5-5-3} 的三档消融为准。此外 MPC 地形相有约 14.3\% 的步触发``保持上次输出''的回退，这是 MPC 在起始深度与目标差距过大（约 8 m 降到 3 m）时带宽/速率约束求解不可行的真实工程边界，须诚实记录。
+
+图~\ref{fig:ch05-terrain-tracking}展示 PID/MPC 地形跟随的离底高度跟踪，对应上表的离底高度与违规行；安全裕度只是离底高度对安全阈值的线性平移，信息与跟踪曲线重复，连同离底 RMSE 四组对比与指令契约示意图一并作为同组 \(n=1\) 支撑材料，随附录 A.7/Artifact Manifest 归档，其中``MPC 未优于 PID''这一诚实边界已在上表与 \S\ref{sec:ch05-5-6} 中记录，主文不再逐图展开：
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={R20 标准 EKF、固定 R、全局自适应 R、分源 R、Huber 与时间戳膨胀六种策略在名义、脉冲异常和延迟异常场景中的三维 RMSE 对比}]{experiments/state_estimation/r20_filter_strategy_comparison.png}
-\caption{R20 滤波策略与时间戳处理基线（每种策略、每场景五个种子）}\label{fig:ch05-r20-filter-strategy}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}]{terrain_following/terrain_tz_tracking_pid_mpc.pdf}
+\caption{地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}\label{fig:ch05-terrain-tracking}
 \end{figure}
 \FloatBarrier
 
-\subsection{不确定性感知控制主消融结果（定位侧）}\label{sec:ch05-5-5-6}
+图~\ref{fig:ch05-terrain-tracking} 从时间维度刻画了离底高度的动态收敛，但难以直观呈现车辆如何在起伏海床上方保持恒定净空。为补足空间直觉，图~\ref{fig:ch05-terrain-3d} 给出 PID 地形跟随相的三维视图：海底曲面由本次运行所用的确定性地形配置离线重建，其起伏公式与仿真地形生成逻辑同源（同一 seed 与噪声参数），因而覆盖 AUV 全程轨迹并忠实对应本次运行的真实地形，而非 bag 中仅围绕原点、坐标系与世界系不一致的静态点云快照。图中蓝色轨迹在起伏海床上方以近似恒定的间隙推进，绿色虚线为按 3~m 目标净空换算的目标深度路径，二者的稳定平行关系正是表~\ref{tab:ch05-terrain-main} 中米级以内离底 RMSE 的空间化印证。为诚实标注地形曲面的可信度，图中另叠加沿程 DVL 实测海底高度作为验证锚点，其与重建曲面沿程相关系数约 0.91、均值偏差约 \(-0.06\)~m、均方根偏差约 0.34~m，说明重建地形与车辆实际经历的海床一致。需要说明的是，该三维视图对应单次运行（\(n=1\)），仅作空间直觉与地形可信度的佐证，近底安全的稳健统计结论仍以 §\ref{sec:ch05-5-5-3} 的三档多种子消融为准。
 
-不确定性感知控制与固定权重基线的对比实验在三个场景（基线、重度 DVL 丢包、综合压力）、两种控制模式、三个种子下执行，共十八次运行：
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,alt={三维海底曲面与 PID 地形跟随轨迹：确定性重建的起伏海床曲面覆盖 AUV 全轨迹，蓝色轨迹在海床上方以近似恒定净空推进，红色散点为沿程 DVL 实测海底验证锚，重建与实测沿程相关系数约 0.91}]{terrain_following/terrain_3d_pid_terrain_trajectory.pdf}
+\caption{三维海底曲面与 PID 地形跟随轨迹（确定性地形重建 + 沿程 DVL 实测海底验证锚，\(n=1\)）：蓝色为 AUV 轨迹，绿色虚线为 3~m 目标净空对应的目标深度路径，曲面颜色表示向下为正的海底深度，红色散点为 DVL 实测海底高度，重建与实测沿程相关系数约 0.91}\label{fig:ch05-terrain-3d}
+\end{figure}
+\FloatBarrier
+
+\subsection{PID 地形跟随的地形强度消融}\label{sec:ch05-5-5-3}
+
+为把上一节的单次基准提升为可进入论文统计表的结论，本节对低、中、高三档地形强度各跑三个随机种子复验，并对其中两档落盘失败的种子各做一次重跑，最终合并口径如下（部分档的三种子由主跑成功种子与重跑成功种子合并得到，重跑原因是记录落盘不稳定而非算法闭环失败）：
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1364}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1364}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1818}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1818}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1818}}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1818}}@{}}
-\caption{不确定性感知控制主消融定位侧结果}\label{tab:ch05-uampc-localization}\tabularnewline
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1304}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}@{}}
+\caption{PID 地形跟随三档多种子消融结果}\label{tab:ch05-terrain-ablation}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-场景
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-模式
+地形强度
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
 成功/总数
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-水平 RMSE
+离底 RMSE（均值\allowbreak{}±标准差）
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-深度 RMSE
+平均离底（均值\allowbreak{}±标准差）
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-圆概率误差
+最小离底（均值\allowbreak{}±标准差）
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\textless{} 1.5 m 违规
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+地形强度
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+成功/总数
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+离底 RMSE（均值\allowbreak{}±标准差）
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+平均离底（均值\allowbreak{}±标准差）
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+最小离底（均值\allowbreak{}±标准差）
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\textless{} 1.5 m 违规
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+低 & 3/3 & 0.587\allowbreak{}±0.112 m & 3.546\allowbreak{}±0.146 m & 3.259\allowbreak{}±0.388 m & 0.0000 \\
+中 & 3/3 & 0.709\allowbreak{}±0.002 m & 3.709\allowbreak{}±0.002 m & 3.708\allowbreak{}±0.002 m & 0.0000 \\
+高 & 3/3 & 0.610\allowbreak{}±0.081 m & 3.583\allowbreak{}±0.112 m & 3.228\allowbreak{}±0.205 m & 0.0000 \\
+\end{longtable}
+
+三档地形均三次全部完成、无一例低于 1.5 m 的安全违规，离底 RMSE 落在 0.59--0.71 m 区间，说明 PID 地形跟随在当前地形模型下具有稳定的近底安全性，这一均值\allowbreak{}±标准差结论可作为论文近底安全的主结论。
+对应三档消融图与同源结果文件随图组来源记录归档，正文以表~\ref{tab:ch05-terrain-ablation} 为准。
+\FloatBarrier
+
+\subsection{MPC 极端平面路径支线结果}\label{sec:ch05-5-5-4}
+
+本表为删除测试脚手架中一处常值下游偏置后的公平口径重跑结果：该偏置曾把整条 MPC 参考推向最近点下游、迫使 MPC 切弯并人为放大其横向误差，而两条 PID 基线不受影响，删除该偏置（保留真实预瞄项）后各变体一致复跑，样本量与适用边界见附录 A.7。下表为无扰动确定性单次运行（\(n=1\)），其后另附受控扰动的五种子（\(n=5\)）统计以支撑主结论。
+
+本组实验把离线规划的长波与短波 S 弯、直角折弯与发卡掉头四类极端路径，分别交给仅调航向的 PID、视线制导（LOS）与 MPC 跟踪，比较横向跟踪误差。作为对照基线，LOS 的几何前视形式沿用经典制导方法\cite{breivik2005guidance,fossen2015los}，结果如下：
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2222}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}@{}}
+\caption{模型预测控制极端平面路径公平口径结果}\label{tab:ch05-mpc-extreme-paths}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+场景
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+仅航向 PID 横向 RMSE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+LOS 横向 RMSE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MPC 最优横向 RMSE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+结论
 \end{minipage} \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 场景
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+仅航向 PID 横向 RMSE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+LOS 横向 RMSE
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MPC 最优横向 RMSE
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-模式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-成功/总数
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-水平 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-深度 RMSE
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
-圆概率误差
+结论
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-基线 & 固定权重 & 3/3 & 4.62\allowbreak{}±0.61 m & 0.30\allowbreak{}±0.003 m & 4.63\allowbreak{}±0.61 m \\
-基线 & 不确定性感知 & 3/3 & 4.40\allowbreak{}±1.01 m & 0.30\allowbreak{}±0.004 m & 4.41\allowbreak{}±1.00 m \\
-重度 DVL 丢包 & 固定权重 & 3/3 & 3.49\allowbreak{}±0.95 m & 0.29\allowbreak{}±0.001 m & 3.50\allowbreak{}±0.95 m \\
-重度 DVL 丢包 & 不确定性感知 & 3/3 & 3.55\allowbreak{}±0.50 m & 0.30\allowbreak{}±0.006 m & 3.56\allowbreak{}±0.49 m \\
-综合压力 & 固定权重 & 3/3 & 4.11\allowbreak{}±0.11 m & 0.29\allowbreak{}±0.004 m & 4.12\allowbreak{}±0.12 m \\
-综合压力 & 不确定性感知 & 3/3 & 3.68\allowbreak{}±0.50 m & 0.29\allowbreak{}±0.002 m & 3.69\allowbreak{}±0.50 m \\
+长波 S 弯（60 m / 7 m） & 0.093 m & 1.047 m & 0.055 m & MPC 均优（较仅航向 −41\%、较 LOS −95\%） \\
+发卡 180° 掉头 & 4.69 m & 4.69 m & 2.277 m & MPC 均优（−51\%） \\
+短波 S 弯 & 2.597 m & 1.657 m & 1.655 m & MPC 较仅航向 −36\%、与 LOS 持平 \\
+直角折弯 & 3.596 m & 0.659 m & 1.452 m & 诚实边界：直角折弯上 LOS 前瞻最优 \\
 \end{longtable}
 
-按水平 RMSE 比较，不确定性感知控制相对固定权重基线在基线场景改善约 4.7\%、在综合压力场景改善约 10.4\%，而在重度 DVL 丢包场景反而变差约 1.9\%。
+\textbf{结论与边界}：公平口径下（同源 Bag、同一评价脚手架），MPC 在长波 S 弯、发卡掉头、短波 S 弯三类工况均优于或持平基线，长波 S 弯与发卡掉头上对两条基线均优于基线，短波 S 弯上优于仅航向 PID 且与 LOS 持平。唯一的诚实边界是直角折弯：该路径由分段直线组成，视线制导的几何前瞻最贴合，横向 RMSE（0.659 m）优于 MPC（1.452 m），此边界予以保留、不作过度宣称。早先``MPC 未普遍优于基线''的判断源自测试脚手架的偏置错误，修复后已被推翻。
 
-\textbf{结论与边界}：不确定性感知控制在基线与综合压力场景下对定位相关指标有轻微改善，尤其在综合压力下改善约 10.4\%；但在重度 DVL 丢包场景下不再有优势，说明其权重调整在速度观测严重丢失时不一定带来定位增益。\textbf{重要边界}：本表指标来自离线滤波评估的定位误差，不是完整的控制侧性能指标，因此不能据此单独写成``不确定性感知控制性能显著优于基线''；更准确的表述是，它在部分场景下对定位指标有轻微改善，控制侧结论需结合横向误差、回退率与控制努力综合判断。
+为把上表的单次结论提升为可作主结论的统计证据，本文进一步在同一离线闭环中注入受控外部扰动（恒定横流不超过 0.15 m/s、初始横向偏移不超过 0.8 m、逐步艏向白噪声不超过 1.5°），以随机种子固定其实现，并令三种控制器在同一种子下共享同一扰动实现以保证公平；每类路径的 MPC 权重变体冻结为上表选定者，避免逐种子挑选。五个种子下横向 RMSE 的均值与标准差（单位 m）为：长波 S 弯，仅航向 PID $2.18\pm1.10$、LOS $1.15\pm0.15$、MPC $0.13\pm0.03$；发卡掉头，$4.50\pm1.28$、$4.25\pm0.46$、$2.36\pm0.23$；短波 S 弯，$2.73\pm0.31$、$1.67\pm0.04$、$1.82\pm0.19$；直角折弯，$3.43\pm0.46$、$1.00\pm0.51$、$1.57\pm0.46$。长波 S 弯与发卡掉头上 MPC 相对 LOS 的优势达到均值加减一倍标准差区间互不重叠的程度，短波 S 弯上 MPC 与 LOS 统计持平且均优于仅航向 PID，直角折弯上 LOS 仍最优。多种子统计因此支持上表的单次判断，MPC 制导层的多步预瞄与速度规划对复杂曲率路径具有可复现的横向误差优势，直角折弯的视线制导边界亦稳定成立。
 
-\subsection{主消融的控制侧指标}\label{sec:ch05-5-5-7}
+长波 S 弯、短波 S 弯、发卡 180° 掉头与直角折弯四类 \(n=1\) 轨迹图均随附录 A.7/Artifact Manifest 归档；其中长波 S 弯的横向 RMSE 较 LOS 降低约 95\%，直角折弯的 LOS 前瞻更优边界也已由表~\ref{tab:ch05-mpc-extreme-paths} 逐行给出，正文不再用单次轨迹图重复展示。
+\FloatBarrier
 
-上一节给出定位侧结果，本节进一步考察横向误差、控制变化率与安全性。主消融包含基线、重度 DVL 丢包和综合压力三类场景，每类场景分别运行固定权重与不确定性感知模式，各取三个种子。表~\ref{tab:ch05-uampc-control}只保留该批次中定义稳定的控制指标；求解可解性与当前失败耗时采用下一节具有完整诊断字段的 P-1/P-2 口径。
+\subsection{不确定性感知控制主消融结果}\label{sec:ch05-5-5-6}\label{sec:ch05-5-5-7}
 
+不确定性感知控制与固定权重基线的主消融在三个场景（基线、重度 DVL 丢包、综合压力）、两种控制模式、三个种子下执行，共十八次运行，全部成功（各行 3/3）且无安全违规。表~\ref{tab:ch05-uampc-control}并列给出定位侧（水平/深度 RMSE，来自离线滤波评估）与控制侧（横向 RMSE、控制变化率、安全违规率）的关键指标；圆概率误差与水平 RMSE 数值等价，不再单列，求解可解性与失败耗时采用具有完整诊断字段的 P-1/P-2 口径（见 \S\ref{sec:ch05-5-5-8}）。
+
+\begingroup
+\small
+\setlength{\tabcolsep}{2pt}
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{0.15\linewidth}
-  >{\raggedright\arraybackslash}p{0.16\linewidth}
-  >{\centering\arraybackslash}p{0.09\linewidth}
-  >{\raggedleft\arraybackslash}p{0.18\linewidth}
-  >{\raggedleft\arraybackslash}p{0.16\linewidth}
-  >{\raggedleft\arraybackslash}p{0.10\linewidth}@{}}
-\caption{不确定性感知控制主消融控制侧结果}\label{tab:ch05-uampc-control}\tabularnewline
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.12}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.14}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.15}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.13}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.17}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.15}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.09}}@{}}
+\caption{不确定性感知控制主消融结果（定位侧与控制侧并列）}\label{tab:ch05-uampc-control}\label{tab:ch05-uampc-localization}\tabularnewline
 \toprule\noalign{}
-场景 & 模式 & 成功/总数 & 横向 RMSE（m） & 控制变化率 & 安全违规率 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-场景 & 模式 & 成功/总数 & 横向 RMSE（m） & 控制变化率 & 安全违规率 \\
+场景 & 模式 & 水平 RMSE（m） & 深度 RMSE（m） & 横向 RMSE（m） & 控制变化率 & 违规 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-基线 & 固定权重 & 3/3 & \(0.0038\pm0.0004\) & \(0.14\pm0.01\) & 0 \\
-基线 & 不确定性感知 & 3/3 & \(0.0037\pm0.0003\) & \(0.44\pm0.27\) & 0 \\
-重度 DVL 丢包 & 固定权重 & 3/3 & \(0.0033\pm0.0003\) & \(0.13\pm0.06\) & 0 \\
-重度 DVL 丢包 & 不确定性感知 & 3/3 & \(0.0039\pm0.0013\) & \(0.19\pm0.22\) & 0 \\
-综合压力 & 固定权重 & 3/3 & \(0.0035\pm0.0002\) & \(0.14\pm0.07\) & 0 \\
-综合压力 & 不确定性感知 & 3/3 & \(0.0029\pm0.0004\) & \(0.030\pm0.004\) & 0 \\
+基线 & 固定权重 & 4.62±0.61 & 0.30±0.003 & 0.0038±0.0004 & 0.14±0.01 & 0 \\
+基线 & 不确定性感知 & 4.40±1.01 & 0.30±0.004 & 0.0037±0.0003 & 0.44±0.27 & 0 \\
+重度 DVL 丢包 & 固定权重 & 3.49±0.95 & 0.29±0.001 & 0.0033±0.0003 & 0.13±0.06 & 0 \\
+重度 DVL 丢包 & 不确定性感知 & 3.55±0.50 & 0.30±0.006 & 0.0039±0.0013 & 0.19±0.22 & 0 \\
+综合压力 & 固定权重 & 4.11±0.11 & 0.29±0.004 & 0.0035±0.0002 & 0.14±0.07 & 0 \\
+综合压力 & 不确定性感知 & 3.68±0.50 & 0.29±0.002 & 0.0029±0.0004 & 0.030±0.004 & 0 \\
 \end{longtable}
+\endgroup
 
-综合压力场景中，不确定性感知模式的横向 RMSE 由 0.0035 m 降至 0.0029 m，改善约 15.8\%，与定位侧约 10.4\% 的改善方向一致；控制变化率同时由 0.14 降至 0.030。重度 DVL 丢包下，横向 RMSE 则由 0.0033 m 增至 0.0039 m，说明状态校正能力严重下降后，控制层权重调度不再形成增益。六组对照均无安全违规，但该结果只说明本批次没有触及安全边界，不能替代极端场景压力测试。
+结果收敛到两条主结论。其一，\textbf{综合压力下不确定性感知控制形成一致增益}：水平 RMSE 由 4.11 降至 3.68~m（改善约 10.4\%），横向 RMSE 由 0.0035 降至 0.0029~m（改善约 15.8\%，与定位侧方向一致），控制变化率同时由 0.14 降至 0.030；基线场景亦有约 4.7\% 的轻微定位改善。其二，\textbf{重度 DVL 丢包下不再有优势}：水平 RMSE 反而变差约 1.9\%、横向 RMSE 由 0.0033 增至 0.0039~m，说明速度观测严重丢失、状态校正能力下降后，控制层权重调度不再形成增益。六组对照均无安全违规，但这只说明本批次未触及安全边界，不能替代极端场景压力测试；定位侧指标来自离线滤波评估，故``性能优于基线''的判断须结合横向误差、回退率与控制努力综合成立，而非由定位单项断言。
 
 \subsection{不确定性感知控制的消融变体设计与机制归因}\label{sec:ch05-5-5-8}
 
-为把整体性能变化归因到具体机制，本文设置四个变体：A0 为固定权重基线，A1 为完整 UA-MPC，A2 关闭低置信度下的 S 型控制代价降权，A3 保留完整机制但令置信度映射指数 \(\alpha=1\)。P-1 对 A0、A2 和 A3 各执行三场景、三种子共二十七次运行；A1 采用 P-2 中 \(max\_iter=100\) 的同场景、同种子层作为默认对照。事件加权结果见表~\ref{tab:ch05-uampc-p1-feasibility}。
+为把整体性能变化归因到具体机制，本文设置四个变体：A0 为固定权重基线，A1 为完整 UA-MPC，A2 关闭低置信度下的 S 型控制代价降权，A3 保留完整机制但令置信度映射指数 \(\alpha=1\)。P-1 对 A0、A2 和 A3 各执行三场景、三种子共二十七次运行；A1 采用 P-2 中迭代上限 100 的同场景、同种子层作为默认对照。事件加权结果见表~\ref{tab:ch05-uampc-p1-feasibility}。
 
 \begin{longtable}[]{@{}cllr@{}}
 \caption{P-1/P-2 默认层的 UA-MPC 可解性归因}\label{tab:ch05-uampc-p1-feasibility}\tabularnewline
@@ -846,11 +594,11 @@ A0 与 A2 均为全程回退，而保留 S 型降权的 A1 和 A3 恢复了部�
 \begin{longtable}[]{@{}rrrrrr@{}}
 \caption{P-2 最大迭代次数独立对照}\label{tab:ch05-uampc-p2-maxiter}\tabularnewline
 \toprule\noalign{}
-\(max\_iter\) & 诊断帧 & 回退率 & 成功帧均值（ms） & 失败占用（ms） & 水平 RMSE（m） \\
+迭代上限 & 诊断帧 & 回退率 & 成功帧均值（ms） & 失败占用（ms） & 水平 RMSE（m） \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\(max\_iter\) & 诊断帧 & 回退率 & 成功帧均值（ms） & 失败占用（ms） & 水平 RMSE（m） \\
+迭代上限 & 诊断帧 & 回退率 & 成功帧均值（ms） & 失败占用（ms） & 水平 RMSE（m） \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -862,7 +610,7 @@ A0 与 A2 均为全程回退，而保留 S 型降权的 A1 和 A3 恢复了部�
 
 从 100 提高到 200 只使回退率下降 1.4 个百分点，综合压力场景甚至由 0.657 上升到 0.736；提高到 400 后仍有 59.4\% 回退，失败占用达到控制周期的 3.7 倍，诊断帧相对 100 档减少约 26\%。因此，迭代上限偏紧不是高回退的主因，默认值保持 100；后续可解性改进应转向初值连续性、约束残差与软约束机制。
 
-P-1/P-2 的参考路径接近直线，毫米级横向误差不适合承担精度归因。H4 因此在置信度 \(c=0.3\)、\(max\_iter=100\) 下，以确定性运动学模型补充长波 S 弯与 \(180^\circ\) 发卡路径，四个变体均无求解回退。结果见表~\ref{tab:ch05-uampc-h4-maneuver}。
+P-1/P-2 的参考路径接近直线，毫米级横向误差不适合承担精度归因。H4 因此在置信度 \(c=0.3\)、迭代上限 100 下，以确定性运动学模型补充长波 S 弯与 \(180^\circ\) 发卡路径，四个变体均无求解回退。结果见表~\ref{tab:ch05-uampc-h4-maneuver}。
 
 \begin{longtable}[]{@{}lrrrr@{}}
 \caption{H4 横向机动的精度归因}\label{tab:ch05-uampc-h4-maneuver}\tabularnewline
@@ -904,25 +652,164 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 开启 & 开启 & 343 & 0.0292 & 0.0437 & 30.32 & 21.50 \\
 \end{longtable}
 
-参考斜坡、软约束与终端保持的确定性消融则回答了另外两个问题。参考斜坡把发卡有效段 RMSE 从约 0.100 m 增至 0.424 m，不作为默认机制；终端保持不改变有效段精度，并把发卡末端 RMSE 从 7.484 m 降至 3.288 m，说明路径完成后应由任务层切换到终端状态。当前简化动力学不含反推力，零推进后仍存在被动漂移，因此该结果只支撑``终端任务定义有效''，不外推为定点保持精度。综合四组闭环统计与机制消融，本文冻结热启动开启、软约束关闭、\(max\_iter=100\) 的控制配置，并把终端保持作为独立任务状态。
+参考斜坡、软约束与终端保持的确定性消融则回答了另外两个问题。参考斜坡把发卡有效段 RMSE 从约 0.100 m 增至 0.424 m，不作为默认机制；终端保持不改变有效段精度，并把发卡末端 RMSE 从 7.484 m 降至 3.288 m，说明路径完成后应由任务层切换到终端状态。当前简化动力学不含反推力，零推进后仍存在被动漂移，因此该结果只支撑``终端任务定义有效''，不外推为定点保持精度。综合四组闭环统计与机制消融，本文冻结热启动开启、软约束关闭、迭代上限 100 的控制配置，并把终端保持作为独立任务状态。
 
-\subsection{仿真到实物的迁移性讨论}\label{sec:ch05-5-5-9}
 
-仿真侧的实验已经把``算法层面正确性''的证据建立得较充分，但工程论文必须主动回答一个更尖锐的问题，这些结论能否原样迁移到真实 AUV？把仿真结论直接当作实物结论是常见的过度推断，本节据此把迁移面临的障碍按动力学模型偏差、传感器噪声差异、通信时延分布与算力约束四类逐项展开。
+\subsection{极端电缆巡检场景设计}\label{sec:ch05-5-7}
 
-动力学模型偏差方面，仿真所用的船舶动力学水动力系数为经验估计值，与真实 AUV 存在偏差；这一偏差的影响是非对称的，状态估计与决策层结论受影响较小（它们主要依赖观测序列的统计特性），控制层结论受影响较大（控制律对水动力参数直接敏感）。本系统的应对是把 MPC 定位在制导层，让水动力偏差主要由内层 PID 通过实测调参吸收，而不让 MPC 自身假设过于精确的动力学。传感器噪声方面，仿真采用的丢包、线性漂移与脉冲尖峰模型，与真实环境中可能出现的相关噪声、背景磁场的低频噪声等更复杂频谱有差异；本系统的应对是用比预期真实噪声更恶劣的极端配置作压力测试，从而在不依赖噪声谱精确对齐的前提下给出鲁棒性的安全裕度。通信时延方面，仿真使用固定基线延迟叠加均匀抖动，真实声学链路的时延可能呈长尾分布；这对节点拓扑与行为树的影响相对可控（节点级缓冲已吸收大部分抖动），但对失联保护阈值的整定有直接影响，仿真中验证过的 1 秒失联阈值在真实链路中可能需要根据实测时延高分位重新校准。算力约束方面，Jetson 仿真等效测试了求解器的算力接口，但真机的频率限制、内存带宽与散热约束可能改变求解耗时分布；若真机求解时间超过控制周期，热启动机制会被打破，须以更短的预测时域或更稀疏的离散化作为退路。
+第二类缺口指向的``场景真实性不足''问题，本节通过定义六个极端电缆巡检场景给出系统性补救方案。之所以需要单独设计一组极端场景、而不是简单把常规扰动幅度调大，原因在于极端工况的物理风险量级与常规消融不同，需要按几何极端、耦合极端、感知极端与多因素极端四类各自构造代表性场景，才能让``分层架构能否守住底线''这一问题获得有覆盖度的证据。六个场景按这一原则组织，各从路径设置、真实风险、观测角色与评价指标四个维度描述（见表~\ref{tab:ch05-extreme-scenarios}），并与第 4 章极端工况的``场景乘模式''二维消融设计相对应。
 
-后续的场景迁移分三步推进：先把 S 弯与发卡路径迁移为仿真场景配置，补齐``几何极端加完整闭环''的组合工况；再把地形高程图与电缆中心线绑定，形成坡面横穿；最后加入声呐短时不可见、磁信号衰减、DVL 丢包与横流，形成综合极端场景。三步迁移的共同特点是``先在仿真内扩展、再迁到真机''，仿真内的扩展给出可重复、可消融的统计基线，真机迁移则只需在该基线之上叠加硬件物理偏差维度，避免一上来就让多个不确定性因素同时进入实验。
+前两个场景检验几何极端：连续 S 弯是最先暴露预瞄能力差异的工况，视线制导在反向转弯过渡区因前视点跳变出现瞬态偏移，模型预测控制则因预测时域内能``看到''反向曲率而提前减小偏差；发卡掉头把转弯半径压到接近 AUV 的最小转弯半径，一旦几何不可行，即使最优预瞄也无法物理跟随，考察的是行为树能否触发``短时退出加重新对准''而不撞断电缆。陡坡穿越检验地形跟随与深度跟踪的协同，其难点在于水平推进与垂直深度调节必须在斜坡进入瞬间几乎同时完成，否则离底高度会短暂跌入 1.5~m 安全阈值以下。埋设间断检验声磁观测接力与滤波连续性：掩埋段内磁场特征突变、声呐几乎失去电缆边缘特征，AUV 须仅靠惯性递推与杆臂修正维持位置估计连续性，直至暴露段重新出现观测。横流冲击的扰动是持续而非瞬态的，欠驱动 AUV 没有横向执行器，只能通过航向偏置间接抵消，要求控制器在预测时域内识别横向偏移的累积趋势并主动给出航向偏置。综合极端场景把前五类因素叠加，用于同时压力测试``行为树高优先级子树是否按设计触发''、``控制器是否在多重压力下保持收敛''与``失联保护是否在极端通信扰动下兜底''三类问题，是判断分层架构能否在极端工况下守住安全底线（仿真）的最关键一项实验。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.13}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.27}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.18}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.22}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.18}}@{}}
+\caption{六类极端电缆巡检场景设定}\label{tab:ch05-extreme-scenarios}\tabularnewline
+\toprule\noalign{}
+场景 & 路径设置 & 真实风险 & 观测角色 & 评价指标 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+场景 & 路径设置 & 真实风险 & 观测角色 & 评价指标 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+连续 S 弯急弯 & 两个反向圆弧，半径 15 m，总长 200 m & 舵角饱和导致跟踪失败 & 不确定性感知预瞄对视线制导预瞄 & 最大横向偏移、控制量平滑度 \\
+发卡掉头 & 180° 掉头，半径 10 m & 最小转弯半径不足，路径不可行 & 预测时域能否提前预判 & 跟踪失败距离、航向误差 \\
+陡坡穿越 & 电缆沿 30° 斜坡上升 5 m & 离底高度骤降，碰撞风险 & 两种地形跟随策略对比 & 最小离底高度、深度误差 \\
+埋设间断 & 50 m 掩埋段 + 20 m 暴露段 + 50 m 掩埋段 & 磁场特征突变导致定位漂移 & 声磁接力切换 & 检测连续性、埋深反演误差 \\
+横流冲击 & 直线电缆，横流 0.5 m/s & 横向偏移持续积累，舵角饱和 & 预测前馈对反馈补偿 & 稳态横向偏移、控制努力 \\
+综合极端 & S 弯 + 发卡 + 陡坡 + 横流，叠加 DVL 丢包 30\% + 磁畸变 + 声呐杂波 & 多重失效耦合 & 系统整体鲁棒性 & 路由完成率、安全违规率 \\
+\end{longtable}
+
+六类场景的闭环统计和原生因子契约统一在下一节给出。
+
+\subsubsection{代理正式矩阵、CBF 安全过滤与原生因子闭环}\label{sec:ch05-5-7-7}
+
+六类代理电缆场景用于检验完整 ROS2 控制栈在``几何、地形、感知质量、横流''四类压力下的闭环行为。本节采用分源置信重跑后的正式矩阵作为主结果：6 个场景、固定权重与保守分源不确定性感知控制（下称 UA）两种模式、三个随机种子、每次 60 s，共 36 次运行。全部运行均完成并生成非空记录，运行契约完整，无失败事件；两种模式的求解回退均为 0，平均求解耗时 p95 分别约为 9.93 ms 和 9.82 ms。由此可以先得到一个运行层面的正结果：旧代理矩阵中的高回退现象在本轮同口径正式矩阵中未复现。
+
+R13-v2 的主要性能结果见表~\ref{tab:ch05-r13-v2-main-results}。为突出实验结论而不是实现过程，表中只报告横向 RMSE、控制变化率、安全违规和授权模式四类结果。可以看到，保守 UA 并未系统改善横向 RMSE；全局均值由固定权重的 7.932 m 变为 8.006 m。但它显著降低了多类高压力场景的控制变化率，全局 RMS 由 0.247 降为 0.085，其中发卡、横流和综合极端分别降低约 89.8\%、52.0\% 和 84.4\%。因此，本轮矩阵支持的主结论是``分源置信下的保守控制平滑与实时可解性''，而不是``路径跟踪精度全面提升''。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{0.15\linewidth}
+  >{\centering\arraybackslash}p{0.18\linewidth}
+  >{\centering\arraybackslash}p{0.12\linewidth}
+  >{\centering\arraybackslash}p{0.14\linewidth}
+  >{\centering\arraybackslash}p{0.17\linewidth}
+  >{\centering\arraybackslash}p{0.10\linewidth}@{}}
+\caption{R13-v2 六类代理场景三种子正式结果}\label{tab:ch05-r13-v2-main-results}\tabularnewline
+\toprule\noalign{}
+场景 & RMSE 固定/UA（m） & RMSE 变化 & 控制变化率变化 & 安全违规固定/UA & UA 跟踪态占比 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+场景 & RMSE 固定/UA（m） & RMSE 变化 & 控制变化率变化 & 安全违规固定/UA & UA 跟踪态占比 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+连续 S 弯 & 5.898 / 6.002 & +1.77\% & -24.50\% & 0.000 / 0.000 & 0.691 \\
+发卡掉头 & 6.017 / 6.013 & -0.06\% & -89.79\% & 0.000 / 0.000 & 0.160 \\
+坡面穿越 & 4.140 / 4.127 & -0.33\% & +15.95\% & 0.000 / 0.000 & 0.690 \\
+埋设间断 & 4.136 / 4.053 & -2.01\% & +2.27\% & 0.000 / 0.000 & 0.542 \\
+横流冲击 & 15.052 / 15.484 & +2.87\% & -52.02\% & 0.000 / 0.000 & 0.645 \\
+综合极端 & 12.349 / 12.356 & +0.06\% & -84.40\% & 0.290 / 0.287 & 0.000 \\
+\end{longtable}
+
+分源置信链的核心证据来自授权模式和 \(p_{\mathrm{track}}\) 分布，而不是来自单一 RMSE 数字。声呐源提供 \(p_{\mathrm{track}}\)，磁源只提供检测概率；授权逻辑再按进入/退出阈值和去抖规则在保持、搜索与跟踪之间切换。六类场景的差异汇总于图~\ref{fig:ch05-r13-v2-evidence}：连续 S 弯、坡面和横流多处于跟踪态，发卡因有效观测稀疏而保持态增加，埋设间断同时跨越三类授权且逐次 \(p_{95}-p_5\) 均值约 0.483，综合极端则因未越过跟踪进入门而停留在搜索/保持边界。这说明授权机制没有把低质量观测误用为连续跟踪许可。
+
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{保守 UA 对控制变化率的影响\label{fig:ch05-r13-v2-control-rate}}{%
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 六类代理场景中固定权重与 conservative UA 的控制变化率成对对比；发卡、横流和综合极端显著下降}]{experiments/control/r13_v2_control_rate_paired.png}}\\[2pt]
+\subcaptionbox{分源置信下的授权模式分布\label{fig:ch05-r13-v2-authority}}{%
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景的 HOLD、SEARCH、TRACK 授权占比堆叠图}]{experiments/control/r13_v2_authority_modes_ua.png}}\\[2pt]
+\subcaptionbox{分源置信 \(p_{\mathrm{track}}\) 分布\label{fig:ch05-r13-v2-ptrack}}{%
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景 sonar p_track 分布箱线图；埋设间断动态范围最大，综合极端未达到 TRACK 进入门}]{experiments/control/r13_v2_p_track_boxplot_ua.png}}
+\caption{R13-v2 分源置信证据三面板：(a) 保守 UA 对控制变化率的影响；(b) 授权模式分布；(c) \(p_{\mathrm{track}}\) 分布}\label{fig:ch05-r13-v2-evidence}
+\end{figure}
+\FloatBarrier
+
+为了关闭速度门控的遥测缺口，本文在不改变 36 次正式矩阵结论的前提下补充遥测与授权审计。原矩阵 36 次运行均未记录策略后目标速度和控制器实际消费的授权快照，因此只能支撑控制平滑、回退与授权分布结论；补入请求/施加目标速度和授权快照后，四类场景共 12 次约 60 s UA-only 运行全部有效，速度与授权快照缺失均为 0。质量控制策略接受率均值为 0.995，速度缩放最小值、逐次 \(q_5\) 下界和均值分别为 0.000、0.805 和 0.896，最大施加速度动态范围 0.285 m/s，回退为 0，求解耗时 p95 上界 13.43 ms。该补强仅证明保守策略确实改变 MPC 消费目标速度，不替换表~\ref{tab:ch05-r13-v2-main-results} 的正式成对统计。
+
+综合极端另以固定权重基线做三种子 60 s 全流程补充，结果见表~\ref{tab:ch05-r13-v16-combined-baseline}：3/3 完成，控制设定点全程处于巡缆跟踪状态，横向偏移 q50/q95 均值为 0.147/0.206 m，最大值 0.235 m，跟踪授权占比均值 0.982，回退与安全违规为 0。该组结果只作为搜索/保持边界之外的补充正证据，说明基础巡缆链路在最复杂代理场景下可重复闭合。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{0.18\linewidth}
+  >{\centering\arraybackslash}p{0.09\linewidth}
+  >{\centering\arraybackslash}p{0.14\linewidth}
+  >{\centering\arraybackslash}p{0.14\linewidth}
+  >{\centering\arraybackslash}p{0.11\linewidth}
+  >{\centering\arraybackslash}p{0.12\linewidth}@{}}
+\caption{综合极端固定权重全流程 60 s 三种子补充结果}\label{tab:ch05-r13-v16-combined-baseline}\tabularnewline
+\toprule\noalign{}
+运行口径 & 成功次数 & 横向偏移 q50（m） & 横向偏移 q95（m） & 跟踪占比 & 回退 / 安全违规 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+运行口径 & 成功次数 & 横向偏移 q50（m） & 横向偏移 q95（m） & 跟踪占比 & 回退 / 安全违规 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+固定权重全流程, 60 s & 3/3 & 0.147 & 0.206 & 0.982 & 0 / 0 \\
+\end{longtable}
+
+近底安全方面，第~\ref{sec:ch04-4-4-7} 节定义的 CBF 过滤器在低、中、高三档地形和 PID/MPC 两类控制器下复核，共 18 个约 60 s 运行均有效。逐档结果见附录表~\ref{tab:ch05-cbf-terrain-matrix}：1.5 m 安全违规率和海床穿透率均为 0，最小净空下界为 2.70--2.90 m，18 个运行均触发速度门控，全局最低速度缩放为 0.180；MPC 9 个运行回退均为 0，求解耗时 p95 上界 23.84 ms。该矩阵支撑近底安全过滤有效，但其代理口径和实时性边界仍收束于 \S\ref{sec:ch05-5-6}。
+
+\subsubsection{边界与负结果集中说明}\label{sec:ch05-r13-boundaries}
+
+本组实验的负结果和不可外推项已统一并入 \S\ref{sec:ch05-5-6} 的证据边界总表，涉及 R13-v2 横向 RMSE 未系统改善、综合极端未进入跟踪态、速度门控仅由补强证明、旧代理矩阵回退失败归因、CBF 仍为手动设定点加运动学代理口径且求解耗时 p95 上界不等于 10 ms 实时性等条目，此处不再重复展开。R13-v2 横向 RMSE 边界已由表~\ref{tab:ch05-r13-v2-main-results} 的成对 RMSE 与变化率列给出，成对柱状图作为同源诊断材料随图组来源记录归档。
+
+为避免继续用配置拼装代替场景物理契约，本文另建立原生因子生成器。电缆中心线由分段几何和随地形变化的埋深共同定义，磁真值由同一中心线的分段 Biot--Savart 积分生成，声呐可见性由埋深决定，横流独立作用于水体速度；实测三轴噪声只进入量测副本，不能修改电缆、地形、磁场或流场真值。曲线几何、地形与埋设、实测噪声回放、横流四个因子各自独立开关，\(2^4\) 个组合各取两个种子，共 32 次契约验证全部有效。
+
+\begin{longtable}[]{@{}llll@{}}
+\caption{R21 原生场景因子开关验证}\label{tab:ch05-r21-native-factors}\tabularnewline
+\toprule\noalign{}
+因子 & 关闭口径 & 开启口径 & 可观测差异 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+因子 & 关闭口径 & 开启口径 & 可观测差异 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+电缆几何 & 直线 & 分段曲线 & 中心线真值独立改变 \\
+地形与埋设 & 平底、0.15 m & 起伏地形、最大 1.40 m & 声呐可见率 1.000 降至 0.845 \\
+磁噪声 & 同协方差高斯 & 实测三轴循环回放 & lag-1 相关 \(-0.024\) 变为 \(-0.998\) \\
+横流 & 0 m/s & 时变横流 & 平均流速 0.352 m/s \\
+\end{longtable}
+
+R21 闭合的是``因子可独立操纵、真值与量测不串扰''这一生成器契约，而非控制性能结论；上表已给出四个因子开关的可观测差异，噪声时间结构与横流时序波形随附录 A.7 归档。R22 在此基础上把原生生成器接入制导级 MPC、分源跟踪授权和保守质量控制策略，形成不调用 PVS 原生定深定向自驾的全因子离线闭环矩阵，用于排除原生声磁、地形与横流因子无法进入控制闭环的接口风险，并量化主效应与二阶交互。
+
+R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流四个因子的 \(2^4\) 个组合，每组 3 个种子，并分别运行固定权重基线与保守不确定性感知控制，共 96 次、每次 20 s。全部运行有效，回退、1.5 m 低净空违规和海床穿透均为 0；最坏横向 p95 为 1.716 m，最小净空为 2.536 m。求解耗时 p95/max 上界为 24.02/38.83 ms，相对 20 Hz ROS 控制、10 Hz 桥接/主控和约 0.3 s 网络接收预算均未越界，全矩阵与时序审计见附录表~\ref{tab:ch05-r22-native-factorial}。
+
+因子效应上，横流是横向 p95 的主导因子，跨模式主效应约 0.639 m；曲线几何与横流构成主要二阶交互，跨模式约 0.396 m。地形/埋设与本轮实测噪声回放在 20 s 短时窗口内主效应接近零，说明当前压力主要来自平面几何和水体速度。不确定性感知控制的收益仍应按控制风格表述：平均控制变化率 RMS 从约 4.831 降至约 0.814，但平均横向 p95 从约 1.173 m 增至约 1.206 m；困难的曲线加横流组合中最坏 p95 由 1.716 m 降至约 1.625 m，只能写成边界样本上的平滑收益。
+
+为检查短时窗口是否掩盖误差累积，本文随后运行三组仿真侧补强。60 s 全 \(2^4\) 矩阵共 96 次运行，全部有效且回退、安全违规和穿底均为 0，最坏横向 p95 为 2.176 m，最小净空 2.384 m；终端审计显示 96 次均未触发有限参考路径末端，因此全窗口指标可视作活动巡缆段指标。120 s 地形加横流固定时长边界矩阵共 24 次运行，安全违规仍为 0，但全窗口最坏横向 p95 达到 6.839 m；分段审计发现 24/24 次均在 65.0--105.0 s 到达路径终点，活动段横向 p95 最大 2.152 m、终端尾段最大 7.703 m。加入任务层到达即退出后，同一专项 24/24 到达并退出，最坏横向 p95 回落到 2.152 m，说明固定时长恶化来自路径完成后的终端尾段，而非主矩阵接口结论被推翻。该归因不是定点保持或横流悬停能力，边界见 \S\ref{sec:ch05-5-6}。
+
+为关闭离线仿真代理尚未覆盖的执行链风险，本文另运行一次 PVS 原生定深定向冒烟实验。专用配置将 PVS 控制模式置为定深定向自驾、运动模型置为原生，ROS2 控制器、MPC 与仲裁器经二进制下行进入模拟管理设备自动分发后触发 PVS 内层自驾。审计显示自动模式命中 149 次、原生自驾后端开启 1 次、运动学代理日志为 0；记录到设定点 245 帧、控制命令 720 帧、滤波状态 998 帧，72 个控制器诊断样本均求解成功，耗时 p95/max 为 19.32/20.40 ms。该结果只支撑``PVS 原生仿真执行链已闭合''，覆盖范围见 \S\ref{sec:ch05-5-6}。
+
+真机侧时序口径由 PC104 UDP 探针补充：主机按 10 Hz 发送安全零推力 \texttt{\$CKTH} 下行包，并记录 \texttt{\$AUV} 上行到达间隔、帧号缺口、解析错误与 PC104 运行时长单调性。30 s 主机中继记录中，300 帧零推力下行进入中继，450 帧上行被容器解析，解析错误为 0；主上行到达频率约 15.000 Hz，到达间隔 p50/p95/p99 为 57.983/85.710/85.944 ms。该探针只能报告到达间隔与抖动，不构成单向物理延迟，边界见 \S\ref{sec:ch05-5-6}。
+
+\section{端到端海缆巡检数字孪生仿真}\label{sec:ch05-e2e}
+
+第三条主线把前两条主线的估计与控制能力合拢为一条完整的海缆巡检任务，在高保真数字孪生后端上端到端运行，并给出两级证据：其一是干净先验下符合行业标准风格的数字孪生验收，其二是先验带偏差时的分层证据——从算法同源性、失效边界到满足磁观测前提的六自由度闭环恢复。二者共同界定端到端链路"已闭环到什么程度、在什么先验条件下成立"。
 
 \subsection{海缆巡检的行业标准数字孪生验收结果}\label{sec:ch05-5-5-10}
 
 前面几节讨论的代理电缆巡检是从控制侧压力测试的角度验证闭环可运行性，本节报告一条独立、更高保真的证据链：在数字孪生后端上运行完整的海缆巡检任务，把运行时的电缆跟踪结果落盘，再经离线评分得到符合行业标准（《DL/T 1278---2025 海底电力电缆运行规程》\cite{dlt1278_2025}）风格的评分与工业验收判定，最后对多次运行聚合（评分链路、阈值定义与验收处理参数见附录 A.8）。此前该链路只有单次有效运行，本轮在清理残留进程、恢复干净运行环境后补跑了三次实时验收运行，使其能进入``多次运行聚合结论''。
 
-在补跑之前，本链路先完成过一次约 120 秒的全流程初步运行，用以证明``磁力计到跟踪到控制到落盘到离线评分产物''这条工程链路整体打通。该次运行的指标仅为初步样张：跟踪置信度全程固定为 0.5、最大路由偏移约 14.7 m、缺埋深不确定度而无法判定精度，工业结论可用性判为``有限''。因此本文只把该次运行作为工程链路打通与产物格式成立的证据，不作为验收结论；其逐项产物图（埋深剖面、路由偏移、跟踪置信度、估计平面轨迹、制导航向、制导可行性、路由偏移分布）不在正文展开，文件路径随附录 A.8/Artifact Manifest 归档以备追溯。真正可进入``多次运行聚合结论''的，是随后引入质量与验收判定层后的三次全新运行。
+在补跑之前，本链路先完成过一次约 120 秒的全流程初步运行，用以证明``磁力计到跟踪到控制到落盘到离线评分产物''这条工程链路整体打通。该次运行的指标仅为初步样张：跟踪置信度全程固定为 0.5、最大路由偏移约 14.7 m、缺埋深不确定度而无法判定精度，工业结论可用性判为``有限''。因此本文只把该次运行作为工程链路打通与产物格式成立的证据，不作为验收结论；其逐项产物图不在正文展开，文件路径随附录 A.8/Artifact Manifest 归档以备追溯。真正可进入``多次运行聚合结论''的，是随后引入质量与验收判定层后的三次全新运行。
 
 三次全新运行的结果高度一致：原始样本约 1230--1250、有效样本约 770--790、就绪且通过工业验收，行业标准风格评分完全一致（总分 24、最差项 16、注意状态），扣分项均为``海缆埋深不足''与``埋深估计精度未达 0.15 m''两项。三次运行的排除样本构成也一致，均为``离开 50 m 巡检窗口''、``埋深预热未就绪''与``越出路由走廊''三类，说明窗口化剔除的是末段到达终点后的漂移与起步预热，而非``裁剪到通过''。对三次运行聚合，通过率为三分之三、就绪分布一致，满足``至少三次运行且通过率不低于 0.67''的口径，因此初步验收就绪判定为真。这里的``初步''是刻意保留的限定词：它表示``在数字孪生证据链上，多次运行的证据完整性、起点健康、窗口有效性与工程阈值均一致通过''，而非``通过现场海试验收''。（三次运行的验收判据与聚合口径见附录 A.8。）
 
-行业标准风格评分卡以图~\ref{fig:ch05-dlt-scorecard-run1} 为代表（三次运行评分完全一致，第 2、3 次评分卡不再重复展示）；面向运维的验收汇总产物见图~\ref{fig:ch05-cable-operator-summary}。其余运维产物（电缆平面图、巡检窗口时间线、埋深不确定度窗口诊断、电缆跟踪动态末帧、上位机操作员工作流演示末帧）为同批次 UI/回放截图，不在正文逐张展开，文件路径随附录 A.8/Artifact Manifest 归档。
+行业标准风格评分卡以图~\ref{fig:ch05-dlt-scorecard-run1} 为代表（三次运行评分完全一致，第 2、3 次评分卡不再重复展示）。其余运维产物（面向运维的验收汇总文本框、电缆平面图、巡检窗口时间线、埋深不确定度窗口诊断、电缆跟踪动态末帧、上位机操作员工作流演示末帧）为同批次 UI/回放截图，其结论已在上文与评分卡中完整给出，不在正文逐张展开，文件路径随附录 A.8/Artifact Manifest 归档。
 
 \begin{figure}[htbp]
 \centering
@@ -931,30 +818,21 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 \end{figure}
 \FloatBarrier
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={运维验收汇总（第 1 次运行；文本框产物，诚实呈现 NOT READY/扣分项，不整改）}]{cable_acceptance/operator_acceptance_summary_fresh1.png}
-\caption{运维验收汇总（第 1 次运行；文本框产物，诚实呈现 NOT READY/扣分项，不整改）}\label{fig:ch05-cable-operator-summary}
-\end{figure}
-\FloatBarrier
+此外还生成了一段面向答辩的上位机操作员工作流演示视频：它在离屏模式下用第一次运行的真实遥测逐帧驱动真实上位机界面回放电缆巡检监控面板，仅执行安全操作员动作并停用外发定时器以杜绝真实发包；其末帧截图随附录 A.8/Artifact Manifest 归档。
 
-此外还生成了一段面向答辩的上位机操作员工作流演示视频：它在离屏模式下驱动真实的上位机界面，用第一次运行的真实遥测逐帧回放电缆巡检监控面板（结论、偏移、埋深、进度、置信度、评分状态与验收标志），仅执行安全的操作员动作并停用外发定时器以杜绝真实发包；其末帧截图同样随附录 A.8/Artifact Manifest 归档。
-
-\textbf{证据边界（必须与上述结论同时引用）}：本节验收链路的口径限制已并入 \S\ref{sec:ch05-5-6} 的证据边界总表，核心是四点：数字孪生提供确定性电缆先验、近零路由偏移与近常值置信度只能证明链路与评分逻辑正确而非真实检测精度；埋深扣分源自数字孪生几何设定而非真实海缆状态评估；就绪与通过判定限定于有效巡检窗口（约 770--790 点），全程未窗口化数据不通过验收；三次运行为同一场景连续重复，不等价于多天、多海况、多电缆几何的现场验收。
-
-综上，本节可写入论文的结论是：``声磁电缆巡检的运行时数据到离线行业标准评分到工业验收到多次运行聚合的全链路已闭环，在数字孪生确定性先验下三次运行全部就绪且通过、初步验收就绪''；不可越界写成``通过真实海缆检测精度验收''或``通过现场行业标准验收''。
+\textbf{证据边界（必须与上述结论同时引用）}：本节验收链路的口径限制已并入 \S\ref{sec:ch05-5-6} 的证据边界总表——核心是近零路由偏移与近常值置信度只证明链路与评分逻辑正确而非真实检测精度，且就绪判定限定于有效巡检窗口、三次运行为同一场景连续重复，其余分项不再重复展开。因此，本节可写入论文的结论是：``声磁电缆巡检的运行时数据到离线行业标准评分到工业验收到多次运行聚合的全链路已闭环，在数字孪生确定性先验下三次运行全部就绪且通过、初步验收就绪''；不可越界写成``通过真实海缆检测精度验收''或``通过现场行业标准验收''。
 
 \subsection{端到端电缆探测的分层证据：从干净先验闭环、失效边界到满足磁观测前提的六自由度闭环恢复}\label{sec:ch05-5-5-11}
 
-§5.5.10 报告的行业标准验收，是主仓端到端链路在一种先验条件下的结果。本节回答一个更结构性的问题：主仓端到端所运行的``电缆探测算法''究竟是什么、它在什么先验条件下被激励、以及工业界最关心的``先验带偏差时算法能承受多大失效边界、又能恢复到什么程度''目前由哪一层证据支撑。把这三件事讲清楚，是为了避免把``算法在专用磁探测仓库里被扫描出来的鲁棒性边界''误当成``主仓端到端已实测的鲁棒性''。为此，本节把证据按``算法同源性 → 失效边界 → 恢复能力 → 分层判定''四个层次逐层展开，每一层都显式标注它能支撑什么、不能支撑什么；相应证据层级与恢复条件汇总于附录 A.9。
+§\ref{sec:ch05-5-5-10} 报告的行业标准验收，是主仓端到端链路在一种先验条件下的结果。本节回答一个更结构性的问题：主仓端到端所运行的``电缆探测算法''究竟是什么、在什么先验条件下被激励、以及``先验带偏差时能承受多大失效边界、又能恢复到什么程度''目前由哪一层证据支撑，以避免把``专用磁探测仓库扫描出的鲁棒性边界''误当成``主仓端到端已实测的鲁棒性''。为此，本节按``算法同源性 → 失效边界 → 恢复能力 → 分层判定''四层展开，每层显式标注能支撑什么、不能支撑什么；证据层级与恢复条件汇总于附录 A.9。
 
-\textbf{（一）算法同源性：主仓端到端消费的是同源部署接口，而非占位代理。} 主仓电缆巡检运行时节点在启动时把专用磁探测仓库挂入模块检索路径，直接实例化其部署接口中的跟踪流水线与感知配置，每约 0.1 秒调用一次带制导的推进接口，并把跟踪结论，横向偏移、路由进度、埋深及其不确定度、跟踪置信度、磁信噪比、质量与验收标志、工业就绪判定，经电缆跟踪话题对外发布。这与方法论篇所描述的两级估计、主动感知激励与几何安全约束是同一套算法实现：在``仿真与实物代码同源''的架构下，主仓端到端消费的正是专用仓库导出的部署接口（下称部署门面），而非另写一份简化代理。因此 §5.5.10 的验收结果就是真实算法的端到端结果，这一判断可以明确写入论文。
+\textbf{（一）算法同源性：主仓端到端消费的是同源部署接口，而非占位代理。} 主仓电缆巡检运行时节点在启动时把专用磁探测仓库挂入模块检索路径，直接实例化其部署接口中的跟踪流水线与感知配置，每约 0.1 秒调用一次带制导的推进接口，并把跟踪结论，横向偏移、路由进度、埋深及其不确定度、跟踪置信度、磁信噪比、质量与验收标志、工业就绪判定，经电缆跟踪话题对外发布。这与方法论篇所描述的两级估计、主动感知激励与几何安全约束是同一套算法实现：在``仿真与实物代码同源''的架构下，主仓端到端消费的正是专用仓库导出的部署接口（下称部署门面），而非另写一份简化代理。因此 §\ref{sec:ch05-5-5-10} 的验收结果即真实算法的端到端结果。
 
-同时必须点明的是，主仓端到端目前只在``干净先验''条件下被激励。运行时配置直接给出先验航线的三点坐标，先验适配器据此构造电缆地图时从不施加平移、旋转或缩放，节点与配置也不暴露先验偏差档位或位姿误差注入开关。这一点由 §5.5.10 的运行时证据直接印证，三次全新运行的最大路由偏移在数值上等于零，说明控制器消费的参考航线与数字孪生真值电缆几乎重合，即端到端所跑的是未施加静态位姿扭曲、也未叠加旋转慢漂的干净先验。\textbf{因此，已闭环并达到行业标准就绪且通过的，仅是干净先验条件下的端到端证据。}
+同时必须点明的是，主仓端到端目前只在``干净先验''条件下被激励。运行时配置直接给出先验航线的三点坐标，先验适配器据此构造电缆地图时从不施加平移、旋转或缩放，节点与配置也不暴露先验偏差档位或位姿误差注入开关。这一点由 §\ref{sec:ch05-5-5-10} 的运行时证据直接印证，三次全新运行的最大路由偏移在数值上等于零，说明控制器消费的参考航线与数字孪生真值电缆几乎重合，即端到端所跑的是未施加静态位姿扭曲、也未叠加旋转慢漂的干净先验。\textbf{因此，已闭环并达到行业标准就绪且通过的，仅是干净先验条件下的端到端证据。}
 
 \textbf{（二）失效边界：先验带偏差时算法的承受极限，由算法级扫描与主仓端到端实测两层证据共同界定。}
 
-算法级证据来自专用磁探测仓库的离线场景扫描，其证据等级为算法级、单次复现、纯仿真。这些结论应作为``同源算法在专用仓库中已验证的鲁棒性边界''被引用，而非改写成主仓端到端实测；为保持主仓论文的自包含性与``不迁移''约束，此处只给出结论摘要，此处仅保留可复核的结论摘要（证据层级见附录 A.9）：
+算法级证据来自专用磁探测仓库的离线场景扫描，其证据等级为算法级、单次复现、纯仿真。这些结论应作为``同源算法在专用仓库中已验证的鲁棒性边界''被引用，而非改写成主仓端到端实测；为保持主仓论文的自包含性与``不迁移''约束，此处仅保留可复核的结论摘要（证据层级见附录 A.9）：
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
@@ -983,39 +861,12 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 纯磁最小可承受曲率半径 & 30 m（环境硬下限）之前无失效边界，最大跳变仅 0.1--0.2 m、完成度 0.960--0.974；瓶颈在电缆几何物理下限而非纯磁感知 \\
 留一法机制分解 & 载荷机制（关闭即失败）为在线先验修正与自适应之字形；冗余安全网（该场景下关闭无影响）为进度窗口投影与磁路径观测 \\
 跨车道压力与地图系解耦 & 关闭在线先验修正在 70/50 m 车道间距下触发 724.1/686.4 m 大跳变、任务失败；同一消融下地图系投影跳变仍约 0.2 m；基线累计约 7.53 m/−3.18° 物理配准修正 \\
-之字形埋深估计达标潜力 & 初始小摆幅未达标；调优后 1.0/1.5/2.0 m 埋深在 36°/32°/25° 摆幅下达 0.124/0.079/0.123 m 的单周期平均误差（行业参考目标 0.15 m） \\
+之字形埋深估计精度 & 初始小摆幅误差较大；调优后 1.0/1.5/2.0 m 埋深在 36°/32°/25° 摆幅下达 0.124/0.079/0.123 m 的单周期平均误差（达到行业参考目标量级 0.15 m，仿真单周期口径） \\
 \end{longtable}
 
-为把上表从``摘要口径''还原为``可核查的因果链''，下面按``失效现象 → 机制解耦 → 运维价值''三步给出三张算法级证据图。三图均从上述专用磁探测仓库的确定性单次纯仿真复现或其结果 CSV 生成，证据等级与摘要表一致（算法级、单次复现、\(n=1\)），不构成主仓端到端或实测结论。
+上表已经按``失效现象 → 机制解耦 → 运维价值''给出算法级因果链：关闭在线先验修正会使重档先验下横偏漂移至 30--40 m 并触发 +57.5 m 跨车道跳变；地图系投影连续（约 0.2 m 跳变）并不等价于物理配准，真正起作用的是约 7.53 m/−3.18° 的在线先验修正；主动之字形在调优后可使 1.0/1.5/2.0 m 埋深的单周期平均误差进入 0.15 m 参考目标。对应三张算法级因果图从正文降级归档，文件随图组来源记录与 Artifact `MAG-CABLE-ALGORITHM-BOUNDARY` 保留；其证据等级仍为专用仓库、纯仿真、单次复现、\(n=1\)，不构成主仓端到端或实测结论。
 
-首先是失效现象。图~\ref{fig:ch05-mag-failure-timeseries}给出重档畸变先验下关闭在线先验修正的纯磁失效时序：基线（在线修正开）横偏全程稳定在数米以内、路由进度近似线性推进；消融（在线修正关）无法吸收错位先验，横偏累积漂移至 30--40 m，并在约 2119 s 处触发 +57.5 m 的单步跨车道投影跳变，路由进度随之明显落后于基线。这就是失效边界摘要中``纯磁失效时序''一行的时序来源。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={重档畸变先验下纯磁失效时序：基线（在线先验修正开）横偏稳定、路由进度线性；消融（在线先验修正关）横偏漂移至 30--40 m 并在约 2119 s 触发 +57.5 m 跨车道跳变。专用算法仓库单次纯仿真，n=1}]{experiments/cable_mag_integration/pure_magnetic_failure_timeseries.png}
-\caption{重档畸变先验下的纯磁失效时序（关闭在线先验修正；专用算法仓库单次纯仿真，\(n=1\)）}\label{fig:ch05-mag-failure-timeseries}
-\end{figure}
-\FloatBarrier
-
-其次是机制解耦，用以澄清一个易被误读的问题：地图系投影连续不等于任务健康。图~\ref{fig:ch05-mag-prior-decoupling}左图显示，在 50/70 m 车道间距下关闭在线先验修正时，全局路由进度出现 686.4/724.1 m 的大跳变、任务失败，但同一消融下地图系投影跳变仍仅约 0.2 m，即 map-frame 跟踪器只保证``投影落在哪一段''连续，并不保证任务不失败；右图显示真正把错位地图拉回真实电缆的是在线先验配准的物理修正量，基线累计约 7.53 m 平移与约 \(-3.18^\circ\) 旋转，而消融支路的平移修正恒为零。这解释了失效边界摘要中``跨车道压力与地图系解耦''一行。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={地图系投影安全与在线先验配准解耦：左图关闭在线先验修正时全局路由跳变 686.4/724.1 m 但地图系投影跳变仅约 0.2 m；右图基线累计平移约 7.53 m、旋转约 -3.18 度，消融平移修正为零。专用算法仓库单次纯仿真，n=1}]{experiments/cable_mag_integration/prior_alignment_decoupling.png}
-\caption{地图系投影安全与在线先验配准的解耦：投影连续不等于物理配准（专用算法仓库单次纯仿真，\(n=1\)）}\label{fig:ch05-mag-prior-decoupling}
-\end{figure}
-\FloatBarrier
-
-最后是运维价值，回答``主动之字形探查换来什么''。图~\ref{fig:ch05-mag-zigzag-tradeoff}左图给出 1.0/1.5/2.0 m 三档真值埋深在 20--36\(^\circ\) 摆幅下的单周期埋深平均绝对误差包络：初始小摆幅普遍未达标，随摆幅增大，各档误差分别在 36\(^\circ\)/32\(^\circ\)/25\(^\circ\) 处取得最优（圈标点，0.124/0.079/0.123 m），进入 0.15 m 行业参考目标；右图给出各档最优点上``埋深精度增益''与``TRACK 横偏、路线完成度代价''的权衡，说明摆幅需按埋深与信号状态自适应，一味增大摆幅会恶化横偏与完成时间。这为失效边界摘要中``之字形埋深估计达标潜力''一行提供了完整的调参依据。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.98\linewidth,height=\textheight,keepaspectratio,alt={调优后之字形主动探查埋深权衡：左图 1.0/1.5/2.0 m 埋深在 36/32/25 度摆幅取得 0.124/0.079/0.123 m 单周期埋深误差、进入 0.15 m 参考目标；右图给出各最优点埋深精度与 TRACK 横偏、完成度权衡。专用算法仓库单次纯仿真，n=1}]{experiments/cable_mag_integration/zigzag_burial_tradeoff.png}
-\caption{调优后之字形主动探查的埋深--摆幅--跟踪权衡（圈标为各埋深最优工作点；专用算法仓库单次纯仿真，\(n=1\)）}\label{fig:ch05-mag-zigzag-tradeoff}
-\end{figure}
-\FloatBarrier
-
-主仓端到端一侧，本文首次把先验偏差引入真实 ROS 链路加以激励，并分别以开环回放与六自由度闭环两种方式实测其失效传导。开环回放的正确性先由干净基线回归确认，关闭偏差注入时回放逐位复现原始全新运行（最大路由偏移在数值上为零、771 个窗口点、就绪且通过），证明跟踪估计是所录制导航与磁场输入的纯函数。在此基础上，对中、重两档静态位姿扭曲分别跨三个不同源回放各跑三次；随后当六自由度仿真后端就位，又以与 §5.5.10 完全一致的仿真配方做了真闭环复跑（同样中、重两档各三次全新运行），闭环基线亦先由干净复现确认（723 帧、最大路由偏移为零、就绪且通过）。两种方式的失效传导结果如下：
+主仓端到端一侧，本文首次把先验偏差引入真实 ROS 链路加以激励，并分别以开环回放与六自由度闭环两种方式实测其失效传导。开环回放的正确性先由干净基线回归确认，关闭偏差注入时回放逐位复现原始全新运行（最大路由偏移在数值上为零、771 个窗口点、就绪且通过），证明跟踪估计是所录制导航与磁场输入的纯函数。在此基础上，对中、重两档静态位姿扭曲分别跨三个不同源回放各跑三次；随后当六自由度仿真后端就位，又以与 §\ref{sec:ch05-5-5-10} 完全一致的仿真配方做了真闭环复跑（同样中、重两档各三次全新运行），闭环基线亦先由干净复现确认（723 帧、最大路由偏移为零、就绪且通过）。两种方式的失效传导结果如下：
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1667}}
@@ -1054,7 +905,7 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-干净（回归基准） & 4.40 / 0.88 / 4.08（窗口内约为零） & 0.0 \(\checkmark\) & 771 & 就绪·通过（三次全部，§5.5.10） \\
+干净（回归基准） & 4.40 / 0.88 / 4.08（窗口内约为零） & 0.0 \(\checkmark\) & 771 & 就绪·通过（三次全部，§\ref{sec:ch05-5-5-10}） \\
 中档（开环回放） & 15.36--15.50 / 10.40--10.49 / 14.96--15.10 & 7.88--7.92 \(\times\) & 0 & 不就绪·不通过（三次全部） \\
 重档（开环回放） & 20.24--20.40 / 14.26--14.38 / 19.78--19.94 & 10.61--10.70 \(\times\) & 0 & 不就绪·不通过（三次全部） \\
 中档（六自由度闭环） & 15.27--15.31 / 10.28--10.31 / 14.51--14.55 & 7.93--7.95 \(\times\) & 0 & 不就绪·不通过（三次全部） \\
@@ -1063,18 +914,11 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 
 这组实测给出三点一致的结论。其一，失效方向与算法级扫描一致，先验偏差越大，路由偏移越大、验收越难通过（干净→中→重的全程最大偏移单调升至约 15 m、20 m），端到端链路确实把先验畸变的压力传导到了行业标准评分与工业验收判定。其二，跨回放实现的离散极小（中档三次最大偏移 15.36/15.39/15.50 m，重档 20.24/20.27/20.40 m），说明这是先验几何偏差的确定性后果而非随机噪声。其三，失效通道是``起始横偏超限加全程横偏未被吸收''：中、重两档起始三十帧的横偏即达 7.9/10.7 m，超过起点健康检查的 5 m 门限，且全程逐帧的先验配准残差恒等于横向偏移，即在线先验修正未能把偏差收敛回宽约 2 m 的验收走廊，故窗口内有效点数为零、判为无效。
 
-这里必须显式声明一个关键机制边界，否则极易误读。开环回放中车辆轨迹被干净先验录制所固定，先验畸变只改变参考航线、不会重新操舵车辆去贴合被扭曲的先验，因此在线先验修正得不到闭环激励，横偏被``冻结''在开环几何差上单调累积。六自由度闭环则确实``闭上了''：逐帧的期望航向与原始期望航向平均相差 17--20°、峰值约 47--50°，中档约九百七十帧、重档约一千零四十帧发生了实质操舵修正，说明车辆在物理回路里被真实重新操舵，而非固定轨迹回放。但即便如此，闭环结果与开环几乎逐位重合（闭环中档最大偏移约 15.3 m 对开环 15.4 m、闭环重档约 20.1 m 对开环 20.3 m），仍确定性地三次全部不通过。这说明失效并非``在线修正尝试恢复但失败''，其根因在下一层被澄清。
+这里须显式声明一个关键机制边界，否则极易误读。开环回放中车辆轨迹被干净先验录制所固定，先验畸变只改变参考航线、不会重新操舵车辆去贴合被扭曲的先验，因此在线先验修正得不到闭环激励，横偏被``冻结''在开环几何差上单调累积。六自由度闭环则确实``闭上了''：逐帧的期望航向与原始期望航向平均相差 17--20°、峰值约 47--50°，中档约九百七十帧、重档约一千零四十帧发生了实质操舵修正，说明车辆在物理回路里被真实重新操舵，而非固定轨迹回放。但即便如此，闭环结果与开环几乎逐位重合（闭环中档最大偏移约 15.3 m 对开环 15.4 m、闭环重档约 20.1 m 对开环 20.3 m），仍确定性地三次全部不通过。可见失效并非``在线修正尝试恢复但失败''，其根因在下一层被澄清。
 
-\textbf{（三）观测前提与闭环恢复。} 在线先验修正接入部署门面后，系统以磁异常的水平分量和竖直分量之比构造带符号横偏，并把估计的平移与旋转修正回投影缓存。初次闭环复验中，约一千二百帧磁观测全部被残差门拒绝；复算表明，产磁电缆与车辆近乎共面，使直线埋缆模型反演出的横偏被放大约四至五倍。残差门的拒绝由此被定位为观测几何不满足模型前提，而不是在线修正接口或滤波器失效。该诊断过程及其处置在第 5.6 节集中归纳，本节只保留满足前提后的恢复结果。
+\textbf{（三）观测前提与闭环恢复。} 在线先验修正接入部署门面后，系统以磁异常的水平分量和竖直分量之比构造带符号横偏，并把估计的平移与旋转修正回投影缓存。初次闭环复验中，约一千二百帧磁观测全部被残差门拒绝；复算表明，产磁电缆与车辆近乎共面，使直线埋缆模型反演出的横偏被放大约四至五倍。残差门的拒绝由此被定位为观测几何不满足模型前提，而不是在线修正接口或滤波器失效。该诊断过程及其处置在§\ref{sec:ch05-5-6}集中归纳，本节只保留满足前提后的恢复结果。
 
-第二环，用一个满足磁观测前提的解耦轻量闭环，独立证明``算法部署接口本身可在线闭环''。为把``当前产磁几何不满足前提''与``部署算法是否可在线闭环''两件事区分开，本文构造了一个不依赖六自由度动力学的轻量闭环外壳：它只承担仿真外壳职责，消费出厂节点发布的控制设定值，用简单运动学积分车辆位姿，回发状态、磁场与任务指令；磁场仍调用与高保真仿真同一个毕奥-萨伐尔纯函数，但把真值直缆布置在磁传感器正下方约 7.5 m，使水平分量主导并满足直线埋缆观测前提。短闭环冒烟测试显示，在线修正被真实观测激励并接受：被观测与被接受比例均为满值、垂直分离 7.5 m、拟合质量约为 1.0、累积平移非零，即满足磁观测前提时，在线修正在部署闭环中被真实观测持续接受、并把修正量累积回投影缓存，与第一环因近共面几何被残差门全数拒绝形成直接对照。图~\ref{fig:ch05-direction-a-prior-alignment}从该录制包提取逐帧诊断，绘出带符号横偏（先验对磁观测）、累积平移与旋转修正量、拟合质量相对置信门限，以及逐帧接受标志与航向修正量：
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={解耦轻量闭环在线先验修正接受时序（满足磁观测前提：缆在车下垂直分离 7.5 m；观测/接受均为满值、拟合质量约 1.0、累积平移非零，\(n=1\)）}]{cable_acceptance/direction_a_online_prior_alignment.png}
-\caption{解耦轻量闭环在线先验修正接受时序（满足磁观测前提：缆在车下垂直分离 7.5 m；观测/接受均为满值、拟合质量约 1.0、累积平移非零，\(n=1\)）}\label{fig:ch05-direction-a-prior-alignment}
-\end{figure}
-\FloatBarrier
+第二环，用一个满足磁观测前提的解耦轻量闭环，独立证明``算法部署接口本身可在线闭环''。为把``当前产磁几何不满足前提''与``部署算法是否可在线闭环''两件事区分开，本文构造了一个不依赖六自由度动力学的轻量闭环外壳：它只承担仿真外壳职责，消费出厂节点发布的控制设定值，用简单运动学积分车辆位姿，回发状态、磁场与任务指令；磁场仍调用与高保真仿真同一个毕奥-萨伐尔纯函数，但把真值直缆布置在磁传感器正下方约 7.5 m，使水平分量主导并满足直线埋缆观测前提。短闭环冒烟测试显示，满足磁观测前提时在线修正被真实观测持续激励并接受、并把修正量累积回投影缓存，与第一环因近共面几何被残差门全数拒绝形成直接对照，关键量与对照汇总于表~\ref{tab:ch05-decoupled-loop}（从该录制包提取的逐帧诊断时序图随附录 A.9/Artifact Manifest 归档）。
 
 \begin{longtable}[]{@{}lrl@{}}
 \caption{解耦轻量闭环关键量}\label{tab:ch05-decoupled-loop}\tabularnewline
@@ -1098,23 +942,16 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 
 这一结果的意义是分层的。对``算法能否装进实机部署管理框架''而言，答案可以从``待证''修订为``是''（限定在算法部署接口与闭环运行形态）：出厂节点已按真实部署契约消费原始磁场与里程计输入，在线先验修正已在部署门面内被实例化并由满足物理前提的磁观测接受，控制输出经设定值话题回到外部运动学闭环，且全链路可录制为可视化巡检视频。对``实物部署验收''而言，答案仍不能写成``是''：它仍是无地磁背景、无真实检测噪声、无硬件时延与标定误差、无六自由度水动力的轻量闭环，不能替代真机与外场实验。因此准确表述应为，算法实机部署接口与闭环数据契约已成立，硬件实物验收证据仍待补。
 
-第三环，把满足磁观测前提的产磁几何迁回六自由度闭环，首次复现闭环恢复。前两环分别给出了``负结果的根因''与``满足前提时的轻量闭环正结果''，本环把这两条证据合拢进同一个六自由度闭环：不再另起轻量外壳，而是直接把满足磁观测前提的产磁几何迁回高保真仿真（真值直缆布置于磁传感器下方、垂直分离约 7.5 m，恢复水平分量主导的直线埋缆前提），并叠加动力学迁移后所需的一组物理与控制修正，用与 §5.5.10 干净全新运行完全一致的仿真配方，对中、重两档各跑三次真闭环全新运行。
+第三环，把满足磁观测前提的产磁几何迁回六自由度闭环，在六自由度闭环中复现闭环恢复。前两环分别给出了``负结果的根因''与``满足前提时的轻量闭环正结果''，本环把这两条证据合拢进同一个六自由度闭环：不再另起轻量外壳，而是直接把满足磁观测前提的产磁几何迁回高保真仿真（真值直缆布置于磁传感器下方、垂直分离约 7.5 m，恢复水平分量主导的直线埋缆前提），并叠加动力学迁移后所需的一组物理与控制修正，用与 §\ref{sec:ch05-5-5-10} 干净全新运行完全一致的仿真配方，对中、重两档各跑三次真闭环全新运行。
 
 首先，在线先验修正在六自由度闭环中被真实接受，与第一环形成直接对照。迁回满足前提的几何后，磁导出横偏观测不再被残差门拒绝：全部六次运行的被观测与被接受帧数恒为约 1200/1220（接受率约 98\%），拒绝原因恒为``接受''，垂直分离中位数 7.53 m，拟合质量中位数 1.0。以重档一次运行为例，磁导出观测横偏 −2.22 m 与真值几何横偏 −2.15 m 逐帧吻合，而第一环的反演横偏被系统性放大四到五倍至约 −40 m。这直接证明第一环的负结果根因确为产磁几何违反观测前提，而非接线或滤波器缺陷，一旦电缆回到车体下方，同一套已接线的在线修正立即在六自由度闭环中被真实激励并接受。
 
-其次，闭环恢复被首次复现，与开环冻结形成直接对照。重档车辆起始横偏约 −10.25 m（由先验畸变注入），在线修正被接受后横偏在约 12 秒内收敛进约 \allowbreak{}±3.4 m 的验收廊道并全程保持（末段带符号横偏收敛到约零），全程逐帧的航向修正超过 1° 的占 1112/1219 帧，即车辆被真实重新操舵去贴合修正后的先验，而非此前``横偏被冻结在开环几何差上单调累积''。作为同源对照，本环同时跑了在线修正关闭的六次基线运行：中、重两档全程最大路由偏移分别约 15.3/20.1 m、窗口内点数为零、三次全部无效，与失效边界闭环时逐位重合。开关对照下的横偏恢复轨迹与在线修正接受时序见图~\ref{fig:ch05-pvs-closedloop-recovery}；为便于向非专业读者解释``车辆如何从偏离状态重新贴回电缆廊道''，二维俯视图见图~\ref{fig:ch05-pvs-closedloop-topview}：
+其次，闭环恢复在六自由度闭环中被复现，与开环冻结形成直接对照。重档车辆起始横偏约 −10.25 m（由先验畸变注入），在线修正被接受后横偏在约 12 秒内收敛进约 \allowbreak{}±3.4 m 的验收廊道并全程保持（末段带符号横偏收敛到约零），全程逐帧的航向修正超过 1° 的占 1112/1219 帧，即车辆被真实重新操舵去贴合修正后的先验，而非此前``横偏被冻结在开环几何差上单调累积''。作为同源对照，本环同时跑了在线修正关闭的六次基线运行：中、重两档全程最大路由偏移分别约 15.3/20.1 m、窗口内点数为零、三次全部无效，与失效边界闭环时逐位重合。开关对照下的横偏恢复轨迹与在线修正接受时序见图~\ref{fig:ch05-pvs-closedloop-recovery}（同批次二维俯视回放为 \(n=1\) 科普性插图，不在正文展开，随附录 A.9/Artifact Manifest 归档）：
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_recovery_prior_alignment.png}
 \caption{六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 \(n=3\)）}\label{fig:ch05-pvs-closedloop-recovery}
-\end{figure}
-\FloatBarrier
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={六自由度闭环恢复二维俯视图（电缆先验、车辆轨迹与 10 m 比例尺；车辆经在线修正贴回电缆廊道，\(n=1\) 回放）}]{cable_acceptance/3f_replay_top_view.png}
-\caption{六自由度闭环恢复二维俯视图（电缆先验、车辆轨迹与 10 m 比例尺；车辆经在线修正贴回电缆廊道，\(n=1\) 回放）}\label{fig:ch05-pvs-closedloop-topview}
 \end{figure}
 \FloatBarrier
 
@@ -1183,374 +1020,193 @@ A3 & 0.0740 & 86.6\% & 0.0972 & 7.563 \\
 
 首轮到末轮的收敛来自物理与控制模型修正，而不是放宽验收阈值。埋深反演增加 10 m 物理上限门以排除不可行伪深埋，目标航向接口消除不一致限幅，之字形摆幅由 1.0 m 调整为 0.6 m，并以 3.4 m 的较小走廊完成统一判定。修正后六次运行的有效埋深比为 1、不确定度超限归零；失败面收敛与末轮验收裕度见图~\ref{fig:ch05-pvs-closedloop-convergence}：
 
-\begin{figure}[htbp]
+\begin{figure}[tp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_acceptance_convergence.png}
+\includegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio,alt={六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_acceptance_convergence.png}
 \caption{六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}\label{fig:ch05-pvs-closedloop-convergence}
 \end{figure}
 \FloatBarrier
 
-\textbf{（四）分层判定。} 干净先验端到端已经闭环达标；在线先验修正已接入同源部署接口，并在满足磁观测前提的轻量闭环和六自由度闭环中持续接受观测。六自由度重档由约 \(-10.25\text{ m}\) 的起始横偏在约 12 s 内收敛进入 \(\pm3.4\text{ m}\) 廊道，中、重两档各三次运行全部就绪且通过，关闭在线修正的同源对照则全部无效。由此可以判定算法部署接口和闭环恢复机制已经成立。该结论对应数字孪生中的静态位姿扭曲和规定巡检窗口；真实检测噪声与硬件条件下的系统验收作为集中剩余验证列入第 5.6 节。
+\textbf{（四）分层判定。} 干净先验端到端已经通过窗口内验收（仿真）；在线先验修正已接入同源部署接口，并在满足磁观测前提的轻量闭环和六自由度闭环中持续接受观测。六自由度重档由约 \(-10.25\text{ m}\) 的起始横偏在约 12 s 内收敛进入 \(\pm3.4\text{ m}\) 廊道，中、重两档各三次运行全部就绪且通过，关闭在线修正的同源对照则全部无效。由此可以判定算法部署接口和闭环恢复机制已经成立。该结论对应数字孪生中的静态位姿扭曲和规定巡检窗口；真实检测噪声与硬件条件下的系统验收作为集中剩余验证列入§\ref{sec:ch05-5-6}。
+
+\section{面向实物的证据基础与迁移路径}\label{sec:ch05-5-3}
+
+三条仿真主线之外，本节集中给出面向实物的证据基础与向真机迁移的路径。与前三节的纯仿真/数字孪生口径不同，本节内容来自随附硬件测试报告、短接实测与实验室等效实验，证据等级为实物或半实物；其作用是为仿真结论提供物理锚点，并把向真机迁移所需的补充验证组织为可独立交付的单元。硬件证据沿通信接口、传感器本体、数采子链和空间标定四个层次组织，实验室等效实验随后给出近底巡检与反演精度，最后归纳仿真到实物的迁移路径。这样的分层使每项结果对应明确的物理对象，同时保持从传感器输出到状态估计输入的连续链路。
+
+\subsection{``双脑''通信链路与实时性压力测试}\label{sec:ch05-5-3-1}
+
+Jetson 与上位机之间的二进制通信链路需要在实物环境下测试真实时延与丢包率，当前的仿真等效测试仅验证了协议解析的正确性与软件栈的算力约束。该链路的下行帧携带工作模式、任务指令、舵角、推力与一组可调浮点参数，上行帧携带姿态、卫星定位、三轴速度、深度、电压、温度、漏水与故障位图（学术数据契约见附录 A.6）。在上位机端与 VxWorks 端的独立开发过程中已发现若干处协议偏差，包括帧头长度、压力与航向字段的错位、深度缩放因子的不一致、舵角类型与符号约定的差异等，这些偏差已在仿真期通过协议单元测试闭环，但实物部署时仍需逐一复核。真实链路的时延统计（各分位数、丢包率、序列号跳变次数）须留待实物部署阶段补充。
+
+\subsection{TMR8637 本体与 SK2301 数采链噪声表征}\label{sec:ch05-5-3-2}
+
+随实物 TMR8637 提供的编号 6\# 模组纸质测试报告构成了当前第一份直接面向该三轴模组的硬件文档证据。报告中的三轴测试汇总给出 X、Y、Z 轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性，三轴在 1 Hz 处的磁场噪声谱密度均为 200 pT/\(\sqrt{\text{Hz}}\)。完整性能参数见表~\ref{tab:ch02-tmr8637-test-data}，三轴传输特性与电压/磁场噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
+
+磁场噪声谱采用双对数坐标，横轴覆盖约 0.1 Hz 至 10 kHz，纵轴单位为 pT/\(\sqrt{\text{Hz}}\)。50 Hz 位于 10 Hz 与 100 Hz 主刻度之间，按三轴曲线线宽读取约为 20--30 pT/\(\sqrt{\text{Hz}}\)，即约 \(2\times10^1\ \text{pT}/\sqrt{\text{Hz}}\) 量级。由于现有证据是纸质曲线扫描件而非数值数据导出，本文把``约 20 pT/\(\sqrt{\text{Hz}}\)''作为中心近似，并采用 20--30 pT/\(\sqrt{\text{Hz}}\) 区间完成保守计算，不报告虚假的个位精度。
+
+按 \(\sigma_B\approx S_B(50\text{ Hz})\sqrt{B_{\mathrm{ENBW}}}\) 估算，若只考虑模组本体噪声，要使 \(\sigma_B\leq0.05\text{ nT}\)，20--30 pT/\(\sqrt{\text{Hz}}\) 区间对应的带宽上限为 6.25--2.78 Hz；按 30 pT/\(\sqrt{\text{Hz}}\) 的区间上界作最保守设计时，应满足 \(B_{\mathrm{ENBW}}\leq2.78\text{ Hz}\)。第 3.2.3 节采用的四阶 Butterworth 低通在 \(f_c=0.5\text{ Hz}\) 时对应 \(B_{\mathrm{ENBW}}\approx0.513\text{ Hz}\)，由此得到模组本体 RMS 噪声约 0.014--0.022 nT，低于 0.05 nT 系统目标。
+
+在传感器本体证据之外，本文对 SK2301 的 CH4 差分输入进行了短接噪声测试。2000 Hz 直接采样的 RMS 噪声为 \(47.974\ \mu\text{V}\)，噪声 ENOB 为 16.877 bit；将硬件采样率提高到 16 kHz，并以 OSR=8 块平均恢复 2 kHz 输出后，RMS 噪声降至 \(17.375\ \mu\text{V}\)，ENOB 提升到 18.342 bit。图~\ref{fig:ch05-adc-enob-osr}(左) 显示各采样率下 ENOB 随 OSR 的变化基本重合，实测 1.440 bit 增益接近白噪声理论值 1.500 bit，表明超采样收益具有稳定的统计来源，而不是单次偶然波动；图~\ref{fig:ch05-adc-enob-osr}(右) 的幅度谱进一步表明，不同采样率下宽带噪声底随采样率提高而下降，同时保留若干窄带尖峰，这既解释了 OSR 增益为何接近但略低于理想白噪声模型，也说明继续提高平均长度最终会受相关噪声与窄带干扰限制。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入下噪声 ENOB 随非重叠块平均过采样率的变化}]{hardware/adc_enob/ch4_enob_vs_osr.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入在不同采样率下的电压幅度谱密度}]{hardware/adc_enob/ch4_noise_spectral_density.png}
+\end{minipage}
+\caption{SK2301 短接输入噪声表征：（左）噪声 ENOB 与过采样率的关系；（右）不同采样率下的幅度谱密度}\label{fig:ch05-adc-enob-osr}
+\end{figure}
+\FloatBarrier
+
+按 \(20\text{ mV}/\mu\text{T}\) 名义灵敏度换算，在 16 kHz 采样、OSR=8 和 1 s 45 Hz 正交解调条件下，ADC 子链的等效磁噪声为 \(0.0230\text{ nT}\) 矢量 RMS，I/Q 单分量 \(3\sigma\) 为 \(0.0514\text{ nT}\)。因此，本实验支持的结论是：低成本 24 bit ADC 虽只有约 16.88 bit 的原始宽带 ENOB，但通过超采样与相干积分可进入 0.05 nT 灵敏度量级。灵敏度描述规定带宽和判据下的最小可辨变化；绝对精度还取决于可溯源真值、TMR 本征噪声、模拟前端、温漂和标定误差，二者在本文中不作等同。
+
+短接测试隔离的是 ADC 子链，尚未包含 TMR、供电、接线和宿舍环境电磁背景。为把这一缺口收束为可复现的半实物输入，本文进一步对 \texttt{hardware\_wrappers/fangkong\_adc/raw\_data} 中 17 段三轴原始记录做统一重分析，其中两段未呈现强 45 Hz 目标激励的记录被设为默认背景噪声回放源，输出由 \texttt{real\_experiments/mag\_chain\_noise/run.sh} 一键生成。结果见表~\ref{tab:ch05-mag-chain-noise-replay}。需要说明的是，该背景采集发生在非屏蔽宿舍环境，50 Hz 工频干扰明显，因而它的作用是为仿真观测链提供真实全链路噪声回放和压力测试输入，而不是替代屏蔽实验室中的本底噪声计量。
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{ADC--TMR 全链路背景噪声回放与 45 Hz 半实物注入验证}\label{tab:ch05-mag-chain-noise-replay}
+\begin{tabular}{@{}p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}@{}}
+\toprule
+项目 & 结果 & 解释边界 \\
+\midrule
+默认背景源 & 2 段三轴记录，共 13.104 s & 选取无强 45 Hz 目标激励的宿舍环境记录，保留真实采集链相关噪声与工频背景 \\
+锁相频率分离 & 45 Hz 中位幅值 2.584 nT；50 Hz 中位幅值 169.284 nT & 50 Hz 为环境工频项，45 Hz 可作为避开工频的受控目标频率 \\
+宽带背景量级 & 线性去趋势后三轴矢量 RMS 为 149.825 nT；80--300 Hz 矢量 ASD 中位数为 0.133 nT/\(\sqrt{\text{Hz}}\) & 宽带量级反映宿舍环境与全链路耦合，不等价于屏蔽实验室噪声底 \\
+半实物注入 & 将实测背景叠加到 \(I_{\mathrm{peak}}=2.6140\text{ A}\)、高度 0.20 m 的 45 Hz 直导线 Biot--Savart 目标，两个背景段的锁相幅值 RMSE 为 0.792/0.271 nT & 验证真实噪声可进入磁观测仿真链并被同一锁相接口消费；ROS2 父层接入结果见表~\ref{tab:ch05-mag-chain-noise-ros} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\FloatBarrier
+
+在 Linux 侧复跑中，本文进一步把同一噪声包接入 \texttt{decoupled\_cable\_sim\_node.py} 的磁观测发布点：先由 Biot--Savart 模型生成清洁 \texttt{/auv/sensors/magnetic}，再仅对该量测副本叠加噪声，并通过 \texttt{/auv/sensors/magnetic\_noise\_metadata} 记录噪声模式、NPZ 来源、profile 哈希、样本索引和回放相位。表~\ref{tab:ch05-mag-chain-noise-ros} 给出三种输入在同一 Direction A 解耦电缆闭环中的 20 s 对照；前 4 s 作为启动暖机剔除，其余电缆几何、地形、流场、先验和控制参数均保持不变。由于该轻量闭环保留了大横偏初始几何且未注入埋深方差，\texttt{industrial\_ready} 与 \texttt{industrial\_acceptance\_pass} 在三组中均为 0，故本对照不作为行业验收实验，而只用于检验 ROS 观测层噪声接入对闭环统计的影响。
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{ADC--TMR 实测背景噪声 ROS2 闭环回放对照}\label{tab:ch05-mag-chain-noise-ros}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+噪声输入 & 样本 & 横偏 p95/m & 置信度 & 噪声 p95/nT & 控制 RMS \\
+\midrule
+清洁 & 157 & 7.762 & 0.8472 & 0.0 & 0.06319 \\
+同协方差高斯 & 159 & 7.766 & 0.8473 & 268.1 & 0.06329 \\
+实测回放 & 158 & 7.767 & 0.8477 & 180.0 & 0.06346 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\linewidth,height=0.38\textheight,keepaspectratio,alt={ADC--TMR 实测背景噪声在 ROS2 闭环中的三模式对照柱状图}]{experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.png}
+\caption{ADC--TMR 实测背景噪声 ROS2 闭环对照：清洁、同协方差高斯与实测回放三种磁观测输入在同一 Direction A 轻量闭环中的横偏 p95、平均置信度和噪声幅值 p95}\label{fig:ch05-mag-chain-noise-ros}
+\end{figure}
+\FloatBarrier
+
+结果表明，实测背景回放与同协方差高斯噪声均没有改变该闭环的主导运行状态：先验观测与接受率保持为 1.00，横偏 p95 维持在约 7.77 m，控制变化率 RMS 仍约为 0.063。差异主要出现在观测噪声幅值和时序结构上，实测回放的噪声 p95 为 180.0 nT，且由于 13.104 s 记录被 20 s 闭环循环使用，metadata 中记录到 2 次回放折返。这说明真实 ADC--TMR 背景已经能以可追溯的 ROS2 观测输入进入控制闭环；在当前配置下，它没有改变本文主线关于安全边界和闭环可运行性的结论。
+
+这一补充把证据层次区分为四档：TMR8637 随附报告给出传感器本体频谱先验，短接 ENOB 给出 ADC 子链的量化与窄带处理裕度，宿舍背景回放给出包含传感器、供电、接线和环境工频的真实全链路扰动样本，ROS2 回放对照则验证该扰动样本可以在不污染真值层的条件下进入父层闭环。四者共同支持后续把磁观测噪声从参数化高斯推进到实测回放，但仍不能替代长时温漂、屏蔽前后对比、可溯源磁场真值实验和完整 AUV 水下实测闭环。
+
+\subsection{磁传感器杆臂/安装角标定（仿真标定验证）}\label{sec:ch05-5-3-3}
+
+磁传感器标定需要同时估计传感器相对载体的安装位置偏移（杆臂）与安装角，使磁场采样点能从载体基准位置正确外推到传感器的世界坐标。真机场景需在高精度转台上旋转 AUV 以拟合软铁矩阵与硬磁偏置；在实物转台就位之前，本节先给出一轮\textbf{仿真标定验证}，以数字孪生真值外参生成磁采样，再从一个带偏差的初值运行标定流程使其收敛，用以验证``杆臂改正链路与文件契约成立''。标定采用真值/估计双配置模型：真值外参仅用于数字孪生生成传感器观测，带偏差的估计外参则由标定输出替换。在约 120 秒、一千二百余个样本上，标定从有偏初值收敛，结果如下：
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{磁传感器杆臂与安装角仿真标定结果}\label{tab:ch05-mag-calibration}\tabularnewline
+\toprule\noalign{}
+指标 & 初值 & 估计后 & 改善 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+指标 & 初值 & 估计后 & 改善 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+平移误差 & 0.1086 m & 0.0041 m & 96.27 \% \\
+安装角误差 & 1.5000° & 0.0704° & 95.31 \% \\
+残差（首→末） & 0.1086 m & 0.0048 m & ： \\
+验证状态 & ： & 通过 & ： \\
+\end{longtable}
+
+图~\ref{fig:ch05-mag-residual}给出标定过程的残差收敛曲线，对应上表残差行；平移/安装角误差下降对比只是上表首尾两行数值的柱状复述，不另作图，其数值以表为准：
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}]{experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.png}
+\caption{磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}\label{fig:ch05-mag-residual}
+\end{figure}
+\FloatBarrier
+
+本轮从配置、仿真采样、模拟标定到估计配置应用形成完整闭环，平移误差由 0.1086 m 降至 0.0041 m、安装角误差由 1.5000° 降至 0.0704°，说明杆臂改正链路与文件契约能够承载标定结果。该组数值来自仿真外参标定，用于验证方法和软件闭环；真机九参数与安装外参的计量标定统一列入§\ref{sec:ch05-5-6}。
+
+\subsection{故障注入自救逻辑验证}\label{sec:ch05-5-3-4}
+
+故障注入自救逻辑采用等价规则完成统计对照：1000 次持续漏水用于响应延迟，100 条阈值噪声序列用于颤振，500 次低电压、漏水和近底穿越组合故障用于遗漏与死锁判定。两种决策架构均保持 100 ms 紧急响应和 100\% 组合故障生存率，证据只用于决策核心逻辑，不外推为通信链路或执行机构的系统级响应。
+
+\subsection{实验室近底巡检模拟与反演精度分析}\label{sec:ch05-5-4}
+
+\subsubsection{45 Hz 电缆与位姿联合实验}\label{sec:ch05-5-4-1}
+
+实验采用可控 45 Hz 电流激励直导线，并同步记录 TMR8637/SK2301 三轴电压与双 ArUco 相对位姿。ADC 以 2000 Hz 采样，共获得 106821 个时刻样本；位姿日志覆盖 832 帧，按 1 s 锁相窗口和 0.05 s 步长完成时间对齐后得到 777 个有效磁场--位姿配对点。黄金电阻两端电压为 \(7.56\text{ V RMS}\)，电阻为 \(4.09\ \Omega\)，对应电流 \(1.8484\text{ A RMS}\) 和 \(2.6140\text{ A}\) 峰值。由于锁相输出采用正弦峰值口径，固定电流模型使用后者。
+
+三轴复 I/Q 与位姿的联合处理保留了幅值、方向和公共相位。图~\ref{fig:ch05-joint-trajectory}将 45 Hz 磁场模量映射到传感器运动轨迹，显示靠近拟合电缆区域时同频响应显著增强。连续运动使单个三轴传感器在空间上形成合成阵列，从而为电缆方向和相对位置提供超出单点观测的几何约束。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\linewidth,height=\textheight,keepaspectratio,alt={TMR 运动轨迹及其 45 Hz 磁场模量空间分布}]{experiments/magnetic_joint/trajectory_colored_by_b.png}
+\caption{TMR 运动轨迹与 45 Hz 磁场模量空间分布}\label{fig:ch05-joint-trajectory}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{三轴复 I/Q 的 Biot--Savart 联合反演}\label{sec:ch05-5-4-2}
+
+对电缆轴单位向量 \(\boldsymbol{u}\)、轴线上一点 \(\boldsymbol{p}_0\) 和传感器位置 \(\boldsymbol{p}\)，采用无限长直导线模型
+
+\[
+\boldsymbol{B}(\boldsymbol{p})
+=\frac{\mu_0 I}{2\pi}
+\frac{\boldsymbol{u}\times\boldsymbol{\rho}}{\|\boldsymbol{\rho}\|^2},
+\qquad
+\boldsymbol{\rho}
+=(\boldsymbol{p}-\boldsymbol{p}_0)
+-[(\boldsymbol{p}-\boldsymbol{p}_0)\cdot\boldsymbol{u}]\boldsymbol{u}.
+\]
+
+模型不预设电缆方向和位置，而是以多起点非线性最小二乘同时估计直线的四个可辨识几何自由度与公共复尺度。自由复尺度拟合得到复数 \(R^2=0.8792\)、等效峰值电流 2.8789 A；固定峰值电流为实测 2.6140 A 时，复数 \(R^2=0.8711\)。图~\ref{fig:ch05-joint-complex-fit}给出三轴同相与正交分量的测量--模型对照。相较仅拟合非负模量，复 I/Q 保留了场方向符号和公共参考相位，使不同轴上的峰谷与换向能够共同约束几何。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\linewidth,height=\textheight,keepaspectratio,alt={三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型拟合结果}]{experiments/magnetic_joint/complex_iq_fit.png}
+\caption{三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型联合拟合}\label{fig:ch05-joint-complex-fit}
+\end{figure}
+\FloatBarrier
+
+为区分真实模型失配与优化器不可辨识，本文另以未知轴向、未知位置和未知复相位的合成数据执行同一拟合流程，得到轴向一致性 0.99999999、线位置误差 \(5.34\times10^{-6}\text{ m}\) 和复数 \(R^2=0.9999878\)。因此，真实数据中约 0.87--0.88 的拟合水平主要反映杆臂旋转、通道复增益和无限长直导线近似等模型因素，而不是局部优化失败。该实验验证了移动单三轴磁传感器结合位姿与复锁相恢复电缆相对几何的可行性；绝对埋深精度和多芯回流模型的验证集中列入§\ref{sec:ch05-5-6}。
+
+\subsection{仿真到实物的迁移性讨论}\label{sec:ch05-5-5-9}
+
+仿真侧的实验已经把``算法层面正确性''的证据建立得较充分，但工程论文必须主动回答一个更尖锐的问题，这些结论能否原样迁移到真实 AUV？把仿真结论直接当作实物结论是常见的过度推断，本节据此把迁移面临的障碍按动力学模型偏差、传感器噪声差异、通信时延分布与算力约束四类逐项展开。
+
+动力学模型偏差方面，仿真所用的船舶动力学水动力系数为经验估计值，与真实 AUV 存在偏差；这一偏差的影响是非对称的，状态估计与决策层结论受影响较小（它们主要依赖观测序列的统计特性），控制层结论受影响较大（控制律对水动力参数直接敏感）。本系统的应对是把 MPC 定位在制导层，让水动力偏差主要由内层 PID 通过实测调参吸收，而不让 MPC 自身假设过于精确的动力学。传感器噪声方面，仿真采用的丢包、线性漂移与脉冲尖峰模型，与真实环境中可能出现的相关噪声、背景磁场的低频噪声等更复杂频谱有差异；本系统的应对是用比预期真实噪声更恶劣的极端配置作压力测试，从而在不依赖噪声谱精确对齐的前提下给出鲁棒性的安全裕度。通信时延方面，仿真使用固定基线延迟叠加均匀抖动，真实声学链路的时延可能呈长尾分布；这对节点拓扑与行为树的影响相对可控（节点级缓冲已吸收大部分抖动），但对失联保护阈值的整定有直接影响，仿真中验证过的 1 秒失联阈值在真实链路中可能需要根据实测时延高分位重新校准。算力约束方面，Jetson 仿真等效测试了求解器的算力接口，但真机的频率限制、内存带宽与散热约束可能改变求解耗时分布；若真机求解时间超过控制周期，热启动机制会被打破，须以更短的预测时域或更稀疏的离散化作为退路。
+
+后续的场景迁移分三步推进：先把 S 弯与发卡路径迁移为仿真场景配置，补齐``几何极端加完整闭环''的组合工况；再把地形高程图与电缆中心线绑定，形成坡面横穿；最后加入声呐短时不可见、磁信号衰减、DVL 丢包与横流，形成综合极端场景。三步迁移的共同特点是``先在仿真内扩展、再迁到真机''，仿真内的扩展给出可重复、可消融的统计基线，真机迁移则只需在该基线之上叠加硬件物理偏差维度，避免一上来就让多个不确定性因素同时进入实验。
+
+上述四类迁移差距并非本文方法的失效项，而是分层验证阶梯有意留待硬件在环与实验室层解决的刻度：磁观测链路噪声、等效通电电缆磁场反演与载荷舱磁卫生构成后续实物证据链中三个各自独立、可交付的单元（其推进路径见 §\ref{sec:ch06-6-3}），可在不改动上层算法接口的前提下逐层接入，而不构成对当前仿真结论的否定。
 
 \section{证据边界、负结果归因与剩余验证}\label{sec:ch05-5-6}
 
-本节把全章各类实验的负结果、口径限制和不可外推项集中收束到一处。这些边界并非独立于主线的失败清单，而是用于识别模型适用条件、观测口径和工程实现瓶颈。表~\ref{tab:ch05-negative-results}将仍具有解释价值的现象统一为``现象--归因--处置--剩余验证''四个环节；\S\ref{sec:ch05-5-5}、\S\ref{sec:ch05-5-7} 各结果小节只保留正向主结果与最小必要限定，相同局限不再重复展开，统一以``边界见 \S\ref{sec:ch05-5-6}''指向本表。表中涉及 R13-v2、CBF、R22、native PVS 与 PC104 的行，其正向主结果见 \S\ref{sec:ch05-5-7-7}。
+本节把全章实验的负结果、口径限制和不可外推项集中收束为六个问题域：磁探测计量与验收口径、ES-EKF 统计一致性、在线先验与几何前提、UA/R13-v2 控制证据、CBF/R22 与 PVS 原生闭环、实物通信与端到端时延。各域的边界归因、已采取处置与可写结论、剩余验证逐条汇总于附录表~\ref{tab:ch05-negative-results}；\S\ref{sec:ch05-5-5}、\S\ref{sec:ch05-5-ctrl}、\S\ref{sec:ch05-e2e} 各结果主线只保留正向主结果与最小必要限定，相同局限统一指向该表。需要强调的是，该表``剩余验证''列并非未知缺口清单，而是已按可独立交付的实物证据链拆解的推进路径——每项均可在当前仿真结论之上增量验证，其向实物层推进的路线见 §\ref{sec:ch06-6-3}，不构成对已有结论的否定。
 
-\begin{longtable}[]{@{}p{0.17\linewidth}p{0.24\linewidth}p{0.26\linewidth}p{0.21\linewidth}@{}}
-\caption{负结果归因与剩余验证}\label{tab:ch05-negative-results}\tabularnewline
-\toprule\noalign{}
-现象 & 机理归因 & 已采取处置 & 剩余验证 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-现象 & 机理归因 & 已采取处置 & 剩余验证 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-短背景 45 Hz 幅值高于 0.05 nT & 矩形窗泄漏占主导；三轴背景高度相关且主峰约 50.01 Hz，时间结构主要放大跨运行离散 & 显式记录窗函数、相干增益与 ENBW；完成同协方差高斯/实测回放五种子对照 & 长时 M0/M1/M4 重复采集、检测概率与平稳性 \\
-深度与 DVL 的 NIS 失配方向相反 & 一维与三维原始 NIS 被历史实现混入同一窗口，全局尺度产生跨源污染 & 完成固定、全局、分源与 Huber 的 90 次对照；Huber 将异常 RMSE 降约 79\% & 鲁棒权重下 NIS 覆盖率仍低，需按分源 p 值继续校准 \\
-五分钟水平漂移显著且误差排序非单调 & 长航段缺少持续绝对水平位置/航向约束；100 ms 相位改变误差投影与积分路径 & 完成两相位成对对照，并证实仅按时间差膨胀 R 未改善延迟异常 & 延迟状态更新及声磁绝对水平观测闭环 \\
-在线修正初次闭环未恢复 & 产磁电缆与车辆近共面，违反直线埋缆横偏反演前提，残差门正确拒绝越界观测 & 将满足观测前提的几何迁回六自由度闭环，约 98\% 观测被接受，中重档各三次通过 & 真实背景、动态先验误差与硬件时延下复验 \\
-代理闭环回退快照比例达 0.90--0.99 & 深度误差进入硬俯仰饱和后梯度退化；低频 debug 仅为 0.5 s 快照，不能解释为逐周期概率 & 改用有界可导饱和；36 个实际快照全部收敛，18 组关键闭环零回退 & 六场景 60 s 全矩阵与 Jetson 时限复验 \\
-代理场景 UA 差异缺少动态置信激励 & 控制置信度几乎恒为 0.367，使跟踪权重固定约 2.01 倍、控制惩罚固定约 0.394 倍 & 综合场景三种子分解表明控制降权主导激进输出，跟踪放大未带来安全收益 & 重构分源置信接口后重跑六场景主矩阵 \\
-绝对埋深与系统级 0.05 nT 尚无计量结论 & 当前联合拟合采用直导线与公共复尺度，ADC 结果只表征短接子链灵敏度 & 已完成复 I/Q 联合拟合、合成可辨识性闭环和 ENOB 测算 & 可溯源电流/距离/转台、九参数标定与完整不确定度预算 \\
-R13-v2 横向 RMSE 未系统改善 & conservative source-specific UA 主要作用于控制风格而非路径精度，全局 RMSE 由 7.932 m 变为 8.006 m & 结论收束为控制平滑与实时可解性（变化率 RMS 0.247→0.085），不写为精度提升；图~\ref{fig:ch05-r13-v2-rmse-boundary} 仅示边界 & 在动态置信激励更强的场景与真机口径下复验精度效应 \\
-综合极端 R13-v2 conservative UA 未进入 TRACK & \(p_{\mathrm{track}}\) 的 q95 约 0.610，未达 0.75 TRACK 进入门；HOLD/SEARCH 约 0.626/0.374 & 解释为硬门拒绝低质量观测，而非完整 TRACK 闭环成功；另由 baseline full-flow 三种子给出可重复巡缆正证据 & 提升综合极端观测质量后的 TRACK 闭环复验 \\
-R13-v2 速度门控仅由补强证明 & 原 36-run MCAP 不含 policy 后 applied target speed 与 authority snapshot & 补入遥测后 12-run UA-only 补强证明速度缩放，但不反向改写正式矩阵 paired 统计与 combined no-TRACK 边界 & 在正式矩阵口径内直接落盘速度门控遥测 \\
-CBF 矩阵仍是 manual setpoint/kinematic proxy & low/mid/high 三种子矩阵未调用 native PVS depthHeadingAutopilot & 18/18 有效、最小净空 2.70--2.90 m、违规与穿底为 0；native PVS smoke 单独关闭执行链风险，不反向改写数据层 & native PVS 全因子安全矩阵与真机近底复验 \\
-CBF/R22 solver p95 上界不等于 10 ms 实时性 & CBF MPC p95 上界 23.84 ms、R22 p95 上界 24.02 ms & 相对 20 Hz/10 Hz/0.3 s 三级周期预算未越界，作为实时性边界保留，不写为满足 10 ms & 真机 Jetson--PC104 端到端时延闭环 \\
-R22 120 s 固定时长尾段污染 & 有限参考路径在 65--105 s 完成后终端尾段被计入巡缆指标，全窗口横向 p95 达 6.839 m & 分段审计显示活动段 p95 最大 2.152 m；任务层 \texttt{exit\_at\_end} 后 24/24 到达退出、最坏 p95 回落 2.152 m & 终端保持/横流悬停控制及长航时稳定闭环 \\
-R22 主结果仍为 offline simulation\_proxy & 全矩阵在 native cable truth/measurement 契约上执行 guidance-level 闭环，未调用 PVS depthHeadingAutopilot & 96/96 有效、fallback 与安全违规为 0；横流被识别为横向误差主导因子 & native PVS 全因子性能矩阵与速度/横流/初始偏差边界搜索 \\
-native PVS smoke 仅覆盖 constant-depth/heading 执行链 & 专用配置验证 ROS2→Mock AMD AUTO→PVS \texttt{depthHeadingAutopilot} 未走 kinematic proxy & 审计 passed，72 个 controller debug 均 \texttt{Solve\_Succeeded}，solver p95/max 为 19.32/20.40 ms & 多 seed 性能矩阵与实物执行验收 \\
-PC104 探针只能报告到达间隔/抖动 & host-relay 30 s 记录缺共享时钟或 firmware echo & 450 帧上行、15.000 Hz 到达频率、p95 到达间隔 85.710 ms、parse error 0；只作序列完整性审计 & PTP/NTP 同步或 firmware echo 下的单向/往返物理时延测量 \\
-数字孪生验收是干净先验有效窗口内结果 & 静态位姿扭曲、缆在车下满足前提、窗口内判定 & 干净先验三次就绪通过，中/重档各三次窗口内验收通过；不等于现场行业验收 & 真实检测噪声、硬件标定与海试条件下的实物验收 \\
-\end{longtable}
-
-这些结果共同表明，当前方法的主要算法链已经闭合，剩余工作集中在延迟状态处理与统计标定、分源置信映射及目标平台实时复验、原生耦合闭环交互和系统级计量验证四个层面。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
-
-\section{极端电缆巡检场景设计}\label{sec:ch05-5-7}
-
-第二类缺口指向的``场景真实性不足''问题，本节通过定义六个极端电缆巡检场景给出系统性补救方案。之所以需要单独设计一组极端场景、而不是简单把常规扰动幅度调大，原因在于极端工况的物理风险量级与常规消融不同，需要按几何极端、耦合极端、感知极端与多因素极端四类各自构造代表性场景，才能让``分层架构能否守住底线''这一问题获得有覆盖度的证据。下列六个场景按这一组织原则展开，每个场景从路径设置、真实风险、观测角色与评价指标四个维度描述，与第 4 章极端工况的``场景乘模式''二维消融设计相对应。
-
-\subsection{连续 S 弯急弯场景}\label{sec:ch05-5-7-1}
-
-该场景模拟海缆连续 S 形弯曲，要求 AUV 在连续反向转弯中保持稳定的横向偏移。连续 S 弯是最常见、也最先暴露预瞄能力差异的几何极端工况，视线制导在反向转弯过渡区会因前视点跳变出现瞬态偏移，模型预测控制则因预测时域内能``看到''反向曲率而提前减小偏差。这一对比是复杂路径预瞄结论在极端几何下的直接验证。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{连续 S 弯极端场景设定}\label{tab:ch05-extreme-s-curve}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-路径 & 两个反向圆弧，半径 15 m，总长 200 m \\
-真实风险 & 舵角饱和导致跟踪失败 \\
-观测角色 & 不确定性感知预瞄对视线制导预瞄 \\
-指标 & 最大横向偏移、控制量平滑度 \\
-\end{longtable}
-
-\subsection{发卡掉头场景}\label{sec:ch05-5-7-2}
-
-海缆路由可能出现 180° 急弯，该场景测试 AUV 在航向突变下的跟踪能力。它与连续 S 弯的差异在于半径更小、转弯角更大，一旦半径接近 AUV 的最小转弯半径，即使最优预瞄也无法在物理上完成跟随，必须由行为树触发``短时退出加重新对准''的应急路径。把该场景写入实验设计的目的不是证明控制器一定能跟住，而是验证当几何不可行时，分层架构能否优雅退出而不直接撞断电缆。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{发卡掉头极端场景设定}\label{tab:ch05-extreme-hairpin}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-路径 & 180° 掉头，半径 10 m \\
-真实风险 & 最小转弯半径不足，路径不可行 \\
-观测角色 & 预测时域能否提前预判 \\
-指标 & 跟踪失败距离、航向误差 \\
-\end{longtable}
-
-\subsection{陡坡穿越场景}\label{sec:ch05-5-7-3}
-
-该场景测试地形跟随与深度跟踪在斜坡穿越时的协同。其本质难点不在地形坡度本身，而在于水平推进与垂直深度调节必须在斜坡进入瞬间几乎同时完成，预测能力不足或内层控制响应不够快，都会让离底高度短暂跌入 1.5 m 安全阈值以下。这一场景是近底安全证据在极端地形下的延伸验证。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{陡坡穿越极端场景设定}\label{tab:ch05-extreme-slope}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-路径 & 电缆沿 30° 斜坡上升 5 m \\
-真实风险 & 离底高度骤降，碰撞风险 \\
-观测角色 & 两种地形跟随策略对比 \\
-指标 & 最小离底高度、深度误差 \\
-\end{longtable}
-
-\subsection{埋设间断场景}\label{sec:ch05-5-7-4}
-
-该场景模拟电缆部分掩埋或观测弱化，重点考察声磁观测接力与滤波器连续性。埋设间断是声磁双通道协同最尖锐的压力测试，掩埋段内磁场特征突变、声呐图像几乎完全失去电缆边缘特征，AUV 必须仅靠惯性递推与杆臂修正维持位置估计的连续性，直到电缆暴露段重新出现观测。该场景同时检验参考轨迹生成在观测中断时能否切换到恒定航向的兜底参考。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{埋设间断极端场景设定}\label{tab:ch05-extreme-burial-gap}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-路径 & 50 m 掩埋段 + 20 m 暴露段 + 50 m 掩埋段 \\
-真实风险 & 磁场特征突变导致定位漂移 \\
-观测角色 & 声磁接力切换 \\
-指标 & 检测连续性、埋深反演误差 \\
-\end{longtable}
-
-\subsection{横流冲击场景}\label{sec:ch05-5-7-5}
-
-AUV 受到持续横向推力，该场景测试欠驱动 AUV 的横流补偿能力。横流与一般扰动的区别在于它是持续而非瞬态的，欠驱动 AUV 没有横向执行器，只能通过航向偏置间接抵消横流，这就要求控制器在预测时域内识别出横向偏移持续累积的趋势，并主动给出偏离参考路径若干度的航向偏置。该场景对不确定性感知控制的跟踪权重与控制权重平衡提出明确要求，是复杂路径预瞄证据在持续扰动下的延伸。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{横流冲击极端场景设定}\label{tab:ch05-extreme-cross-current}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-路径 & 直线电缆，横流 0.5 m/s \\
-真实风险 & 横向偏移持续积累，舵角饱和 \\
-观测角色 & 预测前馈对反馈补偿 \\
-指标 & 稳态横向偏移、控制努力 \\
-\end{longtable}
-
-\subsection{综合极端场景}\label{sec:ch05-5-7-6}
-
-前五个场景把几何、地形、感知、扰动四类极端因素分别隔离测试，本场景则把它们叠加在一起，专门用于检验整个分层架构在最坏情形下的稳健性。综合极端场景不是为刷某个指标设计的，而是为了把``行为树高优先级子树是否被按设计触发''、``控制器是否在多重压力下保持收敛''、``失联保护是否在极端通信扰动下兜底''这三类问题同时压力测试，这是判断分层架构能否真正交付到工程现场的最关键一项实验。
-
-\begin{longtable}[]{@{}ll@{}}
-\caption{综合极端场景设定}\label{tab:ch05-extreme-combined}\tabularnewline
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-维度 & 设定 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-几何 & S 弯 + 发卡 + 陡坡 + 横流 \\
-扰动 & DVL 丢包 30\% + 磁畸变 + 声呐杂波 \\
-真实风险 & 多重失效耦合 \\
-观测角色 & 系统整体鲁棒性 \\
-指标 & 路由完成率、安全违规率 \\
-\end{longtable}
-
-六类场景的闭环统计和原生因子契约统一在下一节给出。
-
-\subsection{代理正式矩阵、CBF 安全过滤与原生因子闭环}\label{sec:ch05-5-7-7}
-
-六类代理电缆场景用于检验完整 ROS2 控制栈在``几何、地形、感知质量、横流''四类压力下的闭环行为。本节采用分源置信重跑后的正式矩阵作为主结果：6 个场景、固定权重与 conservative source-specific UA 两种模式、三个随机种子、每次 60 s，共 36 次运行。全部运行均完成并生成非空 MCAP，运行契约完整，无失败事件；两种模式的求解 fallback 均为 0，平均 p95 wall time 分别约为 9.93 ms 和 9.82 ms。由此可以先得到一个运行层面的正结果：旧代理矩阵中的高回退现象在本轮同口径正式矩阵中未复现。
-
-R13-v2 的主要性能结果见表~\ref{tab:ch05-r13-v2-main-results}。为突出实验结论而不是实现过程，表中只报告横向 RMSE、控制变化率、安全违规和 authority 模式四类结果。可以看到，conservative UA 并未系统改善横向 RMSE；全局均值由固定权重的 7.932 m 变为 8.006 m。但它显著降低了多类高压力场景的控制变化率，全局 RMS 由 0.247 降为 0.085，其中发卡、横流和综合极端分别降低约 89.8\%、52.0\% 和 84.4\%。因此，本轮矩阵支持的主结论是``分源置信下的保守控制平滑与实时可解性''，而不是``路径跟踪精度全面提升''。
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{0.15\linewidth}
-  >{\centering\arraybackslash}p{0.18\linewidth}
-  >{\centering\arraybackslash}p{0.12\linewidth}
-  >{\centering\arraybackslash}p{0.14\linewidth}
-  >{\centering\arraybackslash}p{0.17\linewidth}
-  >{\centering\arraybackslash}p{0.10\linewidth}@{}}
-\caption{R13-v2 六类代理场景三种子正式结果}\label{tab:ch05-r13-v2-main-results}\tabularnewline
-\toprule\noalign{}
-场景 & RMSE 固定/UA（m） & RMSE 变化 & 控制变化率变化 & 安全违规固定/UA & UA TRACK 占比 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-场景 & RMSE 固定/UA（m） & RMSE 变化 & 控制变化率变化 & 安全违规固定/UA & UA TRACK 占比 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-连续 S 弯 & 5.898 / 6.002 & +1.77\% & -24.50\% & 0.000 / 0.000 & 0.691 \\
-发卡掉头 & 6.017 / 6.013 & -0.06\% & -89.79\% & 0.000 / 0.000 & 0.160 \\
-坡面穿越 & 4.140 / 4.127 & -0.33\% & +15.95\% & 0.000 / 0.000 & 0.690 \\
-埋设间断 & 4.136 / 4.053 & -2.01\% & +2.27\% & 0.000 / 0.000 & 0.542 \\
-横流冲击 & 15.052 / 15.484 & +2.87\% & -52.02\% & 0.000 / 0.000 & 0.645 \\
-综合极端 & 12.349 / 12.356 & +0.06\% & -84.40\% & 0.290 / 0.287 & 0.000 \\
-\end{longtable}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=0.82\textheight,keepaspectratio,alt={R13-v2 六类代理场景中固定权重与 conservative UA 的控制变化率成对对比；发卡、横流和综合极端显著下降}]{experiments/control/r13_v2_control_rate_paired.png}
-\caption{R13-v2 conservative UA 对控制变化率的影响}\label{fig:ch05-r13-v2-control-rate}
-\end{figure}
-
-分源置信链的核心证据来自 authority 模式和 \(p_{\mathrm{track}}\) 分布，而不是来自单一 RMSE 数字。声呐源提供 \(p_{\mathrm{track}}\)，磁源只提供检测概率而不伪造 track 置信度；tracking authority 根据进入/退出阈值和去抖规则在 HOLD、SEARCH 与 TRACK 之间切换。图~\ref{fig:ch05-r13-v2-authority} 显示，不同场景下 authority 分布并不相同：连续 S 弯、坡面和横流中 TRACK 占比较高；发卡场景看到声呐线时 \(p_{\mathrm{track}}\) 不低，但有效观测样本稀疏，HOLD 占比更高；综合极端下 \(p_{\mathrm{track}}\) 未越过 TRACK 进入门，因此始终保持 SEARCH/HOLD。这样的结果说明 authority 没有把低质量观测误用为连续跟踪许可。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=0.82\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景的 HOLD、SEARCH、TRACK authority 占比堆叠图}]{experiments/control/r13_v2_authority_modes_ua.png}
-\caption{R13-v2 分源置信下的 authority 模式分布}\label{fig:ch05-r13-v2-authority}
-\end{figure}
-
-埋设间断是最适合作为分源置信机制展示的场景。该场景的 \(p_{\mathrm{track}}\) 跨越 SEARCH 与 TRACK 相关门限，三类 authority 模式均出现，且 run 内 \(p_{95}-p_5\) 均值约为 0.483，动态范围明显大于其余场景。相比之下，连续 S 弯、坡面和横流的 \(p_{\mathrm{track}}\) 多数处于较高区间，适合证明 TRACK 许可链路可工作，但不适合作为强动态置信证据；综合极端则是硬门拒绝边界。图~\ref{fig:ch05-r13-v2-ptrack} 给出六场景的 \(p_{\mathrm{track}}\) 分布。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.92\linewidth,height=0.82\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景 sonar p_track 分布箱线图；埋设间断动态范围最大，综合极端未达到 TRACK 进入门}]{experiments/control/r13_v2_p_track_boxplot_ua.png}
-\caption{R13-v2 分源置信 \(p_{\mathrm{track}}\) 分布}\label{fig:ch05-r13-v2-ptrack}
-\end{figure}
-
-为了关闭速度门控遥测缺口，本文在不改变 36-run 正式矩阵结论的前提下补充了 R13-v2 telemetry/authority 审计。对原正式矩阵的事后审计显示，36 个 run 的 controller debug 均未记录 policy 后的 applied target speed，也未写入控制器实际消费到的 authority snapshot；因此原矩阵只能支撑控制平滑、fallback 与 authority 分布结论，不能单独量化速度缩放。随后在控制器 debug 中补入 requested/applied target speed 与 authority snapshot，并以当前 proxy 配置对 S 弯、埋设间断、综合极端和发卡四类场景进行 UA-only 三种子补强，共 12 个约 60 s 运行。补强结果 12/12 有效，applied speed 与 debug authority snapshot 缺失均为 0；quality-control policy 的接受率均值为 0.995，speed scale 的最小值、逐 run \(q_5\) 下界和逐 run 均值分别为 0.000、0.805 和 0.896，最大 applied speed 动态范围为 0.285 m/s；fallback 为 0，solver wall-time p95 上界为 13.43 ms，单次最大 wall time 为 51.71 ms。该补强证明 conservative quality-control policy 确实改变了 MPC 消费的目标速度，但其功能是闭合遥测证据，不替换表~\ref{tab:ch05-r13-v2-main-results} 的正式 paired RMSE 与控制变化率统计。
-
-综合极端另有一组 full-flow 补充实验，用于确认基础巡缆链路在最复杂代理场景下能否闭合。该补充实验只采用固定权重 baseline，在 60 s、三个随机种子下全部完成：控制设定点 100\% 处于 CABLE\_TRACKING，cross-track q50 均值为 0.147 m，q95 均值为 0.206 m，最大值为 0.235 m，全部样本小于 1 m；authority TRACK ratio 均值为 0.982，fallback 为 0，安全违规为 0，solver p95 均值约 10.806 ms。该组结果说明综合极端场景的 baseline full-flow 巡缆链路已经具备可重复闭环能力，可作为 R13-v2 中综合极端 SEARCH/HOLD 边界之外的补充正证据。
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{0.18\linewidth}
-  >{\centering\arraybackslash}p{0.09\linewidth}
-  >{\centering\arraybackslash}p{0.14\linewidth}
-  >{\centering\arraybackslash}p{0.14\linewidth}
-  >{\centering\arraybackslash}p{0.11\linewidth}
-  >{\centering\arraybackslash}p{0.12\linewidth}@{}}
-\caption{综合极端 baseline full-flow 60 s 三种子补充结果}\label{tab:ch05-r13-v16-combined-baseline}\tabularnewline
-\toprule\noalign{}
-运行口径 & 成功次数 & cross-track q50（m） & cross-track q95（m） & TRACK 占比 & fallback / 安全违规 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-运行口径 & 成功次数 & cross-track q50（m） & cross-track q95（m） & TRACK 占比 & fallback / 安全违规 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-baseline full-flow, 60 s & 3/3 & 0.147 & 0.206 & 0.982 & 0 / 0 \\
-\end{longtable}
-
-近底安全方面，本文进一步用第~\ref{sec:ch04-4-4-7} 节定义的 CBF 过滤器进行 low/mid/high 三档地形三种子复核。该实验使用固定 3.0 m 离底目标，以最小净空、平均净空、1.5 m 低净空违规率、海床穿透率、CBF 激活率、速度缩放和 MPC 求解时间为评价指标。PID 与 MPC 共 18 个约 60 s 运行均有效，1.5 m 安全违规率和海床穿透率均为 0；各 controller--terrain 组的最小净空下界为 2.70--2.90 m。CBF 速度门控在 18 个运行中均被触发，全局最低 speed scale 为 0.180；MPC 9 个运行 fallback 均为 0，solver p95 上界为 23.84 ms。表~\ref{tab:ch05-cbf-terrain-matrix} 给出该矩阵结果。
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{0.13\linewidth}
-  >{\centering\arraybackslash}p{0.08\linewidth}
-  >{\centering\arraybackslash}p{0.11\linewidth}
-  >{\centering\arraybackslash}p{0.11\linewidth}
-  >{\centering\arraybackslash}p{0.12\linewidth}
-  >{\centering\arraybackslash}p{0.13\linewidth}
-  >{\centering\arraybackslash}p{0.10\linewidth}@{}}
-\caption{CBF terrain low/mid/high 60 s 三种子复核矩阵结果}\label{tab:ch05-cbf-terrain-matrix}\tabularnewline
-\toprule\noalign{}
-运行 & run & 最小净空下界（m） & 平均净空均值（m） & 违规/穿底最大值 & CBF 激活率/最低 scale & solver p95 最大（ms） \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-运行 & run & 最小净空下界（m） & 平均净空均值（m） & 违规/穿底最大值 & CBF 激活率/最低 scale & solver p95 最大（ms） \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-PID-low & 3/3 & 2.90 & 3.19 & 0 / 0 & 0.669 / 0.678 & N/A \\
-PID-mid & 3/3 & 2.90 & 3.14 & 0 / 0 & 0.473 / 0.563 & N/A \\
-PID-high & 3/3 & 2.80 & 3.16 & 0 / 0 & 0.330 / 0.413 & N/A \\
-MPC-low & 3/3 & 2.90 & 3.22 & 0 / 0 & 0.775 / 0.585 & 23.84 \\
-MPC-mid & 3/3 & 2.80 & 3.15 & 0 / 0 & 0.544 / 0.500 & 19.62 \\
-MPC-high & 3/3 & 2.70 & 3.21 & 0 / 0 & 0.463 / 0.180 & 23.62 \\
-\end{longtable}
-
-\subsubsection{边界与负结果集中说明}\label{sec:ch05-r13-boundaries}
-
-本组实验的负结果和不可外推项已统一并入 \S\ref{sec:ch05-5-6} 的证据边界总表，涉及 R13-v2 横向 RMSE 未系统改善、综合极端未进入 TRACK、速度门控仅由补强证明、旧代理矩阵回退失败归因、CBF 仍为 manual setpoint/kinematic proxy 且 solver p95 上界不等于 10 ms 实时性等条目，此处不再重复展开。其中 R13-v2 横向 RMSE 边界由图~\ref{fig:ch05-r13-v2-rmse-boundary} 示意。
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=0.82\textheight,keepaspectratio,alt={R13-v2 六类代理场景中固定权重与 conservative UA 的 RMSE 成对对比；整体 RMSE 没有系统改善}]{experiments/control/r13_v2_rmse_paired.png}
-\caption{R13-v2 横向 RMSE 边界：控制平滑不等于精度改善}\label{fig:ch05-r13-v2-rmse-boundary}
-\end{figure}
-
-为避免继续用配置拼装代替场景物理契约，本文另建立原生因子生成器。电缆中心线由分段几何和随地形变化的埋深共同定义，磁真值由同一中心线的分段 Biot--Savart 积分生成，声呐可见性由埋深决定，横流独立作用于水体速度；实测三轴噪声只进入量测副本，不能修改电缆、地形、磁场或流场真值。曲线几何、地形与埋设、实测噪声回放、横流四个因子各自独立开关，\(2^4\) 个组合各取两个种子，共 32 次契约验证全部有效。
-
-\begin{longtable}[]{@{}llll@{}}
-\caption{R21 原生场景因子开关验证}\label{tab:ch05-r21-native-factors}\tabularnewline
-\toprule\noalign{}
-因子 & 关闭口径 & 开启口径 & 可观测差异 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-因子 & 关闭口径 & 开启口径 & 可观测差异 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-电缆几何 & 直线 & 分段曲线 & 中心线真值独立改变 \\
-地形与埋设 & 平底、0.15 m & 起伏地形、最大 1.40 m & 声呐可见率 1.000 降至 0.845 \\
-磁噪声 & 同协方差高斯 & 实测三轴循环回放 & lag-1 相关 \(-0.024\) 变为 \(-0.998\) \\
-横流 & 0 m/s & 时变横流 & 平均流速 0.352 m/s \\
-\end{longtable}
-
-R21 闭合的是``因子可独立操纵、真值与量测不串扰''这一生成器契约，不是控制闭环性能结论；上表已量化四个因子开关的可观测差异（实测噪声将 lag-1 相关由 \(-0.024\) 拉到 \(-0.998\)、横流开关产生 0.352 m/s 平均流速），对应的噪声时间结构与横流时序波形随附录 A.7/Artifact Manifest 归档，主文不再单列图。在此基础上，R22 将原生生成器接入制导级 MPC、分源 tracking authority 和 conservative quality-control policy，形成全因子离线闭环矩阵。该矩阵不调用 PVS 原生 depthHeadingAutopilot，而是在同一 native cable truth/measurement 契约上执行 guidance-level 闭环；其目的首先是排除``原生声磁、地形、横流因子无法进入控制闭环''这一接口风险，并进一步量化四个原生因子的主效应与二阶交互。
-
-R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流四个因子的 \(2^4\) 个组合；每个组合取 3 个 seed，并分别运行固定权重 baseline 与 conservative UA，两种模式共 96 次、每次 20 s。全部运行均有效，fallback 为 0，1.5 m 低净空违规率和海床穿透率均为 0；最坏横向 p95 样本为 \(g1\_t0\_r0\_c1\)、seed 0、baseline 模式，横向 p95 为 1.716 m；最小净空样本为 \(g1\_t1\_r1\_c1\)、seed 1、UA 模式，最小净空为 2.536 m。时序审计把 MPC solver wall time 与已知周期预算分开记录：本组 solver p95 最大为 24.02 ms、solver max 最大为 38.83 ms，相对 ROS 控制默认 20 Hz（50 ms）、bridge 命令 10 Hz（100 ms）、VxWorks 主控 10 Hz（100 ms）以及 NetRecv 信号释放约 0.3 s 均未越界，见表~\ref{tab:ch05-r22-native-factorial}。
-
-\begingroup
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{0.16\linewidth}
-  >{\centering\arraybackslash}p{0.12\linewidth}
-  >{\centering\arraybackslash}p{0.13\linewidth}
-  >{\centering\arraybackslash}p{0.12\linewidth}
-  >{\centering\arraybackslash}p{0.16\linewidth}
-  >{\centering\arraybackslash}p{0.10\linewidth}@{}}
-\caption{R22 原生因子闭环全矩阵与时序审计}\label{tab:ch05-r22-native-factorial}\tabularnewline
-\toprule\noalign{}
-运行口径 & 有效运行 & 最坏横向 p95 & 最小净空 & solver p95 / max & 周期越界 \\
-\midrule\noalign{}
-\endfirsthead
-\toprule\noalign{}
-运行口径 & 有效运行 & 最坏横向 p95 & 最小净空 & solver p95 / max & 周期越界 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\(2^4\)×3 seed×2 模式，20 s & 96/96 & 1.716 m & 2.536 m & 24.02 / 38.83 ms & 0 \\
-\end{longtable}
-\endgroup
-
-因子效应上，横流是横向 p95 的主导因子：跨 baseline/UA 汇总的横流主效应约为 0.639 m，baseline 与 UA 内分别为 0.627 m 和 0.652 m；曲线几何与横流的二阶交互为主要交互项，跨模式汇总约为 0.396 m。地形/埋设与本轮实测噪声回放在 20 s 短时窗口内对横向 p95 的主效应接近零，说明当前压力主要来自平面几何和水体速度，而不是所有原生因子都同等支配控制误差。UA 的收益也应按控制风格而非平均横向精度表述：它将平均控制变化率 RMS 从约 4.831 降至约 0.814，但平均横向 p95 从 baseline 的约 1.173 m 增至 UA 的约 1.206 m；在最困难的曲线加横流组合中，UA 将最坏 p95 从 1.716 m 降至约 1.625 m，可作为边界样本上的平滑收益，而不是全局精度提升结论。
-
-为检查短时窗口是否掩盖误差累积，本文随后运行了两组仿真侧补强。第一组保持完整 \(2^4\) 因子结构，将单次时长扩展到 60 s，共 96 次运行，全部有效且 fallback、安全违规和穿底均为 0；最坏横向 p95 增至 2.176 m，最小净空为 2.384 m，solver p95/max 上界为 14.93/43.70 ms。补充终端审计表明该组 96 次运行均未触发有限参考路径末端，因此 60 s 的 full-window 指标可以直接解释为活动巡缆段指标。第二组专门固定地形与横流开启，只保留曲线几何和实测噪声两个开关，运行 4 个组合、3 seed、baseline/UA、120 s 的固定时长边界矩阵。该组 24/24 运行有效且安全违规仍为 0；全窗口最坏横向 p95 达到 6.839 m，UA fallback 最大达到 0.113，solver p95/max 上界为 34.36/48.28 ms。随后按参考路径末端重新分段审计，发现 24/24 次运行均在 65.0--105.0 s 到达有限路径终点；活动巡缆段的横向 p95 最大为 2.152 m，终端尾段的横向 p95 最大为 7.703 m。因此，120 s 结果应写成``固定时长口径暴露了路径完成后的终端任务边界''，而不是``地形+横流活动段跟踪已经崩溃到 6 m''。
-
-为验证该归因，本文进一步在同一 120 s 地形+横流专项中加入任务层 \texttt{exit\_at\_end} 策略，即当有限参考路径完成后直接退出任务，不再把终端尾段计入巡缆指标。该组 24/24 运行有效，且 24/24 均到达路径末端；实际有效时长为 65.0--105.0 s。退出策略下最坏横向 p95 回落到 2.152 m，与上一组 active tracking 分段审计上界一致；baseline 横向 p95 均值/最大值为 1.445/1.616 m，fallback 最大为 0；UA 横向 p95 均值/最大值为 2.112/2.152 m，fallback 最大为 0.018。solver p95/max 上界为 22.99/53.27 ms，其中 p95 未越过 50 ms ROS 控制周期，但单点最大值造成最高 20 Hz 周期越界率 0.006；相对 10 Hz bridge/VxWorks 和 0.3 s NetRecv 预算仍未越界。由此，R22 的终端尾段边界可以收束为``任务层到达即退出能够消除固定时长指标污染''；但这不是定点保持或横流悬停能力，也不能改写 UA 的全局精度边界。
-
-综上，R22 20 s 全矩阵可以写成``原生声磁、地形与横流因子已进入制导级闭环，且当前参数下 solver 预算未阻塞 20 Hz/10 Hz 控制链''，也可以用于 \(2^4\) 全因子主效应和交互效应讨论；60 s 补强可作为未触发终点的长窗口复核，120 s 固定时长补强暴露了路径完成后的终端尾段，\texttt{exit\_at\_end} 专项则证明该尾段应由任务层退出处理，而不是覆盖主矩阵的正向接口结论或活动段跟踪崩溃证据。上述结果的数据层性质与终端尾段边界见 \S\ref{sec:ch05-5-6}。
-
-为关闭上述 offline simulation\_proxy 尚未覆盖的执行链风险，本文另运行 native PVS/protocol\_udp constant-depth/constant-heading smoke。该运行使用专用配置将 \texttt{pvs.control\_mode} 置为 \texttt{depthHeadingAutopilot}，并将 \texttt{pvs.autonomy\_motion\_model} 置为 \texttt{native}；ROS2 controller/MPC/arbiter 通过 \texttt{protocol\_udp} 二进制下行进入 Mock AMD 的 AUTO dispatch，再由 \texttt{PVSSimWrapper.set\_reference()} 触发 PVS 内层 \texttt{depthHeadingAutopilot()}。审计结果为 passed：日志中 AUTO mode 149 次、native autopilot backend open 1 次、kinematic log 为 0；MCAP 中记录到 setpoint 245 帧、mpc command 720 帧、filtered state 998 帧，filtered state 的 \(x/y/z/yaw\) span 分别约为 24.035 m、7.892 m、1.127 m 和 30.7 deg；72 个 controller debug 样本均为 \texttt{Solve\_Succeeded}，solver p95/max 为 19.32/20.40 ms。该结果只支撑``native PVS/protocol\_udp 仿真执行链已闭合''，其覆盖范围边界见 \S\ref{sec:ch05-5-6}。
-
-为补齐真机侧时序口径，本文另实现 PC104 UDP 时序探针：按 10 Hz 发送安全零推力 \texttt{\$CKTH} 下行包，记录 \texttt{\$AUV} 上行间隔、帧号缺口、解析错误与 PC104 uptime 单调性。在 host-relay 路径下完成 30 s 实机记录后，300 帧零推力下行进入 relay，450 帧 PC104 上行被容器解析，parse error 为 0；观测到主上行到达频率约 15.000 Hz，inter-arrival p50/p95/p99 分别为 57.983/85.710/85.944 ms。该探针的口径边界（只能报告到达间隔/抖动，不构成单向物理延迟）见 \S\ref{sec:ch05-5-6}。
+综合这六个问题域可见，当前方法的主要算法链已经闭合，剩余工作集中在统计标定、分源置信映射、原生耦合闭环、目标平台实时复验和系统级计量验证五个层面。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
 
 \section{本章小结}\label{sec:ch05-5-8}
 
-本章建立了从实验编排、真实采集到闭环验证的分层证据链。低成本磁采集方面，SK2301 短接噪声 ENOB 由 16.877 bit 经超采样提高到 18.342 bit，1 s、45 Hz 相干解调得到 0.0230 nT 的等效矢量 RMS；45 Hz 电缆--TMR--ArUco 联合实验进一步以 777 个位姿对齐点获得 \(R^2=0.8792\) 的三轴复 I/Q 拟合，验证了移动单三轴传感器形成合成空间阵列并恢复相对几何的可行性。
+本章把实验结果收束为三条仿真主线和一个面向实物的证据容器。状态估计主线说明，ES-EKF 在多扰动、多随机种子条件下能够保持连续输出，并通过分源 NIS、长时程相位敏感性、实测背景回放和 Huber 更新把统计一致性与观测失配边界拆开说明；控制与安全主线说明，地形跟随、复杂路径预瞄、UA-MPC、CBF、安全仲裁和原生因子闭环共同构成可审计的近底巡检控制证据，但不同控制层级的优势区必须分别解释，不能把某一单项指标扩展为全场景最优；端到端海缆巡检数字孪生主线说明，系统在干净先验、先验畸变和满足磁观测前提的闭环恢复条件下完成了行业标准风格的验收判定，并把横偏、埋深、不确定度、置信度、运行状态和验收标志组织成同一运行话题链；ADC--TMR 噪声回放主线进一步证明，真实采集链背景可以以可追溯的 ROS2 量测输入进入闭环，而不改变本文对安全边界的审慎结论。
 
-状态估计方面，八类扰动场景、三种子共二十四次运行全部完成，分源 NIS 审计揭示深度与 DVL 协方差的相反失配方向；五分钟成对实验把误差非单调定位到长期可观性与异步更新相位，实测背景回放说明时间结构主要增加跨运行离散，90 次策略对照则确认 Huber 即时降权是脉冲异常下误差下降的主要来源。控制方面，地形跟随三档复验均无安全违规，MPC 在长短波 S 弯和发卡路径上体现预瞄优势；R13-v2 六类代理场景、两模式、三种子的正式矩阵完成 36/36 运行，fallback 为 0，conservative source-specific UA 将全局控制变化率 RMS 从 0.247 降至 0.085，后续 12-run telemetry supplement 又确认 applied target speed 与 authority snapshot 已进入 controller debug，说明其主要收益是控制平滑、实时可解性和可观测的速度门控；CBF low/mid/high 60 s 三种子矩阵进一步在可信执行链下取得 18/18 有效、最小净空 2.70--2.90 m、1.5 m 低净空违规率和穿底率均为 0 的近底安全结果，同时保留 MPC p95 上界 23.84 ms 的实时性边界；R22 原生因子闭环全矩阵则把 R21 的声磁、地形与横流因子接入制导级控制闭环，96/96 有效、fallback 和安全违规均为 0，solver p95 最大 24.02 ms，并将横流识别为当前横向误差的主导因子。执行与计量层面，native PVS/protocol\_udp smoke 已验证 ROS2 controller/MPC/arbiter 能经 Mock AMD AUTO dispatch 进入 PVS \texttt{depthHeadingAutopilot}，且未走 kinematic proxy；PC104 host-relay 30 s 探针记录到 450 帧上行、15.000 Hz 到达频率和 85.710 ms p95 到达间隔，但只作为到达间隔/抖动审计。决策层的等价规则实验表明，行为树与状态机具有相同的紧急响应和组合故障生存率，施密特触发与去抖使阈值附近模式切换减少约 98.5\%，行为树的优势主要体现为安全逻辑的集中组织。
-
-端到端电缆巡检在干净先验下完成行业标准风格的数字孪生验收；在先验畸变条件下，在线修正已接入同源部署接口，并在满足磁观测前提的六自由度闭环中使重档约 \(-10.25\text{ m}\) 的起始横偏于约 12 s 内收敛进入 \(\pm3.4\text{ m}\) 廊道，中、重两档各三次运行全部就绪且通过。综合极端 baseline full-flow 三种子补充实验进一步给出可重复巡缆闭环，cross-track q95 均值为 0.206 m，fallback 与安全违规均为 0。由此，本文形成了``低成本窄带采集--声磁协同估计--不确定性感知控制--闭环恢复''的连续实验主线。需要继续验证的统计、场景和计量问题已集中于第 5.6 节与第~\ref{sec:ch05-r13-boundaries} 节，不在本章小结重复展开。
+三条仿真主线之外，低成本磁采集、SK2301 窄带等效分辨率、45 Hz 复 I/Q 联合反演、磁外参标定链路、PC104 时序探针和双脑通信逻辑为实物部署提供了物理锚点。它们当前支撑的是``关键链路可实现、接口可复用、部署路径可分阶段推进''，而不是完整水下自主巡检已经闭合。全章因此形成的结论边界是清晰的：算法链路已在可重复仿真与半实物口径下闭合，实物层还需沿磁采集链、等效海缆扫描、磁卫生、Jetson 实时性、声呐接口替代和 PC104/VxWorks 接入逐级补强。统计、场景、接口和计量边界已集中于 §\ref{sec:ch05-5-6} 与附录表~\ref{tab:ch05-negative-results}，不在本章小结重复展开。

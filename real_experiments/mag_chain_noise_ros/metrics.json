@@ -1,0 +1,169 @@
+{
+  "experiment_id": "mag_chain_noise_ros",
+  "warmup_s": 4.0,
+  "run_count": 3,
+  "runs": [
+    {
+      "mode": "none",
+      "run_dir": "/auv_data/mag_chain_noise_ros/20260821_164532/none/20260821_164532",
+      "bag_mcap": "/auv_data/mag_chain_noise_ros/20260821_164532/none/20260821_164532/rosbag/rosbag_0.mcap",
+      "tracking_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/none/20260821_164532/tracking.jsonl",
+      "noise_metadata_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/none/20260821_164532/noise_metadata.jsonl",
+      "status": "ok",
+      "extract_status": "ok",
+      "duration_s": "20",
+      "seed": "20260821",
+      "noise_scale": "1.0",
+      "ros_domain_id": "80",
+      "tracking_sample_count": 157,
+      "tracking_duration_s": 15.60153317451477,
+      "cross_track_abs_mean_m": 5.857164244567569,
+      "cross_track_abs_p95_m": 7.761650133780547,
+      "cross_track_abs_max_m": 7.772147296084214,
+      "confidence_mean": 0.8471621215355994,
+      "confidence_min": 0.8108896015100873,
+      "magnetic_confidence_mean": 0.8471621215355994,
+      "magnetic_snr_db_mean": 108.25681123311323,
+      "magnetic_snr_db_p05": 106.8819766998965,
+      "burial_sigma_p95_m": null,
+      "industrial_ready_ratio": 0.0,
+      "industrial_acceptance_pass_ratio": 0.0,
+      "prior_alignment_observed_ratio": 1.0,
+      "prior_alignment_accepted_ratio": 1.0,
+      "mode_counts": {
+        "quality_limited": 157
+      },
+      "acceptance_flag_counts": {
+        "burial_uncertainty_missing": 157,
+        "route_offset_over_limit": 157
+      },
+      "quality_flag_counts": {
+        "burial_warming_up": 157,
+        "route_offset_large": 157
+      },
+      "noise_metadata_sample_count": 0,
+      "noise_magnitude_mean_nt": 0.0,
+      "noise_magnitude_p95_nt": 0.0,
+      "noise_magnitude_max_nt": 0.0,
+      "clean_magnitude_mean_nt": null,
+      "published_magnitude_mean_nt": null,
+      "replay_wrap_count": 0,
+      "noise_profile_sha256": "",
+      "noise_source_npz": [],
+      "setpoint_sample_count": 198,
+      "control_rate_rms_per_s": 0.06319025863750263,
+      "control_rate_mean_abs_per_s": 0.018191389623583236,
+      "setpoint_metric_status": "ok"
+    },
+    {
+      "mode": "covariance_gaussian",
+      "run_dir": "/auv_data/mag_chain_noise_ros/20260821_164532/covariance_gaussian/20260821_164557",
+      "bag_mcap": "/auv_data/mag_chain_noise_ros/20260821_164532/covariance_gaussian/20260821_164557/rosbag/rosbag_0.mcap",
+      "tracking_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/covariance_gaussian/20260821_164557/tracking.jsonl",
+      "noise_metadata_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/covariance_gaussian/20260821_164557/noise_metadata.jsonl",
+      "status": "ok",
+      "extract_status": "ok",
+      "duration_s": "20",
+      "seed": "20260821",
+      "noise_scale": "1.0",
+      "ros_domain_id": "81",
+      "tracking_sample_count": 159,
+      "tracking_duration_s": 15.79832935333252,
+      "cross_track_abs_mean_m": 5.852354954510917,
+      "cross_track_abs_p95_m": 7.766076584924958,
+      "cross_track_abs_max_m": 7.777532503325646,
+      "confidence_mean": 0.8472938490818887,
+      "confidence_min": 0.8108029824505476,
+      "magnetic_confidence_mean": 0.8472938490818887,
+      "magnetic_snr_db_mean": 108.25073478455485,
+      "magnetic_snr_db_p05": 106.85952108077714,
+      "burial_sigma_p95_m": null,
+      "industrial_ready_ratio": 0.0,
+      "industrial_acceptance_pass_ratio": 0.0,
+      "prior_alignment_observed_ratio": 1.0,
+      "prior_alignment_accepted_ratio": 1.0,
+      "mode_counts": {
+        "quality_limited": 159
+      },
+      "acceptance_flag_counts": {
+        "burial_uncertainty_missing": 159,
+        "route_offset_over_limit": 159
+      },
+      "quality_flag_counts": {
+        "burial_warming_up": 159,
+        "route_offset_large": 159
+      },
+      "noise_metadata_sample_count": 992,
+      "noise_magnitude_mean_nt": 133.623013576663,
+      "noise_magnitude_p95_nt": 268.1399742845785,
+      "noise_magnitude_max_nt": 477.16742208605905,
+      "clean_magnitude_mean_nt": 12589.758533498123,
+      "published_magnitude_mean_nt": 12585.750541883055,
+      "replay_wrap_count": 0,
+      "noise_profile_sha256": "4b44c5acfb95f7369b348f189c10dbd55df4bb3acfd2abe3380ca3436a591556",
+      "noise_source_npz": [
+        "/home/auv_user/auv_ws/AUV-Master-Project/hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz",
+        "/home/auv_user/auv_ws/AUV-Master-Project/hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz"
+      ],
+      "setpoint_sample_count": 199,
+      "control_rate_rms_per_s": 0.06329183206727712,
+      "control_rate_mean_abs_per_s": 0.01823182119838645,
+      "setpoint_metric_status": "ok"
+    },
+    {
+      "mode": "measured_replay",
+      "run_dir": "/auv_data/mag_chain_noise_ros/20260821_164532/measured_replay/20260821_164623",
+      "bag_mcap": "/auv_data/mag_chain_noise_ros/20260821_164532/measured_replay/20260821_164623/rosbag/rosbag_0.mcap",
+      "tracking_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/measured_replay/20260821_164623/tracking.jsonl",
+      "noise_metadata_jsonl": "/auv_data/mag_chain_noise_ros/20260821_164532/measured_replay/20260821_164623/noise_metadata.jsonl",
+      "status": "ok",
+      "extract_status": "ok",
+      "duration_s": "20",
+      "seed": "20260821",
+      "noise_scale": "1.0",
+      "ros_domain_id": "82",
+      "tracking_sample_count": 158,
+      "tracking_duration_s": 15.699926853179932,
+      "cross_track_abs_mean_m": 5.829498689339253,
+      "cross_track_abs_p95_m": 7.766760855421709,
+      "cross_track_abs_max_m": 7.7789633783821515,
+      "confidence_mean": 0.847737353392647,
+      "confidence_min": 0.8107799751989522,
+      "magnetic_confidence_mean": 0.847737353392647,
+      "magnetic_snr_db_mean": 108.27083484530927,
+      "magnetic_snr_db_p05": 106.89294220320878,
+      "burial_sigma_p95_m": null,
+      "industrial_ready_ratio": 0.0,
+      "industrial_acceptance_pass_ratio": 0.0,
+      "prior_alignment_observed_ratio": 1.0,
+      "prior_alignment_accepted_ratio": 1.0,
+      "mode_counts": {
+        "quality_limited": 158
+      },
+      "acceptance_flag_counts": {
+        "burial_uncertainty_missing": 158,
+        "route_offset_over_limit": 158
+      },
+      "quality_flag_counts": {
+        "burial_warming_up": 158,
+        "route_offset_large": 158
+      },
+      "noise_metadata_sample_count": 994,
+      "noise_magnitude_mean_nt": 83.12333737489712,
+      "noise_magnitude_p95_nt": 179.99492080374898,
+      "noise_magnitude_max_nt": 447.9014510666983,
+      "clean_magnitude_mean_nt": 12600.839208186226,
+      "published_magnitude_mean_nt": 12615.951348524151,
+      "replay_wrap_count": 2,
+      "noise_profile_sha256": "4b44c5acfb95f7369b348f189c10dbd55df4bb3acfd2abe3380ca3436a591556",
+      "noise_source_npz": [
+        "/home/auv_user/auv_ws/AUV-Master-Project/hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz",
+        "/home/auv_user/auv_ws/AUV-Master-Project/hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz"
+      ],
+      "setpoint_sample_count": 199,
+      "control_rate_rms_per_s": 0.063455409753166,
+      "control_rate_mean_abs_per_s": 0.01823966711396333,
+      "setpoint_metric_status": "ok"
+    }
+  ]
+}

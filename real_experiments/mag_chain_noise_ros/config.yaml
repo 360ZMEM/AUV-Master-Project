@@ -1,0 +1,25 @@
+experiment_id: mag_chain_noise_ros
+description: ADC-TMR measured background replay injected into the ROS2 Direction A cable loop.
+
+duration_s: 30
+modes:
+  - none
+  - covariance_gaussian
+  - measured_replay
+
+tracking_config_file: brain_linux/config/cable_tracking_direction_a.yaml
+source_run_script: scripts/run_direction_a_decoupled_cable_sim.sh
+
+noise:
+  profile_path: real_experiments/mag_chain_noise/data/noise_profile.json
+  npz_paths:
+    - hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz
+    - hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz
+  seed: 20260821
+  detrend: linear
+  scale: 1.0
+  note: measured_replay loops the 13.104 s ADC-TMR background record when the ROS run is longer.
+
+outputs:
+  raw_root: results/mag_chain_noise_ros
+  thesis_figure_dir: docs/thesis/figures/experiments/mag_chain_noise_ros

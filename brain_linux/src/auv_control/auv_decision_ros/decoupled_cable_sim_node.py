@@ -31,6 +31,11 @@ from auv_interfaces.msg import Setpoint
 
 from .cable_prior_adapter import ensure_auv_master_mag_on_path, load_cable_map_from_config
 
+try:
+    from .mag_noise_replay import make_magnetic_noise_source, parse_path_sequence
+except ImportError:  # pragma: no cover - supports direct script execution
+    from mag_noise_replay import make_magnetic_noise_source, parse_path_sequence
+
 
 def _find_project_root() -> Path:
     candidates: list[Path] = []
@@ -71,6 +76,39 @@ def _load_tracking_config(path: Path) -> dict[str, Any]:
     return dict(payload.get("cable_tracking", payload) or {})
 
 
+def _parameter_sequence(value: object) -> list[object]:
+    if isinstance(value, (list, tuple)):
+        return list(value)
+    text = str(value).strip()
+    if not text:
+        return []
+    if text.startswith("["):
+        try:
+            loaded = json.loads(text)
+        except json.JSONDecodeError:
+            loaded = None
+        if isinstance(loaded, list):
+            return list(loaded)
+    return [part.strip() for part in text.split(",") if part.strip()]
+
+
+def _json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return _json_safe(value.tolist())
+    if isinstance(value, (np.floating, float)):
+        number = float(value)
+        return number if math.isfinite(number) else None
+    if isinstance(value, (np.integer, int)):
+        return int(value)
+    if isinstance(value, (np.bool_, bool)):
+        return bool(value)
+    return value
+
+
 class DecoupledCableSimNode(Node):
     """Close the ROS cable-tracking loop without a PVS/HoloOcean dynamics backend."""
 
@@ -106,6 +144,25 @@ class DecoupledCableSimNode(Node):
         self.declare_parameter("vertical_separation_m", 7.5)
         self.declare_parameter("current_amp_a", 600.0)
         self.declare_parameter("trail_max_points", 1200)
+        self.declare_parameter("mag_noise_mode", "none")
+        self.declare_parameter(
+            "mag_noise_profile_path",
+            "real_experiments/mag_chain_noise/data/noise_profile.json",
+        )
+        self.declare_parameter(
+            "mag_noise_npz_paths",
+            [
+                "hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz",
+                "hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz",
+            ],
+        )
+        self.declare_parameter("mag_noise_seed", 20260821)
+        self.declare_parameter("mag_noise_detrend", "linear")
+        self.declare_parameter("mag_noise_scale", 1.0)
+        self.declare_parameter("mag_noise_axis_order", [0, 1, 2])
+        self.declare_parameter("mag_noise_axis_signs", [1.0, 1.0, 1.0])
+        self.declare_parameter("mag_noise_publish_metadata", True)
+        self.declare_parameter("mag_noise_metadata_topic", "/auv/sensors/magnetic_noise_metadata")
 
         tracking_config_file = Path(str(self.get_parameter("tracking_config_file").value))
         if not tracking_config_file.is_absolute():
@@ -126,6 +183,21 @@ class DecoupledCableSimNode(Node):
         self.depth_time_constant_s = max(0.05, float(self.get_parameter("depth_time_constant_s").value))
         self.current_amp_a = float(self.get_parameter("current_amp_a").value)
         self.trail: deque[np.ndarray] = deque(maxlen=max(2, int(self.get_parameter("trail_max_points").value)))
+        mag_noise_seed_value = int(self.get_parameter("mag_noise_seed").value)
+        self.mag_noise_source = make_magnetic_noise_source(
+            mode=str(self.get_parameter("mag_noise_mode").value),
+            project_root=PROJECT_ROOT,
+            npz_paths=parse_path_sequence(self.get_parameter("mag_noise_npz_paths").value),
+            profile_path=str(self.get_parameter("mag_noise_profile_path").value),
+            seed=None if mag_noise_seed_value < 0 else mag_noise_seed_value,
+            detrend_mode=str(self.get_parameter("mag_noise_detrend").value),
+            axis_order=[int(item) for item in _parameter_sequence(self.get_parameter("mag_noise_axis_order").value)],
+            axis_signs=[
+                float(item) for item in _parameter_sequence(self.get_parameter("mag_noise_axis_signs").value)
+            ],
+            scale=float(self.get_parameter("mag_noise_scale").value),
+        )
+        self.mag_noise_start_time_s = self._now_s()
 
         self.position_ned = np.array(
             [
@@ -147,6 +219,13 @@ class DecoupledCableSimNode(Node):
         self.pub_magnetic = self.create_publisher(MagneticField, "/auv/sensors/magnetic", 50)
         self.pub_mission = self.create_publisher(String, "/auv/mission_command", 10)
         self.pub_cable_mission = self.create_publisher(String, "/auv/cable/mission_command", 10)
+        self.pub_mag_noise_metadata = None
+        if bool(self.get_parameter("mag_noise_publish_metadata").value) and self.mag_noise_source.mode != "none":
+            self.pub_mag_noise_metadata = self.create_publisher(
+                String,
+                str(self.get_parameter("mag_noise_metadata_topic").value),
+                10,
+            )
         self.pub_true_cable = self.create_publisher(Marker, "/auv/visual/decoupled_true_cable", 10)
         self.pub_prior_cable = self.create_publisher(Marker, "/auv/visual/decoupled_prior_cable", 10)
         self.pub_trail = self.create_publisher(Marker, "/auv/visual/decoupled_vehicle_trail", 10)
@@ -169,6 +248,10 @@ class DecoupledCableSimNode(Node):
             f"true_cable_y={float(self.get_parameter('true_cable_y_m').value):.1f} "
             f"vertical_sep={float(self.get_parameter('vertical_separation_m').value):.1f} "
             f"current={self.current_amp_a:.1f}A"
+        )
+        self.get_logger().info(
+            "magnetic noise source ready "
+            + json.dumps(_json_safe(self.mag_noise_source.describe()), ensure_ascii=False, allow_nan=False)
         )
 
     def _now_s(self) -> float:
@@ -242,18 +325,39 @@ class DecoupledCableSimNode(Node):
         self.pub_odom.publish(msg)
 
     def _publish_magnetic(self) -> None:
-        b_ned_t = compute_biot_savart_hvdc(
+        now = self.get_clock().now()
+        stamp = now.to_msg()
+        clean_b_ned_t = compute_biot_savart_hvdc(
             auv_pos_ned=self.position_ned,
             cable=self.true_cable,
             current_amp=self.current_amp_a,
         )
+        noise_sample = self.mag_noise_source.sample(
+            float(now.nanoseconds) * 1.0e-9 - self.mag_noise_start_time_s
+        )
+        noise_t = np.asarray(noise_sample.vector_t, dtype=float)
+        b_ned_t = clean_b_ned_t + noise_t
         msg = MagneticField()
-        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.stamp = stamp
         msg.header.frame_id = self.mag_frame_id
         msg.magnetic_field.x = float(b_ned_t[0])
         msg.magnetic_field.y = float(b_ned_t[1])
         msg.magnetic_field.z = float(b_ned_t[2])
         self.pub_magnetic.publish(msg)
+        if self.pub_mag_noise_metadata is not None:
+            payload = {
+                **noise_sample.metadata,
+                "stamp_sec": float(now.nanoseconds) * 1.0e-9,
+                "clean_field_t": [float(v) for v in np.asarray(clean_b_ned_t, dtype=float)],
+                "noise_field_t": [float(v) for v in noise_t],
+                "published_field_t": [float(v) for v in b_ned_t],
+                "clean_magnitude_nt": float(np.linalg.norm(clean_b_ned_t) * 1.0e9),
+                "noise_magnitude_nt": float(np.linalg.norm(noise_t) * 1.0e9),
+                "published_magnitude_nt": float(np.linalg.norm(b_ned_t) * 1.0e9),
+            }
+            self.pub_mag_noise_metadata.publish(
+                String(data=json.dumps(_json_safe(payload), ensure_ascii=False, allow_nan=False))
+            )
 
     def _publish_mission(self) -> None:
         payload = {
@@ -262,6 +366,7 @@ class DecoupledCableSimNode(Node):
             "target_speed_mps": self.target_speed_mps,
             "source": "decoupled_cable_sim_node",
             "tracking_config_file": str(self.tracking_config_file),
+            "mag_noise_mode": self.mag_noise_source.mode,
         }
         msg = String(data=json.dumps(payload, ensure_ascii=False))
         if bool(self.get_parameter("publish_general_mission").value):

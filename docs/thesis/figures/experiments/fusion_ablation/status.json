@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "state": "complete",
+  "updated_at_utc": "2026-08-20T11:17:02.064298+00:00",
+  "run_count": 108,
+  "valid_run_count": 108,
+  "invalid_run_count": 0,
+  "failure_event_count": 0,
+  "diagnostic_completeness": {
+    "effective_sample_count": {
+      "observed_count": 0,
+      "total_count": 108,
+      "complete": false
+    },
+    "failure_event_count": {
+      "observed_count": 108,
+      "total_count": 108,
+      "complete": true
+    },
+    "capability_gate_status": {
+      "observed_count": 0,
+      "total_count": 108,
+      "complete": false
+    },
+    "solver_wall_time_current_ms": {
+      "observed_count": 0,
+      "total_count": 108,
+      "complete": false
+    },
+    "fallback_type": {
+      "observed_count": 0,
+      "total_count": 108,
+      "complete": false
+    }
+  },
+  "contract_complete": false
+}

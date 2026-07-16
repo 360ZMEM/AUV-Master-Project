@@ -3,14 +3,16 @@
 本目录下三张 §5.5.11 算法级因果图由主仓脚本
 `tools/render_cable_mag_causal_figures.py` 按主仓中文排版约定（WenQuanYi CJK）
 重绘 / 重算，不是子仓库原图 PNG 的直接复制。三图共同构成
-“失效现象 → 机制解耦 → 运维价值” 的算法级证据链。
+“失效现象 → 机制解耦 → 运维价值” 的算法级证据链。2026-08-18
+论文压缩后，三图从正文降级归档，正文数值权威源为
+`tab:ch05-cable-algorithm-boundaries`。
 
 子仓库审计基线 commit：`12e1884b59737dbe14e83c825b6cea9bb3c7a4bb`。
 证据等级统一为：算法级、单次确定性复现、纯仿真、`n=1`，不构成主仓端到端或实测。
 
 ## 1. pure_magnetic_failure_timeseries.{png,pdf}
 
-- 论文落点：第 5.5.11 节“失效边界”，图 `fig:ch05-mag-failure-timeseries`
+- 原论文落点：第 5.5.11 节“失效边界”，图 `fig:ch05-mag-failure-timeseries`；现已降级归档
 - 数据来源：重跑子仓库确定性仿真
   （`case_maze_sonar_dropout_prior_heavy` 基线 vs 关闭
   `nominal_route_prior_observation_correction_enabled` 的消融）
@@ -21,7 +23,7 @@
 
 ## 2. prior_alignment_decoupling.{png,pdf}
 
-- 论文落点：第 5.5.11 节“机制解耦”，图 `fig:ch05-mag-prior-decoupling`
+- 原论文落点：第 5.5.11 节“机制解耦”，图 `fig:ch05-mag-prior-decoupling`；现已降级归档
 - 数据来源：
   - `AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_70.csv`
   - `AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_50.csv`
@@ -32,7 +34,7 @@
 
 ## 3. zigzag_burial_tradeoff.{png,pdf}
 
-- 论文落点：第 5.5.11 节“运维价值”，图 `fig:ch05-mag-zigzag-tradeoff`
+- 原论文落点：第 5.5.11 节“运维价值”，图 `fig:ch05-mag-zigzag-tradeoff`；现已降级归档
 - 数据来源（合并三份调优扫描，取 `lat_2p0` 基础覆盖变体，得到 20--36° 完整包络）：
   - `results/20260705_zigzag_burial/zigzag_burial_tuning_focused.csv`
   - `results/20260705_zigzag_burial/zigzag_burial_tuning_shallow_mid.csv`

@@ -1,0 +1,44 @@
+{
+  "A_baseline_default": {
+    "depth": {
+      "n_events": 17630,
+      "nis_per_dof_mean": 7.204864440219748,
+      "coverage_95": 0.5607487237663075,
+      "upper_exceed": 0.4158252977878616
+    },
+    "dvl_world": {
+      "n_events": 17613,
+      "nis_per_dof_mean": 0.1188741135911381,
+      "coverage_95": 0.5528302958042355,
+      "upper_exceed": 0.0
+    }
+  },
+  "B_per_source_gating": {
+    "depth": {
+      "n_events": 17630,
+      "nis_per_dof_mean": 8.126001638760709,
+      "coverage_95": 0.5665910380034033,
+      "upper_exceed": 0.40998298355076573
+    },
+    "dvl_world": {
+      "n_events": 17613,
+      "nis_per_dof_mean": 0.054539876534132406,
+      "coverage_95": 0.23073865894509737,
+      "upper_exceed": 0.0
+    }
+  },
+  "C_per_source_tuned": {
+    "depth": {
+      "n_events": 17630,
+      "nis_per_dof_mean": 3.2846875242067908,
+      "coverage_95": 0.7367555303460012,
+      "upper_exceed": 0.21378332387975044
+    },
+    "dvl_world": {
+      "n_events": 17613,
+      "nis_per_dof_mean": 0.05005957436499175,
+      "coverage_95": 0.22176801226366888,
+      "upper_exceed": 0.0
+    }
+  }
+}

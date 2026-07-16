@@ -7,11 +7,11 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 文件的路径、字节数与 SHA256；历史实验未记录的 Git commit 不用当前 commit
 冒充，而是保留为 provenance gap。
 
-- 生成时间（UTC）：`2026-08-12T16:25:23.952771+00:00`
-- 当前仓库 commit：`6e91f369ad5ec77dcdf937bc836b807fdf6deef7`
+- 生成时间（UTC）：`2026-08-13T09:48:11.046324+00:00`
+- 当前仓库 commit：`b9dd38a983d5129717d65f881020735c1f202c43`
 - 当前工作树状态：`not_evaluated`
-- Catalog SHA256：`4727a59689ef3cca799b26e81c3e1d5efda7605b046a6e44ccb44605a1fb16c1`
-- JSON SHA256：`8ea94be1b7d376f5cd03307f5cc7c0635f901af4c35ba69691c40a9f824e9215`
+- Catalog SHA256：`1d7b3210ee817d711740dce03246abbb64651353b3a572a8a5ed092a53b6e01e`
+- JSON SHA256：`67781299a30cbef4d232a2d1d3ddd19386f542c5bcb543c085ce2d442832ada3`
 
 ## 2. 证据等级
 
@@ -60,21 +60,24 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 | HARDWARE-PC104-UDP-TIMING-PROBE | PC104/VxWorks UDP 时序探针与 host-relay 实机记录 | physical_pc104_udp_packet_timing_probe | C | physical_hostrelay_packet_timing_complete_with_boundaries | 30 s PC104 host-relay 实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 300 帧零推力下行，解析 450 帧 $AUV 上行，上行到达频率 15.000 Hz，p95 间隔 85.710 ms，parse error 0 | 28/28 | 0/0 | 完整 |
 | JETSON-R09-HANDOFF | Jetson clean benchmark 与历史产物回收 handoff | jetson_hardware_infrastructure | D | infrastructure_complete_dry_run_only | baseline/combined 120 s；MPC steady 200 与 stress 50；combined 1800 s soak 计划 | 8/8 | 0/0 | 完整 |
 | JETSON-25W | Jetson Orin NX 25W smoke 与 MPC microbench | jetson_hardware_documented | C | documented_only | 60 s smoke 记录；MPC steady 200 solve；constraint stress 50 solve | 4/9 | 0/3 | 完整 |
+| CONTROL-MPC-EXTREME-E1-MULTISEED | MPC 极端平面路径多种子统计验证 | deterministic_guidance_offline_closed_loop_multiseed | B | complete_with_scope_boundaries | 长波/短波 S 弯、90° 直角折弯、180° 发卡 4 场景 x 仅航向 PID/PID-LOS/预瞄 MPC 3 控制器 x 5 seed；受控扰动（恒定横流≤0.15 m/s、初始横向偏移≤0.8 m、逐步艏向白噪声≤1.5°）；离线制导闭环，不依赖历史 bag | 5/5 | 0/0 | 完整 |
+| ESTIMATOR-E2-TRI-ESTIMATOR-FAIR | 三估计器公平初始化对比重算（O-1 修复后） | offline_estimator_comparison_fair_init | B | complete_with_observability_boundary | P1 sensor sweep 同源 8 场景 x 3 seed = 24 个 bag；Raw DR / Std EKF / ES-EKF 三引擎；fair 与 legacy-auto 双口径对照；每 run 30 s | 12/12 | 0/0 | 完整 |
+| ESTIMATOR-E3-COVARIANCE-AB | 分源自适应 R 协方差整定 A/B（O-3/O-4，独立对照，不改主线默认） | offline_covariance_consistency_ab | B | complete_with_structural_dvl_floor | P1 sensor sweep 同源 8 场景 x 3 seed = 24 个 bag；三臂 A_baseline_default / B_per_source_gating / C_per_source_tuned；与 §5.5.5 分源 NIS 审计逐量测同口径重算（深度 17630 事件、DVL 17613 事件/臂） | 9/9 | 0/0 | 完整 |
 
 ## 4. 分项边界
 
 ### BUILD-R00 ThuThesis 论文构建基线
 
-- Artifact digest：`e21ebf4cf3300bae2ad3b8ead42d385ee90ff603aba58d4dd7298e03c2d57342`
-- 可访问字节数：`13549150`
+- Artifact digest：`e44b00ac3f23ee80ad6caefa76a536bc135fd146b2e4a2aa084941926930d7bd`
+- 可访问字节数：`13113116`
 - 可支持结论：Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF；最终日志不存在 undefined command/citation/reference；R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8；AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论
 - 不可外推：构建通过不等于占位符、论证或排版质量已经最终验收；写作审计只压缩了主文叙事与图表数量，未新增、删除或改判任何实验证据；被移出主文的图对应的原始实验证据仍以本清单其余条目为准
 - 主要文件：`thuthesis/auv-thesis.pdf`
 
 ### MAG-CABLE-ALGORITHM-BOUNDARY 专用磁探测仓库电缆探测算法级边界与迁移图
 
-- Artifact digest：`d06ffaab3a84285562cbcfd66c3979cb57975b3e512fcc683bb5e753ada4b389`
-- 可访问字节数：`1194305`
+- Artifact digest：`ea21e9b5645fb21903cd3f9a4f62d8d31d3953442fab8735ea65d3ba5c9293f7`
+- 可访问字节数：`1197292`
 - 可支持结论：关闭在线先验修正会在重档错位先验下引发横偏累积（漂移至 30--40 m）并在约 2119 s 触发 +57.5 m 跨车道投影跳变；map-frame 投影连续与先验物理配准是两个不同机制：关闭在线修正时全局路由跳变 686.4/724.1 m 但地图系投影跳变仍约 0.2 m，基线累计约 7.53 m 平移与约 -3.18 度旋转把错位地图拉回真实电缆；当前场景中在线先验修正与自适应之字形是关闭即失败的载荷机制，进度窗口投影与磁路径观测在该场景下为冗余安全网；之字形主动激励在调优后显示进入 0.15 m 参考线的算法级潜力：1.0/1.5/2.0 m 埋深在 36/32/25 度摆幅下达 0.124/0.079/0.123 m 单周期平均误差；30--120 m 曲率扫描未击穿曲率边界，30 m 为环境硬下限、瓶颈接近电缆几何物理下限而非固定曲率半径
 - 不可外推：全部是专用算法仓库的单次确定性纯仿真（n=1），不等于主仓 ROS/PVS 端到端、多种子或实物结论；30 m 是扫描下限而非实际失效阈值；埋深达标点是参数扫描最优点，不代表固定幅值全场景达标；幅值需按埋深/信号状态自适应；无声呐初始捕获仍失败，是可观测性负边界；综合健康分是任务级复合指标，机制判断需同时引用原始横偏、完成度、跳变和通过状态；results/ 在子仓库内不受 Git 跟踪、docs/figure 相对提交为 modified，故本 artifact 以各文件当前 SHA256 而非子仓库 commit 唯一确定
 - Provenance gaps：随机种子未透传，当前 n=1，无法给出多种子统计分布；真值字段仅允许离线评价，不进入在线感知管线；算法级边界尚未在主仓 ROS/PVS 端到端或真机链路上复核
@@ -118,8 +121,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### ESKF-NIS-8X3 ES-EKF 八场景三种子 NIS/R 聚合
 
-- Artifact digest：`852bd15f27022fa65ee510c3224e9727bbfd88e273a52c370719e407d52f4373`
-- 可访问字节数：`58386883`
+- Artifact digest：`ca4748fc63be1117dd397cd2fbfb7132a388668897c5fb48c6497715a863e726`
+- 可访问字节数：`58389456`
 - 可支持结论：24 个源运行与对应 MCAP 当前全部可访问；自适应 R 在八类场景均发生触发；可按观测源和自由度生成标准 NIS、卡方覆盖率、协方差和创新时序
 - 不可外推：历史 adaptive-R 滑窗混合 3 维 DVL 与 1 维深度原始 NIS，固定阈值 9.0 不具备统一卡方语义；innovation/gate proxy 仅作诊断，不得与标准 NIS 混合；30 s 与 3 seed 不构成长时漂移结论
 - Provenance gaps：历史 sweep manifest 未记录 Git commit、子模块 commit 和配置快照
@@ -366,6 +369,33 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 - Provenance gaps：原始结果位于另一设备且未回收；缺少可校验的 Jetson 环境与结果 bundle
 - **已知缺失包**：/auv_data/bags/20260713_002210；/auv_data/bags/20260713_002921；/auv_data/bags/20260713_011233；results/mpc_solve_microbench/jetson_20260713_depth_stress；results/mpc_solve_microbench/jetson_20260713_steady_200
 - 主要文件：`docs/JETSON_DEPLOYMENT_CONTEXT.md`
+
+### CONTROL-MPC-EXTREME-E1-MULTISEED MPC 极端平面路径多种子统计验证
+
+- Artifact digest：`bb1d5524c9475af4977b905b0764b8797e92fed32c9c00c7ebe52e02e24357c6`
+- 可访问字节数：`82454`
+- 可支持结论：把原 n=1 极端路径结论升级为 n=5 统计：长波 S 弯 MPC 横向 RMSE 0.133±0.034 m vs PID-LOS 1.146±0.148 m，均值±1σ 区间互不重叠，MPC 全胜；180° 发卡掉头 MPC 2.363±0.234 m vs PID-LOS 4.246±0.459 m，区间互不重叠，MPC 全胜；短波 S 弯 MPC 1.824±0.190 m 与 PID-LOS 1.672±0.043 m 统计持平，二者均优于仅航向 PID 2.725±0.315 m；同一 seed 下三控制器共享同一扰动实现与噪声流以保证公平，MPC 变体冻结为确定性通道选出的 best 以防逐 seed 樱桃摘取；不传 --seeds 时 plant 逐字节复现旧 n=1（PID/LOS 位精确，MPC 仅 IPOPT ~1e-6 浮点噪声、三位小数不变），向后兼容归档
+- 不可外推：90° 直角折弯 PID-LOS 1.003±0.513 m 最优、MPC 未领先，作为诚实边界保留，不外推为 MPC 全场景最优；该结论为离线制导闭环 + 简化艏向一阶动力学代理，非 PVS 六自由度或原生声磁闭环，也非真机；扰动为受控合成（恒定横流+初始偏移+艏向白噪声），不代表真实海流谱与传感噪声；n=5 种子为统计充分性下界，非大样本蒙特卡洛
+- Provenance gaps：源 run 落在 AUV_DATA_ROOT 隔离目录（.auv_data_e1/results/control/mpc_xy_yaw_extreme/20260813_151303），不随仓库同步；仓库内仅保留 multiseed_summary.csv/multiseed_raw.csv 派生产物；该场景族缺少与真机或 PVS 原生闭环的横向 RMSE 交叉核对
+- 主要文件：`docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/_SOURCE.md`；`docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/multiseed_summary.csv`
+
+### ESTIMATOR-E2-TRI-ESTIMATOR-FAIR 三估计器公平初始化对比重算（O-1 修复后）
+
+- Artifact digest：`c699b856536cd10d356debfcefacf795c616c9917be78930eab6ca934caf92dc`
+- 可访问字节数：`141825`
+- 可支持结论：统一三引擎初始化口径（同一 truth 起点位姿、同一 NED frame、去除手动翻 Z）后，24 次运行水平 RMSE 统计等价：Raw DR 3.197±0.695 m、Std EKF 3.196±0.692 m、ES-EKF 3.200±0.692 m，±1σ 完全重叠；深度维 12 m 恒偏伪影已消除，Z RMSE 落到 0.025/0.110/0.203 m 量级；Raw DR 因直接透传深度计读数、不做协方差融合而 Z RMSE 最小；legacy-auto 口径下 ES-EKF 水平 3.187 m 的微优被证实为首帧自对齐伪影，公平口径下消失，从根上消除 23 号 §8.1 的排序矛盾与开发文档 dvl_fixed_final 不自洽；水平三方等价属结构性可观性边界：观测仅 DVL(测速)+depth(测 z)，x/y 无绝对位置量测项，correct_gps 未接入，任何滤波器都退化为速度积分漂移；O-1 只改 benchmark 脚手架（新增 --es-ekf-init、收敛内联翻 Z 为具名 _ros_up_to_ned），不动 algorithm/es_ekf.py 主线算法
+- 不可外推：水平等价不可通过调 R 突破，须引入绝对横向观测（USBL/GPS/声磁绝对定位）才能改变阶数，属论文展望（O-5）；深度维 Std/ES-EKF 略大于 Raw DR 属协方差整定口径问题（深度 R 偏小、DVL R 过保守），非算法精度结论，可整定项见 O-3/O-4（须批准）；离线滤波误差不等于控制侧 RMSE；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声
+- Provenance gaps：逐 run 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e2_tri_estimator_fair），不随仓库同步；仓库内保留 summary/raw/pooled 派生产物与 legacy-auto 对照；尚未在 O-3/O-4 分源协方差整定后重算以验证深度维一致性改善
+- 主要文件：`docs/thesis/figures/experiments/tri_estimator_fair/_SOURCE.md`；`docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_summary.csv`；`log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv`
+
+### ESTIMATOR-E3-COVARIANCE-AB 分源自适应 R 协方差整定 A/B（O-3/O-4，独立对照，不改主线默认）
+
+- Artifact digest：`8c9887b8bee4239e8f02e31eb919694ad13ed1bfe0349db981051ff9f9f3cf8c`
+- 可访问字节数：`154928`
+- 可支持结论：baseline 臂不传任何覆盖开关即逐字节复现正文引用口径（深度 NIS/自由度 7.205、DVL 0.119），证明 A/B 与正文同口径、既有 24 矩阵与 ESKF-NIS-8X3 产物不失效、不回改；O-3 分源门控消除跨源污染：DVL 实际 R 缩放由 baseline 的 1.69x（上调占比 0.30）落回 1.000x（上调占比 0），全局机制把深度失配施加到 DVL 的伪影被切断；O-4 深度参数整定把负结果翻正：sigma_depth 0.05->0.12 后深度 NIS/自由度 7.205->3.280、95% 带覆盖率 0.561->0.735、上界超限率 0.416->0.215，逐 run 稳健（深度 3.21±1.27、覆盖率 0.739±0.072，n=24）；整定仅经 tools/uncertainty_metrics.py 新增 CLI 覆盖开关（--sigma-dvl/--sigma-depth/--adaptive-r-mode/--adaptive-r-normalized-threshold）在实验进程内改写口径，algorithm/es_ekf.py 与 brain_linux/config/params.yaml 默认协方差不变；新增 applied_r_scale 列如实记录 per_source 模式下逐源实际生效的 R 缩放，弥补 r_scale_after_update 在 per_source 恒为 1.0 而低估分源缩放的问题；既有列数值逐字节不变
+- 不可外推：DVL 过保守（NIS/自由度约 0.05）是结构性下界而非可整定项：自适应 R 仅膨胀（下界 1.0x），分源门控下 DVL 从不触发上调；根治须下调 DVL 名义协方差 sigma_dvl 本身（属改主线默认），本独立实验刻意不做，如实记为下界；整定臂为独立对照口径，未回写 es_ekf.py/params.yaml 默认，正文主结论不依赖 B/C 臂；C 臂 sigma_depth=0.12 未在闭环控制侧验证一致性收益；离线逐量测重算 NIS 不等于在线控制侧协方差一致性；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声
+- Provenance gaps：逐 bag 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e3_covariance_ab），不随仓库同步；仓库内保留 summary/raw/pooled/comparison 派生产物；整定后的默认协方差若要进入主线需单独批准并重跑既有 24 矩阵，本条目不含该主线变更
+- 主要文件：`docs/thesis/figures/experiments/covariance_ab/_SOURCE.md`；`docs/thesis/figures/experiments/covariance_ab/covariance_ab_summary.csv`；`log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv`
 
 ## 5. 当前最重要缺口
 

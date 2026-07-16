@@ -45,7 +45,7 @@ python3 tools/plot_terrain_following_figures.py \
 - `--main-result` 指向 PID/MPC 四组对比结果目录，默认使用 `results/control/terrain_following_20260610_175154`。
 - `--ablation-summary` 指向 low/mid/high 三档 PID terrain 消融汇总，默认使用 `results/control/pid_terrain_ablation_20260610_summary.csv`。
 - `--terrain-config` 用于 3D 图的确定性地形重建，默认使用 `config/bridge_params.protocol_udp.pvs.terrain.yaml`。
-- 若 bag 中存在 `/auv/visual/seabed_cloud` 或 `/auv/visual/seabed_cloud_throttled` 点云，3D 图优先使用 bag 点云；若 bag 未记录点云，则根据 bridge YAML 中 `digital_twin` 参数离线重建地形曲面。
+- 3D 图统一采用**确定性地形重建**曲面（覆盖全轨迹、忠实于运行地形公式），并叠加 AUV 沿程 DVL 实测海底高度作为验证锚；bag 中的 `seabed_cloud` 因是静态显示帧快照（覆盖有限且与世界系轨迹去相关）不再用于本图，详见 §3.6。
 
 ---
 
@@ -165,17 +165,17 @@ docs/thesis/figures/terrain_following/
 
 **文件**: `terrain_3d_pid_terrain_trajectory.pdf/png`  
 **分析脚本位置**: `tools/plot_terrain_following_figures.py::plot_3d_terrain_trajectory`  
-**数据源**: `results/control/terrain_following_20260610_175154/pid_terrain/bag_path.txt` + `config/bridge_params.protocol_udp.pvs.terrain.yaml`
+**数据源**: `results/control/terrain_following_20260619_222639/pid_terrain/bag_path.txt` + `config/bridge_params.protocol_udp.pvs.terrain.yaml`
 
  caption：
 
-> 图 X PID terrain 实验中的三维地形曲面与 AUV 轨迹。蓝色曲线表示 AUV 在显示坐标系下的三维运动轨迹，绿色虚线表示基于 3m 目标离底高度得到的目标深度轨迹，海底曲面颜色表示向下为正的海底深度。由于当前 bag 未记录可直接读取的 seabed point cloud，本图根据完整 bridge 配置中的 deterministic terrain 参数离线重建海底曲面，并叠加 bag 中记录的 AUV 轨迹。
+> 图 X PID terrain 实验中的三维海底曲面与 AUV 轨迹。海底曲面由本次运行所用确定性地形配置离线重建（颜色表示向下为正的海底深度），覆盖 AUV 全轨迹；蓝色曲线为 AUV 三维运动轨迹，绿色虚线为由 3 m 目标离底高度换算的目标深度路径，红色散点为 AUV 沿程 DVL 实测海底高度验证锚。重建曲面与实测海底沿程相关系数约 0.91、均值偏差约 −0.06 m、RMS 约 0.34 m。
 
-可追溯性说明：
+可追溯性与口径说明（2026-08-20，P2-1a 更新）：
 
-- 轨迹来自 MCAP 中 `/auv/state/filtered`。
-- 若 MCAP 中存在 `/auv/visual/seabed_cloud` 或 `/auv/visual/seabed_cloud_throttled`，脚本优先使用 bag point cloud。
-- 当前正式结果 bag 未读到 point cloud，因此脚本读取 `config/bridge_params.protocol_udp.pvs.terrain.yaml` 的 `digital_twin` 参数。
+- 轨迹来自 MCAP 中 `/auv/state/filtered`，覆盖 x∈[15.8, 62.0] m。
+- **地形曲面口径修正**：早先版本在 bag 存在 `/auv/visual/seabed_cloud` 时优先绘制该点云，但该点云是**围绕原点的静态显示帧快照**（仅 x∈[−25, 25]，且其 (x,y) 坐标与世界系轨迹去相关，corr≈−0.04），叠加世界系轨迹会造成``轨迹悬空''的误导。现统一改为由本次运行的确定性地形配置离线重建海底曲面：其公式与仿真 `synthetic_sensors.py::_terrain_height` 完全一致（seed=42、octaves=4、scale=6、amplitude=2.0、slope=3°），对全轨迹均有定义，忠实于运行本身。
+- **诚实验证**：图中叠加 AUV 沿程 DVL 实测海底高度（`clearance_source=real_altitude`）作为验证锚，重建曲面与实测沿程 r≈0.91、偏差≈−0.06 m、RMS≈0.34 m，量化标注地形可信度；样本量为 n=1 单次运行。
 - 地形重建公式复用 `sim_holoocean/interfaces/synthetic_sensors.py::berlin_noise_2d`，与仿真侧 deterministic terrain 生成逻辑一致。
 
 ---

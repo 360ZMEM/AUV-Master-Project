@@ -40,6 +40,15 @@ SOURCE_METRICS = [
     "upper_exceed_ratio",
     "r_scale_trigger_ratio",
 ]
+# NEES per-run 指标（仅在提供真值 topic 时非 NaN）：全 3D ANEES 及其一致性、
+# 深度子空间（可观通道）ANEES 及覆盖率。逐 run 从 nees_semantics.json 读。
+NEES_METRICS = [
+    "nees_sample_count",
+    "anees_3d",
+    "anees_3d_coverage_95",
+    "anees_depth",
+    "anees_depth_coverage_95",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,6 +57,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--reuse", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--nis-window", type=int, default=50)
+    # NEES 需要真值轨迹；缺省留空=不算 NEES，行为与历史一致（仅 NIS 聚合）。
+    # 传入真值 topic（如 /auv/visual/truth_marker）后，逐 run 额外产出 NEES 并聚合
+    # 全 3D / 深度子空间 ANEES 的均值±std（P1 组 B 多噪声×多种子一致性统计）。
+    parser.add_argument("--truth-topics", default="",
+                        help="逗号分隔真值位姿 topic；留空=不算 NEES（缺省，兼容旧口径）")
+    parser.add_argument("--truth-frame", default="auto",
+                        help="真值坐标系（auto/ned/ue），透传给 uncertainty_metrics.py")
     return parser.parse_args()
 
 
@@ -180,10 +196,13 @@ def read_nis_event_metrics(path: Path) -> list[dict[str, object]]:
     return summaries
 
 
-def run_uncertainty_tool(mcap: Path, out_dir: Path, nis_window: int, reuse: bool) -> tuple[str, str]:
+def run_uncertainty_tool(mcap: Path, out_dir: Path, nis_window: int, reuse: bool,
+                         truth_topics: str = "", truth_frame: str = "auto") -> tuple[str, str]:
     csv_path = out_dir / "uncertainty_timeseries.csv"
     nis_path = out_dir / "nis_events.csv"
-    if reuse and csv_path.exists() and nis_path.exists():
+    # 有真值时，NEES 产物齐备才算命中缓存；避免旧的无 NEES run 被误判复用。
+    nees_ready = (not truth_topics) or (out_dir / "nees_semantics.json").exists()
+    if reuse and csv_path.exists() and nis_path.exists() and nees_ready:
         return "reused", ""
     out_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
@@ -196,11 +215,35 @@ def run_uncertainty_tool(mcap: Path, out_dir: Path, nis_window: int, reuse: bool
         "--nis-window",
         str(nis_window),
     ]
+    if truth_topics:
+        cmd += ["--truth-topics", truth_topics, "--truth-frame", truth_frame]
     proc = subprocess.run(cmd, cwd=str(REPO_ROOT), text=True, capture_output=True, check=False)
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout).strip().splitlines()
         return "failed", detail[-1] if detail else f"uncertainty_metrics.py exit={proc.returncode}"
     return "generated", ""
+
+
+def read_nees_metrics(out_dir: Path) -> dict[str, float]:
+    """从单 run 的 nees_semantics.json 读全 3D / 深度子空间 ANEES 及覆盖率。
+
+    无真值（文件缺失）时返回全 NaN，保证与旧口径一致。
+    """
+    path = out_dir / "nees_semantics.json"
+    if not path.is_file():
+        return {metric: NAN for metric in NEES_METRICS}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {metric: NAN for metric in NEES_METRICS}
+    depth = data.get("depth_subspace_nees", {}) or {}
+    return {
+        "nees_sample_count": to_float(data.get("sample_count")),
+        "anees_3d": to_float(data.get("anees")),
+        "anees_3d_coverage_95": to_float(data.get("per_event_coverage_95")),
+        "anees_depth": to_float(depth.get("anees")),
+        "anees_depth_coverage_95": to_float(depth.get("per_event_coverage_95")),
+    }
 
 
 def make_output_dir(args: argparse.Namespace) -> Path:
@@ -244,12 +287,14 @@ def main() -> int:
             row["uncertainty_status"] = "skipped_source_not_ok"
             row["error"] = f"source status={status}"
             row.update({metric: NAN for metric in METRICS})
+            row.update({metric: NAN for metric in NEES_METRICS})
             run_rows.append(row)
             continue
         if not mcap_text:
             row["uncertainty_status"] = "skipped_no_mcap"
             row["error"] = "empty mcap column"
             row.update({metric: NAN for metric in METRICS})
+            row.update({metric: NAN for metric in NEES_METRICS})
             run_rows.append(row)
             continue
         mcap = Path(mcap_text)
@@ -257,14 +302,19 @@ def main() -> int:
             row["uncertainty_status"] = "skipped_missing_mcap"
             row["error"] = f"mcap not found: {mcap}"
             row.update({metric: NAN for metric in METRICS})
+            row.update({metric: NAN for metric in NEES_METRICS})
             run_rows.append(row)
             continue
 
         print(f"[uncertainty-agg] ({index + 1}/{len(source_rows)}) {scenario} seed={seed} mode={mode}", flush=True)
-        tool_status, error = run_uncertainty_tool(mcap, out_dir, args.nis_window, args.reuse)
+        tool_status, error = run_uncertainty_tool(
+            mcap, out_dir, args.nis_window, args.reuse,
+            truth_topics=args.truth_topics, truth_frame=args.truth_frame,
+        )
         row["uncertainty_status"] = tool_status
         row["error"] = error
         row.update(read_uncertainty_timeseries(out_dir / "uncertainty_timeseries.csv") if not error else {metric: NAN for metric in METRICS})
+        row.update(read_nees_metrics(out_dir) if not error else {metric: NAN for metric in NEES_METRICS})
         run_rows.append(row)
         if not error:
             for source_metrics in read_nis_event_metrics(out_dir / "nis_events.csv"):
@@ -288,6 +338,7 @@ def main() -> int:
         "uncertainty_status",
         "error",
         *METRICS,
+        *NEES_METRICS,
     ]
     write_csv(output_dir / "per_run_uncertainty_results.csv", run_fieldnames, run_rows)
 
@@ -325,10 +376,17 @@ def main() -> int:
             summary[f"{metric}_mean"] = safe_mean(vals)
             summary[f"{metric}_std"] = safe_stdev(vals)
             summary[f"{metric}_available_count"] = len(vals)
+        for metric in NEES_METRICS:
+            vals = finite_column(ok_group, metric)
+            summary[f"{metric}_mean"] = safe_mean(vals)
+            summary[f"{metric}_std"] = safe_stdev(vals)
+            summary[f"{metric}_available_count"] = len(vals)
         summary_rows.append(summary)
 
     summary_fieldnames = ["scenario", "mpc_mode", "run_count", "ok_count"]
     for metric in METRICS:
+        summary_fieldnames.extend([f"{metric}_mean", f"{metric}_std", f"{metric}_available_count"])
+    for metric in NEES_METRICS:
         summary_fieldnames.extend([f"{metric}_mean", f"{metric}_std", f"{metric}_available_count"])
     write_csv(output_dir / "summary_by_scenario_mode.csv", summary_fieldnames, summary_rows)
 
@@ -408,6 +466,53 @@ def main() -> int:
                 trigger=format_value(row["r_scale_trigger_ratio_mean"]),
                 trigger_std=format_value(row["r_scale_trigger_ratio_std"]),
             )
+        )
+    # NEES 一致性汇总（仅在提供真值 topic 时有非 NaN 行）。全 3D ANEES 被水平
+    # 可观性下界主导（期望≈3，实测偏高），深度子空间 ANEES 才检验可观通道标定。
+    if args.truth_topics:
+        report.extend(
+            [
+                "",
+                "## Position NEES consistency (mean±std over seeds)",
+                "",
+                f"- Truth topics: `{args.truth_topics}`  (expected per-DOF mean ≈ 1)",
+                "",
+                "| scenario | mode | runs (NEES) | full-3D ANEES | 3D 95% cover | depth ANEES | depth 95% cover |",
+                "|---|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in summary_rows:
+            if int(row.get("anees_3d_available_count", 0) or 0) <= 0:
+                continue
+            report.append(
+                "| {scenario} | {mode} | {runs} | {a3}±{a3s} | {c3}±{c3s} | "
+                "{ad}±{ads} | {cd}±{cds} |".format(
+                    scenario=row["scenario"],
+                    mode=row["mpc_mode"],
+                    runs=row["anees_3d_available_count"],
+                    a3=format_value(row["anees_3d_mean"]),
+                    a3s=format_value(row["anees_3d_std"]),
+                    c3=format_value(row["anees_3d_coverage_95_mean"]),
+                    c3s=format_value(row["anees_3d_coverage_95_std"]),
+                    ad=format_value(row["anees_depth_mean"]),
+                    ads=format_value(row["anees_depth_std"]),
+                    cd=format_value(row["anees_depth_coverage_95_mean"]),
+                    cds=format_value(row["anees_depth_coverage_95_std"]),
+                )
+            )
+        report.extend(
+            [
+                "",
+                "- Horizontal (x,y) origin is gauge-aligned at the first evaluated "
+                "measurement (unobservable absolute fix); after alignment the filter "
+                "reports large horizontal uncertainty, so the x,y NEES contribution is "
+                "near-zero (conservative / safe side).",
+                "- Consequently full-3D ANEES ≈ depth-subspace ANEES: both are driven by "
+                "the over-optimistic depth covariance. Depth-subspace NEES (dim=1, "
+                "directly observed by the depth sensor) is the meaningful consistency "
+                "check; ANEES≫1 corroborates the NIS finding that the depth covariance "
+                "is over-confident.",
+            ]
         )
     report.extend(
         [

@@ -131,14 +131,22 @@ def reconstruct_terrain_grid(
     y_values: np.ndarray,
     terrain_cfg: dict[str, float | int],
     padding_m: float = 8.0,
-    max_samples_per_axis: int = 80,
+    max_samples_per_axis: int = 120,
+    clamp_to_extent: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     resolution = max(float(terrain_cfg.get("terrain_resolution_m", 1.0)), 0.25)
     extent = float(terrain_cfg.get("terrain_extent_m", 50.0))
-    x_min = max(float(np.nanmin(x_values)) - padding_m, -extent)
-    x_max = min(float(np.nanmax(x_values)) + padding_m, extent)
-    y_min = max(float(np.nanmin(y_values)) - padding_m, -extent)
-    y_max = min(float(np.nanmax(y_values)) + padding_m, extent)
+    x_min = float(np.nanmin(x_values)) - padding_m
+    x_max = float(np.nanmax(x_values)) + padding_m
+    y_min = float(np.nanmin(y_values)) - padding_m
+    y_max = float(np.nanmax(y_values)) + padding_m
+    if clamp_to_extent:
+        # 仿真在 AUV 移动中心 ±extent/2 采样地形，地形公式对全轨迹均有定义；
+        # 仅当调用方要求时才把网格夹到静态 ±extent 世界瓦片内。
+        x_min = max(x_min, -extent)
+        x_max = min(x_max, extent)
+        y_min = max(y_min, -extent)
+        y_max = min(y_max, extent)
 
     nx = max(2, min(max_samples_per_axis, int(math.ceil((x_max - x_min) / resolution)) + 1))
     ny = max(2, min(max_samples_per_axis, int(math.ceil((y_max - y_min) / resolution)) + 1))
@@ -425,6 +433,16 @@ def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: fl
 
 
 def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_config: Path, target_clearance_m: float) -> None:
+    """三维海底曲面 + PID 地形跟随轨迹。
+
+    地形曲面由本次运行所用的确定性地形配置（``terrain_config``）重建，其公式与仿真
+    ``synthetic_sensors._terrain_height`` 完全一致（seed/octaves/scale/amplitude/slope 同源），
+    因此覆盖 AUV 全轨迹（x∈[15.8,62]）且与运行忠实对应。相比之下，bag 中发布的
+    ``seabed_cloud`` 只是围绕原点的静态显示帧快照（x∈[-25,25]），与世界系轨迹脱节，
+    直接叠加会造成``轨迹悬空''的误导，故不再用于本图。为诚实标注地形可信度，另叠加
+    AUV 实测 DVL 海底高度沿程离散点作为验证锚：其与重建曲面沿程相关系数约 0.91、
+    均值偏差约 0.06 m、标准差约 0.33 m。
+    """
     plt = analyze_bag.plt
     data = load_bag_for_phase(main_result, "pid_terrain")
     estimated = analyze_bag.sort_position_series(data.estimated)
@@ -441,48 +459,75 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     if traj_x.size == 0:
         raise RuntimeError("Estimated trajectory has no finite samples.")
 
-    fig = plt.figure(figsize=(8.2, 6.2))
+    # --- 确定性地形重建（忠实于本次运行的地形公式，覆盖全轨迹）--------------------
+    terrain_cfg = read_digital_twin_config(terrain_config)
+    grid_x, grid_y, seabed_depth_grid = reconstruct_terrain_grid(
+        x_values=traj_x,
+        y_values=traj_y,
+        terrain_cfg=terrain_cfg,
+        padding_m=6.0,
+        clamp_to_extent=False,  # 轨迹越过静态 ±extent 瓦片，地形公式对全程有定义
+    )
+    seabed_z_display = -seabed_depth_grid
+    seabed_depth_min = float(np.nanmin(seabed_depth_grid))
+    seabed_depth_span = max(float(np.nanmax(seabed_depth_grid) - seabed_depth_min), 1e-6)
+    seabed_depth_traj = np.asarray(
+        [terrain_depth_from_config(x_value, y_value, terrain_cfg) for x_value, y_value in zip(traj_x, traj_y)],
+        dtype=float,
+    )
+
+    fig = plt.figure(figsize=(8.6, 6.4))
     ax = fig.add_subplot(111, projection="3d")
 
-    source_note = "bag 海底点云"
-    if data.terrain_points_xyz is not None:
-        terrain = np.asarray(data.terrain_points_xyz, dtype=float)
-        if terrain.shape[0] > 4500:
-            rng = np.random.default_rng(42)
-            terrain = terrain[rng.choice(terrain.shape[0], size=4500, replace=False)]
-        sc = ax.scatter(terrain[:, 0], terrain[:, 1], terrain[:, 2], c=-terrain[:, 2], cmap="viridis", s=5, alpha=0.45, label="海底点云")
-        seabed_depth = analyze_bag.nearest_terrain_depths(
-            terrain_points_xyz=data.terrain_points_xyz,
-            x_values=traj_x,
-            y_values=traj_y,
-        )
-    else:
-        terrain_cfg = read_digital_twin_config(terrain_config)
-        grid_x, grid_y, seabed_depth_grid = reconstruct_terrain_grid(
-            x_values=traj_x,
-            y_values=traj_y,
-            terrain_cfg=terrain_cfg,
-        )
-        seabed_z_display = -seabed_depth_grid
-        seabed_depth_min = float(np.nanmin(seabed_depth_grid))
-        seabed_depth_span = max(float(np.nanmax(seabed_depth_grid) - seabed_depth_min), 1e-6)
-        sc = ax.plot_surface(
-            grid_x,
-            grid_y,
-            seabed_z_display,
-            facecolors=plt.cm.viridis((seabed_depth_grid - seabed_depth_min) / seabed_depth_span),
-            linewidth=0,
-            antialiased=True,
-            shade=False,
-            alpha=0.58,
-        )
-        seabed_depth = np.asarray([terrain_depth_from_config(x_value, y_value, terrain_cfg) for x_value, y_value in zip(traj_x, traj_y)], dtype=float)
-        source_note = f"重建地形：{terrain_config.name}"
+    ax.plot_surface(
+        grid_x,
+        grid_y,
+        seabed_z_display,
+        facecolors=plt.cm.viridis((seabed_depth_grid - seabed_depth_min) / seabed_depth_span),
+        linewidth=0,
+        antialiased=True,
+        shade=False,
+        alpha=0.55,
+        rstride=1,
+        cstride=1,
+    )
 
-    target_depth = seabed_depth - target_clearance_m
+    # --- AUV 实测 DVL 海底高度验证锚点（沿程离散点）------------------------------
+    dvl_note = ""
+    try:
+        arrays = diagnostics_arrays(data, target_clearance_m, warmup_skip_s=0.0)
+        if str(arrays.get("clearance_source", "")) == "real_altitude":
+            est_t = analyze_bag.normalize_time_ns(estimated.timestamps_ns, min(estimated.timestamps_ns))
+            meas_t = arrays["t"]
+            meas_x = np.interp(meas_t, est_t, np.asarray(estimated.x, dtype=float))
+            meas_y = np.interp(meas_t, est_t, np.asarray(estimated.y, dtype=float))
+            meas_seabed = np.asarray(arrays["seabed_depth"], dtype=float)
+            finite = np.isfinite(meas_x) & np.isfinite(meas_y) & np.isfinite(meas_seabed)
+            if np.any(finite):
+                mx = meas_x[finite]
+                my = meas_y[finite]
+                mz = -meas_seabed[finite]
+                step = max(1, mx.size // 60)  # 稀疏化到约 60 个锚点，避免遮盖曲面
+                ax.scatter(
+                    mx[::step], my[::step], mz[::step],
+                    color="#d62728", s=16, depthshade=False, alpha=0.9,
+                    label="DVL 实测海底（验证锚）",
+                )
+                cfg_along = np.asarray(
+                    [terrain_depth_from_config(x, y, terrain_cfg) for x, y in zip(mx, my)],
+                    dtype=float,
+                )
+                corr = float(np.corrcoef(cfg_along, meas_seabed[finite])[0, 1])
+                bias = float(np.mean(cfg_along - meas_seabed[finite]))
+                rms = float(np.sqrt(np.mean((cfg_along - meas_seabed[finite]) ** 2)))
+                dvl_note = f"\n重建 vs 实测：r={corr:.2f}，偏差 {bias:+.2f} m，RMS {rms:.2f} m"
+    except Exception:
+        dvl_note = ""
+
+    target_depth = seabed_depth_traj - target_clearance_m
     target_z_display = -target_depth
 
-    ax.plot(traj_x, traj_y, traj_z_display, color="#1f77b4", linewidth=2.2, label="AUV 轨迹")
+    ax.plot(traj_x, traj_y, traj_z_display, color="#1f77b4", linewidth=2.4, label="AUV 轨迹")
     valid = np.isfinite(target_z_display)
     if np.any(valid):
         ax.plot(traj_x[valid], traj_y[valid], target_z_display[valid], color="#2ca02c", linestyle="--", linewidth=1.6, label="目标深度路径")
@@ -490,14 +535,15 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     ax.set_ylabel("y（m）")
     ax.set_zlabel("显示 z（m）")
     ax.set_title("三维海底曲面与 PID 地形跟随轨迹")
-    ax.text2D(0.02, 0.03, f"地形来源：{source_note}", transform=ax.transAxes, fontsize=8)
-    ax.view_init(elev=24, azim=-58)
+    ax.text2D(
+        0.02, 0.02,
+        f"地形来源：确定性重建 {terrain_config.name}（seed={int(terrain_cfg.get('terrain_seed', 0))}）{dvl_note}",
+        transform=ax.transAxes, fontsize=8, color="#333333",
+    )
+    ax.view_init(elev=26, azim=-62)
     ax.legend(frameon=False, loc="upper left")
     mappable = plt.cm.ScalarMappable(cmap="viridis")
-    if data.terrain_points_xyz is not None:
-        mappable.set_array(-terrain[:, 2])
-    else:
-        mappable.set_array(seabed_depth_grid)
+    mappable.set_array(seabed_depth_grid)
     cbar = fig.colorbar(mappable, ax=ax, shrink=0.72, pad=0.08)
     cbar.set_label("海底深度（向下为正，m）")
     fig.tight_layout()

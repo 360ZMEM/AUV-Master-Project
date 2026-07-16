@@ -265,6 +265,21 @@ def _ned_to_ros_up(pos_ned: np.ndarray) -> np.ndarray:
     return np.array([pos_ned[0], pos_ned[1], -pos_ned[2]], dtype=float)
 
 
+def _ros_up_to_ned(pos_ros_up: np.ndarray) -> np.ndarray:
+    """Convert ES-EKF internal ROS-up position back to benchmark NED.
+
+    Exact inverse of ``_ned_to_ros_up``. The ES-EKF (algorithm/es_ekf.py) keeps
+    state.p in ROS-up (state.p[2] = -depth), matching the brain_linux runtime
+    contract; the offline comparator, truth pipeline and StandardEKFEngine all
+    operate in NED (z = +depth). Applying this single, named frame transform to
+    the ES-EKF output keeps all three engines in one consistent NED frame
+    without a scattered inline sign patch and without touching the main-line
+    algorithm or the truth pipeline.
+    """
+    pos_ros_up = np.asarray(pos_ros_up, dtype=float).reshape(3)
+    return np.array([pos_ros_up[0], pos_ros_up[1], -pos_ros_up[2]], dtype=float)
+
+
 def _resolve_truth_frame(topic: str, msg: Any, requested_frame: str) -> str:
     if requested_frame != "auto":
         return requested_frame
@@ -663,7 +678,14 @@ class StandardEKFEngine:
 
 
 class EseKfEngine:
-    """ES-EKF 包装器：复用 algorithm/es_ekf.py 中的 ES_EKF 类。"""
+    """ES-EKF 包装器：复用 algorithm/es_ekf.py 中的 ES_EKF 类。
+
+    公平初始化（fair-init，O-1）：当 auto_init=False 时，滤波器直接采用配置中的
+    真值起点位姿（由 main 注入的 truth 起点，ROS-up frame），不再从首帧 DVL/depth
+    自对齐。这样 ES-EKF 与 Raw DR、Std EKF 共享同一 truth 起点与同一初速，消除
+    "DR 用 truth 起点、ES-EKF 用首帧观测自对齐"造成的系统性初始偏移伪影，使三方
+    对比在方法上可信。传 auto_init=True 恢复历史自对齐行为，仅用于 A/B 复现。
+    """
 
     def __init__(self, cfg: dict, auto_init: bool = True):
         cfg = cfg.copy()
@@ -674,6 +696,10 @@ class EseKfEngine:
         cfg["bias_calibration_samples"] = 50  # 使用前50个IMU样本进行校准
         ES_EKF_CLASS = self._load_es_ekf_class()
         self.filter = ES_EKF_CLASS(cfg)
+        # 公平初始化：关闭自对齐时，把滤波器状态锁定在配置注入的 truth 起点，
+        # 并标记为已初始化，使后续观测更新直接从该起点出发（与 DR/Std EKF 一致）。
+        if not auto_init:
+            self.filter.initialize_from_observation()
         self.history_ts: list[int] = []
         self.history_p: list[np.ndarray] = []
         self.innovation_ts: list[int] = []
@@ -694,17 +720,10 @@ class EseKfEngine:
 
     def get_position(self) -> np.ndarray:
         # ES-EKF (algorithm/es_ekf.py) keeps state.p in ROS-up convention
-        # (state.p[2] = -depth, e.g. -12 for 12 m below surface), matching the
-        # brain_linux runtime contract (/auv/state/filtered, controller, TF).
-        # The offline benchmark compares against truth_pos that goes through
-        # ft.ue_position_to_ned() and StandardEKFEngine state, both NED
-        # (z = +depth). Flip Z here so the offline comparator sees a consistent
-        # NED frame across all three engines without touching the main-line
-        # algorithm or the truth pipeline.
+        # (state.p[2] = -depth). Convert to benchmark NED via the single named
+        # transform _ros_up_to_ned so all three engines share one NED frame.
         s = self.filter.get_state()
-        p = s["p"].copy()
-        p[2] = -p[2]
-        return p
+        return _ros_up_to_ned(s["p"])
 
     def predict(self, acc_body: np.ndarray, gyro_body: np.ndarray, dt: float) -> None:
         # 在首次predict之前，执行零偏预校准
@@ -1058,6 +1077,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dvl-frame", choices=["body", "world"], default="world", help="DVL 速度坐标系 (默认: world)")
     parser.add_argument("--dr-mode", choices=list(DeadReckoningEngine.VALID_MODES), default="dvl_world",
                         help="Dead Reckoning 模式 (默认: dvl_world，与 DVL world frame 数据一致)")
+    parser.add_argument("--es-ekf-init", choices=["fair", "legacy-auto"], default="fair",
+                        help="ES-EKF 初始化口径 (默认: fair=从同一 truth 起点初始化，与 DR/Std EKF 一致，"
+                             "消除首帧自对齐伪影；legacy-auto=首帧 DVL/depth 自对齐，仅用于历史 A/B 复现)")
     parser.add_argument("--dr-gyro-bias-z", type=float, default=0.0,
                         help="DR yaw 积分使用的 gyro_z bias (rad/s, 默认: 0.0)")
     parser.add_argument("--no-coordinate-transform", action="store_true",
@@ -1321,20 +1343,31 @@ def main() -> None:
         gyro_bias_z=float(args.dr_gyro_bias_z),
     )
 
+    es_ekf_fair = (args.es_ekf_init == "fair")
+
     std_ekf_cfg = ekf_cfg.copy()
     std_ekf_cfg["init_pos"] = init_pos.tolist()
     std_ekf_cfg["init_vel"] = ekf_cfg.get("init_vel", [0.0, 0.0, 0.0])
-    std_ekf_cfg["auto_init"] = True
-    std_ekf_cfg["use_first_dvl_for_init"] = True
-    std_ekf_cfg["use_first_depth_for_init"] = True
+    # Fair-init: Std EKF already starts exactly at truth[0] and does not
+    # self-align, so it is fair by construction. Keep auto_init flags on only
+    # in legacy mode to preserve historical A/B reproducibility.
+    std_ekf_cfg["auto_init"] = not es_ekf_fair
+    std_ekf_cfg["use_first_dvl_for_init"] = not es_ekf_fair
+    std_ekf_cfg["use_first_depth_for_init"] = not es_ekf_fair
 
     es_ekf_cfg = std_ekf_cfg.copy()
     es_ekf_cfg["init_pos"] = _ned_to_ros_up(init_pos).tolist()
+    # Share the same initial heading as DR/Std EKF (truth[0] orientation) so the
+    # three engines start from an identical pose, not just an identical position.
+    if truth_samples[0].quat_wxyz is not None:
+        es_ekf_cfg["init_quat_wxyz"] = truth_samples[0].quat_wxyz.tolist()
 
     std_ekf_engine = StandardEKFEngine(std_ekf_cfg)
-    es_ekf_engine = EseKfEngine(es_ekf_cfg, auto_init=True)
+    es_ekf_engine = EseKfEngine(es_ekf_cfg, auto_init=not es_ekf_fair)
 
     if args.verbose:
+        init_mode = "fair (shared truth start, no self-align)" if es_ekf_fair else "legacy-auto (first-frame self-align)"
+        print(f"  Init mode:             {init_mode}")
         print("  Dead Reckoning engine: OK")
         print("  Standard EKF engine:   OK")
         print("  ES-EKF engine:         OK")

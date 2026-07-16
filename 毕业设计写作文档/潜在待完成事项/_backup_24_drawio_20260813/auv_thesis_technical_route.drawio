@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-08-06T00:00:00.000Z" agent="draw.io" version="30.3.14">
+  <diagram id="thesis-technical-route" name="Page-1">
+    <mxGraphModel dx="1440" dy="940" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1440" pageHeight="940" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="本文技术路线" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=28;fontStyle=1;fontColor=#1F2937;" vertex="1" parent="1">
+          <mxGeometry x="420" y="20" width="600" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="面向复杂海况的自主海缆巡检需求&#xa;行业标准约束 · 近底安全 · 多源感知退化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF2F8;strokeColor=#2E75B6;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="100" width="720" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="双脑异步系统集成&#xa;Jetson 感知决策 + VxWorks 硬实时执行&#xa;虚实统一接口与安全闭环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAD3;strokeColor=#548235;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="90" y="290" width="370" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="声磁协同状态估计&#xa;ES-EKF · 时空标定 · 自适应观测协方差&#xa;协方差 → 置信度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#BF9000;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="535" y="290" width="370" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="分层决策与不确定性感知控制&#xa;行为树调度 · 之字形搜索 · UA-MPC&#xa;安全仲裁与降级/自救" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4D6;strokeColor=#C55A11;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="980" y="290" width="370" height="125" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="多层验证与边界分析&#xa;PVS 算法验证 · HoloOcean 集成验证 · 故障注入&#xa;硬件物理证据与 Sim-to-Real 迁移边界" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E4DFEC;strokeColor=#8064A2;strokeWidth=3;fontFamily=Times New Roman;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="570" width="720" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="目标：形成可解释、可验证、可迁移的 AUV 自主海缆巡检方法体系" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDEBF7;strokeColor=#2F5597;strokeWidth=3;fontFamily=Times New Roman;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="280" y="780" width="880" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="9" value="系统支撑" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.31;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="10" value="感知基础" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="控制约束" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.69;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="12" value="状态与置信度" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="13" value="系统、算法与控制验证" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="16" value="验证结论与迁移边界" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Times New Roman;fontSize=14;strokeWidth=3;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="7" target="8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

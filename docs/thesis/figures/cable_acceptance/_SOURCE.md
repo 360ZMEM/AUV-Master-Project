@@ -40,3 +40,14 @@
 - 重跑命令：`python3 tools/make_cable_tracking_gif.py --tracking-jsonl results/cable_ops_report/acceptance_fresh1_20260706_135331/tracking.jsonl --output <tmp>/cable_tracking_dynamic_fresh1.gif --last-frame-png <tmp>/cable_tracking_dynamic_fresh1_last_frame.png`
 - 核验末帧（1237 帧最后一帧）：四面板标题/轴标/图例/状态框全中文、负号正常、内部标识保留；已 cp gif + 末帧 png 迁入本目录。
 - **数据说明**：源为 fresh1 验收 run（`置信度 0.875`、埋深反演有非空序列），与组 7 fullflow 的 C 类弱数据（置信度恒 0.5、埋深 sigma 全空）不同——本图数据正常，不属 C 类。
+
+## 论文压缩降级记录（2026-08-18，批次 D 叙述凝练/整图移出正文）
+
+- `3f_replay_top_view.png`（原 `fig:ch05-pvs-closedloop-topview`）：**从正文降级归档，图片文件保留本目录不删**。理由：该图为 \(n=1\) 回放的二维俯视科普性插图，明确标注是"为便于向非专业读者解释车辆如何贴回电缆廊道"；同一次六自由度闭环恢复的权威证据已由 `pvs_closedloop_recovery_prior_alignment.png`（`fig:ch05-pvs-closedloop-recovery`，中/重档各 \(n=3\)）在正文给出。正文改以一句括注指向本图随附录 A.9/Artifact Manifest 归档。
+- 数值/结论权威源：`fig:ch05-pvs-closedloop-recovery`（auv-chap05.tex §5.5.11 第三环）+ 六自由度闭环验收表 `tab:ch05-...`（同节）。
+- `operator_acceptance_summary_fresh1.png`（原 `fig:ch05-cable-operator-summary`）：**从正文降级归档，图片文件保留本目录不删**。理由：该图为验收汇总文本框截图，其 NOT READY/扣分项（总分 24、最差项 16、埋深不足与埋深精度未达 0.15 m）已在 §5.5.10 正文完整复述，并由 `cable_dlt1278_scorecard_fresh1.png`（`fig:ch05-dlt-scorecard-run1`）以评分卡形式在正文给出，图文重复。正文改为一句列举指向本图随附录 A.8/Artifact Manifest 归档。
+
+## 论文压缩降级记录（2026-08-18，L2 表-图去重）
+
+- `direction_a_online_prior_alignment.png`（原 `fig:ch05-direction-a-prior-alignment`）：**从正文降级归档，图片文件保留本目录不删**。理由：该图为解耦轻量闭环 \(n=1\) 逐帧诊断时序，其六项稳态量（磁观测被激励/在线修正被接受/拒绝原因/横偏拟合质量/垂直分离/累积平移修正）与"近共面闭环对照"列，逐行等同于紧邻其后的表 `tab:ch05-decoupled-loop`，图表功能完全重复。同节六自由度闭环恢复的权威证据由 `pvs_closedloop_recovery_prior_alignment.png`（`fig:ch05-pvs-closedloop-recovery`，中/重档各 \(n=3\)）在正文给出。正文改为一句括注指向本图随附录 A.9/Artifact Manifest 归档。
+- 数值权威源：表 `tab:ch05-decoupled-loop`（auv-chap05.tex §5.5.11 第二环）。

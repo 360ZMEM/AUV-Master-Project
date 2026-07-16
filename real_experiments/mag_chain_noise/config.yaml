@@ -1,0 +1,42 @@
+raw_data_dir: ../../hardware_wrappers/fangkong_adc/raw_data
+output_dir: .
+
+records:
+  include_glob: "*.npz"
+  default_background:
+    - 1780675809_291477.npz
+    - 1780676130_241387.npz
+  biot_savart_joint_record: 1783235358_205719.npz
+  known_45hz_excited:
+    - 1780678630_021069.npz
+    - 1780679609_173887.npz
+    - 1780680447_127210.npz
+    - 1780680607_729347.npz
+    - 1783235089_214317.npz
+    - 1783235358_205719.npz
+
+analysis:
+  reference_frequency_hz: 45.0
+  mains_frequency_hz: 50.0
+  high_frequency_band_hz: [80.0, 300.0]
+  spectral_peak_band_hz: [1.0, 200.0]
+  welch_segment_sec: 2.0
+  lockin_window_sec: 1.0
+  lockin_hop_sec: 0.05
+  sensitivity_mv_per_ut: [20.02, 19.98, 19.96]
+
+simulation:
+  current_peak_a: 2.614048
+  wire_height_m: 0.20
+  lateral_span_m: 1.00
+  gaussian_seed: 20260821
+
+biot_savart_reference:
+  summary_json: ../../hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/fit_summary.json
+  rerun_command:
+    workdir: ../../hardware_wrappers/fangkong_adc
+    args:
+      - python3
+      - scripts/joint_biot_savart_analysis.py
+      - --adc
+      - raw_data/1783235358_205719.npz

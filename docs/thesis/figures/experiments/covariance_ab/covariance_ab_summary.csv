@@ -1,0 +1,7 @@
+arm,source,n_events,nis_per_dof_mean,coverage_95,upper_exceed,applied_r_scale_mean,r_inflated_frac
+A_baseline_default,depth,17630,7.2049,0.5607,0.4158,1.6784,0.2947
+A_baseline_default,dvl_world,17613,0.1189,0.5528,0.0000,1.6908,0.3006
+B_per_source_gating,depth,17630,8.1260,0.5666,0.4100,2.9139,0.5089
+B_per_source_gating,dvl_world,17613,0.0545,0.2307,0.0000,1.0000,0.0000
+C_per_source_tuned,depth,17630,3.2847,0.7368,0.2138,2.6587,0.4281
+C_per_source_tuned,dvl_world,17613,0.0501,0.2218,0.0000,1.0000,0.0000

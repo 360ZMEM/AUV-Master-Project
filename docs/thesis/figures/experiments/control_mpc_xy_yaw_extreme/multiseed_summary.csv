@@ -1,0 +1,13 @@
+scenario,controller,n_seeds,lateral_rmse_mean_m,lateral_rmse_std_m,yaw_rmse_mean_deg,yaw_rmse_std_deg
+s_turn_long_wave,pid_yaw_only_fixed_speed,5,2.1769,1.1043,0.8826,0.6267
+s_turn_long_wave,pid_los_fixed_speed,5,1.1465,0.1476,7.8244,2.988
+s_turn_long_wave,mpc_preview_speed,5,0.1327,0.0338,3.0378,0.5483
+s_turn_short_wave,pid_yaw_only_fixed_speed,5,2.725,0.3148,58.3749,1.5835
+s_turn_short_wave,pid_los_fixed_speed,5,1.672,0.0425,63.1746,2.7959
+s_turn_short_wave,mpc_preview_speed,5,1.8242,0.1895,67.1585,4.6758
+chicane_90deg,pid_yaw_only_fixed_speed,5,3.4287,0.4594,41.9315,5.7775
+chicane_90deg,pid_los_fixed_speed,5,1.0031,0.5134,24.4076,2.1448
+chicane_90deg,mpc_preview_speed,5,1.5671,0.4603,29.7586,3.1069
+hairpin_180deg,pid_yaw_only_fixed_speed,5,4.4982,1.2778,2.799,2.0892
+hairpin_180deg,pid_los_fixed_speed,5,4.2462,0.4592,61.9281,6.8578
+hairpin_180deg,mpc_preview_speed,5,2.3634,0.2338,53.8102,28.2433

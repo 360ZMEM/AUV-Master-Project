@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "sweep_source": "/home/auv_user/auv_ws/AUV-Master-Project/log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv",
+  "nees_source": "/home/auv_user/auv_ws/AUV-Master-Project/results/uncertainty_aggregates/20260820_p1_nees/summary_by_scenario_mode.csv",
+  "scenarios": {
+    "dvl_dropout_10": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 2.9723333333333333,
+      "xy_std": 1.4092105354890494,
+      "z_mean": 0.20299999999999999,
+      "z_std": 0.025514701644346154,
+      "nees": {
+        "anees_depth": 794.19,
+        "anees_depth_std": 115.718,
+        "cov95": 0.0817414
+      }
+    },
+    "dvl_dropout_30": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 3.3733333333333335,
+      "xy_std": 0.13400497503202397,
+      "z_mean": 0.20200000000000004,
+      "z_std": 0.009165151389911672,
+      "nees": {
+        "anees_depth": 753.104,
+        "anees_depth_std": 64.7424,
+        "cov95": 0.119674
+      }
+    },
+    "dvl_dropout_60": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 2.8863333333333334,
+      "xy_std": 0.45564935348723296,
+      "z_mean": 0.22033333333333335,
+      "z_std": 0.010503967504392496,
+      "nees": {
+        "anees_depth": 846.461,
+        "anees_depth_std": 34.5824,
+        "cov95": 0.0951424
+      }
+    },
+    "dvl_dropout_90": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 3.5483333333333333,
+      "xy_std": 0.22606709918370113,
+      "z_mean": 0.19266666666666668,
+      "z_std": 0.0405010287935175,
+      "nees": {
+        "anees_depth": 783.481,
+        "anees_depth_std": 133.558,
+        "cov95": 0.0638843
+      }
+    },
+    "mag_distortion_light": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 2.7579999999999996,
+      "xy_std": 0.3412667578302932,
+      "z_mean": 0.18066666666666667,
+      "z_std": 0.007505553499465142,
+      "nees": {
+        "anees_depth": 681.67,
+        "anees_depth_std": 33.6885,
+        "cov95": 0.141688
+      }
+    },
+    "mag_distortion_heavy": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 3.416,
+      "xy_std": 0.10267911179982021,
+      "z_mean": 0.222,
+      "z_std": 0.021283796653792753,
+      "nees": {
+        "anees_depth": 849.578,
+        "anees_depth_std": 82.3634,
+        "cov95": 0.102482
+      }
+    },
+    "sonar_clutter": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 3.2669999999999995,
+      "xy_std": 1.058638748582348,
+      "z_mean": 0.20033333333333334,
+      "z_std": 0.029670411748631564,
+      "nees": {
+        "anees_depth": 789.801,
+        "anees_depth_std": 119.881,
+        "cov95": 0.0809573
+      }
+    },
+    "combined_stress": {
+      "n": 3.0,
+      "n_ok": 3.0,
+      "xy_mean": 3.2720000000000002,
+      "xy_std": 1.0894379284750464,
+      "z_mean": 0.20366666666666666,
+      "z_std": 0.023158871590242335,
+      "nees": {
+        "anees_depth": 751.272,
+        "anees_depth_std": 126.986,
+        "cov95": 0.166718
+      }
+    }
+  }
+}

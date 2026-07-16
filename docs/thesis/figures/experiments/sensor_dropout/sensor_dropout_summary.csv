@@ -1,0 +1,9 @@
+scenario,label,family,n_ok,xy_rmse_mean,xy_rmse_std,z_rmse_mean,z_rmse_std,anees_depth,anees_depth_coverage_95
+dvl_dropout_10,DVL 丢包 10%,dvl,3,2.9723,1.4092,0.2030,0.0255,794.1900,0.0817
+dvl_dropout_30,DVL 丢包 30%,dvl,3,3.3733,0.1340,0.2020,0.0092,753.1040,0.1197
+dvl_dropout_60,DVL 丢包 60%,dvl,3,2.8863,0.4556,0.2203,0.0105,846.4610,0.0951
+dvl_dropout_90,DVL 丢包 90%,dvl,3,3.5483,0.2261,0.1927,0.0405,783.4810,0.0639
+mag_distortion_light,磁畸变·轻度,mag,3,2.7580,0.3413,0.1807,0.0075,681.6700,0.1417
+mag_distortion_heavy,磁畸变·重度,mag,3,3.4160,0.1027,0.2220,0.0213,849.5780,0.1025
+sonar_clutter,声呐杂波,other,3,3.2670,1.0586,0.2003,0.0297,789.8010,0.0810
+combined_stress,综合压力(含横流),other,3,3.2720,1.0894,0.2037,0.0232,751.2720,0.1667
