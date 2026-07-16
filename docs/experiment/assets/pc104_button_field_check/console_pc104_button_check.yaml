@@ -1,0 +1,34 @@
+zenoh:
+  router_ip: 127.0.0.1
+  router_port: 7447
+  mode: client
+  enabled: false
+  pc_cmd_raw_key: rt/pc/cmd_raw
+  telemetry_key: rt/auv/telemetry
+  viz_internal_key: rt/auv/viz/internal
+  publish_cmd_raw: true
+  subscribe_bridge_telemetry: true
+  subscribe_viz_internal: false
+udp:
+  local_ip: 127.0.0.1
+  local_port: 52366
+  amd_ip: 127.0.0.1
+  amd_port: 52364
+packet:
+  obj_address: 1
+  work_mode: 1
+  depth_proprotect_param1: 500
+  depth_proprotect_param2: 29
+  bottom_proprotect_param1: 300
+  bottom_proprotect_param2: 200
+  preset_time: 10
+communication:
+  heartbeat_hz: 5.0
+  pc_timeout_s: 1.5
+  soft_warning_s: 1.0
+defaults:
+  work_mode: 1
+  target_depth_m: 5.0
+  track_distance_m: 500.0
+  task_timeout_s: 1200
+  mission_type: CABLE_TRACKING

@@ -538,11 +538,20 @@ class AUVBridgeNode(Node):
         control_mode_byte = int(payload.get(KEY_CONTROL_MODE_BYTE, int(ControlModeByte.REMOTE_CONTROL)))
         work_instruction = int(payload.get(KEY_WORK_INSTRUCTION, int(WorkInstruction.NONE)))
 
-        if work_instruction in {int(WorkInstruction.TASK_CANCEL), int(WorkInstruction.CLEAR_FAULT)}:
+        if work_instruction == int(WorkInstruction.TASK_CANCEL):
             # ESTOP：无论当前状态，立即锁回遥控
             guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
             decision = self.command_arbiter.force_remote(payload, now=now)
             self.get_logger().warn('[bridge] ESTOP/MANUAL_OVERRIDE received, forcing REMOTE')
+        elif work_instruction == int(WorkInstruction.CLEAR_FAULT):
+            guard_decision = self.autonomy_guard.clear_manual_override()
+            clear_payload = self._zero_manual_payload(
+                payload,
+                control_mode_byte=int(ControlModeByte.REMOTE_CONTROL),
+                work_instruction=int(WorkInstruction.CLEAR_FAULT),
+            )
+            decision = self.command_arbiter.force_remote(clear_payload, now=now)
+            self.get_logger().warn('[bridge] CLEAR_FAULT received, manual override lock cleared')
         elif control_mode_byte == int(ControlModeByte.JETSON_PROTOCOL):
             # 自主申请：守卫检查
             guard_decision = self.autonomy_guard.request_activation(
@@ -560,8 +569,25 @@ class AUVBridgeNode(Node):
                 self.get_logger().warn('[bridge] Autonomy guard rejected, forcing zero-thrust REMOTE')
         else:
             # 手动模式：透明路由
-            guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.NONE)
-            decision = self.command_arbiter.update_pc_raw_command(payload, now=now)
+            if (
+                self.autonomy_guard.auto_state == AutoState.LOCKED
+                and self.autonomy_guard.deny_reason == DenyReason.MANUAL_OVERRIDE
+            ):
+                guard_decision = GuardDecision(
+                    auto_state=self.autonomy_guard.auto_state,
+                    deny_reason=self.autonomy_guard.deny_reason,
+                    autonomy_allowed=False,
+                )
+                locked_payload = self._zero_manual_payload(
+                    payload,
+                    control_mode_byte=int(ControlModeByte.REMOTE_CONTROL),
+                    work_instruction=work_instruction,
+                )
+                decision = self.command_arbiter.force_remote(locked_payload, now=now)
+                self.get_logger().warn('[bridge] manual command rejected while ESTOP lock is active')
+            else:
+                guard_decision = self.autonomy_guard.lock(deny_reason=DenyReason.NONE)
+                decision = self.command_arbiter.update_pc_raw_command(payload, now=now)
 
         self.last_arbiter_decision = decision
         self._publish_arbiter_decision(decision, guard_decision=guard_decision)
@@ -648,6 +674,29 @@ class AUVBridgeNode(Node):
             KEY_PARAMETERS: (0,) * 12,
             KEY_TS: ts,
         }
+
+    def _zero_manual_payload(
+        self,
+        payload: dict[str, Any],
+        *,
+        control_mode_byte: int,
+        work_instruction: int,
+    ) -> dict[str, Any]:
+        """构造零执行器手动包，用于安全锁清除和手动覆盖路径。"""
+        safe_payload = dict(payload)
+        safe_payload[KEY_CONTROL_MODE_BYTE] = int(control_mode_byte)
+        safe_payload[KEY_WORK_INSTRUCTION] = int(work_instruction)
+        safe_payload[KEY_THRUST] = 0.0
+        safe_payload[KEY_LEFT] = 0.0
+        safe_payload[KEY_RIGHT] = 0.0
+        safe_payload[KEY_TOP] = 0.0
+        safe_payload[KEY_BOTTOM] = 0.0
+        safe_payload[KEY_SIDE_MOTOR_RPM] = 0
+        safe_payload.setdefault(KEY_DEPTH_PROTECT_PARAMS, self.default_remote_depth_protect_params)
+        safe_payload.setdefault(KEY_BOTTOM_PROTECT_PARAMS, self.default_remote_bottom_protect_params)
+        safe_payload.setdefault(KEY_PRESET_TIME_TENTHS_MIN, self.default_remote_preset_time_tenths_min)
+        safe_payload[KEY_TS] = time.time()
+        return safe_payload
 
     def _zero_command_payload(self) -> dict[str, Any]:
         """构造零控制输出，作为超时或空闲时的安全兜底。"""

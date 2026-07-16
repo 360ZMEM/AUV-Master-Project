@@ -1,0 +1,22 @@
+[SYMBOLS]
+  DVL_Prase_Data                       0x536e40
+  Current_State                        0x536bc0
+  UI_WIFI_Instruction                  0x536b60
+  Instruction_To_FMCU                  0x536dc0
+  Sys_Abnorm_Inf_Judgement             0x51724c
+  Seafloor_Grounding_Arbitration       0x33d347
+
+[BASELINE]
+  Sys_Abnorm=0x00002000
+  DVL: BD_Check=0.000 BD_Height=0.000
+  Current_State: mode=1 work=0x00 dep=0.000 pitch=0.000 dvl_kn=0.000
+  UI_WIFI: ctrl=1 para1=500 work=0x00
+  Instruction_To_FMCU: motor1=0 lh=2048 rh=2048
+
+[DRY-RUN] 未使用 --execute, 不会写入板上内存。
+  DVL_Prase_Data.BD_Height  -> 0x536e58
+  DVL_Prase_Data.BD_Check   -> 0x536e60
+  Current_State.Current_Mode -> 0x536bc2
+  Current_State.Current_Dep  -> 0x536bf4
+  UI_WIFI ctrl/DepthPara1    -> 0x536b67 / 0x536b68
+  执行示例: /usr/bin/python3 scripts/vxworks_dvl_runtime_probe.py --execute --case soft --suspend-runtime-tasks

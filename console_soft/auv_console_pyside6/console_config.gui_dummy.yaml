@@ -1,0 +1,20 @@
+# AUV Console GUI-only dummy profile.
+# Used for headless layout screenshots; it must not target the PC104 link.
+zenoh:
+  enabled: false
+  router_ip: "127.0.0.1"
+  router_port: 7447
+  mode: "client"
+
+udp:
+  local_ip: "127.0.0.1"
+  local_port: 59966
+  amd_ip: "127.0.0.1"
+  amd_port: 59964
+
+defaults:
+  work_mode: 1
+  target_depth_m: 5.0
+  track_distance_m: 500.0
+  task_timeout_s: 1200
+  mission_type: "CABLE_TRACKING"

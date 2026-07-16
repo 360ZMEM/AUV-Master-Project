@@ -47,6 +47,8 @@ PC104 <-> scripts/pc104_udp_fanout.py <-> ROS2/PySide6
 - ROS2 使用 `127.0.0.1:52365` 接收上行、向 `127.0.0.1:52364` 下行。
 - PySide6 使用 `127.0.0.1:52366` 接收上行、向 `127.0.0.1:52364` 下行。
 - 默认只允许零执行器 `$CKTH`，非零主推/侧推/舵角会被拒绝，除非显式启用非零执行器选项。
+- Docker Desktop/macOS UDP publish 场景下，容器内可能看到上行源为 Docker 网关；此时保持 `--pc104-remote-host 192.168.0.101`，并额外传
+  `--accept-uplink-source 172.18.0.1`。
 
 常用命令:
 

@@ -57,6 +57,9 @@ class AutonomyGuard:
         sensor_status: dict[str, Any] | None,
         telemetry_status: dict[str, Any] | None,
     ) -> GuardDecision:
+        if self._state == AutoState.LOCKED and self._deny_reason == DenyReason.MANUAL_OVERRIDE:
+            return GuardDecision(auto_state=self._state, deny_reason=self._deny_reason, autonomy_allowed=False)
+
         self._state = AutoState.REQUESTING
         deny_reason = self._evaluate(sensor_status=sensor_status, telemetry_status=telemetry_status)
         if deny_reason == DenyReason.NONE:
@@ -90,8 +93,20 @@ class AutonomyGuard:
         return GuardDecision(auto_state=self._state, deny_reason=self._deny_reason, autonomy_allowed=False)
 
     def lock(self, *, deny_reason: DenyReason = DenyReason.MANUAL_OVERRIDE) -> GuardDecision:
+        if (
+            self._state == AutoState.LOCKED
+            and self._deny_reason == DenyReason.MANUAL_OVERRIDE
+            and deny_reason == DenyReason.NONE
+        ):
+            return GuardDecision(auto_state=self._state, deny_reason=self._deny_reason, autonomy_allowed=False)
+
         self._state = AutoState.LOCKED
         self._deny_reason = deny_reason
+        return GuardDecision(auto_state=self._state, deny_reason=self._deny_reason, autonomy_allowed=False)
+
+    def clear_manual_override(self) -> GuardDecision:
+        if self._state == AutoState.LOCKED and self._deny_reason == DenyReason.MANUAL_OVERRIDE:
+            self._deny_reason = DenyReason.NONE
         return GuardDecision(auto_state=self._state, deny_reason=self._deny_reason, autonomy_allowed=False)
 
     def _evaluate(

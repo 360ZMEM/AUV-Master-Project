@@ -10,12 +10,13 @@ import yaml
 from datetime import datetime
 from pathlib import Path
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+                               QGridLayout, QSizePolicy,
                                QGroupBox, QLabel, QPushButton, QTableWidget,
                                QTableWidgetItem, QTabWidget, QStatusBar, QTextEdit,
                                QComboBox, QSpinBox, QCheckBox, QButtonGroup, QMessageBox,
                                QLineEdit, QDoubleSpinBox)
 from PySide6.QtCore import Qt, QTimer, Signal
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QPalette
 
 from ..data_structures import Preferences, GPSQueue
 from ..communication.comm_manager import CommunicationManager, CommunicationMode
@@ -95,22 +96,57 @@ class MainWindow(QMainWindow):
         self.load_configuration()
         self.connect_signals()
 
+    def semantic_label_style(self, role: str = "normal", font_size: int | None = None,
+                             bold: bool = False) -> str:
+        """
+        @brief Return contrast-aware QLabel style for light and dark palettes.
+        @param role Semantic color role: normal, success, info, warning, danger.
+        @param font_size Optional font size in px.
+        @param bold Whether the label should be bold.
+        @author 清华 AUV 课题组
+        """
+        dark_palette = self.palette().color(QPalette.ColorRole.Window).lightness() < 128
+        colors = {
+            "normal": None,
+            "success": "#00e676" if dark_palette else "#1b5e20",
+            "info": "#64b5f6" if dark_palette else "#0d47a1",
+            "warning": "#ffd54f" if dark_palette else "#8a5a00",
+            "danger": "#ff6b6b" if dark_palette else "#b71c1c",
+        }
+        rules = []
+        color = colors.get(role)
+        if color:
+            rules.append(f"color: {color};")
+        if font_size is not None:
+            rules.append(f"font-size: {font_size}px;")
+        if bold:
+            rules.append("font-weight: bold;")
+        return " ".join(rules)
+
     def init_ui(self):
         """Initialize all UI components"""
         self.setWindowTitle("AUV Console (Python/PySide6)")
-        self.setGeometry(100, 100, 1400, 900)
+        self.setGeometry(20, 40, 1280, 820)
+        self.setMinimumSize(1120, 720)
 
         # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QVBoxLayout(central_widget)
+        main_layout.setContentsMargins(8, 8, 8, 6)
+        main_layout.setSpacing(8)
 
         # Top section: Telemetry displays
         telemetry_group = self.create_telemetry_group()
         main_layout.addWidget(telemetry_group)
 
-        # Middle section: Map and controls
-        middle_split = QHBoxLayout()
+        # Middle section: Map and controls. Keep this area taller than the tabs.
+        middle_widget = QWidget()
+        middle_widget.setMinimumHeight(285)
+        middle_widget.setMaximumHeight(330)
+        middle_split = QHBoxLayout(middle_widget)
+        middle_split.setContentsMargins(0, 0, 0, 0)
+        middle_split.setSpacing(8)
 
         # Map widget
         self.map_widget = MapWidget(self)
@@ -120,18 +156,21 @@ class MainWindow(QMainWindow):
         control_panel = self.create_control_panel()
         middle_split.addWidget(control_panel, stretch=1)
 
-        main_layout.addLayout(middle_split)
+        main_layout.addWidget(middle_widget, stretch=1)
 
         # Bottom: Tab widget (compressed height)
         self.tab_widget = QTabWidget()
         self.tab_widget.addTab(self.create_waypoint_tab(), "航点规划")
         self.tab_widget.addTab(self.create_mission_tab(), "任务配置")
         self.tab_widget.addTab(self.create_message_tab(), "消息")
-        main_layout.addWidget(self.tab_widget, stretch=2)  # More space for tab widget
+        self.tab_widget.addTab(self.create_diagnostics_tab(), "诊断监控")
+        self.tab_widget.setMinimumHeight(135)
+        self.tab_widget.setMaximumHeight(190)
+        main_layout.addWidget(self.tab_widget, stretch=0)
 
-        # 新增：底部控制台 - 最高优先级操作区（拉高高度）
+        # 新增：底部控制台 - 最高优先级操作区
         self.control_bar = self.create_bottom_control_bar()
-        main_layout.addWidget(self.control_bar, stretch=1)  # Balanced height
+        main_layout.addWidget(self.control_bar, stretch=0)
 
         # Status bar
         self.status_bar = QStatusBar()
@@ -206,34 +245,42 @@ class MainWindow(QMainWindow):
         group = QGroupBox("控制面板")
         group.setContentsMargins(8, 10, 8, 8)  # Balanced margins
         main_layout = QHBoxLayout()  # Main layout is horizontal (two columns)
-        main_layout.setContentsMargins(4, 4, 4, 4)  # Balanced inner margins
-        main_layout.setSpacing(4)  # Reasonable spacing
+        main_layout.setContentsMargins(6, 6, 6, 6)  # Balanced inner margins
+        main_layout.setSpacing(8)  # Reasonable spacing
+        panel_group_style = (
+            "QGroupBox { margin-top: 12px; padding-top: 12px; }"
+            "QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; }"
+        )
 
         # Left column
         left_layout = QVBoxLayout()
-        left_layout.setContentsMargins(3, 3, 3, 3)
-        left_layout.setSpacing(3)
+        left_layout.setContentsMargins(4, 4, 4, 4)
+        left_layout.setSpacing(6)
 
         # Task control - 2x2 grid layout
         task_group = QGroupBox("任务控制")
-        task_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        task_group.setStyleSheet(panel_group_style)
         task_layout = QVBoxLayout()
-        task_layout.setContentsMargins(3, 3, 3, 3)
-        task_layout.setSpacing(2)
+        task_layout.setContentsMargins(6, 10, 6, 6)
+        task_layout.setSpacing(6)
 
         self.btn_task_start = QPushButton("任务开启")
         self.btn_task_cancel = QPushButton("任务取消")
         self.btn_clear_fault = QPushButton("清除故障")
         self.btn_init = QPushButton("初始化")
+        for btn in (self.btn_task_start, self.btn_task_cancel, self.btn_clear_fault, self.btn_init):
+            btn.setMinimumHeight(28)
 
         # Row 1
         task_row1 = QHBoxLayout()
+        task_row1.setSpacing(6)
         task_row1.addWidget(self.btn_task_start)
         task_row1.addWidget(self.btn_task_cancel)
         task_layout.addLayout(task_row1)
 
         # Row 2
         task_row2 = QHBoxLayout()
+        task_row2.setSpacing(6)
         task_row2.addWidget(self.btn_clear_fault)
         task_row2.addWidget(self.btn_init)
         task_layout.addLayout(task_row2)
@@ -242,16 +289,19 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(task_group)
 
         arbiter_group = QGroupBox("仲裁控制")
-        arbiter_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        arbiter_group.setStyleSheet(panel_group_style)
         arbiter_layout = QVBoxLayout()
-        arbiter_layout.setContentsMargins(3, 3, 3, 3)
-        arbiter_layout.setSpacing(2)
+        arbiter_layout.setContentsMargins(6, 10, 6, 6)
+        arbiter_layout.setSpacing(5)
         arbiter_button_row = QHBoxLayout()
+        arbiter_button_row.setSpacing(6)
 
         self.btn_request_autonomy = QPushButton("请求自主")
         self.btn_request_autonomy.setCheckable(True)
         self.btn_request_autonomy.setStyleSheet("QPushButton:checked { background-color: LightBlue; }")
         self.btn_manual_takeover = QPushButton("手动接管")
+        self.btn_request_autonomy.setMinimumHeight(28)
+        self.btn_manual_takeover.setMinimumHeight(28)
 
         arbiter_button_row.addWidget(self.btn_request_autonomy)
         arbiter_button_row.addWidget(self.btn_manual_takeover)
@@ -268,23 +318,26 @@ class MainWindow(QMainWindow):
 
         # Right column
         right_layout = QVBoxLayout()
-        right_layout.setContentsMargins(3, 3, 3, 3)
-        right_layout.setSpacing(3)
+        right_layout.setContentsMargins(4, 4, 4, 4)
+        right_layout.setSpacing(6)
 
         # Communication mode
         comm_group = QGroupBox("通信模式")
-        comm_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        comm_group.setStyleSheet(panel_group_style)
         comm_layout = QVBoxLayout()  # Changed to vertical to fit in narrow column
-        comm_layout.setContentsMargins(3, 3, 3, 3)
-        comm_layout.setSpacing(2)
+        comm_layout.setContentsMargins(6, 10, 6, 6)
+        comm_layout.setSpacing(6)
 
         self.btn_radio = QPushButton("无线电")
         self.btn_wifi = QPushButton("WiFi")
         self.btn_wifi.setCheckable(True)
         self.btn_wifi.setChecked(True)
         self.btn_beidou = QPushButton("北斗")
+        for btn in (self.btn_radio, self.btn_wifi, self.btn_beidou):
+            btn.setMinimumHeight(28)
 
         comm_row1 = QHBoxLayout()
+        comm_row1.setSpacing(6)
         comm_row1.addWidget(self.btn_radio)
         comm_row1.addWidget(self.btn_wifi)
         comm_layout.addLayout(comm_row1)
@@ -295,15 +348,17 @@ class MainWindow(QMainWindow):
 
         # Operation mode
         mode_group = QGroupBox("运行模式")
-        mode_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        mode_group.setStyleSheet(panel_group_style)
         mode_layout = QHBoxLayout()
-        mode_layout.setContentsMargins(3, 3, 3, 3)
-        mode_layout.setSpacing(2)
+        mode_layout.setContentsMargins(6, 10, 6, 6)
+        mode_layout.setSpacing(6)
 
         self.btn_online_mode = QPushButton("在线模式")
         self.btn_online_mode.setCheckable(True)
         self.btn_offline_mode = QPushButton("离线模式")
         self.btn_offline_mode.setCheckable(True)
+        self.btn_online_mode.setMinimumHeight(28)
+        self.btn_offline_mode.setMinimumHeight(28)
 
         # Create button group for mutual exclusion
         self.mode_button_group = QButtonGroup()
@@ -323,27 +378,31 @@ class MainWindow(QMainWindow):
 
         # Quick actions (compact vertical layout)
         action_group = QGroupBox("快捷操作")
-        action_group.setStyleSheet("QGroupBox { margin-top: 5px; padding-top: 5px; }")
+        action_group.setStyleSheet(panel_group_style)
         action_layout = QVBoxLayout()
-        action_layout.setContentsMargins(3, 3, 3, 3)
-        action_layout.setSpacing(2)
+        action_layout.setContentsMargins(6, 10, 6, 6)
+        action_layout.setSpacing(6)
 
         self.btn_extend = QPushButton("扩展控制...")
         self.btn_settings = QPushButton("端口设置...")
         self.btn_load_xml = QPushButton("导入航点...")
         self.btn_save_xml = QPushButton("导出航点...")
+        for btn in (self.btn_extend, self.btn_settings, self.btn_load_xml, self.btn_save_xml):
+            btn.setMinimumHeight(28)
 
         # Two-row layout for buttons
         action_row1 = QHBoxLayout()
+        action_row1.setSpacing(6)
         action_row1.addWidget(self.btn_extend)
         action_row1.addWidget(self.btn_settings)
         action_layout.addLayout(action_row1)
-        
+
         action_row2 = QHBoxLayout()
+        action_row2.setSpacing(6)
         action_row2.addWidget(self.btn_load_xml)
         action_row2.addWidget(self.btn_save_xml)
         action_layout.addLayout(action_row2)
-        
+
         action_group.setLayout(action_layout)
         right_layout.addWidget(action_group)
         right_layout.addStretch()
@@ -368,7 +427,7 @@ class MainWindow(QMainWindow):
         self.waypoint_table.setHorizontalHeaderLabels([
             "序号", "经度", "纬度", "策略", "参数", "电机转速", "设备控制"
         ])
-        self.waypoint_table.setMaximumHeight(150)  # Limit height to compress tab
+        self.waypoint_table.setMaximumHeight(105)  # Keep waypoint area flat per main-screen layout.
         layout.addWidget(self.waypoint_table)
 
         # Buttons
@@ -442,6 +501,81 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.message_log)
 
         widget.setLayout(layout)
+        return widget
+
+    def create_diagnostics_tab(self) -> QWidget:
+        """
+        @brief Create a secondary diagnostics page for link and cable-monitor details.
+        @author 清华 AUV 课题组
+        """
+        widget = QWidget()
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(10)
+
+        left_col = QVBoxLayout()
+        left_col.setSpacing(8)
+
+        zenoh_group = QGroupBox("Zenoh 链路")
+        zenoh_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        zenoh_layout = QGridLayout(zenoh_group)
+        zenoh_layout.setContentsMargins(10, 12, 10, 8)
+        zenoh_layout.setHorizontalSpacing(8)
+        zenoh_layout.setVerticalSpacing(6)
+        zenoh_layout.addWidget(QLabel("Router IP:"), 0, 0)
+        self.edit_zenoh_ip = QLineEdit("127.0.0.1")
+        self.edit_zenoh_ip.setMinimumWidth(140)
+        zenoh_layout.addWidget(self.edit_zenoh_ip, 0, 1)
+
+        self.lbl_zenoh_status = QLabel("状态: 未连接")
+        self.lbl_zenoh_status.setStyleSheet(self.semantic_label_style("danger", 12, True))
+        zenoh_layout.addWidget(self.lbl_zenoh_status, 1, 0, 1, 2)
+
+        self.btn_zenoh_connect = QPushButton("连接 Zenoh")
+        self.btn_zenoh_connect.setMinimumHeight(30)
+        zenoh_layout.addWidget(self.btn_zenoh_connect, 2, 0, 1, 2)
+        left_col.addWidget(zenoh_group)
+
+        conf_group = QGroupBox("传感器置信度")
+        conf_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
+        conf_layout = QVBoxLayout(conf_group)
+        conf_layout.setContentsMargins(10, 12, 10, 8)
+        self.lbl_confidence = QLabel("置信度: --")
+        self.lbl_confidence.setStyleSheet("font-size: 16px; font-weight: bold;")
+        conf_layout.addWidget(self.lbl_confidence)
+        left_col.addWidget(conf_group)
+        left_col.addStretch()
+
+        cable_group = QGroupBox("电缆巡检监控")
+        cable_group.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        cable_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 14px; }")
+        cable_layout = QGridLayout(cable_group)
+        cable_layout.setContentsMargins(10, 12, 10, 8)
+        cable_layout.setHorizontalSpacing(14)
+        cable_layout.setVerticalSpacing(5)
+
+        self.lbl_cable_ready = QLabel("结论: --")
+        self.lbl_cable_ready.setStyleSheet("font-size: 17px; font-weight: bold;")
+        self.lbl_cable_metrics = QLabel("偏移/埋深/进度: --")
+        self.lbl_cable_quality = QLabel("置信度/SNR: --")
+        self.lbl_cable_dlt = QLabel("DL/T状态/扣分合计: --")
+        self.lbl_cable_dlt.setStyleSheet("font-size: 14px; font-weight: bold;")
+        self.lbl_cable_score_items = QLabel("扣分项: --")
+        self.lbl_cable_score_items.setWordWrap(True)
+        self.lbl_cable_flags = QLabel("验收标志: --")
+        self.lbl_cable_products = QLabel("产物链: --")
+        self.lbl_cable_products.setWordWrap(True)
+
+        cable_layout.addWidget(self.lbl_cable_ready, 0, 0, 1, 2)
+        cable_layout.addWidget(self.lbl_cable_metrics, 1, 0)
+        cable_layout.addWidget(self.lbl_cable_quality, 1, 1)
+        cable_layout.addWidget(self.lbl_cable_dlt, 2, 0)
+        cable_layout.addWidget(self.lbl_cable_flags, 2, 1)
+        cable_layout.addWidget(self.lbl_cable_score_items, 3, 0, 1, 2)
+        cable_layout.addWidget(self.lbl_cable_products, 4, 0, 1, 2)
+
+        layout.addLayout(left_col, stretch=0)
+        layout.addWidget(cable_group, stretch=1)
         return widget
 
     def resolve_console_config_path(self) -> Path:
@@ -577,17 +711,23 @@ class MainWindow(QMainWindow):
     def create_bottom_control_bar(self) -> QWidget:
         """创建底部控制台 - 最高优先级操作区"""
         bar = QWidget()
-        bar.setStyleSheet("background-color: #1e1e1e; border-top: 2px solid #555;")
-        bar.setMinimumHeight(140)  # 增加最小高度
+        bar.setObjectName("criticalControlBar")
+        bar.setStyleSheet(
+            "QWidget#criticalControlBar { border-top: 1px solid palette(mid); }"
+            "QWidget#criticalControlBar QGroupBox { font-weight: bold; font-size: 13px; }"
+        )
+        bar.setMinimumHeight(118)
+        bar.setMaximumHeight(150)
         layout = QHBoxLayout(bar)
-        layout.setContentsMargins(12, 8, 12, 8)  # 增加边距
-        layout.setSpacing(12)  # 增加组件间距
+        layout.setContentsMargins(10, 6, 10, 6)
+        layout.setSpacing(10)
 
         # 1. 紧急切断按钮（醒目红色，带显式复位）
         estop_layout = QVBoxLayout()
+        estop_layout.setSpacing(6)
         self.btn_estop = QPushButton("🛑 紧急切断 ESTOP")
-        self.btn_estop.setMinimumWidth(180)
-        self.btn_estop.setMinimumHeight(50)
+        self.btn_estop.setMinimumWidth(176)
+        self.btn_estop.setMinimumHeight(46)
         self.btn_estop.setStyleSheet(
             "QPushButton { background-color: #cc0000; color: white; font-weight: bold; "
             "font-size: 15px; padding: 8px; border-radius: 5px; }"
@@ -595,8 +735,8 @@ class MainWindow(QMainWindow):
             "QPushButton:disabled { background-color: #666; color: #999; }"
         )
         self.btn_estop_reset = QPushButton("🔓 解除急停")
-        self.btn_estop_reset.setMinimumWidth(180)
-        self.btn_estop_reset.setMinimumHeight(35)
+        self.btn_estop_reset.setMinimumWidth(176)
+        self.btn_estop_reset.setMinimumHeight(32)
         self.btn_estop_reset.setEnabled(False)
         self.btn_estop_reset.setStyleSheet(
             "QPushButton { background-color: #ff6600; color: white; font-weight: bold; "
@@ -610,12 +750,13 @@ class MainWindow(QMainWindow):
 
         # 2. 模式切换开关（手动/自主）
         mode_group = QGroupBox("控制模式")
-        mode_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
-        mode_layout = QVBoxLayout()
+        mode_layout = QVBoxLayout(mode_group)
+        mode_layout.setContentsMargins(10, 12, 10, 8)
+        mode_layout.setSpacing(6)
         self.toggle_mode = QPushButton("手动遥控 MANUAL")
         self.toggle_mode.setCheckable(True)
-        self.toggle_mode.setMinimumWidth(200)
-        self.toggle_mode.setMinimumHeight(45)
+        self.toggle_mode.setMinimumWidth(188)
+        self.toggle_mode.setMinimumHeight(42)
         self.toggle_mode.setStyleSheet(
             "QPushButton { background-color: #0066cc; color: white; font-weight: bold; "
             "font-size: 14px; padding: 8px; border-radius: 5px; }"
@@ -623,129 +764,57 @@ class MainWindow(QMainWindow):
             "QPushButton:disabled { background-color: #555; color: #888; }"
         )
         self.lbl_arbiter_status = QLabel("仲裁状态: UNKNOWN")
-        self.lbl_arbiter_status.setStyleSheet("color: #aaa; font-size: 11px;")
+        self.lbl_arbiter_status.setStyleSheet("font-size: 12px;")
         mode_layout.addWidget(self.toggle_mode)
         mode_layout.addWidget(self.lbl_arbiter_status)
-        mode_group.setLayout(mode_layout)
         layout.addWidget(mode_group, stretch=0)
 
-        # 3. Zenoh 连接状态
-        zenoh_group = QGroupBox("Zenoh 链路")
-        zenoh_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
-        zenoh_layout = QVBoxLayout()
-        zenoh_row = QHBoxLayout()
-        zenoh_row.setSpacing(6)
-        zenoh_row.addWidget(QLabel("Router IP:"))
-        self.edit_zenoh_ip = QLineEdit("127.0.0.1")
-        self.edit_zenoh_ip.setMaximumWidth(120)
-        zenoh_row.addWidget(self.edit_zenoh_ip)
-        zenoh_layout.addLayout(zenoh_row)
-
-        self.lbl_zenoh_status = QLabel("状态: 未连接")
-        self.lbl_zenoh_status.setStyleSheet("color: #ff4444; font-size: 11px;")
-        zenoh_layout.addWidget(self.lbl_zenoh_status)
-
-        self.btn_zenoh_connect = QPushButton("连接 Zenoh")
-        self.btn_zenoh_connect.setMinimumHeight(30)
-        zenoh_layout.addWidget(self.btn_zenoh_connect)
-        zenoh_group.setLayout(zenoh_layout)
-        layout.addWidget(zenoh_group, stretch=0)
-
-        # 4. 自主任务参数输入区
+        # 3. 自主任务参数输入区
         task_group = QGroupBox("自主任务参数")
-        task_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
-        task_layout = QVBoxLayout()
+        task_layout = QGridLayout(task_group)
+        task_layout.setContentsMargins(10, 12, 10, 8)
+        task_layout.setHorizontalSpacing(8)
+        task_layout.setVerticalSpacing(6)
 
-        row1 = QHBoxLayout()
-        row1.setSpacing(6)
-        row1.addWidget(QLabel("目标深度(m):"))
+        task_layout.addWidget(QLabel("目标深度(m):"), 0, 0)
         self.spin_target_depth = QDoubleSpinBox()
         self.spin_target_depth.setRange(0.0, 500.0)
         self.spin_target_depth.setValue(5.0)
         self.spin_target_depth.setSingleStep(0.5)
-        self.spin_target_depth.setMaximumWidth(90)
-        row1.addWidget(self.spin_target_depth)
+        self.spin_target_depth.setMaximumWidth(92)
+        task_layout.addWidget(self.spin_target_depth, 0, 1)
 
-        row1.addSpacing(10)
-        row1.addWidget(QLabel("巡检距离(m):"))
+        task_layout.addWidget(QLabel("巡检距离(m):"), 0, 2)
         self.spin_track_distance = QDoubleSpinBox()
         self.spin_track_distance.setRange(0.0, 10000.0)
         self.spin_track_distance.setValue(500.0)
         self.spin_track_distance.setSingleStep(50.0)
-        self.spin_track_distance.setMaximumWidth(100)
-        row1.addWidget(self.spin_track_distance)
-        task_layout.addLayout(row1)
+        self.spin_track_distance.setMaximumWidth(104)
+        task_layout.addWidget(self.spin_track_distance, 0, 3)
 
-        row2 = QHBoxLayout()
-        row2.setSpacing(6)
-        row2.addWidget(QLabel("任务超时(s):"))
+        task_layout.addWidget(QLabel("任务超时(s):"), 0, 4)
         self.spin_task_timeout = QSpinBox()
         self.spin_task_timeout.setRange(60, 7200)
         self.spin_task_timeout.setValue(1200)
         self.spin_task_timeout.setSingleStep(60)
-        self.spin_task_timeout.setMaximumWidth(90)
-        row2.addWidget(self.spin_task_timeout)
+        self.spin_task_timeout.setMaximumWidth(92)
+        task_layout.addWidget(self.spin_task_timeout, 0, 5)
 
-        row2.addSpacing(10)
-        row2.addWidget(QLabel("任务类型:"))
+        task_layout.addWidget(QLabel("任务类型:"), 1, 0)
         self.combo_mission_type = QComboBox()
         self.combo_mission_type.addItems([
             "CABLE_TRACKING",
             "AREA_SEARCH",
             "PIPELINE_INSPECT"
         ])
-        self.combo_mission_type.setMaximumWidth(150)
-        row2.addWidget(self.combo_mission_type)
+        self.combo_mission_type.setMinimumWidth(160)
+        task_layout.addWidget(self.combo_mission_type, 1, 1, 1, 3)
 
         self.btn_send_mission = QPushButton("下发任务")
-        self.btn_send_mission.setMinimumHeight(30)
-        row2.addWidget(self.btn_send_mission)
+        self.btn_send_mission.setMinimumHeight(32)
+        task_layout.addWidget(self.btn_send_mission, 1, 4, 1, 2)
 
-        task_layout.addLayout(row2)
-        task_group.setLayout(task_layout)
         layout.addWidget(task_group, stretch=1)
-
-        # 5. 置信度显示
-        conf_group = QGroupBox("传感器置信度")
-        conf_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 13px; }")
-        conf_layout = QVBoxLayout()
-        self.lbl_confidence = QLabel("置信度: --")
-        self.lbl_confidence.setStyleSheet("color: #aaa; font-size: 16px; font-weight: bold;")
-        conf_layout.addWidget(self.lbl_confidence)
-        conf_group.setLayout(conf_layout)
-        layout.addWidget(conf_group, stretch=0)
-
-        # 6. 电缆巡检监控：只显示从 cable tracking JSON 中提取的关键字段
-        cable_group = QGroupBox("电缆巡检监控")
-        cable_group.setMinimumWidth(560)
-        cable_group.setStyleSheet("QGroupBox { font-weight: bold; font-size: 14px; color: #f0f0f0; }")
-        cable_layout = QVBoxLayout()
-        cable_layout.setSpacing(2)
-        self.lbl_cable_ready = QLabel("结论: --")
-        self.lbl_cable_ready.setStyleSheet("color: #aaa; font-size: 18px; font-weight: bold;")
-        self.lbl_cable_metrics = QLabel("偏移/埋深/进度: --")
-        self.lbl_cable_metrics.setStyleSheet("color: #f0f0f0; font-size: 13px;")
-        self.lbl_cable_quality = QLabel("置信度/SNR: --")
-        self.lbl_cable_quality.setStyleSheet("color: #f0f0f0; font-size: 13px;")
-        self.lbl_cable_dlt = QLabel("DL/T状态/扣分合计: --")
-        self.lbl_cable_dlt.setStyleSheet("color: #f0f0f0; font-size: 14px; font-weight: bold;")
-        self.lbl_cable_score_items = QLabel("扣分项: --")
-        self.lbl_cable_score_items.setWordWrap(True)
-        self.lbl_cable_score_items.setStyleSheet("color: #f0f0f0; font-size: 12px;")
-        self.lbl_cable_flags = QLabel("验收标志: --")
-        self.lbl_cable_flags.setStyleSheet("color: #f0f0f0; font-size: 12px;")
-        self.lbl_cable_products = QLabel("产物链: --")
-        self.lbl_cable_products.setWordWrap(True)
-        self.lbl_cable_products.setStyleSheet("color: #d8d8d8; font-size: 11px;")
-        cable_layout.addWidget(self.lbl_cable_ready)
-        cable_layout.addWidget(self.lbl_cable_metrics)
-        cable_layout.addWidget(self.lbl_cable_quality)
-        cable_layout.addWidget(self.lbl_cable_dlt)
-        cable_layout.addWidget(self.lbl_cable_score_items)
-        cable_layout.addWidget(self.lbl_cable_flags)
-        cable_layout.addWidget(self.lbl_cable_products)
-        cable_group.setLayout(cable_layout)
-        layout.addWidget(cable_group, stretch=2)
 
         return bar
 
@@ -1226,13 +1295,13 @@ class MainWindow(QMainWindow):
             arb = payload.get('active_arbiter', '--')
             if arb == 'REMOTE':
                 self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
-                self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+                self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("success", 12))
             elif arb == 'AUTONOMOUS':
                 self.lbl_arbiter_status.setText("仲裁状态: AUTONOMOUS")
-                self.lbl_arbiter_status.setStyleSheet("color: #0099ff; font-weight: bold;")
+                self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("info", 12, True))
             elif 'ESTOP' in str(arb):
                 self.lbl_arbiter_status.setText(f"仲裁状态: {arb}")
-                self.lbl_arbiter_status.setStyleSheet("color: #ff0000; font-weight: bold;")
+                self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("danger", 12, True))
         if 'auto_state' in payload:
             self.labels['auto_state'].setText(f"自主状态: {payload.get('auto_state', '--')}")
         if 'deny_reason' in payload:
@@ -1244,11 +1313,11 @@ class MainWindow(QMainWindow):
             conf = float(payload.get('confidence', 0.0))
             self.lbl_confidence.setText(f"置信度: {conf:.2f}")
             if conf < 0.5:
-                self.lbl_confidence.setStyleSheet("color: #ff4444; font-size: 16px; font-weight: bold;")
+                self.lbl_confidence.setStyleSheet(self.semantic_label_style("danger", 16, True))
             elif conf < 0.7:
-                self.lbl_confidence.setStyleSheet("color: #ffaa00; font-size: 16px; font-weight: bold;")
+                self.lbl_confidence.setStyleSheet(self.semantic_label_style("warning", 16, True))
             else:
-                self.lbl_confidence.setStyleSheet("color: #00cc66; font-size: 16px; font-weight: bold;")
+                self.lbl_confidence.setStyleSheet(self.semantic_label_style("success", 16, True))
         if isinstance(payload.get('cable_monitor'), dict):
             self.update_cable_monitor_display(payload['cable_monitor'])
         self.update_arbiter_feedback(
@@ -1276,11 +1345,11 @@ class MainWindow(QMainWindow):
         if ready:
             pass_text = "PASS" if acceptance_pass else "FAIL"
             self.lbl_cable_ready.setText(f"结论: READY/{pass_text} | {mode}")
-            self.lbl_cable_ready.setStyleSheet("color: #00e676; font-size: 18px; font-weight: bold;")
+            self.lbl_cable_ready.setStyleSheet(self.semantic_label_style("success", 18, True))
         else:
             pass_text = "PASS" if acceptance_pass else "FAIL"
             self.lbl_cable_ready.setText(f"结论: NOT READY/{pass_text} | {mode}")
-            self.lbl_cable_ready.setStyleSheet("color: #ff5555; font-size: 18px; font-weight: bold;")
+            self.lbl_cable_ready.setStyleSheet(self.semantic_label_style("danger", 18, True))
 
         self.lbl_cable_metrics.setText(
             "偏移/埋深/进度: "
@@ -1298,20 +1367,20 @@ class MainWindow(QMainWindow):
         dlt_score = fmt(monitor.get('dlt1278_total_score'), 0)
         self.lbl_cable_dlt.setText(f"DL/T状态/扣分合计: {dlt_state} / {dlt_score}")
         if dlt_state in ('异常状态', '严重状态'):
-            self.lbl_cable_dlt.setStyleSheet("color: #ff5555; font-size: 14px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet(self.semantic_label_style("danger", 14, True))
         elif dlt_state == '注意状态':
-            self.lbl_cable_dlt.setStyleSheet("color: #ffcc33; font-size: 14px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet(self.semantic_label_style("warning", 14, True))
         elif dlt_state == '正常状态':
-            self.lbl_cable_dlt.setStyleSheet("color: #00e676; font-size: 14px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet(self.semantic_label_style("success", 14, True))
         else:
-            self.lbl_cable_dlt.setStyleSheet("color: #f0f0f0; font-size: 14px; font-weight: bold;")
+            self.lbl_cable_dlt.setStyleSheet(self.semantic_label_style("normal", 14, True))
 
         self.lbl_cable_score_items.setText(f"扣分项: {monitor.get('dlt1278_score_items_text', '--')}")
         self.lbl_cable_flags.setText(f"验收标志: {flags}")
         if flags and flags != 'none':
-            self.lbl_cable_flags.setStyleSheet("color: #ffcc33; font-size: 12px; font-weight: bold;")
+            self.lbl_cable_flags.setStyleSheet(self.semantic_label_style("warning", 12, True))
         else:
-            self.lbl_cable_flags.setStyleSheet("color: #00e676; font-size: 12px; font-weight: bold;")
+            self.lbl_cable_flags.setStyleSheet(self.semantic_label_style("success", 12, True))
         self.lbl_cable_products.setText(f"产物链: {monitor.get('dlt1278_products_text', '--')}")
 
     def update_arbiter_state_display(self, payload: dict):
@@ -1447,7 +1516,7 @@ class MainWindow(QMainWindow):
         self.btn_estop.setEnabled(False)
         self.btn_estop_reset.setEnabled(True)
         self.lbl_arbiter_status.setText("仲裁状态: ESTOP LOCKED")
-        self.lbl_arbiter_status.setStyleSheet("color: #ff0000; font-weight: bold; font-size: 14px;")
+        self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("danger", 14, True))
 
         self.append_message("安全", "🛑 紧急切断已触发！所有推力归零，状态锁死")
         self.status_bar.showMessage("🛑 紧急切断生效 - 必须显式复位", 5000)
@@ -1486,7 +1555,7 @@ class MainWindow(QMainWindow):
         self.btn_estop_reset.setEnabled(False)
         self.toggle_mode.setEnabled(True)
         self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
-        self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+        self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("success", 12))
 
         self.append_message("安全", "✅ 急停已解除，恢复手动遥控模式")
         self.status_bar.showMessage("急停已解除", 3000)
@@ -1502,7 +1571,7 @@ class MainWindow(QMainWindow):
             self.autonomy_mode_active = True
             self.toggle_mode.setText("自主授权 AUTONOMY")
             self.lbl_arbiter_status.setText("仲裁状态: 请求自主...")
-            self.lbl_arbiter_status.setStyleSheet("color: #ffcc00;")
+            self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("warning", 12, True))
             self.append_message("仲裁", "切换至自主模式，等待 Jetson 确认")
 
             # 发送自主请求包 (mode=0xEE)
@@ -1511,7 +1580,7 @@ class MainWindow(QMainWindow):
             self.autonomy_mode_active = False
             self.toggle_mode.setText("手动遥控 MANUAL")
             self.lbl_arbiter_status.setText("仲裁状态: REMOTE")
-            self.lbl_arbiter_status.setStyleSheet("color: #00cc66;")
+            self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("success", 12))
             self.clear_autonomy_hold(reason="手动模式切换", send_override=True)
             self.append_message("仲裁", "切换至手动遥控模式")
 
@@ -1550,7 +1619,7 @@ class MainWindow(QMainWindow):
             # 断开连接
             self.comm_manager.set_side_channel_active(False)
             self.lbl_zenoh_status.setText("状态: 未连接")
-            self.lbl_zenoh_status.setStyleSheet("color: #ff4444;")
+            self.lbl_zenoh_status.setStyleSheet(self.semantic_label_style("danger", 12, True))
             self.btn_zenoh_connect.setText("连接 Zenoh")
             self.append_message("链路", "Zenoh 连接已断开")
         else:
@@ -1561,7 +1630,7 @@ class MainWindow(QMainWindow):
                 # 尝试通过 side channel 连接到指定 IP
                 self.comm_manager.connect_zenoh_to_ip(ip, self.zenoh_router_port)
                 self.lbl_zenoh_status.setText(f"状态: 已连接 ({ip}:{self.zenoh_router_port})")
-                self.lbl_zenoh_status.setStyleSheet("color: #00cc66;")
+                self.lbl_zenoh_status.setStyleSheet(self.semantic_label_style("success", 12, True))
                 self.btn_zenoh_connect.setText("断开 Zenoh")
                 self.append_message("链路", f"Zenoh 已连接到 {ip}:{self.zenoh_router_port}")
                 self.status_bar.showMessage(f"Zenoh 已连接到 {ip}", 3000)
@@ -1628,12 +1697,12 @@ class MainWindow(QMainWindow):
 
         if normalized_state == "DENIED" and normalized_deny != "NONE":
             self.labels['arbiter_feedback'].setText(f"拒绝反馈: {normalized_deny}")
-            self.labels['arbiter_feedback'].setStyleSheet("color: FireBrick; font-weight: bold;")
+            self.labels['arbiter_feedback'].setStyleSheet(self.semantic_label_style("danger", 12, True))
             return
 
         if normalized_state == "ACTIVE":
             self.labels['arbiter_feedback'].setText("拒绝反馈: 已通过")
-            self.labels['arbiter_feedback'].setStyleSheet("color: DarkGreen;")
+            self.labels['arbiter_feedback'].setStyleSheet(self.semantic_label_style("success", 12))
             return
 
         self.labels['arbiter_feedback'].setText("拒绝反馈: --")

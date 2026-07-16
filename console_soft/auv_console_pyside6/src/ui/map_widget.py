@@ -6,7 +6,7 @@ C# Reference: Form1.cs pictureBox1_Paint() method, lines 1910-2100
 import math
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Qt, QPointF, QRectF
-from PySide6.QtGui import QPainter, QPen, QColor, QFont, QBrush, QPolygonF, QCursor
+from PySide6.QtGui import QPainter, QPen, QColor, QFont, QBrush, QPolygonF, QCursor, QPalette
 
 
 class MapWidget(QWidget):
@@ -148,14 +148,18 @@ class MapWidget(QWidget):
                                int(width/2), int(-100*i))
 
         # Draw "航行器" label (C# lines 1944-1948)
-        font = QFont("Arial", int(24 * ratio))  # Increased from 8 to 14 for better readability
+        font = QFont("Arial", max(10, int(21 * ratio)))
+        font.setBold(True)
         painter.setFont(font)
-        painter.setPen(QColor(0xFFDEAD))  # NavajoWhite
-        painter.drawText(int(-width/2 + 10), int(-height/2 + 18*ratio), "航行器")
+        dark_palette = self.palette().color(QPalette.ColorRole.Window).lightness() < 128
+        painter.setPen(QColor(0xFFD166) if dark_palette else QColor(0x7A4A00))
+        label_y = int(-height/2 + max(24, 38*ratio))
+        line_gap = int(max(22, 34*ratio))
+        painter.drawText(int(-width/2 + 10), label_y, "航行器")
 
         # Draw scale indicator (C# line 1963)
         scale_text = f"量程：{int(100/self.scale)}米/格"
-        painter.drawText(int(-width/2), int(-height/2 + 50*ratio), scale_text)
+        painter.drawText(int(-width/2), label_y + line_gap, scale_text)
 
     def _draw_gps_trajectory(self, painter):
         """Draw GPS trajectory as red dots (C# lines 1996-2007)"""

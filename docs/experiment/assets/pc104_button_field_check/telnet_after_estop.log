@@ -1,0 +1,31 @@
+[SYMBOLS]
+  Current_State                        0x536bc0
+  UI_WIFI_Instruction                  0x536b60
+  UI_LORA_Instruction                  0x536f80
+  UI_Channel_Selection_Down            0x5171c8
+  Instruction_To_FMCU                  0x536dc0
+  Sys_Abnorm_Inf_Judgement             0x51724c
+  Depth_Exceed_FromUI12_Depth_Para1    0x51725c
+  to_MCU_buf                           0x513d00
+
+[BASELINE]
+  Sys_Abnorm=0x00002000  DepthExceed=0
+  UI_WIFI shadow: ctrl=1 depth_para1=500 work_cmd=0x02 motor1=0 lh_angle=0 rh_angle=0
+  Current_State: work_cmd=0x00 depth=0x00000000
+  Instruction_To_FMCU word scan (+0x10..+0x2a):
+    +0x10=0 +0x12=0 +0x14=0 +0x16=23108 +0x18=0 +0x1a=0 +0x1c=0 +0x1e=0 +0x20=2048 +0x22=2048 +0x24=2048 +0x26=2048 +0x28=1 +0x2a=21034
+  TOBUF=$MCUFD,002,020101,012716,00,00,00,DZ,00000,00000,2048,2048,2048,2048,01,*RN*RN
+  判定: final frame still contains Motor1=00000
+
+[DRY-RUN] 未使用 --execute, 不会写入板上内存。
+可手动执行的关键命令模板:
+  *(unsigned int*)0x536bf4=0x41200000  /* Current_Dep=10.0f */
+  *(unsigned char*)0x536bd8=0  /* Current_Work_Cmd=0x00 */
+  *(unsigned short*)0x536b68=5
+  *(unsigned char*)0x536b76=0  /* UI work_cmd=0x00 */
+  *(unsigned short*)0x536b78=300
+  *(short*)0x536b7c=-20
+  *(short*)0x536b7e=-20
+  semGive(semEmergencyTask)
+  printf("SYS=0x%08x\n", *(unsigned int*)0x51724c)
+  printf("TOBUF=%s\n", (char*)0x513d00)

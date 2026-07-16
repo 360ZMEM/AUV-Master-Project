@@ -53,8 +53,25 @@ def parse_args() -> argparse.Namespace:
             "local ROS2/PySide6 high ports, and arbitrate local downlink packets."
         )
     )
-    parser.add_argument("--pc104-host", default="192.168.0.101")
+    parser.add_argument(
+        "--pc104-host",
+        "--pc104-remote-host",
+        dest="pc104_host",
+        default="192.168.0.101",
+    )
     parser.add_argument("--pc104-port", type=int, default=21)
+    parser.add_argument(
+        "--accept-uplink-source",
+        "--pc104-uplink-source-host",
+        dest="accept_uplink_sources",
+        action="append",
+        default=[],
+        help=(
+            "Extra source host accepted on the PC104 uplink socket. Use this "
+            "for Docker Desktop/macOS UDP publish where PC104 packets appear "
+            "inside the container as the Docker gateway, e.g. 172.18.0.1."
+        ),
+    )
     parser.add_argument("--listen-host", default="192.168.0.11")
     parser.add_argument("--listen-port", type=int, default=21)
     parser.add_argument("--cmd-host", default="127.0.0.1")
@@ -175,6 +192,16 @@ def make_socket(bind_addr: tuple[str, int]) -> socket.socket:
     return sock
 
 
+def accepted_uplink_hosts(args: argparse.Namespace) -> set[str]:
+    # /**
+    #  * @brief 兼容 Docker Desktop/macOS UDP publish 后的上行源地址改写。
+    #  * @author 清华 AUV 课题组
+    #  */
+    hosts = {args.pc104_host}
+    hosts.update(host for host in args.accept_uplink_sources if host)
+    return hosts
+
+
 def main() -> int:
     args = parse_args()
     subscribers = args.subscriber or [
@@ -185,11 +212,13 @@ def main() -> int:
     pc_sock = make_socket((args.listen_host, args.listen_port))
     cmd_sock = make_socket((args.cmd_host, args.cmd_port))
     pc104_addr = (args.pc104_host, args.pc104_port)
+    uplink_sources = accepted_uplink_hosts(args)
 
     print(
         f"[fanout] PC104 uplink bind {args.listen_host}:{args.listen_port}, "
         f"PC104 remote {args.pc104_host}:{args.pc104_port}"
     )
+    print("[fanout] accepted uplink sources: " + ", ".join(sorted(uplink_sources)))
     print(f"[fanout] local downlink bind {args.cmd_host}:{args.cmd_port}")
     print("[fanout] subscribers: " + ", ".join(f"{item.name}={item.host}:{item.port}" for item in subscribers))
     print(
@@ -211,8 +240,8 @@ def main() -> int:
                 packet, addr = sock.recvfrom(args.recv_buffer_size)
 
                 if sock is pc_sock:
-                    if addr[0] != args.pc104_host:
-                        print(f"[fanout] ignore non-PC104 packet from {addr[0]}:{addr[1]} len={len(packet)}")
+                    if addr[0] not in uplink_sources:
+                        print(f"[fanout] ignore non-uplink packet from {addr[0]}:{addr[1]} len={len(packet)}")
                         continue
                     if len(packet) == PROTOCOL_UPLINK_SIZE and packet.startswith(PROTOCOL_UPLINK_HEADER):
                         uplink_count += 1

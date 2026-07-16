@@ -1,0 +1,16 @@
+[config] 已加载上位机配置: /tmp/auv_pc104_button_check_20260716_234428/console_pc104_button_check.yaml
+Port configuration loaded from /home/auv_user/auv_ws/AUV-Master-Project/console_soft/auv_console_pyside6/config/port_set.txt
+  Radio: /dev/ttyS0, Beidou: /dev/ttyS0
+  Console: 192.168.0.11:21
+  AUV: 192.168.0.101:52364
+[config] UDP 配置覆盖: 127.0.0.1:52366 -> 127.0.0.1:52364
+[config] Zenoh 配置覆盖: enabled=False, router=127.0.0.1:7447, pc_cmd_raw_key=rt/pc/cmd_raw
+UDP socket 已绑定到 127.0.0.1:52366
+通信管理器初始化完成: 当前模式=WiFi (默认)
+Parameters loaded from /home/auv_user/auv_ws/AUV-Master-Project/console_soft/auv_console_pyside6/config/param.txt
+  Address: 2, Mode: 2
+[config] Packet 配置覆盖: obj_address=1, work_mode=1, depth_para1=500
+[gui-action] clicked extended main thruster on 0x11
+[gui-action] quitting
+UDP socket 已关闭
+通信管理器资源已清理

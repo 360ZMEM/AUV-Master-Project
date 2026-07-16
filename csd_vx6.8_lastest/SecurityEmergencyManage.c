@@ -53,6 +53,7 @@ u16 Not_Recv_From_WI_DVL_No = 0;
  * ��ֵ 10 = 1.0s ��ʱ
  */
 u16 Not_Recv_From_Jetson_No = 0;
+static u8 Jetson_Timeout_Latched = 0;
 
 u32 Device_Power_State_Judgement=0;
 u32 Cmd_State_Judgement=0;
@@ -72,6 +73,7 @@ void EmergencyTask(void)
 	{
 		if(OK == semTake(semEmergencyTask,WAIT_FOREVER))
 		{
+				u8 jetson_mode_active;
 			printf("EmergencyTask start::::\n");	
 			
 			/*�1�7�1�7�1�7�1�7�1�7�0�2�0�8�0�0�1�7�1�7�0�1�1�7�1�7�1�7�1�7�0�4�1�7�1�7�1�7�0�1�1�7�1�7�0�2�0�0�1�7�1�7�1�7�1�7�1�7�0�5�0�2-1�1�7�0�3�1�7�1�7�1�7�0�8�1�7�1�7�0�4�1�7�1�7�1�7�0�1�1�7wifi�1�7�1�7�1�7�1�7*/
@@ -86,20 +88,45 @@ void EmergencyTask(void)
 			 * ���� 0xEE/0xEF ģʽ����Ч
 			 * ��������: ģʽ������ Remote(0x01), ��������, ��ͣ
 			 */
-			if(Not_Recv_From_Jetson_No >= 10)
-			{
-				if(Current_State.Current_Mode == 0xEE || Current_State.Current_Mode == 0xEF)
+				jetson_mode_active = (Current_State.Current_Mode == 0xEE || Current_State.Current_Mode == 0xEF);
+				if(jetson_mode_active)
 				{
-					UI_WIFI_Instruction.FromUI12_Ctrl_Mode = 0x01;  /* ������ң��ģʽ */
-					UI_WIFI_Instruction.FromUI12_Motor_Speed1 = 0;  /* �������� */
-					UI_WIFI_Instruction.FromUI12_Motor_Speed2 = 0;
-					Sys_Abnorm_Inf_Judgement |= 0x00004000;  /* Bit14: Jetsonͨ�ų�ʱ�澯 */
+					if(Not_Recv_From_Jetson_No >= 10)
+					{
+						Jetson_Timeout_Latched = 1;
+						UI_WIFI_Instruction.FromUI12_Ctrl_Mode = 0x01;  /* ������ң��ģʽ */
+						UI_WIFI_Instruction.FromUI12_Motor_Speed1 = 0;  /* �������� */
+						UI_WIFI_Instruction.FromUI12_Motor_Speed2 = 0;
+						Sys_Abnorm_Inf_Judgement |= 0x00004000;  /* Bit14: Jetsonͨ�ų�ʱ�澯 */
+					}
+					else
+					{
+						Jetson_Timeout_Latched = 0;
+						Sys_Abnorm_Inf_Judgement &= 0xffffbfff;  /* ��� Bit14 */
+					}
 				}
-			}
-			else
-			{
-				Sys_Abnorm_Inf_Judgement &= 0xffffbfff;  /* ��� Bit14 */
-			}
+				else
+				{
+					/*
+					 * PC104 may boot and idle before Jetson starts. Do not let this
+					 * stale counter cause an immediate timeout when Jetson mode is
+					 * selected later. If a real timeout was latched, keep Bit14
+					 * observable until a Jetson packet resets the counter.
+					 */
+					if(Not_Recv_From_Jetson_No < 10)
+					{
+						Jetson_Timeout_Latched = 0;
+					}
+					if(Jetson_Timeout_Latched)
+					{
+						Sys_Abnorm_Inf_Judgement |= 0x00004000;
+					}
+					else
+					{
+						Not_Recv_From_Jetson_No = 0;
+						Sys_Abnorm_Inf_Judgement &= 0xffffbfff;  /* ��� Bit14 */
+					}
+				}
 			
 			/* BUG-5/6/7: ��׸߶��ٲ� + ˮ�ذ�ȫ */
 #if POOL_TEST_MODE
@@ -348,7 +375,10 @@ void EmergencyTask(void)
 			}
 			else
 			{
-				Sys_Abnorm_Inf_Judgement &= 0xffffbfff;
+				if(Jetson_Timeout_Latched == 0)
+				{
+					Sys_Abnorm_Inf_Judgement &= 0xffffbfff;
+				}
 			}
 				
 			if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x8000) == 0x8000)  /*Bit15:�1�7�1�7�0�3�1�7�1�7�0�0�1�7�1�7�1�7�1�0��*/

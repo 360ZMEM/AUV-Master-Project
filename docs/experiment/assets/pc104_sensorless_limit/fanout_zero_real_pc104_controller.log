@@ -1,0 +1,11 @@
+[real-fanout] zero CKTH len=72 head=b'$CKTH\x02\x01\x01'
+[real-fanout] recv $AUV #1 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] recv $AUV #16 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] sent zero CKTH #1
+[real-fanout] sent zero CKTH #2
+[real-fanout] recv $AUV #32 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] sent zero CKTH #3
+[real-fanout] recv $AUV #48 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] recv $AUV #64 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] recv $AUV #80 from=127.0.0.1:21 len=145 sys=0x00002000
+[real-fanout] summary sent_zero_ckth=3 recv_uplink=91

@@ -1,0 +1,26 @@
+[fanout] PC104 uplink bind 0.0.0.0:21, PC104 remote 192.168.0.101:21
+[fanout] accepted uplink sources: 172.18.0.1, 192.168.0.101
+[fanout] local downlink bind 127.0.0.1:52364
+[fanout] subscribers: pyside6=127.0.0.1:52366
+[fanout] safety: ros_downlink=True, console_downlink=True, allow_nonzero_actuator=False
+[fanout] status uplink=16 downlink=0 blocked=0
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=0 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] status uplink=31 downlink=1 blocked=0
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=17 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=17 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] status uplink=47 downlink=3 blocked=0
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=17 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] status uplink=63 downlink=4 blocked=0
+[fanout] status uplink=79 downlink=4 blocked=0
+[fanout] status uplink=94 downlink=4 blocked=0
+[fanout] status uplink=110 downlink=4 blocked=0
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=0 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=2 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=2 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] status uplink=126 downlink=7 blocked=0
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=2 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] forward pyside6 -> PC104: obj=1 ctrl=1 work=2 depth=(500, 29) bottom=(300, 200) preset=10 motor=0/0 fins=(0.0,0.0,0.0,0.0)
+[fanout] status uplink=141 downlink=9 blocked=0
+[fanout] status uplink=157 downlink=9 blocked=0
+[fanout] status uplink=173 downlink=9 blocked=0
+[fanout] status uplink=188 downlink=9 blocked=0

@@ -64,3 +64,44 @@ def test_lock_marks_manual_override() -> None:
     assert decision.auto_state == AutoState.LOCKED
     assert decision.deny_reason == DenyReason.MANUAL_OVERRIDE
     assert decision.autonomy_allowed is False
+
+
+def test_manual_override_lock_rejects_activation_until_cleared() -> None:
+    guard = AutonomyGuard(min_total_voltage_v=47.0, min_confidence=0.5, max_uplink_age_ms=200.0)
+    healthy_sensor = {KEY_LEAK_LEVEL: int(LeakLevel.NONE), KEY_CONFIDENCE: 0.9}
+    healthy_telemetry = {KEY_TOTAL_VOLTAGE_V: 48.5, KEY_TELEMETRY_FRESHNESS_MS: 20.0}
+
+    guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
+    decision = guard.request_activation(
+        sensor_status=healthy_sensor,
+        telemetry_status=healthy_telemetry,
+    )
+
+    assert decision.auto_state == AutoState.LOCKED
+    assert decision.deny_reason == DenyReason.MANUAL_OVERRIDE
+    assert decision.autonomy_allowed is False
+
+    clear_decision = guard.clear_manual_override()
+    assert clear_decision.auto_state == AutoState.LOCKED
+    assert clear_decision.deny_reason == DenyReason.NONE
+    assert clear_decision.autonomy_allowed is False
+
+    decision = guard.request_activation(
+        sensor_status=healthy_sensor,
+        telemetry_status=healthy_telemetry,
+    )
+
+    assert decision.auto_state == AutoState.ACTIVE
+    assert decision.deny_reason == DenyReason.NONE
+    assert decision.autonomy_allowed is True
+
+
+def test_plain_manual_lock_does_not_clear_manual_override() -> None:
+    guard = AutonomyGuard()
+
+    guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
+    decision = guard.lock(deny_reason=DenyReason.NONE)
+
+    assert decision.auto_state == AutoState.LOCKED
+    assert decision.deny_reason == DenyReason.MANUAL_OVERRIDE
+    assert decision.autonomy_allowed is False
