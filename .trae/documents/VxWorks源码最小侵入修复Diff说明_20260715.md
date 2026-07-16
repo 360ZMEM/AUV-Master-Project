@@ -32,6 +32,17 @@
   - 修复 BUG-5/BUG-6 中 `Remote_Assignment()` 用 UI shadow 覆盖应急/自救主推与舵面的行为。
   - 保留常规 remote 打包语义，只对单次应急发送生效。
 
+#### 补丁 B-2：DVL 保护位不再被 MCU 回报码 `else` 清掉
+
+- 基本位置：`Unpack_Data_From_FMCU(u8 *temp_buf)` 内 `McuFD_Sys_Abnorm_Inf` 映射段
+- 当前行号：`1148-1167`
+- 关键行：
+  - `1148-1153`：新增 Doxygen 注释，明确 Bit11/12/13 为软件仲裁主导
+  - `1154-1167`：保留 Bit11/12/13 的 MCU 置位镜像，去掉 `else` 清位分支
+- 修改目的：
+  - 修复 live 链路中 `Seafloor_Grounding_Arbitration()` 已置位 Bit11/12/13，但在 `$AUV` 导出前又被 `Data_From_FMCU.McuFD_Sys_Abnorm_Inf` 的 `else` 分支清掉的问题。
+  - 让 DVL soft/hard/lost 三类软件保护位能稳定进入 `Current_State.Current_Sys_Abnorm_Inf` 并导出到 `$AUV`/UI。
+
 ### 2.2 `csd_vx6.8_lastest/SecurityEmergencyManage.c`
 
 #### 补丁 C：应急发送包装函数
@@ -73,6 +84,17 @@
 - 修改目的：
   - 保证 DVL 自救输出的 `motor1` 与舵面按仲裁结果进入最终 `$MCUFD`。
 
+#### 补丁 G：`EmergencyTask` 不再用 MCU `else` 清掉 DVL 软件保护位
+
+- 基本位置：`EmergencyTask()` 内 `Data_From_FMCU.McuFD_Sys_Abnorm_Inf` 映射段
+- 当前行号：`320-340`
+- 关键行：
+  - `322-327`：新增 Doxygen 注释，说明 Bit11/12/13 为软件仲裁位优先
+  - `320-340`：保留 Bit11/12/13 的 MCU 置位镜像，去掉三段 `else` 清位
+- 修改目的：
+  - 修复 live 链路中 `EmergencyTask()` 周期性运行时，会把 `Seafloor_Grounding_Arbitration()` 刚置上的 Bit11/12/13 再次清掉的问题。
+  - 让 DVL soft/hard/lost 三类软件保护位在主循环 + `NetSendTask` 的真实发送路径中稳定进入 `$AUV.sys`。
+
 ## 3. 本轮附加证据（未改 DVL 源码）
 
 ### DVL 字段注入对照
@@ -85,10 +107,61 @@
   - `Seafloor_Grounding_Arbitration()` 当前运行时只认 `BD_Check/BD_Height`，不认 `WD_Check/WD_Depth`。
   - 因此 DVL 一侧本轮不需要修改源码，后续主要是 probe/注入方法统一到 `BD_*`。
 
+### DVL live `$AUV` 可见性专项 probe
+
+- 运行时观测到：
+  - 注入 DVL soft 条件后，`Sys_Abnorm_Inf_Judgement` 可短暂变为 `0x00000800`
+  - 但 `Current_State.Current_Sys_Abnorm_Inf` 与 `$AUV.sys` 仍保持 `0`
+- 结合源码审计确认：
+  - `DataProcess.c:1148-1172` 会按 `Data_From_FMCU.McuFD_Sys_Abnorm_Inf` 周期性维护 Bit11/12/13
+  - 当 MCU 回报码尚未携带这些软件保护位时，旧逻辑中的 `else` 会把软件仲裁刚置上的位再次清掉
+- 结论：
+  - 这不是 probe 假象，而是 live 导出链路上的真实清位路径
+  - 因此新增补丁 B-2 作为最小侵入修复
+
+### DVL live `$AUV` 发送路径追加证据
+
+- 运行时观测到：
+  - `Current_State.Current_Sys_Abnorm_Inf = 0x00000800`
+  - `To_UI12_Buf[126:129] = 00 00 08 00`
+  - 但 live 抓到的 `$AUV.sys` 仍为 `0`
+- 进一步验证：
+  - 暂停 `EmergencyTask` 后，再做同样的 DVL soft 注入，live `$AUV.sys` 稳定变为 `0x00000800`
+- 结论：
+  - `DataProcess.c` 之外，`SecurityEmergencyManage.c` 中 `EmergencyTask()` 的旧 `else` 清位逻辑也是 live 发送链路的实际清位点
+  - 因此新增补丁 G 作为最小侵入修复
+
+### 补丁 G 烧录后追加复验证据
+
+- 本轮重新烧录后，使用：
+  - `sudo -n /usr/bin/python3 scripts/vxworks_dvl_runtime_probe.py --host 192.168.0.101 --execute --case all --capture-uplink`
+- 直接结果：
+  - `AFTER SOFT`：`Sys_Abnorm=0x00000800`，但脚本最终采到的 `$AUV.sys=0x00000000`
+  - `AFTER HARD`：`Sys_Abnorm=0x00001800`，但脚本最终采到的 `$AUV.sys=0x00000000`
+  - `AFTER LOST`：`Sys_Abnorm=0x00002000`，但脚本最终采到的 `$AUV.sys=0x00000000`
+- 进一步追加时间序列 probe 后确认：
+  - live `$AUV.sys` 并非始终为 `0`
+  - 在 DVL soft 注入后，连续抓包能看到 `0x00000800 -> 0x00000000` 的短暂过渡
+  - 同期内存观测为：
+    - `Sys_Abnorm_Inf_Judgement` 初始为 `0x00000800`
+    - 约 `0.2s ~ 0.3s` 后再次掉回 `0x00000000`
+    - `DVL_Prase_Data.BD_Check = 0x40000000 (2.0f)`、`BD_Height = 0x40200000 (2.5f)` 全程保持不变
+- 隔离实验结论：
+  - 仅挂起 `NetRecvTask` / `UnpackNetDataTask`，该清位现象仍存在，说明并非下行网络包持续覆盖导致
+  - 挂起 `EmergencyTask` 后，`Sys_Abnorm_Inf_Judgement` 可稳定保持 `0x00000800`，且 `UI_WIFI_Instruction.FromUI12_Ctrl_Mode` 不再从 `0xEE` 翻为 `0x01`
+- 当前收口：
+  - 最新板端行为已经证明：清位源仍位于 `EmergencyTask` 实际运行路径
+  - 但该行为与当前工作区中补丁 G 落盘后的 `SecurityEmergencyManage.c` 源码表现不一致
+  - 因此现阶段更准确的判断是：
+    1. 要么板端镜像未实际带上补丁 G；
+    2. 要么 `EmergencyTask` 运行路径中仍存在尚未覆盖到的等价清位逻辑
+  - 在进入下一轮源码修改前，建议优先把“当前烧录镜像是否真实包含补丁 G”作为第一确认项，避免再次盲改、盲烧。
+
 ## 4. 说明
 
 - 本文档中的行号基于当前工作区修改后文件重新编号。
-- 本轮尚未进行完整 VxWorks 构建/烧录验证；当前完成的是：
-  1. DVL 字段级运行期证据补强；
-  2. BUG-4 与 BUG-5/BUG-6 的最小侵入源码修复；
-  3. 单独 diff 文档固化。
+- 当前已完成至少一轮包含补丁集的烧录与 live 复验。
+- 截至本文档最新状态：
+  1. BUG-4、BUG-5/BUG-6 已具备较强的实机闭合证据；
+  2. DVL live `$AUV` 导出链已确认仍有未闭合点，且根因继续收缩到 `EmergencyTask` 实际运行路径；
+  3. 单独 diff 文档与追加 probe 证据已经同步固化。

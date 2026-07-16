@@ -75,9 +75,8 @@ class VxShell:
         if not self.tn:
             raise RuntimeError("Telnet is not connected")
         self.tn.write((command + "\n").encode("ascii"))
-        time.sleep(wait)
         try:
-            return self.tn.read_very_eager().decode("ascii", errors="replace")
+            return self.tn.read_until(b"->", timeout=max(wait, 1.0)).decode("ascii", errors="replace")
         except EOFError:
             return ""
 
@@ -134,11 +133,15 @@ def _first_int(text: str) -> int | None:
 
 
 def _first_hex_or_int(text: str) -> int | None:
-    match = re.search(r"V=(0x[0-9a-fA-F]+|-?\d+)", text)
-    if not match:
-        return None
-    raw = match.group(1)
-    return int(raw, 16) if raw.startswith("0x") else int(raw)
+    # Ignore the echoed shell command line such as `printf("V=0x%08x\n", ...)`,
+    # and only parse the actual runtime output line `V=0x12345678`.
+    for line in reversed(text.splitlines()):
+        line = line.strip()
+        match = re.fullmatch(r"V=(0x[0-9a-fA-F]+|-?\d+)", line)
+        if match:
+            raw = match.group(1)
+            return int(raw, 16) if raw.startswith("0x") else int(raw)
+    return None
 
 
 def _fmt(value: int | None) -> str:

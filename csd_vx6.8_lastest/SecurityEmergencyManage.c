@@ -319,12 +319,14 @@ void EmergencyTask(void)
 				
 			if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x0800) == 0x0800)/*Bit11: �1�7�1�7�0�7�1�7�1�7�1�3�1�7�1�7�1�7�1�7�1�7�1�7�1�71�1�7��*/
 			{
+				/**
+				 * @brief Preserve software-arbitrated DVL protection bits in EmergencyTask.
+				 * @note  Seafloor_Grounding_Arbitration() can assert Bit11/12/13 before MCU
+				 *        feedback carries the same bits. Mirror MCU-set bits here, but do
+				 *        not clear software-owned DVL protection bits from this path.
+				 */
 				Sys_Abnorm_Inf_Judgement |= 0x00000800;	
 				Emergency_Level1();
-			}
-			else
-			{
-				Sys_Abnorm_Inf_Judgement &= 0xfffff7ff;
 			}
 			
 			if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x1000) == 0x1000)  /*Bit12�1�7�1�7�1�7�1�7�0�7�1�7�1�7�1�3�1�7�1�7�1�7�1�7�1�7�1�7�1�72�1�7��*/
@@ -332,19 +334,11 @@ void EmergencyTask(void)
 				Sys_Abnorm_Inf_Judgement |= 0x00001000;	
 				Emergency_Level2();
 			}
-			else
-			{
-				Sys_Abnorm_Inf_Judgement &= 0xffffefff;
-			}
 					
 			if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x2000) == 0x2000) /*Bit13: �1�7�1�7�0�3�1�7�1�7�0�2�1�7��*/
 			{
 				Sys_Abnorm_Inf_Judgement |= 0x00002000;	
 				Emergency_Level1();
-			}
-			else
-			{
-				Sys_Abnorm_Inf_Judgement &= 0xffffdfff;
 			}		
 				
 			if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x4000) == 0x4000)  /*Bit14:�1�7�1�7�1�7�Ԅ1�7�0�2�1�7��*/

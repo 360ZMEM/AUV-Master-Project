@@ -150,11 +150,15 @@ def _first_int(text: str) -> int | None:
 
 
 def _first_hex_or_int(text: str) -> int | None:
-    match = re.search(r"V=(0x[0-9a-fA-F]+|-?\d+)", text)
-    if not match:
-        return None
-    raw = match.group(1)
-    return int(raw, 16) if raw.startswith("0x") else int(raw)
+    # Ignore the echoed shell command line such as `printf("V=0x%08x\n", ...)`,
+    # and only parse the actual runtime output line `V=0x12345678`.
+    for line in reversed(text.splitlines()):
+        line = line.strip()
+        match = re.fullmatch(r"V=(0x[0-9a-fA-F]+|-?\d+)", line)
+        if match:
+            raw = match.group(1)
+            return int(raw, 16) if raw.startswith("0x") else int(raw)
+    return None
 
 
 def _u32_to_float(value: int) -> float:

@@ -1145,31 +1145,25 @@ void Unpack_Data_From_FMCU(u8 *temp_buf)
 		Sys_Abnorm_Inf_Judgement &= 0xfffffbff;
 	}*/
 		
+	/**
+	 * @brief Preserve software-arbitrated DVL protection bits across live export.
+	 * @note  Bit11/12/13 can be asserted by Seafloor_Grounding_Arbitration() before
+	 *        MCU feedback carries the same status. Only mirror MCU-set bits here;
+	 *        do not clear software-owned bits from the export path.
+	 */
 	if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x0800) == 0x0800)/*Bit11: ��׳��ޱ�������1�澯*/
 	{
 		Sys_Abnorm_Inf_Judgement |= 0x00000800;	    
-	}
-	else
-	{
-		Sys_Abnorm_Inf_Judgement &= 0xfffff7ff;
 	}
 	
 	if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x1000) == 0x1000)  /*Bit12����׳��ޱ�������2�澯*/
 	{
 		Sys_Abnorm_Inf_Judgement |= 0x00001000;		
 	}
-	else
-	{
-		Sys_Abnorm_Inf_Judgement &= 0xffffefff;
-	}
 			
 	if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x2000) == 0x2000) /*Bit13: ��Ǳ��ʱ�澯*/
 	{
 		Sys_Abnorm_Inf_Judgement |= 0x00002000;	    
-	}
-	else
-	{
-		Sys_Abnorm_Inf_Judgement &= 0xffffdfff;
 	}		
 		
 	if((Data_From_FMCU.McuFD_Sys_Abnorm_Inf & 0x4000) == 0x4000)  /*Bit14:���г�ʱ�澯*/
