@@ -130,6 +130,63 @@ def generate_nodes(context, *args, **kwargs):
         ],
     )
 
+    sensor_supervisor = Node(
+        package='auv_decision_ros',
+        executable='sensor_supervisor_node',
+        name='auv_sensor_supervisor_node',
+        condition=IfCondition(LaunchConfiguration('enable_sensor_supervisor')),
+        output='screen',
+        parameters=[
+            {
+                'config_file': LaunchConfiguration('sensor_supervisor_config'),
+                'enabled': LaunchConfiguration('enable_sensor_supervisor'),
+            }
+        ],
+    )
+
+    mock_magnetic_wrapper = Node(
+        package='auv_decision_ros',
+        executable='magnetic_sensor_wrapper_node',
+        name='auv_mock_magnetic_wrapper_node',
+        condition=IfCondition(LaunchConfiguration('enable_mock_magnetic_wrapper')),
+        output='screen',
+        parameters=[
+            {
+                'mock_mode': True,
+                'output_topic': LaunchConfiguration('mock_magnetic_topic'),
+                'frame_id': LaunchConfiguration('mock_magnetic_frame_id'),
+                'publish_rate_hz': LaunchConfiguration('mock_magnetic_rate_hz'),
+                'mock_field_t': LaunchConfiguration('mock_magnetic_field_t'),
+            }
+        ],
+    )
+
+    real_magnetic_wrapper = Node(
+        package='auv_decision_ros',
+        executable='magnetic_sensor_wrapper_node',
+        name='auv_real_magnetic_wrapper_node',
+        condition=IfCondition(LaunchConfiguration('enable_real_magnetic_wrapper')),
+        output='screen',
+        parameters=[LaunchConfiguration('magnetic_wrapper_params_file')],
+    )
+
+    mock_forward_sonar_wrapper = Node(
+        package='auv_decision_ros',
+        executable='forward_sonar_wrapper_node',
+        name='auv_mock_forward_sonar_wrapper_node',
+        condition=IfCondition(LaunchConfiguration('enable_mock_forward_sonar_wrapper')),
+        output='screen',
+        parameters=[
+            {
+                'mock_mode': True,
+                'slope_topic': LaunchConfiguration('mock_forward_sonar_topic'),
+                'publish_rate_hz': LaunchConfiguration('mock_forward_sonar_rate_hz'),
+                'mock_slope': LaunchConfiguration('mock_forward_sonar_slope'),
+                'mock_range_m': LaunchConfiguration('mock_forward_sonar_range_m'),
+            }
+        ],
+    )
+
     cable_mission_autostart = Node(
         package='auv_decision_ros',
         executable='cable_mission_autostart_node',
@@ -154,6 +211,10 @@ def generate_nodes(context, *args, **kwargs):
         bridge,
         TimerAction(period=2.0, actions=[localization]),
         TimerAction(period=3.0, actions=[viz_bridge]),
+        TimerAction(period=3.5, actions=[sensor_supervisor]),
+        TimerAction(period=3.7, actions=[real_magnetic_wrapper]),
+        TimerAction(period=3.8, actions=[mock_magnetic_wrapper]),
+        TimerAction(period=3.9, actions=[mock_forward_sonar_wrapper]),
         TimerAction(period=4.0, actions=[controller]),
         TimerAction(period=6.0, actions=[decision]),
         TimerAction(period=7.0, actions=[cable_tracking]),
@@ -222,6 +283,90 @@ def generate_launch_description() -> LaunchDescription:
         'enable_cable_tracking',
         default_value='false',
         description='Enable AUV-Master-Mag cable tracking adapter node',
+    )
+
+    enable_sensor_supervisor_arg = DeclareLaunchArgument(
+        'enable_sensor_supervisor',
+        default_value='true',
+        description='Enable Jetson-side topic freshness and capability supervisor',
+    )
+
+    sensor_supervisor_config_arg = DeclareLaunchArgument(
+        'sensor_supervisor_config',
+        default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'sensor_supervisor.yaml'),
+        description='YAML config file for sensor_supervisor_node',
+    )
+
+    enable_mock_magnetic_wrapper_arg = DeclareLaunchArgument(
+        'enable_mock_magnetic_wrapper',
+        default_value='false',
+        description='Enable a Jetson-side mock magnetic wrapper publisher',
+    )
+
+    enable_real_magnetic_wrapper_arg = DeclareLaunchArgument(
+        'enable_real_magnetic_wrapper',
+        default_value='false',
+        description='Enable the real FK2301/TMR8637 magnetic wrapper publisher',
+    )
+
+    magnetic_wrapper_params_file_arg = DeclareLaunchArgument(
+        'magnetic_wrapper_params_file',
+        default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'magnetic_wrapper_fangkong.yaml'),
+        description='ROS parameter file for the real magnetic wrapper node',
+    )
+
+    mock_magnetic_topic_arg = DeclareLaunchArgument(
+        'mock_magnetic_topic',
+        default_value='/auv/sensors/magnetic',
+        description='Output topic for the mock magnetic wrapper',
+    )
+
+    mock_magnetic_frame_id_arg = DeclareLaunchArgument(
+        'mock_magnetic_frame_id',
+        default_value='mag_link',
+        description='Frame id for the mock magnetic wrapper',
+    )
+
+    mock_magnetic_rate_hz_arg = DeclareLaunchArgument(
+        'mock_magnetic_rate_hz',
+        default_value='50.0',
+        description='Publish rate for the mock magnetic wrapper',
+    )
+
+    mock_magnetic_field_t_arg = DeclareLaunchArgument(
+        'mock_magnetic_field_t',
+        default_value='[3.0e-5, 0.0, -1.0e-5]',
+        description='Mock magnetic field vector in Tesla',
+    )
+
+    enable_mock_forward_sonar_wrapper_arg = DeclareLaunchArgument(
+        'enable_mock_forward_sonar_wrapper',
+        default_value='false',
+        description='Enable a Jetson-side mock forward sonar wrapper publisher',
+    )
+
+    mock_forward_sonar_topic_arg = DeclareLaunchArgument(
+        'mock_forward_sonar_topic',
+        default_value='/auv/sensors/forward_sonar_slope',
+        description='Output topic for the mock forward sonar wrapper',
+    )
+
+    mock_forward_sonar_rate_hz_arg = DeclareLaunchArgument(
+        'mock_forward_sonar_rate_hz',
+        default_value='20.0',
+        description='Publish rate for the mock forward sonar wrapper',
+    )
+
+    mock_forward_sonar_slope_arg = DeclareLaunchArgument(
+        'mock_forward_sonar_slope',
+        default_value='0.05',
+        description='Mock forward sonar terrain slope',
+    )
+
+    mock_forward_sonar_range_m_arg = DeclareLaunchArgument(
+        'mock_forward_sonar_range_m',
+        default_value='8.0',
+        description='Mock forward sonar range in meters',
     )
 
     cable_tracking_config_arg = DeclareLaunchArgument(
@@ -482,6 +627,20 @@ def generate_launch_description() -> LaunchDescription:
             enable_controller_arg,
             enable_decision_arg,
             enable_cable_tracking_arg,
+            enable_sensor_supervisor_arg,
+            sensor_supervisor_config_arg,
+            enable_real_magnetic_wrapper_arg,
+            magnetic_wrapper_params_file_arg,
+            enable_mock_magnetic_wrapper_arg,
+            mock_magnetic_topic_arg,
+            mock_magnetic_frame_id_arg,
+            mock_magnetic_rate_hz_arg,
+            mock_magnetic_field_t_arg,
+            enable_mock_forward_sonar_wrapper_arg,
+            mock_forward_sonar_topic_arg,
+            mock_forward_sonar_rate_hz_arg,
+            mock_forward_sonar_slope_arg,
+            mock_forward_sonar_range_m_arg,
             cable_tracking_config_arg,
             enable_cable_mission_autostart_arg,
             cable_mission_type_arg,

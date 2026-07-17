@@ -28,6 +28,7 @@
 | 10 | [terrain.md](10_terrain.md) | 地形跟随基准：恒深 vs 自适应离底高度对比 |
 | 11 | [control_aggregate.md](11_control_aggregate.md) | 控制侧指标聚合：lateral RMSE、solve time、fallback、安全违规率 |
 | 12 | [real_deployment/INDEX.md](../real_deployment/INDEX.md) | **多 Level 实物部署路径**：08 是速记表，本入口给出 S1–S5 完整 SOP 体系 |
+| 14 | [real_magnetic_wrapper_sop.md](14_real_magnetic_wrapper_sop.md) | FK2301/TMR8637 真实磁 wrapper：从 probe 到 headless、ROS smoke、全栈 smoke 的操作顺序 |
 
 ---
 

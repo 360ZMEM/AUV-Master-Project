@@ -19,6 +19,7 @@
 | 8 | [08_cable_inspection_io_contract.md](08_cable_inspection_io_contract.md) | 电缆巡检部署时的输入/输出契约与磁外参要求 |
 | 9 | [09_dlt1278_digital_twin_outputs.md](09_dlt1278_digital_twin_outputs.md) | DLT1278 风格数字孪生产物、评分字段和导出物 |
 | 10 | [10_sim_vs_real_link_and_wrapper_map.md](10_sim_vs_real_link_and_wrapper_map.md) | 仿真 / 真机链路区别、配置分层、fan-out 用法与 wrapper 接入建议 |
+| 11 | [11_sensor_wrapper_ip_coordination.md](11_sensor_wrapper_ip_coordination.md) | Jetson 侧多个真实传感器 wrapper 的 IP/网段规划、主仓 override 规则与故障定位顺序 |
 
 ---
 

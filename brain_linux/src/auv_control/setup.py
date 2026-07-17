@@ -27,6 +27,9 @@ setup(
             'cable_tracking_node = auv_decision_ros.cable_tracking_node:main',
             'cable_mission_autostart_node = auv_decision_ros.cable_mission_autostart_node:main',
             'decoupled_cable_sim_node = auv_decision_ros.decoupled_cable_sim_node:main',
+            'sensor_supervisor_node = auv_decision_ros.sensor_supervisor_node:main',
+            'magnetic_sensor_wrapper_node = auv_decision_ros.magnetic_sensor_wrapper_node:main',
+            'forward_sonar_wrapper_node = auv_decision_ros.forward_sonar_wrapper_node:main',
         ],
     },
 )

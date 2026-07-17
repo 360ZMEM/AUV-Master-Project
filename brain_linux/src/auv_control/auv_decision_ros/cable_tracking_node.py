@@ -8,11 +8,13 @@ import json
 import math
 import os
 from pathlib import Path
+import time
 from typing import Any
 
 import numpy as np
 from nav_msgs.msg import Odometry
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
 from std_msgs.msg import Bool, Float32, String
@@ -22,6 +24,7 @@ from auv_interfaces.msg import ArbiterStatus, Setpoint
 
 from .cable_guidance_limits import GuidanceLimitConfig, ZigzagProbeConfig, apply_zigzag_probe, limit_guidance, wrap_deg
 from .cable_prior_adapter import ensure_auv_master_mag_on_path, load_cable_map_from_config
+from .sensor_runtime import SensorGateResult, evaluate_cable_inspection_gate
 
 
 def _find_project_root() -> Path:
@@ -104,18 +107,23 @@ class CableTrackingNode(Node):
         self.control_cfg = dict(self.config.get("control", {}) or {})
         self.recovery_cfg = dict(self.config.get("recovery_guidance", {}) or {})
         self.mag_cfg = dict(self.config.get("magnetic", {}) or {})
+        self.sensor_policy_cfg = dict(self.config.get("sensor_policy", {}) or {})
         self.limit_cfg = GuidanceLimitConfig.from_mapping(self.config.get("zigzag_limits", {}) or {})
         self.probe_cfg = ZigzagProbeConfig.from_mapping(self.config.get("zigzag_probe", {}) or {})
         self.mag_block: deque[list[float]] = deque(maxlen=max(1, int(self.mag_cfg.get("block_size", 8))))
         self.latest_odom: Odometry | None = None
         self.latest_mission: dict[str, Any] | None = None
         self.latest_arbiter: ArbiterStatus | None = None
+        self.latest_runtime_status: dict[str, Any] | None = None
+        self.latest_odom_wall_time_s = 0.0
+        self.latest_magnetic_wall_time_s = 0.0
         self._missing_input_logged = False
         self._publish_count = 0
         self._recovery_guidance_active = False
         self._recovery_guidance_streak = 0
         self._inspection_hold_active = False
         self._inspection_hold_streak = 0
+        self._last_sensor_gate_reason = ""
 
         self.pub_setpoint = self.create_publisher(Setpoint, "/auv/control/setpoint", 10)
         self.pub_tracking = self.create_publisher(String, "/auv/cable/tracking", 10)
@@ -144,6 +152,12 @@ class CableTrackingNode(Node):
             self.create_subscription(String, "/auv/mission_command", self._on_mission_command, 10),
             self.create_subscription(String, "/auv/cable/mission_command", self._on_mission_command, 10),
             self.create_subscription(ArbiterStatus, "/auv/arbiter/status", self._on_arbiter_status, 10),
+            self.create_subscription(
+                String,
+                str(self.sensor_policy_cfg.get("runtime_status_topic", "/auv/sensors/runtime_status")),
+                self._on_runtime_status,
+                10,
+            ),
         ]
         self.timer = self.create_timer(0.1, self._on_tick)
         self.get_logger().info(
@@ -197,6 +211,7 @@ class CableTrackingNode(Node):
 
     def _on_odom(self, msg: Odometry) -> None:
         self.latest_odom = msg
+        self.latest_odom_wall_time_s = time.monotonic()
 
     def _on_magnetic(self, msg: MagneticField) -> None:
         self.mag_block.append([
@@ -204,6 +219,7 @@ class CableTrackingNode(Node):
             float(msg.magnetic_field.y) * 1.0e9,
             float(msg.magnetic_field.z) * 1.0e9,
         ])
+        self.latest_magnetic_wall_time_s = time.monotonic()
 
     def _on_mission_command(self, msg: String) -> None:
         try:
@@ -219,6 +235,28 @@ class CableTrackingNode(Node):
 
     def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
         self.latest_arbiter = msg
+
+    def _on_runtime_status(self, msg: String) -> None:
+        try:
+            payload = json.loads(msg.data)
+        except json.JSONDecodeError as exc:
+            self.get_logger().warning(f"invalid runtime sensor status JSON: {exc}")
+            return
+        if isinstance(payload, dict):
+            self.latest_runtime_status = payload
+
+    def _evaluate_sensor_gate(self, *, now_s: float) -> SensorGateResult:
+        return evaluate_cable_inspection_gate(
+            latest_odom_present=self.latest_odom is not None,
+            latest_odom_wall_time_s=self.latest_odom_wall_time_s,
+            magnetic_present=bool(self.mag_block),
+            latest_magnetic_wall_time_s=self.latest_magnetic_wall_time_s,
+            latest_runtime_status=self.latest_runtime_status,
+            now_s=now_s,
+            navigation_timeout_s=float(self.sensor_policy_cfg.get("navigation_timeout_s", 0.5)),
+            magnetic_timeout_s=float(self.sensor_policy_cfg.get("magnetic_timeout_s", 0.5)),
+            required_capability=str(self.sensor_policy_cfg.get("required_capability", "cable_inspection")).strip(),
+        )
 
     def _build_inputs(self):
         if self.latest_odom is None or not self.mag_block:
@@ -249,6 +287,18 @@ class CableTrackingNode(Node):
     def _on_tick(self) -> None:
         if not self.enabled or self.latest_mission is None:
             return
+        sensor_gate = self._evaluate_sensor_gate(now_s=time.monotonic())
+        if not sensor_gate.ready:
+            if self._last_sensor_gate_reason != sensor_gate.reason:
+                self.get_logger().warning(
+                    "cable tracking degraded by sensor gate "
+                    f"reason={sensor_gate.reason} blocked_sensors={sensor_gate.blocked_sensors} "
+                    f"blocked_capabilities={sensor_gate.blocked_capabilities}"
+                )
+                self._last_sensor_gate_reason = sensor_gate.reason
+            self._publish_degraded_state(sensor_gate)
+            return
+        self._last_sensor_gate_reason = ""
         nav, mag = self._build_inputs()
         if nav is None or mag is None:
             if not self._missing_input_logged:
@@ -332,6 +382,64 @@ class CableTrackingNode(Node):
         if bool(self.control_cfg.get("publish_setpoint", True)):
             self._publish_setpoint(tracking, guidance, limited, target_depth)
         self._publish_tracking(tracking, guidance, limited)
+
+    def _publish_degraded_state(self, gate: SensorGateResult) -> None:
+        self._missing_input_logged = False
+        hold_published = False
+        if bool(self.sensor_policy_cfg.get("publish_degraded_hold_setpoint", True)) and self.latest_odom is not None:
+            self._publish_degraded_hold_setpoint(gate.reason)
+            hold_published = True
+
+        diagnostics = {
+            "ready": False,
+            "reason": gate.reason,
+            "blocked_sensors": list(gate.blocked_sensors),
+            "blocked_capabilities": list(gate.blocked_capabilities),
+            "inspection_limited": True,
+            "degraded_hold_setpoint_published": hold_published,
+        }
+        payload = {
+            "time_s": float(self.get_clock().now().nanoseconds) * 1.0e-9,
+            "mode": "SENSOR_DEGRADED",
+            "quality_flags": list(gate.blocked_sensors),
+            "acceptance_flags": [gate.reason],
+            "industrial_ready": False,
+            "industrial_acceptance_pass": False,
+            "dlt1278": {
+                "state": "传感器降级",
+                "total_score": 0,
+                "industrial_conclusion_readiness": "limited",
+                "industrial_acceptance_pass": False,
+                "acceptance_flags": [gate.reason],
+                "score_items": [],
+                "output_products": ["tracking.jsonl", "inspection_summary.json"],
+            },
+            "diagnostics": diagnostics,
+        }
+        text = json.dumps(_json_safe(payload), ensure_ascii=False, allow_nan=False)
+        self.pub_tracking.publish(String(data=text))
+        self._publish_cable_monitor_topics(payload)
+        self._publish_diag(diagnostics)
+
+    def _publish_degraded_hold_setpoint(self, reason: str) -> None:
+        if self.latest_odom is None:
+            return
+        msg = Setpoint()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.mode = "CABLE_TRACKING_DEGRADED_HOLD"
+        msg.bridge_backend = str(self.control_cfg.get("bridge_backend", "protocol_udp"))
+        msg.control_mode_byte = int(self.control_cfg.get("control_mode_byte", 0xEE))
+        msg.target_depth_m = max(0.0, -float(self.latest_odom.pose.pose.position.z))
+        msg.target_heading_rad = float(_yaw_from_odom(self.latest_odom))
+        msg.target_speed_mps = float(self.sensor_policy_cfg.get("degraded_hold_speed_mps", 0.0))
+        msg.track_cable = False
+        msg.sine_amplitude = 0.0
+        msg.sine_period_s = 0.0
+        msg.high_priority = True
+        msg.note = f"sensor degraded hold: {reason}"
+        msg.target_x_m = float(self.latest_odom.pose.pose.position.x)
+        msg.target_y_m = float(self.latest_odom.pose.pose.position.y)
+        self.pub_setpoint.publish(msg)
 
     def _publish_setpoint(self, tracking, guidance, limited, target_depth: float) -> None:
         msg = Setpoint()
@@ -691,9 +799,17 @@ def main() -> None:
     node = CableTrackingNode()
     try:
         rclpy.spin(node)
+    except ExternalShutdownException:
+        pass
+    except Exception:
+        if not rclpy.ok():
+            pass
+        else:
+            raise
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":

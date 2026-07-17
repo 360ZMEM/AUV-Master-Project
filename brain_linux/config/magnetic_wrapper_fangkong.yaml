@@ -1,0 +1,31 @@
+/**:
+  ros__parameters:
+    output_topic: /auv/sensors/magnetic
+    frame_id: mag_link
+    publish_rate_hz: 50.0
+    input_unit: tesla
+    retry_interval_s: 5.0
+
+    fangkong_root: hardware_wrappers/fangkong_adc
+    fangkong_default_config: hardware_wrappers/fangkong_adc/config/default_config.yaml
+    fangkong_user_config: ""
+    use_fangkong_user_config: false
+
+    device_host: 192.168.0.12
+    device_port: 1600
+    connect_timeout_sec: 3.0
+    recv_timeout_sec: 1.0
+    reconnect_interval_sec: 2.0
+
+    sample_rate_hz: 2000
+    active_channels: [0, 1, 2]
+    read_bytes_per_request: 1404
+    sensor_sensitivity_mv_per_ut: [20.02, 19.98, 19.96]
+    transport_mode: poll
+    waveform_y_unit: magnetic_field
+
+    calibration_enabled: true
+    calibration_profile_path: hardware_wrappers/fangkong_adc/calibration_profiles/20260705T144937_magnetometer_9param.json
+
+    axis_order: [0, 1, 2]
+    axis_signs: [1.0, 1.0, 1.0]

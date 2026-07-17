@@ -491,7 +491,170 @@ payload = {
 
 ---
 
-## 10. 实际迁移时建议怎么走
+## 10. Jetson 端多个传感器怎么组织
+
+当 `magnetic`、`sonar`、未来可能新增的相机/惯导辅助传感器都挂在 Jetson 一端时，推荐按下面三层组织：
+
+```text
+设备 wrapper 层
+  -> 每个设备各自负责厂商协议、单位、坐标轴、坏包过滤
+  -> 输出标准 ROS topic
+
+sensor supervisor 层
+  -> 只做 topic freshness / health / capability 聚合
+  -> 给出“哪些能力还能用，哪些任务该降级”
+
+任务/算法层
+  -> 按 capability 做 mission 级降级
+  -> 不直接理解厂商协议
+```
+
+当前已经落到代码里的对应关系是：
+
+- 磁传感器 wrapper 骨架：
+  `brain_linux/src/auv_control/auv_decision_ros/magnetic_sensor_wrapper_node.py`
+- 前视声呐 wrapper 骨架：
+  `brain_linux/src/auv_control/auv_decision_ros/forward_sonar_wrapper_node.py`
+- 多传感器 supervisor：
+  `brain_linux/src/auv_control/auv_decision_ros/sensor_supervisor_node.py`
+- supervisor 配置：
+  `brain_linux/config/sensor_supervisor.yaml`
+
+这样组织的好处是：
+
+- 新增设备时，只改对应 wrapper，不动 mission 节点；
+- 传感器掉线时，先在 supervisor 汇总成 capability 降级，再由 mission 节点决定是否限用；
+- 不会因为某一个专用传感器失效，就把整个 Jetson 栈粗暴判成“全不可用”。
+
+### 10.1 当前 capability 划分
+
+本轮落地的 supervisor 默认把能力分成：
+
+- `autonomy_core`：依赖 `navigation`
+- `cable_inspection`：依赖 `navigation + magnetic`
+- `terrain_following`：依赖 `navigation + forward_sonar`
+
+这意味着：
+
+- `magnetic` 掉线时，**只应阻断 cable inspection**
+- `forward_sonar` 掉线时，**只应阻断 terrain following**
+- `navigation` 掉线时，才属于核心能力不可用
+
+这套映射在 `brain_linux/config/sensor_supervisor.yaml` 里可扩展，不是写死在单个算法节点里的。
+
+### 10.2 `decision_node` / `terrain_following` 现在怎么接 gate
+
+本轮已经把 capability gate 接到了两处关键执行链：
+
+- `decision_node.py`
+  - 收 mission command 时先看 capability 是否满足；
+  - 行为树输出 goal 后再次检查；
+  - 如果缺能力，则不再继续发布原任务目标，而是发布 `CAPABILITY_DEGRADED_HOLD`。
+
+- `auv_controller_node.py`
+  - 当 setpoint 进入 `ALTITUDE_FOLLOW` / `TERRAIN_FOLLOWING` 路径时，
+    检查 `terrain_following` capability；
+  - 若前视声呐缺失，则直接发零输出 hold，不继续走 terrain follower。
+
+因此现在的行为已经变成：
+
+- `magnetic` 缺失：只阻断 `cable_inspection`
+- `forward_sonar` 缺失：只阻断 `terrain_following`
+- `navigation` 缺失：核心自主能力不可用
+
+### 10.3 顶层实验命令现在怎么开 mock wrapper
+
+本轮之后，`auv_stack.launch.py` 已经支持直接从顶层实验命令打开 Jetson 端 mock wrapper。
+
+例如：
+
+```bash
+bash scripts/start_experiment.sh \
+  --sim-backend pvs \
+  --bridge-backend protocol_udp \
+  --arbiter-profile \
+  --duration 30 \
+  --enable-mock-magnetic-wrapper \
+  --enable-mock-forward-sonar-wrapper
+```
+
+也可以单独开其中一个：
+
+```bash
+--enable-mock-magnetic-wrapper
+--enable-mock-forward-sonar-wrapper
+```
+
+可调参数包括：
+
+- `--mock-magnetic-rate-hz`
+- `--mock-magnetic-field-t`
+- `--mock-forward-sonar-rate-hz`
+- `--mock-forward-sonar-slope`
+- `--mock-forward-sonar-range-m`
+
+如果需要兼容旧脚本或一次性透传任意 launch 参数，仍然可以继续使用：
+
+```bash
+--brain-arg enable_mock_magnetic_wrapper:=true
+--brain-arg enable_mock_forward_sonar_wrapper:=true
+```
+
+这意味着顶层实验命令现在已经可以：
+
+- 起主栈
+- 起 `sensor_supervisor`
+- 起 mock magnetic / mock sonar 源
+- 让 `decision_node` / `terrain_following` 真正吃到 capability gate
+
+---
+
+## 11. 传感器失效逻辑怎么落
+
+原则是“**任务级降级，不做全栈一刀切**”。
+
+### 11.1 现在已经落地的逻辑
+
+1. `sensor_supervisor_node.py` 订阅多个传感器 topic，按超时判断健康度；
+2. 它把结果聚合成 `/auv/sensors/runtime_status`；
+3. `cable_tracking_node.py` 订阅这个 runtime status，并结合本地 freshness 再做一层保护；
+4. 若 `magnetic` 不可用，则进入：
+   `magnetic_unavailable_inspection_blocked`
+5. 此时 `cable_tracking` 不再继续输出旧巡检 setpoint，而是发布一个 **degraded hold setpoint**：
+   - 保持当前航向
+   - 保持当前深度
+   - 速度降到 `0.0`
+   - `track_cable=false`
+
+这样可以避免一种很危险的情况：
+
+- 磁传感器已经停了；
+- 但 `cable_tracking_node.py` 还拿着之前缓存的磁块继续算；
+- 控制器继续沿用旧巡检 setpoint 往前跑。
+
+这次改动已经把这个隐患堵住了。
+
+### 11.2 为什么既要 supervisor，又要本地 freshness
+
+因为 supervisor 是**统一组织层**，但 mission 节点自身也必须有“最后一道门”：
+
+- supervisor 负责统一说清楚“哪些 capability 还可用”；
+- `cable_tracking_node.py` 自己也会检查 `navigation_timeout_s` 和 `magnetic_timeout_s`；
+- 即便 supervisor 暂时没启，`cable_tracking` 也不会把陈旧磁数据当作新数据继续用。
+
+### 11.3 以后扩展别的任务时怎么套用
+
+可以直接复用这套模式：
+
+- 地形跟踪节点订阅 `terrain_following` capability
+- 巡检/磁跟踪节点订阅 `cable_inspection` capability
+- 视觉巡检节点订阅 `visual_inspection` capability
+
+每个任务只关心“自己需要的 capability”，而不是自己去重新判断全系统健康。
+
+---
+
+## 12. 实际迁移时建议怎么走
 
 建议按这个顺序：
 
@@ -506,7 +669,7 @@ payload = {
 
 ---
 
-## 11. 相关文档
+## 13. 相关文档
 
 - 仿真验证记录：[`../experiment/protocol_udp_sim_validation.md`](../experiment/protocol_udp_sim_validation.md)
 - PC104 空板边界：[`../experiment/pc104_sensorless_limit.md`](../experiment/pc104_sensorless_limit.md)

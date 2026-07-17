@@ -37,6 +37,7 @@ from geometry_msgs.msg import TwistStamped
 from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import SetParametersResult
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
 from std_msgs.msg import Float32, Float32MultiArray, String
@@ -528,7 +529,9 @@ class AUVLocalizationNode(Node):
                 f'  Velocity: [{state["v"][0]:.4f}, {state["v"][1]:.4f}, {state["v"][2]:.4f}]'
             )
 
-
+##
+# @brief Run the localization node until the ROS context stops.
+# @param args Optional ROS CLI arguments.
 def main(args=None) -> None:
     """节点入口。"""
     rclpy.init(args=args)
@@ -536,6 +539,8 @@ def main(args=None) -> None:
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
+        pass
+    except ExternalShutdownException:
         pass
     finally:
         node.destroy_node()

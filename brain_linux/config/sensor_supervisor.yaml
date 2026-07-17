@@ -1,0 +1,44 @@
+sensor_supervisor:
+  enabled: true
+  publish_rate_hz: 2.0
+  status_topic: /auv/sensors/runtime_status
+
+  capabilities:
+    autonomy_core:
+      - navigation
+    cable_inspection:
+      - navigation
+      - magnetic
+    terrain_following:
+      - navigation
+      - forward_sonar
+
+  sensors:
+    - name: navigation
+      topic: /auv/state/filtered
+      msg_type: nav_msgs/msg/Odometry
+      timeout_s: 0.5
+      required: true
+      capabilities:
+        - autonomy_core
+        - cable_inspection
+        - terrain_following
+      description: Filtered vehicle state used by controller and mission adapters.
+
+    - name: magnetic
+      topic: /auv/sensors/magnetic
+      msg_type: sensor_msgs/msg/MagneticField
+      timeout_s: 0.5
+      required: false
+      capabilities:
+        - cable_inspection
+      description: Magnetic field source for cable inspection and magnetic diagnostics.
+
+    - name: forward_sonar
+      topic: /auv/sensors/forward_sonar_slope
+      msg_type: std_msgs/msg/Float32
+      timeout_s: 0.5
+      required: false
+      capabilities:
+        - terrain_following
+      description: Forward-looking terrain slope input for terrain-following control.

@@ -77,6 +77,34 @@ while [[ $# -gt 0 ]]; do
       BRAIN_ARGS+=("${2:?missing value for --brain-arg}")
       shift 2
       ;;
+    --enable-mock-magnetic-wrapper)
+      BRAIN_ARGS+=("enable_mock_magnetic_wrapper:=true")
+      shift
+      ;;
+    --mock-magnetic-field-t)
+      BRAIN_ARGS+=("mock_magnetic_field_t:=${2:?missing value for --mock-magnetic-field-t}")
+      shift 2
+      ;;
+    --mock-magnetic-rate-hz)
+      BRAIN_ARGS+=("mock_magnetic_rate_hz:=${2:?missing value for --mock-magnetic-rate-hz}")
+      shift 2
+      ;;
+    --enable-mock-forward-sonar-wrapper)
+      BRAIN_ARGS+=("enable_mock_forward_sonar_wrapper:=true")
+      shift
+      ;;
+    --mock-forward-sonar-slope)
+      BRAIN_ARGS+=("mock_forward_sonar_slope:=${2:?missing value for --mock-forward-sonar-slope}")
+      shift 2
+      ;;
+    --mock-forward-sonar-range-m)
+      BRAIN_ARGS+=("mock_forward_sonar_range_m:=${2:?missing value for --mock-forward-sonar-range-m}")
+      shift 2
+      ;;
+    --mock-forward-sonar-rate-hz)
+      BRAIN_ARGS+=("mock_forward_sonar_rate_hz:=${2:?missing value for --mock-forward-sonar-rate-hz}")
+      shift 2
+      ;;
     --arbiter-profile)
       BRAIN_ARGS+=("--arbiter-profile")
       shift
@@ -136,6 +164,19 @@ Options:
   --protocol-control-mode-byte N
                              decision-side control mode byte for protocol_udp
   --brain-arg ARG            append an extra launch argument forwarded to brain
+  --enable-mock-magnetic-wrapper
+                             start Jetson-side mock magnetic publisher
+  --mock-magnetic-field-t VEC
+                             override mock magnetic field, e.g. "[3e-5,0,-1e-5]"
+  --mock-magnetic-rate-hz N  override mock magnetic publish rate
+  --enable-mock-forward-sonar-wrapper
+                             start Jetson-side mock forward sonar publisher
+  --mock-forward-sonar-slope N
+                             override mock terrain slope
+  --mock-forward-sonar-range-m N
+                             override mock terrain range
+  --mock-forward-sonar-rate-hz N
+                             override mock forward sonar publish rate
   --arbiter-profile          use protocol_udp arbiter params on the brain side
   --skip-layout              skip Foxglove JSON generation
   --topic-prefix PREFIX      apply a namespace prefix to Foxglove topics

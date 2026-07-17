@@ -17,6 +17,12 @@ BRIDGE_BACKEND_OVERRIDE="${AUV_BRIDGE_BACKEND:-}"
 CLI_BRIDGE_CFG_OVERRIDE=""
 SIM_TIME_SCALE=""
 TEMP_BRIDGE_CFG=""
+TEMP_BRAIN_PARAMS=""
+TEMP_SENSOR_SUPERVISOR_CONFIG=""
+OVERRIDE_BRAIN_MAGNETIC_KEY=""
+DISABLE_BRIDGE_MAGNETIC_SIDE_CHANNEL=false
+INJECT_MISSING_MAGNETIC=false
+INJECT_MISSING_FORWARD_SONAR=false
 LAUNCH_OUTPUT_MODE="${AUV_LAUNCH_OUTPUT_MODE:-log}"
 WAIT_BEFORE_RECORD_S="${WAIT_BEFORE_RECORD_S:-3}"
 RECORD_BAG=true
@@ -77,6 +83,69 @@ resolve_default_bridge_cfg() {
   esac
 }
 
+resolve_default_brain_params() {
+  if [[ -f "$BRAIN_DIR/config/params.protocol_udp_arbiter.yaml" && " ${LAUNCH_ARGS[*]} " == *" --arbiter-profile "* ]]; then
+    echo "$BRAIN_DIR/config/params.protocol_udp_arbiter.yaml"
+    return
+  fi
+  echo "$BRAIN_DIR/config/params.yaml"
+}
+
+resolve_default_sensor_supervisor_config() {
+  echo "$BRAIN_DIR/config/sensor_supervisor.yaml"
+}
+
+extract_brain_launch_arg_value() {
+  local key="$1"
+  local idx=0
+  while [[ "$idx" -lt "${#LAUNCH_ARGS[@]}" ]]; do
+    if [[ "${LAUNCH_ARGS[$idx]}" == "--brain-arg" ]]; then
+      local next_idx=$((idx + 1))
+      if [[ "$next_idx" -lt "${#LAUNCH_ARGS[@]}" ]]; then
+        local arg="${LAUNCH_ARGS[$next_idx]}"
+        if [[ "$arg" == "$key":=* ]]; then
+          echo "${arg#"$key":=}"
+        fi
+      fi
+      idx=$((idx + 2))
+      continue
+    fi
+    idx=$((idx + 1))
+  done
+}
+
+has_launch_option() {
+  local expected="$1"
+  local arg
+  for arg in "${LAUNCH_ARGS[@]}"; do
+    if [[ "$arg" == "$expected" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+has_enabled_brain_launch_arg() {
+  local key="$1"
+  local idx=0
+  while [[ "$idx" -lt "${#LAUNCH_ARGS[@]}" ]]; do
+    if [[ "${LAUNCH_ARGS[$idx]}" == "--brain-arg" ]]; then
+      local next_idx=$((idx + 1))
+      if [[ "$next_idx" -lt "${#LAUNCH_ARGS[@]}" ]]; then
+        case "${LAUNCH_ARGS[$next_idx]}" in
+          "$key":=true|"$key":=True|"$key":=1)
+            return 0
+            ;;
+        esac
+      fi
+      idx=$((idx + 2))
+      continue
+    fi
+    idx=$((idx + 1))
+  done
+  return 1
+}
+
 run_progress_bar() {
   local total_s="$1"
   local elapsed_s=0
@@ -122,6 +191,29 @@ Options:
                                explicit protocol control mode byte for brain side
   --arbiter-profile            force protocol_udp arbiter profile on the brain side
   --brain-arg ARG              append one raw argument forwarded to start_lin_brain.sh
+  --enable-mock-magnetic-wrapper
+                               start a Jetson-side mock magnetic publisher
+  --mock-magnetic-field-t VEC  override mock magnetic field, e.g. "[3e-5,0,-1e-5]"
+  --mock-magnetic-rate-hz N    override mock magnetic publish rate
+  --disable-bridge-magnetic-side-channel
+                               generate a per-run brain params file that points
+                               bridge.magnetic_key at a disabled topic; useful
+                               for true "missing magnetic" validation in PVS
+  --brain-magnetic-key KEY     override bridge.magnetic_key in a generated
+                               per-run brain params file
+  --inject-missing-magnetic    inject a strict magnetic fault for capability
+                               tests; disables the bridge side-channel and
+                               marks magnetic unavailable in sensor supervisor
+  --inject-missing-forward-sonar
+                               inject a strict forward-sonar fault for
+                               terrain-following capability tests
+  --enable-mock-forward-sonar-wrapper
+                               start a Jetson-side mock forward sonar publisher
+  --mock-forward-sonar-slope N override mock terrain slope
+  --mock-forward-sonar-range-m N
+                               override mock terrain range
+  --mock-forward-sonar-rate-hz N
+                               override mock forward sonar publish rate
   --topic-prefix PREFIX        apply a namespace prefix to generated Foxglove topics
   --with-map                   include the 3D map layer in generated layout
   --viz-mock-mode              force visualization bridge mock mode
@@ -211,6 +303,51 @@ while [[ $# -gt 0 ]]; do
       LAUNCH_ARGS+=("--brain-arg" "${2:?missing value for --brain-arg}")
       shift 2
       ;;
+    --enable-mock-magnetic-wrapper)
+      LAUNCH_ARGS+=("--enable-mock-magnetic-wrapper")
+      shift
+      ;;
+    --mock-magnetic-field-t)
+      LAUNCH_ARGS+=("--mock-magnetic-field-t" "${2:?missing value for --mock-magnetic-field-t}")
+      shift 2
+      ;;
+    --mock-magnetic-rate-hz)
+      LAUNCH_ARGS+=("--mock-magnetic-rate-hz" "${2:?missing value for --mock-magnetic-rate-hz}")
+      shift 2
+      ;;
+    --disable-bridge-magnetic-side-channel)
+      DISABLE_BRIDGE_MAGNETIC_SIDE_CHANNEL=true
+      OVERRIDE_BRAIN_MAGNETIC_KEY="rt/auv/sensors/magnetic_disabled"
+      shift
+      ;;
+    --brain-magnetic-key)
+      OVERRIDE_BRAIN_MAGNETIC_KEY="${2:?missing value for --brain-magnetic-key}"
+      shift 2
+      ;;
+    --inject-missing-magnetic)
+      INJECT_MISSING_MAGNETIC=true
+      shift
+      ;;
+    --inject-missing-forward-sonar)
+      INJECT_MISSING_FORWARD_SONAR=true
+      shift
+      ;;
+    --enable-mock-forward-sonar-wrapper)
+      LAUNCH_ARGS+=("--enable-mock-forward-sonar-wrapper")
+      shift
+      ;;
+    --mock-forward-sonar-slope)
+      LAUNCH_ARGS+=("--mock-forward-sonar-slope" "${2:?missing value for --mock-forward-sonar-slope}")
+      shift 2
+      ;;
+    --mock-forward-sonar-range-m)
+      LAUNCH_ARGS+=("--mock-forward-sonar-range-m" "${2:?missing value for --mock-forward-sonar-range-m}")
+      shift 2
+      ;;
+    --mock-forward-sonar-rate-hz)
+      LAUNCH_ARGS+=("--mock-forward-sonar-rate-hz" "${2:?missing value for --mock-forward-sonar-rate-hz}")
+      shift 2
+      ;;
     --bag-arg)
       BAG_EXTRA_ARGS+=("${2:?missing value for --bag-arg}")
       shift 2
@@ -286,6 +423,24 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$INJECT_MISSING_MAGNETIC" == true ]]; then
+  DISABLE_BRIDGE_MAGNETIC_SIDE_CHANNEL=true
+  OVERRIDE_BRAIN_MAGNETIC_KEY="rt/auv/sensors/magnetic_disabled"
+  if has_launch_option "--enable-mock-magnetic-wrapper" || \
+    has_enabled_brain_launch_arg "enable_mock_magnetic_wrapper" || \
+    has_enabled_brain_launch_arg "enable_real_magnetic_wrapper"; then
+    echo "[AUV][ERROR] --inject-missing-magnetic conflicts with an enabled magnetic wrapper"
+    exit 2
+  fi
+fi
+
+if [[ "$INJECT_MISSING_FORWARD_SONAR" == true ]]; then
+  if has_launch_option "--enable-mock-forward-sonar-wrapper" || has_enabled_brain_launch_arg "enable_mock_forward_sonar_wrapper"; then
+    echo "[AUV][ERROR] --inject-missing-forward-sonar conflicts with an enabled mock forward sonar wrapper"
+    exit 2
+  fi
+fi
 
 case "$LAUNCH_OUTPUT_MODE" in
   log|stream)
@@ -426,6 +581,113 @@ elif [[ -n "$CLI_BRIDGE_CFG_OVERRIDE" ]]; then
   LAUNCH_ARGS+=("--bridge-cfg" "$CLI_BRIDGE_CFG_OVERRIDE")
 fi
 
+if [[ -n "$OVERRIDE_BRAIN_MAGNETIC_KEY" ]]; then
+  BASE_BRAIN_PARAMS="$(extract_brain_launch_arg_value params_file)"
+  if [[ -z "$BASE_BRAIN_PARAMS" ]]; then
+    BASE_BRAIN_PARAMS="$(resolve_default_brain_params)"
+  fi
+  if [[ "$BASE_BRAIN_PARAMS" != /* ]]; then
+    BASE_BRAIN_PARAMS="$ROOT_DIR/$BASE_BRAIN_PARAMS"
+  fi
+  if [[ ! -f "$BASE_BRAIN_PARAMS" ]]; then
+    echo "[AUV][ERROR] brain params for magnetic override not found: $BASE_BRAIN_PARAMS"
+    exit 1
+  fi
+
+  TEMP_BRAIN_PARAMS="$RUN_DIR/brain_params.magnetic_key_override.yaml"
+  python3 - "$BASE_BRAIN_PARAMS" "$TEMP_BRAIN_PARAMS" "$OVERRIDE_BRAIN_MAGNETIC_KEY" <<'PY'
+from pathlib import Path
+import sys
+
+import yaml
+
+src = Path(sys.argv[1])
+dst = Path(sys.argv[2])
+magnetic_key = sys.argv[3]
+
+with src.open("r", encoding="utf-8") as f:
+    cfg = yaml.safe_load(f) or {}
+if not isinstance(cfg, dict):
+    raise SystemExit(f"[AUV][ERROR] brain params root must be a mapping: {src}")
+bridge = cfg.setdefault("bridge", {})
+if not isinstance(bridge, dict):
+    raise SystemExit(f"[AUV][ERROR] brain params bridge section must be a mapping: {src}")
+bridge["magnetic_key"] = magnetic_key
+dst.parent.mkdir(parents=True, exist_ok=True)
+with dst.open("w", encoding="utf-8") as f:
+    yaml.safe_dump(cfg, f, sort_keys=False, allow_unicode=True)
+PY
+  LAUNCH_ARGS+=("--brain-arg" "params_file:=${TEMP_BRAIN_PARAMS}")
+  echo "[AUV] brain magnetic_key override: $OVERRIDE_BRAIN_MAGNETIC_KEY"
+  echo "[AUV] generated per-run brain params: $TEMP_BRAIN_PARAMS"
+fi
+
+if [[ "$INJECT_MISSING_MAGNETIC" == true || "$INJECT_MISSING_FORWARD_SONAR" == true ]]; then
+  BASE_SENSOR_SUPERVISOR_CONFIG="$(extract_brain_launch_arg_value sensor_supervisor_config)"
+  if [[ -z "$BASE_SENSOR_SUPERVISOR_CONFIG" ]]; then
+    BASE_SENSOR_SUPERVISOR_CONFIG="$(resolve_default_sensor_supervisor_config)"
+  fi
+  if [[ "$BASE_SENSOR_SUPERVISOR_CONFIG" != /* ]]; then
+    BASE_SENSOR_SUPERVISOR_CONFIG="$ROOT_DIR/$BASE_SENSOR_SUPERVISOR_CONFIG"
+  fi
+  if [[ ! -f "$BASE_SENSOR_SUPERVISOR_CONFIG" ]]; then
+    echo "[AUV][ERROR] sensor supervisor config for capability fault injection not found: $BASE_SENSOR_SUPERVISOR_CONFIG"
+    exit 1
+  fi
+
+  TEMP_SENSOR_SUPERVISOR_CONFIG="$RUN_DIR/sensor_supervisor.capability_fault.yaml"
+  python3 - \
+    "$BASE_SENSOR_SUPERVISOR_CONFIG" \
+    "$TEMP_SENSOR_SUPERVISOR_CONFIG" \
+    "$INJECT_MISSING_MAGNETIC" \
+    "$INJECT_MISSING_FORWARD_SONAR" <<'PY'
+from pathlib import Path
+import sys
+
+import yaml
+
+src = Path(sys.argv[1])
+dst = Path(sys.argv[2])
+missing_magnetic = sys.argv[3].lower() == "true"
+missing_forward_sonar = sys.argv[4].lower() == "true"
+
+with src.open("r", encoding="utf-8") as f:
+    cfg = yaml.safe_load(f) or {}
+if not isinstance(cfg, dict):
+    raise SystemExit(f"[AUV][ERROR] sensor supervisor config root must be a mapping: {src}")
+supervisor = cfg.get("sensor_supervisor")
+if not isinstance(supervisor, dict):
+    raise SystemExit(f"[AUV][ERROR] missing sensor_supervisor mapping: {src}")
+sensors = supervisor.get("sensors")
+if not isinstance(sensors, list):
+    raise SystemExit(f"[AUV][ERROR] sensor_supervisor.sensors must be a list: {src}")
+
+faulted_sensors = {
+    "magnetic": missing_magnetic,
+    "forward_sonar": missing_forward_sonar,
+}
+for sensor_name, enabled in faulted_sensors.items():
+    if not enabled:
+        continue
+    for sensor in sensors:
+        if isinstance(sensor, dict) and sensor.get("name") == sensor_name:
+            sensor["topic"] = f"/auv/sensors/{sensor_name}_fault_disabled"
+            sensor["description"] = (
+                f"Capability fault injection: {sensor_name} input intentionally disabled for this run."
+            )
+            break
+    else:
+        raise SystemExit(f"[AUV][ERROR] sensor supervisor config does not define sensor '{sensor_name}': {src}")
+
+dst.parent.mkdir(parents=True, exist_ok=True)
+with dst.open("w", encoding="utf-8") as f:
+    yaml.safe_dump(cfg, f, sort_keys=False, allow_unicode=True)
+PY
+  LAUNCH_ARGS+=("--brain-arg" "sensor_supervisor_config:=${TEMP_SENSOR_SUPERVISOR_CONFIG}")
+  echo "[AUV] capability fault injection: missing_magnetic=$INJECT_MISSING_MAGNETIC missing_forward_sonar=$INJECT_MISSING_FORWARD_SONAR"
+  echo "[AUV] generated per-run sensor supervisor config: $TEMP_SENSOR_SUPERVISOR_CONFIG"
+fi
+
 cleanup() {
   if [[ -n "${PROGRESS_PID:-}" ]]; then
     kill "$PROGRESS_PID" >/dev/null 2>&1 || true
@@ -499,6 +761,12 @@ trap cleanup EXIT INT TERM
   echo "cli_bridge_cfg_override=$CLI_BRIDGE_CFG_OVERRIDE"
   echo "sim_time_scale=$SIM_TIME_SCALE"
   echo "temp_bridge_cfg=$TEMP_BRIDGE_CFG"
+  echo "disable_bridge_magnetic_side_channel=$DISABLE_BRIDGE_MAGNETIC_SIDE_CHANNEL"
+  echo "override_brain_magnetic_key=$OVERRIDE_BRAIN_MAGNETIC_KEY"
+  echo "temp_brain_params=$TEMP_BRAIN_PARAMS"
+  echo "inject_missing_magnetic=$INJECT_MISSING_MAGNETIC"
+  echo "inject_missing_forward_sonar=$INJECT_MISSING_FORWARD_SONAR"
+  echo "temp_sensor_supervisor_config=$TEMP_SENSOR_SUPERVISOR_CONFIG"
   echo "launcher_output_mode=$LAUNCH_OUTPUT_MODE"
   echo "record_bag=$RECORD_BAG"
   echo "bag_storage_id=$BAG_STORAGE_ID"

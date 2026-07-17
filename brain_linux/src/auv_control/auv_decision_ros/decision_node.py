@@ -13,6 +13,7 @@ import math
 
 from nav_msgs.msg import Odometry
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
 from std_msgs.msg import Float32, String
@@ -30,6 +31,7 @@ from .mappers import (
     sensor_msg_to_core,
     telemetry_snapshot_to_msg,
 )
+from .sensor_runtime import capability_available, capability_missing_sensors
 
 
 class AUVDecisionNode(Node):
@@ -55,6 +57,8 @@ class AUVDecisionNode(Node):
         self.declare_parameter('debug_level', 0)  # 0:AUTO, 1:HOLD, 2:PATH, 3:FULL
         self.declare_parameter('transition_threshold_m', 2.0)  # 触发平滑过渡的跳变阈值（米）
         self.declare_parameter('transition_duration_s', 3.0)  # 平滑过渡持续时间（秒）
+        self.declare_parameter('runtime_status_topic', '/auv/sensors/runtime_status')
+        self.declare_parameter('enable_capability_gate', True)
 
         # --- 特征开关 (Feature Flags) ---
         self.declare_parameter('enable_behavior_tree', True)
@@ -72,6 +76,8 @@ class AUVDecisionNode(Node):
         self.debug_level = int(self.get_parameter('debug_level').value)
         self.transition_threshold_m = float(self.get_parameter('transition_threshold_m').value)
         self.transition_duration_s = float(self.get_parameter('transition_duration_s').value)
+        self.runtime_status_topic = str(self.get_parameter('runtime_status_topic').value)
+        self.enable_capability_gate = bool(self.get_parameter('enable_capability_gate').value)
 
         self.enable_behavior_tree = bool(self.get_parameter('enable_behavior_tree').value)
         self.bypass_to_manual_setpoint = bool(self.get_parameter('bypass_to_manual_setpoint').value)
@@ -90,6 +96,8 @@ class AUVDecisionNode(Node):
         self.last_tree_print_ns: int = 0
         self.last_summary_log_ns: int = 0
         self.last_bt_status_ns: int = 0
+        self.latest_runtime_status: dict | None = None
+        self._last_capability_gate_reason = ""
 
         # Mock AMD clock synchronization
         self.mock_amd_timestamp_us: int = 0
@@ -113,6 +121,7 @@ class AUVDecisionNode(Node):
         self.create_subscription(ArbiterStatus, '/auv/arbiter/status', self._on_arbiter_status, 10)
         self.create_subscription(Setpoint, '/auv/manual/setpoint', self._on_manual_setpoint, 10)
         self.create_subscription(String, '/auv/mission_command', self._on_mission_command, 10)
+        self.create_subscription(String, self.runtime_status_topic, self._on_runtime_status, 10)
 
         self.latest_manual_setpoint: Setpoint | None = None
         self.latest_mission_command: dict | None = None
@@ -140,6 +149,7 @@ class AUVDecisionNode(Node):
         self.get_logger().info('订阅: /auv/metrics/lateral_error (std_msgs/Float32)')
         self.get_logger().info('订阅: /auv/state/filtered (nav_msgs/Odometry)')
         self.get_logger().info('订阅: /auv/sensors/magnetic (sensor_msgs/MagneticField)')
+        self.get_logger().info(f'订阅: {self.runtime_status_topic} (std_msgs/String)')
         self.get_logger().info('发布: /auv/control/goal (auv_interfaces/ControlGoal)')
         self.get_logger().info('发布: /auv/control/setpoint (auv_interfaces/Setpoint)')
         self.get_logger().info('发布: /auv/bt_status (std_msgs/String)')
@@ -154,8 +164,19 @@ class AUVDecisionNode(Node):
         """接收上位机下发的任务指令，注入行为树黑板。"""
         try:
             data = json.loads(msg.data)
+            mission_type = str(data.get('mission_type', 'UNKNOWN')).upper()
+            required_capability = self._mission_required_capability(mission_type)
+            if self.enable_capability_gate and required_capability and not capability_available(
+                self.latest_runtime_status,
+                required_capability,
+            ):
+                missing = capability_missing_sensors(self.latest_runtime_status, required_capability)
+                self.get_logger().warning(
+                    f'[mission_command] reject mission_type={mission_type} capability={required_capability} '
+                    f'missing={missing}'
+                )
+                return
             self.latest_mission_command = data
-            mission_type = data.get('mission_type', 'UNKNOWN')
             target_depth = data.get('target_depth', 0.0)
             track_distance = data.get('track_distance', 0.0)
             timeout_s = data.get('timeout_s', 1200)
@@ -241,6 +262,56 @@ class AUVDecisionNode(Node):
         elif work_instruction == WorkInstruction.ANALYTICAL_PATH_DEBUG:
             self.get_logger().info('收到 0xA2 ANALYTICAL_PATH_DEBUG 指令，切换到 debug_level=2')
             self.debug_level = 2
+
+    def _on_runtime_status(self, msg: String) -> None:
+        try:
+            payload = json.loads(msg.data)
+        except json.JSONDecodeError as exc:
+            self.get_logger().warning(f'Failed to parse runtime status: {exc}')
+            return
+        if isinstance(payload, dict):
+            self.latest_runtime_status = payload
+
+    @staticmethod
+    def _mission_required_capability(mission_type: str) -> str:
+        normalized = str(mission_type or '').upper()
+        if normalized in {'CABLE_TRACKING', 'CABLE_INSPECTION'}:
+            return 'cable_inspection'
+        if normalized in {'ALTITUDE_FOLLOW', 'TERRAIN_FOLLOWING'}:
+            return 'terrain_following'
+        return ''
+
+    def _goal_required_capability(self, goal_dict: dict) -> str:
+        mode = str(goal_dict.get('mode', '')).upper()
+        if mode in {'PARALLEL_TRACKING', 'ZIGZAG_SEARCH', 'CABLE_TRACKING', 'CABLE_INSPECTION'}:
+            return 'cable_inspection'
+        if mode in {'ALTITUDE_FOLLOW', 'TERRAIN_FOLLOWING'}:
+            return 'terrain_following'
+        mission_type = ''
+        if isinstance(self.latest_mission_command, dict):
+            mission_type = str(self.latest_mission_command.get('mission_type', '')).upper()
+        return self._mission_required_capability(mission_type)
+
+    def _publish_capability_hold(self, capability: str, reason: str) -> None:
+        stamp = self.get_clock().now().to_msg()
+        depth_m = float(self.latest_sensor_status.depth_m)
+        heading_rad = float(self.latest_sensor_status.heading_rad)
+        hold_goal = {
+            'mode': 'CAPABILITY_DEGRADED_HOLD',
+            'target_depth_m': depth_m,
+            'target_heading_rad': heading_rad,
+            'target_speed_mps': 0.0,
+            'high_priority': True,
+            'bridge_backend': self.bridge_backend,
+            'control_mode_byte': self.protocol_control_mode_byte if self.bridge_backend == 'protocol_udp' else 0,
+            'note': f'capability_gate:{capability}:{reason}',
+            'track_cable': False,
+            'target_x_m': 0.0,
+            'target_y_m': 0.0,
+        }
+        self.pub_goal.publish(motion_goal_dict_to_msg(hold_goal))
+        self.pub_setpoint.publish(motion_goal_dict_to_setpoint_msg(hold_goal, stamp=stamp))
+        self.pub_bt_status.publish(String(data=f'CapabilityGate HOLD | capability={capability} | reason={reason}'))
 
     def _resolve_lateral_error(self) -> float | None:
         """优先返回显式横向误差，否则回退到滤波位姿中的横向偏移。"""
@@ -412,6 +483,22 @@ class AUVDecisionNode(Node):
         if goal_dict.get('mode') in {'PARALLEL_TRACKING', 'ZIGZAG_SEARCH'}:
             goal_dict.setdefault('track_cable', True)
 
+        required_capability = self._goal_required_capability(goal_dict)
+        if self.enable_capability_gate and required_capability and not capability_available(
+            self.latest_runtime_status,
+            required_capability,
+        ):
+            missing = capability_missing_sensors(self.latest_runtime_status, required_capability)
+            reason = f'{required_capability}_missing:{",".join(missing) if missing else "unknown"}'
+            if self._last_capability_gate_reason != reason:
+                self.get_logger().warning(
+                    f'[capability_gate] hold mode because capability={required_capability} missing={missing}'
+                )
+                self._last_capability_gate_reason = reason
+            self._publish_capability_hold(required_capability, reason)
+            return
+        self._last_capability_gate_reason = ""
+
         goal_dict['target_heading_rad'] = self._resolve_target_heading(goal_dict)
         goal_dict.setdefault('bridge_backend', self.bridge_backend)
         if self.bridge_backend == 'protocol_udp':
@@ -490,7 +577,9 @@ class AUVDecisionNode(Node):
             self.last_tree_print_ns = now_ns
             self.get_logger().info(f'行为树快照:\n{telemetry.tree_snapshot}')
 
-
+##
+# @brief Run the decision node until the ROS context stops.
+# @param args Optional ROS CLI arguments.
 def main(args=None) -> None:
     """节点入口。"""
     rclpy.init(args=args)
@@ -499,6 +588,8 @@ def main(args=None) -> None:
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
+        pass
+    except ExternalShutdownException:
         pass
     finally:
         node.destroy_node()

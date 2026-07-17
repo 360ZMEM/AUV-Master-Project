@@ -72,6 +72,14 @@ cable_tracking:
     block_size: 8
     sensor_frame: mag_link
 
+  sensor_policy:
+    runtime_status_topic: /auv/sensors/runtime_status
+    required_capability: cable_inspection
+    navigation_timeout_s: 0.5
+    magnetic_timeout_s: 0.5
+    publish_degraded_hold_setpoint: true
+    degraded_hold_speed_mps: 0.0
+
   quality:
     enable_magnetic_quality: true
     enable_burial_inversion: true

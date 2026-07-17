@@ -34,6 +34,9 @@ from pathlib import Path
 import sys
 from typing import Any
 
+import rclpy
+from rclpy.executors import ExternalShutdownException
+
 def _resolve_project_root() -> Path:
     env_root = Path(str(os.environ.get('AUV_PROJECT_ROOT', ''))).expanduser() if os.environ.get('AUV_PROJECT_ROOT') else None
     if env_root and (env_root / 'common').exists() and (env_root / 'brain_linux').exists():
@@ -53,7 +56,6 @@ for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common', PROJECT_ROOT / 'sim_holooc
     if folder_str not in sys.path:
         sys.path.insert(0, folder_str)
 
-import rclpy
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion, TransformStamped, Vector3
 from rclpy.node import Node
 from sensor_msgs.msg import PointCloud2, PointField
@@ -602,6 +604,9 @@ class ZenohVizBridgeNode(Node):
         与 _on_truth (Z_PATH_TRUTH_POSE) 不同：此回调消费 Z_PATH_GROUND_TRUTH，
         不依赖 mock fallback，直接桥接 sim → ROS PoseStamped 供 benchmark 消费。
         """
+        if not rclpy.ok():
+            return
+
         position = data.get(KEY_POSITION_NED)
         rpy = data.get(KEY_RPY_NED)
         if not isinstance(position, list) or not isinstance(rpy, list):
@@ -615,7 +620,12 @@ class ZenohVizBridgeNode(Node):
         msg.pose.position.y = float(position[1])
         msg.pose.position.z = float(-position[2])
         msg.pose.orientation = _rpy_to_quaternion(rpy)
-        self.gt_pub.publish(msg)
+        try:
+            self.gt_pub.publish(msg)
+        except Exception:
+            if not rclpy.ok():
+                return
+            raise
 
         # Backfill _live_truth so the visualization marker tracks the real pose
         # if Z_PATH_TRUTH_POSE delivery is broken (avoids silent mock fallback).
@@ -723,20 +733,28 @@ class ZenohVizBridgeNode(Node):
           2. 否则从_live_*缓存读取最新Zenoh数据并发布
           3. 若Zenoh无真值数据，不发布任何内容
         """
+        if not rclpy.ok():
+            return
+
         now_ns = self.get_clock().now().nanoseconds
         have_live = self._last_live_rx_ns > 0 and (now_ns - self._last_live_rx_ns) < int(self.mock_fallback_timeout_s * 1e9)
 
         if self.mock_mode or not have_live:
             position, rpy = self.virtual_env.sample_mock_pose(self._mock_tick)
             payloads = self.virtual_env.build_visual_payloads(position_ned=position, rpy_ned=rpy, publish_terrain=True)
-            self._publish_scene(
-                payloads[Z_PATH_SEABED_CLOUD],
-                payloads[Z_PATH_CABLE_MARKER],
-                payloads[Z_PATH_TRUTH_POSE],
-                payloads[Z_PATH_HISTORY_TRAIL],
-                payloads[Z_PATH_VIEW_RANGE],
-            )
-            self._publish_mock_scene_summary(sample_index=self._mock_tick, position_ned=position, rpy_ned=rpy, mode='mock')
+            try:
+                self._publish_scene(
+                    payloads[Z_PATH_SEABED_CLOUD],
+                    payloads[Z_PATH_CABLE_MARKER],
+                    payloads[Z_PATH_TRUTH_POSE],
+                    payloads[Z_PATH_HISTORY_TRAIL],
+                    payloads[Z_PATH_VIEW_RANGE],
+                )
+                self._publish_mock_scene_summary(sample_index=self._mock_tick, position_ned=position, rpy_ned=rpy, mode='mock')
+            except Exception:
+                if not rclpy.ok():
+                    return
+                raise
             self._mock_tick += 1
             return
 
@@ -751,13 +769,18 @@ class ZenohVizBridgeNode(Node):
             KEY_RADIUS_M: self.virtual_env.config.view_radius_m,
             KEY_HEIGHT_M: self.virtual_env.config.view_height_m,
         }
-        self._publish_scene(terrain, cable, self._live_truth, trail, view_range)
-        self._publish_mock_scene_summary(
-            sample_index=self._mock_tick,
-            position_ned=self._live_truth.get(KEY_POSITION_NED, [0.0, 0.0, 0.0]),
-            rpy_ned=self._live_truth.get(KEY_RPY_NED, [0.0, 0.0, 0.0]),
-            mode='live',
-        )
+        try:
+            self._publish_scene(terrain, cable, self._live_truth, trail, view_range)
+            self._publish_mock_scene_summary(
+                sample_index=self._mock_tick,
+                position_ned=self._live_truth.get(KEY_POSITION_NED, [0.0, 0.0, 0.0]),
+                rpy_ned=self._live_truth.get(KEY_RPY_NED, [0.0, 0.0, 0.0]),
+                mode='live',
+            )
+        except Exception:
+            if not rclpy.ok():
+                return
+            raise
 
     def destroy_node(self):
         """清理资源：关闭Zenoh会话和订阅。"""
@@ -777,7 +800,9 @@ class ZenohVizBridgeNode(Node):
 
         return super().destroy_node()
 
-
+##
+# @brief Run the visualization bridge node until the ROS context stops.
+# @param args Optional ROS CLI arguments.
 def main(args=None) -> None:
     """Zenoh可视化桥接节点入口点。"""
     rclpy.init(args=args)
@@ -785,6 +810,8 @@ def main(args=None) -> None:
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
+        pass
+    except ExternalShutdownException:
         pass
     finally:
         node.destroy_node()

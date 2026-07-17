@@ -23,3 +23,4 @@
 | 11 | [experiment_state_machine.md](11_experiment_state_machine.md) | start_experiment.sh 编排状态机：进程拓扑、时序图、trap 路径 |
 | 12 | [cable_tracking_mag_integration.md](12_cable_tracking_mag_integration.md) | 电缆跟踪磁探测集成：在线先验修正、磁导出横偏观测、PVS 闭环恢复原理 |
 | 13 | [mag_lever_arm_calibration.md](13_mag_lever_arm_calibration.md) | 磁强计杆臂标定：外参配置模型与 bag 级证明 |
+| 14 | [fangkong_adc_wrapper_architecture.md](14_fangkong_adc_wrapper_architecture.md) | FK2301/TMR8637 真实磁 wrapper：submodule API 边界、默认标定、主仓 IP override 与脚本分层 |

@@ -36,6 +36,7 @@ import importlib.util
 import os
 
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from auv_interfaces.msg import Setpoint, MpcCmd, ArbiterStatus
 from geometry_msgs.msg import Twist, TwistStamped
 from nav_msgs.msg import Odometry
@@ -49,6 +50,7 @@ import yaml
 from common.enums import StateEstimateSource, ControlModeByte
 from common.protocol import KEY_STATE_SOURCE
 from common.env_utils import load_config_with_overrides
+from auv_decision_ros.sensor_runtime import capability_available, capability_missing_sensors
 
 from .base_controller import BaseController, ControlOutput
 from .pid_controller import PIDController
@@ -127,6 +129,8 @@ class AUVControllerNode(Node):
         self.declare_parameter('control_mode_byte', int(ControlModeByte.JETSON_HYBRID))
         self.declare_parameter('heading_ramp_limit_deg', 30.0)
         self.declare_parameter('heading_ramp_rate_deg_s', 10.0)
+        self.declare_parameter('runtime_status_topic', '/auv/sensors/runtime_status')
+        self.declare_parameter('enable_capability_gate', True)
 
         # --- 特征开关 (Feature Flags) ---
         self.declare_parameter('depth_mode', 'CONSTANT')
@@ -164,6 +168,8 @@ class AUVControllerNode(Node):
         self._heading_ramp_target = 0.0
         self._heading_ramp_limit_deg = float(self.get_parameter('heading_ramp_limit_deg').value)
         self._heading_ramp_rate_deg_s = float(self.get_parameter('heading_ramp_rate_deg_s').value)
+        self._runtime_status_topic = str(self.get_parameter('runtime_status_topic').value)
+        self._enable_capability_gate = bool(self.get_parameter('enable_capability_gate').value)
 
         self._depth_mode = str(self.get_parameter('depth_mode').value)
         self._heading_mode = str(self.get_parameter('heading_mode').value)
@@ -187,6 +193,8 @@ class AUVControllerNode(Node):
         self.latest_debug_payload: dict | None = None
         self._latest_confidence: float = 1.0
         self.latest_arbiter_status: ArbiterStatus | None = None
+        self.latest_runtime_status: dict | None = None
+        self._last_capability_gate_reason = ""
 
         # E4 — EKF 协方差驱动的置信度（论文 §4.4 主创新点）
         self._latest_p_trace_xy = float('nan')
@@ -211,6 +219,7 @@ class AUVControllerNode(Node):
         self.altitude_sub = self.create_subscription(Float32, '/auv/sensors/altitude', self._on_altitude, 20)
         self.forward_sonar_sub = self.create_subscription(Float32, '/auv/sensors/forward_sonar_slope', self._on_forward_sonar, 20)
         self.cov_sub = self.create_subscription(Float32MultiArray, '/auv/state/covariance', self._on_covariance, 20)
+        self.runtime_status_sub = self.create_subscription(String, self._runtime_status_topic, self._on_runtime_status, 20)
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
@@ -244,6 +253,15 @@ class AUVControllerNode(Node):
         """缓存最新控制目标并记录时间戳。"""
         self.latest_setpoint = msg
         self.latest_setpoint_ts = time.time()
+
+    def _on_runtime_status(self, msg: String) -> None:
+        try:
+            payload = json.loads(msg.data)
+        except json.JSONDecodeError as exc:
+            self.get_logger().warning(f'failed to parse runtime status: {exc}')
+            return
+        if isinstance(payload, dict):
+            self.latest_runtime_status = payload
 
     def _on_filtered_state(self, msg: Odometry) -> None:
         """缓存滤波后的状态估计。"""
@@ -440,6 +458,20 @@ class AUVControllerNode(Node):
         sp.target_speed_mps = self.latest_setpoint.target_speed_mps
         
         is_altitude_follow = (self.latest_setpoint.mode == 'ALTITUDE_FOLLOW' or self._depth_mode == 'TERRAIN_FOLLOWING')
+        if self._enable_capability_gate and is_altitude_follow and not capability_available(
+            self.latest_runtime_status,
+            'terrain_following',
+        ):
+            missing = capability_missing_sensors(self.latest_runtime_status, 'terrain_following')
+            reason = f"terrain_following_missing:{','.join(missing) if missing else 'unknown'}"
+            if self._last_capability_gate_reason != reason:
+                self.get_logger().warning(
+                    f'[capability_gate] terrain following disabled, missing={missing}; publishing zero-effort hold'
+                )
+                self._last_capability_gate_reason = reason
+            self._publish_zero_effort_hold(reason=reason, sp=self.latest_setpoint)
+            return
+        self._last_capability_gate_reason = ""
         
         # 1. 深度源选择
         work_instruction = 0x00
@@ -580,8 +612,13 @@ class AUVControllerNode(Node):
             mpc_msg.target_depth_m = float(sp.target_depth_m)
             mpc_msg.work_instruction = work_instruction
             mpc_msg.note = str(ctrl_output.debug.get('note', ''))
-            
-            self._mpc_cmd_pub.publish(mpc_msg)
+
+            try:
+                self._mpc_cmd_pub.publish(mpc_msg)
+            except Exception:
+                if not rclpy.ok():
+                    return
+                raise
         else:
             # PID 模式：直接发布 Twist
             tw = Twist()
@@ -648,6 +685,42 @@ class AUVControllerNode(Node):
             },
         }
 
+    def _publish_zero_effort_hold(self, *, reason: str, sp: Setpoint) -> None:
+        tw = Twist()
+        self.cmd_pub.publish(tw)
+
+        mpc_msg = MpcCmd()
+        mpc_msg.header.stamp = self.get_clock().now().to_msg()
+        mpc_msg.source = 'CAPABILITY_GATE'
+        mpc_msg.valid = True
+        mpc_msg.healthy = False
+        mpc_msg.thrust_percent = 0.0
+        mpc_msg.right_fin_deg = 0.0
+        mpc_msg.top_fin_deg = 0.0
+        mpc_msg.left_fin_deg = 0.0
+        mpc_msg.bottom_fin_deg = 0.0
+        mpc_msg.target_depth_m = float(sp.target_depth_m)
+        mpc_msg.work_instruction = 0
+        mpc_msg.note = reason
+        self._mpc_cmd_pub.publish(mpc_msg)
+
+        self.latest_debug_payload = {
+            'mode': 'CAPABILITY_DEGRADED_HOLD',
+            'controller_type': 'CAPABILITY_GATE',
+            'fallback_reason': reason,
+            'thrust_cmd': 0.0,
+            'guidance_heading': float(sp.target_heading_rad),
+            'guidance_depth': float(sp.target_depth_m),
+            'target_speed_mps': 0.0,
+            'cmd': {
+                'right_deg': 0.0,
+                'top_deg': 0.0,
+                'left_deg': 0.0,
+                'bottom_deg': 0.0,
+                'thrust': 0.0,
+            },
+        }
+
     def _log_latency(self) -> None:
         """周期性打印控制链路的平均延迟统计。"""
         if self._lat_count == 0:
@@ -698,13 +771,17 @@ class AUVControllerNode(Node):
 
         return obj
 
-
+##
+# @brief Run the controller node until the ROS context stops.
+# @param args Optional ROS CLI arguments.
 def main(args=None) -> None:
     rclpy.init(args=args)
     node = AUVControllerNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
+        pass
+    except ExternalShutdownException:
         pass
     finally:
         node.destroy_node()

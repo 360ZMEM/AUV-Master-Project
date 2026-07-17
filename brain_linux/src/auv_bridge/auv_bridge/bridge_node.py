@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import Any
 
 import rclpy
+from rclpy.executors import ExternalShutdownException
 
 from . import PROJECT_ROOT
 from auv_interfaces.msg import ArbiterStatus, MpcCmd, SensorStatus, Setpoint
@@ -376,7 +377,17 @@ class AUVBridgeNode(Node):
             payload['sensor_position_ned_hash_sha256_16'] = self._sensor_position_hash(sensor_position)
             payload['sensor_position_hash_quantization_m'] = 0.01
 
-        pub.publish(String(data=json.dumps(payload, ensure_ascii=False, sort_keys=True, allow_nan=False)))
+        self._safe_publish_ros(pub, String(data=json.dumps(payload, ensure_ascii=False, sort_keys=True, allow_nan=False)))
+
+    def _safe_publish_ros(self, publisher: Any, msg: Any) -> bool:
+        """Publish a ROS message unless the context is already shutting down."""
+        try:
+            publisher.publish(msg)
+            return True
+        except Exception:
+            if not rclpy.ok():
+                return False
+            raise
 
     def _create_transport(self, backend: BridgeBackend) -> BaseBridgeBackend:
         """根据配置选择具体传输后端实现。"""
@@ -864,7 +875,7 @@ class AUVBridgeNode(Node):
         msg.autonomy_allowed = bool(guard.autonomy_allowed) if guard is not None else False
         msg.telemetry_freshness_ms = float(self._current_telemetry_status(now=time.time()).get(KEY_TELEMETRY_FRESHNESS_MS, 0.0))
         msg.note = str(active_decision.command_payload.get(KEY_NOTE, '')) if active_decision is not None else ''
-        self.arbiter_status_pub.publish(msg)
+        self._safe_publish_ros(self.arbiter_status_pub, msg)
 
     @staticmethod
     def _header_stamp_to_seconds(stamp) -> float:
@@ -902,6 +913,9 @@ class AUVBridgeNode(Node):
         return self.get_clock().now().to_msg()
 
     def handle_json_sensor_payload(self, keyexpr: str, data: dict[str, Any]) -> None:
+        if not rclpy.ok():
+            return
+
         self._rx_count += 1
         self._record_latency(data)
 
@@ -919,7 +933,7 @@ class AUVBridgeNode(Node):
             msg.angular_velocity.x = float(gyro[0])
             msg.angular_velocity.y = float(gyro[1])
             msg.angular_velocity.z = float(gyro[2])
-            self.imu_pub.publish(msg)
+            self._safe_publish_ros(self.imu_pub, msg)
             return
 
         if keyexpr == self.dvl_key:
@@ -932,7 +946,7 @@ class AUVBridgeNode(Node):
             msg.twist.linear.x = float(vel[0])
             msg.twist.linear.y = float(vel[1])
             msg.twist.linear.z = float(vel[2])
-            self.dvl_pub.publish(msg)
+            self._safe_publish_ros(self.dvl_pub, msg)
             return
 
         if keyexpr == self.depth_key:
@@ -941,7 +955,7 @@ class AUVBridgeNode(Node):
                 return
             msg = Float32()
             msg.data = float(depth)
-            self.depth_pub.publish(msg)
+            self._safe_publish_ros(self.depth_pub, msg)
             return
 
         if keyexpr == self.magnetic_key:
@@ -955,10 +969,13 @@ class AUVBridgeNode(Node):
             msg.magnetic_field.x = float(magnetic_vec[0])
             msg.magnetic_field.y = float(magnetic_vec[1])
             msg.magnetic_field.z = float(magnetic_vec[2])
-            self.magnetic_pub.publish(msg)
+            self._safe_publish_ros(self.magnetic_pub, msg)
             self._publish_magnetic_extrinsics_status(data)
 
     def handle_protocol_telemetry(self, telemetry: ProtocolUplinkTelemetry) -> None:
+        if not rclpy.ok():
+            return
+
         self._rx_count += 1
         now = time.time()
         self.latest_protocol_telemetry_ts = now
@@ -977,7 +994,7 @@ class AUVBridgeNode(Node):
         imu_msg.linear_acceleration.x = 0.0
         imu_msg.linear_acceleration.y = 0.0
         imu_msg.linear_acceleration.z = 0.0
-        self.imu_pub.publish(imu_msg)
+        self._safe_publish_ros(self.imu_pub, imu_msg)
 
         dvl_msg = TwistStamped()
         dvl_msg.header.stamp = self.get_clock().now().to_msg()
@@ -990,15 +1007,15 @@ class AUVBridgeNode(Node):
         dvl_msg.twist.linear.x = dvl_world[0]
         dvl_msg.twist.linear.y = dvl_world[1]
         dvl_msg.twist.linear.z = dvl_world[2]
-        self.dvl_pub.publish(dvl_msg)
+        self._safe_publish_ros(self.dvl_pub, dvl_msg)
 
         depth_msg = Float32()
         depth_msg.data = float(telemetry.depth_m)
-        self.depth_pub.publish(depth_msg)
+        self._safe_publish_ros(self.depth_pub, depth_msg)
 
         altitude_msg = Float32()
         altitude_msg.data = float(telemetry.altitude_m)
-        self.altitude_pub.publish(altitude_msg)
+        self._safe_publish_ros(self.altitude_pub, altitude_msg)
 
         guard_decision = None
         if self.arbiter_enabled:
@@ -1119,7 +1136,11 @@ class AUVBridgeNode(Node):
         self.transport.close()
         return super().destroy_node()
 
-
+##
+# @brief Run the bridge node until the ROS context stops.
+# @param args Optional ROS CLI arguments.
+# @param preferred_backend Optional backend override.
+# @param node_name ROS node name to instantiate.
 def main(args=None, *, preferred_backend: str | None = None, node_name: str = 'auv_bridge_node') -> None:
     rclpy.init(args=args)
     node = AUVBridgeNode(node_name=node_name, preferred_backend=preferred_backend)
@@ -1127,6 +1148,13 @@ def main(args=None, *, preferred_backend: str | None = None, node_name: str = 'a
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
+    except ExternalShutdownException:
+        pass
+    except Exception:
+        if not rclpy.ok():
+            pass
+        else:
+            raise
     finally:
         node.destroy_node()
         if rclpy.ok():

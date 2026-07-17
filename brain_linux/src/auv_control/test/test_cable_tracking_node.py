@@ -4,6 +4,7 @@ import pytest
 import rclpy
 
 from auv_decision_ros.cable_tracking_node import CableTrackingNode
+from auv_decision_ros.sensor_runtime import evaluate_cable_inspection_gate
 
 
 def _summary_node() -> CableTrackingNode:
@@ -117,3 +118,27 @@ def test_acceptance_flags_block_industrial_ready_and_pass():
     assert industrial_ready is False
     assert summary["industrial_conclusion_readiness"] == "limited"
     assert summary["industrial_acceptance_pass"] is False
+
+
+def test_sensor_gate_blocks_only_cable_inspection_when_magnetic_missing():
+    gate = evaluate_cable_inspection_gate(
+        latest_odom_present=True,
+        latest_odom_wall_time_s=10.0,
+        magnetic_present=True,
+        latest_magnetic_wall_time_s=10.0,
+        latest_runtime_status={
+        "capabilities": {
+            "autonomy_core": {"available": True, "missing_sensors": []},
+            "cable_inspection": {"available": False, "missing_sensors": ["magnetic"]},
+        }
+        },
+        now_s=10.1,
+        navigation_timeout_s=0.5,
+        magnetic_timeout_s=0.5,
+        required_capability="cable_inspection",
+    )
+
+    assert gate.ready is False
+    assert gate.reason == "magnetic_unavailable_inspection_blocked"
+    assert gate.blocked_sensors == ["magnetic"]
+    assert gate.blocked_capabilities == ["cable_inspection"]

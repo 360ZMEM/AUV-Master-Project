@@ -344,7 +344,7 @@ results/visual_feedback/gui_pyside6_click_probe/click_probe_1783261553.png
 - 当前 Docker 仓库路径 `/home/auv_user/auv_ws/AUV-Master-Project` 在宿主机映射为：
 
 ```text
-/Users/bytedance/coding/AUV-Master-Project
+/Users/auv_user/coding/AUV-Master-Project
 ```
 
 ### 9.1 Base64 URL 参数验证
@@ -399,7 +399,7 @@ https://app.foxglove.dev/guanwen/p/prj_0eTMB6alu9ojy3u3/view?layoutId=lay_0eTMD3
 首次导入时宿主机文件路径：
 
 ```text
-/Users/bytedance/coding/AUV-Master-Project/tmp/foxglove_layout/auv_layout.generated.json
+/Users/auv_user/coding/AUV-Master-Project/tmp/foxglove_layout/auv_layout.generated.json
 ```
 
 ### 9.3 辅助脚本
@@ -514,7 +514,7 @@ python3 tools/foxglove_playwright_import_layout.py
 如果在宿主机运行，layout 文件对应路径为：
 
 ```text
-/Users/bytedance/coding/AUV-Master-Project/tmp/foxglove_layout/auv_layout.generated.json
+/Users/auv_user/coding/AUV-Master-Project/tmp/foxglove_layout/auv_layout.generated.json
 ```
 
 ### 10.2 方案二：IndexedDB 注入

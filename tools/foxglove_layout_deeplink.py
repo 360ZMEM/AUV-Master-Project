@@ -19,7 +19,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_WEB_BASE = "https://app.foxglove.dev/guanwen/p/prj_0eTMB6alu9ojy3u3/view"
 DEFAULT_LAYOUT_ID = "lay_0eTMD35mSIuRpPoy"
 DEFAULT_WS_URL = "ws://localhost:8765"
-DEFAULT_HOST_REPO_ROOT = "/Users/bytedance/coding/AUV-Master-Project"
+DEFAULT_HOST_REPO_ROOT = "/Users/auv_user/coding/AUV-Master-Project"
 
 
 def parse_args() -> argparse.Namespace:
