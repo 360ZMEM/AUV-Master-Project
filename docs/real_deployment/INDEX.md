@@ -16,6 +16,9 @@
 | 5 | [05_stage5_full_autonomy.md](05_stage5_full_autonomy.md) | **S5 全自主巡检**（行为树 + ros2 bag） |
 | 6 | [06_kill_switch.md](06_kill_switch.md) | 任何时候 — 急停操作与"双保险"分工 |
 | 7 | [07_param_diff_sim_vs_real.md](07_param_diff_sim_vs_real.md) | 阶段切换 — 参数差异速查（仿真 vs 真机） |
+| 8 | [08_cable_inspection_io_contract.md](08_cable_inspection_io_contract.md) | 电缆巡检部署时的输入/输出契约与磁外参要求 |
+| 9 | [09_dlt1278_digital_twin_outputs.md](09_dlt1278_digital_twin_outputs.md) | DLT1278 风格数字孪生产物、评分字段和导出物 |
+| 10 | [10_sim_vs_real_link_and_wrapper_map.md](10_sim_vs_real_link_and_wrapper_map.md) | 仿真 / 真机链路区别、配置分层、fan-out 用法与 wrapper 接入建议 |
 
 ---
 

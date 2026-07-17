@@ -1,3 +1,11 @@
 [submodule "AUV-Master-Mag"]
 	path = AUV-Master-Mag
 	url = https://github.com/360ZMEM/AUV-Master-Mag
+	branch = main
+
+
+
+[submodule "fangkong_adc"]
+	path = hardware_wrappers/fangkong_adc
+	url = https://github.com/360ZMEM/fangkong_adc
+	branch = main

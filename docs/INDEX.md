@@ -74,6 +74,7 @@
 - [05_stage5_full_autonomy.md](real_deployment/05_stage5_full_autonomy.md) — 行为树释放 + ros2 bag 黑匣子
 - [06_kill_switch.md](real_deployment/06_kill_switch.md) — 急停双保险与释放顺序
 - [07_param_diff_sim_vs_real.md](real_deployment/07_param_diff_sim_vs_real.md) — 仿真 vs 真机参数差异速查
+- [10_sim_vs_real_link_and_wrapper_map.md](real_deployment/10_sim_vs_real_link_and_wrapper_map.md) — 仿真 / 真机链路区别、配置分层、fan-out 与 wrapper 接入图
 
 ---
 

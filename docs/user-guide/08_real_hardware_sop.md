@@ -4,6 +4,7 @@
 
 > **本文档是 6 步速记表，便于现场对照执行**。
 > 如需完整的多 Level 实施路径（S1 链路审计 → S2 静态执行器 → S3 影子导航 → S4 单点闭环 → S5 全自主，每阶段独立 shell 入口、独立通过判据、独立失败回退），请前往 [`docs/real_deployment/INDEX.md`](../real_deployment/INDEX.md)。
+> 需要先分清“仿真链路 vs 真机链路、各 YAML 谁负责哪一层、fan-out/磁传感器 wrapper 应怎么接”时，请先看 [`10_sim_vs_real_link_and_wrapper_map.md`](../real_deployment/10_sim_vs_real_link_and_wrapper_map.md)。
 > 急停 SOP 与"双保险"分工见 [`06_kill_switch.md`](../real_deployment/06_kill_switch.md)。仿真↔真机参数差异速查见 [`07_param_diff_sim_vs_real.md`](../real_deployment/07_param_diff_sim_vs_real.md)。
 
 ---
