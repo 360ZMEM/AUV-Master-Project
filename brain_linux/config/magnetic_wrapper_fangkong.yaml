@@ -27,5 +27,10 @@
     calibration_enabled: true
     calibration_profile_path: hardware_wrappers/fangkong_adc/calibration_profiles/20260705T144937_magnetometer_9param.json
 
+    # Main-repo wrapper/headless runs should not create ./data by default.
+    # Enable only for explicit bench recordings.
+    storage_enabled: false
+    storage_root_dir: data
+
     axis_order: [0, 1, 2]
     axis_signs: [1.0, 1.0, 1.0]

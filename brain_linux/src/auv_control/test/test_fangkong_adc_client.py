@@ -25,6 +25,7 @@ def test_build_fangkong_config_applies_main_repo_overrides():
     assert config.network.host == DEFAULT_MAIN_REPO_DEVICE_HOST
     assert config.calibration.enabled is True
     assert config.calibration.profile_path.endswith("20260705T144937_magnetometer_9param.json")
+    assert config.storage.enabled is False
 
 
 def test_resolve_project_path_converts_relative_path():

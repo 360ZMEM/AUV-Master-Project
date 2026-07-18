@@ -72,6 +72,7 @@ brain_linux/config/magnetic_wrapper_fangkong.yaml
 - 默认标定文件路径
 - 采样率/通道/灵敏度
 - 轴顺序与符号
+- 主仓 wrapper/headless 默认关闭 `fangkong_adc` 本地存储，避免在仓库根目录生成 `data/`
 
 ## 6. 脚本分层
 
@@ -86,3 +87,5 @@ brain_linux/config/magnetic_wrapper_fangkong.yaml
 
 - 每一层都要在“未接 ADC”时给出明确错误
 - 不允许只有 GUI 能看懂、脚本看不懂的失败路径
+- 主仓集成调试默认不落 `data/`；如需保存原始波形，需要显式把
+  `brain_linux/config/magnetic_wrapper_fangkong.yaml` 中的 `storage_enabled` 改为 `true`

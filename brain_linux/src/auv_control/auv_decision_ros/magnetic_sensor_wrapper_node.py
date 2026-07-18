@@ -64,6 +64,8 @@ class MagneticSensorWrapperNode(Node):
         self.declare_parameter("waveform_y_unit", "magnetic_field")
         self.declare_parameter("calibration_enabled", True)
         self.declare_parameter("calibration_profile_path", DEFAULT_MAIN_REPO_CALIBRATION)
+        self.declare_parameter("storage_enabled", False)
+        self.declare_parameter("storage_root_dir", "data")
         self.declare_parameter("axis_order", [0, 1, 2])
         self.declare_parameter("axis_signs", [1.0, 1.0, 1.0])
 
@@ -94,6 +96,8 @@ class MagneticSensorWrapperNode(Node):
         self.waveform_y_unit = str(self.get_parameter("waveform_y_unit").value)
         self.calibration_enabled = bool(self.get_parameter("calibration_enabled").value)
         self.calibration_profile_path = str(self.get_parameter("calibration_profile_path").value)
+        self.storage_enabled = bool(self.get_parameter("storage_enabled").value)
+        self.storage_root_dir = str(self.get_parameter("storage_root_dir").value)
         self.axis_order = self._parse_int_list(self.get_parameter("axis_order").value)
         self.axis_signs = self._parse_float_list(self.get_parameter("axis_signs").value)
 
@@ -220,6 +224,8 @@ class MagneticSensorWrapperNode(Node):
                 waveform_y_unit=self.waveform_y_unit,
                 calibration_enabled=self.calibration_enabled,
                 calibration_profile_path=self.calibration_profile_path,
+                storage_enabled=self.storage_enabled,
+                storage_root_dir=self.storage_root_dir,
                 axis_order=self.axis_order,
                 axis_signs=self.axis_signs,
             )

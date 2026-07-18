@@ -74,6 +74,8 @@ def main() -> int:
         waveform_y_unit=str(params.get("waveform_y_unit", "magnetic_field")),
         calibration_enabled=bool(params.get("calibration_enabled", True)),
         calibration_profile_path=params.get("calibration_profile_path", ""),
+        storage_enabled=bool(params.get("storage_enabled", False)),
+        storage_root_dir=params.get("storage_root_dir", "data"),
         axis_order=[int(item) for item in params.get("axis_order", [0, 1, 2])],
         axis_signs=[float(item) for item in params.get("axis_signs", [1.0, 1.0, 1.0])],
     )

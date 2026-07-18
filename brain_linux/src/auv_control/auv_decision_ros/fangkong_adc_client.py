@@ -71,6 +71,8 @@ def build_fangkong_config(
     waveform_y_unit: str | None = None,
     calibration_enabled: bool = True,
     calibration_profile_path: str | Path = DEFAULT_MAIN_REPO_CALIBRATION,
+    storage_enabled: bool = False,
+    storage_root_dir: str | Path | None = None,
 ) -> Any:
     project_root = discover_project_root()
     default_path = resolve_project_path(fangkong_default_config, project_root=project_root)
@@ -107,6 +109,9 @@ def build_fangkong_config(
     config.calibration.profile_path = str(
         resolve_project_path(calibration_profile_path, project_root=project_root)
     )
+    config.storage.enabled = bool(storage_enabled)
+    if storage_root_dir:
+        config.storage.root_dir = str(resolve_project_path(storage_root_dir, project_root=project_root))
     config.validate()
     return config
 
@@ -140,6 +145,8 @@ class FangkongAdcMagneticClient:
         waveform_y_unit: str = "magnetic_field",
         calibration_enabled: bool = True,
         calibration_profile_path: str | Path = DEFAULT_MAIN_REPO_CALIBRATION,
+        storage_enabled: bool = False,
+        storage_root_dir: str | Path | None = None,
         axis_order: list[int] | None = None,
         axis_signs: list[float] | None = None,
     ) -> None:
@@ -164,6 +171,8 @@ class FangkongAdcMagneticClient:
         self.waveform_y_unit = waveform_y_unit
         self.calibration_enabled = calibration_enabled
         self.calibration_profile_path = calibration_profile_path
+        self.storage_enabled = storage_enabled
+        self.storage_root_dir = storage_root_dir
         self.axis_order = list(axis_order) if axis_order is not None else [0, 1, 2]
         self.axis_signs = [float(item) for item in (axis_signs if axis_signs is not None else [1.0, 1.0, 1.0])]
         self.api = None
@@ -189,6 +198,8 @@ class FangkongAdcMagneticClient:
             waveform_y_unit=self.waveform_y_unit,
             calibration_enabled=self.calibration_enabled,
             calibration_profile_path=self.calibration_profile_path,
+            storage_enabled=self.storage_enabled,
+            storage_root_dir=self.storage_root_dir,
         )
         self.controller = self.api.AcquisitionController(config)
         self.controller._connect_impl()
