@@ -57,3 +57,53 @@ tmp/
 docs/real_experiment/
 # !docs/real_experiment/debug-pc104-telnet-udp.md
 !docs/real_experiment/20260715_pc104_sync_and_vxworks_plan_update.md
+
+# Thesis source attachments and local context archives.
+# Keep distilled Markdown/BibTeX records in Git; keep immutable source material local.
+/相关附件和参照/
+/毕业设计写作文档/参考文献/文献PDF/
+/毕业设计写作文档/AI对话记录——了解背景信息.md
+
+# Local review renders and canonical-source backups.
+/.tmp_math_review/
+/毕业设计写作文档/未完成内容/image_audit_tmp/
+/docs/thesis/paper/_backup_orig_*/
+
+# Project LaTeX build products. Template/source PDFs below subdirectories are
+# not matched by these top-level rules.
+/thuthesis/*.pdf
+/thubeamer-1.2/*.pdf
+/thuthesis/*.aux
+/thuthesis/*.bbl
+/thuthesis/*.bcf
+/thuthesis/*.blg
+/thuthesis/*.fdb_latexmk
+/thuthesis/*.fls
+/thuthesis/*.lof
+/thuthesis/*.log
+/thuthesis/*.lot
+/thuthesis/*.out
+/thuthesis/*.run.xml
+/thuthesis/*.synctex*
+/thuthesis/*.toc
+/thuthesis/*.xdv
+/thuthesis/.tmr8637_crops/
+/thuthesis/.tmr8637_pdf_review/
+/thuthesis/.tmr8637_review/
+/thuthesis/新建文件夹.png
+/thubeamer-1.2/*.aux
+/thubeamer-1.2/*.bbl
+/thubeamer-1.2/*.bcf
+/thubeamer-1.2/*.blg
+/thubeamer-1.2/*.fdb_latexmk
+/thubeamer-1.2/*.fls
+/thubeamer-1.2/*.lof
+/thubeamer-1.2/*.log
+/thubeamer-1.2/*.lot
+/thubeamer-1.2/*.nav
+/thubeamer-1.2/*.out
+/thubeamer-1.2/*.run.xml
+/thubeamer-1.2/*.snm
+/thubeamer-1.2/*.synctex*
+/thubeamer-1.2/*.toc
+/thubeamer-1.2/*.xdv

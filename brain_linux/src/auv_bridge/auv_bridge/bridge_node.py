@@ -76,6 +76,7 @@ from common.protocol import (
     Z_PATH_AUV_VIZ_INTERNAL,
     Z_PATH_PC_CMD_RAW,
     build_bridge_telemetry_payload,
+    map_pc104_uptime_to_ros_seconds,
 )
 
 from .arbiter import ArbiterDecision, CommandArbiter
@@ -227,6 +228,8 @@ class AUVBridgeNode(Node):
         self._mag_extrinsics_static_status = self._build_magnetic_extrinsics_static_status(cfg, params_file)
         self.shadow_cmd_pub = self.create_publisher(String, self.shadow_cmd_topic, 10)
         self.shadow_telemetry_pub = self.create_publisher(String, self.shadow_telemetry_topic, 10)
+        self._protocol_pc104_time_base_ms: int | None = None
+        self._protocol_ros_time_base_s: float | None = None
 
         self.create_subscription(Twist, '/cmd_vel', self._on_cmd_vel, 10)
         self.create_subscription(Setpoint, '/auv/control/setpoint', self._on_setpoint, 10)
@@ -794,11 +797,14 @@ class AUVBridgeNode(Node):
         return math.degrees(float(self.latest_setpoint.target_heading_rad)) % 360.0
 
     def _record_latency(self, payload: dict[str, Any]) -> None:
-        """统计控制命令从生成到发送的延迟。"""
+        """Record sensor ingress latency when payload timestamps are wall-clock based."""
         ts = payload.get('ts')
         if isinstance(ts, (int, float)):
-            dt = time.time() - float(ts)
-            if dt >= 0.0:
+            now = time.time()
+            dt = now - float(ts)
+            # Only count wall-clock timestamps. Simulation-relative stamps such
+            # as sim_time/step are valid sensor stamps, but not ingress latency.
+            if float(ts) > 1_000_000_000.0 and 0.0 <= dt <= 60.0:
                 self._lat_count += 1
                 self._lat_sum += dt
 
@@ -883,6 +889,53 @@ class AUVBridgeNode(Node):
         if int(stamp.sec) == 0 and int(stamp.nanosec) == 0:
             return time.time()
         return float(stamp.sec) + float(stamp.nanosec) * 1.0e-9
+
+    def _seconds_to_header_stamp(self, seconds: float):
+        """Create a ROS header stamp from floating-point seconds."""
+        sec = int(seconds)
+        nsec = int(round((float(seconds) - sec) * 1.0e9))
+        if nsec >= 1000000000:
+            sec += 1
+            nsec -= 1000000000
+        stamp = self.get_clock().now().to_msg()
+        stamp.sec = sec
+        stamp.nanosec = nsec
+        return stamp
+
+    def _make_protocol_header_stamp(self, telemetry: ProtocolUplinkTelemetry):
+        """Create one shared stamp for all messages derived from one protocol frame."""
+        receive_stamp = self.get_clock().now().to_msg()
+        return self._make_pc104_header_stamp(
+            pc104_uptime_ms=int(telemetry.pc104_uptime_ms),
+            pc104_time_valid=bool(telemetry.pc104_time_valid),
+            fallback_stamp=receive_stamp,
+            allow_before_base=False,
+        )
+
+    def _make_pc104_header_stamp(
+        self,
+        *,
+        pc104_uptime_ms: int,
+        pc104_time_valid: bool,
+        fallback_stamp,
+        allow_before_base: bool,
+    ):
+        """Create a ROS stamp from a PC104 uptime value."""
+        receive_stamp = self.get_clock().now().to_msg()
+        receive_time_s = self._header_stamp_to_seconds(receive_stamp)
+        stamp_s, base_pc104_ms, base_ros_s, used_pc104_time = map_pc104_uptime_to_ros_seconds(
+            pc104_uptime_ms=int(pc104_uptime_ms),
+            pc104_time_valid=bool(pc104_time_valid),
+            receive_time_s=receive_time_s,
+            base_pc104_uptime_ms=self._protocol_pc104_time_base_ms,
+            base_ros_time_s=self._protocol_ros_time_base_s,
+            allow_before_base=bool(allow_before_base),
+        )
+        self._protocol_pc104_time_base_ms = base_pc104_ms
+        self._protocol_ros_time_base_s = base_ros_s
+        if not used_pc104_time:
+            return fallback_stamp
+        return self._seconds_to_header_stamp(stamp_s)
 
     def _make_header_stamp(self, data: dict[str, Any]):
         """从传感器数据中提取时间戳并转为 ROS2 stamp。
@@ -980,8 +1033,16 @@ class AUVBridgeNode(Node):
         now = time.time()
         self.latest_protocol_telemetry_ts = now
 
+        protocol_stamp = self._make_protocol_header_stamp(telemetry)
+        dvl_stamp = self._make_pc104_header_stamp(
+            pc104_uptime_ms=int(telemetry.pc104_dvl_bi_uptime_ms),
+            pc104_time_valid=bool(telemetry.pc104_dvl_bi_time_valid),
+            fallback_stamp=protocol_stamp,
+            allow_before_base=True,
+        )
+
         imu_msg = Imu()
-        imu_msg.header.stamp = self.get_clock().now().to_msg()
+        imu_msg.header.stamp = protocol_stamp
         imu_msg.header.frame_id = 'auv/base_link'
         qx, qy, qz, qw = _rpy_deg_to_quaternion(telemetry.roll_deg, telemetry.pitch_deg, telemetry.heading_deg)
         imu_msg.orientation.x = qx
@@ -997,7 +1058,7 @@ class AUVBridgeNode(Node):
         self._safe_publish_ros(self.imu_pub, imu_msg)
 
         dvl_msg = TwistStamped()
-        dvl_msg.header.stamp = self.get_clock().now().to_msg()
+        dvl_msg.header.stamp = dvl_stamp
         dvl_msg.header.frame_id = 'auv/base_link'
         # Protocol UDP DVL 为 body frame；旋转到 world frame 以匹配 EKF correct_dvl_world()
         dvl_body = [float(telemetry.dvl_body_x_mps),

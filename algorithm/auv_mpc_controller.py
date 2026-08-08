@@ -148,6 +148,7 @@ class AUVMPCOptimizer:
         dt=0.1,
         weights=None,
         constraints=None,
+        max_iter=100,
     ):
         """构建 MPC 优化器。
 
@@ -161,6 +162,7 @@ class AUVMPCOptimizer:
         self.kinematics = kinematics
         self.N = N
         self.dt = dt
+        self.max_iter = max(1, int(max_iter))
 
         weights = self._normalize_weights(weights)
         self.W_x = float(weights.get("x", 1.0))
@@ -350,7 +352,7 @@ class AUVMPCOptimizer:
             "ipopt.print_level": 0,
             "print_time": False,
             "ipopt.tol": 1e-4,
-            "ipopt.max_iter": 100,
+            "ipopt.max_iter": self.max_iter,
         }
         opti.solver("ipopt", opts)
 

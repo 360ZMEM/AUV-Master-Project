@@ -62,6 +62,19 @@ def main() -> None:
     except Exception as exc:  # pragma: no cover
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
+    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
+    import os
+    import matplotlib.font_manager as fm
+
+    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(_zh_font):
+        fm.fontManager.addfont(_zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 13, "axes.labelsize": 12, "legend.fontsize": 9})
+
     # Build an elapsed-time axis from cumulative dt so the x-axis is seconds.
     dts = _series(rows, "prior_alignment_dt_s", 0.1)
     elapsed: list[float] = []
@@ -87,52 +100,52 @@ def main() -> None:
 
     fig, axes = plt.subplots(2, 2, figsize=(13, 8))
     fig.suptitle(
-        "Direction A decoupled closed loop: online prior-alignment excited and accepted\n"
-        f"(vertical_separation={vsep:.2f} m, observed={observe_ratio*100:.0f}% frames, "
-        f"accepted={accept_ratio*100:.0f}% frames)",
+        "方向 A 解耦闭环：在线先验对齐被激励且被接受\n"
+        f"（垂直间距={vsep:.2f} m，观测={observe_ratio*100:.0f}% 帧，"
+        f"接受={accept_ratio*100:.0f}% 帧）",
         fontsize=12,
     )
 
     ax = axes[0, 0]
-    ax.plot(elapsed, signed_ct, label="signed cross-track (m)", color="tab:blue")
-    ax.plot(elapsed, prior_ct, label="prior cross-track (m)", color="tab:gray", alpha=0.7)
-    ax.plot(elapsed, observed_offset, label="mag-derived observed offset (m)", color="tab:orange", alpha=0.8)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("cross-track (m)")
-    ax.set_title("Cross-track vs magnetic observation")
+    ax.plot(elapsed, signed_ct, label="带符号横向偏差（m）", color="tab:blue")
+    ax.plot(elapsed, prior_ct, label="先验横向偏差（m）", color="tab:gray", alpha=0.7)
+    ax.plot(elapsed, observed_offset, label="磁导出观测偏移（m）", color="tab:orange", alpha=0.8)
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("横向偏差（m）")
+    ax.set_title("横向偏差与磁观测对比")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8)
 
     ax = axes[0, 1]
-    ax.plot(elapsed, translation_norm, label="accumulated translation norm (m)", color="tab:green", linewidth=2)
+    ax.plot(elapsed, translation_norm, label="累计平移范数（m）", color="tab:green", linewidth=2)
     ax2 = ax.twinx()
-    ax2.plot(elapsed, rotation_deg, label="accumulated rotation (deg)", color="tab:red", alpha=0.7)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("translation norm (m)", color="tab:green")
-    ax2.set_ylabel("rotation (deg)", color="tab:red")
-    ax.set_title("Accumulated online prior correction (non-zero)")
+    ax2.plot(elapsed, rotation_deg, label="累计旋转（deg）", color="tab:red", alpha=0.7)
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("平移范数（m）", color="tab:green")
+    ax2.set_ylabel("旋转（deg）", color="tab:red")
+    ax.set_title("累计在线先验校正（非零）")
     ax.grid(True, alpha=0.3)
     lines1, labels1 = ax.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
     ax.legend(lines1 + lines2, labels1 + labels2, fontsize=8, loc="lower right")
 
     ax = axes[1, 0]
-    ax.plot(elapsed, quality, label="cross-track fit quality", color="tab:purple", linewidth=2)
+    ax.plot(elapsed, quality, label="横向拟合质量", color="tab:purple", linewidth=2)
     ax.axhline(args.min_confidence, color="tab:red", linestyle="--", label=f"min_confidence={args.min_confidence}")
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("fit quality [0,1]")
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("拟合质量 [0,1]")
     ax.set_ylim(0.0, 1.05)
-    ax.set_title("Observation quality gate (accepted when above threshold)")
+    ax.set_title("观测质量门限（超过阈值即接受）")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8)
 
     ax = axes[1, 1]
     accept_num = [1 if a else 0 for a in accepted]
-    ax.step(elapsed, accept_num, where="post", label="prior alignment accepted", color="tab:blue")
-    ax.plot(elapsed, heading_corr, label="heading correction (deg)", color="tab:orange", alpha=0.8)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("accepted (0/1) / heading corr (deg)")
-    ax.set_title("Acceptance decision & steering correction")
+    ax.step(elapsed, accept_num, where="post", label="先验对齐已接受", color="tab:blue")
+    ax.plot(elapsed, heading_corr, label="艏向校正（deg）", color="tab:orange", alpha=0.8)
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("接受（0/1）/ 艏向校正（deg）")
+    ax.set_title("接受判定与转向校正")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8)
 

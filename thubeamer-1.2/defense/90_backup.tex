@@ -1,0 +1,41 @@
+\appendix
+\section{备份}
+
+\begin{frame}{备份：主要结果与证据边界}
+  \scriptsize
+  \begin{tabularx}{\linewidth}{lccX}
+    \toprule
+    结果 & 样本量 & 结论 & 边界 \\
+    \midrule
+    ES-EKF 扰动回归 & 8 场景 \(\times\) 3 种子 & 24/24 完成 & 离线仿真评估 \\
+    磁外参标定 & \(n=1\) 全流程 & 96.27\% / 95.31\% & 仿真标定框架 \\
+    地形跟随 & 3 档 \(\times\) 3 种子 & 零安全违规 & PVS 与真地形口径 \\
+    UA-MPC 主消融 & 3 场景 \(\times\) 2 模式 \(\times\) 3 种子 & 综合压力改善 & 重度 DVL 丢包无优势 \\
+    闭环先验恢复 & 中/重档各 3 次 & 各 3/3 就绪通过 & 满足磁观测物理前提 \\
+    \bottomrule
+  \end{tabularx}
+\end{frame}
+
+\begin{frame}{备份：分层安全时序口径}
+  \small
+  \begin{tabularx}{\linewidth}{lccX}
+    \toprule
+    层级 & 周期/阈值 & 触发对象 & 动作 \\
+    \midrule
+    ROS2 仲裁 & 1.0 s / 1.5 s & PC 原始指令 & 软告警 / hard ESTOP \\
+    ROS2 控制 & 0.5 s & MPC 指令 & 回退安全控制输出 \\
+    自治守卫 & 200 ms & 遥测新鲜度 & 拒绝过期状态与未授权任务 \\
+    PC104/VxWorks & 0.1 s 周期，约 1.0 s 超时 & Jetson 有效指令 & 切回遥控、清零推进并上报告警 \\
+    本地硬保护 & 实时 & 深度、近底、漏水等 & 防触底、上浮或人工干预 \\
+    \bottomrule
+  \end{tabularx}
+
+  \vspace{3mm}
+  \BoundaryTag{注意}\quad 不同层处理不同故障对象，不能把所有超时合并成单一数值。
+\end{frame}
+
+\begin{frame}[allowframebreaks]{参考文献}
+  \nocite{dlt1278_2025}
+  \bibliographystyle{thubeamer}
+  \bibliography{ref/auv-references}
+\end{frame}

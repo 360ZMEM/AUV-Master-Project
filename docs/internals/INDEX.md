@@ -24,3 +24,4 @@
 | 12 | [cable_tracking_mag_integration.md](12_cable_tracking_mag_integration.md) | 电缆跟踪磁探测集成：在线先验修正、磁导出横偏观测、PVS 闭环恢复原理 |
 | 13 | [mag_lever_arm_calibration.md](13_mag_lever_arm_calibration.md) | 磁强计杆臂标定：外参配置模型与 bag 级证明 |
 | 14 | [fangkong_adc_wrapper_architecture.md](14_fangkong_adc_wrapper_architecture.md) | FK2301/TMR8637 真实磁 wrapper：submodule API 边界、默认标定、主仓 IP override 与脚本分层 |
+| 15 | [implementation_architecture_figures.md](15_implementation_architecture_figures.md) | 实现级架构图：代码层级、ROS2 拓扑与安全仲裁部署 |

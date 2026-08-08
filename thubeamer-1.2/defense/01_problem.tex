@@ -1,0 +1,61 @@
+\section{问题与命题}
+
+\begin{frame}{海缆自主巡检的核心矛盾}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{环境与观测}
+        \begin{itemize}
+          \item DVL 丢包、声呐杂波、磁畸变随工况变化
+          \item 多源传感器异步、频率相差一个数量级
+          \item 掩埋电缆不可见，单一模态存在失效区
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{传统链路缺口}
+        \begin{itemize}
+          \item 状态估计只输出“在哪里”
+          \item 决策与控制不知道“有多可信”
+          \item 观测退化时仍可能维持原有控制强度
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \FrameConclusion{矛盾不只是“估得准不准”，而是系统能否在估计变差时主动收敛行为。}
+\end{frame}
+
+\begin{frame}{本文的可检验命题}
+  \centering
+  \vspace{3mm}
+  {\Large
+    观测质量
+    \(\longrightarrow\)
+    协方差
+    \(\longrightarrow\)
+    置信度
+    \(\longrightarrow\)
+    决策阈值与控制权重
+  }
+
+  \vspace{8mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \begin{block}{H1\quad 可观测}
+        扰动增强时，自适应协方差应被触发且可核查。
+      \end{block}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{H2\quad 可调度}
+        低置信度应改变行为优先级和控制代价。
+      \end{block}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{H3\quad 有边界}
+        感知完全退化时，权重调整不应被宣称仍有优势。
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \FrameConclusion{验证目标是“机制、收益与失效边界”同时成立，而非追求单一最优数字。}
+\end{frame}

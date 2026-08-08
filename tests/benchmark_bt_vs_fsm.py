@@ -222,30 +222,30 @@ def plot_reaction_latency(results: dict[str, Any], output_dir: Path) -> Path:
     bt_data = results['bt_latencies_ms']
     fsm_data = results['fsm_latencies_ms']
     bins = max(10, len(set(bt_data + fsm_data)) // 2)
-    ax0.hist(bt_data, bins=bins, alpha=0.6, label='Behavior Tree (BT)', color='#2196F3', edgecolor='white')
-    ax0.hist(fsm_data, bins=bins, alpha=0.6, label='Finite State Machine (FSM)', color='#FF5722', edgecolor='white')
+    ax0.hist(bt_data, bins=bins, alpha=0.6, label='行为树（BT）', color='#2196F3', edgecolor='white')
+    ax0.hist(fsm_data, bins=bins, alpha=0.6, label='有限状态机（FSM）', color='#FF5722', edgecolor='white')
     ax0.axvline(results['bt_mean'], color='#2196F3', linestyle='--', linewidth=1.5,
-                label=f'BT mean={results["bt_mean"]:.1f}ms')
+                label=f'BT 均值={results["bt_mean"]:.1f}ms')
     ax0.axvline(results['fsm_mean'], color='#FF5722', linestyle='--', linewidth=1.5,
-                label=f'FSM mean={results["fsm_mean"]:.1f}ms')
-    ax0.set_xlabel('Reaction Latency (ms)')
-    ax0.set_ylabel('Frequency')
-    ax0.set_title('Leak Fault Injection: Reaction Latency Distribution')
+                label=f'FSM 均值={results["fsm_mean"]:.1f}ms')
+    ax0.set_xlabel('反应延迟（ms）')
+    ax0.set_ylabel('频次')
+    ax0.set_title('漏水故障注入：反应延迟分布')
     ax0.legend(fontsize=8)
     ax0.grid(axis='y', alpha=0.3)
 
     ax1 = axes[1]
     data_to_plot = [bt_data, fsm_data]
-    bp = ax1.boxplot(data_to_plot, tick_labels=['Behavior Tree (BT)', 'Finite State Machine (FSM)'], patch_artist=True, widths=0.5)
+    bp = ax1.boxplot(data_to_plot, tick_labels=['行为树（BT）', '有限状态机（FSM）'], patch_artist=True, widths=0.5)
     bp['boxes'][0].set_facecolor('#2196F3')
     bp['boxes'][0].set_alpha(0.6)
     bp['boxes'][1].set_facecolor('#FF5722')
     bp['boxes'][1].set_alpha(0.6)
-    ax1.set_ylabel('Reaction Latency (ms)')
-    ax1.set_title('Reaction Latency Box Plot')
+    ax1.set_ylabel('反应延迟（ms）')
+    ax1.set_title('反应延迟箱线图')
     ax1.grid(axis='y', alpha=0.3)
 
-    plt.suptitle('Reaction Latency: Behavior Tree vs Finite State Machine (N={} runs)'.format(results['n_runs']), fontsize=12, fontweight='bold')
+    plt.suptitle('反应延迟：行为树 vs 有限状态机（N={} 次）'.format(results['n_runs']), fontsize=12, fontweight='bold')
     plt.tight_layout()
     out_path = output_dir / 'figures' / '01_reaction_latency_distribution.png'
     fig.savefig(str(out_path), dpi=150, bbox_inches='tight')
@@ -340,25 +340,25 @@ def plot_chattering(results: dict[str, Any], output_dir: Path) -> Path:
     fsm_states = [state_map.get(s, -1) for _, s in results['fsm_state_timeline']]
 
     ax0.step(bt_times, bt_states, where='post', color='#2196F3', linewidth=1.2)
-    ax0.set_ylabel('State (Behavior Tree)')
-    ax0.set_title(f'BT State Timeline (switches: {results["bt_switches"]}, '
-                  f'chattering: {results["bt_chattering_hz"]:.2f} Hz)')
+    ax0.set_ylabel('状态（行为树）')
+    ax0.set_title(f'BT 状态时间线（切换次数：{results["bt_switches"]}，'
+                  f'抖振：{results["bt_chattering_hz"]:.2f} Hz）')
     ax0.set_yticks(list(state_map.values()))
     ax0.set_yticklabels(list(state_map.keys()), fontsize=7)
     ax0.grid(alpha=0.3)
 
     ax1.step(fsm_times, fsm_states, where='post', color='#FF5722', linewidth=1.2)
-    ax1.set_xlabel('Time (s)')
-    ax1.set_ylabel('State (FSM)')
-    ax1.set_title(f'FSM State Timeline (switches: {results["fsm_switches"]}, '
-                  f'chattering: {results["fsm_chattering_hz"]:.2f} Hz)')
+    ax1.set_xlabel('时间（s）')
+    ax1.set_ylabel('状态（FSM）')
+    ax1.set_title(f'FSM 状态时间线（切换次数：{results["fsm_switches"]}，'
+                  f'抖振：{results["fsm_chattering_hz"]:.2f} Hz）')
     ax1.set_yticks(list(state_map.values()))
     ax1.set_yticklabels(list(state_map.keys()), fontsize=7)
     ax1.grid(alpha=0.3)
 
     plt.suptitle(
-        f'State Oscillation (confidence={results["center_confidence"]}, '
-        f'sigma={results["sigma"]}, duration={results["duration_s"]}s)',
+        f'状态振荡（置信度={results["center_confidence"]}，'
+        f'sigma={results["sigma"]}，时长={results["duration_s"]}s）',
         fontsize=12, fontweight='bold')
     plt.tight_layout()
     out_path = output_dir / 'figures' / '02_chattering_timeline.png'
@@ -479,14 +479,14 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     width = 0.35
 
     ax0 = fig.add_subplot(gs[0, 0])
-    cat0 = ['File-level\nV(G)', 'Max function\ncomplexity']
+    cat0 = ['文件级\nV(G)', '最大函数\n复杂度']
     bt0 = [results['bt']['file_complexity'], results['bt']['max_function']]
     fsm0 = [results['fsm']['file_complexity'], results['fsm']['max_function']]
     x0 = np.arange(len(cat0))
     bars0 = ax0.bar(x0 - width/2, bt0, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
     ax0.bar(x0 + width/2, fsm0, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
-    ax0.set_ylabel('Complexity Value')
-    ax0.set_title('Cyclomatic Complexity (McCabe V(G))')
+    ax0.set_ylabel('复杂度数值')
+    ax0.set_title('圈复杂度（McCabe V(G)）')
     ax0.set_xticks(x0)
     ax0.set_xticklabels(cat0)
     ax0.legend(fontsize=9)
@@ -496,14 +496,14 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
                 f'{val}', ha='center', va='bottom', fontsize=11, fontweight='bold')
 
     ax1 = fig.add_subplot(gs[0, 1])
-    cat1 = ['Emergency check\ndeclarations', 'States with\nemergency check']
+    cat1 = ['应急检查\n声明数', '含应急检查\n的状态数']
     bt1 = [dup.get('bt_emergency_checks', 0), dup.get('bt_states_with_emergency', 0)]
     fsm1 = [dup.get('fsm_emergency_checks', 0), dup.get('fsm_states_with_emergency', 0)]
     x1 = np.arange(len(cat1))
     bars1 = ax1.bar(x1 - width/2, bt1, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
     ax1.bar(x1 + width/2, fsm1, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
-    ax1.set_ylabel('Count')
-    ax1.set_title('Emergency Handling Code Duplication')
+    ax1.set_ylabel('数量')
+    ax1.set_title('应急处理代码重复度')
     ax1.set_xticks(x1)
     ax1.set_xticklabels(cat1)
     ax1.legend(fontsize=9)
@@ -519,8 +519,8 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     x2 = np.arange(len(states_names))
     ax2.bar(x2 - width/2, bt_has, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
     ax2.bar(x2 + width/2, fsm_has, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
-    ax2.set_ylabel('Emergency check present (1=Yes)')
-    ax2.set_title('Per-State Emergency Check Distribution')
+    ax2.set_ylabel('是否含应急检查（1=是）')
+    ax2.set_title('各状态应急检查分布')
     ax2.set_xticks(x2)
     ax2.set_xticklabels(states_names, rotation=25, ha='right', fontsize=7)
     ax2.legend(fontsize=9)
@@ -538,7 +538,7 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax3.set_yticks(y_pos)
     ax3.set_yticklabels([n.split('.')[-1][:30] if '.' in n else n[:30] for n in all_names], fontsize=7)
     ax3.set_xlabel('V(G)')
-    ax3.set_title('Per-Function Complexity Comparison')
+    ax3.set_title('各函数复杂度对比')
     ax3.legend(fontsize=9)
     ax3.grid(axis='x', alpha=0.3)
 
@@ -547,14 +547,14 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     fsm_avg = results['fsm']['avg_function']
     bt_max = results['bt']['max_function']
     fsm_max = results['fsm']['max_function']
-    ax4.bar(['Average\ncomplexity', 'Max\ncomplexity'], [bt_avg, bt_max], width, color='#2196F3', alpha=0.85, label='BT')
-    ax4.bar(['Average\ncomplexity', 'Max\ncomplexity'], [fsm_avg, fsm_max], width, bottom=[bt_avg, bt_max], color='#FF5722', alpha=0.85, label='FSM')
-    ax4.set_ylabel('Complexity')
-    ax4.set_title('Average & Max Complexity')
+    ax4.bar(['平均\n复杂度', '最大\n复杂度'], [bt_avg, bt_max], width, color='#2196F3', alpha=0.85, label='BT')
+    ax4.bar(['平均\n复杂度', '最大\n复杂度'], [fsm_avg, fsm_max], width, bottom=[bt_avg, bt_max], color='#FF5722', alpha=0.85, label='FSM')
+    ax4.set_ylabel('复杂度')
+    ax4.set_title('平均与最大复杂度')
     ax4.legend(fontsize=9)
     ax4.grid(axis='y', alpha=0.3)
 
-    plt.suptitle('Code Complexity & Structure Analysis: BT vs FSM', fontsize=14, fontweight='bold')
+    plt.suptitle('代码复杂度与结构分析：BT vs FSM', fontsize=14, fontweight='bold')
     out_path = output_dir / 'figures' / '03_complexity_comparison.png'
     fig.savefig(str(out_path), dpi=150, bbox_inches='tight')
     plt.close(fig)
@@ -566,15 +566,15 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
 
     width = 0.35
 
-    cat = ['Add 1 state\ncode lines', 'Add 10 states\ncode lines']
+    cat = ['新增 1 个状态\n代码行数', '新增 10 个状态\n代码行数']
     bt_vals = [results['bt_new_state_lines'], results['bt_new_state_lines'] * 10]
     fsm_vals = [results['fsm_new_state_lines'], results['fsm_new_state_lines'] * 10]
     x = np.arange(len(cat))
 
     ax0.bar(x - width/2, bt_vals, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
     ax0.bar(x + width/2, fsm_vals, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
-    ax0.set_ylabel('Lines of Code')
-    ax0.set_title('State Expansion Cost Comparison')
+    ax0.set_ylabel('代码行数')
+    ax0.set_title('状态扩展成本对比')
     ax0.set_xticks(x)
     ax0.set_xticklabels(cat)
     ax0.legend()
@@ -587,17 +587,17 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     states = list(range(1, 21))
     bt_cost = [results['bt_new_state_lines'] * s for s in states]
     fsm_cost = [results['fsm_new_state_lines'] * s for s in states]
-    ax1.plot(states, bt_cost, 'o-', color='#2196F3', linewidth=2, markersize=5, label=f'BT (slope={results["bt_new_state_lines"]})')
-    ax1.plot(states, fsm_cost, 's-', color='#FF5722', linewidth=2, markersize=5, label=f'FSM (slope={results["fsm_new_state_lines"]})')
-    ax1.fill_between(states, bt_cost, fsm_cost, alpha=0.15, color='#FF5722', label='FSM extra work')
-    ax1.set_xlabel('Number of New States')
-    ax1.set_ylabel('Cumulative New Lines of Code')
-    ax1.set_title('State Expansion Cost Growth (1-20 states)')
+    ax1.plot(states, bt_cost, 'o-', color='#2196F3', linewidth=2, markersize=5, label=f'BT（斜率={results["bt_new_state_lines"]}）')
+    ax1.plot(states, fsm_cost, 's-', color='#FF5722', linewidth=2, markersize=5, label=f'FSM（斜率={results["fsm_new_state_lines"]}）')
+    ax1.fill_between(states, bt_cost, fsm_cost, alpha=0.15, color='#FF5722', label='FSM 额外工作量')
+    ax1.set_xlabel('新增状态数')
+    ax1.set_ylabel('累计新增代码行数')
+    ax1.set_title('状态扩展成本增长（1–20 个状态）')
     ax1.legend()
     ax1.grid(alpha=0.3)
     ax1.set_xticks(states)
 
-    plt.suptitle('State Expansion Cost: BT vs FSM', fontsize=12, fontweight='bold')
+    plt.suptitle('状态扩展成本：BT vs FSM', fontsize=12, fontweight='bold')
     plt.tight_layout()
     out_path = output_dir / 'figures' / '04_expansion_cost.png'
     fig.savefig(str(out_path), dpi=150, bbox_inches='tight')
@@ -771,11 +771,11 @@ def plot_monte_carlo_survival(results: dict[str, Any], output_dir: Path) -> Path
     x = np.arange(2)
     bottom = np.zeros(2)
 
-    p0 = ax0.bar(x, [bt_s, fsm_s], 0.5, label='Survived', color=colors_survived, edgecolor='white')
+    p0 = ax0.bar(x, [bt_s, fsm_s], 0.5, label='存活', color=colors_survived, edgecolor='white')
     bottom += [bt_s, fsm_s]
-    p1 = ax0.bar(x, [bt_c, fsm_c], 0.5, bottom=bottom, label='Crash', color=colors_crash, edgecolor='white')
+    p1 = ax0.bar(x, [bt_c, fsm_c], 0.5, bottom=bottom, label='崩溃', color=colors_crash, edgecolor='white')
     bottom2 = bottom + np.array([bt_c, fsm_c])
-    p2 = ax0.bar(x, [bt_d, fsm_d], 0.5, bottom=bottom2, label='Deadlock', color=colors_deadlock, edgecolor='white')
+    p2 = ax0.bar(x, [bt_d, fsm_d], 0.5, bottom=bottom2, label='死锁', color=colors_deadlock, edgecolor='white')
 
     for rects, vals in [(p0, [bt_s, fsm_s]), (p1, [bt_c, fsm_c]), (p2, [bt_d, fsm_d])]:
         for rect, val in zip(rects, vals):
@@ -784,21 +784,21 @@ def plot_monte_carlo_survival(results: dict[str, Any], output_dir: Path) -> Path
                          f'{int(val)}', ha='center', va='center', fontsize=10, fontweight='bold', color='white')
 
     ax0.set_xticks(x)
-    ax0.set_xticklabels(['Behavior Tree (BT)', 'Finite State Machine (FSM)'])
-    ax0.set_ylabel('Count')
-    ax0.set_title(f'Monte Carlo Survival Test (N={n})')
+    ax0.set_xticklabels(['行为树（BT）', '有限状态机（FSM）'])
+    ax0.set_ylabel('数量')
+    ax0.set_title(f'蒙特卡洛生存测试（N={n}）')
     ax0.legend()
     ax0.grid(axis='y', alpha=0.3)
 
-    labels = ['Survived', 'Crash', 'Deadlock']
+    labels = ['存活', '崩溃', '死锁']
     bt_pie = [bt_s, bt_c, bt_d]
     fsm_pie = [fsm_s, fsm_c, fsm_d]
 
     wedges0, texts, autotexts = ax1.pie(bt_pie, labels=labels, colors=[colors_survived, colors_crash, colors_deadlock],
                           autopct='%1.1f%%', startangle=90, textprops={'fontsize': 8})
-    ax1.set_title(f'BT Survival Rate: {results["bt_survival_rate"]:.1f}%')
+    ax1.set_title(f'BT 存活率：{results["bt_survival_rate"]:.1f}%')
 
-    plt.suptitle('Monte Carlo Survival: BT vs FSM', fontsize=12, fontweight='bold')
+    plt.suptitle('蒙特卡洛生存：BT vs FSM', fontsize=12, fontweight='bold')
     plt.tight_layout()
     out_path = output_dir / 'figures' / '05_monte_carlo_survival.png'
     fig.savefig(str(out_path), dpi=150, bbox_inches='tight')

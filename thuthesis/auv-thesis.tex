@@ -1,0 +1,45 @@
+% !TEX encoding = UTF-8
+% !TEX program = xelatex
+
+\documentclass[
+  degree=master,
+  degree-type=professional,
+  fontset=fandol
+]{thuthesis}
+
+\input{auvsetup}
+
+\begin{document}
+
+\maketitle
+\copyrightpage
+
+\frontmatter
+\input{data/auv-abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\input{data/auv-denotation}
+
+\mainmatter
+\input{data/auv-chap01}
+\input{data/auv-chap02}
+\input{data/auv-chap03}
+\input{data/auv-chap04}
+\input{data/auv-chap05}
+\input{data/auv-chap06}
+
+\printbibliography
+
+\appendix
+\input{data/auv-appendix-a}
+
+\backmatter
+\input{data/auv-acknowledgements}
+
+% The signed statement and resume are enabled during the final release pass.
+% \statement[page-style=plain, file=scan-statement.pdf]
+% \input{data/auv-resume}
+
+\end{document}

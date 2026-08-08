@@ -1,0 +1,74 @@
+\section{不确定性感知}
+
+\begin{frame}{声磁协同：连续递推与绝对约束互补}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.30\textwidth}
+      \begin{block}{高频骨架}
+        IMU 约 100 Hz\\
+        DVL 约 2 Hz\\[1mm]
+        ES-EKF 保持连续状态
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{声学辅助}
+        裸露、水质好：声呐主导\\
+        掩埋、浑浊：质量分数下降
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{磁学拉回}
+        DLIA 输出幅值、相位、SNR\\
+        FWHM 提供垂直距离约束
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{4mm}
+  \begin{beamercolorbox}[rounded=true,sep=2mm]{block body}
+    \centering
+    \[
+      z_{\mathrm{mag}}
+      = \frac{1}{2}v\sin\alpha\,\Delta t_{\mathrm{FWHM}},
+      \qquad
+      d_{\mathrm{depth}} = z_{\mathrm{mag}}-h_{\mathrm{alt}}
+    \]
+  \end{beamercolorbox}
+
+  \begin{itemize}
+    \item 几何时间跨度替代未知电流幅值，降低铠装衰减和姿态变化影响。
+    \item SNR 与拟合残差进入 \(\boldsymbol{R}_k\)，决定磁观测应被信任到什么程度。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{不确定性 Highway：置信度成为跨层信号}
+  \centering
+  \includegraphics[width=0.98\linewidth,height=0.86\textheight,keepaspectratio]
+    {architecture/auv_v2_uncertainty_highway.png}
+\end{frame}
+
+\begin{frame}{状态估计证据：稳定输出且协方差机制被真实触发}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.61\textheight,keepaspectratio]
+        {experiments/mag_lever_arm_fullflow_20260705_2145/02_mag_extrinsics_error_reduction.png}
+      \scriptsize 仿真外参标定框架，不等同于真机转台标定。
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{block}{扰动回归}
+        \centering
+        \KeyNumber{24/24}{8 场景 \(\times\) 3 随机种子全部完成}
+      \end{block}
+      \begin{block}{自适应协方差}
+        \centering
+        \KeyNumber{0.24--0.36}{八类场景中的触发率范围}
+      \end{block}
+      \begin{block}{磁外参仿真标定}
+        \centering
+        \KeyNumber{96.27\% / 95.31\%}{平移误差 / 安装角误差下降}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \FrameConclusion{“输出没有崩溃”与“协方差知道自己在变差”是两条独立证据。}
+\end{frame}

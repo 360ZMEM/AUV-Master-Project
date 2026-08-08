@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--burial-target-m", type=float, default=1.5)
     parser.add_argument("--burial-sigma-target-m", type=float, default=0.15)
     parser.add_argument("--confidence-target", type=float, default=0.65)
-    parser.add_argument("--title", default="Cable Tracking Dynamic Inspection")
+    parser.add_argument("--title", default="电缆动态巡检跟踪")
     return parser.parse_args()
 
 
@@ -104,6 +104,16 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib animation unavailable: {exc}") from exc
 
+    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体）
+    import matplotlib.font_manager as fm  # type: ignore
+
+    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    fm.fontManager.addfont(zh_font)
+    plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 13, "axes.labelsize": 12, "legend.fontsize": 10})
+
+
     xs: list[float] = []
     ys: list[float] = []
     for row in rows:
@@ -133,21 +143,21 @@ def main() -> None:
     ax_status = fig.add_subplot(grid[1, 1])
 
     fig.suptitle(args.title)
-    ax_xy.set_title("Estimated cable track")
-    ax_xy.set_xlabel("local x m")
-    ax_xy.set_ylabel("local y m")
+    ax_xy.set_title("电缆跟踪估计轨迹")
+    ax_xy.set_xlabel("局部坐标 x（m）")
+    ax_xy.set_ylabel("局部坐标 y（m）")
     ax_xy.set_xlim(*xlim)
     ax_xy.set_ylim(*ylim)
     ax_xy.set_aspect("equal", adjustable="box")
     ax_xy.grid(True, alpha=0.3)
-    ax_xy.plot(xs, ys, color="lightgray", linewidth=1.0, label="full track")
-    xy_line, = ax_xy.plot([], [], color="tab:blue", linewidth=2.0, label="tracked")
-    xy_head = ax_xy.scatter([], [], s=60, color="tab:red", zorder=3, label="current")
+    ax_xy.plot(xs, ys, color="lightgray", linewidth=1.0, label="完整轨迹")
+    xy_line, = ax_xy.plot([], [], color="tab:blue", linewidth=2.0, label="已跟踪")
+    xy_head = ax_xy.scatter([], [], s=60, color="tab:red", zorder=3, label="当前")
     ax_xy.legend(loc="best")
 
-    ax_offset.set_title("Route offset")
-    ax_offset.set_xlabel("route progress m")
-    ax_offset.set_ylabel("cross-track m")
+    ax_offset.set_title("航迹偏移")
+    ax_offset.set_xlabel("航迹进度（m）")
+    ax_offset.set_ylabel("横向偏差（m）")
     ax_offset.set_xlim(*progress_lim)
     ax_offset.set_ylim(*cross_lim)
     ax_offset.grid(True, alpha=0.3)
@@ -155,20 +165,20 @@ def main() -> None:
     ax_offset.axhline(-args.route_offset_target_m, color="tab:red", linestyle="--", linewidth=1.0)
     offset_line, = ax_offset.plot([], [], color="tab:orange", linewidth=2.0)
 
-    ax_burial.set_title("Burial inversion")
-    ax_burial.set_xlabel("route progress m")
+    ax_burial.set_title("埋深反演")
+    ax_burial.set_xlabel("航迹进度（m）")
     ax_burial.set_ylabel("m")
     ax_burial.set_xlim(*progress_lim)
     ax_burial.set_ylim(*burial_lim)
     ax_burial.grid(True, alpha=0.3)
-    ax_burial.axhline(args.burial_target_m, color="tab:green", linestyle="--", linewidth=1.0, label="burial target")
-    ax_burial.axhline(args.burial_sigma_target_m, color="tab:red", linestyle=":", linewidth=1.0, label="sigma target")
-    burial_line, = ax_burial.plot([], [], color="tab:green", linewidth=2.0, label="burial depth")
-    sigma_line, = ax_burial.plot([], [], color="tab:red", linewidth=1.5, alpha=0.8, label="burial sigma")
+    ax_burial.axhline(args.burial_target_m, color="tab:green", linestyle="--", linewidth=1.0, label="埋深目标")
+    ax_burial.axhline(args.burial_sigma_target_m, color="tab:red", linestyle=":", linewidth=1.0, label="sigma 目标")
+    burial_line, = ax_burial.plot([], [], color="tab:green", linewidth=2.0, label="埋深")
+    sigma_line, = ax_burial.plot([], [], color="tab:red", linewidth=1.5, alpha=0.8, label="埋深 sigma")
     ax_burial.legend(loc="best")
 
     ax_status.axis("off")
-    status_text = ax_status.text(0.02, 0.98, "", va="top", ha="left", family="monospace", fontsize=10)
+    status_text = ax_status.text(0.02, 0.98, "", va="top", ha="left", fontsize=11)
 
     def update(frame_no: int):
         idx = frame_indices[frame_no]
@@ -181,22 +191,22 @@ def main() -> None:
 
         row = rows[idx]
         status = [
-            f"sample: {idx + 1}/{len(rows)}",
-            f"route progress: {_float(row.get('route_progress_m'), 0.0):7.2f} m",
-            f"cross-track:    {_float(row.get('cross_track_m'), 0.0):7.3f} m",
-            f"burial depth:  {_float(row.get('burial_depth_m'), 0.0):7.3f} m",
-            f"burial sigma:  {_float(row.get('burial_sigma_m'), 0.0):7.3f} m",
-            f"confidence:    {_float(row.get('confidence'), 0.0):7.3f}",
-            f"mag SNR:       {_float(row.get('magnetic_snr_db'), 0.0):7.2f} dB",
-            f"ready:         {bool(row.get('industrial_ready', False))}",
-            f"mode:          {row.get('mode', '--')}",
+            f"样本: {idx + 1}/{len(rows)}",
+            f"航迹进度: {_float(row.get('route_progress_m'), 0.0):.2f} m",
+            f"横向偏差: {_float(row.get('cross_track_m'), 0.0):.3f} m",
+            f"埋深: {_float(row.get('burial_depth_m'), 0.0):.3f} m",
+            f"埋深 sigma: {_float(row.get('burial_sigma_m'), 0.0):.3f} m",
+            f"置信度: {_float(row.get('confidence'), 0.0):.3f}",
+            f"磁场信噪比: {_float(row.get('magnetic_snr_db'), 0.0):.2f} dB",
+            f"industrial_ready: {bool(row.get('industrial_ready', False))}",
+            f"模式: {row.get('mode', '--')}",
         ]
         if math.isfinite(confidence[idx]) and confidence[idx] < args.confidence_target:
-            status.append("status: confidence below target")
+            status.append("状态: 置信度低于目标")
         elif math.isfinite(magnetic_snr[idx]):
-            status.append("status: magnetic tracking active")
+            status.append("状态: 磁跟踪激活")
         else:
-            status.append("status: tracking")
+            status.append("状态: 跟踪中")
         status_text.set_text("\n".join(status))
         return xy_line, xy_head, offset_line, burial_line, sigma_line, status_text
 

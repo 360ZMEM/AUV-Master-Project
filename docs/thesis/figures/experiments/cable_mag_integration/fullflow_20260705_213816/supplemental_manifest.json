@@ -5,10 +5,20 @@
     "04_cable_track_xy.png",
     "05_cable_guidance_heading.png",
     "06_guidance_feasibility_metrics.png",
-    "07_route_offset_distribution.png"
+    "07_route_offset_distribution.png",
+    "08_quality_flags_timeline.png",
+    "09_confidence_acceptance_band.png",
+    "10_burial_sigma_acceptance_band.png",
+    "11_route_offset_vs_guidance.png",
+    "12_inspection_window_timeline.png",
+    "13_burial_sigma_window_diagnosis.png"
   ],
   "confidence_min": 0.5,
   "confidence_max": 0.5,
   "max_abs_cross_track_m": 14.716646300223722,
-  "zigzag_limited_count": 526
+  "zigzag_limited_count": 526,
+  "quality_flag_count": 0,
+  "acceptance_flag_count": 0,
+  "inspection_window_valid_count": 866,
+  "inspection_window_excluded_count": 0
 }

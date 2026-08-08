@@ -117,6 +117,19 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
+    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
+    import os
+    import matplotlib.font_manager as fm
+
+    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(_zh_font):
+        fm.fontManager.addfont(_zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 10})
+
     progress = _series(rows, "route_progress_m")
     cross_track = _series(rows, "cross_track_m")
     abs_cross_track = [abs(value) for value in cross_track]
@@ -135,10 +148,10 @@ def main() -> None:
 
     plt.figure(figsize=(6, 5))
     scatter = plt.scatter(xs, ys, c=progress, s=10, cmap="viridis")
-    plt.colorbar(scatter, label="route progress m")
-    plt.xlabel("estimated cable x m")
-    plt.ylabel("estimated cable y m")
-    plt.title("Estimated Cable Track XY")
+    plt.colorbar(scatter, label="航迹进度（m）")
+    plt.xlabel("估计电缆 x（m）")
+    plt.ylabel("估计电缆 y（m）")
+    plt.title("电缆航迹估计 XY")
     plt.grid(True, alpha=0.3)
     plt.axis("equal")
     plt.tight_layout()
@@ -146,15 +159,15 @@ def main() -> None:
     plt.close()
 
     plt.figure(figsize=(8, 4))
-    plt.plot(progress, raw_heading, label="raw desired heading deg", alpha=0.6)
-    plt.plot(progress, heading, label="limited desired heading deg", linewidth=2)
+    plt.plot(progress, raw_heading, label="原始期望艏向（deg）", alpha=0.6)
+    plt.plot(progress, heading, label="限幅后期望艏向（deg）", linewidth=2)
     if any(limited):
         limited_x = [p for p, flag in zip(progress, limited) if flag]
         limited_y = [h for h, flag in zip(heading, limited) if flag]
-        plt.scatter(limited_x, limited_y, s=12, label="limited samples", color="tab:red")
-    plt.xlabel("route progress m")
-    plt.ylabel("heading deg")
-    plt.title("Cable Guidance Heading")
+        plt.scatter(limited_x, limited_y, s=12, label="限幅样本", color="tab:red")
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("艏向（deg）")
+    plt.title("电缆制导艏向")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -162,11 +175,11 @@ def main() -> None:
     plt.close()
 
     plt.figure(figsize=(8, 4))
-    plt.plot(progress, yaw_rate, label="yaw rate deg/s", linewidth=2)
-    plt.plot(progress, turn_radius, label="commanded turn radius m", alpha=0.7)
-    plt.xlabel("route progress m")
-    plt.ylabel("guidance metric")
-    plt.title("Guidance Feasibility Metrics")
+    plt.plot(progress, yaw_rate, label="偏航角速率（deg/s）", linewidth=2)
+    plt.plot(progress, turn_radius, label="指令转弯半径（m）", alpha=0.7)
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("制导指标")
+    plt.title("制导可行性指标")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -174,11 +187,11 @@ def main() -> None:
     plt.close()
 
     plt.figure(figsize=(8, 4))
-    plt.hist(abs_cross_track, bins=30, alpha=0.75, label="abs cross-track m")
-    plt.axvline(args.route_offset_target_m, color="tab:red", linestyle="--", label="route offset target")
-    plt.xlabel("absolute route offset m")
-    plt.ylabel("sample count")
-    plt.title("Route Offset Distribution")
+    plt.hist(abs_cross_track, bins=30, alpha=0.75, label="横向偏差绝对值（m）")
+    plt.axvline(args.route_offset_target_m, color="tab:red", linestyle="--", label="航迹偏移目标")
+    plt.xlabel("航迹偏移绝对值（m）")
+    plt.ylabel("样本数")
+    plt.title("航迹偏移分布")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -193,28 +206,28 @@ def main() -> None:
     if labels:
         plt.barh(labels, counts, color=["tab:orange"] * len(quality_counts) + ["tab:red"] * len(acceptance_counts))
     else:
-        plt.text(0.5, 0.5, "No quality or acceptance flags", ha="center", va="center", transform=plt.gca().transAxes)
+        plt.text(0.5, 0.5, "无质量或验收标志", ha="center", va="center", transform=plt.gca().transAxes)
         plt.xlim(0, 1)
-    plt.xlabel("sample count")
-    plt.title("Quality and Acceptance Flags")
+    plt.xlabel("样本数")
+    plt.title("质量与验收标志")
     plt.grid(True, axis="x", alpha=0.3)
     plt.tight_layout()
     plt.savefig(output_dir / "08_quality_flags_timeline.png", dpi=180)
     plt.close()
 
     plt.figure(figsize=(8, 4))
-    plt.plot(progress, confidence, label="tracking confidence", linewidth=2)
+    plt.plot(progress, confidence, label="跟踪置信度", linewidth=2)
     if any(value is not None for value in magnetic_confidence):
         plt.plot(
             progress,
             [float(value) if value is not None else float("nan") for value in magnetic_confidence],
-            label="magnetic confidence",
+            label="磁场置信度",
             alpha=0.75,
         )
-    plt.axhline(args.confidence_target, color="tab:red", linestyle="--", label="confidence target")
-    plt.xlabel("route progress m")
-    plt.ylabel("confidence")
-    plt.title("Confidence Acceptance Band")
+    plt.axhline(args.confidence_target, color="tab:red", linestyle="--", label="置信度目标")
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("置信度")
+    plt.title("置信度验收带")
     plt.ylim(0.0, 1.05)
     plt.grid(True, alpha=0.3)
     plt.legend()
@@ -224,26 +237,26 @@ def main() -> None:
 
     plt.figure(figsize=(8, 4))
     sigma_values = [float(value) if value is not None else float("nan") for value in burial_sigma]
-    plt.plot(progress, sigma_values, label="burial sigma m", linewidth=2)
+    plt.plot(progress, sigma_values, label="埋深 sigma（m）", linewidth=2)
     if any(not valid for valid in inspection_valid):
         excluded_progress = [p for p, valid in zip(progress, inspection_valid) if not valid]
         excluded_sigma = [s for s, valid in zip(sigma_values, inspection_valid) if not valid]
-        plt.scatter(excluded_progress, excluded_sigma, s=12, color="tab:gray", alpha=0.65, label="excluded samples")
-    plt.axhline(args.burial_sigma_target_m, color="tab:red", linestyle="--", label="burial sigma target")
+        plt.scatter(excluded_progress, excluded_sigma, s=12, color="tab:gray", alpha=0.65, label="剔除样本")
+    plt.axhline(args.burial_sigma_target_m, color="tab:red", linestyle="--", label="埋深 sigma 目标")
     if any(value is not None for value in magnetic_snr):
         ax = plt.gca()
         ax2 = ax.twinx()
         ax2.plot(
             progress,
             [float(value) if value is not None else float("nan") for value in magnetic_snr],
-            label="magnetic SNR dB",
+            label="磁场信噪比（dB）",
             color="tab:green",
             alpha=0.45,
         )
-        ax2.set_ylabel("magnetic SNR dB")
-    plt.xlabel("route progress m")
-    plt.ylabel("burial sigma m")
-    plt.title("Burial Sigma Acceptance Band")
+        ax2.set_ylabel("磁场信噪比（dB）")
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("埋深 sigma（m）")
+    plt.title("埋深 sigma 验收带")
     plt.grid(True, alpha=0.3)
     plt.legend(loc="upper left")
     plt.tight_layout()
@@ -251,11 +264,11 @@ def main() -> None:
     plt.close()
 
     plt.figure(figsize=(8, 4))
-    plt.scatter(abs_cross_track, heading, s=10, alpha=0.7, label="desired heading")
-    plt.axvline(args.route_offset_target_m, color="tab:red", linestyle="--", label="route offset target")
-    plt.xlabel("absolute route offset m")
-    plt.ylabel("desired heading deg")
-    plt.title("Route Offset vs Guidance")
+    plt.scatter(abs_cross_track, heading, s=10, alpha=0.7, label="期望艏向")
+    plt.axvline(args.route_offset_target_m, color="tab:red", linestyle="--", label="航迹偏移目标")
+    plt.xlabel("航迹偏移绝对值（m）")
+    plt.ylabel("期望艏向（deg）")
+    plt.title("航迹偏移与制导关系")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -264,14 +277,14 @@ def main() -> None:
 
     plt.figure(figsize=(9, 4))
     valid_y = [1.0 if valid else 0.0 for valid in inspection_valid]
-    plt.step(progress, valid_y, where="post", label="inspection window valid", linewidth=2)
-    plt.plot(progress, abs_cross_track, label="abs route offset m", alpha=0.75)
-    plt.axhline(args.route_offset_target_m, color="tab:red", linestyle="--", label="route offset target")
+    plt.step(progress, valid_y, where="post", label="巡检窗口有效", linewidth=2)
+    plt.plot(progress, abs_cross_track, label="航迹偏移绝对值（m）", alpha=0.75)
+    plt.axhline(args.route_offset_target_m, color="tab:red", linestyle="--", label="航迹偏移目标")
     if args.inspection_max_route_progress_m is not None:
-        plt.axvline(float(args.inspection_max_route_progress_m), color="tab:purple", linestyle="--", label="window max progress")
-    plt.xlabel("route progress m")
-    plt.ylabel("window / offset")
-    plt.title("Inspection Window Timeline")
+        plt.axvline(float(args.inspection_max_route_progress_m), color="tab:purple", linestyle="--", label="窗口最大进度")
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("窗口 / 偏移")
+    plt.title("巡检窗口时间线")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -284,13 +297,13 @@ def main() -> None:
     excluded_progress = [p for p, valid in zip(progress, inspection_valid) if not valid]
     excluded_sigma = [s for s, valid in zip(sigma_values, inspection_valid) if not valid]
     if valid_progress:
-        plt.scatter(valid_progress, valid_sigma, s=10, alpha=0.8, label="inspection window")
+        plt.scatter(valid_progress, valid_sigma, s=10, alpha=0.8, label="巡检窗口内")
     if excluded_progress:
-        plt.scatter(excluded_progress, excluded_sigma, s=10, alpha=0.55, color="tab:gray", label="excluded")
-    plt.axhline(args.burial_sigma_target_m, color="tab:red", linestyle="--", label="burial sigma target")
-    plt.xlabel("route progress m")
-    plt.ylabel("burial sigma m")
-    plt.title("Burial Sigma by Inspection Window")
+        plt.scatter(excluded_progress, excluded_sigma, s=10, alpha=0.55, color="tab:gray", label="剔除样本")
+    plt.axhline(args.burial_sigma_target_m, color="tab:red", linestyle="--", label="埋深 sigma 目标")
+    plt.xlabel("航迹进度（m）")
+    plt.ylabel("埋深 sigma（m）")
+    plt.title("按巡检窗口划分的埋深 sigma")
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()

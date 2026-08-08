@@ -1,7 +1,7 @@
 # 端到端 distorted-prior 电缆探测验证 —— 下一步计划（独立专项）
 
 - 生成时间：`2026-07-06`
-- 定位：本文件是 [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) §5.5.11 第 (5) 条引用的独立计划文档。
+- 定位：本文件是 canonical [05new_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05new_experiments_and_discussion.md) §5.5.11 第 (5) 条引用的独立计划文档。
 - 结论前置：主仓端到端电缆探测目前**只在 clean prior 下闭环验收**（§5.5.10），"先验带偏差时端到端能否承受并恢复"这一实物部署最关心的问题，**尚未在主仓端到端 ROS 链路中验证**。本文规划把该缺口闭合的可执行路线。
 
 ## 1. 为什么需要这个专项（缺口定义）

@@ -138,6 +138,17 @@ class MagneticSensorWrapperNode(Node):
             return [float(item) for item in value]
         raise ValueError("expected a list of floats")
 
+    def _seconds_to_header_stamp(self, seconds: float):
+        sec = int(seconds)
+        nsec = int(round((float(seconds) - sec) * 1.0e9))
+        if nsec >= 1000000000:
+            sec += 1
+            nsec -= 1000000000
+        stamp = self.get_clock().now().to_msg()
+        stamp.sec = sec
+        stamp.nanosec = nsec
+        return stamp
+
     def _on_timer(self) -> None:
         if not rclpy.ok():
             return
@@ -163,7 +174,15 @@ class MagneticSensorWrapperNode(Node):
             return
 
         msg = MagneticField()
-        msg.header.stamp = self.get_clock().now().to_msg()
+        sample_time_s = decoded.get("sample_time_s")
+        try:
+            sample_time_value = float(sample_time_s) if sample_time_s is not None else float("nan")
+        except (TypeError, ValueError):
+            sample_time_value = float("nan")
+        if math.isfinite(sample_time_value):
+            msg.header.stamp = self._seconds_to_header_stamp(sample_time_value)
+        else:
+            msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = self.frame_id
         msg.magnetic_field.x = bx_t
         msg.magnetic_field.y = by_t
@@ -194,7 +213,7 @@ class MagneticSensorWrapperNode(Node):
             return None
         if field is None:
             return None
-        return {"x": field.x_t, "y": field.y_t, "z": field.z_t}
+        return {"x": field.x_t, "y": field.y_t, "z": field.z_t, "sample_time_s": field.sample_time_s}
 
     def _maybe_start_runtime(self) -> None:
         if self.mock_mode:

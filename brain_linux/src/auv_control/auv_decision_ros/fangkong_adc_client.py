@@ -121,6 +121,7 @@ class FangkongLatestField:
     x_t: float
     y_t: float
     z_t: float
+    sample_time_s: float
     status_message: str
 
 
@@ -235,5 +236,6 @@ class FangkongAdcMagneticClient:
             x_t=signed[0] * 1.0e-6,
             y_t=signed[1] * 1.0e-6,
             z_t=signed[2] * 1.0e-6,
+            sample_time_s=float(snapshot.timestamp),
             status_message=snapshot.status_message,
         )

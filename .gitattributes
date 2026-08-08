@@ -1,0 +1,45 @@
+* text=auto
+
+*.bat text eol=crlf
+*.bib text eol=lf
+*.bst text eol=lf
+*.c text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.json text eol=lf
+*.launch text eol=lf
+*.lua text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.tex text eol=lf
+*.xml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+*.drawio text eol=lf
+*.svg text eol=lf
+
+docs/thesis/figures/**/*.gif filter=lfs diff=lfs merge=lfs -text
+docs/thesis/figures/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+docs/thesis/figures/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+docs/thesis/figures/**/*.pdf filter=lfs diff=lfs merge=lfs -text
+docs/thesis/figures/**/*.png filter=lfs diff=lfs merge=lfs -text
+docs/internals/figures/**/*.gif filter=lfs diff=lfs merge=lfs -text
+docs/internals/figures/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+docs/internals/figures/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+docs/internals/figures/**/*.pdf filter=lfs diff=lfs merge=lfs -text
+docs/internals/figures/**/*.png filter=lfs diff=lfs merge=lfs -text
+
+*.bmp binary
+*.doc binary
+*.docx binary
+*.dwg binary
+*.exe binary
+*.ppt binary
+*.pptx binary
+*.stp binary
+*.xls binary
+*.xlsx binary
+*.zip binary

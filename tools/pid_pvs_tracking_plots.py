@@ -22,6 +22,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def _apply_zh_style() -> None:
+    """图内统一中文：注入文泉驿正黑（容器内唯一可用 CJK 字体），并上调字号适配 A4。"""
+    import os
+    import matplotlib.font_manager as fm
+
+    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(zh_font):
+        fm.fontManager.addfont(zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False  # 负号用 ASCII，避免中文字体缺 U+2212 变方块
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 11})
+
+
+_apply_zh_style()
+
+
 def _resolve_project_root() -> Path:
     cur = Path(__file__).resolve()
     for parent in cur.parents:
@@ -218,29 +236,29 @@ def _plot_tracking(case: Case, result: dict[str, np.ndarray | dict[str, float]],
         feasible = result["feasible_depth"]
         error = result["depth_error"]
         control = result["stern_deg"]
-        ylabel = "Depth (m)"
-        error_label = "Depth error (m)"
-        control_label = "Stern plane (deg)"
+        ylabel = "深度（m）"
+        error_label = "深度误差（m）"
+        control_label = "艉舵（deg）"
     else:
         actual = result["yaw"]
         target = result["target_yaw"]
         feasible = result["feasible_yaw"]
         error = result["yaw_error"]
         control = result["rudder_deg"]
-        ylabel = "Yaw (deg)"
-        error_label = "Yaw error (deg)"
-        control_label = "Rudder (deg)"
+        ylabel = "艏向（deg）"
+        error_label = "艏向误差（deg）"
+        control_label = "方向舵（deg）"
 
     for arr in (actual, target, feasible, error, control):
         assert isinstance(arr, np.ndarray)
 
-    axes[0].plot(t, target, "--", label="command", linewidth=2, color="#7f7f7f")
-    axes[0].plot(t, feasible, ":", label="feasible reference", linewidth=2, color="#9467bd")
-    axes[0].plot(t, actual, label="response", linewidth=1.8, color="#1f77b4")
+    axes[0].plot(t, target, "--", label="指令", linewidth=2, color="#7f7f7f")
+    axes[0].plot(t, feasible, ":", label="可行参考", linewidth=2, color="#9467bd")
+    axes[0].plot(t, actual, label="响应", linewidth=1.8, color="#1f77b4")
     axes[0].set_ylabel(ylabel)
     axes[0].grid(True, alpha=0.3)
     axes[0].legend(loc="best")
-    axes[0].set_title(f"{case.name}: {case.profile.name}")
+    axes[0].set_title(f"内层 PID/PVS 跟踪 — {case.name}（{case.profile.name}）")
 
     axes[1].plot(t, error, color="#d62728", linewidth=1.5)
     axes[1].axhline(0.0, color="black", linewidth=0.8)
@@ -249,7 +267,7 @@ def _plot_tracking(case: Case, result: dict[str, np.ndarray | dict[str, float]],
 
     axes[2].plot(t, control, color="#2ca02c", linewidth=1.4)
     axes[2].set_ylabel(control_label)
-    axes[2].set_xlabel("Time (s)")
+    axes[2].set_xlabel("时间（s）")
     axes[2].grid(True, alpha=0.3)
 
     text = ", ".join(f"{k}={v:.3f}" for k, v in metrics.items())
@@ -278,10 +296,10 @@ def _comparison_metrics(kind: str, channel: str) -> list[tuple[str, float]]:
 
 def _plot_summary(output: Path) -> None:
     cases = [
-        ("step", "depth", "Step depth RMSE (m)"),
-        ("step", "yaw", "Step yaw RMSE (deg)"),
-        ("sine", "depth", "Sine depth RMSE (m)"),
-        ("sine", "yaw", "Sine yaw RMSE (deg)"),
+        ("step", "depth", "阶跃深度 RMSE（m）"),
+        ("step", "yaw", "阶跃艏向 RMSE（deg）"),
+        ("sine", "depth", "正弦深度 RMSE（m）"),
+        ("sine", "yaw", "正弦艏向 RMSE（deg）"),
     ]
     fig, axes = plt.subplots(2, 2, figsize=(12, 8))
     for ax, (kind, channel, title) in zip(axes.ravel(), cases):

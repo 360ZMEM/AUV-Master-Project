@@ -1,0 +1,28 @@
+\section{系统架构}
+
+\begin{frame}{从工程需求到可迁移方法体系}
+  \centering
+  \includegraphics[width=0.98\linewidth,height=0.86\textheight,keepaspectratio]
+    {architecture/auv_thesis_technical_route.png}
+\end{frame}
+
+\begin{frame}{异步双脑：把智能与硬实时安全解耦}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.72\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]
+        {architecture/auv_v2_dual_brain_async_hardware.png}
+    \end{column}
+    \begin{column}{0.25\textwidth}
+      \begin{block}{Jetson / ROS2}
+        估计、决策、规划与 UA-MPC
+      \end{block}
+      \begin{block}{PC104 / VxWorks}
+        内环、驱动、看门狗与本地保护
+      \end{block}
+      \begin{alertblock}{分层超时}
+        ROS2 管指令回退；PC104 管硬件级失联与防触底。
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}

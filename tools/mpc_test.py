@@ -60,6 +60,18 @@ plt.rcParams.update({
     'grid.alpha': 0.3,
 })
 
+# 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
+import os as _os
+import matplotlib.font_manager as _fm
+
+_ZH_FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+if _os.path.exists(_ZH_FONT):
+    _fm.fontManager.addfont(_ZH_FONT)
+    plt.rcParams["font.family"] = _fm.FontProperties(fname=_ZH_FONT).get_name()
+else:
+    plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+plt.rcParams["axes.unicode_minus"] = False
+
 
 def _wrap_angle(angle):
     return (angle + np.pi) % (2 * np.pi) - np.pi
@@ -538,24 +550,24 @@ def generate_plots(results):
     T_cmd = results['depth_step']['T_cmd']
 
     target_traj = [tgt if tt >= 3.0 else 0.0 for tt in t]
-    axes[0].plot(t, d, 'b-', linewidth=2, label='Actual Depth')
-    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='Target (step @3s)')
+    axes[0].plot(t, d, 'b-', linewidth=2, label='实际深度')
+    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='目标（3s 阶跃）')
     if feas is not None:
-        axes[0].plot(t, feas, 'g-.', linewidth=1.2, label='PVS feasible z_d')
-    axes[0].set_ylabel('Depth (m)')
-    axes[0].set_title('MPC Depth Step Response (v2 aligned)')
+        axes[0].plot(t, feas, 'g-.', linewidth=1.2, label='PVS 可行 z_d')
+    axes[0].set_ylabel('深度（m）')
+    axes[0].set_title('MPC 深度阶跃响应（v2 对齐）')
     axes[0].legend(loc='lower right', fontsize=9)
     axes[0].grid(True)
 
     axes[1].plot(t, z_cmd, 'g-', linewidth=1.5)
-    axes[1].set_ylabel('MPC z_cmd (m)')
-    axes[1].set_title('MPC Depth Reference Command')
+    axes[1].set_ylabel('MPC 深度参考 z_cmd（m）')
+    axes[1].set_title('MPC 深度参考指令')
     axes[1].grid(True)
 
     axes[2].plot(t, T_cmd, 'orange', linewidth=1.5)
-    axes[2].set_ylabel('MPC T_cmd (%)')
-    axes[2].set_xlabel('Time (s)')
-    axes[2].set_title('MPC Thrust Command')
+    axes[2].set_ylabel('MPC 推力 T_cmd（%）')
+    axes[2].set_xlabel('时间（s）')
+    axes[2].set_title('MPC 推力指令')
     axes[2].grid(True)
 
     plt.tight_layout()
@@ -573,23 +585,23 @@ def generate_plots(results):
     psi_cmd = results['heading_step']['psi_cmd']
 
     target_traj = [yaw_tgt if tt >= 3.0 else 0.0 for tt in t]
-    axes[0].plot(t, yaw, 'b-', linewidth=2, label='Actual Heading')
-    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='Target (step @3s)')
+    axes[0].plot(t, yaw, 'b-', linewidth=2, label='实际艏向')
+    axes[0].plot(t, target_traj, 'r--', linewidth=1.5, label='目标（3s 阶跃）')
     if feas_yaw is not None:
-        axes[0].plot(t, np.rad2deg(feas_yaw), 'g-.', linewidth=1.2, label='PVS feasible psi_d')
-    axes[0].set_ylabel('Heading (deg)')
-    axes[0].set_title('MPC Heading Step Response (v2 aligned)')
+        axes[0].plot(t, np.rad2deg(feas_yaw), 'g-.', linewidth=1.2, label='PVS 可行 psi_d')
+    axes[0].set_ylabel('艏向（deg）')
+    axes[0].set_title('MPC 艏向阶跃响应（v2 对齐）')
     axes[0].legend(loc='lower right', fontsize=9)
     axes[0].grid(True)
 
     axes[1].plot(t, np.rad2deg(psi_cmd), 'g-', linewidth=1.5)
-    axes[1].set_ylabel('MPC psi_cmd (deg)')
-    axes[1].set_title('MPC Heading Reference Command')
+    axes[1].set_ylabel('MPC 艏向参考 psi_cmd（deg）')
+    axes[1].set_title('MPC 艏向参考指令')
     axes[1].grid(True)
 
     axes[2].plot(t, results['heading_step']['T_cmd'], 'orange', linewidth=1.5)
-    axes[2].set_ylabel('MPC T_cmd (%)')
-    axes[2].set_xlabel('Time (s)')
+    axes[2].set_ylabel('MPC 推力 T_cmd（%）')
+    axes[2].set_xlabel('时间（s）')
     axes[2].grid(True)
 
     plt.tight_layout()
@@ -605,20 +617,20 @@ def generate_plots(results):
     d_tgt = results['cable_tracking']['target_depth']
     z_cmd = results['cable_tracking']['z_cmd']
 
-    axes[0].plot(t, d, 'b-', linewidth=1.5, label='Actual Depth')
-    axes[0].plot(t, d_tgt, 'r--', linewidth=1.5, label='Target Depth')
-    axes[0].set_ylabel('Depth (m)')
-    axes[0].set_title('MPC Cable Tracking - Depth')
+    axes[0].plot(t, d, 'b-', linewidth=1.5, label='实际深度')
+    axes[0].plot(t, d_tgt, 'r--', linewidth=1.5, label='目标深度')
+    axes[0].set_ylabel('深度（m）')
+    axes[0].set_title('MPC 电缆跟踪 — 深度')
     axes[0].legend(loc='best', fontsize=9)
     axes[0].grid(True)
 
     axes[1].plot(t, z_cmd, 'g-', linewidth=1.2)
-    axes[1].set_ylabel('MPC z_cmd (m)')
+    axes[1].set_ylabel('MPC 深度参考 z_cmd（m）')
     axes[1].grid(True)
 
     axes[2].plot(t, results['cable_tracking']['T_cmd'], 'orange', linewidth=1.2)
-    axes[2].set_ylabel('MPC T_cmd (%)')
-    axes[2].set_xlabel('Time (s)')
+    axes[2].set_ylabel('MPC 推力 T_cmd（%）')
+    axes[2].set_xlabel('时间（s）')
     axes[2].grid(True)
 
     plt.tight_layout()
@@ -634,20 +646,20 @@ def generate_plots(results):
     yaw_tgt = np.rad2deg(results['cable_tracking']['target_yaw'])
     psi_cmd = np.rad2deg(results['cable_tracking']['psi_cmd'])
 
-    axes[0].plot(t, yaw, 'b-', linewidth=1.5, label='Actual Heading')
-    axes[0].plot(t, yaw_tgt, 'r--', linewidth=1.5, label='Target Heading')
-    axes[0].set_ylabel('Heading (deg)')
-    axes[0].set_title('MPC Cable Tracking - Heading')
+    axes[0].plot(t, yaw, 'b-', linewidth=1.5, label='实际艏向')
+    axes[0].plot(t, yaw_tgt, 'r--', linewidth=1.5, label='目标艏向')
+    axes[0].set_ylabel('艏向（deg）')
+    axes[0].set_title('MPC 电缆跟踪 — 艏向')
     axes[0].legend(loc='best', fontsize=9)
     axes[0].grid(True)
 
     axes[1].plot(t, psi_cmd, 'g-', linewidth=1.2)
-    axes[1].set_ylabel('MPC psi_cmd (deg)')
+    axes[1].set_ylabel('MPC 艏向参考 psi_cmd（deg）')
     axes[1].grid(True)
 
     axes[2].plot(t, results['cable_tracking']['u'], 'm-', linewidth=1.2)
-    axes[2].set_ylabel('Surge Speed (m/s)')
-    axes[2].set_xlabel('Time (s)')
+    axes[2].set_ylabel('纵向速度（m/s）')
+    axes[2].set_xlabel('时间（s）')
     axes[2].grid(True)
 
     plt.tight_layout()
@@ -662,32 +674,32 @@ def generate_plots(results):
     t_ds = results['depth_step']['time']
     axes[0, 0].plot(t_ds, results['depth_step']['depth'], 'b-', linewidth=2)
     axes[0, 0].axhline(y=5.0, color='r', linestyle='--', linewidth=1.5)
-    axes[0, 0].set_xlabel('Time (s)')
-    axes[0, 0].set_ylabel('Depth (m)')
-    axes[0, 0].set_title('MPC Depth Step')
+    axes[0, 0].set_xlabel('时间（s）')
+    axes[0, 0].set_ylabel('深度（m）')
+    axes[0, 0].set_title('MPC 深度阶跃')
     axes[0, 0].grid(True)
 
     t_hs = results['heading_step']['time']
     axes[0, 1].plot(t_hs, np.rad2deg(results['heading_step']['yaw']), 'b-', linewidth=2)
     axes[0, 1].axhline(y=30.0, color='r', linestyle='--', linewidth=1.5)
-    axes[0, 1].set_xlabel('Time (s)')
-    axes[0, 1].set_ylabel('Heading (deg)')
-    axes[0, 1].set_title('MPC Heading Step')
+    axes[0, 1].set_xlabel('时间（s）')
+    axes[0, 1].set_ylabel('艏向（deg）')
+    axes[0, 1].set_title('MPC 艏向阶跃')
     axes[0, 1].grid(True)
 
     t_ct = results['cable_tracking']['time']
     axes[1, 0].plot(t_ct, results['cable_tracking']['depth'], 'b-', linewidth=1.5)
     axes[1, 0].plot(t_ct, results['cable_tracking']['target_depth'], 'r--', linewidth=1.5)
-    axes[1, 0].set_xlabel('Time (s)')
-    axes[1, 0].set_ylabel('Depth (m)')
-    axes[1, 0].set_title('MPC Cable Tracking - Depth')
+    axes[1, 0].set_xlabel('时间（s）')
+    axes[1, 0].set_ylabel('深度（m）')
+    axes[1, 0].set_title('MPC 电缆跟踪 — 深度')
     axes[1, 0].grid(True)
 
     axes[1, 1].plot(t_ct, np.rad2deg(results['cable_tracking']['yaw']), 'b-', linewidth=1.5)
     axes[1, 1].plot(t_ct, np.rad2deg(results['cable_tracking']['target_yaw']), 'r--', linewidth=1.5)
-    axes[1, 1].set_xlabel('Time (s)')
-    axes[1, 1].set_ylabel('Heading (deg)')
-    axes[1, 1].set_title('MPC Cable Tracking - Heading')
+    axes[1, 1].set_xlabel('时间（s）')
+    axes[1, 1].set_ylabel('艏向（deg）')
+    axes[1, 1].set_title('MPC 电缆跟踪 — 艏向')
     axes[1, 1].grid(True)
 
     plt.tight_layout()

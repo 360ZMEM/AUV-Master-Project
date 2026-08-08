@@ -151,11 +151,14 @@ class SensorSupervisorNode(Node):
                 self._last_sensor_health[name] = healthy
                 continue
             self._last_sensor_health[name] = healthy
-            level = "info" if healthy else "warning"
-            getattr(self.get_logger(), level)(
+            message = (
                 f"sensor {name} health changed -> {healthy} "
                 f"topic={data.get('topic')} age_s={data.get('age_s')} timeout_s={data.get('timeout_s')}"
             )
+            if healthy:
+                self.get_logger().info(message)
+            else:
+                self.get_logger().warning(message)
 
         capabilities = dict(payload.get("capabilities", {}) or {})
         for name, data in capabilities.items():
@@ -165,10 +168,11 @@ class SensorSupervisorNode(Node):
                 self._last_capability_health[name] = available
                 continue
             self._last_capability_health[name] = available
-            level = "info" if available else "warning"
-            getattr(self.get_logger(), level)(
-                f"capability {name} changed -> {available} missing={data.get('missing_sensors', [])}"
-            )
+            message = f"capability {name} changed -> {available} missing={data.get('missing_sensors', [])}"
+            if available:
+                self.get_logger().info(message)
+            else:
+                self.get_logger().warning(message)
 
 ##
 # @brief Run the sensor supervisor node until the ROS context stops.

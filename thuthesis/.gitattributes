@@ -1,0 +1,22 @@
+* text=auto
+
+*.bat text eol=crlf
+*.bib text eol=lf
+*.bst text eol=lf
+*.bbx text eol=lf
+*.cbx text eol=lf
+*.cls text eol=lf
+*.dtx text eol=lf
+*.ins text eol=lf
+*.lua text eol=lf
+*.md text eol=lf
+*.pl text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.sty text eol=lf
+*.tex text eol=lf
+*.tlg text eol=lf
+
+*.jpg binary
+*.pdf binary
+*.png binary

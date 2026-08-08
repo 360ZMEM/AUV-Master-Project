@@ -294,7 +294,7 @@ def test_build_uplink_packet_uses_sensor_cache(monkeypatch) -> None:
         DummyCommandGuard(),
     )
     state_holder = _install_state_hooks(monkeypatch, heading_deg=10.0, dvl_speed_mps=2.0, depth_m=8.0)
-    server._start_time = 0.0
+    server._start_time = 99.0
     monkeypatch.setattr(mock_amd_server_module.time, "time", lambda: 100.0)
 
     packet1 = server._build_uplink_packet({}, 1, np.array([0.0, 0.0, 0.0, 0.0, 5.0], dtype=float))
@@ -302,6 +302,10 @@ def test_build_uplink_packet_uses_sensor_cache(monkeypatch) -> None:
     assert parsed1.heading_deg == 10.0
     assert parsed1.dvl_speed_mps == 2.0
     assert parsed1.depth_m == 8.0
+    assert parsed1.pc104_time_valid is True
+    assert parsed1.pc104_uptime_ms == 1000
+    assert parsed1.pc104_dvl_bi_time_valid is True
+    assert parsed1.pc104_dvl_bi_uptime_ms == parsed1.pc104_uptime_ms
 
     state_holder["heading_deg"] = 90.0
     state_holder["dvl_speed_mps"] = 7.0
@@ -313,6 +317,26 @@ def test_build_uplink_packet_uses_sensor_cache(monkeypatch) -> None:
     assert parsed2.heading_deg == 10.0
     assert parsed2.dvl_speed_mps == 2.0
     assert parsed2.depth_m == 8.0
+    assert parsed2.pc104_time_valid is True
+    assert parsed2.pc104_uptime_ms == 1200
+    assert parsed2.pc104_dvl_bi_time_valid is True
+    assert parsed2.pc104_dvl_bi_uptime_ms == 1000
+
+
+def test_build_uplink_packet_pc104_uptime_uses_elapsed_wall_time(monkeypatch) -> None:
+    server = MockAmdUdpServer(_make_config(), DummyCommandGuard())
+    _install_state_hooks(monkeypatch, heading_deg=10.0, dvl_speed_mps=2.0, depth_m=8.0)
+    server._start_time = 100.0
+    monkeypatch.setattr(mock_amd_server_module.time, "time", lambda: 101.25)
+
+    packet = server._build_uplink_packet({}, 999, np.zeros(5, dtype=float))
+    parsed = parse_uplink_packet(packet)
+
+    assert parsed.pc104_time_valid is True
+    assert parsed.pc104_uptime_ms == 1250
+    assert parsed.pc104_uptime_ms != int(round(999.0 * server.dt * 1000.0))
+    assert parsed.pc104_dvl_bi_time_valid is True
+    assert parsed.pc104_dvl_bi_uptime_ms == 1250
 
 
 def test_build_uplink_packet_applies_chaos(monkeypatch) -> None:

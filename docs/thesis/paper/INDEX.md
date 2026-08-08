@@ -8,17 +8,20 @@
 
 ## 章节映射与导航
 
-按毕设 1–5 章组织的正文材料：
+按毕设 1–6 章组织的 canonical 正文材料：
 
 | 文件 | 对应章节 | 核心内容 |
 |---|---|---|
 | [01_background_and_significance.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/01_background_and_significance.md) | 第 1 章 | 研究背景、技术现状、研究内容与创新点 |
 | [02_system_design.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/02_system_design.md) | 第 2 章 | 任务需求、双脑架构、通信协议、声磁建模与标定框架 |
 | [03_state_estimation.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/03_state_estimation.md) | 第 3 章 | 异步同步、ES-EKF、声磁协同、自适应不确定性 |
-| [04_decision_and_control.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/04_decision_and_control.md) | 第 4 章 | 行为树、failsafe、PID/PVS、MPC/UA-MPC 与控制边界 |
-| [05_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05_experiments_and_discussion.md) | 第 5 章 | 实验平台、指标、结果表、讨论与 Sim-to-Real 边界（5.1–5.8 全章，单文件） |
+| [04new_decision_and_control.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/04new_decision_and_control.md) | 第 4 章 | 行为树、分层安全守卫、PID/PVS、MPC/UA-MPC 与控制边界 |
+| [05new_experiments_and_discussion.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/05new_experiments_and_discussion.md) | 第 5 章 | 实验平台、指标、结果表、讨论与仿真到实物边界（5.1–5.8 全章，单文件） |
+| [06_conclusion_and_outlook.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/06_conclusion_and_outlook.md) | 第 6 章 | 全文总结、研究局限、未来工作展望（Sim-to-Real 迁移、学习/随机 MPC、智能海缆探测、多 AUV 协同与持久自治）|
 
-> **05 章单文件说明（P2-b，已合并）**：原 `05_experiments_and_discussion.md`（主）+ `..._continued.md`（续写）双文件结构已合并为**单一主文件**。续写文件中的新增结果已按主题并入主文件对应子节——terrain PID 3 seed → §5.5.3、P1 NIS/R 聚合 → §5.5.5、P1 控制侧聚合与 H1 solve-time 重跑 → §5.5.7、代理电缆 6 场景 smoke → §5.7.7。主文件 §5.5.x 编号保持不变（03/04 章及 e2e 计划文档均按此编号交叉引用），不再存在双文件编号重叠问题。
+> **Canonical 决策（2026-08-07）**：LaTeX 迁移和后续正文编辑只读取 `04new_decision_and_control.md` 与 `05new_experiments_and_discussion.md`。无 `new` 后缀的 04/05 文件保留为历史对照，不再作为正文事实源，也不得与 canonical 文件同时装配。
+>
+> **05 章单文件说明（P2-b，已合并）**：`05new_experiments_and_discussion.md` 已吸收原主文件与续写文件中的有效结果，并保持 §5.5.x 的交叉引用语义。terrain PID 3 seed、P1 NIS/R 聚合、P1 控制侧聚合、H1 solve-time 重跑与代理电缆 6 场景 smoke 均在该 canonical 单文件内维护。
 > **三组过渡实验（F1/F2/F3）证据**见工程证据层 [docs/thesis/11_transition_experiments_F1_F2_F3.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/11_transition_experiments_F1_F2_F3.md)，对应第 2/3 章。
 
 按论文写作支撑用途组织的补充文档：
@@ -29,7 +32,7 @@
 | [pvs_extreme_cable_scenarios.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/pvs_extreme_cable_scenarios.md) | PVS 场景真实性、极端电缆巡检设计和 discrepancy 收敛 |
 | [e2e_distorted_prior_next_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/e2e_distorted_prior_next_plan.md) | 端到端 distorted-prior 电缆探测验证专项计划（§5.5.11 第 (5) 条引用），闭合"clean-prior 端到端已闭环、distorted-prior 仅算法级验证"的缺口；§4 已推进到 (3f)——在满足磁观测前提的 PVS 六自由度闭环中首次复现闭环恢复，剩余项 (a1-PVS)/(a2) 已闭合，仅余真实噪声/多种子/硬件 |
 
-> **§5.5.10/§5.5.11 电缆探测证据分层（P2-c）**：`05_experiments_and_discussion.md` §5.5.10 为主仓 DL/T 1278 数字孪生验收（clean prior，3/3 ready/pass）；§5.5.11 把端到端电缆探测证据显式分层——主仓端到端运行的是同源 `AuvMagTrackingPipeline`（非代理），但只在 clean prior 下被激励，distorted-prior 失效/恢复边界为专用仓库 `AUV-Master-Mag` docs 28-30 的**算法级、n=1、纯仿真**证据（仅引用，不迁移）。写作时严禁把算法级 distorted-prior 结论表述为主仓端到端实测。
+> **§5.5.10/§5.5.11 电缆探测证据分层（P2-c）**：`05new_experiments_and_discussion.md` §5.5.10 为主仓 DL/T 1278 数字孪生验收（clean prior，3/3 ready/pass）；§5.5.11 把端到端电缆探测证据显式分层——主仓端到端运行的是同源 `AuvMagTrackingPipeline`（非代理），但只在 clean prior 下被激励，distorted-prior 失效/恢复边界为专用仓库 `AUV-Master-Mag` docs 28-30 的**算法级、n=1、纯仿真**证据（仅引用，不迁移）。写作时严禁把算法级 distorted-prior 结论表述为主仓端到端实测。
 
 > **上位机操作员工作流演示视频（答辩/附录）**：§5.5.10 末尾附上位机操作员工作流演示视频，由 [tools/record_console_operator_video.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/record_console_operator_video.py) 在 headless（`xvfb-run` + `QT_QPA_PLATFORM=offscreen`）下驱动真实 PySide6 `MainWindow`，用 run1 真实遥测 `tracking.jsonl` 逐帧回放电缆巡检监控面板并 `window.grab()` 后经 ffmpeg 编码 MP4（PIL 作 GIF 回退），产物在 `docs/thesis/figures/console_operator_video/`。**边界：真实遥测的离线回放演示（非现场实时会话），仅执行安全操作员动作、停用外发定时器不发包，末帧对应全程离窗后的 `NOT READY/FAIL` 状态。**
 

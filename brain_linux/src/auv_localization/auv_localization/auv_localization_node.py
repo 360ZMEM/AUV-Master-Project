@@ -195,6 +195,9 @@ class AUVLocalizationNode(Node):
         self._last_dvl_header_stamp = None  # 新增：保存DVL消息的Header Stamp
         self._last_depth_header_stamp = None  # 新增：保存深度消息的Header Stamp
         self._last_loop_ts = time.time()
+        self._last_predict_imu_ts = 0.0
+        self._last_corrected_dvl_ts = 0.0
+        self._last_corrected_depth_ts = 0.0
         self._latest_setpoint_depth_m: float | None = None
         self._filter_initialized_logged = False
 
@@ -452,27 +455,42 @@ class AUVLocalizationNode(Node):
     def _on_timer(self) -> None:
         """滤波主循环：推进 ES-EKF、发布状态和调试话题。"""
         now = time.time()
-        dt = max(1e-3, min(0.2, now - self._last_loop_ts))
         self._last_loop_ts = now
 
         # 强制对齐：如果没有收到IMU时间锚点，跳过发布（绝不发布垃圾状态）
         if self._last_imu_header_stamp is None:
             return
 
-        self.filter.predict(self._last_imu, self._last_gyro, dt)
+        if self._last_imu_ts <= 0.0:
+            return
+
+        if self._last_predict_imu_ts <= 0.0:
+            self._last_predict_imu_ts = self._last_imu_ts
+        elif self._last_imu_ts > self._last_predict_imu_ts:
+            dt = max(1e-3, min(0.2, self._last_imu_ts - self._last_predict_imu_ts))
+            self._last_predict_imu_ts = self._last_imu_ts
+            self.filter.predict(self._last_imu, self._last_gyro, dt)
+        elif self._last_imu_ts < self._last_predict_imu_ts:
+            self._last_predict_imu_ts = self._last_imu_ts
 
         raw_state = self.filter.get_state()
         if self.publish_raw_state:
             self._publish_state_odom(raw_state, self.raw_odom_pub, publish_tf=False)
 
-        if self._last_dvl is not None:
+        if self._last_dvl is not None and self._last_dvl_ts > self._last_corrected_dvl_ts:
             was_initialized = self.filter.is_initialized()
-            self.filter.correct_dvl_world(self._last_dvl)
+            self.filter.correct_dvl_world_with_timestamp(
+                self._last_dvl,
+                self._last_dvl_ts,
+                self._last_imu_ts,
+            )
+            self._last_corrected_dvl_ts = self._last_dvl_ts
             if not was_initialized and self.filter.is_initialized():
                 self._log_filter_initialization("dvl")
-        if self._last_depth is not None:
+        if self._last_depth is not None and self._last_depth_ts > self._last_corrected_depth_ts:
             was_initialized = self.filter.is_initialized()
             self.filter.correct_depth(self._last_depth)
+            self._last_corrected_depth_ts = self._last_depth_ts
             if not was_initialized and self.filter.is_initialized():
                 self._log_filter_initialization("depth")
 

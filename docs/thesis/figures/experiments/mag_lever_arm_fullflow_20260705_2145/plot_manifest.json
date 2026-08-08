@@ -1,0 +1,7 @@
+{
+  "input_dir": "/home/auv_user/auv_ws/AUV-Master-Project/results/mag_extrinsics/fullflow_20260705_2145",
+  "generated": [
+    "01_mag_extrinsics_residual.png",
+    "02_mag_extrinsics_error_reduction.png"
+  ]
+}

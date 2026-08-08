@@ -53,6 +53,27 @@ def test_correct_dvl_sensor_matches_body_dvl_for_identity_extrinsic() -> None:
         assert np.allclose(left, right)
 
 
+def test_correct_dvl_world_with_timestamp_inflates_noise_for_delay() -> None:
+    f_recent = ES_EKF(_cfg())
+    f_delayed = ES_EKF(_cfg())
+    measurement = np.array([1.4, 0.2, 0.0])
+
+    f_recent.correct_dvl_world_with_timestamp(
+        measurement,
+        dvl_timestamp=100.0,
+        current_timestamp=100.03,
+    )
+    f_delayed.correct_dvl_world_with_timestamp(
+        measurement,
+        dvl_timestamp=99.8,
+        current_timestamp=100.0,
+    )
+
+    recent_delta = np.linalg.norm(f_recent.v - np.array(_cfg()["init_vel"], dtype=float))
+    delayed_delta = np.linalg.norm(f_delayed.v - np.array(_cfg()["init_vel"], dtype=float))
+    assert delayed_delta < recent_delta
+
+
 def test_correct_depth_sensor_matches_depth_for_identity_extrinsic() -> None:
     f_depth = ES_EKF(_cfg())
     f_sensor = ES_EKF(_cfg())

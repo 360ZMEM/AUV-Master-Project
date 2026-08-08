@@ -34,6 +34,22 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CLOSEDLOOP_ROOT = PROJECT_ROOT / "results" / "cable_ops_report" / "closedloop_e2e"
 
 
+def _apply_zh_style() -> None:
+    """图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII。"""
+    import os
+    import matplotlib.font_manager as fm
+    import matplotlib.pyplot as plt  # type: ignore
+
+    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(zh_font):
+        fm.fontManager.addfont(zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 13, "axes.labelsize": 12, "legend.fontsize": 9})
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--closedloop-root", type=Path, default=CLOSEDLOOP_ROOT)
@@ -71,6 +87,7 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt  # type: ignore
+    _apply_zh_style()
 
     on_run = root / "cl_heavy_run1_recovery" / "tracking.jsonl"
     off_run = root / "cl_heavy_run1_prioroff" / "tracking.jsonl"
@@ -91,48 +108,48 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
 
     fig, axes = plt.subplots(2, 2, figsize=(13, 8))
     fig.suptitle(
-        "PVS six-DOF closed loop reproduces distorted-prior recovery (heavy tier)\n"
-        f"online prior-alignment accepted={accept_ratio_on*100:.0f}% frames, "
-        f"vertical_separation={vsep:.2f} m (was 0% accepted / near-coplanar in 5.5.11(3d))",
+        "PVS 六自由度闭环复现畸变先验恢复（重载档）\n"
+        f"在线先验对齐接受帧占比={accept_ratio_on*100:.0f}%，"
+        f"垂直间距={vsep:.2f} m（5.5.11(3d) 中曾为 0% 接受 / 近共面）",
         fontsize=12,
     )
 
     ax = axes[0, 0]
-    ax.plot(t_on, ct_on, color="tab:green", linewidth=1.8, label="online correction ON (accepted)")
-    ax.plot(t_off, ct_off, color="tab:red", linewidth=1.4, alpha=0.8, label="correction OFF (open-loop offset)")
-    ax.axhspan(-corridor_m, corridor_m, color="tab:blue", alpha=0.10, label=f"acceptance corridor +/-{corridor_m} m")
+    ax.plot(t_on, ct_on, color="tab:green", linewidth=1.8, label="在线校正 ON（已接受）")
+    ax.plot(t_off, ct_off, color="tab:red", linewidth=1.4, alpha=0.8, label="校正 OFF（开环偏移）")
+    ax.axhspan(-corridor_m, corridor_m, color="tab:blue", alpha=0.10, label=f"验收走廊 +/-{corridor_m} m")
     ax.axhline(0.0, color="k", linewidth=0.6, alpha=0.4)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("signed cross-track vs true cable (m)")
-    ax.set_title("Cross-track recovery: ~10 m distorted prior -> corridor")
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("相对真电缆的带符号横向偏差（m）")
+    ax.set_title("横向偏差恢复：~10 m 畸变先验 -> 走廊内")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
     ax = axes[0, 1]
-    ax.plot(t_on, tnorm_on, color="tab:green", linewidth=1.8, label="accumulated translation correction (m)")
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("prior-alignment translation norm (m)")
-    ax.set_title("Online correction accumulates (was == 0 in 3d, all obs rejected)")
+    ax.plot(t_on, tnorm_on, color="tab:green", linewidth=1.8, label="累计平移校正量（m）")
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("先验对齐平移范数（m）")
+    ax.set_title("在线校正逐步累积（3d 中恒为 0，观测全被拒）")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8)
 
     ax = axes[1, 0]
-    ax.plot(t_on, quality_on, color="tab:purple", linewidth=1.6, label="mag cross-track fit quality")
+    ax.plot(t_on, quality_on, color="tab:purple", linewidth=1.6, label="磁横向拟合质量")
     ax.axhline(0.35, color="tab:red", linestyle="--", label="min_confidence=0.35")
     ax.set_ylim(0.0, 1.05)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("fit quality [0,1]")
-    ax.set_title("Magnetic observation now satisfies straight-cable precondition")
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("拟合质量 [0,1]")
+    ax.set_title("磁观测现已满足直线电缆前置条件")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
     ax = axes[1, 1]
     accept_num = [1 if a else 0 for a in accepted_on]
-    ax.step(t_on, accept_num, where="post", color="tab:blue", label="prior alignment accepted (0/1)")
+    ax.step(t_on, accept_num, where="post", color="tab:blue", label="先验对齐接受（0/1）")
     ax.set_ylim(-0.1, 1.2)
-    ax.set_xlabel("elapsed time (s)")
-    ax.set_ylabel("accepted flag")
-    ax.set_title(f"Acceptance: reason_code=1 on {accept_ratio_on*100:.0f}% frames")
+    ax.set_xlabel("经过时间（s）")
+    ax.set_ylabel("接受标志")
+    ax.set_title(f"接受：reason_code=1 占 {accept_ratio_on*100:.0f}% 帧")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
@@ -152,6 +169,7 @@ def plot_convergence(root: Path, out: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt  # type: ignore
     import numpy as np
+    _apply_zh_style()
 
     # first full run (documented in-session, before the fixes): mid 2/3, heavy 1/3
     first = {"mid": 2, "heavy": 1}
@@ -162,7 +180,7 @@ def plot_convergence(root: Path, out: Path) -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
     fig.suptitle(
-        "Distorted-prior closed-loop acceptance convergence (mid/heavy, n=3 each)",
+        "畸变先验闭环验收收敛（中载/重载，各 n=3）",
         fontsize=12,
     )
 
@@ -170,13 +188,13 @@ def plot_convergence(root: Path, out: Path) -> None:
     tiers = ["mid", "heavy"]
     x = np.arange(len(tiers))
     w = 0.35
-    ax.bar(x - w / 2, [first[t] for t in tiers], w, color="tab:red", alpha=0.75, label="first full run (pre-fix)")
-    ax.bar(x + w / 2, [final[t] for t in tiers], w, color="tab:green", alpha=0.85, label="final full run (post-fix)")
+    ax.bar(x - w / 2, [first[t] for t in tiers], w, color="tab:red", alpha=0.75, label="首次完整运行（修复前）")
+    ax.bar(x + w / 2, [final[t] for t in tiers], w, color="tab:green", alpha=0.85, label="最终完整运行（修复后）")
     ax.set_xticks(x)
     ax.set_xticklabels([f"{t}\n(t0=(0,{'7.5' if t=='mid' else '10.0'})m)" for t in tiers])
-    ax.set_ylabel("runs ready/pass out of 3")
+    ax.set_ylabel("3 次中就绪/通过次数")
     ax.set_ylim(0, 3.4)
-    ax.set_title("Ready/pass count: 2/3,1/3 -> 3/3,3/3")
+    ax.set_title("就绪/通过计数：2/3,1/3 -> 3/3,3/3")
     ax.grid(True, axis="y", alpha=0.3)
     ax.legend(fontsize=9)
     for i, t in enumerate(tiers):
@@ -185,7 +203,7 @@ def plot_convergence(root: Path, out: Path) -> None:
 
     # right: worst-run acceptance margins for the final run
     ax = axes[1]
-    labels = ["mid max\noffset (m)", "heavy max\noffset (m)", "mid mean\noffset (m)", "heavy mean\noffset (m)"]
+    labels = ["mid 最大\n偏移（m）", "heavy 最大\n偏移（m）", "mid 平均\n偏移（m）", "heavy 平均\n偏移（m）"]
     vals = [
         mid["max_route_offset_m_max"],
         heavy["max_route_offset_m_max"],
@@ -194,14 +212,14 @@ def plot_convergence(root: Path, out: Path) -> None:
     ]
     thresholds = [3.4, 3.4, 2.5, 2.5]
     xx = np.arange(len(labels))
-    ax.bar(xx, vals, 0.5, color="tab:blue", alpha=0.8, label="worst-of-3 observed")
+    ax.bar(xx, vals, 0.5, color="tab:blue", alpha=0.8, label="3 次中最差观测")
     for i, th in enumerate(thresholds):
         ax.plot([i - 0.28, i + 0.28], [th, th], color="tab:red", linewidth=2)
-    ax.plot([], [], color="tab:red", linewidth=2, label="acceptance threshold")
+    ax.plot([], [], color="tab:red", linewidth=2, label="验收阈值")
     ax.set_xticks(xx)
     ax.set_xticklabels(labels, fontsize=8)
-    ax.set_ylabel("route offset (m)")
-    ax.set_title("Final run stays under thresholds (valid_burial_ratio=1.0, sigma_over=0)")
+    ax.set_ylabel("航迹偏移（m）")
+    ax.set_title("最终运行保持在阈值以下（valid_burial_ratio=1.0，sigma_over=0）")
     ax.grid(True, axis="y", alpha=0.3)
     ax.legend(fontsize=9)
     for i, v in enumerate(vals):

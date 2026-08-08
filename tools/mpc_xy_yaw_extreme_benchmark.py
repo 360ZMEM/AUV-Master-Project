@@ -24,6 +24,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def _apply_zh_style() -> None:
+    """图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII。"""
+    import os
+    import matplotlib.font_manager as fm
+
+    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(zh_font):
+        fm.fontManager.addfont(zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 11})
+
+
+_apply_zh_style()
+
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -363,21 +381,21 @@ def plot_case(output_dir: Path, scenario: Scenario, path: np.ndarray, pid: dict[
     mpc_states = mpc["states"]
     assert isinstance(pid_states, np.ndarray)
     assert isinstance(mpc_states, np.ndarray)
-    axes[0].plot(path[:, 0], path[:, 1], "k--", linewidth=1.5, label="reference path")
-    axes[0].plot(pid_states[:, 0], pid_states[:, 1], color="#c44e52", label="PID yaw-only fixed speed")
+    axes[0].plot(path[:, 0], path[:, 1], "k--", linewidth=1.5, label="参考路径")
+    axes[0].plot(pid_states[:, 0], pid_states[:, 1], color="#c44e52", label="PID 仅艏向·定速")
     axes[0].plot(mpc_states[:, 0], mpc_states[:, 1], color="#4c72b0", label=f"MPC {variant.name}")
     axes[0].set_aspect("equal", adjustable="box")
-    axes[0].set_title(f"{scenario.name}: x/y path tracking")
-    axes[0].set_xlabel("x (m)")
-    axes[0].set_ylabel("y (m)")
+    axes[0].set_title(f"{scenario.name}：x/y 路径跟踪")
+    axes[0].set_xlabel("x（m）")
+    axes[0].set_ylabel("y（m）")
     axes[0].grid(True, alpha=0.3)
     axes[0].legend()
 
     axes[1].plot(np.rad2deg(np.unwrap(pid["psi_cmds"])), color="#c44e52", label="PID psi_cmd")
     axes[1].plot(np.rad2deg(np.unwrap(mpc["psi_cmds"])), color="#4c72b0", label="MPC psi_cmd")
-    axes[1].set_title("Guidance heading command")
-    axes[1].set_xlabel("step")
-    axes[1].set_ylabel("heading cmd (deg)")
+    axes[1].set_title("制导艏向指令")
+    axes[1].set_xlabel("步")
+    axes[1].set_ylabel("艏向指令（deg）")
     axes[1].grid(True, alpha=0.3)
     axes[1].legend()
     fig.tight_layout()

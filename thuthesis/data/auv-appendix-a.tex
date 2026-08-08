@@ -1,0 +1,434 @@
+% This appendix is a manually curated publication view.
+% It intentionally omits repository paths, file names, scripts, and commands.
+
+\chapter{实验参数、评价方法与证据边界}
+
+本附录汇总正文中不宜反复展开、但对学术复核仍有必要的实验设定、数学定义与证据边界。内容按场景设计、故障模型、控制参数、优化约束、评价指标和证据等级组织。变量均在首次出现时说明其意义；仅用于定位代码或执行实验的路径、文件名、脚本名和命令不属于论文论证链，故不在本附录保留。
+
+除特别说明外，表中数值是本文仿真与数字孪生实验的名义设定，不代表传感器制造误差、海试环境统计量或装备验收限值。凡尚未由实物数据标定的参数，均只能用于可控扰动下的相对比较。
+
+\section{仿真场景与扰动因子}\label{sec:app-a-1}
+
+场景库采用“单因素分级 + 多因素联合”的设计。单因素场景用于识别某类观测退化对估计与控制的独立影响，综合压力场景用于检查多种不确定性同时出现时的闭环鲁棒性。令 \(p_{\mathrm{dvl}}\) 表示 DVL 观测在给定时段内的丢失概率，\(B_{\mathrm{sat}}\) 表示磁场硬饱和阈值，\(\eta_a\) 与 \(\eta_s\) 分别表示加速度计和声呐噪声的相对放大系数，\(v_c\) 表示海流速度。
+
+\begin{longtable}{@{}p{0.22\linewidth}p{0.20\linewidth}p{0.20\linewidth}p{0.28\linewidth}@{}}
+\caption{仿真场景及其学术用途}\label{tab:app-a-scenarios}\\
+\toprule
+场景 & 主要扰动 & 名义强度 & 用途 \\
+\midrule
+\endfirsthead
+\toprule
+场景 & 主要扰动 & 名义强度 & 用途 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+干净基线 & 无主动扰动 & --- & 给出算法对照基线 \\
+DVL 轻度丢失 & 速度观测间歇缺失 & \(p_{\mathrm{dvl}}=0.10\) & 检查轻度观测不连续 \\
+DVL 中度丢失 & 速度观测间歇缺失 & \(p_{\mathrm{dvl}}=0.30\) & 检查常见遮挡压力 \\
+DVL 重度丢失 & 速度观测间歇缺失 & \(p_{\mathrm{dvl}}=0.60\) & 检查置信度调度边界 \\
+DVL 极重度丢失 & 速度观测近乎不可用 & \(p_{\mathrm{dvl}}=0.90\) & 检查估计器失效趋势 \\
+轻度磁畸变 & 磁场限幅 & \(B_{\mathrm{sat}}=10^{-6}\,\mathrm{T}\) & 检查磁观测降权机制 \\
+重度磁畸变 & 磁场限幅 & \(B_{\mathrm{sat}}=10^{-8}\,\mathrm{T}\) & 检查磁观测近失效状态 \\
+声呐杂波 & 成像观测噪声增强 & 固定放大 & 检查声学质量退化 \\
+综合压力 & 丢包、漂移、噪声与海流联合 & 见表~\ref{tab:app-a-combined-stress} & 检查多扰动叠加鲁棒性 \\
+\end{longtable}
+
+综合压力场景同时施加八类扰动。令 \(p_b\) 表示通信帧丢失概率，\(\dot b_a\) 表示加速度计偏置增长率，\(\lambda_z\) 表示深度尖峰的平均发生率，\(A_z\) 表示尖峰幅值。各量的名义值与物理意图列于表~\ref{tab:app-a-combined-stress}。
+
+\begin{longtable}{@{}p{0.24\linewidth}p{0.28\linewidth}p{0.38\linewidth}@{}}
+\caption{综合压力场景的扰动参数}\label{tab:app-a-combined-stress}\\
+\toprule
+扰动源 & 名义参数 & 物理意图 \\
+\midrule
+\endfirsthead
+\toprule
+扰动源 & 名义参数 & 物理意图 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+通信帧丢失 & \(p_b=0.05\) & 近似低带宽链路中的随机丢帧 \\
+DVL 丢失 & \(p_{\mathrm{dvl}}=0.30\)，持续 \(1\sim3\,\mathrm{s}\) & 近似浑水或遮挡引起的速度观测中断 \\
+IMU 慢漂移 & \(\dot b_a=10^{-3}\,\mathrm{m/s^3}\) & 近似无充分温补时的缓慢偏置增长 \\
+深度尖峰 & \(\lambda_z=0.05\,\mathrm{Hz}\)，\(A_z=0.5\,\mathrm{m}\) & 近似低频瞬态电磁干扰 \\
+磁场饱和 & \(B_{\mathrm{sat}}=10^{-7}\,\mathrm{T}\) & 近似强近场磁干扰导致的量程受限 \\
+加速度计噪声 & \(\eta_a=1.5\) & 近似结构振动耦合 \\
+声呐噪声 & \(\eta_s=2.0\) & 近似浑浊浅水中的成像退化 \\
+海流 & \(v_c=0.3\,\mathrm{m/s}\) & 近似常见近海横流压力 \\
+\end{longtable}
+
+上述磁饱和阈值只用于形成可重复的相对压力，不是由实测噪声谱反演得到的传感器参数。因此，本文只比较同一场景定义下不同算法的相对行为，不把该阈值解释为真实海域中的失效概率。
+
+\section{异步采样与故障注入模型}\label{sec:app-a-2}
+
+仿真接口由通信时延、异步采样和故障注入三个抽象环节组成。通信时延写为
+\[
+  \tau_k=\bar{\tau}+\epsilon_{\tau,k},
+  \qquad
+  \bar{\tau}=200\,\mathrm{ms},
+  \qquad
+  \epsilon_{\tau,k}\sim\mathcal{U}(-50,50)\,\mathrm{ms},
+\]
+其中 \(\bar{\tau}\) 为基线时延，\(\epsilon_{\tau,k}\) 为有界抖动。各传感器按独立时钟采样：IMU、深度、磁场和 DVL 的名义频率分别为 \(100\)、\(50\)、\(20\) 和 \(6\,\mathrm{Hz}\)。该设定用于复现多速率观测的时间对齐问题，不代表所有实物传感器的固定输出频率。
+
+六类故障模型定义如下。
+
+\begin{longtable}{@{}p{0.20\linewidth}p{0.35\linewidth}p{0.35\linewidth}@{}}
+\caption{故障注入模型及其参数}\label{tab:app-a-chaos}\\
+\toprule
+故障类型 & 数学或逻辑模型 & 名义参数 \\
+\midrule
+\endfirsthead
+\toprule
+故障类型 & 数学或逻辑模型 & 名义参数 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+DVL 冻结 & 丢失窗口内保持最近一次有效速度 \(\tilde{\boldsymbol v}_k=\tilde{\boldsymbol v}_{k_0}\) & 触发概率 \(0.30\)，窗口 \(1\sim3\,\mathrm{s}\) \\
+IMU 漂移 & \(\tilde{\boldsymbol a}(t)=\boldsymbol a(t)+\boldsymbol b_a(t)\)，\(\dot{\boldsymbol b}_a=\boldsymbol w_b\) & 名义漂移率 \(10^{-3}\,\mathrm{m/s^3}\) \\
+深度尖峰 & \(\tilde z_k=z_k+A_z I_k\)，\(I_k\) 服从泊松到达过程 & \(\lambda_z=0.05\,\mathrm{Hz}\)，\(A_z=0.5\,\mathrm{m}\) \\
+磁场饱和 & \(\tilde B_i=\operatorname{clip}(B_i,-B_{\mathrm{sat}},B_{\mathrm{sat}})\) & \(B_{\mathrm{sat}}=10^{-7}\,\mathrm{T}\) \\
+通信丢包 & 每帧按伯努利变量 \(I_k\sim\operatorname{Bernoulli}(1-p_b)\) 保留或丢弃 & \(p_b=0.05\) \\
+数据乱序 & 以给定概率交换相邻帧的到达顺序 & 乱序概率 \(0.01\) \\
+\end{longtable}
+
+这里的 \(\operatorname{clip}(\cdot)\) 表示双边限幅，\(\boldsymbol w_b\) 表示驱动偏置变化的随机过程。模型分别覆盖“持续值错误、缓慢累积误差、瞬态异常、量程受限和通信时序错误”，便于区分估计器对不同失效形态的响应。
+
+\section{不确定性感知控制参数化与消融设计}\label{sec:app-a-3}
+
+令 \(c\in[0,1]\) 为由状态协方差映射得到的归一化置信度，\(c=1\) 表示高置信度。定义低置信度激活量
+\[
+  \rho(c)=(1-c)^\alpha ,
+\]
+其中 \(\alpha>0\) 控制置信度映射的非线性。跟踪权重和控制增量权重分别写为
+\[
+  w_e(c)=w_{e,0}\left[1+s_e\rho(c)\right],
+\]
+\[
+  w_u(c)=w_{u,0}
+  \left[
+    \gamma_u+(1-\gamma_u)
+    \sigma\!\left(k(c-c_0)\right)
+  \right],
+  \qquad
+  \sigma(x)=\frac{1}{1+\exp(-x)}.
+\]
+其中 \(w_{e,0}\) 与 \(w_{u,0}\) 为基准权重，\(s_e\) 为低置信度跟踪权重增益，\(\gamma_u\) 为控制代价的最小缩放比例，\(k\) 为 S 型函数陡峭度，\(c_0\) 为置信度转折点。
+
+\begin{longtable}{@{}p{0.20\linewidth}p{0.17\linewidth}p{0.53\linewidth}@{}}
+\caption{不确定性感知控制的名义参数}\label{tab:app-a-uampc-parameters}\\
+\toprule
+参数 & 名义值 & 含义 \\
+\midrule
+\endfirsthead
+\toprule
+参数 & 名义值 & 含义 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\(s_e\) & \(3.0\) & 低置信度下跟踪权重的最大附加增益 \\
+\(\gamma_u\) & \(0.3\) & 低置信度下控制增量代价的最小缩放比例 \\
+\(\alpha\) & \(1.5\) & 置信度到跟踪增益的幂指数 \\
+\(k\) & \(8.0\) & S 型控制代价缩放的陡峭度 \\
+\(c_0\) & \(0.6\) & 高、低置信度过渡的中心值 \\
+\(N\) & \(20\) & 模型预测控制的预测步数 \\
+\(\Delta t\) & \(0.1\,\mathrm{s}\) & 离散控制时间步长 \\
+\end{longtable}
+
+消融实验不以工程开关命名，而按被移除的机制定义。
+
+\begin{longtable}{@{}p{0.12\linewidth}p{0.25\linewidth}p{0.30\linewidth}p{0.23\linewidth}@{}}
+\caption{不确定性感知控制消融变体}\label{tab:app-a-uampc-ablation}\\
+\toprule
+变体 & 定义 & 被隔离的机制 & 学术用途 \\
+\midrule
+\endfirsthead
+\toprule
+变体 & 定义 & 被隔离的机制 & 学术用途 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+A0 & \(w_e,w_u\) 恒定 & 全部置信度调度 & 固定权重对照 \\
+A1 & 使用完整参数化 & 无 & 默认 UA-MPC \\
+A2 & 令 \(w_u(c)=w_{u,0}\) & S 型控制代价降权 & 识别可解性与精度主贡献 \\
+A3 & 令 \(\alpha=1\) & 非线性置信度映射 & 检查线性映射的边际影响 \\
+A4 & 令 \(s_e=0\) & 低置信度跟踪增益 & 分离跟踪权重放大作用 \\
+\end{longtable}
+
+第 5 章的机制归因表明，A2 对可解性和 S 弯横向精度的影响最大；A3 只有边际收益。因此本文保留默认 \(\alpha=1.5\)，不依据单次运动学基准修改默认参数。
+
+\section{代价权重与约束}\label{sec:app-a-4}
+
+名义代价函数写为
+\[
+  J=
+  \sum_{k=0}^{N-1}
+  \left[
+    \boldsymbol e_k^\mathsf{T}\boldsymbol Q(c)\boldsymbol e_k
+    +\Delta\boldsymbol u_k^\mathsf{T}
+     \boldsymbol R(c)\Delta\boldsymbol u_k
+  \right]
+  +\boldsymbol e_N^\mathsf{T}\boldsymbol Q_f\boldsymbol e_N ,
+\]
+其中 \(\boldsymbol e_k\) 为状态跟踪误差，\(\Delta\boldsymbol u_k\) 为控制增量，\(\boldsymbol Q(c)\) 与 \(\boldsymbol R(c)\) 分别为随置信度变化的跟踪和控制权重矩阵。
+
+\begin{longtable}{@{}p{0.27\linewidth}p{0.18\linewidth}p{0.45\linewidth}@{}}
+\caption{代价函数的基准权重}\label{tab:app-a-cost-weights}\\
+\toprule
+代价项 & 基准权重 & 说明 \\
+\midrule
+\endfirsthead
+\toprule
+代价项 & 基准权重 & 说明 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+纵向位置误差 \(e_x\) & \(1.0\) & 水平面位置跟踪 \\
+横向位置误差 \(e_y\) & \(1.0\) & 电缆中心线跟踪 \\
+深度误差 \(e_z\) & \(5.0\) & 直接关联近底安全裕度 \\
+航向误差 \(e_\psi\) & \(3.0\) & 约束路径几何跟随 \\
+前向速度误差 \(e_u\) & \(0.5\) & 允许适度速度调整 \\
+垂向速度误差 \(e_w\) & \(1.0\) & 限制垂向动态偏差 \\
+航向指令增量 & \(0.1\) & 抑制航向指令抖动 \\
+深度指令增量 & \(0.1\) & 抑制深度指令跳变 \\
+推力指令增量 & \(0.05\) & 抑制推进器频繁调节 \\
+\end{longtable}
+
+硬约束用于保证物理可行性，速率约束用于限制相邻预测步的变化，带宽约束用于限制指令相对当前状态的偏离。设 \(u_k\) 为前向速度，\(\psi_{\mathrm{cmd},k}\)、\(z_{\mathrm{cmd},k}\) 和 \(T_{\mathrm{cmd},k}\) 分别为航向、深度和推力指令。
+
+\begin{longtable}{@{}p{0.27\linewidth}p{0.38\linewidth}p{0.25\linewidth}@{}}
+\caption{模型预测控制约束}\label{tab:app-a-hard-constraints}\\
+\toprule
+约束 & 数学表达 & 名义范围 \\
+\midrule
+\endfirsthead
+\toprule
+约束 & 数学表达 & 名义范围 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+最低航速 & \(u_k\ge u_{\min}\) & \(u_{\min}=0.1\,\mathrm{m/s}\) \\
+航向指令 & \(-\pi\le\psi_{\mathrm{cmd},k}\le\pi\) & \([-\pi,\pi]\,\mathrm{rad}\) \\
+深度指令 & \(0\le z_{\mathrm{cmd},k}\le z_{\max}\) & \(z_{\max}=50\,\mathrm{m}\) \\
+推力指令 & \(0\le T_{\mathrm{cmd},k}\le100\%\) & 禁止反向推力 \\
+深度变化率 & \(\lvert\Delta z_{\mathrm{cmd},k}\rvert\le\Delta z_{\max}\) & \(\Delta z_{\max}=0.5\,\mathrm{m/step}\) \\
+航向变化率 & \(\lvert\Delta\psi_{\mathrm{cmd},k}\rvert\le\Delta\psi_{\max}\) & \(\Delta\psi_{\max}=8^\circ/\mathrm{step}\) \\
+深度带宽 & \(\lvert z_{\mathrm{cmd},k}-z_{\mathrm{current}}\rvert\le z_b\) & \(z_b=3.0\,\mathrm{m}\) \\
+航向带宽 & \(\lvert\psi_{\mathrm{cmd},k}-\psi_{\mathrm{current}}\rvert\le\psi_b\) & \(\psi_b=45^\circ\) \\
+\end{longtable}
+
+其中 \(\Delta z_{\mathrm{cmd},k}=z_{\mathrm{cmd},k+1}-z_{\mathrm{cmd},k}\)，航向差采用角度环绕后的最短差值。硬约束、速率约束和带宽约束分别对应“物理边界、短时平滑性和中期可跟随性”，不能相互替代。
+
+\section{数值求解、实时性与回退}\label{sec:app-a-5}
+
+优化问题采用内点法求解。每个控制周期只更新当前状态、参考轨迹和置信度，并以上一周期最优控制序列移位后作为初值。名义配置见表~\ref{tab:app-a-solver}。
+
+\begin{longtable}{@{}p{0.25\linewidth}p{0.22\linewidth}p{0.43\linewidth}@{}}
+\caption{数值求解的名义配置}\label{tab:app-a-solver}\\
+\toprule
+项目 & 名义值 & 说明 \\
+\midrule
+\endfirsthead
+\toprule
+项目 & 名义值 & 说明 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+收敛容差 & \(10^{-4}\) & 平衡数值精度与在线计算时间 \\
+最大迭代次数 & \(100\) & 防止单次求解无限阻塞控制循环 \\
+控制周期 & \(100\,\mathrm{ms}\) & 与 \(\Delta t=0.1\,\mathrm{s}\) 一致 \\
+预测时域 & \(N=20\) & 对应约 \(2\,\mathrm{s}\) 的前视窗口 \\
+优化变量规模 & 约 \(360\) & 由状态维度、控制维度和预测步数共同决定 \\
+\end{longtable}
+
+若求解器在当前周期未返回可接受解，则系统显式进入回退逻辑，而不把回退输出记为求解成功。回退顺序为：优先保持最近一次已验证的安全控制输出；若该输出已过期，则退化到几何制导或安全设定值；当状态新鲜度或安全条件不满足时，由更高优先级的行为树与底层保护接管。
+
+补充实验表明，单纯把最大迭代次数从 \(100\) 增至 \(200\) 或 \(400\) 不能从根本上解决高回退率，反而显著延长失败求解的占用时间。因此迭代上限不是本文宣称的性能优化手段，后续应优先改善初值连续性、约束可行性和终端任务定义。
+
+\section{评价指标与数据契约}\label{sec:app-a-6}
+
+本节只保留与结论直接相关的指标定义，不记录分析工具名称或数据通道名称。设第 \(k\) 个样本的真实位置和估计位置分别为 \(\boldsymbol p_k\) 与 \(\hat{\boldsymbol p}_k\)，水平误差为
+\[
+  e_{xy,k}=
+  \sqrt{(p_{x,k}-\hat p_{x,k})^2+(p_{y,k}-\hat p_{y,k})^2}.
+\]
+水平位置均方根误差定义为
+\[
+  \operatorname{RMSE}_{xy}
+  =
+  \sqrt{\frac{1}{n}\sum_{k=1}^{n}e_{xy,k}^2}.
+\]
+\(\operatorname{CEP}_{50}\) 为样本集合 \(\{e_{xy,k}\}\) 的中位数，即满足半数水平误差不超过该值的半径。
+
+对新息向量 \(\boldsymbol y_k\) 和新息协方差 \(\boldsymbol S_k\)，归一化新息平方定义为
+\[
+  \operatorname{NIS}_k=
+  \boldsymbol y_k^\mathsf{T}
+  \boldsymbol S_k^{-1}
+  \boldsymbol y_k .
+\]
+若量测维数为 \(m\) 且滤波假设成立，则 \(\operatorname{NIS}_k\) 近似服从自由度为 \(m\) 的卡方分布，其期望为 \(m\)。跨不同量测维数比较时，另采用维数归一化量 \(\overline{\operatorname{NIS}}_k=\operatorname{NIS}_k/m\)，其理论期望为 \(1\)。本文使用 NIS 检查协方差一致性，不把它解释为在线定位精度本身。
+
+控制量变化率采用相邻控制向量差分的均方根：
+\[
+  r_{\Delta u}
+  =
+  \sqrt{
+    \frac{1}{n-1}
+    \sum_{k=1}^{n-1}
+    \lVert\boldsymbol u_{k+1}-\boldsymbol u_k\rVert_2^2
+  }.
+\]
+求解回退率定义为
+\[
+  r_{\mathrm{fb}}=
+  \frac{N_{\mathrm{fb}}}{N_{\mathrm{ctrl}}},
+\]
+其中 \(N_{\mathrm{fb}}\) 为进入回退逻辑的控制周期数，\(N_{\mathrm{ctrl}}\) 为总控制周期数。
+
+对地形跟随，令 \(h_k\) 为真实离底高度，\(h^\star\) 为目标离底高度，则
+\[
+  \operatorname{RMSE}_{h}
+  =
+  \sqrt{\frac{1}{n}\sum_{k=1}^{n}(h_k-h^\star)^2},
+  \qquad
+  h_{\min}=\min_k h_k .
+\]
+对海缆巡检，令 \(d_{\perp,k}\) 为相对电缆中心线的横向偏移，\(s_k\) 为沿先验路由的累计进度，\(\hat d_k\) 与 \(\sigma_{d,k}\) 分别为埋深估计及其标准差。上述变量共同构成巡检质量与验收判断的最小数据契约。
+
+双脑通信的学术数据契约只要求下行数据包含任务模式、控制意图和执行参数，上行数据包含姿态、速度、深度、能源状态与故障状态。具体字段偏移和程序接口属于实现文档，不进入论文附录；实物阶段仍需单独报告端到端时延分位数、丢包率和序列号跳变统计。
+
+\section{证据矩阵与样本量边界}\label{sec:app-a-7}
+
+原始数据存储位置会随平台和实验批次变化，不构成学术结论的一部分。本节以实验对象、样本量、可支撑结论和不可外推范围替代路径索引。
+
+\begin{longtable}{@{}p{0.24\linewidth}p{0.19\linewidth}p{0.27\linewidth}p{0.215\linewidth}@{}}
+\caption{核心实验的证据矩阵}\label{tab:app-a-data-sources}\\
+\toprule
+实验对象 & 样本量 & 可支撑结论 & 不可外推范围 \\
+\midrule
+\endfirsthead
+\toprule
+实验对象 & 样本量 & 可支撑结论 & 不可外推范围 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+状态估计扰动回归 & 8 场景 \(\times\) 3 种子 & 24 次均完成，输出稳定 & 不证明误差随扰动强度单调变化 \\
+协方差一致性 & 8 场景 \(\times\) 3 种子 & 自适应机制在全部场景被触发 & NIS 为离线一致性检查 \\
+UA-MPC 主消融 & 3 场景 \(\times\) 2 模式 \(\times\) 3 种子 & 综合压力下定位和横向指标同向改善 & 重度 DVL 丢失下不再有优势 \\
+横向机动归因 & 2 路径 \(\times\) 4 变体，确定性单次 & S 型控制代价降权为主要机制 & 不替代六自由度多种子结论 \\
+地形跟随复验 & 3 强度 \(\times\) 3 种子 & 无安全违规，PID 为可靠基线 & 不证明 MPC 在所有地形下更优 \\
+复杂平面路径 & 每路径单次 & MPC 在不规则曲率路径具备预瞄优势 & 直角路径上 LOS 仍可能更优 \\
+TMR8637 随附测试报告 & 1 份报告，编号 6\# 模组三轴 & 1 Hz 本底噪声为 200 pT/\(\sqrt{\mathrm{Hz}}\)，50 Hz 约为 20--30 pT/\(\sqrt{\mathrm{Hz}}\) & 供应方随附单件报告，不等同于完整采集链实测 \\
+磁外参仿真标定 & 单次全流程 & 标定计算与应用链路成立 & 不等同于真机转台或九参数标定 \\
+代理电缆场景 & 6 场景 \(\times\) 2 模式，单种子 & 压力测试链路可运行 & 不能比较两种控制模式的统计优劣 \\
+数字孪生验收 & 3 次独立运行 & 窗口化评分与聚合判据可复现 & 不等同于现场海试验收 \\
+六自由度先验恢复 & 中、重两档各 3 次 & 满足磁观测前提时可复现闭环恢复 & 受确定性先验与窗口判定限制 \\
+\end{longtable}
+
+正文中对“旧口径被替代”的说明，应理解为分析定义或实验公平性得到修正，而不是删除不利结果。任何单次结果仍须标注 \(n=1\)，任何代理场景仍须与原生声磁耦合场景区分。
+
+\section{海缆巡检验收判据}\label{sec:app-a-8}
+
+数字孪生验收采用起点健康、有效窗口、逐帧质量和多次运行聚合四级判据。令 \(s_k\) 为路由进度，\(d_{\perp,k}\) 为横向偏移，\(q_k\in\{0,1\}\) 表示埋深估计是否就绪，\(I_k\in\{0,1\}\) 表示第 \(k\) 帧是否进入验收窗口。有效窗口定义为
+\[
+  I_k=
+  \mathbb{I}
+  \left(
+    q_k=1,\;
+    s_k\le50\,\mathrm{m},\;
+    |d_{\perp,k}|\le2.0\,\mathrm{m}
+  \right).
+\]
+起点健康检查使用前 \(30\) 个样本，并要求起始路由进度不超过 \(20\,\mathrm{m}\)、起始横向偏移不超过 \(5\,\mathrm{m}\)。该宽松起点阈值用于排除明显错误初始化，不代替正式验收走廊。
+
+令 \(\sigma_{d,k}\) 为埋深估计标准差，\(\sigma_{\max}\) 为规定上限，则不确定度超限比例为
+\[
+  r_\sigma=
+  \frac{
+    \sum_k I_k\,
+    \mathbb{I}(\sigma_{d,k}>\sigma_{\max})
+  }{
+    \sum_k I_k
+  }.
+\]
+本文要求 \(r_\sigma\le0.05\)。多次运行聚合至少包含 \(N_{\min}=3\) 次独立运行，通过率定义为
+\[
+  r_{\mathrm{pass}}=
+  \frac{N_{\mathrm{pass}}}{N_{\mathrm{run}}},
+  \qquad
+  r_{\mathrm{pass}}\ge0.67.
+\]
+
+三次数字孪生运行均满足就绪与通过判据，但“初步验收就绪”只表示数据完整性、窗口有效性和工程阈值在数字孪生中一致，不表示已通过真实海缆检测精度验收。
+
+\section{端到端证据层级与恢复条件}\label{sec:app-a-9}
+
+端到端电缆探测由磁场、导航和声学观测共同驱动，每个时刻输出至少包括横向偏移 \(d_\perp\)、路由进度 \(s\)、埋深估计 \(\hat d\)、埋深标准差 \(\sigma_d\)、置信度 \(c\)、磁信噪比和质量状态。具体程序接口、字段名称和消息通道属于软件文档，不影响本文算法定义，故不在此列出。
+
+设先验电缆点为 \(\boldsymbol p_i\)，受控先验畸变写为
+\[
+  \tilde{\boldsymbol p}_i
+  =
+  \boldsymbol R(\delta\psi)\boldsymbol p_i
+  +\boldsymbol t,
+\]
+其中 \(\delta\psi\) 为平面旋转偏差，\(\boldsymbol t\) 为平移偏差。在线修正估计 \(\hat{\delta\psi}\) 与 \(\hat{\boldsymbol t}\)，并仅在磁观测满足质量门限时接受更新。该设计保证“恢复”来自新观测对先验的校正，而不是直接放宽验收阈值。
+
+端到端证据按以下层级解释：
+
+\begin{enumerate}
+  \item \textbf{算法级扫描：}用于识别同源算法对先验偏差、曲率和观测失效的敏感性，属于纯仿真单次证据。
+  \item \textbf{开环回放：}证明先验畸变会沿数据链确定性传导至横向偏移和验收失败，但不包含车辆运动反馈。
+  \item \textbf{解耦轻量闭环：}证明观测接受、在线修正和指导量更新可以形成闭环，但运动模型经过简化。
+  \item \textbf{六自由度闭环：}在满足磁观测物理前提时，中、重两档各三次复现窗口内恢复。
+  \item \textbf{实物验收：}TMR8637 已有单件模组三轴随附测试报告，完整声磁噪声、采集链、硬件标定、网络时延和水域试验仍未完成。
+\end{enumerate}
+
+六自由度恢复实验中，电缆相对车体的名义垂直间距约为 \(7.5\,\mathrm{m}\)，之字形横切幅度为 \(0.6\)，验收走廊半宽为 \(3.4\,\mathrm{m}\)。这些量是恢复实验的物理前提与判定尺度，不是通用海缆参数。重度先验畸变由约 \(10.25\,\mathrm{m}\) 的起始横偏在约 \(12\,\mathrm{s}\) 内收敛进入走廊；关闭在线修正的对照不能形成同等恢复。
+
+\section{代理极端场景的因子化定义}\label{sec:app-a-10}
+
+原生仿真后端尚不能完整耦合电缆几何、近底地形、声磁观测和横流。为验证控制闭环在组合压力下能否运行，本文将代理场景表示为四个因子的组合
+\[
+  \mathcal{S}
+  =
+  \mathcal{G}
+  \times
+  \mathcal{T}
+  \times
+  \mathcal{O}
+  \times
+  \mathcal{C},
+\]
+其中 \(\mathcal{G}\) 表示电缆中心线几何，\(\mathcal{T}\) 表示地形坡度与起伏，\(\mathcal{O}\) 表示声磁观测质量，\(\mathcal{C}\) 表示海流速度和方向。
+
+\begin{longtable}{@{}p{0.23\linewidth}p{0.27\linewidth}p{0.40\linewidth}@{}}
+\caption{代理极端场景的主导因子}\label{tab:app-a-proxy-scenarios}\\
+\toprule
+场景 & 主导因子 & 主要考察问题 \\
+\midrule
+\endfirsthead
+\toprule
+场景 & 主导因子 & 主要考察问题 \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+连续 S 弯 & \(\mathcal{G}\) & 连续曲率变化下的预瞄与横向跟踪 \\
+发卡掉头 & \(\mathcal{G}\) & 大航向变化和终端任务定义 \\
+坡面穿越 & \(\mathcal{T}\) & 平面制导与近底高度控制耦合 \\
+埋设间断 & \(\mathcal{O}\) & 观测中断下的置信度与回退 \\
+横流冲击 & \(\mathcal{C}\) & 外部扰动下的横向保持能力 \\
+综合极端 & \(\mathcal{G},\mathcal{T},\mathcal{O},\mathcal{C}\) & 多因素同时作用时的闭环可运行性 \\
+\end{longtable}
+
+六类场景分别在固定权重和不确定性感知两种模式下完成单种子冒烟测试，共 \(6\times2=12\) 次运行。该结果只能说明代理压力测试链路能够生成有效控制指标；由于每个组合仅 \(n=1\)，不能据此宣称两种控制模式存在统计显著差异，也不能替代原生声磁耦合数字孪生或海试。

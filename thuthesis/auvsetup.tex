@@ -1,0 +1,76 @@
+% !TEX root = ./auv-thesis.tex
+
+% Author confirmation is still required for the professional degree wording,
+% English title, and final submission date.
+\thusetup{
+  output = electronic,
+  title = {面向海上风电电缆运维的 AUV\\多源异构感知与安全自主巡检研究},
+  title* = {Research on Multi-source Heterogeneous Perception and Safe Autonomous Inspection of AUV for Offshore Wind Power Cable Operation and Maintenance},
+  degree-category = {工学硕士},
+  degree-category* = {Master of Electronic and Information Engineering},
+  department = {深圳国际研究生院},
+  professional-field = {海洋技术与工程},
+  professional-field* = {Ocean Technology and Engineering},
+  author = {谢冠文},
+  author* = {Xie Guanwen},
+  supervisor = {陈道毅, 教授},
+  supervisor* = {Professor Chen Daoyi},
+  date = {2027-03-15},
+  include-spine = false,
+}
+
+\usepackage{amsthm}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{placeins}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{siunitx}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\real}[1]{#1}
+
+\thusetup{
+  math-style = GB,
+  math-font = xits,
+  cite-style = super,
+}
+
+\usepackage[
+  backend=biber,
+  style=gb7714-2015,
+  sorting=none
+]{biblatex}
+\addbibresource{ref/auv-references.bib}
+
+\graphicspath{{../docs/thesis/figures/}}
+
+\newcommand{\migrationplaceholder}[1]{%
+  \par\noindent
+  \fcolorbox{orange!70!black}{orange!8}{%
+    \parbox{0.94\linewidth}{\textbf{F1 迁移占位：}#1}%
+  }%
+  \par
+}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor = black,
+  citecolor = black,
+  urlcolor = blue!50!black,
+}

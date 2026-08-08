@@ -19,6 +19,36 @@
 
 #define UIBeidID 0989564
 #define AUVBeidID 0989565
+#define PC104_UPTIME_VALID_MARKER 0x5453
+
+/**
+ * @brief Return PC104 relative uptime in signed 32-bit milliseconds.
+ * @details The value is derived from the VxWorks tick counter and does not
+ *          depend on RTC, GPS, or wall-clock synchronization. The value wraps
+ *          before the signed 32-bit millisecond range is exceeded.
+ * @return Relative uptime in milliseconds.
+ * @author Tsinghua AUV Group
+ */
+static int32 Get_PC104_Uptime_Ms(void)
+{
+	unsigned long ticks;
+	unsigned long rate;
+	unsigned long seconds;
+	unsigned long remain_ticks;
+	unsigned long uptime_ms;
+
+	ticks = (unsigned long)tickGet();
+	rate = (unsigned long)sysClkRateGet();
+	if(rate == 0)
+	{
+		return 0;
+	}
+
+	seconds = ticks / rate;
+	remain_ticks = ticks % rate;
+	uptime_ms = (seconds % 2147483UL) * 1000UL + (remain_ticks * 1000UL) / rate;
+	return (int32)uptime_ms;
+}
 
 void UnpackNetDataTask(void);
 void UnpackBEIDOUDataTask(void);
@@ -114,6 +144,7 @@ _From_FMCU Data_From_FMCU;
 _From_GPS GPS_Prase_Data;
 
 _From_DVL DVL_Prase_Data;
+static int32 DVL_BI_Uptime_Ms = 0;
 
 _FromACK GetACKfromDVL;
 
@@ -3094,37 +3125,45 @@ void Pack_Data_To_UI12(_To_UI12 *temp)
 	temp->ToUI12_Para12=(Current_State.Current_Para12);
 	
 	/**
-	 * @brief DVL 三轴速度上行扩展 (Body Frame, mm/s)
-	 * 辅助 Jetson ES-EKF 状态估计
-	 * 
-	 * 极性标定说明 (台架联调时确认):
-	 *   BI_X: 前进为正 (surge, +X = forward)
-	 *   BI_Y: 右移为正 (sway,  +Y = starboard)  [待实测确认]
-	 *   BI_Z: 下潜为正 (heave, +Z = down)       [待实测确认]
-	 * 若极性反转, 在此处取反即可, 例如: -DVL_Prase_Data.BI_Y
+	 * @brief DVL three-axis velocity uplink extension in body frame.
+	 * @details Para5/6/7 carry BI_X/BI_Y/BI_Z in mm/s for the Jetson ES-EKF.
+	 *          Bench polarity:
+	 *          BI_X: surge, +X = forward.
+	 *          BI_Y: sway, +Y = starboard.
+	 *          BI_Z: heave, +Z = down.
+	 * @author Tsinghua AUV Group
 	 */
 	temp->ToUI12_Para5 = (short int)DVL_Prase_Data.BI_X;  /* DVL Body X (mm/s) */
 	temp->ToUI12_Para6 = (short int)DVL_Prase_Data.BI_Y;  /* DVL Body Y (mm/s) */
 	temp->ToUI12_Para7 = (short int)DVL_Prase_Data.BI_Z;  /* DVL Body Z (mm/s) */
 
 	/**
-	 * @brief IMU 三轴角速度上行扩展 (Body Frame)
-	 * 编码: rad/s × 1000 → int16, 精度 0.001 rad/s, 量程 ±32.767 rad/s
-	 *
-	 * AngRateX_AngRateY_AngRateZ[0] = Roll  rate (绕X轴)
-	 * AngRateX_AngRateY_AngRateZ[1] = Pitch rate (绕Y轴)
-	 * AngRateX_AngRateY_AngRateZ[2] = Yaw   rate (绕Z轴)
+	 * @brief IMU three-axis angular-rate uplink extension in body frame.
+	 * @details Para8/9/10 carry roll/pitch/yaw rates encoded as rad/s x 1000.
+	 * @author Tsinghua AUV Group
 	 */
 	temp->ToUI12_Para8  = (short int)(IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[0] * 1000.0f);
 	temp->ToUI12_Para9  = (short int)(IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[1] * 1000.0f);
 	temp->ToUI12_Para10 = (short int)(IMU_Prase_Data.AngRateX_AngRateY_AngRateZ[2] * 1000.0f);
+
+	/**
+	 * @brief PC104 relative-time uplink extension.
+	 * @details Para3 carries packet pack uptime in milliseconds. Para4 carries
+	 *          the latest DVL BI parse uptime in milliseconds. Para12 carries a
+	 *          fixed marker so Jetson can distinguish new firmware from legacy
+	 *          frames that only echoed command parameters.
+	 * @author Tsinghua AUV Group
+	 */
+	temp->ToUI12_Para3 = Get_PC104_Uptime_Ms();
+	temp->ToUI12_Para4 = DVL_BI_Uptime_Ms;
+	temp->ToUI12_Para12 = PC104_UPTIME_VALID_MARKER;
 		
 	temp->ToUI12_IMU_Heading=(Current_State.Current_IMU_Heading)*10;
 	temp->ToUI12_IMU_Pitch=(Current_State.Current_IMU_Pitch)*10;
 	temp->ToUI12_IMU_Roll=(Current_State.Current_IMU_Roll)*10;	
 	temp->ToUI12_GPS_Heading=(Current_State.Current_GPS_Heading)*10;
 	temp->ToUI12_GPS_Velocity=(Current_State.Current_GPS_Velocity_Kn)*10;
-	temp->ToUI12_DVL_Velocity=(short int)(DVL_Prase_Data.BI_V / 100.0f);  /**< @brief DVL速度 m/s×10, was knots×10. BI_V(mm/s)/100=m/s×10 */
+	temp->ToUI12_DVL_Velocity=(short int)(DVL_Prase_Data.BI_V / 100.0f);  /**< @brief DVL speed encoded as m/s x 10. */
 	temp->ToUI12_Height=(Current_State.Current_Height)*10;
 	
 	temp->ToUI12_Cal_Longitude=(Current_State.Current_Cal_Longitude)*1000000;
@@ -3445,6 +3484,7 @@ void Unpack_Data_From_DVL_BI(u8 *temp_buf)
 		DVL_Prase_Data.BI_Z = atoi(ptr+1);   /*Z���ٶ�*/
 		
 		DVL_Prase_Data.BI_V = sqrt(((DVL_Prase_Data.BI_X)*(DVL_Prase_Data.BI_X))+((DVL_Prase_Data.BI_Y)*(DVL_Prase_Data.BI_Y))+((DVL_Prase_Data.BI_Z)*(DVL_Prase_Data.BI_Z)));   /*BI_V*/
+		DVL_BI_Uptime_Ms = Get_PC104_Uptime_Ms();
 		
 		/*ptr = strstr(ptr+1, ","); 		
 		ptr = strstr(ptr+1, ","); 

@@ -1,0 +1,1128 @@
+% ===========================================================================
+%  references.bib — AUV 海缆巡检硕士论文 参考文献库（第 1–4 章）
+% ---------------------------------------------------------------------------
+%  编码       ：UTF-8（务必以 UTF-8 保存/打开，勿转 GBK）
+%  目标引擎   ：xelatex + biblatex + biblatex-gb7714-2015 + biber
+%  引用键约定 ：作者姓 + 年份 + 主题词（全小写），如 mayne2000constrained
+%  分区       ：A. Crossref/DataCite 已验证（DOI 可经官方内容协商接口解析）
+%              B. 期刊官网权威题录已核实，但 DOI 属 CSTR/期刊自有体系，Crossref 不可解析
+%              C. 政策 / 行业报告（无 DOI，[EB/OL]/[R]，待核对发布版本与访问日期）
+%  索引对照   ：见同目录 00_引用点总索引.md（C*/D*/E*/G* 编号）及各主题 .md
+%  provenance ：每条上方注释给出 [索引号] 引用点 章节 + 来源核验状态
+%  中文条目   ：已加 langid={chinese}，使 gb7714 正确切换中英文著录格式
+%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 6 条（官网核实，DOI 非 Crossref 体系）｜C 区 7 条（政策/报告/标准/网页），合计 83 条
+%              └ A 区含"展望/未来趋势"子区 F1–F8（8 条，第 6 章结论与展望引用）
+%              └ A.5：01 章现状综述正文编号 [1]–[36]（[4] 归 C 区）+ A6 教材 + A10 DLIA
+%  维护       ：谢冠文 xgw24@mails.tsinghua.edu.cn  2026-08
+% ===========================================================================
+
+
+% ###########################################################################
+% #  A 区：Crossref / DataCite 已验证（题录来自官方内容协商接口）
+% ###########################################################################
+
+% --- A.1 决策与控制（对应 40_control：C1–C9） -------------------------------
+
+% [C1] B6 §1.3.2/§4.2 — 行为树 vs FSM ｜ Crossref 已验证（原 @misc，按专著修正为 @book）
+@book{colledanchise2018behavior,
+  title     = {Behavior Trees in Robotics and AI: An Introduction},
+  author    = {Colledanchise, Michele and Ögren, Petter},
+  year      = {2018},
+  publisher = {CRC Press},
+  address   = {Boca Raton, FL},
+  doi       = {10.1201/9780429489105},
+  isbn      = {9780429489105},
+}
+
+% [C2] B4 §1.3.1/§4.4 — 约束 MPC 稳定性与最优性综述 ｜ Crossref 已验证
+@article{mayne2000constrained,
+  title   = {Constrained model predictive control: Stability and optimality},
+  author  = {Mayne, D. Q. and Rawlings, J. B. and Rao, C. V. and Scokaert, P. O. M.},
+  journal = {Automatica},
+  year    = {2000},
+  volume  = {36},
+  number  = {6},
+  pages   = {789--814},
+  doi     = {10.1016/S0005-1098(99)00214-9},
+  issn    = {0005-1098},
+}
+
+% [C3] B5 §4.4.6 — CasADi 非线性优化框架 ｜ Crossref 已验证
+%      （Crossref online-first 2018-07；正式卷期 11(1) 为 2019，此处取卷期年）
+@article{andersson2019casadi,
+  title   = {{CasADi} -- A software framework for nonlinear optimization and optimal control},
+  author  = {Andersson, Joel A. E. and Gillis, Joris and Horn, Greg and Rawlings, James B. and Diehl, Moritz},
+  journal = {Mathematical Programming Computation},
+  year    = {2019},
+  volume  = {11},
+  number  = {1},
+  pages   = {1--36},
+  doi     = {10.1007/s12532-018-0139-4},
+  issn    = {1867-2949},
+}
+
+% [C4] B5 §4.4.6 — IPOPT 内点法求解器 ｜ Crossref 已验证
+%      （Crossref online-first 2005；正式卷期 106(1) 为 2006，此处取卷期年）
+@article{waechter2006ipopt,
+  title   = {On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming},
+  author  = {Wächter, Andreas and Biegler, Lorenz T.},
+  journal = {Mathematical Programming},
+  year    = {2006},
+  volume  = {106},
+  number  = {1},
+  pages   = {25--57},
+  doi     = {10.1007/s10107-004-0559-y},
+  issn    = {0025-5610},
+}
+
+% [C5] B1 §2.2.3/§4.1.1/§4.4.1 — Fossen 船舶/水下动力学与运动控制 ｜ Crossref 已验证
+%      （另有第 2 版 2021，ISBN 978-1-119-57505-4，如需最新版见 40_control C5 备注）
+@book{fossen2011handbook,
+  title     = {Handbook of Marine Craft Hydrodynamics and Motion Control},
+  author    = {Fossen, Thor I.},
+  year      = {2011},
+  publisher = {John Wiley \& Sons},
+  address   = {Chichester, UK},
+  doi       = {10.1002/9781119994138},
+  isbn      = {9781119994138},
+}
+
+% [C6] B2 §4.1.1 — REMUS 100 型 AUV 平台 ｜ Crossref 已验证
+%      ⚠ DOI 已修正：原索引 10.1109/OCEANS.2000.881247 有误（指向 Stojanovic 声通信文），
+%         正确为 .881250（Purcell et al., 147–151），已据 OCEANS 2000 参考文献列表核对
+@inproceedings{purcell2000remus,
+  title     = {New capabilities of the {REMUS} autonomous underwater vehicle},
+  author    = {Purcell, M. and von Alt, C. and Allen, B. and Austin, T. and Forrester, N. and Goldsborough, R. and Stokey, R.},
+  booktitle = {OCEANS 2000 MTS/IEEE Conference and Exhibition},
+  year      = {2000},
+  volume    = {1},
+  pages     = {147--151},
+  address   = {Providence, RI},
+  publisher = {IEEE},
+  doi       = {10.1109/OCEANS.2000.881250},
+}
+
+% [C7] B7 §4.4.4/§4.1.1 — LOS 视线制导路径跟踪（主）｜ Crossref 已验证（补 year=2005）
+@inproceedings{breivik2005guidance,
+  title     = {Principles of guidance-based path following in 2D and 3D},
+  author    = {Breivik, Morten and Fossen, Thor I.},
+  booktitle = {Proceedings of the 44th IEEE Conference on Decision and Control (CDC)},
+  year      = {2005},
+  pages     = {627--634},
+  address   = {Seville, Spain},
+  publisher = {IEEE},
+  doi       = {10.1109/CDC.2005.1582226},
+}
+
+% [C7-补1] B7 — LOS + 侧滑角自适应补偿 ｜ Crossref 已验证
+@article{fossen2015los,
+  title   = {Line-of-sight path following for {Dubins} paths with adaptive sideslip compensation of drift forces},
+  author  = {Fossen, Thor I. and Pettersen, Kristin Y. and Galeazzi, Roberto},
+  journal = {IEEE Transactions on Control Systems Technology},
+  year    = {2015},
+  volume  = {23},
+  number  = {2},
+  pages   = {820--827},
+  doi     = {10.1109/TCST.2014.2338354},
+  issn    = {1063-6536},
+}
+
+% [C7-补2] B7 — 比例 LOS 制导律 USGES 稳定性证明 ｜ Crossref 已验证
+@article{fossen2014usges,
+  title   = {On uniform semiglobal exponential stability ({USGES}) of proportional line-of-sight guidance laws},
+  author  = {Fossen, Thor I. and Pettersen, Kristin Y.},
+  journal = {Automatica},
+  year    = {2014},
+  volume  = {50},
+  number  = {11},
+  pages   = {2912--2917},
+  doi     = {10.1016/j.automatica.2014.10.018},
+  issn    = {0005-1098},
+}
+
+% [C8] B10 §3.4.2/§4.4.3 — tube-based robust MPC（UA-MPC 理论基础）｜ Crossref 已验证
+@article{mayne2005robust,
+  title   = {Robust model predictive control of constrained linear systems with bounded disturbances},
+  author  = {Mayne, D. Q. and Seron, M. M. and Raković, S. V.},
+  journal = {Automatica},
+  year    = {2005},
+  volume  = {41},
+  number  = {2},
+  pages   = {219--224},
+  doi     = {10.1016/j.automatica.2004.08.019},
+  issn    = {0005-1098},
+}
+
+% [C8-补] B10 — stochastic/chance-constrained MPC 综述 ｜ DOI 已验证
+%      题名/作者已经 IEEE Xplore + eScholarship 双源核实（Mesbah A., IEEE CSM 36(6):30–44, 2016）
+@article{mesbah2016stochastic,
+  title   = {Stochastic model predictive control: An overview and perspectives for future research},
+  author  = {Mesbah, Ali},
+  journal = {IEEE Control Systems Magazine},
+  year    = {2016},
+  volume  = {36},
+  number  = {6},
+  pages   = {30--44},
+  doi     = {10.1109/MCS.2016.2602087},
+  issn    = {1066-033X},
+}
+
+% [C9] A14 §4.3.1 — boustrophedon 覆盖路径分解（经典）｜ Crossref 已验证
+@inproceedings{choset1998boustrophedon,
+  title     = {Coverage path planning: The boustrophedon cellular decomposition},
+  author    = {Choset, Howie and Pignon, Philippe},
+  booktitle = {Field and Service Robotics},
+  year      = {1998},
+  pages     = {203--209},
+  address   = {London},
+  publisher = {Springer},
+  doi       = {10.1007/978-1-4471-1273-0_32},
+}
+
+% [C9-补1] A14 — 覆盖路径规划综述 ｜ Crossref 已验证
+@article{choset2001coverage,
+  title   = {Coverage for robotics -- A survey of recent results},
+  author  = {Choset, Howie},
+  journal = {Annals of Mathematics and Artificial Intelligence},
+  year    = {2001},
+  volume  = {31},
+  number  = {1-4},
+  pages   = {113--126},
+  doi     = {10.1023/A:1016639210559},
+  issn    = {1012-2443},
+}
+
+% [C9-补2] A14 — AUV 航迹间距自适应覆盖（最贴合）｜ Crossref 已验证
+%      （Crossref 页码 4774–4780；索引原记 4774–4781，以 Crossref 为准）
+@article{yordanova2020coverage,
+  title   = {Coverage path planning with track spacing adaptation for autonomous underwater vehicles},
+  author  = {Yordanova, Veronika and Gips, Bart},
+  journal = {IEEE Robotics and Automation Letters},
+  year    = {2020},
+  volume  = {5},
+  number  = {3},
+  pages   = {4774--4780},
+  doi     = {10.1109/LRA.2020.3003886},
+  issn    = {2377-3766},
+}
+
+
+% --- A.2 探测技术（对应 20_detection：D3–D5） ------------------------------
+
+% [D3-补1] A4/A6 §1.2.2/§2.3.1 — 交流磁场建模弱磁探测 ｜ Crossref 已验证
+@inproceedings{su2025precise,
+  title     = {Precise identification method of submarine cable routes based on weak magnetic detection and {AC} modeling},
+  author    = {Su, Qian and Zhang, Yu and Zhao, Jianjian and Zhu, Jinyuan and Zhang, Wenxuan and Kong, Chao and Zhao, Shouwang and Wang, Tuanjie and Zhao, Yong and Li, Lei and Tong, Bo and Chen, Yu},
+  booktitle = {2025 International Conference on Sensing, Measurement \& Data Analytics in the era of Artificial Intelligence (ICSMD)},
+  year      = {2025},
+  pages     = {1--4},
+  publisher = {IEEE},
+  doi       = {10.1109/ICSMD67131.2025.11365331},
+}
+
+% [D4] A12 §3.3.3 — 端到端神经网络磁数据反演电缆定位 ｜ Crossref 已验证
+@article{liu2024submarine,
+  title   = {Submarine cable detection using an end-to-end neural network-based magnetic data inversion},
+  author  = {Liu, Yutao and Wu, Yuquan and Li, Gang and Abbas, Aqeel and Shi, Taikun},
+  journal = {Journal of Geophysics and Engineering},
+  year    = {2024},
+  volume  = {21},
+  number  = {3},
+  pages   = {884--896},
+  doi     = {10.1093/jge/gxae045},
+  issn    = {1742-2132},
+}
+
+% [D5] A9 §2.4.2 — 约束最优椭球拟合三轴磁强计标定（九参数）｜ Crossref 已验证
+%      注：Crossref 全称含 pedestrian/foot-mounted 应用域；九参数椭球标定方法本身可迁移至 AUV。
+%      ⚠ 索引原页码(1017–1024)有误，Crossref 实为 166–174，以此为准。
+@inproceedings{cui2018magnetometer,
+  title     = {Three-axis magnetometer calibration based on optimal ellipsoidal fitting under constraint condition for pedestrian positioning system using foot-mounted inertial sensor/magnetometer},
+  author    = {Cui, Xufei and Li, Yibing and Wang, Qiuying and Zhang, Minghui and Li, Jia},
+  booktitle = {2018 IEEE/ION Position, Location and Navigation Symposium (PLANS)},
+  year      = {2018},
+  pages     = {166--174},
+  publisher = {IEEE},
+  doi       = {10.1109/PLANS.2018.8373378},
+}
+
+% [D5-补] A9 — 传感器坐标系捷联磁强计标定几何法（经典强基线）｜ Crossref 已验证
+@article{vasconcelos2011geometric,
+  title   = {Geometric approach to strapdown magnetometer calibration in sensor frame},
+  author  = {Vasconcelos, J. F. and Elkaim, G. and Silvestre, C. and Oliveira, P. and Cardeira, B.},
+  journal = {IEEE Transactions on Aerospace and Electronic Systems},
+  year    = {2011},
+  volume  = {47},
+  number  = {2},
+  pages   = {1293--1306},
+  doi     = {10.1109/TAES.2011.5751259},
+  issn    = {0018-9251},
+}
+
+
+% --- A.3 状态估计（对应 30_estimation：E1–E3） -----------------------------
+
+% [E1] B3/A11 §3.1.1/§3.3.1 — ES-EKF 四元数运动学 ｜ DataCite 已验证（arXiv 预印本）
+@online{sola2017quaternion,
+  title       = {Quaternion kinematics for the error-state {Kalman} filter},
+  author      = {Solà, Joan},
+  year        = {2017},
+  eprint      = {1711.02508},
+  eprinttype  = {arXiv},
+  eprintclass = {cs.RO},
+  doi         = {10.48550/arXiv.1711.02508},
+  url         = {https://arxiv.org/abs/1711.02508},
+  urldate     = {2026-08-06},
+}
+
+% [E1-补] B3/A11 — EKF vs ESKF 姿态估计对比（正式出版物出处）｜ Crossref 已验证
+@inproceedings{madyastha2011eskf,
+  title     = {Extended {Kalman} filter vs. error state {Kalman} filter for aircraft attitude estimation},
+  author    = {Madyastha, Venkatesh and Ravindra, Vishal and Mallikarjunan, Srinath and Goyal, Anup},
+  booktitle = {AIAA Guidance, Navigation, and Control Conference},
+  year      = {2011},
+  publisher = {American Institute of Aeronautics and Astronautics},
+  doi       = {10.2514/6.2011-6615},
+}
+
+% [E2] B9 §3.2.1 — DVL 水跟踪辅助惯性导航（经典工程出处）｜ Crossref 已验证
+@inproceedings{hegrenaes2009doppler,
+  title     = {Doppler water-track aided inertial navigation for autonomous underwater vehicle},
+  author    = {Hegrenæs, Øyvind and Berglund, Einar},
+  booktitle = {OCEANS 2009-EUROPE},
+  year      = {2009},
+  pages     = {1--10},
+  address   = {Bremen},
+  publisher = {IEEE},
+  doi       = {10.1109/OCEANSE.2009.5278307},
+}
+
+% [E3] A13 §3.4.1 — NIS/NEES 一致性检验奠基教材 ｜ Crossref 已验证
+%      （Crossref 记 2002；通行版年为 2001 Wiley，此处取通行年）
+@book{barshalom2001estimation,
+  title     = {Estimation with Applications to Tracking and Navigation: Theory, Algorithms and Software},
+  author    = {Bar-Shalom, Yaakov and Li, X. Rong and Kirubarajan, Thiagalingam},
+  year      = {2001},
+  publisher = {John Wiley \& Sons},
+  address   = {New York},
+  doi       = {10.1002/0471221279},
+  isbn      = {9780471221272},
+}
+
+% [E3-补1] A13 — 在线卡尔曼滤波一致性（NIS）检验专论 ｜ Crossref 已验证
+%      （Crossref online-first 2015；正式卷期 30(1) 为 2016，此处取卷期年）
+@article{piche2016online,
+  title   = {Online tests of {Kalman} filter consistency},
+  author  = {Piché, Robert},
+  journal = {International Journal of Adaptive Control and Signal Processing},
+  year    = {2016},
+  volume  = {30},
+  number  = {1},
+  pages   = {115--124},
+  doi     = {10.1002/acs.2571},
+  issn    = {0890-6327},
+}
+
+% [E3-补2] A13 §3.4.1 — 贝叶斯优化强制卡方分布的 KF 自动调参（预印本）｜ DataCite 已验证
+%      DataCite 内容协商返回 5 位作者全名，DOI 10.48550/arXiv.2306.07225 可解析
+@online{chen2023kalman,
+  title       = {Kalman filter auto-tuning through enforcing chi-squared normalized error distributions with {Bayesian} optimization},
+  author      = {Chen, Zhaozhong and Biggie, Harel and Ahmed, Nisar and Julier, Simon and Heckman, Christoffer},
+  year        = {2023},
+  eprint      = {2306.07225},
+  eprinttype  = {arXiv},
+  eprintclass = {cs.RO},
+  doi         = {10.48550/arXiv.2306.07225},
+  url         = {https://arxiv.org/abs/2306.07225},
+  urldate     = {2026-08-06},
+}
+
+
+% --- A.4 研究背景（对应 10_bg_offshore：G2 学术锚点） ----------------------
+
+% [G2-5] A2 §1.1.2 — 海缆损伤与寿命预测（唯一带 DOI 的学术锚点）｜ Crossref 已验证
+@article{dinmohammadi2019predicting,
+  title   = {Predicting damage and life expectancy of subsea power cables in offshore renewable energy applications},
+  author  = {Dinmohammadi, Fateme and Flynn, David and Bailey, Chris and Pecht, Michael and Yin, Chunyan and Rajaguru, Pushpa and Robu, Valentin},
+  journal = {IEEE Access},
+  year    = {2019},
+  volume  = {7},
+  pages   = {54658--54669},
+  doi     = {10.1109/ACCESS.2019.2911260},
+  issn    = {2169-3536},
+}
+
+
+% --- A.5 第 1 章现状综述新增（对应 01_background：正文编号 [1]–[36]） ---------
+%      来源：Crossref REST 内容协商（/transform/application/x-bibtex）逐条拉取，
+%            [36] 走 DataCite（arXiv）；键沿用「作者姓+年份+主题词」全小写。
+%      ⚠ 键与 01 初稿编号的两处差异：
+%         [7]  首作者经 Crossref 核实为 Bi Ran（非 Liu），键取 bi2025tmr；
+%         [20] Crossref 记出版年 2017（非 2016），键取 shen2017integrated。
+%      注：[30] colledanchise2017how 为 IEEE T-RO 期刊版，与 A.1 的专著
+%          colledanchise2018behavior 并存，二者不同文献。
+
+% [1] §1.2.1 — 侧扫声呐 AUV 海缆/管线自主跟踪 ｜ Crossref 已验证
+@inproceedings{bagnitsky2011sidescan,
+  title     = {Side scan sonar using for underwater cables \& pipelines tracking by means of {AUV}},
+  author    = {Bagnitsky, Andrey and Inzartsev, Alexander and Pavin, Alexander and Melman, Sergey and Morozov, Mikhail},
+  booktitle = {2011 IEEE Symposium on Underwater Technology and Workshop on Scientific Use of Submarine Cables and Related Technologies},
+  year      = {2011},
+  pages     = {1--10},
+  publisher = {IEEE},
+  doi       = {10.1109/UT.2011.5774119},
+}
+
+% [2] §1.2.1 — 基于侧扫声呐的海缆/管线自动跟踪方法 ｜ Crossref 已验证
+@article{feng2023automatic,
+  title   = {Automatic tracking method for submarine cables and pipelines of {AUV} based on side scan sonar},
+  author  = {Feng, Hao and Yu, Jiancheng and Huang, Yan and Cui, Jian and Qiao, Jianan and Wang, Zhenyu and Xie, Zongbo and Ren, Kai},
+  journal = {Ocean Engineering},
+  year    = {2023},
+  volume  = {280},
+  pages   = {114689},
+  doi     = {10.1016/j.oceaneng.2023.114689},
+  issn    = {0029-8018},
+}
+
+% [3] §1.2.1 — ASV 多模态声呐海缆路由建图 ｜ Crossref 已验证
+@article{jung2022multimodal,
+  title   = {Multi-modal sonar mapping of offshore cable lines with an autonomous surface vehicle},
+  author  = {Jung, Jongdae and Lee, Yeongjun and Park, Jeonghong and Yeu, Tae-Kyeong},
+  journal = {Journal of Marine Science and Engineering},
+  year    = {2022},
+  volume  = {10},
+  number  = {3},
+  pages   = {361},
+  doi     = {10.3390/jmse10030361},
+  issn    = {2077-1312},
+}
+
+% [5] §1.2.1 — 浅剖数据零样本管线检测（成像原理）｜ Crossref 已验证
+@article{zheng2021zeroshot,
+  title   = {Zero-shot pipeline detection for sub-bottom profiler data based on imaging principles},
+  author  = {Zheng, Gen and Zhao, Jianhu and Li, Shaobo and Feng, Jie},
+  journal = {Remote Sensing},
+  year    = {2021},
+  volume  = {13},
+  number  = {21},
+  pages   = {4401},
+  doi     = {10.3390/rs13214401},
+  issn    = {2072-4292},
+}
+
+% [6] §1.2.1 — 三维声学成像探测完全掩埋风电海缆 ｜ Crossref 已验证
+@article{ha2022buried,
+  title   = {A case study of completely buried wind-power cable detection using {3D} acoustic imaging},
+  author  = {Ha, Jiho and Shin, Jungkyun},
+  journal = {Journal of Environmental and Engineering Geophysics},
+  year    = {2022},
+  volume  = {27},
+  number  = {3},
+  pages   = {123--134},
+  doi     = {10.32389/JEEG22-003},
+  issn    = {1083-1363},
+}
+
+% [7] §1.2.2 — 高灵敏度低噪声 TMR 传感器结构优化 ｜ Crossref 已验证
+%      ⚠ 键 bi2025tmr：Crossref 首作者为 Bi Ran（01 初稿误记为 Liu）
+@article{bi2025tmr,
+  title   = {A high-sensitivity, low-noise, and low-hysteresis tunneling magnetoresistance sensor based on structural optimization of magnetic tunnel junctions},
+  author  = {Bi, Ran and Chen, Ruiying and Wu, Shilin and Ma, Haoyu and Zhang, Huiquan and Liu, Xinting and He, Jinliang and Hu, Jun},
+  journal = {Sensors},
+  year    = {2025},
+  volume  = {25},
+  number  = {6},
+  pages   = {1730},
+  doi     = {10.3390/s25061730},
+  issn    = {1424-8220},
+}
+
+% [8] §1.2.2 — AUV 磁导引海缆跟踪 ｜ Crossref 已验证
+@article{xiang2016subsea,
+  title   = {Subsea cable tracking by autonomous underwater vehicle with magnetic sensing guidance},
+  author  = {Xiang, Xianbo and Yu, Caoyang and Niu, Zemin and Zhang, Qin},
+  journal = {Sensors},
+  year    = {2016},
+  volume  = {16},
+  number  = {8},
+  pages   = {1335},
+  doi     = {10.3390/s16081335},
+  issn    = {1424-8220},
+}
+
+% [9] §1.2.2 — 电磁定位制导下飞行式 AUV 海缆跟踪自适应神经控制 ｜ Crossref 已验证
+@article{zhang2023adaptive,
+  title   = {Adaptive neural control of flight-style {AUV} for subsea cable tracking under electromagnetic localization guidance},
+  author  = {Zhang, Jialei and Xiang, Xianbo and Li, Weijia and Zhang, Qin},
+  journal = {IEEE/ASME Transactions on Mechatronics},
+  year    = {2023},
+  volume  = {28},
+  number  = {5},
+  pages   = {2976--2987},
+  doi     = {10.1109/TMECH.2023.3256707},
+  issn    = {1941-014X},
+}
+
+% [10] §1.2.2 — 标量磁强计姿态无关海缆路由跟踪（高海况）｜ Crossref 已验证
+@article{li2024attitude,
+  title   = {Attitude-independent route tracking for subsea power cables using a scalar magnetometer under high sea conditions},
+  author  = {Li, Guozhu and Geng, Xuxing and Liang, Shangqing and Chen, Yuanpeng and Huang, Guangming and Li, Gaoxiang and Zhang, Xueting and Yang, Guoqing},
+  journal = {Remote Sensing},
+  year    = {2024},
+  volume  = {16},
+  number  = {2},
+  pages   = {226},
+  doi     = {10.3390/rs16020226},
+  issn    = {2072-4292},
+}
+
+% [11] §1.2.2 — 悬停式 AUV 磁法水下 UXO 探测 ｜ Crossref 已验证
+@article{seidel2023uxo,
+  title   = {Underwater {UXO} detection using magnetometry on hovering {AUVs}},
+  author  = {Seidel, Marc and Frey, Torsten and Greinert, Jens},
+  journal = {Journal of Field Robotics},
+  year    = {2023},
+  volume  = {40},
+  number  = {4},
+  pages   = {848--861},
+  doi     = {10.1002/rob.22159},
+  issn    = {1556-4967},
+}
+
+% [12] §1.2.2 — 水下无人潜器矢量磁数据处理 ｜ Crossref 已验证
+@article{oehler2024processing,
+  title   = {Processing of unmanned underwater vehicle vector magnetometer data},
+  author  = {Oehler, J.-F. and Schifano, V. and Marquis, G. and Reiller, H. and Lucas, S. and Bougeault, C.},
+  journal = {Geophysical Prospecting},
+  year    = {2024},
+  volume  = {72},
+  number  = {8},
+  pages   = {2902--2918},
+  doi     = {10.1111/1365-2478.13556},
+  issn    = {1365-2478},
+}
+
+% [13] §1.2.2 — 地表磁场探测地下输电电缆 ｜ Crossref 已验证
+@article{sun2014underground,
+  title   = {Underground power cable detection and inspection technology based on magnetic field sensing at ground surface level},
+  author  = {Sun, Xu and Lee, Wing Kin and Hou, Yunhe and Pong, Philip W. T.},
+  journal = {IEEE Transactions on Magnetics},
+  year    = {2014},
+  volume  = {50},
+  number  = {7},
+  pages   = {1--5},
+  doi     = {10.1109/TMAG.2013.2297195},
+  issn    = {1941-0069},
+}
+
+% [14] §3 — 变分贝叶斯自适应 EKF 协同导航 ｜ Crossref 已验证
+@article{sun2018variational,
+  title   = {A new variational {Bayesian} adaptive extended {Kalman} filter for cooperative navigation},
+  author  = {Sun, Chengjiao and Zhang, Yonggang and Wang, Guoqing and Gao, Wei},
+  journal = {Sensors},
+  year    = {2018},
+  volume  = {18},
+  number  = {8},
+  pages   = {2538},
+  doi     = {10.3390/s18082538},
+  issn    = {1424-8220},
+}
+
+% [15] §3 — NavNet：深度序列学习 AUV 导航 ｜ Crossref 已验证
+@article{zhang2020navnet,
+  title   = {{NavNet}: {AUV} navigation through deep sequential learning},
+  author  = {Zhang, Xin and He, Bo and Li, Guangliang and Mu, Xiaokai and Zhou, Ying and Mang, Tanji},
+  journal = {IEEE Access},
+  year    = {2020},
+  volume  = {8},
+  pages   = {59845--59861},
+  doi     = {10.1109/ACCESS.2020.2982272},
+  issn    = {2169-3536},
+}
+
+% [16] §3 — AUV 定位 EKF 与 UKF 导航算法对比 ｜ Crossref 已验证
+@inproceedings{allotta2015comparison,
+  title     = {A comparison between {EKF}-based and {UKF}-based navigation algorithms for {AUVs} localization},
+  author    = {Allotta, Benedetto and Chisci, Luigi and Costanzi, Riccardo and Fanelli, Francesco and Fantacci, Claudio and Meli, Enrico and Ridolfi, Alessandro and Caiti, Andrea and Di Corato, Francesco and Fenucci, Davide},
+  booktitle = {OCEANS 2015 - Genova},
+  year      = {2015},
+  pages     = {1--5},
+  publisher = {IEEE},
+  doi       = {10.1109/OCEANS-Genova.2015.7271681},
+}
+
+% [17] §3 — RBF 神经网络增广误差状态卡尔曼滤波多源融合定位 ｜ Crossref 已验证
+@article{shaukat2021multisensor,
+  title   = {Multi-sensor fusion for underwater vehicle localization by augmentation of {RBF} neural network and error-state {Kalman} filter},
+  author  = {Shaukat, Nabil and Ali, Ahmed and Javed Iqbal, Muhammad and Moinuddin, Muhammad and Otero, Pablo},
+  journal = {Sensors},
+  year    = {2021},
+  volume  = {21},
+  number  = {4},
+  pages   = {1149},
+  doi     = {10.3390/s21041149},
+  issn    = {1424-8220},
+}
+
+% [18] §1.3.1/§4 — AUV 轨迹跟踪模型与控制策略综述 ｜ Crossref 已验证
+@article{li2021trajectory,
+  title   = {{AUV} trajectory tracking models and control strategies: A review},
+  author  = {Li, Daoliang and Du, Ling},
+  journal = {Journal of Marine Science and Engineering},
+  year    = {2021},
+  volume  = {9},
+  number  = {9},
+  pages   = {1020},
+  doi     = {10.3390/jmse9091020},
+  issn    = {2077-1312},
+}
+
+% [19] §4 — 基于 LOS 的欠驱动水面船舶模型预测路径跟踪 ｜ Crossref 已验证
+@article{oh2010path,
+  title   = {Path following of underactuated marine surface vessels using line-of-sight based model predictive control},
+  author  = {Oh, So-Ryeok and Sun, Jing},
+  journal = {Ocean Engineering},
+  year    = {2010},
+  volume  = {37},
+  number  = {2-3},
+  pages   = {289--295},
+  doi     = {10.1016/j.oceaneng.2009.10.004},
+  issn    = {0029-8018},
+}
+
+% [20] §4 — AUV 路径规划与跟踪一体化滚动时域优化 ｜ Crossref 已验证
+%      ⚠ 键 shen2017integrated：Crossref 出版年为 2017（01 初稿记 2016）
+@article{shen2017integrated,
+  title   = {Integrated path planning and tracking control of an {AUV}: A unified receding horizon optimization approach},
+  author  = {Shen, Chao and Shi, Yang and Buckham, Brad},
+  journal = {IEEE/ASME Transactions on Mechatronics},
+  year    = {2017},
+  volume  = {22},
+  number  = {3},
+  pages   = {1163--1173},
+  doi     = {10.1109/TMECH.2016.2612689},
+  issn    = {1941-014X},
+}
+
+% [21] §4 — 耦合 AUV 路径跟随模型预测控制 ｜ Crossref 已验证
+@article{jimoh2024path,
+  title   = {Path following model predictive control of a coupled autonomous underwater vehicle},
+  author  = {Jimoh, Isah A. and Yue, Hong},
+  journal = {IFAC-PapersOnLine},
+  year    = {2024},
+  volume  = {58},
+  number  = {20},
+  pages   = {183--188},
+  doi     = {10.1016/j.ifacol.2024.10.052},
+  issn    = {2405-8963},
+}
+
+% [22] §4 — 输入饱和下欠驱动海洋航行器约束 LOS 制导路径跟随 ｜ Crossref 已验证
+@article{liu2024constrained,
+  title   = {Constrained {LOS} guidance for path following of underactuated marine vehicle with input saturation},
+  author  = {Liu, Cheng and Sun, Ting and Wang, Xuegang},
+  journal = {Ocean Engineering},
+  year    = {2024},
+  volume  = {307},
+  pages   = {118217},
+  doi     = {10.1016/j.oceaneng.2024.118217},
+  issn    = {0029-8018},
+}
+
+% [23] §4 — 欠驱动 AUV 参数辨识与模型预测路径跟随（含实验）｜ Crossref 已验证
+@article{zhou2023parameter,
+  title   = {Parameter identification and model prediction path following control of underactuated {AUV}: Methodology and experimental verification},
+  author  = {Zhou, Guangzhao and Xiang, Xianbo and Liu, Chuan},
+  journal = {Control Engineering Practice},
+  year    = {2023},
+  volume  = {141},
+  pages   = {105729},
+  doi     = {10.1016/j.conengprac.2023.105729},
+  issn    = {0967-0661},
+}
+
+% [24] §4 — 基于 MPC 的 AUV 路径规划与轨迹跟踪一体化运动设计 ｜ Crossref 已验证
+@article{deng2024motion,
+  title   = {Autonomous underwater vehicle ({AUV}) motion design: Integrated path planning and trajectory tracking based on model predictive control ({MPC})},
+  author  = {Deng, Si-Yi and Hao, Li-Ying and Shen, Chao},
+  journal = {Journal of Marine Science and Engineering},
+  year    = {2024},
+  volume  = {12},
+  number  = {9},
+  pages   = {1655},
+  doi     = {10.3390/jmse12091655},
+  issn    = {2077-1312},
+}
+
+% [25] §4 — 基于海流观测器的欠驱动 AUV 三维轨迹跟踪 ｜ Crossref 已验证
+@article{liang2018threedim,
+  title   = {Three-dimensional trajectory tracking control of an underactuated autonomous underwater vehicle based on ocean current observer},
+  author  = {Liang, Xiao and Qu, Xingru and Hou, Yuanhang and Ma, Qiang},
+  journal = {International Journal of Advanced Robotic Systems},
+  year    = {2018},
+  volume  = {15},
+  number  = {5},
+  pages   = {1729881418806811},
+  doi     = {10.1177/1729881418806811},
+  issn    = {1729-8814},
+}
+
+% [26] §4 — 扰动与输入饱和下基于收缩理论的 AUV 轨迹跟踪 ｜ Crossref 已验证
+@article{ma2022trajectory,
+  title   = {Trajectory tracking control for autonomous underwater vehicle with disturbances and input saturation based on contraction theory},
+  author  = {Ma, Caipeng and Tang, Yu and Lei, Ming and Jiang, Dapeng and Luo, Wanzhen},
+  journal = {Ocean Engineering},
+  year    = {2022},
+  volume  = {266},
+  pages   = {112731},
+  doi     = {10.1016/j.oceaneng.2022.112731},
+  issn    = {0029-8018},
+}
+
+% [27] §4 — 基于 LOS 重规划的 AUV 管道式鲁棒模型预测控制 ｜ Crossref 已验证
+@article{jimoh2024tube,
+  title   = {Tube-based model predictive control of an autonomous underwater vehicle using line-of-sight re-planning},
+  author  = {Jimoh, Isah A. and Yue, Hong and Grimble, Michael J.},
+  journal = {Ocean Engineering},
+  year    = {2024},
+  volume  = {314},
+  pages   = {119688},
+  doi     = {10.1016/j.oceaneng.2024.119688},
+  issn    = {0029-8018},
+}
+
+% [28] §4 — 改进 MPC 的 AUV 深度控制实验评估 ｜ Crossref 已验证
+@article{yao2018experimental,
+  title   = {Experimental evaluation on depth control using improved model predictive control for autonomous underwater vehicle ({AUVs})},
+  author  = {Yao, Feng and Yang, Chao and Liu, Xing and Zhang, Mingjun},
+  journal = {Sensors},
+  year    = {2018},
+  volume  = {18},
+  number  = {7},
+  pages   = {2321},
+  doi     = {10.3390/s18072321},
+  issn    = {1424-8220},
+}
+
+% [29] §4 — 基于海流观测器的欠驱动 AUV 三维路径跟随 ｜ Crossref 已验证
+@article{he2024threedim,
+  title   = {Three-dimensional path following control for underactuated {AUV} based on ocean current observer},
+  author  = {He, Long and Zhang, Ya and Li, Shizhong and Li, Bo and Yuan, Zeihui},
+  journal = {Drones},
+  year    = {2024},
+  volume  = {8},
+  number  = {11},
+  pages   = {672},
+  doi     = {10.3390/drones8110672},
+  issn    = {2504-446X},
+}
+
+% [30] §1.3.2/§4 — 行为树如何模块化混合控制系统（IEEE T-RO 期刊版）｜ Crossref 已验证
+%      注：与 A.1 专著 colledanchise2018behavior 并存，二者不同文献
+@article{colledanchise2017how,
+  title   = {How behavior trees modularize hybrid control systems and generalize sequential behavior compositions, the subsumption architecture, and decision trees},
+  author  = {Colledanchise, Michele and Ögren, Petter},
+  journal = {IEEE Transactions on Robotics},
+  year    = {2017},
+  volume  = {33},
+  number  = {2},
+  pages   = {372--389},
+  doi     = {10.1109/TRO.2016.2633567},
+  issn    = {1941-0468},
+}
+
+% [31] §4 — 用行为树提升 AUV 控制系统模块化 ｜ Crossref 已验证
+@inproceedings{sprague2018improving,
+  title     = {Improving the modularity of {AUV} control systems using behaviour trees},
+  author    = {Sprague, Christopher Iliffe and Özkahraman, Özer and Munafo, Andrea and Marlow, Rachel and Phillips, Alexander and Ögren, Petter},
+  booktitle = {2018 IEEE/OES Autonomous Underwater Vehicle Workshop (AUV)},
+  year      = {2018},
+  pages     = {1--6},
+  publisher = {IEEE},
+  doi       = {10.1109/AUV.2018.8729810},
+}
+
+% [32] §4 — 控制障碍函数与行为树结合的多智能体水下覆盖 ｜ Crossref 已验证
+@inproceedings{ozkahraman2020combining,
+  title     = {Combining control barrier functions and behavior trees for multi-agent underwater coverage missions},
+  author    = {Özkahraman, Özer and Ögren, Petter},
+  booktitle = {2020 59th IEEE Conference on Decision and Control (CDC)},
+  year      = {2020},
+  pages     = {5275--5282},
+  publisher = {IEEE},
+  doi       = {10.1109/CDC42340.2020.9304151},
+}
+
+% [33] §4 — 基于行为树的协同水下作业动态任务规划框架 ｜ Crossref 已验证
+@article{choi2025dynamic,
+  title   = {Dynamic mission planning framework for collaborative underwater operations using behavior trees},
+  author  = {Choi, Seunghyuk and Jung, Jongdae},
+  journal = {Journal of Marine Science and Engineering},
+  year    = {2025},
+  volume  = {13},
+  number  = {8},
+  pages   = {1458},
+  doi     = {10.3390/jmse13081458},
+  issn    = {2077-1312},
+}
+
+% [34] §4 — 非线性 MPC 与行为树控制欠驱动 AUV 倒立摆 ｜ Crossref 已验证
+@inproceedings{bhat2023controlling,
+  title     = {Controlling an underactuated {AUV} as an inverted pendulum using nonlinear model predictive control and behavior trees},
+  author    = {Bhat, Sriharsha and Stenius, Ivan},
+  booktitle = {2023 IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2023},
+  pages     = {12261--12267},
+  publisher = {IEEE},
+  doi       = {10.1109/ICRA48891.2023.10160926},
+}
+
+% [35] §4 — 参数不确定机器人的灵敏度感知模型预测控制 ｜ Crossref 已验证
+@article{belvedere2025sensitivity,
+  title   = {Sensitivity-aware model predictive control for robots with parametric uncertainty},
+  author  = {Belvedere, Tommaso and Cognetti, Marco and Oriolo, Giuseppe and Giordano, Paolo Robuffo},
+  journal = {IEEE Transactions on Robotics},
+  year    = {2025},
+  volume  = {41},
+  pages   = {3039--3058},
+  doi     = {10.1109/TRO.2025.3554415},
+  issn    = {1941-0468},
+}
+
+% [36] §4 — 视觉语言模型+反应式规划+行为树实时故障处理统一框架 ｜ DataCite 已验证（arXiv）
+@online{ahmad2025unified,
+  title       = {A unified framework for real-time failure handling in robotics using vision-language models, reactive planner and behavior trees},
+  author      = {Ahmad, Faseeh and Ismail, Hashim and Styrud, Jonathan and Stenmark, Maj and Krueger, Volker},
+  year        = {2025},
+  eprint      = {2503.15202},
+  eprinttype  = {arXiv},
+  eprintclass = {cs.RO},
+  doi         = {10.48550/arXiv.2503.15202},
+  url         = {https://arxiv.org/abs/2503.15202},
+  urldate     = {2026-08-06},
+}
+
+% [A6] §2.3.1 — 经典电动力学教材（Biot-Savart 三芯正演物理基础）｜ Crossref 已验证
+@book{griffiths2017electrodynamics,
+  title     = {Introduction to Electrodynamics},
+  author    = {Griffiths, David J.},
+  year      = {2017},
+  edition   = {4},
+  publisher = {Cambridge University Press},
+  address   = {Cambridge},
+  doi       = {10.1017/9781108333511},
+  isbn      = {9781108420419},
+}
+
+% [A10] §3.2.3 — 数字锁相放大器（DLIA）在变电站复杂电磁干扰中的应用（50 Hz 陷波）｜ Crossref 已验证
+@article{song2020dlia,
+  title   = {Application of digital lock-in amplifier in complex electromagnetic interference of substation},
+  author  = {Song, Jiabing and Song, Hengli and Yang, Xuan and Dong, Haobin},
+  journal = {Progress In Electromagnetics Research C},
+  year    = {2020},
+  volume  = {106},
+  pages   = {105--120},
+  doi     = {10.2528/PIERC20071001},
+  issn    = {1937-8718},
+}
+
+% ---------------------------------------------------------------------------
+% A 区·展望/未来趋势子区（第 6 章"结论与展望"引用；Crossref/DataCite 已验证）
+% 覆盖第 5 章披露缺口对应的四个展望方向：Sim-to-Real 迁移、学习/不确定性感知 MPC 深化、
+% 智能海缆探测、多 AUV 协同与持久自治。经典奠基 + 2023 年后新趋势混合。
+% ---------------------------------------------------------------------------
+
+% [F1] §6.3 展望·Sim-to-Real — 域随机化把仿真训练策略迁移到真机（经典奠基）｜ Crossref 已验证
+@inproceedings{tobin2017domain,
+  title     = {Domain randomization for transferring deep neural networks from simulation to the real world},
+  author    = {Tobin, Josh and Fong, Rachel and Ray, Alex and Schneider, Jonas and Zaremba, Wojciech and Abbeel, Pieter},
+  booktitle = {2017 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  year      = {2017},
+  pages     = {23--30},
+  publisher = {IEEE},
+  doi       = {10.1109/IROS.2017.8202133},
+}
+
+% [F2] §6.3 展望·数字孪生迁移 — 数字孪生驱动的 AUV 集群海洋探测（Nature 子刊，2026 前沿）｜ Crossref 已验证
+@article{yan2026digitaltwin,
+  title     = {Digital twin-driven swarm of autonomous underwater vehicles for marine exploration},
+  author    = {Yan, Jing and Zhang, Tianyi and Guan, Xinping and Yang, Xian and Chen, Cailian},
+  journal   = {Communications Engineering},
+  year      = {2026},
+  volume    = {5},
+  number    = {1},
+  issn      = {2731-3395},
+  publisher = {Springer Nature},
+  doi       = {10.1038/s44172-025-00571-7},
+}
+
+% [F3] §6.3 展望·学习型 MPC — 面向安全学习的学习型模型预测控制权威综述｜ Crossref 已验证
+@article{hewing2020learning,
+  title   = {Learning-based model predictive control: Toward safe learning in control},
+  author  = {Hewing, Lukas and Wabersich, Kim P. and Menner, Marcel and Zeilinger, Melanie N.},
+  journal = {Annual Review of Control, Robotics, and Autonomous Systems},
+  year    = {2020},
+  volume  = {3},
+  number  = {1},
+  pages   = {269--296},
+  issn    = {2573-5144},
+  doi     = {10.1146/annurev-control-090419-075625},
+}
+
+% [F4] §6.3 展望·不确定性传播 MPC — 带不确定性传播时域的随机非线性 MPC（直接呼应 UA-MPC，2024）｜ Crossref 已验证
+@inproceedings{zarrouki2024stochastic,
+  title     = {A stochastic nonlinear model predictive control with an uncertainty propagation horizon for autonomous vehicle motion control},
+  author    = {Zarrouki, Baha and Wang, Chenyang and Betz, Johannes},
+  booktitle = {2024 American Control Conference (ACC)},
+  year      = {2024},
+  pages     = {5466--5473},
+  publisher = {IEEE},
+  doi       = {10.23919/ACC60939.2024.10645032},
+}
+
+% [F5] §6.3 展望·智能海缆探测 — 面向 AUV 巡检的实时海缆检测（2024 新趋势，正题）｜ Crossref 已验证
+@inproceedings{bodenmann2024realtime,
+  title     = {Real-time subsea communication cable detection for AUV-based inspection},
+  author    = {Bodenmann, Adrian and Djauhari, Ibrahim Fadhil and Devgon, Jivan and Thornton, Blair},
+  booktitle = {2024 IEEE/OES Autonomous Underwater Vehicles Symposium (AUV)},
+  year      = {2024},
+  pages     = {1--6},
+  publisher = {IEEE},
+  doi       = {10.1109/AUV61864.2024.11030782},
+}
+
+% [F6] §6.3 展望·持久自治 — 驻留式 AUV 与水下对接（长航时自治，重访经典）｜ Crossref 已验证
+@inproceedings{curtin2018resident,
+  title     = {Resident autonomous underwater vehicles: Docking revisited},
+  author    = {Curtin, Thomas and Manalang, Dana},
+  booktitle = {2018 IEEE/OES Autonomous Underwater Vehicle Workshop (AUV)},
+  year      = {2018},
+  pages     = {1--6},
+  publisher = {IEEE},
+  doi       = {10.1109/AUV.2018.8729824},
+}
+
+% [F7] §6.3 展望·多 AUV 编队 — 多自主水下航行器编队控制综述（2023 专题综述，正题）｜ Crossref 已验证
+@article{yan2023formation,
+  title     = {Formation control of multiple autonomous underwater vehicles: A review},
+  author    = {Yan, Tao and Xu, Zhe and Yang, Simon X. and Gadsden, S. Andrew},
+  journal   = {Intelligence \& Robotics},
+  year      = {2023},
+  volume    = {3},
+  number    = {1},
+  pages     = {1--22},
+  issn      = {2770-3541},
+  publisher = {OAE Publishing Inc.},
+  doi       = {10.20517/ir.2023.01},
+}
+
+% [F8] §6.3 展望·协同定位 — 基于最大熵原理的鲁棒多 AUV 协同定位（2025 T-ASE 方法专文）｜ Crossref 已验证
+@article{li2025cooplocalization,
+  title     = {Robust multiple autonomous underwater vehicle cooperative localization based on the principle of maximum entropy},
+  author    = {Li, Yichen and Yu, Wenbin and Xu, Haotian and Guan, Xinping},
+  journal   = {IEEE Transactions on Automation Science and Engineering},
+  year      = {2025},
+  volume    = {22},
+  pages     = {12960--12974},
+  issn      = {1558-3783},
+  publisher = {IEEE},
+  doi       = {10.1109/TASE.2025.3546674},
+}
+
+
+% ###########################################################################
+% #  B 区：期刊官网权威题录已核实；DOI 属 CSTR/期刊自有体系，Crossref 不可解析
+% #  边界说明：题录（作者/卷期/页码/DOI）均已从期刊官方网站或会议原文逐条核对，
+% #            可放心 \cite；仅「DOI 无法经 api.crossref.org 内容协商解析」这一点
+% #            与 A 区不同——中文刊 10.11993/10.16516 前缀注册于 CSTR/万方，
+% #            新刊 InUS Transactions 与 HN 尚未进 Crossref，故单列为 B 区。
+% ###########################################################################
+
+% [D1/E4] A3/B8 §1.2.1/§1.2.3/§3.3.4 — 海缆巡检与海洋机器人综述（跨主题复用）
+%      核实：InUS Transactions 官网 PDF（浙大海洋学院+AutoSubsea，开放获取 CC BY）
+%      作者名 Qiang 为全名（原索引缩写 Qi 已更正）；新刊未被 Crossref 收录
+@article{zhang2025submarine,
+  title   = {Submarine cable inspection and marine robot applications: A literature review},
+  author  = {Zhang, Qiang and Tian, Yu and Ji, Daxiong},
+  journal = {InUS Transactions},
+  year    = {2025},
+  volume  = {1},
+  number  = {1},
+  pages   = {1--19},
+  doi     = {10.23380/inustrans.2025.1.1.1},
+  note    = {题录经期刊官网核实；DOI 属期刊自有体系，Crossref 不可解析},
+}
+
+% [D1-补1] A8 §2.4.1 — 声学法海缆埋深测量要求与策略
+%      核实：Hydrographische Nachrichten 105 官网原文（dhyg.de）+ HYDRO 2016 PPT
+%      ⚠ 已修正：作者 Jan Arvid Ingulfsen / Sabine Müller（原 Arild/Sebastian 有误）；
+%         页码 50--54（原记 6--11 系 HYDRO 2016 会议稿页码，期刊版为 HN105 p.50–54）
+@article{wunderlich2016burial,
+  title    = {Burial depth determination of cables using acoustics -- Requirements, issues and strategies},
+  author   = {Wunderlich, Jens and Ingulfsen, Jan Arvid and Müller, Sabine},
+  journal  = {Hydrographische Nachrichten},
+  year     = {2016},
+  number   = {105},
+  pages    = {50--54},
+  doi      = {10.23784/HN105_11},
+  note     = {题录经期刊官网核实；DOI 属 DHyG 自有体系，Crossref 不可解析},
+}
+
+% [D1-补2] A3 §1.2.1 — 海底电缆检测技术方法选择分析（中文）
+%      核实：南方能源建设官网（energychina.press），4 位作者全
+@article{cen2017submarine,
+  title    = {海底电缆检测技术方法选择分析},
+  author   = {岑贞锦 and 蒋道宇 and 张维佳 and 蔡驰},
+  journal  = {南方能源建设},
+  year     = {2017},
+  volume   = {4},
+  number   = {3},
+  pages    = {85--91, 96},
+  doi      = {10.16516/j.gedi.issn2095-8676.2017.03.016},
+  langid   = {chinese},
+  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+}
+
+% [D3] A4/A6 §1.2.2/§2.3.1 — 基于工频磁特征的近岸海缆航磁定位（Biot-Savart 三芯正演，中文，最贴合 A6）
+%      核实：水下无人系统学报官网（sxwrxtxb.xml-journal.net），8 位作者全名补全
+@article{sun2026magnetic,
+  title    = {基于工频磁特征的近岸海底电缆UAV航磁定位方法},
+  author   = {孙运坤 and 李尤 and 曹向东 and 陈美 and 张雷 and 李明跃 and 赵杰 and 韩琦},
+  journal  = {水下无人系统学报},
+  year     = {2026},
+  volume   = {34},
+  number   = {1},
+  pages    = {37--46},
+  doi      = {10.11993/j.issn.2096-3920.2025-0083},
+  langid   = {chinese},
+  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+}
+
+% [E2-补1] B9/A13 §3.2.1 — 紧组合 SINS/DVL/USBL（含卡方检验隔断野值，中文）
+%      核实：水下无人系统学报官网，5 位作者全名补全（31(6):847-855，DVL 失效误差仅增 5.2%）
+@article{zhang2023sinsdvl,
+  title    = {基于紧组合的SINS/DVL/USBL导航算法},
+  author   = {章彩霞 and 刘锡祥 and 黄永江 and 陈世杰 and 陶育杰},
+  journal  = {水下无人系统学报},
+  year     = {2023},
+  volume   = {31},
+  number   = {6},
+  pages    = {847--855},
+  doi      = {10.11993/j.issn.2096-3920.2022-0076},
+  langid   = {chinese},
+  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+}
+
+% [40] A7 §1.2.2/§2.3.2 — 三芯海缆损耗解析公式（铠装涡流+磁滞+绞合，铠装屏蔽 grounding）
+%      核实：Jicable'15 官网论文集（www.jicable.org），Paper E2.5；无 DOI，Crossref/CIGRE 未收录
+%      ⚠ 已修正 01 初稿两处错误：会议实为 Jicable'15（非 CIGRE Session）；补第 4 作者 Karlstrand
+@inproceedings{hatlo2015accurate,
+  title     = {Accurate analytic formula for calculation of losses in three-core submarine cables},
+  author    = {Hatlo, Marius and Olsen, Espen and Stølan, Ronny and Karlstrand, Johan},
+  booktitle = {Proceedings of the 9th International Conference on Insulated Power Cables (Jicable'15)},
+  year      = {2015},
+  pages     = {Paper E2.5},
+  address   = {Versailles, France},
+  note      = {题录经 Jicable'15 官网论文集核实；无 DOI，Crossref 不可解析},
+}
+
+
+% ###########################################################################
+% #  C 区：政策 / 行业报告（无 DOI，[EB/OL]/[R]）
+% #  ⚠ 待核对：正式文件名 / 发布号 / 访问日期；建议正文首次出现处标 [EB/OL] 或 [R]
+% ###########################################################################
+
+% [G1-1] A1 §1.1.1 — 深远海风电国家战略（一手，中文）
+@online{nea2026shenlan,
+  title    = {海上风电转向"深蓝"},
+  author   = {{国家能源局}},
+  year     = {2026},
+  url      = {http://www.nea.gov.cn/},
+  urldate  = {2026-08-06},
+  langid   = {chinese},
+  note     = {2026-07-10 发布；待核对正式规划文件名（如"十五五"可再生能源发展规划）与发布号},
+}
+
+% [G1-2] A1 §1.1.1 — 深远海风电装机进展（一手，中文）
+@online{nea2025shenlan,
+  title    = {海上风电加速挺进深蓝},
+  author   = {{国家能源局}},
+  year     = {2025},
+  url      = {http://www.nea.gov.cn/},
+  urldate  = {2026-08-06},
+  langid   = {chinese},
+  note     = {2025-11-21 发布；截至 2025-09 累计装机 4461 万千瓦},
+}
+
+% [G1-3] A1 §1.1.1 — 中国海上风电扩容（英文一手，对外可核对副本）
+@online{scio2026offshore,
+  title    = {China scales up offshore wind capacity},
+  author   = {{State Council Information Office}},
+  year     = {2026},
+  url      = {http://english.scio.gov.cn/},
+  urldate  = {2026-08-06},
+  note     = {2026-04-23 发布；15th Five-Year Plan (2026–2030) 目标 2030 年海上风电累计容量超 1 亿 kW},
+}
+
+% [37] A5 §1.2.2 — 海底电力电缆运行规程（0.05 nT/0.2 m 指标直接依据，标准，中文）
+%      ⚠ 待核对：发布机构（能源行业标准，归口单位）与出版信息以正式颁布文本为准
+@online{dlt1278_2025,
+  title    = {海底电力电缆运行规程: DL/T 1278—2025},
+  author   = {{国家能源局}},
+  year     = {2025},
+  url      = {http://www.nea.gov.cn/},
+  urldate  = {2026-08-06},
+  langid   = {chinese},
+  note     = {电力行业标准 [S]；待核对正式发布日期与出版社（中国电力出版社）},
+}
+
+% [41] §2.2/§2.5/§3.2 — TMR8637 三轴模组及其 TMR8607 单轴敏感单元规格
+%      型号边界：TMR8637 为三轴模组；详细电气参数表对应 TMR8607 单轴敏感单元
+@manual{multidimension2024tmr8607,
+  title        = {TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组）},
+  author       = {{江苏多维科技有限公司}},
+  organization = {江苏多维科技有限公司},
+  year         = {2024},
+  edition      = {Version 1.0},
+  url          = {https://www.dowaytech.com/},
+  urldate      = {2026-08-08},
+  langid       = {chinese},
+  note         = {TMR8637 模组参数与 TMR8607 单轴敏感单元详细电气参数需分层引用},
+}
+
+% [38] §1.2.2 — 海底管道及海底电缆检测技术规范（团体标准，中文）
+%      ⚠ 待核对：完整标准号（T/CSGPC ×××—××××）与发布年
+@online{tcsgpc_cable,
+  title    = {海底管道及海底电缆检测技术规范: T/CSGPC},
+  author   = {{中国海洋工程咨询协会}},
+  year     = {2025},
+  langid   = {chinese},
+  note     = {团体标准 [S]；待核对完整标准号与发布日期},
+}
+
+% [4] §1.2.1 — 浅地层剖面系统高分辨率地震数据集（行业网页）
+@online{geomatching2022sbp,
+  title    = {Sub-bottom profiling system helps produce high-resolution seismic datasets},
+  author   = {{Geo-matching}},
+  year     = {2022},
+  url      = {https://geo-matching.com/articles/sub-bottom-profiling-system-helps-produce-high-resolution-seismic-datasets},
+  urldate  = {2026-07-28},
+  note     = {2022-01-25 发布 [EB/OL]},
+}
+
+% [39] A2 §1.1.2 — 海上风电 80% 保险索赔与海缆故障相关（行业网页，损失锚点）
+@online{dnv2024cablefailure,
+  title    = {80\% of insurance claims in offshore wind are related to subsea cable failures — How can the industry manage these risks?},
+  author   = {{DNV}},
+  url      = {https://www.dnv.com/article/80-percent-of-insurance-claims-in-offshore-wind-are-related-to-subsea-cable-failures-how-can-the-industry-manage-these-risks/},
+  urldate  = {2026-07-28},
+  note     = {[EB/OL]；待核对发布日期},
+}
+
+% ---------------------------------------------------------------------------
+% 说明：A2 的行业/保险统计口径（Acteon/Strathclyde 0.003 failures/km/year、
+%       DNV·Lloyd Warwick 83%、GCube 2015 77%、Nexans/ESCA/IMCA 80% 外部因素、
+%       CPEM 30–40%）多为网页转引、无稳定题录，建议正文以脚注或转引方式处理，
+%       定量学术锚点统一用 dinmohammadi2019predicting（A 区）。详见 10_bg_offshore.md G2。
+% ---------------------------------------------------------------------------

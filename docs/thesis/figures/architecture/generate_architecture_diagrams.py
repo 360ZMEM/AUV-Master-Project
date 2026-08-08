@@ -489,7 +489,7 @@ def dual_brain_async_hardware_v2():
 
     lane(cells, "jetson", "左大脑：Jetson Orin", 130, 145, 390, 505, "blue")
     lane(cells, "pc104", "右小脑：PC104", 880, 145, 390, 505, "teal")
-    rect(cells, "boundary", "UDP 二进制协议边界\n72B 上行 / 145B 下行", 610, 145, 180, 505, "gray", extra="dashed=1;dashPattern=10 6;strokeWidth=3;fontStyle=1;")
+    rect(cells, "boundary", "UDP 二进制协议边界\n72B 下行 / 145B 上行", 610, 145, 180, 505, "gray", extra="dashed=1;dashPattern=10 6;strokeWidth=3;fontStyle=1;")
 
     rect(cells, "jet_env", "Ubuntu / ROS2\nNon-Real-Time", 75, 55, 240, 54, "gray", "jetson", extra="fontStyle=2;")
     rect(cells, "brain", "非实时高算力大脑\n想：理解、决策、规划", 50, 130, 290, 70, "blue", "jetson", extra="fontSize=16;fontStyle=1;")
@@ -602,8 +602,8 @@ def behavior_tree_illustration():
     rect(cells, "mission_seq", "Sequence\n任务执行分支", 610, 260, 260, 66, "yellow", extra="fontStyle=1;")
     rect(cells, "idle", "Idle\n待机 / 记录", 1090, 275, 220, 56, "gray")
 
-    rect(cells, "s_low_batt", "Condition\n低电量 / 漏水 / 超时", 60, 405, 210, 60, "red")
-    rect(cells, "s_surface", "Action\n上浮返航 (Failsafe)", 290, 405, 210, 60, "red")
+    rect(cells, "s_low_batt", "Condition\n漏水 / 低压 / 失联", 60, 405, 210, 60, "red")
+    rect(cells, "s_surface", "Action\n回零 / 上浮 / 急停", 290, 405, 210, 60, "red")
 
     rect(cells, "m_pre", "Condition\n预检通过 / 授权 OK", 555, 405, 220, 60, "yellow")
     rect(cells, "m_seq", "Sequence\n巡线 → 到点 → 拍照", 795, 405, 220, 60, "yellow")
@@ -680,23 +680,22 @@ def mission_state_machine():
 def emergency_transition():
     cells = []
     text(cells, "t1", "紧急情况下的状态切换与仲裁", 380, 20, 660, 42, True)
-    text(cells, "s1", "AUTONOMOUS 运行中一旦触发关键守卫，Arbiter 立即将控制权切换到 HOLD 或 REMOTE / SURFACE", 260, 66, 900, 34)
+    text(cells, "s1", "AUTONOMOUS 运行中触发关键守卫后，ROS2 先回零/锁定；深度或近底风险由 PC104 本地覆盖", 260, 66, 900, 34)
 
     ellipse(cells, "auto", "AUTONOMOUS\n自主运行", 620, 130, 220, 100, "green", extra="fontStyle=1;fontSize=16;")
 
-    rect(cells, "g1", "通信丢失\nuplink age > τ", 100, 300, 220, 66, "red")
-    rect(cells, "g2", "EKF 发散\n协方差爆炸", 380, 300, 220, 66, "red")
-    rect(cells, "g3", "电量告警\nSOC < 阈值", 660, 300, 220, 66, "red")
+    rect(cells, "g1", "链路陈旧\nPC / telemetry timeout", 100, 300, 220, 66, "red")
+    rect(cells, "g2", "置信度不足\n状态不可用", 380, 300, 220, 66, "red")
+    rect(cells, "g3", "漏水 / 低电压\nGuard deny", 660, 300, 220, 66, "red")
     rect(cells, "g4", "操作员 ESTOP\n地面站按下", 940, 300, 220, 66, "red")
 
     diamond(cells, "arb", "Arbiter\n权限仲裁", 620, 440, 220, 110, "purple", extra="fontStyle=1;")
 
-    ellipse(cells, "hold", "SAFE_HOLD\n零推力保持", 130, 640, 220, 100, "gray")
-    ellipse(cells, "remote", "REMOTE\n交还操作员", 470, 640, 220, 100, "orange")
-    ellipse(cells, "surface", "SURFACE\n应急上浮", 810, 640, 220, 100, "yellow")
-    ellipse(cells, "kill", "KILL\n执行器截止", 1140, 640, 200, 100, "red")
-
-    text(cells, "legend", "阈值命中优先级：ESTOP > 通信丢失 > EKF 发散 > 电量告警；不同守卫映射到不同目标态", 130, 800, 1180, 34)
+    ellipse(cells, "hold", "ZERO_FALLBACK\n零指令保持", 130, 640, 220, 100, "gray")
+    ellipse(cells, "remote", "REMOTE_LOCK\n切遥控清零", 470, 640, 220, 100, "orange")
+    ellipse(cells, "surface", "LOCAL_SURFACE\n上浮 / 防触底", 810, 640, 220, 100, "yellow")
+    ellipse(cells, "kill", "KILL / ABORT\n急停截止", 1140, 640, 200, 100, "red")
+    text(cells, "legend", "分层优先级：ESTOP / 漏水等硬故障优先；通信、遥测、置信度拒绝自主；PC104 对深度、近底、DVL 失锁执行本地覆盖", 130, 800, 1180, 34)
 
     for spec in [
         ("et1", "auto", "g1", "监听", True,
@@ -713,13 +712,13 @@ def emergency_transition():
         ("et7", "g3", "arb", "触发", False, None, "exitX=0.5;exitY=1;entryX=0.65;entryY=0;", True),
         ("et8", "g4", "arb", "触发", False,
             [(1050, 400), (830, 400)], "exitX=0.5;exitY=1;entryX=0.95;entryY=0.4;", True),
-        ("et9",  "arb", "hold",    "低电量 → 保持",     False,
+        ("et9",  "arb", "hold",    "低压/置信度 → 回零", False,
             [(660, 600), (240, 600)], "exitX=0.2;exitY=1;entryX=0.5;entryY=0;", True),
-        ("et10", "arb", "remote",  "通信丢失 → 遥控",   False,
+        ("et10", "arb", "remote",  "PC 超时 → 遥控锁定", False,
             [(700, 600), (580, 600)], "exitX=0.4;exitY=1;entryX=0.5;entryY=0;", True),
-        ("et11", "arb", "surface", "EKF 发散 → 上浮",   False,
+        ("et11", "arb", "surface", "深度/DVL → 本地上浮", False,
             [(760, 600), (920, 600)], "exitX=0.6;exitY=1;entryX=0.5;entryY=0;", True),
-        ("et12", "arb", "kill",    "ESTOP → 截止",      False,
+        ("et12", "arb", "kill",    "ESTOP/漏水 → 截止", False,
             [(800, 600), (1240, 600)], "exitX=0.8;exitY=1;entryX=0.5;entryY=0;", True),
     ]:
         edge(cells, *spec)
@@ -745,7 +744,7 @@ def mission_lifecycle_flow():
     rect(cells, "ar1", "权限锁定\n拒绝越权", 50, 50, 190, 58, "red", "arb")
     rect(cells, "ar2", "AutonomyGuard\n通信 / 电压 / 置信度", 275, 50, 220, 58, "red", "arb")
     rect(cells, "ar3", "权限迁移\nREMOTE → AUTONOMOUS", 525, 50, 240, 58, "purple", "arb")
-    rect(cells, "ar4", "回退触发\nEStop / 超时", 795, 50, 220, 58, "red", "arb")
+    rect(cells, "ar4", "分层回退\n回零 / 本地覆盖", 795, 50, 220, 58, "red", "arb")
     rect(cells, "ar5", "结束确认\n关闭权限", 1045, 50, 190, 58, "gray", "arb")
 
     rect(cells, "br1", "状态估计\nES-EKF 初始化", 50, 70, 200, 60, "green", "brain")
@@ -754,11 +753,11 @@ def mission_lifecycle_flow():
     rect(cells, "br4", "健康自检\n置信度输出", 755, 70, 210, 60, "green", "brain")
     rect(cells, "br5", "任务总结\n生成运行报告", 1000, 70, 210, 60, "purple", "brain")
 
-    rect(cells, "am1", "传感器上行\nDVL / IMU / DVL", 50, 50, 210, 58, "teal", "amd")
+    rect(cells, "am1", "传感器上行\nDVL / IMU / 深度", 50, 50, 210, 58, "teal", "amd")
     rect(cells, "am2", "执行下行\n5 通道指令", 300, 50, 210, 58, "teal", "amd")
     rect(cells, "am3", "响应反馈\n姿态 / 位置", 550, 50, 210, 58, "teal", "amd")
-    rect(cells, "am4", "故障上报\n漏水 / 短路", 800, 50, 210, 58, "red", "amd")
-    rect(cells, "am5", "回收对接\n断开动力", 1050, 50, 210, 58, "gray", "amd")
+    rect(cells, "am4", "故障上报\n漏水 / 深度 / DVL", 800, 50, 210, 58, "red", "amd")
+    rect(cells, "am5", "上浮回收\n人工断电", 1050, 50, 210, 58, "gray", "amd")
 
     for spec in [
         ("ml1", "op1", "op2", "", False, None, "exitX=1;entryX=0;", True),

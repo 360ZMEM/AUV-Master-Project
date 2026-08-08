@@ -493,6 +493,25 @@ class ES_EKF:
         h_mat[:, 3:6] = np.eye(3)
         self._correct(z, h, h_mat, (self.sigma_dvl ** 2) * np.eye(3), source="dvl_world")
 
+    def _dvl_noise_with_delay(self, dvl_timestamp, current_timestamp):
+        """Return DVL measurement noise inflated for timestamp delay."""
+        dt_delay = float(current_timestamp) - float(dvl_timestamp)
+        if dt_delay > 0.050:
+            delay_factor = min(dt_delay / 0.200, 2.0)
+            dvl_noise_inflation = (self.sigma_dvl ** 2) * (1.0 + delay_factor)
+            return dvl_noise_inflation * np.eye(3)
+        return (self.sigma_dvl ** 2) * np.eye(3)
+
+    def correct_dvl_world_with_timestamp(self, dvl_vel_world, dvl_timestamp, current_timestamp):
+        """Correct with world-frame DVL velocity and timestamp-aware noise."""
+        self._try_auto_init_from_dvl(dvl_vel_world)
+        z = np.asarray(dvl_vel_world, dtype=float).reshape(3)
+        h = self.v.copy()
+        h_mat = np.zeros((3, 15), dtype=float)
+        h_mat[:, 3:6] = np.eye(3)
+        r = self._dvl_noise_with_delay(dvl_timestamp, current_timestamp)
+        self._correct(z, h, h_mat, r, source="dvl_world_ts")
+
     def correct_dvl_with_timestamp(self, dvl_vel_body, dvl_timestamp, current_timestamp):
         """使用带时间戳的 DVL 速度修正，处理异步传感器延迟。
 
@@ -505,14 +524,6 @@ class ES_EKF:
             当 DVL 延迟超过 50ms 时，通过增加协方差矩阵的过程噪声
             来补偿时间不同步导致的误差膨胀。
         """
-        dt_delay = float(current_timestamp) - float(dvl_timestamp)
-        if dt_delay > 0.050:
-            delay_factor = min(dt_delay / 0.200, 2.0)
-            dvl_noise_inflation = (self.sigma_dvl ** 2) * (1.0 + delay_factor)
-            r = dvl_noise_inflation * np.eye(3)
-        else:
-            r = (self.sigma_dvl ** 2) * np.eye(3)
-
         self._try_auto_init_from_dvl(dvl_vel_body)
         z = np.asarray(dvl_vel_body, dtype=float).reshape(3)
         r_nb = quat_to_rotmat(self.q)
@@ -520,6 +531,7 @@ class ES_EKF:
         h_mat = np.zeros((3, 15), dtype=float)
         h_mat[:, 3:6] = r_nb.T
         h_mat[:, 6:9] = r_nb.T @ _skew(self.v)
+        r = self._dvl_noise_with_delay(dvl_timestamp, current_timestamp)
         self._correct(z, h, h_mat, r, source="dvl_body_ts")
 
     def correct_depth(self, depth_m):

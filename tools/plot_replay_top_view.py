@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bag", type=Path, required=True, help="MCAP file or rosbag directory.")
     parser.add_argument("--tracking-config", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--title", default="3f Cable Replay Top View")
+    parser.add_argument("--title", default="3f 电缆回放俯视图")
     return parser.parse_args()
 
 
@@ -98,14 +98,27 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
+    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
+    import os
+    import matplotlib.font_manager as fm
+
+    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(_zh_font):
+        fm.fontManager.addfont(_zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 10})
+
     output = _resolve(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=(8.8, 5.8))
-    ax.plot(prior_xy[:, 0], prior_xy[:, 1], color="#f6d64a", linewidth=3.0, label="cable prior")
-    ax.plot(odom_xyz[:, 0], odom_xyz[:, 1], color="#4f9cff", linewidth=2.2, alpha=0.95, label="AUV trajectory")
-    ax.scatter([odom_xyz[0, 0]], [odom_xyz[0, 1]], s=60, color="#e67e22", label="start")
-    ax.scatter([odom_xyz[-1, 0]], [odom_xyz[-1, 1]], s=70, color="#2ecc71", label="latest")
+    ax.plot(prior_xy[:, 0], prior_xy[:, 1], color="#d4a017", linewidth=3.0, label="电缆先验")
+    ax.plot(odom_xyz[:, 0], odom_xyz[:, 1], color="#1f6fd6", linewidth=2.2, alpha=0.95, label="AUV 轨迹")
+    ax.scatter([odom_xyz[0, 0]], [odom_xyz[0, 1]], s=60, color="#e67e22", label="起点")
+    ax.scatter([odom_xyz[-1, 0]], [odom_xyz[-1, 1]], s=70, color="#2ecc71", label="最新")
 
     if len(odom_xyz) >= 2:
         dx = odom_xyz[-1, 0] - odom_xyz[-2, 0]
@@ -118,7 +131,7 @@ def main() -> None:
             width=0.25,
             head_width=1.2,
             head_length=1.8,
-            color="#7fe7ff",
+            color="#1f6fd6",
             length_includes_head=True,
             zorder=5,
         )
@@ -136,24 +149,19 @@ def main() -> None:
     scale_len = 10.0
     scale_x0 = x_min + pad_x * 0.45
     scale_y0 = y_min - pad_y * 0.35
-    ax.plot([scale_x0, scale_x0 + scale_len], [scale_y0, scale_y0], color="white", linewidth=3.0)
-    ax.plot([scale_x0, scale_x0], [scale_y0 - 0.7, scale_y0 + 0.7], color="white", linewidth=2.0)
-    ax.plot([scale_x0 + scale_len, scale_x0 + scale_len], [scale_y0 - 0.7, scale_y0 + 0.7], color="white", linewidth=2.0)
-    ax.text(scale_x0 + scale_len / 2.0, scale_y0 - 1.7, "10 m", ha="center", va="top", color="white", fontsize=11)
+    ax.plot([scale_x0, scale_x0 + scale_len], [scale_y0, scale_y0], color="black", linewidth=3.0)
+    ax.plot([scale_x0, scale_x0], [scale_y0 - 0.7, scale_y0 + 0.7], color="black", linewidth=2.0)
+    ax.plot([scale_x0 + scale_len, scale_x0 + scale_len], [scale_y0 - 0.7, scale_y0 + 0.7], color="black", linewidth=2.0)
+    ax.text(scale_x0 + scale_len / 2.0, scale_y0 - 1.7, "10 m", ha="center", va="top", color="black", fontsize=11)
 
-    ax.set_facecolor("#07131d")
-    fig.patch.set_facecolor("#07131d")
-    ax.grid(True, alpha=0.22, color="#7f8c8d")
+    ax.set_facecolor("white")
+    fig.patch.set_facecolor("white")
+    ax.grid(True, alpha=0.3, color="#b0b0b0")
     ax.set_aspect("equal", adjustable="box")
-    ax.set_xlabel("world x (m)", color="white")
-    ax.set_ylabel("world y (m)", color="white")
-    ax.set_title(args.title, color="white")
-    ax.tick_params(colors="white")
-    for spine in ax.spines.values():
-        spine.set_color("#7f8c8d")
-    legend = ax.legend(loc="upper left", framealpha=0.85)
-    for text in legend.get_texts():
-        text.set_color("black")
+    ax.set_xlabel("世界坐标 x（m）")
+    ax.set_ylabel("世界坐标 y（m）")
+    ax.set_title(args.title)
+    legend = ax.legend(loc="upper left", framealpha=0.9)
     fig.tight_layout()
     fig.savefig(output, dpi=180, facecolor=fig.get_facecolor())
     plt.close(fig)

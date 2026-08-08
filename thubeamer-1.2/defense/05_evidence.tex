@@ -1,0 +1,54 @@
+\section{实验与证据}
+
+\begin{frame}{负结果同样决定工程选型}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.62\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.64\textheight,keepaspectratio]
+        {terrain_following/terrain_clearance_rmse_pid_mpc.png}
+    \end{column}
+    \begin{column}{0.34\textwidth}
+      \begin{block}{近底地形跟随}
+        三档地形、每档三种子均无安全违规；调优 PID 内层不弱于 MPC。
+      \end{block}
+      \begin{block}{路径跟踪}
+        MPC 在长/短 S 弯和发卡路径优于或持平基线；直角折弯上 LOS 前瞻更优。
+      \end{block}
+      \begin{alertblock}{研究结论}
+        不存在“一个控制器覆盖所有工况”的证据。
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{分层证据：结论强度不超过验证层级}
+  \centering
+  \includegraphics[width=0.88\linewidth,height=0.75\textheight,keepaspectratio]
+    {architecture/auv_system_verification_deployment_ladder.png}
+
+  \FrameConclusion{本文已闭合算法、数字孪生和部署接口证据；实物标定与海试仍是独立门槛。}
+\end{frame}
+
+\begin{frame}{从先验畸变失败到六自由度闭环恢复}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.70\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]
+        {cable_acceptance/pvs_closedloop_recovery_prior_alignment.png}
+    \end{column}
+    \begin{column}{0.27\textwidth}
+      \small
+      \begin{alertblock}{先暴露失败}
+        中、重档开环回放各 \(3/3\) 不通过，偏差传导至验收。
+      \end{alertblock}
+      \begin{block}{物理前提修复}
+        磁观测被真实接受后启用在线修正；阈值不变。
+      \end{block}
+      \begin{block}{闭环恢复}
+        中、重档各 \(3/3\) 通过；重档约 12 s 进入 \(\pm3.4\) m 廊道。
+      \end{block}
+      \scriptsize
+      \BoundaryTag{边界}\quad 数字孪生、静态畸变、满足磁观测前提。
+    \end{column}
+  \end{columns}
+\end{frame}

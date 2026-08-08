@@ -111,6 +111,7 @@ class MPCController(BaseController):
         model_cfg = ctrl_cfg.get("mpc_model", {})
         weights_cfg = dict(ctrl_cfg.get("mpc_weights", {}))
         constraints_cfg = ctrl_cfg.get("mpc_constraints", {})
+        solver_max_iter = int(mpc_cfg.get("max_iter", 100))
 
         # E3 — sweep harness 通过 AUV_MPC_MODE 注入消融模式 (ua/baseline)
         env_mpc_mode = os.environ.get("AUV_MPC_MODE", "").strip().lower()
@@ -123,6 +124,8 @@ class MPCController(BaseController):
             try:
                 overrides = json.loads(overrides_json)
                 if isinstance(overrides, dict):
+                    if "max_iter" in overrides:
+                        solver_max_iter = int(overrides.pop("max_iter"))
                     weights_cfg.update(overrides)
             except Exception:
                 pass
@@ -147,6 +150,7 @@ class MPCController(BaseController):
             dt=self._dt,
             weights=weights_cfg,
             constraints=constraints_cfg,
+            max_iter=solver_max_iter,
         )
 
         self._prev_U: np.ndarray | None = None

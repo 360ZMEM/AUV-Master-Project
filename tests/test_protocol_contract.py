@@ -19,6 +19,10 @@ from common.protocol import (
     KEY_ORIENTATION_DEG,
     KEY_PARAMETERS,
     KEY_PRESET_TIME_TENTHS_MIN,
+    KEY_PC104_DVL_BI_TIME_VALID,
+    KEY_PC104_DVL_BI_UPTIME_MS,
+    KEY_PC104_TIME_VALID,
+    KEY_PC104_UPTIME_MS,
     KEY_RIGHT,
     KEY_SIDE_MOTOR_RPM,
     KEY_SPARE_PARAMS,
@@ -26,6 +30,10 @@ from common.protocol import (
     KEY_THRUST,
     KEY_TOP,
     KEY_WORK_INSTRUCTION,
+    PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER,
+    PROTOCOL_UPLINK_PARA3_OFFSET,
+    PROTOCOL_UPLINK_PARA4_OFFSET,
+    PROTOCOL_UPLINK_PARA12_OFFSET,
     build_bridge_telemetry_payload,
     build_downlink_packet,
     build_downlink_packet_from_payload,
@@ -466,3 +474,31 @@ def test_uplink_anomaly_bitmap() -> None:
     assert parsed.system_alarm == 0x11
     assert parsed.depth_alarm == 0x22
     assert parsed.bottom_alarm == 0x33
+
+
+def test_uplink_pc104_relative_time_fields_are_decoded() -> None:
+    packet = build_uplink_packet(pc104_uptime_ms=123456, dvl_bi_uptime_ms=123400)
+    parsed = parse_uplink_packet(packet)
+
+    assert packet[PROTOCOL_UPLINK_PARA3_OFFSET:PROTOCOL_UPLINK_PARA3_OFFSET + 4] == (123456).to_bytes(4, "big", signed=True)
+    assert packet[PROTOCOL_UPLINK_PARA4_OFFSET:PROTOCOL_UPLINK_PARA4_OFFSET + 4] == (123400).to_bytes(4, "big", signed=True)
+    assert packet[PROTOCOL_UPLINK_PARA12_OFFSET:PROTOCOL_UPLINK_PARA12_OFFSET + 2] == PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER.to_bytes(2, "big", signed=True)
+    assert parsed.pc104_uptime_ms == 123456
+    assert parsed.pc104_time_valid is True
+    assert parsed.pc104_dvl_bi_uptime_ms == 123400
+    assert parsed.pc104_dvl_bi_time_valid is True
+
+    payload = build_bridge_telemetry_payload(parsed, ts=10.0)
+    assert payload[KEY_PC104_UPTIME_MS] == 123456
+    assert payload[KEY_PC104_TIME_VALID] is True
+    assert payload[KEY_PC104_DVL_BI_UPTIME_MS] == 123400
+    assert payload[KEY_PC104_DVL_BI_TIME_VALID] is True
+
+
+def test_uplink_pc104_relative_time_is_legacy_safe_without_marker() -> None:
+    packet = build_uplink_packet(parameter_values=(0, 0, 123456, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+    parsed = parse_uplink_packet(packet)
+
+    assert parsed.pc104_uptime_ms == 123456
+    assert parsed.pc104_time_valid is False
+    assert parsed.pc104_dvl_bi_time_valid is False

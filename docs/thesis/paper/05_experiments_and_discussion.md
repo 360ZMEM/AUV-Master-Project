@@ -419,19 +419,48 @@ UA-MPC 相对 baseline-MPC 的 XY RMSE 变化：
 
 其二，把控制侧聚合从 H1 三场景扩到 P1 全部 8 chaos 场景 × 3 seed（`results/control_aggregates/20260612_170618_p1_sensor_3seed/`）：控制侧状态计数为 `generated,24`（8 场景 × 3 seed 均生成控制指标）；旧 P1 bag 的 solve time 仍为 nan，但 lateral RMSE、fallback rate、control rate RMS、safety violation 可用，且**全部 8 个 P1 场景的 fallback rate 与 safety violation rate 均为 0**。这与 §5.5.7 上表 H1 三场景一致，进一步印证"当前 PVS chaos 幅度虽强但未把 fallback/安全兜底分支压到激活"这一缺口判断（需 §5.7 极端场景与长时任务补齐）。
 
-### 5.5.8 UA-MPC 消融变体设计
+> **（更正，2026-08-06 M1 v2 真口径重跑，取代上表两处陈旧结论）** 本节上表两处需据 2026-08-06 的诊断与真口径重跑更正，前述基于旧 bag 的表述**予以撤回**：
+>
+> 1. **solve time 恒 0 ms ≠ 计时语义未知，而是陈旧数据 artifact。** 旧 H1 solvetime run（2026-06-13）用的是尚无 wall-clock 回退的优化器代码；wall-clock 回退于 2026-06-30（commit `cedd80b`）落地。当前代码经台架微基准（`tools/mpc_solve_microbench.py`）实测 cold≈11.5 ms / warm≈6.8 ms、IPOPT `t_proc_total` 非零，且 M1 v2 闭环 27 run **solve_time 100% 非零**（各档 mean 21.6–30.1 ms，均 <50 ms 预算）。故 solve time 可正常采集、可写入求解性能，不再是"计时语义待确认"。
+> 2. **"UA 权重映射抬高 fallback"是错误归因，须撤回。** 旧表 baseline≈0.30 vs UA≈0.63 是 **baseline↔ua 两种模式**的差异（baseline 权重恒定 + 无 sigmoid 控制代价），并非"权重放大"本身的效应。2026-08-06 的 M1 v2 在 ua 模式内单独扫 `low_confidence_scale`（1.0/3.0/5.0，全程 forward-sonar 使能、`controller_type: MPC`），结果**方向相反**：放大越强 fallback 越低（0.816→0.690→0.621）、Solve_Succeeded 越高（18%→38%），跟踪精度对该档基本不敏感（xy_rmse 1.63–1.73 m，n=3/档不作显著性声称）。真实机理是更大跟踪权重使代价面在参考附近更陡峭聚焦、IPOPT 更快在 max_iter=100/tol=1e-4 内收敛。fallback 仍以 `FALLBACK_LAST_OUTPUT` 为主、reason 全为 `Maximum_Iterations_Exceeded`，属 graceful 降级（非安全失效）。
+> 3. **fallback 绝对水平偏高仍是真问题，但 `max_iter=100` 偏紧仅是次要因素。** 2026-08-07 的 P-2 同批独立对照（A1 默认 UA 参数，max_iter=100/200/400，3 场景×3 seed，27/27 ok）得到 fallback 0.699/0.685/0.594。100→200 仅改善 1.4 个百分点，初始失败求解 wall time 却由约 88 ms 增至 192 ms；400 才改善约 10.5 个百分点，但失败 wall 约 372 ms、2 Hz debug/control 有效帧少约 26%，已明显阻塞控制更新。因此**不修改默认 max_iter=100**；后续应优先改善初值/热启动连续性、约束可行性或容差结构，而非用更长阻塞换成功率。另需注意：`FALLBACK_LAST_OUTPUT` 复用上一成功输出，其 `solve_time_ms` 为陈旧值；普通全帧 solve mean 不能用于失败耗时归因（详见 `chap4_5_experiment_completion_plan.md` §5.7）。
+> 4. **前置 bug（H6，2026-08-06 发现）**：2026-07-17 引入的能力门控（`auv_controller_node.py` `_publish_zero_effort_hold`）在 terrain-follow 且 `terrain_following` 能力不可用（PVS 默认不启 `forward_sonar` 桩节点）时会 zero-effort hold 并跳过 MPC。首轮 M1（未加 `--enable-mock-forward-sonar-wrapper`）27 run 全部 `controller_type: CAPABILITY_GATE`、MPC 未运行而作废；加 `--start-arg=--enable-mock-forward-sonar-wrapper` 后 MPC 恢复。**污染面复核已完成（`chap4_5_experiment_completion_plan.md` §5.4.1 / rating.md B8）**：门控窗口 [07-17 19:07, 08-05] 内无被本文引用的 bag-backed 实验——所有 terrain/altitude-follow 结论（terrain PID 3seed、§5.5.11(3f) PVS 闭环恢复、Direction-A、mpc_xy_yaw_extreme）均录制于门控落地前（≤07-07），`controller_type: MPC` 正常，**历史结论零污染**；实际污染仅限已作废重跑的 M1 v1。**残留风险**：门控是当前代码活跃行为、默认值未改，今后 PVS terrain/altitude-follow 实验若不带 forward-sonar 使能仍会静默跳过 MPC。
+>
+> 完整探查过程、命令与验收见 [chap4_5_experiment_completion_plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/paper/chap4_5_experiment_completion_plan.md) §5。
 
-UA-MPC 消融设计包含以下变体，用于验证各模块的独立贡献：
+### 5.5.8 UA-MPC 消融变体设计与机制归因
 
-| 变体 ID | 名称 | 关键开关 | 预期效果 | 状态 |
-|---|---|---|---|---|
-| A0 | baseline-MPC | `AUV_MPC_MODE=baseline` | 对照基线，权重恒定 | 已完成 |
-| A1 | UA-MPC（默认） | `AUV_MPC_MODE=ua` | RMSE 降低，控制能量降低 | 已完成 |
-| A2 | UA-MPC w/o sigmoid | `cov_to_conf.smoothing=hard` | UA-MPC 优势缩小 | 待执行 |
-| A3 | UA-MPC alpha=1.0 | `low_conf_alpha=1.0` | 线性调整，稳定性下降 | 待执行 |
-| A4 | UA-MPC scale=0 | `low_conf_scale=0.0` | 退化为 baseline-MPC | 待执行 |
+UA-MPC 消融设计从“是否启用 UA”进一步拆成模式、sigmoid 控制代价缩放、低置信权重映射指数和迭代上限四个轴。P-1/P-2/H4 补充实验后，本节不再只给设计占位，而按“可解性归因 + 横向机动精度归因 + 实时性边界”三层回填结论。数据边界必须明确：P-1/P-2 为 PVS + Mock AMD 闭环，H4 为确定性解耦运动学基准，均不能写成真机或海试结论。
 
-> **表格占位符**：正式论文中需补充 A2–A4 变体的消融结果表。
+| 变体 ID | 名称 | 关键开关 | 可解性结论 | 横向机动精度结论 | 状态 |
+|---|---|---|---|---|---|
+| A0 | baseline-MPC | `AUV_MPC_MODE=baseline` | P-1 中 fallback=1.000，Solve_Succeeded=0% | S 长波 lateral RMSE 0.0852 m，固定时长进度 76.5% | 已完成 |
+| A1 | UA-MPC（默认） | `scale=3, alpha=1.5, control_scale=0.3` | fallback=0.690，Solve_Succeeded=31% | S 长波 lateral RMSE 0.0754 m，较 A0 改善约 11.6% | 已完成 |
+| A2 | UA-MPC w/o sigmoid | `low_confidence_control_scale=1.0` | fallback=1.000，退化回 A0；说明 sigmoid 控制代价降权是可解性关键 | S 长波 0.0852 m，几乎逐位退化回 A0 | 已完成 |
+| A3 | UA-MPC alpha=1.0 | `confidence_alpha=1.0` | fallback=0.335，收敛率优于 A1 | S 长波 0.0740 m，较 A1 仅边际改善 | 已完成 |
+| A4 | UA-MPC scale=0 | `low_confidence_scale=0.0` | 未单独执行；P-1 已通过 A0/A2 覆盖主要退化路径 | 未执行 | 低优先级 |
+
+P-1 直线/温和场景的机制拆分结果如下。A0 与 A2 均为全回退，A1 通过 sigmoid 控制代价降权把成功率恢复到 31%，A3 进一步通过线性置信度映射把成功率提高到 66%：
+
+| 变体 | 关键差异 | mpc% | fallback_rate | Solve_Succeeded | solve_mean_ms | xy_rmse(m) |
+|---|---|---:|---:|---:|---:|---:|
+| A0 | baseline（权重恒定 + 无 sigmoid） | 100% | 1.000 | 0% | 83.5 | 1.201 |
+| A2 | UA，关 sigmoid 控制降权 | 100% | 1.000 | 0% | 87.0 | 1.163 |
+| A1 | UA 默认 | 100% | 0.690 | 31% | 26.3 | 1.731 |
+| A3 | UA，`alpha=1.0` | 100% | 0.335 | 66% | 19.9 | 1.601 |
+
+该表只支撑可解性/收敛归因，不支撑跟踪精度优劣。原因是 P-1 三场景参考近直线，lateral RMSE 落在毫米级甚至更低，全回退时沿用上一帧输出反而可能得到更小的横向误差。因此本轮追加 H4 横向机动基准，以 S 长波和 180° hairpin 给 lateral RMSE 施加真实横向激励：
+
+| 场景 / 指标 | A0 baseline | A1 UA default | A2 w/o sigmoid | A3 alpha=1.0 |
+|---|---:|---:|---:|---:|
+| S 长波 lateral RMSE (m) | 0.0852 | 0.0754 | 0.0852 | 0.0740 |
+| S 长波固定时长进度 | 76.5% | 85.8% | 76.5% | 86.6% |
+| Hairpin 有效路径段 RMSE (m) | 0.102 | 0.100 | 0.102 | 0.097 |
+| Hairpin 末端越界 RMSE (m) | 7.480 | 7.484 | 7.480 | 7.563 |
+
+H4 的结论与 P-1 一致：**sigmoid 控制代价降权是 UA-MPC 的主贡献项**。在 S 长波中，A1 相比 A0 的 lateral RMSE 改善约 11.6%，固定时长进度增加 9.3 个百分点；关闭 sigmoid 后，A2 几乎退化回 A0。A3 相比 A1 只有约 1.9% 的额外 S 长波 RMSE 改善，hairpin 有效段约 3% 改善，收益不足以支持把默认 `confidence_alpha=1.5` 改成 1.0。Hairpin 全时段大 RMSE 主要来自约 52 s 完成路径后的 terminal overshoot，而不是 180° 转弯段跟踪失败，因此正文只引用 active-path RMSE，并把末端停止/保持策略列为任务设计边界。
+
+P-2 的 `max_iter=100/200/400` 独立对照进一步排除了“单纯放宽迭代上限即可解决高 fallback”的解释。fallback 仅从 0.699 降至 0.685/0.594，但失败 wall time 升至约 192/372 ms，400 档还使有效 debug/control 帧减少约 26%。因此默认 `max_iter=100` 保持不变；后续优化应转向初值/热启动连续性、约束可行性和容差结构，而不是用更长阻塞换取表面成功率。
 
 ### 5.5.9 Sim-to-Real 迁移性讨论
 

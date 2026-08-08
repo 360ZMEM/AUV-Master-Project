@@ -96,12 +96,12 @@ def provenance_note(summaries: dict[str, dict[str, str]]) -> str:
     sources = sorted({(s.get("clearance_source", "") or "").strip() for s in summaries.values()})
     sources = [s for s in sources if s]
     pretty = {
-        "real_altitude": "real DVL altitude",
-        "terrain_cloud": "seabed point cloud",
-        "diag_constant_datum": "constant datum (legacy)",
+        "real_altitude": "真实 DVL 高度",
+        "terrain_cloud": "海底点云",
+        "diag_constant_datum": "常值基准（旧）",
     }
-    label = ", ".join(pretty.get(s, s) for s in sources) if sources else "unknown"
-    return f"Clearance source: {label}; warm-up trimmed; truth = /auv/sensors/ground_truth"
+    label = ", ".join(pretty.get(s, s) for s in sources) if sources else "未知"
+    return f"净空来源：{label}；已裁去预热；真值 = /auv/sensors/ground_truth"
 
 
 def read_digital_twin_config(path: Path) -> dict[str, float | int]:
@@ -158,20 +158,30 @@ def save_figure(fig, output_dir: Path, stem: str) -> None:
 def setup_style() -> None:
     analyze_bag.ensure_runtime_dependencies()
     plt = analyze_bag.plt
+    # 图内统一中文：注入文泉驿正黑（容器内唯一可用 CJK 字体，无思源宋体）
+    import os
+    import matplotlib.font_manager as fm
+    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(_zh_font):
+        fm.fontManager.addfont(_zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
     plt.rcParams.update(
         {
-            "font.size": 11,
-            "axes.titlesize": 13,
-            "axes.labelsize": 11,
-            "xtick.labelsize": 10,
-            "ytick.labelsize": 10,
-            "legend.fontsize": 10,
+            "font.size": 12,
+            "axes.titlesize": 14,
+            "axes.labelsize": 12,
+            "xtick.labelsize": 11,
+            "ytick.labelsize": 11,
+            "legend.fontsize": 11,
             "figure.dpi": 160,
             "savefig.dpi": 300,
             "axes.spines.top": False,
             "axes.spines.right": False,
             "axes.grid": True,
             "grid.alpha": 0.25,
+            "axes.unicode_minus": False,  # 负号用 ASCII，避免中文字体缺 U+2212 变方块
         }
     )
 
@@ -220,10 +230,10 @@ def plot_clearance_rmse(output_dir: Path, main_result: Path) -> None:
             color="#2ca02c",
             linestyle="--",
             linewidth=1.2,
-            label=f"PID terrain reference ({pid_terrain_rmse:.3f} m)",
+            label=f"PID 地形跟随基准（{pid_terrain_rmse:.3f} m）",
         )
-    ax.set_ylabel("Clearance RMSE to 3 m (m)")
-    ax.set_title("Terrain-Following Clearance Error: PID/MPC x Baseline/Terrain")
+    ax.set_ylabel("对 3 m 目标的离地净空 RMSE（m）")
+    ax.set_title("地形跟随离地净空误差：PID/MPC × 基线/地形")
     ax.set_xticks(x)
     ax.set_xticklabels(display)
     ax.set_ylim(0, max(rmse) * 1.22)
@@ -250,12 +260,12 @@ def plot_clearance_safety(output_dir: Path, main_result: Path) -> None:
 
     fig, ax = plt.subplots(figsize=(7.4, 4.4))
     x = np.arange(len(labels))
-    ax.errorbar(x, mean, yerr=std, fmt="o", markersize=8, color="#1f77b4", ecolor="#1f77b4", capsize=5, label="Mean +/- std")
-    ax.scatter(x, minv, marker="v", s=75, color="#d62728", label="Minimum clearance")
-    ax.axhline(3.0, color="black", linestyle="--", linewidth=1.1, label="Target clearance 3 m")
-    ax.axhline(1.5, color="#d62728", linestyle=":", linewidth=1.2, label="Safety threshold 1.5 m")
-    ax.set_ylabel("Seabed clearance (m)")
-    ax.set_title("Clearance Distribution and Safety Margin")
+    ax.errorbar(x, mean, yerr=std, fmt="o", markersize=8, color="#1f77b4", ecolor="#1f77b4", capsize=5, label="均值 ± 标准差")
+    ax.scatter(x, minv, marker="v", s=75, color="#d62728", label="最小离地净空")
+    ax.axhline(3.0, color="black", linestyle="--", linewidth=1.1, label="目标净空 3 m")
+    ax.axhline(1.5, color="#d62728", linestyle=":", linewidth=1.2, label="安全阈值 1.5 m")
+    ax.set_ylabel("海底离地净空（m）")
+    ax.set_title("离地净空分布与安全裕度")
     ax.set_xticks(x)
     ax.set_xticklabels(display)
     finite_upper = [m + s for m, s in zip(mean, std) if math.isfinite(m) and math.isfinite(s)]
@@ -284,19 +294,19 @@ def plot_ablation(output_dir: Path, ablation_summary: Path) -> None:
     axes[0].bar(x, rmse, color=["#a6d854", "#ffd92f", "#e5c494"], edgecolor="black", linewidth=0.7)
     axes[0].set_xticks(x)
     axes[0].set_xticklabels([terrain.upper() for terrain in terrains])
-    axes[0].set_ylabel("Clearance RMSE to 3 m (m)")
-    axes[0].set_title("PID Terrain Ablation")
+    axes[0].set_ylabel("对 3 m 目标的离地净空 RMSE（m）")
+    axes[0].set_title("PID 地形消融")
     for idx, value in enumerate(rmse):
         axes[0].text(idx, value + 0.008, f"{value:.3f}", ha="center", va="bottom", fontsize=9)
 
-    axes[1].errorbar(x, mean, yerr=std, fmt="o", markersize=8, capsize=5, color="#1f77b4", label="Mean +/- std")
-    axes[1].scatter(x, minv, marker="v", s=70, color="#d62728", label="Minimum")
-    axes[1].axhline(3.0, color="black", linestyle="--", linewidth=1.1, label="Target 3 m")
-    axes[1].axhline(1.5, color="#d62728", linestyle=":", linewidth=1.2, label="Safety 1.5 m")
+    axes[1].errorbar(x, mean, yerr=std, fmt="o", markersize=8, capsize=5, color="#1f77b4", label="均值 ± 标准差")
+    axes[1].scatter(x, minv, marker="v", s=70, color="#d62728", label="最小值")
+    axes[1].axhline(3.0, color="black", linestyle="--", linewidth=1.1, label="目标 3 m")
+    axes[1].axhline(1.5, color="#d62728", linestyle=":", linewidth=1.2, label="安全 1.5 m")
     axes[1].set_xticks(x)
     axes[1].set_xticklabels([terrain.upper() for terrain in terrains])
-    axes[1].set_ylabel("Seabed clearance (m)")
-    axes[1].set_title("Safety Margin Across Terrain Levels")
+    axes[1].set_ylabel("海底离地净空（m）")
+    axes[1].set_title("不同地形等级下的安全裕度")
     axes[1].set_ylim(1.2, 3.4)
     axes[1].legend(frameon=False, loc="lower center")
     fig.tight_layout()
@@ -309,11 +319,11 @@ def plot_command_contract(output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(9.2, 4.6))
     ax.axis("off")
     boxes = [
-        ("Controller", "pid / mpc / both", 0.08, 0.66, "#8da0cb"),
-        ("Mode", "baseline / terrain / both_modes", 0.38, 0.66, "#66c2a5"),
-        ("Terrain Level", "default / low / mid / high / yaml", 0.68, 0.66, "#ffd92f"),
-        ("Phase Output", "results/control/terrain_following_<TS>", 0.22, 0.28, "#e5c494"),
-        ("Analysis", "summary_statistics.csv + figures", 0.58, 0.28, "#fc8d62"),
+        ("控制器", "pid / mpc / both", 0.08, 0.66, "#8da0cb"),
+        ("模式", "baseline / terrain / both_modes", 0.38, 0.66, "#66c2a5"),
+        ("地形等级", "default / low / mid / high / yaml", 0.68, 0.66, "#ffd92f"),
+        ("阶段输出", "results/control/terrain_following_<TS>", 0.22, 0.28, "#e5c494"),
+        ("分析", "summary_statistics.csv + figures", 0.58, 0.28, "#fc8d62"),
     ]
     for title, body, x0, y0, color in boxes:
         rect = plt.Rectangle((x0, y0), 0.24, 0.18, facecolor=color, edgecolor="black", linewidth=1.0, transform=ax.transAxes)
@@ -330,7 +340,7 @@ def plot_command_contract(output_dir: Path) -> None:
         ax.annotate("", xy=end, xytext=start, xycoords="axes fraction", arrowprops={"arrowstyle": "->", "lw": 1.2})
     cmd = "bash scripts/run_terrain_benchmark.sh 60 pid terrain high"
     ax.text(0.5, 0.08, cmd, ha="center", va="center", family="monospace", fontsize=11, bbox={"boxstyle": "round,pad=0.35", "facecolor": "#f7f7f7", "edgecolor": "black"}, transform=ax.transAxes)
-    ax.set_title("Terrain Benchmark Command Contract", fontsize=14, fontweight="bold")
+    ax.set_title("地形基准命令契约", fontsize=14, fontweight="bold")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_benchmark_command_contract")
     plt.close(fig)
@@ -386,28 +396,28 @@ def diagnostics_arrays(
 
 def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: float, warmup_skip_s: float = 0.0) -> None:
     plt = analyze_bag.plt
-    phases = [("pid_terrain", "PID Terrain"), ("mpc_terrain", "MPC Terrain")]
+    phases = [("pid_terrain", "PID 地形"), ("mpc_terrain", "MPC 地形")]
     fig, axes = plt.subplots(2, 1, figsize=(8.0, 6.2), sharex=False)
     for ax, (phase, title) in zip(axes, phases):
         arrays = diagnostics_arrays(load_bag_for_phase(main_result, phase), target_clearance_m, warmup_skip_s)
         t = arrays["t"]
         source_label = {
-            "real_altitude": "real DVL altitude",
-            "terrain_cloud": "seabed point cloud",
-            "diag_constant_datum": "constant datum (legacy)",
+            "real_altitude": "真实 DVL 高度",
+            "terrain_cloud": "海底点云",
+            "diag_constant_datum": "常值基准（旧）",
         }.get(str(arrays.get("clearance_source", "")), str(arrays.get("clearance_source", "")))
-        ax.plot(t, arrays["seabed_depth"], color="#8c564b", linewidth=1.5, label=f"Seabed depth (depth + {source_label})")
-        ax.plot(t, arrays["target_depth"], color="#2ca02c", linestyle="--", linewidth=1.4, label=f"Target depth (seabed - {target_clearance_m:.0f} m)")
-        ax.plot(t, arrays["depth"], color="#1f77b4", linewidth=1.7, label="AUV depth")
-        ax.fill_between(t, arrays["target_depth"] - 0.25, arrays["target_depth"] + 0.25, color="#2ca02c", alpha=0.12, label="+/-0.25 m target band")
-        ax.set_title(f"{title}  (clearance source: {source_label})")
-        ax.set_ylabel("Depth positive down (m)")
+        ax.plot(t, arrays["seabed_depth"], color="#8c564b", linewidth=1.5, label=f"海底深度（深度 + {source_label}）")
+        ax.plot(t, arrays["target_depth"], color="#2ca02c", linestyle="--", linewidth=1.4, label=f"目标深度（海底 - {target_clearance_m:.0f} m）")
+        ax.plot(t, arrays["depth"], color="#1f77b4", linewidth=1.7, label="AUV 深度")
+        ax.fill_between(t, arrays["target_depth"] - 0.25, arrays["target_depth"] + 0.25, color="#2ca02c", alpha=0.12, label="±0.25 m 目标带")
+        ax.set_title(f"{title}（净空来源：{source_label}）")
+        ax.set_ylabel("深度（向下为正，m）")
         ax.invert_yaxis()
         ax.legend(frameon=False, loc="best")
-    axes[-1].set_xlabel("Time (s)")
-    suptitle = "Terrain-Following t-z Tracking Curves"
+    axes[-1].set_xlabel("时间（s）")
+    suptitle = "地形跟随 t-z 跟踪曲线"
     if warmup_skip_s > 0.0:
-        suptitle += f" (warm-up {warmup_skip_s:.0f} s trimmed)"
+        suptitle += f"（已裁去预热 {warmup_skip_s:.0f} s）"
     fig.suptitle(suptitle, y=0.995, fontsize=14, fontweight="bold")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_tz_tracking_pid_mpc")
@@ -434,13 +444,13 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     fig = plt.figure(figsize=(8.2, 6.2))
     ax = fig.add_subplot(111, projection="3d")
 
-    source_note = "bag seabed point cloud"
+    source_note = "bag 海底点云"
     if data.terrain_points_xyz is not None:
         terrain = np.asarray(data.terrain_points_xyz, dtype=float)
         if terrain.shape[0] > 4500:
             rng = np.random.default_rng(42)
             terrain = terrain[rng.choice(terrain.shape[0], size=4500, replace=False)]
-        sc = ax.scatter(terrain[:, 0], terrain[:, 1], terrain[:, 2], c=-terrain[:, 2], cmap="viridis", s=5, alpha=0.45, label="Seabed cloud")
+        sc = ax.scatter(terrain[:, 0], terrain[:, 1], terrain[:, 2], c=-terrain[:, 2], cmap="viridis", s=5, alpha=0.45, label="海底点云")
         seabed_depth = analyze_bag.nearest_terrain_depths(
             terrain_points_xyz=data.terrain_points_xyz,
             x_values=traj_x,
@@ -467,20 +477,20 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
             alpha=0.58,
         )
         seabed_depth = np.asarray([terrain_depth_from_config(x_value, y_value, terrain_cfg) for x_value, y_value in zip(traj_x, traj_y)], dtype=float)
-        source_note = f"reconstructed terrain: {terrain_config.name}"
+        source_note = f"重建地形：{terrain_config.name}"
 
     target_depth = seabed_depth - target_clearance_m
     target_z_display = -target_depth
 
-    ax.plot(traj_x, traj_y, traj_z_display, color="#1f77b4", linewidth=2.2, label="AUV trajectory")
+    ax.plot(traj_x, traj_y, traj_z_display, color="#1f77b4", linewidth=2.2, label="AUV 轨迹")
     valid = np.isfinite(target_z_display)
     if np.any(valid):
-        ax.plot(traj_x[valid], traj_y[valid], target_z_display[valid], color="#2ca02c", linestyle="--", linewidth=1.6, label="Target depth path")
-    ax.set_xlabel("x (m)")
-    ax.set_ylabel("y (m)")
-    ax.set_zlabel("Display z (m)")
-    ax.set_title("3D Terrain Surface and PID Terrain-Following Trajectory")
-    ax.text2D(0.02, 0.03, f"Terrain source: {source_note}", transform=ax.transAxes, fontsize=8)
+        ax.plot(traj_x[valid], traj_y[valid], target_z_display[valid], color="#2ca02c", linestyle="--", linewidth=1.6, label="目标深度路径")
+    ax.set_xlabel("x（m）")
+    ax.set_ylabel("y（m）")
+    ax.set_zlabel("显示 z（m）")
+    ax.set_title("三维海底曲面与 PID 地形跟随轨迹")
+    ax.text2D(0.02, 0.03, f"地形来源：{source_note}", transform=ax.transAxes, fontsize=8)
     ax.view_init(elev=24, azim=-58)
     ax.legend(frameon=False, loc="upper left")
     mappable = plt.cm.ScalarMappable(cmap="viridis")
@@ -489,7 +499,7 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     else:
         mappable.set_array(seabed_depth_grid)
     cbar = fig.colorbar(mappable, ax=ax, shrink=0.72, pad=0.08)
-    cbar.set_label("Seabed depth positive down (m)")
+    cbar.set_label("海底深度（向下为正，m）")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_3d_pid_terrain_trajectory")
     plt.close(fig)

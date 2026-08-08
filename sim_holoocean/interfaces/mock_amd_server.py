@@ -499,6 +499,18 @@ class MockAmdUdpServer:
     # 私有 API：遥测数据包构造
     # ========================================================================
 
+    def _timestamp_to_pc104_uptime_ms(self, timestamp_s, fallback_s: float) -> int:
+        """Map a mock-local timestamp to PC104-style relative uptime milliseconds."""
+        try:
+            source_s = float(timestamp_s)
+        except (TypeError, ValueError):
+            source_s = float(fallback_s)
+        if not np.isfinite(source_s):
+            source_s = float(fallback_s)
+
+        elapsed_s = max(0.0, source_s - float(self._start_time))
+        return int(min(round(elapsed_s * 1000.0), 0x7FFFFFFF))
+
     def _build_uplink_packet(self, raw_state, step, command_vector):
         """
         构造并返回上行遥测数据包。
@@ -582,6 +594,10 @@ class MockAmdUdpServer:
                 depth=dict(sensor_raw_state['depth']),
                 mag=dict(sensor_raw_state['mag']) if sensor_raw_state.get('mag') is not None else None,
                 ts=now,
+                imu_ts=now,
+                dvl_ts=now,
+                depth_ts=now,
+                mag_ts=now,
             )
 
         # ────────────────────────────────────────
@@ -609,20 +625,26 @@ class MockAmdUdpServer:
         altitude_m = max(0.0, seabed_depth_m - depth_ned)  # 离海底距离
 
         # ────────────────────────────────────────
-        # 步骤 6：准备遥测参数并编码上行包
+        # Step 6: prepare telemetry extension fields and encode uplink packet.
         # ────────────────────────────────────────
-        # Parameter values[0] 回显 AMD 时间戳用于时间同步
+        # Para1 echoes the mock AMD timestamp for the command-side sync check.
         parameter_values = [0] * 12
         parameter_values[0] = int(self.last_mock_amd_timestamp_us)
-        # Para5/6/7: DVL Body Frame (m/s × 1000 → mm/s, int16)
+        # The PC104 time extension represents device uptime, not simulated step
+        # time. Use wall elapsed time here so overloaded smoke runs do not create
+        # artificial latency drift when the physics loop runs slower than dt.
+        pc104_uptime_ms = self._timestamp_to_pc104_uptime_ms(now, now)
+        dvl_bi_uptime_ms = self._timestamp_to_pc104_uptime_ms(sensor_snapshot.dvl_ts, now)
+        dvl_bi_uptime_ms = min(dvl_bi_uptime_ms, pc104_uptime_ms)
+        # Para5/6/7: DVL Body Frame (m/s x 1000 -> mm/s, int16).
         parameter_values[4] = int(np.clip(dvl_ned[0] * 1000, -32768, 32767))
         parameter_values[5] = int(np.clip(dvl_ned[1] * 1000, -32768, 32767))
         parameter_values[6] = int(np.clip(dvl_ned[2] * 1000, -32768, 32767))
-        # Para8/9/10: IMU Angular Velocity (rad/s × 1000, int16)
+        # Para8/9/10: IMU angular velocity (rad/s x 1000, int16).
         parameter_values[7] = int(np.clip(gyro_ned[0] * 1000, -32768, 32767))
         parameter_values[8] = int(np.clip(gyro_ned[1] * 1000, -32768, 32767))
         parameter_values[9] = int(np.clip(gyro_ned[2] * 1000, -32768, 32767))
-        # Para11: Forward terrain slope (tan(alpha) × 10000, int16) for terrain following
+        # Para11: forward terrain slope (tan(alpha) x 10000, int16) for terrain following.
         heading_rad = float(np.radians(heading_deg))
         lookahead_m = 5.0
         x_fwd = float(pos_ned[0]) + lookahead_m * np.cos(heading_rad)
@@ -651,6 +673,8 @@ class MockAmdUdpServer:
             dvl_speed_mps=dvl_speed_mps,
             altitude_m=altitude_m,
             parameter_values=parameter_values,
+            pc104_uptime_ms=pc104_uptime_ms,
+            dvl_bi_uptime_ms=dvl_bi_uptime_ms,
             total_voltage_v=self.telemetry_total_voltage_v,
             total_current_a=self.telemetry_total_current_a,
             soc=self.telemetry_soc,

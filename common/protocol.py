@@ -150,6 +150,10 @@ KEY_DENY_REASON = "deny_reason"  # 自主被拒原因
 KEY_TELEMETRY_FRESHNESS_MS = "telemetry_freshness_ms"  # 遥测数据新鲜度 (ms)
 KEY_STATE_SOURCE = "state_source"  # 状态来源（仿真 / 实物）
 KEY_MOCK_AMD_TIMESTAMP_US = "mock_amd_timestamp_us"  # Mock AMD 时间戳 (微秒)
+KEY_PC104_UPTIME_MS = "pc104_uptime_ms"
+KEY_PC104_TIME_VALID = "pc104_time_valid"
+KEY_PC104_DVL_BI_UPTIME_MS = "pc104_dvl_bi_uptime_ms"
+KEY_PC104_DVL_BI_TIME_VALID = "pc104_dvl_bi_time_valid"
 KEY_TARGET_DEPTH_M = "target_depth_m"  # 目标深度 (m)
 
 # =============================================================================
@@ -187,6 +191,10 @@ PROTOCOL_UPLINK_PARA9_OFFSET = 64  # offset +64: Para9 (int16)
 PROTOCOL_UPLINK_PARA10_OFFSET = 66  # offset +66: Para10 (int16)
 PROTOCOL_UPLINK_PARA11_OFFSET = 68  # offset +68: Para11 (int16)
 PROTOCOL_UPLINK_PARA12_OFFSET = 70  # offset +70: Para12 (int16)
+PROTOCOL_UPLINK_PC104_UPTIME_PARA_INDEX = 2
+PROTOCOL_UPLINK_DVL_BI_UPTIME_PARA_INDEX = 3
+PROTOCOL_UPLINK_TIME_MARKER_PARA_INDEX = 11
+PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER = 0x5453
 
 # 控制键组合（用于验证完整性）
 CONTROL_KEYS = (KEY_RIGHT, KEY_TOP, KEY_LEFT, KEY_BOTTOM, KEY_THRUST)  # 5 元控制向量
@@ -346,6 +354,10 @@ class ProtocolUplinkTelemetry:
     gyro_x_rps: float = 0.0
     gyro_y_rps: float = 0.0
     gyro_z_rps: float = 0.0
+    pc104_uptime_ms: int = 0
+    pc104_time_valid: bool = False
+    pc104_dvl_bi_uptime_ms: int = 0
+    pc104_dvl_bi_time_valid: bool = False
 
 REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_GROUND_TRUTH: (KEY_POSITION_NED, KEY_RPY_NED, KEY_CABLE_CLOSEST_NED, KEY_CABLE_DISTANCE_M),
@@ -914,6 +926,10 @@ def build_bridge_telemetry_payload(
         "dev_abnorm_info": int(telemetry.dev_abnorm_info),
         "bms_abnorm_info": int(telemetry.bms_abnorm_info),
         "dev_abnorm_detail": int(telemetry.dev_abnorm_detail),
+        KEY_PC104_UPTIME_MS: int(telemetry.pc104_uptime_ms),
+        KEY_PC104_TIME_VALID: bool(telemetry.pc104_time_valid),
+        KEY_PC104_DVL_BI_UPTIME_MS: int(telemetry.pc104_dvl_bi_uptime_ms),
+        KEY_PC104_DVL_BI_TIME_VALID: bool(telemetry.pc104_dvl_bi_time_valid),
     }
 
     active_arbiter_value = _enum_value(active_arbiter)
@@ -963,6 +979,30 @@ def calculate_byte_sum_checksum(data: bytes | bytearray) -> int:
           生产环境应考虑升级到 CRC-16
     """
     return sum(data) & 0xFF
+
+
+def map_pc104_uptime_to_ros_seconds(
+    *,
+    pc104_uptime_ms: int,
+    pc104_time_valid: bool,
+    receive_time_s: float,
+    base_pc104_uptime_ms: int | None,
+    base_ros_time_s: float | None,
+    allow_before_base: bool = False,
+) -> tuple[float, int | None, float | None, bool]:
+    """Map PC104 relative uptime into the local ROS time domain."""
+    if not pc104_time_valid or pc104_uptime_ms < 0:
+        return receive_time_s, base_pc104_uptime_ms, base_ros_time_s, False
+
+    if (
+        base_pc104_uptime_ms is None
+        or base_ros_time_s is None
+        or (pc104_uptime_ms < base_pc104_uptime_ms and not allow_before_base)
+    ):
+        return receive_time_s, int(pc104_uptime_ms), float(receive_time_s), True
+
+    stamp_s = float(base_ros_time_s) + float(pc104_uptime_ms - base_pc104_uptime_ms) / 1000.0
+    return stamp_s, base_pc104_uptime_ms, base_ros_time_s, True
 
 
 def _clamp_int(value: int, low: int, high: int) -> int:
@@ -1301,6 +1341,8 @@ def build_uplink_packet(
     depth_alarm: int = 0,
     bottom_alarm: int = 0,
     parameter_values: Sequence[int] | None = None,
+    pc104_uptime_ms: int | None = None,
+    dvl_bi_uptime_ms: int | None = None,
 ) -> bytes:
     """
     @brief 从各工程量参数构建 145 字节 $AUV 上行遥测帧
@@ -1322,6 +1364,8 @@ def build_uplink_packet(
     @param [in] device_power_status / operation_feedback / task_status 状态字节
     @param [in] {system_alarm, depth_alarm, bottom_alarm} 告警标志
     @param [in] parameter_values 扩展参数（12 元组）
+    @param [in] pc104_uptime_ms PC104 relative uptime in milliseconds, encoded in uplink Para3 when provided.
+    @param [in] dvl_bi_uptime_ms PC104 uptime when the latest DVL BI sample was parsed, encoded in Para4.
     
     @return bytes，145 字节的完整上行遥测数据包
     
@@ -1343,7 +1387,20 @@ def build_uplink_packet(
     @note 所有工程量输入（角度、深度、位置）都自动按协议标准转换为二进制格式
     @warning 此函数仅在仿真侧使用；实物 AUV 的上行数据来自硬件（不调用此函数）
     """
-    parameters = _coerce_parameters(parameter_values)
+    parameters = list(_coerce_parameters(parameter_values))
+    if pc104_uptime_ms is not None:
+        parameters[PROTOCOL_UPLINK_PC104_UPTIME_PARA_INDEX] = _clamp_int(
+            int(pc104_uptime_ms),
+            0,
+            0x7FFFFFFF,
+        )
+        if dvl_bi_uptime_ms is not None:
+            parameters[PROTOCOL_UPLINK_DVL_BI_UPTIME_PARA_INDEX] = _clamp_int(
+                int(dvl_bi_uptime_ms),
+                0,
+                0x7FFFFFFF,
+            )
+        parameters[PROTOCOL_UPLINK_TIME_MARKER_PARA_INDEX] = PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER
     packet = bytearray(PROTOCOL_UPLINK_SIZE)
     packet[0:5] = PROTOCOL_UPLINK_HEADER
     packet[5] = frame_counter & 0xFF
@@ -1468,6 +1525,11 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         checksum_index=PROTOCOL_UPLINK_CHECKSUM_INDEX,
     )
 
+    pc104_uptime_ms = struct.unpack(">i", packet[PROTOCOL_UPLINK_PARA3_OFFSET:PROTOCOL_UPLINK_PARA3_OFFSET + 4])[0]
+    dvl_bi_uptime_ms = struct.unpack(">i", packet[PROTOCOL_UPLINK_PARA4_OFFSET:PROTOCOL_UPLINK_PARA4_OFFSET + 4])[0]
+    time_marker = struct.unpack(">h", packet[PROTOCOL_UPLINK_PARA12_OFFSET:PROTOCOL_UPLINK_PARA12_OFFSET + 2])[0]
+    pc104_time_valid = time_marker == PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER and pc104_uptime_ms >= 0
+
     return ProtocolUplinkTelemetry(
         frame_number=int(packet[5]),
         auv_address=int(packet[6]),
@@ -1516,4 +1578,10 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         gyro_x_rps=struct.unpack(">h", packet[62:64])[0] * 0.001,
         gyro_y_rps=struct.unpack(">h", packet[64:66])[0] * 0.001,
         gyro_z_rps=struct.unpack(">h", packet[66:68])[0] * 0.001,
+        pc104_uptime_ms=int(pc104_uptime_ms),
+        pc104_time_valid=pc104_time_valid,
+        pc104_dvl_bi_uptime_ms=int(dvl_bi_uptime_ms),
+        pc104_dvl_bi_time_valid=(
+            pc104_time_valid and dvl_bi_uptime_ms > 0 and dvl_bi_uptime_ms <= pc104_uptime_ms
+        ),
     )

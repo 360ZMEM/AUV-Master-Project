@@ -1,0 +1,72 @@
+% !TEX root = ../auv-thesis.tex
+
+\begin{denotation}[2.5cm]
+  % Abbreviations
+  \item[1PPS] 每秒一脉冲时钟信号（One Pulse Per Second）
+  \item[6-DOF] 六自由度（Six Degrees of Freedom）
+  \item[AUV] 自主式水下航行器（Autonomous Underwater Vehicle）
+  \item[BT] 行为树（Behavior Tree）
+  \item[CEP50] 圆概率误差中位半径（Circular Error Probable, 50\%）
+  \item[CI] 持续集成（Continuous Integration）
+  \item[DDS] 数据分发服务（Data Distribution Service）
+  \item[DLIA] 数字锁相放大器（Digital Lock-in Amplifier）
+  \item[DVL] 多普勒测速仪（Doppler Velocity Log）
+  \item[ES-EKF] 误差状态扩展卡尔曼滤波（Error-State Extended Kalman Filter）
+  \item[ESTOP] 紧急停止（Emergency Stop）
+  \item[FFT] 快速傅里叶变换（Fast Fourier Transform）
+  \item[FSM] 有限状态机（Finite State Machine）
+  \item[FWHM] 半高全宽（Full Width at Half Maximum）
+  \item[GCS] 地面控制站/上位机（Ground Control Station）
+  \item[IMU] 惯性测量单元（Inertial Measurement Unit）
+  \item[LOS] 视线制导（Line-of-Sight Guidance）
+  \item[MPC] 模型预测控制（Model Predictive Control）
+  \item[NED] 北、东、地坐标系（North--East--Down）
+  \item[NIS] 归一化新息平方（Normalized Innovation Squared）
+  \item[PC104] PC/104 嵌入式计算平台
+  \item[PID] 比例积分微分控制（Proportional--Integral--Derivative Control）
+  \item[PVS] Python 船舶仿真器（Python Vehicle Simulator）
+  \item[RMSE] 均方根误差（Root Mean Square Error）
+  \item[ROS2] 第二代机器人操作系统（Robot Operating System 2）
+  \item[ROV] 遥控水下机器人（Remotely Operated Vehicle）
+  \item[RTOS] 实时操作系统（Real-Time Operating System）
+  \item[SBP] 浅地层剖面仪（Sub-Bottom Profiler）
+  \item[SNR] 信噪比（Signal-to-Noise Ratio）
+  \item[SSS] 侧扫声呐（Side-Scan Sonar）
+  \item[TMR] 隧道磁阻（Tunnel Magnetoresistance）
+  \item[UA-MPC] 不确定性感知模型预测控制（Uncertainty-Aware MPC）
+  \item[UDP] 用户数据报协议（User Datagram Protocol）
+
+  % State estimation and magnetic inversion
+  \item[$\boldsymbol{x}$] 系统名义状态向量
+  \item[$\delta\boldsymbol{x}$] 误差状态向量
+  \item[$\boldsymbol{p}$] AUV 在导航坐标系中的位置向量
+  \item[$\boldsymbol{q}$] AUV 姿态四元数
+  \item[$\boldsymbol{v}$] AUV 速度向量
+  \item[$\boldsymbol{b}_a$] IMU 加速度计零偏
+  \item[$\boldsymbol{b}_g$] IMU 陀螺仪零偏
+  \item[$\boldsymbol{P}$] 状态估计误差协方差矩阵
+  \item[$\boldsymbol{Q}$] 过程噪声协方差矩阵
+  \item[$\boldsymbol{R}$] 量测噪声协方差矩阵
+  \item[$\boldsymbol{H}$] 量测模型雅可比矩阵
+  \item[$\boldsymbol{K}$] 卡尔曼增益矩阵
+  \item[$\boldsymbol{y}$] 量测新息向量
+  \item[$\boldsymbol{S}$] 新息协方差矩阵
+  \item[$\boldsymbol{B}$] 三轴磁感应强度向量
+  \item[$d_{\mathrm{lat}}$] AUV 相对电缆中心线的横向偏移
+  \item[$d_{\mathrm{depth}}$] 电缆埋深估计值
+  \item[$h_{\mathrm{alt}}$] AUV 离底高度
+  \item[$z_{\mathrm{mag}}$] 磁场反演得到的电缆垂直距离
+  \item[$\Delta t_{\mathrm{FWHM}}$] 磁场模量包络的半高时间跨度
+
+  % Decision and control
+  \item[$\boldsymbol{X}$] 模型预测控制状态向量
+  \item[$\boldsymbol{U}$] 模型预测控制输入向量
+  \item[$J$] 模型预测控制总代价函数
+  \item[$N$] 模型预测控制预测时域步数
+  \item[$\Delta t$] 离散控制时间步长
+  \item[$c$] 由状态协方差映射得到的归一化置信度
+  \item[$\psi_{\mathrm{cmd}}$] 航向指令
+  \item[$z_{\mathrm{cmd}}$] 深度指令
+  \item[$T_{\mathrm{cmd}}$] 推力指令
+  \item[$w_i$] 代价函数第 $i$ 项的权重
+\end{denotation}

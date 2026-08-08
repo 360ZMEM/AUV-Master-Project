@@ -1,0 +1,55 @@
+% !TEX encoding = UTF-8
+% !TEX program = xelatex
+
+\PassOptionsToPackage{fontset=fandol}{ctex}
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usetheme[thupurple]{thubeamer}
+
+\graphicspath{{figures/}{../docs/thesis/figures/}}
+\input{macros}
+
+\title[AUV 海缆安全自主巡检]{%
+  面向海上风电电缆运维的 AUV\\
+  多源异构感知与安全自主巡检研究%
+}
+\author[谢冠文]{%
+  \texorpdfstring{学生：谢冠文\\[2mm]导师：陈道毅\ 教授}{谢冠文，导师：陈道毅教授}%
+}
+\institute[清华大学]{清华大学深圳国际研究生院}
+\date{硕士学位论文答辩}
+
+\definecolor{DefenseBlue}{HTML}{276FBF}
+\definecolor{DefenseGreen}{HTML}{2E8B57}
+\definecolor{DefenseOrange}{HTML}{C65D12}
+\definecolor{DefenseRed}{HTML}{B23A48}
+\definecolor{DefenseGray}{HTML}{52606D}
+
+\newcommand{\EvidenceTag}[1]{%
+  \colorbox{DefenseBlue!12}{\strut\textcolor{DefenseBlue}{\bfseries #1}}%
+}
+\newcommand{\BoundaryTag}[1]{%
+  \colorbox{DefenseRed!10}{\strut\textcolor{DefenseRed}{\bfseries #1}}%
+}
+\newcommand{\KeyNumber}[2]{%
+  {\usebeamercolor[fg]{structure}\Large\bfseries #1}\\[-1mm]
+  {\scriptsize #2}%
+}
+\newcommand{\FrameConclusion}[1]{%
+  \begin{beamercolorbox}[rounded=true,sep=1mm]{block body}
+    \centering\bfseries #1
+  \end{beamercolorbox}%
+}
+
+\begin{document}
+
+\input{defense/00_title}
+\input{defense/01_problem}
+\input{defense/02_system}
+\input{defense/03_perception}
+\input{defense/04_decision_control}
+\input{defense/05_evidence}
+\input{defense/06_conclusion}
+\input{defense/90_backup}
+
+\end{document}

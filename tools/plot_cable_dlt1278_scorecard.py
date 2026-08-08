@@ -17,7 +17,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--summary", type=Path, required=True, help="inspection_summary.json")
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--title", default="DL/T-style Cable Inspection Scorecard")
+    parser.add_argument("--title", default="DL/T 风格海缆巡检评分卡")
     return parser.parse_args()
 
 
@@ -26,18 +26,8 @@ def _resolve(path: Path) -> Path:
 
 
 def _ascii_label(value: Any) -> str:
-    mapping = {
-        "正常状态": "normal",
-        "注意状态": "attention",
-        "异常状态": "abnormal",
-        "严重状态": "severe",
-        "无效数据": "invalid",
-        "海缆位移": "route displacement",
-        "海缆埋深不足": "insufficient burial",
-        "埋深估计精度未达 0.15m": "burial sigma > 0.15m",
-    }
-    text = str(value)
-    return mapping.get(text, text.encode("ascii", "ignore").decode("ascii") or "non-ascii item")
+    # 图内中文化：保留原始（中文）文本，不再强转 ASCII
+    return str(value)
 
 
 def _status_color(summary: dict[str, Any]) -> str:
@@ -61,11 +51,24 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
+    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
+    import os
+    import matplotlib.font_manager as fm
+
+    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+    if os.path.exists(_zh_font):
+        fm.fontManager.addfont(_zh_font)
+        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
+    else:
+        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    plt.rcParams["axes.unicode_minus"] = False
+    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 10})
+
     score_items = summary.get("score_items") or []
     checks = summary.get("acceptance_checks") or {}
-    score_labels = [_ascii_label(item.get("item")) for item in score_items] or ["none"]
+    score_labels = [_ascii_label(item.get("item")) for item in score_items] or ["无"]
     score_values = [float(item.get("score") or 0.0) for item in score_items] or [0.0]
-    check_labels = list(checks.keys()) or ["no checks"]
+    check_labels = list(checks.keys()) or ["无检查项"]
     check_values = [1.0 if bool(value) else 0.0 for value in checks.values()] or [0.0]
 
     fig = plt.figure(figsize=(12, 7))
@@ -80,22 +83,22 @@ def main() -> None:
     ax_status.axis("off")
     total_score = int(summary.get("total_score") or 0)
     status_lines = [
-        f"Readiness: {summary.get('industrial_conclusion_readiness', '--')}",
-        f"Acceptance pass: {bool(summary.get('industrial_acceptance_pass', False))}",
-        f"DL/T-style state: {_ascii_label(summary.get('state', '--'))}",
-        f"Total score: {total_score}",
-        f"Worst single score: {summary.get('worst_single_score', '--')}",
-        f"Valid samples: {summary.get('point_count', '--')}",
+        f"就绪度：{summary.get('industrial_conclusion_readiness', '--')}",
+        f"验收通过：{bool(summary.get('industrial_acceptance_pass', False))}",
+        f"DL/T 风格状态：{_ascii_label(summary.get('state', '--'))}",
+        f"总分：{total_score}",
+        f"最差单项得分：{summary.get('worst_single_score', '--')}",
+        f"有效样本：{summary.get('point_count', '--')}",
     ]
     window = summary.get("inspection_window") or {}
     if window:
         status_lines.extend(
             [
                 "",
-                "Inspection window:",
-                f"  raw samples: {window.get('raw_point_count', '--')}",
-                f"  valid samples: {window.get('inspection_point_count', '--')}",
-                f"  excluded: {window.get('excluded_point_count', '--')}",
+                "巡检窗口：",
+                f"  原始样本：{window.get('raw_point_count', '--')}",
+                f"  有效样本：{window.get('inspection_point_count', '--')}",
+                f"  剔除样本：{window.get('excluded_point_count', '--')}",
             ]
         )
     ax_status.text(
@@ -104,14 +107,13 @@ def main() -> None:
         "\n".join(status_lines),
         va="top",
         ha="left",
-        family="monospace",
         fontsize=11,
         bbox={"boxstyle": "round", "facecolor": _status_color(summary), "alpha": 0.14, "edgecolor": _status_color(summary)},
     )
 
     ax_scores.barh(score_labels, score_values, color="tab:red" if score_items else "lightgray")
-    ax_scores.set_title("Score deductions")
-    ax_scores.set_xlabel("score")
+    ax_scores.set_title("扣分项")
+    ax_scores.set_xlabel("扣分")
     ax_scores.grid(True, axis="x", alpha=0.3)
     for y, value in enumerate(score_values):
         ax_scores.text(value + 0.2, y, f"{value:g}", va="center", fontsize=9)
@@ -119,24 +121,24 @@ def main() -> None:
     colors = ["tab:green" if value >= 0.5 else "tab:red" for value in check_values]
     ax_checks.barh(check_labels, check_values, color=colors)
     ax_checks.set_xlim(0.0, 1.0)
-    ax_checks.set_title("Acceptance checks")
-    ax_checks.set_xlabel("pass=1 / fail=0")
+    ax_checks.set_title("验收检查项")
+    ax_checks.set_xlabel("通过=1 / 未通过=0")
     ax_checks.grid(True, axis="x", alpha=0.3)
 
     ax_metrics.axis("off")
     metric_lines = [
-        "Key metrics:",
-        f"  max route offset m: {summary.get('max_route_offset_m', '--')}",
-        f"  mean route offset m: {summary.get('mean_route_offset_m', '--')}",
-        f"  route offset p95 m: {summary.get('route_offset_p95_m', '--')}",
-        f"  confidence p05: {summary.get('confidence_p05', '--')}",
-        f"  valid burial ratio: {summary.get('valid_burial_ratio', '--')}",
-        f"  burial sigma over-limit ratio: {summary.get('burial_sigma_over_limit_ratio', '--')}",
+        "关键指标：",
+        f"  最大航迹偏移（m）：{summary.get('max_route_offset_m', '--')}",
+        f"  平均航迹偏移（m）：{summary.get('mean_route_offset_m', '--')}",
+        f"  航迹偏移 p95（m）：{summary.get('route_offset_p95_m', '--')}",
+        f"  置信度 p05：{summary.get('confidence_p05', '--')}",
+        f"  有效埋深比例：{summary.get('valid_burial_ratio', '--')}",
+        f"  埋深 sigma 超限比例：{summary.get('burial_sigma_over_limit_ratio', '--')}",
         "",
-        "Implemented DL/T-style items:",
+        "已实现的 DL/T 风格项：",
     ]
     metric_lines.extend(f"  - {_ascii_label(item)}" for item in summary.get("implemented_items") or ["--"])
-    ax_metrics.text(0.02, 0.98, "\n".join(metric_lines), va="top", ha="left", family="monospace", fontsize=10)
+    ax_metrics.text(0.02, 0.98, "\n".join(metric_lines), va="top", ha="left", fontsize=10)
 
     fig.tight_layout()
     fig.savefig(output_path, dpi=180)

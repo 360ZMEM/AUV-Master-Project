@@ -1,0 +1,43 @@
+\section{结论}
+
+\begin{frame}{贡献、结论与下一步}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.31\textwidth}
+      \begin{block}{机制贡献}
+        声磁协同 ES-EKF 将观测质量映射为协方差与置信度，并跨层传递。
+      \end{block}
+      \centering
+      \EvidenceTag{24/24 扰动运行完成}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{系统贡献}
+        双脑异步、行为树抢占、任务状态机与 UA-MPC 形成分层安全闭环。
+      \end{block}
+      \centering
+      \EvidenceTag{综合压力双侧改善}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \begin{block}{证据贡献}
+        以失败注入、根因定位和闭环恢复定义结论成立条件，而非隐藏负结果。
+      \end{block}
+      \centering
+      \EvidenceTag{中/重档各 3/3 恢复}
+    \end{column}
+  \end{columns}
+
+  \vspace{5mm}
+  \begin{alertblock}{仍需完成的实物证据}
+    磁传感器九参数与工频台架标定、真实声磁噪声、真机双脑网络时延，以及湖试/海试条件下的闭环验收。
+  \end{alertblock}
+
+  \FrameConclusion{本文完成的是可解释、可验证、可迁移的自主巡检方法体系，而非提前宣称真机验收。}
+\end{frame}
+
+\begin{frame}
+  \centering
+  {\Huge 谢谢各位老师}\\[8mm]
+  {\Large 敬请批评指正}\\[10mm]
+  {\normalsize
+    \textcolor{DefenseGray}{核心问题：如何让 AUV 在“不确定”时仍保持可解释的安全自主？}
+  }
+\end{frame}

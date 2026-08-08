@@ -1,0 +1,96 @@
+\section{决策与控制}
+
+\begin{frame}{行为树负责抢占，状态机负责生命周期}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{0.74\textwidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]
+        {architecture/auv_v2_behavior_tree_illustration.png}
+    \end{column}
+    \begin{column}{0.23\textwidth}
+      \small
+      \begin{block}{行为树}
+        安全分支高优先级，每个 tick 均可抢占任务。
+      \end{block}
+      \begin{block}{任务状态机}
+        管理搜索、确认、跟踪与返航阶段。
+      \end{block}
+      \begin{alertblock}{安全落点}
+        回零、上浮、防触底和人工急停保持分层。
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{UA-MPC：置信度连续调节控制风格}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \begin{beamercolorbox}[rounded=true,sep=2mm]{block body}
+        \[
+          J =
+          \sum_{k=0}^{N-1}
+          \left(
+            w_{\mathrm{track}}(c)\,\lVert e_k\rVert^2
+            + w_{\mathrm{u}}(c)\,\lVert \Delta u_k\rVert^2
+          \right)
+        \]
+      \end{beamercolorbox}
+      \begin{itemize}
+        \item 高置信度：保持正常跟踪与控制代价。
+        \item 低置信度：放大关键跟踪项，sigmoid 降低控制代价。
+        \item 求解失败：显式回退 LOS/上一安全输出，不伪装为 MPC 成功。
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \begin{block}{机制归因}
+        \textbf{主贡献：}低置信度下的 sigmoid 控制代价降权，同时改善可解性与 S 弯横向精度。
+      \end{block}
+      \begin{block}{参数边界}
+        更线性的置信度映射仅有边际收益；默认指数与求解器迭代上限均不据此修改。
+      \end{block}
+      \begin{alertblock}{适用前提}
+        权重调整不能替代已完全丢失的速度观测。
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{主消融：综合压力下双侧改善，重度丢包下失效}
+  \small
+  \begin{table}
+    \centering
+    \begin{tabularx}{\linewidth}{l>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+      \toprule
+      场景 & 水平 RMSE & 横向 RMSE & 结论 \\
+      \midrule
+      干净基线
+        & 改善约 4.7\%
+        & \(0.0038\rightarrow0.0034\) m
+        & 小幅改善 \\
+      重度 DVL 丢包
+        & \textcolor{DefenseRed}{变差约 1.9\%}
+        & UA 略差
+        & \textcolor{DefenseRed}{不再有优势} \\
+      综合压力
+        & \textcolor{DefenseGreen}{改善约 10.4\%}
+        & \textcolor{DefenseGreen}{\(0.0035\rightarrow0.0029\) m}
+        & \textcolor{DefenseGreen}{改善约 15.8\%} \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+
+  \vspace{3mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{成立条件}
+        多扰动叠加但状态估计尚未完全退化，置信度调度能形成“定位 + 控制”同向收益。
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{不能外推}
+        定位指标含离线滤波评估；不能据此单独声称完整控制性能显著优于基线。
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}

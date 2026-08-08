@@ -57,6 +57,10 @@ class SensorSnapshot:
     depth: dict | None = None
     mag: dict | None = None
     ts: float = 0.0
+    imu_ts: float = 0.0
+    dvl_ts: float = 0.0
+    depth_ts: float = 0.0
+    mag_ts: float = 0.0
 
     def copy(self) -> SensorSnapshot:
         """
@@ -71,6 +75,10 @@ class SensorSnapshot:
             depth=deepcopy(self.depth) if self.depth else None,
             mag=deepcopy(self.mag) if self.mag else None,
             ts=self.ts,
+            imu_ts=self.imu_ts,
+            dvl_ts=self.dvl_ts,
+            depth_ts=self.depth_ts,
+            mag_ts=self.mag_ts,
         )
 
 
@@ -179,6 +187,7 @@ class SensorSampleCache:
                 # 周期已满，更新缓存
                 self._snapshot.imu = imu_data
                 self._last_imu_ts = now
+                self._snapshot.imu_ts = now
 
         # ── DVL ──
         dvl_data = self._extract_dvl(raw_state)
@@ -186,6 +195,7 @@ class SensorSampleCache:
             if self._dvl_period <= 0 or (now - self._last_dvl_ts) >= self._dvl_period:
                 self._snapshot.dvl = dvl_data
                 self._last_dvl_ts = now
+                self._snapshot.dvl_ts = now
 
         # ── Depth ──
         depth_data = self._extract_depth(raw_state)
@@ -193,6 +203,7 @@ class SensorSampleCache:
             if self._depth_period <= 0 or (now - self._last_depth_ts) >= self._depth_period:
                 self._snapshot.depth = depth_data
                 self._last_depth_ts = now
+                self._snapshot.depth_ts = now
 
         # ── Mag ──
         mag_data = self._extract_mag(raw_state)
@@ -200,6 +211,7 @@ class SensorSampleCache:
             if self._mag_period <= 0 or (now - self._last_mag_ts) >= self._mag_period:
                 self._snapshot.mag = mag_data
                 self._last_mag_ts = now
+                self._snapshot.mag_ts = now
 
         # 更新快照时间戳并返回副本
         self._snapshot.ts = now
@@ -269,4 +281,3 @@ class SensorSampleCache:
             "B_ned": list(mag.get("B_ned", [0.0, 0.0, 0.0])),
             "B_norm": float(mag.get("B_norm", 0.0)),
         }
-
