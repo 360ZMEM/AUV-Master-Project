@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-10T15:14:39.682492+00:00",
+  "generated_at_utc": "2026-08-12T16:25:23.952771+00:00",
   "catalog_path": "毕业设计写作文档/潜在待完成事项/06_现有证据Artifact_Manifest.catalog.json",
-  "catalog_sha256": "aedbbef3a161669eba26ab0c05f3fb72a6da60fc6e783f2238b916cf491d82b8",
+  "catalog_sha256": "4727a59689ef3cca799b26e81c3e1d5efda7605b046a6e44ccb44605a1fb16c1",
   "grade_definitions": {
     "A": "原始输入、配置/运行清单、分析代码和机器可读结果均可访问，且生成版本可追溯。",
     "B": "原始输入和机器可读结果可访问，但历史 commit、配置快照或标准化摘要至少缺一项。",
@@ -10,7 +10,7 @@
     "D": "只有计划、接口或未经数据支撑的声明，不能作为实验结论。"
   },
   "repository": {
-    "current_commit": "46fc798d42eeec621417affb526dab86978f7d2c",
+    "current_commit": "6e91f369ad5ec77dcdf937bc836b807fdf6deef7",
     "worktree_state": "not_evaluated",
     "note": "This is the manifest-generation revision, not the historical experiment revision unless an experiment manifest records it. Global dirty-state probing is intentionally skipped because this workspace requires an unavailable git-lfs filter; catalogued artifacts are verified by their own SHA256 values.",
     "submodules": [
@@ -21,7 +21,7 @@
       },
       {
         "path": "hardware_wrappers/fangkong_adc",
-        "commit": "78a5e32967d99fe28eaa9facaf850bb6d0f0350b",
+        "commit": "44397848bd11befb380da19af44b200088b3f2c5",
         "status_prefix": " "
       }
     ]
@@ -33,13 +33,16 @@
       "data_layer": "document_build",
       "evidence_grade": "A",
       "declared_status": "complete",
-      "sample_scope": "192 页 A4 PDF，90 条 Biber 记录",
+      "sample_scope": "180 页 A4 PDF，47 图，63 表，90 条 Biber 记录（R30 写作审计 + AUV-Master-Mag 电缆算法内容迁移后）",
       "claims_supported": [
         "Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF",
-        "最终日志不存在 undefined command/citation/reference"
+        "最终日志不存在 undefined command/citation/reference",
+        "R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8",
+        "AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论"
       ],
       "claim_boundaries": [
-        "构建通过不等于占位符、论证或排版质量已经最终验收"
+        "构建通过不等于占位符、论证或排版质量已经最终验收",
+        "写作审计只压缩了主文叙事与图表数量，未新增、删除或改判任何实验证据；被移出主文的图对应的原始实验证据仍以本清单其余条目为准"
       ],
       "provenance_gaps": [],
       "required_complete": true,
@@ -49,13 +52,13 @@
       "present_file_count": 15,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 16331639,
+      "total_bytes": 13549150,
       "role_counts": {
         "build_product": 1,
         "build_recipe": 1,
         "source": 13
       },
-      "artifact_digest_sha256": "36280d13d099bc8cfb91339279d5e49a2cf50147dcf4b6ddb69eca154c65a3cb",
+      "artifact_digest_sha256": "e21ebf4cf3300bae2ad3b8ead42d385ee90ff603aba58d4dd7298e03c2d57342",
       "files": [
         {
           "path": "thuthesis/Makefile",
@@ -67,7 +70,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2853,
-          "mtime_utc": "2026-08-10T13:24:31.199986+00:00",
+          "mtime_utc": "2026-08-12T13:35:03.147167+00:00",
           "sha256": "8f690738f5d94802a31d1bc696717a1582c8d5dcef646b87181748decc52e9b7"
         },
         {
@@ -79,9 +82,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 15841881,
-          "mtime_utc": "2026-08-10T15:06:00.586030+00:00",
-          "sha256": "372c62c729fece29c6634d312648938d22c626dcca01db9d4f59e51681fed4c8"
+          "size_bytes": 13060900,
+          "mtime_utc": "2026-08-12T16:15:46.200822+00:00",
+          "sha256": "b1427d4532f6b4d2895f7313e696255df8fc8c171ffe65e144573e46317227fd"
         },
         {
           "path": "thuthesis/auv-thesis.tex",
@@ -93,7 +96,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 758,
-          "mtime_utc": "2026-08-08T13:36:13.724166+00:00",
+          "mtime_utc": "2026-08-12T13:35:02.751700+00:00",
           "sha256": "fb04a7d45a59d7f192900ae2074b77d65fee40d0f6a8174f40933c36a14041a9"
         },
         {
@@ -106,7 +109,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2424,
-          "mtime_utc": "2026-08-10T13:24:31.217337+00:00",
+          "mtime_utc": "2026-08-12T13:35:02.861138+00:00",
           "sha256": "a2520966d784a348a2fc7dd036c0015bc162221a7760c159117c2cd6d94aed62"
         },
         {
@@ -118,9 +121,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 10492,
-          "mtime_utc": "2026-08-10T13:24:31.227174+00:00",
-          "sha256": "9117f3b3c001d3d9d33747998b3751ea5dc4f1ccc62a5f396421d0f4de0d939c"
+          "size_bytes": 10513,
+          "mtime_utc": "2026-08-12T13:54:28.010394+00:00",
+          "sha256": "4c256c9a130949d73b3eaf3b9411019a00821035d58edb6be08bf6291e42a9d8"
         },
         {
           "path": "thuthesis/data/auv-acknowledgements.tex",
@@ -132,7 +135,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 132,
-          "mtime_utc": "2026-08-08T13:36:13.760498+00:00",
+          "mtime_utc": "2026-08-12T13:35:02.952159+00:00",
           "sha256": "768718739811c6c7306ecc0de32c5d66dbeaa5914b3a60fadd807c89483f2fa4"
         },
         {
@@ -144,9 +147,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 24554,
-          "mtime_utc": "2026-08-10T13:24:31.235736+00:00",
-          "sha256": "156a20a286343ba19d8d18b4853eb3f35ec9a611585c3530ef7463d76633bb64"
+          "size_bytes": 27006,
+          "mtime_utc": "2026-08-12T16:14:34.451603+00:00",
+          "sha256": "3263b8cb1bacfa2e231c8a083c86390e684f4ad09fe2793e1e6fae7ca34729e8"
         },
         {
           "path": "thuthesis/data/auv-chap01.tex",
@@ -157,9 +160,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 35382,
-          "mtime_utc": "2026-08-10T13:24:31.248968+00:00",
-          "sha256": "f0bac186bacb27d6b7db40d71b3aef209bd1e1c4da14a271792aaac10d582e82"
+          "size_bytes": 35384,
+          "mtime_utc": "2026-08-12T13:54:28.055264+00:00",
+          "sha256": "afce531e45583d5519847178461f1fd96c7b305fcb027c5e8fc033c983308bc7"
         },
         {
           "path": "thuthesis/data/auv-chap02.tex",
@@ -170,9 +173,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 69607,
-          "mtime_utc": "2026-08-10T13:24:31.282999+00:00",
-          "sha256": "3e5f0190803fbb1cce3854c6736c156011a88eaf0d863d842e2690c5edcc6765"
+          "size_bytes": 70591,
+          "mtime_utc": "2026-08-12T15:41:43.045928+00:00",
+          "sha256": "3d1540113008c8e28f14ad5215adbec53b6a4cefbb4d0d60553d1878d98c4903"
         },
         {
           "path": "thuthesis/data/auv-chap03.tex",
@@ -183,9 +186,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 49917,
-          "mtime_utc": "2026-08-10T13:24:31.307983+00:00",
-          "sha256": "b998fa3f6af5b5dbb027f8f1b3ca2ccce08da96b7b65346141b4d380a9a074ee"
+          "size_bytes": 52250,
+          "mtime_utc": "2026-08-12T15:41:02.159219+00:00",
+          "sha256": "74c963e2195aa7b3319d95e069ef1e8ef5f4e6ef4d10ba7fa434c3173fe65f3a"
         },
         {
           "path": "thuthesis/data/auv-chap04.tex",
@@ -196,9 +199,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 68928,
-          "mtime_utc": "2026-08-10T15:02:47.633894+00:00",
-          "sha256": "88afdd9b7e67b937ec7e2b554d327f2d85e4730e2032489725c88a8ab1e3de99"
+          "size_bytes": 64890,
+          "mtime_utc": "2026-08-12T15:06:57.885121+00:00",
+          "sha256": "15bb6ba0d252a2f828b2fecdde4253abc9f335b5ac4ec3e499712b37f1ab990f"
         },
         {
           "path": "thuthesis/data/auv-chap05.tex",
@@ -209,9 +212,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 150314,
-          "mtime_utc": "2026-08-10T15:05:38.810141+00:00",
-          "sha256": "8b705248bae1b146ef1f69f750e1f602b57e16a07a90a16036f60f22a3652bac"
+          "size_bytes": 147795,
+          "mtime_utc": "2026-08-12T16:06:06.580061+00:00",
+          "sha256": "f57d20f3d13d8a31db38a431e2f6b293556725d8b6691f4f7eccda1af14ecdf4"
         },
         {
           "path": "thuthesis/data/auv-chap06.tex",
@@ -222,9 +225,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 11305,
-          "mtime_utc": "2026-08-10T15:02:30.857171+00:00",
-          "sha256": "6a7bffdbca382746d9b7b2a0ee491951009c17c7a7f83fa590e6dae41442dfe6"
+          "size_bytes": 10562,
+          "mtime_utc": "2026-08-12T15:06:57.931328+00:00",
+          "sha256": "0f50d2d8271a5b8d5ec8b9834c0bcbf52cffba164a45f7384c23e1ef2623fbb7"
         },
         {
           "path": "thuthesis/data/auv-denotation.tex",
@@ -236,7 +239,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 3806,
-          "mtime_utc": "2026-08-08T15:35:01.940948+00:00",
+          "mtime_utc": "2026-08-12T13:35:03.140003+00:00",
           "sha256": "a0cd635d1069f035d2115e1b837b098ba498cadf633bf3a4954aef92d167d464"
         },
         {
@@ -251,6 +254,403 @@
           "size_bytes": 59286,
           "mtime_utc": "2026-08-09T06:26:36.918118+00:00",
           "sha256": "a7a8cff73af626000cebfae5a83dd5aaf09853045e00e0c02981aeda77225b74"
+        }
+      ]
+    },
+    {
+      "id": "MAG-CABLE-ALGORITHM-BOUNDARY",
+      "title": "专用磁探测仓库电缆探测算法级边界与迁移图",
+      "data_layer": "algorithm_simulation",
+      "evidence_grade": "C",
+      "declared_status": "complete_with_boundaries",
+      "sample_scope": "专用电缆跟踪算法（AUV-Master-Mag，审计基线 commit 12e1884b59737dbe14e83c825b6cea9bb3c7a4bb）；确定性单次纯仿真复现（n=1）；覆盖先验轻/中/重档、稀疏/中断声呐、30--120 m 曲率、留一法消融、50/70 m 跨车道压力、20--36° 之字形埋深调优等多场景离线扫描",
+      "claims_supported": [
+        "关闭在线先验修正会在重档错位先验下引发横偏累积（漂移至 30--40 m）并在约 2119 s 触发 +57.5 m 跨车道投影跳变",
+        "map-frame 投影连续与先验物理配准是两个不同机制：关闭在线修正时全局路由跳变 686.4/724.1 m 但地图系投影跳变仍约 0.2 m，基线累计约 7.53 m 平移与约 -3.18 度旋转把错位地图拉回真实电缆",
+        "当前场景中在线先验修正与自适应之字形是关闭即失败的载荷机制，进度窗口投影与磁路径观测在该场景下为冗余安全网",
+        "之字形主动激励在调优后显示进入 0.15 m 参考线的算法级潜力：1.0/1.5/2.0 m 埋深在 36/32/25 度摆幅下达 0.124/0.079/0.123 m 单周期平均误差",
+        "30--120 m 曲率扫描未击穿曲率边界，30 m 为环境硬下限、瓶颈接近电缆几何物理下限而非固定曲率半径"
+      ],
+      "claim_boundaries": [
+        "全部是专用算法仓库的单次确定性纯仿真（n=1），不等于主仓 ROS/PVS 端到端、多种子或实物结论",
+        "30 m 是扫描下限而非实际失效阈值",
+        "埋深达标点是参数扫描最优点，不代表固定幅值全场景达标；幅值需按埋深/信号状态自适应",
+        "无声呐初始捕获仍失败，是可观测性负边界",
+        "综合健康分是任务级复合指标，机制判断需同时引用原始横偏、完成度、跳变和通过状态",
+        "results/ 在子仓库内不受 Git 跟踪、docs/figure 相对提交为 modified，故本 artifact 以各文件当前 SHA256 而非子仓库 commit 唯一确定"
+      ],
+      "provenance_gaps": [
+        "随机种子未透传，当前 n=1，无法给出多种子统计分布",
+        "真值字段仅允许离线评价，不进入在线感知管线",
+        "算法级边界尚未在主仓 ROS/PVS 端到端或真机链路上复核"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 27,
+      "present_file_count": 27,
+      "raw_reference_count": 0,
+      "raw_reference_present_count": 0,
+      "total_bytes": 1194305,
+      "role_counts": {
+        "figure": 5,
+        "postprocess_code": 6,
+        "protocol_definition": 1,
+        "run_index": 10,
+        "verification_report": 5
+      },
+      "artifact_digest_sha256": "d06ffaab3a84285562cbcfd66c3979cb57975b3e512fcc683bb5e753ada4b389",
+      "files": [
+        {
+          "path": "AUV-Master-Mag/docs/28_声磁协同方法论合龙.md",
+          "roles": [
+            "verification_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 27408,
+          "mtime_utc": "2026-07-12T08:38:20.921131+00:00",
+          "sha256": "d7ccb1a1c898c08df21aa1b68bff7aa22db70894a6e779d1c8ba569f5468e9fd"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/29_声磁协同实验设计与结果.md",
+          "roles": [
+            "verification_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 42139,
+          "mtime_utc": "2026-07-12T08:38:20.921882+00:00",
+          "sha256": "fb26f2688288ae442a9478b4820bd6e3905363f037cd01af59933788193a64ff"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/31_声磁协同算法部署输入输出规范.md",
+          "roles": [
+            "protocol_definition"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 11380,
+          "mtime_utc": "2026-07-12T08:38:20.923107+00:00",
+          "sha256": "e8931afd640069034514ce8dcb93bdc791f0e18e0e23c631e97a1de8b7db6a66"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260628_dr_ins_boundary/critical_sweep_after_estimator_guard.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 683,
+          "mtime_utc": "2026-06-28T08:43:55.169247+00:00",
+          "sha256": "704c77f1bb5ffdbdaeb0a595ea0ff7516dbfb2bb76b0a71a6b156ba599620d91"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260630_ablation/ablation_sweep.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 989,
+          "mtime_utc": "2026-06-30T13:24:48.542677+00:00",
+          "sha256": "3e1b20cac39966662febefc5e62d9face5759ed21806858bbaf147ab148dbabe"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260630_radius_boundary/radius_sweep.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1479,
+          "mtime_utc": "2026-06-30T13:07:05.782720+00:00",
+          "sha256": "a8ff5ff633f696c20baf5e9687e4eb21c39a0fc85aedad46fea4e9470a2274cc"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_50.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 806,
+          "mtime_utc": "2026-07-05T06:19:55.027157+00:00",
+          "sha256": "f0db082950ae5a5bb557fe2beea431c4b40c05193200a0bbc478cf25cc495377"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_70.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 806,
+          "mtime_utc": "2026-07-05T06:17:16.735795+00:00",
+          "sha256": "5907ec35f3eff004e9bf75079670ff9a6c4bcf12911e2fa99e6ccc830b7f6fe6"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_radius_causality/radius_causality.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1703,
+          "mtime_utc": "2026-07-05T01:15:15.083928+00:00",
+          "sha256": "b40eb64a7211551fb58f837d0fc1d982b42013bf2eafed2591e2af167d186edb"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_sweep.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1850,
+          "mtime_utc": "2026-07-05T01:04:26.871339+00:00",
+          "sha256": "adf67247b91af314507ebba5f146e81bcc26836560c7f32dc15b1c3ca02bb86e"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_tuning_depth2.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2222,
+          "mtime_utc": "2026-07-05T01:31:08.203290+00:00",
+          "sha256": "9c447ca7a81869b733b6f6e7ffc341df0aee7a453dd364a8f78b0c537844fe5e"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_tuning_focused.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1472,
+          "mtime_utc": "2026-07-05T01:32:17.758478+00:00",
+          "sha256": "017168376c6ed34ca8ee9d54ae321c3f6a035e42532eeeaf57487f13435a27db"
+        },
+        {
+          "path": "AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_tuning_shallow_mid.csv",
+          "roles": [
+            "run_index"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1597,
+          "mtime_utc": "2026-07-05T01:33:39.605917+00:00",
+          "sha256": "5c84e8644bcfff81579093093bd79c1d7deb6168f058657fa2f8b97ea118f1d3"
+        },
+        {
+          "path": "AUV-Master-Mag/tools/render_prior_alignment_figures.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 7209,
+          "mtime_utc": "2026-07-12T08:38:21.142113+00:00",
+          "sha256": "07d4ee6f5bc175e4d32a10bd9300af5602b2e0fa001b5113300a8eae83a05002"
+        },
+        {
+          "path": "AUV-Master-Mag/tools/render_stress_test_figures.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 7635,
+          "mtime_utc": "2026-07-12T08:38:21.142692+00:00",
+          "sha256": "6119bf0b035f2118c7278558ede7ecb1b2e3849ce002fc6ac37d9a2264e79c8d"
+        },
+        {
+          "path": "AUV-Master-Mag/tools/render_zigzag_burial_figures.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 6435,
+          "mtime_utc": "2026-07-12T08:38:21.143266+00:00",
+          "sha256": "8575028350726e0c5ba5a40f07f792f95a984b422e0289d25cd75a8065ab7b06"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 211962,
+          "mtime_utc": "2026-08-12T15:34:57.314609+00:00",
+          "sha256": "6b2ca4b500ee83eb44a48918f2d259165bf5133fb24cfd8e4cc2cdced7773420"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/cable_active_crossing_observability.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 182393,
+          "mtime_utc": "2026-08-12T15:39:31.516953+00:00",
+          "sha256": "63ad550a3d52adfb79ad9d6e232aa32473921cfceb0294b9dab6298d7c263b6e"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/cable_method_figures_SOURCE.md",
+          "roles": [
+            "verification_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2172,
+          "mtime_utc": "2026-08-12T15:40:16.123086+00:00",
+          "sha256": "080b0eb6d6e3e7efcfa821ed3e973dfe6c50df060b6aa75656cc37fc04bcfdbb"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/cable_mag_integration/CAUSAL_FIGURES_SOURCE.md",
+          "roles": [
+            "verification_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3097,
+          "mtime_utc": "2026-08-12T16:06:48.617850+00:00",
+          "sha256": "c6b55003737836bfdb229e875a4121c89ae9b9934f7bd660efac663864fee99a"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/cable_mag_integration/prior_alignment_decoupling.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 160678,
+          "mtime_utc": "2026-08-12T16:00:13.751844+00:00",
+          "sha256": "dc3a20622e11f5c8311da4def35b442d232e6023fe98e271f2e2216fe6dab9d6"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/cable_mag_integration/pure_magnetic_failure_timeseries.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 218148,
+          "mtime_utc": "2026-08-12T16:03:07.346764+00:00",
+          "sha256": "35e4994b522d61bc6d93bdfa1942a4f2fdcd432d677be5b96a2bd03f61a29005"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/cable_mag_integration/zigzag_burial_tradeoff.png",
+          "roles": [
+            "figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 244413,
+          "mtime_utc": "2026-08-12T16:00:14.074664+00:00",
+          "sha256": "72d9515bd9c0f0ea96027dbaa864f7cec65929ae99b4663ce520d7d477294a85"
+        },
+        {
+          "path": "tools/render_cable_active_crossing_figure.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 6417,
+          "mtime_utc": "2026-08-12T15:39:20.850251+00:00",
+          "sha256": "0595b7a4f51fb95fa2591ce92b0fdbdfd9b1bc894b48577c8ce4a789f97c9a3f"
+        },
+        {
+          "path": "tools/render_cable_mag_causal_figures.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 14371,
+          "mtime_utc": "2026-08-12T16:00:04.324821+00:00",
+          "sha256": "9aa0e4c2a77f91e05d552684fb8e5b55a524d95a2d4343e6c5ecb19ea95f2641"
+        },
+        {
+          "path": "tools/render_cable_perception_pipeline_figure.py",
+          "roles": [
+            "postprocess_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 6130,
+          "mtime_utc": "2026-08-12T15:34:48.825498+00:00",
+          "sha256": "999fb21fb5a6bb6ce67a4e0e42a05a758d013f59b34092a9407654892efcd9f4"
+        },
+        {
+          "path": "毕业设计写作文档/潜在待完成事项/22_AUV-Master-Mag内容迁移与ThuThesis丰富计划.md",
+          "roles": [
+            "verification_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 28711,
+          "mtime_utc": "2026-08-12T16:15:12.870251+00:00",
+          "sha256": "a032a3d34b3a73406e08f6dbd891d4c36e4392cb0a0fa044deca71709f7bdde6"
         }
       ]
     },
@@ -706,7 +1106,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 72965,
-          "mtime_utc": "2026-08-10T13:24:30.934671+00:00",
+          "mtime_utc": "2026-08-12T13:48:47.305739+00:00",
           "sha256": "848d22b51ef06f49a0ad47e7118f704eebadbd940c587d54a22ee6bfc585e82f"
         },
         {
@@ -1194,7 +1594,7 @@
       "present_file_count": 9,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 51854,
+      "total_bytes": 52354,
       "role_counts": {
         "audit_report": 1,
         "authority_report": 1,
@@ -1204,7 +1604,7 @@
         "runner_code": 2,
         "test_code": 2
       },
-      "artifact_digest_sha256": "9dbfd7de89532f0b3c9a241dbdf83786201f4adb8f10debf7ef26f47c2e3aa14",
+      "artifact_digest_sha256": "279a2d799d24bb87febdba4b8f152ad800c323ae5e29ac3c2c7f82ecf517e025",
       "files": [
         {
           "path": "hardware_wrappers/fangkong_adc/network/tcp_client.py",
@@ -1215,9 +1615,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 3189,
-          "mtime_utc": "2026-08-10T13:24:30.919414+00:00",
-          "sha256": "ca12f281ad748dc39421e397ab5d786f9a1da199fb6c45b2b2dc5be7b41ea8ed"
+          "size_bytes": 3147,
+          "mtime_utc": "2026-08-12T16:21:18.777262+00:00",
+          "sha256": "dfefa8310680a2507d26fe83659bfcdc0328c0b73e642dbfb07b608b3ab79765"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/scripts/run_tmr_handoff.py",
@@ -1229,7 +1629,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 29293,
-          "mtime_utc": "2026-08-10T13:24:30.937417+00:00",
+          "mtime_utc": "2026-08-12T13:48:47.305974+00:00",
           "sha256": "e28f980733346ea54cac8de4d0565d3595766e398a0d4814e23cf576b06283b2"
         },
         {
@@ -1241,9 +1641,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 2400,
-          "mtime_utc": "2026-08-10T13:24:30.947052+00:00",
-          "sha256": "1292c2d2212c1f194801e28c3dc82aaa4ae30002fc181258e420bc1b73ac83f1"
+          "size_bytes": 2942,
+          "mtime_utc": "2026-08-12T16:21:18.809138+00:00",
+          "sha256": "3989635d0c6646dd8c520ed178d73371d548caa40835a145e0021242ed00cad8"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/tests/test_tmr_handoff.py",
@@ -1255,7 +1655,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2382,
-          "mtime_utc": "2026-08-10T13:24:30.951655+00:00",
+          "mtime_utc": "2026-08-12T13:48:47.306596+00:00",
           "sha256": "5634f5b6f06fcd19bd70d073cca949a1db510983c701810a5d8a97c65e733754"
         },
         {
@@ -16013,7 +16413,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 463,
-          "mtime_utc": "2026-08-10T14:56:37.193323+00:00",
+          "mtime_utc": "2026-08-12T15:06:57.740970+00:00",
           "sha256": "0d90193ecfac7f36a125af8c2c6007c7c53851d60d30160b1e4b809a99db7dba"
         },
         {
@@ -16026,7 +16426,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 29420,
-          "mtime_utc": "2026-08-10T14:56:31.274402+00:00",
+          "mtime_utc": "2026-08-12T15:06:57.742291+00:00",
           "sha256": "f0558c018d4b4d3092ce4e244ca76d819da17e17c724bd6bc50f1aa0903b0a82"
         },
         {
@@ -16039,7 +16439,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 4015,
-          "mtime_utc": "2026-08-10T14:48:49.272382+00:00",
+          "mtime_utc": "2026-08-12T15:06:57.747486+00:00",
           "sha256": "f2bd9f176c57904ac599e2b3a9f28ebf7409008f229e3f03cb6589a0b86a78d9"
         },
         {
@@ -16195,7 +16595,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 22712,
-          "mtime_utc": "2026-08-10T14:52:39.870263+00:00",
+          "mtime_utc": "2026-08-12T15:06:57.958834+00:00",
           "sha256": "44f0f4a0d6c1cf60f0c1579c8b70377c0eb4b8134024569d89ae8970fdd50975"
         },
         {
@@ -16221,7 +16621,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 11361,
-          "mtime_utc": "2026-08-10T15:14:17.234772+00:00",
+          "mtime_utc": "2026-08-12T15:06:58.000844+00:00",
           "sha256": "4f71afc26a8e352765d888ce76db07d3fb504b257dbf40d42ce8816d0c972f50"
         }
       ]

@@ -3,15 +3,15 @@
 > 本文件是 `AGENTS.md` 分流后的 **macwin 侧主索引**（`uname` 返回 Darwin / 命令不存在时读本文件）。
 > **每次上下文清理/重置后，即使不是第一次进入，也必须完整读完本文件**，以在不重复探索的前提下恢复目标与约束。
 > 维护约定：既要「概括」又要「行号对应」（`文件#Lxx-Lyy`），便于精准跳读；发现新关键位置随时补行号。高度专业化子内容分流到子文档并在此登记路径（**不得在仓库根目录新建散文件**）。
-> 最后更新：2026-08-08（完成 TMR8637 随附测试报告、50 Hz 噪声裕度核验及 169 页联合编译验收；保留方法引用归属与中文破折号审计结论）。
+> 最后更新：2026-08-13（完成 TMR8637 性能参数拆表、传输/噪声曲线精简及 179 页联合编译验收；保留方法引用归属与中文破折号审计结论）。
 
 ---
-> 当前 LaTeX 状态（2026-08-08）：附录 A 已完成学术化重组，连续结果图已完成紧凑排版，第 4--6 章公式符号已完成学术化；第 1、2、3、5、6 章 canonical 已完成 TMR8637、SK2301、“新息”及关键概念顺序规范化；第 5.1 节已从证据边界概述重写为仿真实施架构、单次闭环生命周期、多场景跑批组织与评价口径；UA-MPC、ES-EKF、DLIA、LOS、组合导航结构和声磁接力的引用归属已按“本文方法—理论基础/启发”分离，LaTeX 正文中的插入式双破折号已清零；TMR8637 三张随附资料已完成原图归档、出版裁剪和证据回填，编号 6# 模组报告核验为 200 pT/√Hz @ 1 Hz、约 20--30 pT/√Hz @ 50 Hz，完整测量链仍待实测；论文联合构建为 169 页 A4。
+> 当前 LaTeX 状态（2026-08-13）：附录 A 已完成学术化重组，连续结果图已完成紧凑排版，第 4--6 章公式符号已完成学术化；第 1、2、3、5、6 章 canonical 已完成 TMR8637、SK2301、“新息”及关键概念顺序规范化；第 5.1 节已从证据边界概述重写为仿真实施架构、单次闭环生命周期、多场景跑批组织与评价口径；UA-MPC、ES-EKF、DLIA、LOS、组合导航结构和声磁接力的引用归属已按“本文方法—理论基础/启发”分离，LaTeX 正文中的插入式双破折号已清零；TMR8637 随附资料已完成原图归档、参数拆表和曲线裁剪，编号 6# 模组报告核验为 200 pT/√Hz @ 1 Hz、约 20--30 pT/√Hz @ 50 Hz，完整测量链仍待实测；论文联合构建为 179 页 A4。
 > 维护边界：第 1–6 章继续由 canonical Markdown 确定性生成；`thuthesis/data/auv-appendix-a.tex` 改为人工维护的学术出版视图，不再参与 Markdown→LaTeX 生成和新鲜度门禁。
 > 验收记录：[附录A_LaTeX学术化重组验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/附录A_LaTeX学术化重组验收_20260808.md)。
 > 图页验收：[连续结果图与正文共存排版验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/连续结果图与正文共存排版验收_20260808.md)。
 > 符号验收：[第三章后LaTeX公式符号学术化验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/第三章后LaTeX公式符号学术化验收_20260808.md)。
-> 传感器与概念验收：[TMR8637规范化与概念顺序审计验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/TMR8637规范化与概念顺序审计验收_20260808.md)；随附资料及 50 Hz 噪声谱已核验，2026-08-11 以平整扫描件替换旧翻拍原图、精确裁剪去水印/个人信息并**舍弃接线端子图**（图 2-5=三轴报告、图 2-6=噪声谱），去扭曲/裁剪参数、原图、裁剪图与哈希见 [tmr8637_test_report/_SOURCE.md](file:///Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/tmr8637_test_report/_SOURCE.md)。
+> 传感器与概念验收：[TMR8637规范化与概念顺序审计验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/TMR8637规范化与概念顺序审计验收_20260808.md)；随附资料及 50 Hz 噪声谱已核验，2026-08-11 以平整扫描件替换旧翻拍原图并舍弃接线端子图；2026-08-13 将三轴性能参数独立排为表 2.10，出版图只保留电压-磁场传输曲线和两幅噪声特性曲线。当前权威 PDF 因前置新增主动横切图，TMR 曲线顺延为图 2.6/2.7；裁剪参数、原图、出版图与哈希见 [tmr8637_test_report/_SOURCE.md](file:///Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/tmr8637_test_report/_SOURCE.md)。
 > 第 5.1 节验收：[第五章5.1仿真实施架构重写验收_20260808.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/第五章5.1仿真实施架构重写验收_20260808.md)。
 
 ## 0. 一句话目标（Prime Directive）

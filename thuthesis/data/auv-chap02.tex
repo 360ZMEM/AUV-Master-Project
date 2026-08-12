@@ -360,6 +360,14 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 \textbf{模型结论}：在远场偶极子近似、匀速直线横切和包络稳定等假设成立时，电缆垂直距离 \(z\) 等于空间半高全宽 \(W_x\) 的一半。幅值尺度项 \(\mu_0m_{eq}/(2\pi)\) 在半峰值方程中被消去，因此该几何关系不依赖电缆电流、铠装衰减率和磁偶极矩的绝对幅值；再结合高度计读数 \(h_{alt}\)，可得埋深 \(d=z-h_{alt}\)。这赋予之字形测线以明确的理论意义：横切机动用于形成可观测的 FWHM 几何约束。实际精度仍受横切速度、交角、包络拟合和背景噪声影响，不能在台架或海试前预先宣称达到厘米级。
 
+上述几何关系的直观含义如图~\ref{fig:ch03-active-crossing} 所示。AUV 以横切角 \(\theta\) 反复穿越电缆，每次穿越在真值电缆上留下一个峰值观测点：峰值时刻定位横向中心线 \(e=0\)，半高全宽 \(W_x\) 反演垂直距离 \(z\)，一次横切即同时给出横向与垂直两类几何观测；多次穿越的峰值点再经加权拟合得到局部估计中心线。需要区分的是，这里描绘的是跟踪与重捕阶段的\textbf{局部主动探查}，其目的是在小范围内构造可观测性，而非搜索阶段用于大范围覆盖的之字形测线。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\linewidth,height=\textheight,keepaspectratio,alt={主动横切构造几何可观测性：上图为俯视几何，峰值观测点定位横向中心线，下图为单次横切的模量剖面，峰值定位横向中心、FWHM反演垂直距离}]{architecture/cable_active_crossing_observability.png}
+\caption{主动横切构造几何可观测性：一次横切同时给出横向中心线（峰值时刻 \(e=0\)）与垂直距离（半高全宽 \(W_x=2z\)），对应跟踪/重捕阶段的局部主动探查}\label{fig:ch03-active-crossing}
+\end{figure}
+
 本文进一步以 45 Hz 可控电流、三轴 TMR 与 ArUco 位姿构成联合实验，对直导线模型进行空间复核。共获得 777 个时间对齐观测点；保留三轴幅值、方向与相位的复 I/Q 拟合在自由复尺度下达到 \(R^2=0.8792\)，在固定峰值电流 \(2.6140\text{ A}\) 下达到 \(R^2=0.8711\)。该结果表明，移动单三轴传感器与外部位姿能够形成合成空间阵列，并从连续轨迹中恢复电缆方向、相对位置与同频场分布。实验采用无限长直导线和公共复尺度，因而在本章中用于验证几何建模与可观测性，不把它扩展解释为多芯铠装海缆的绝对埋深标定；对应实测结果见第 5.4 节。
 
 \section{声呐成像几何模型与视觉标定}\label{sec:ch02-2-4}
@@ -572,19 +580,45 @@ TMR8637 的 8 针接口分别给出电源正、负端，电源地（PWR GND）�
 
 隔离供电之上是三通道 24 位数据采集。当前实物接口采用 SK2301 以太网采集模块，按 \(\pm10\text{ V}\) 量程和名义 2000 Hz 采样率读取 TMR8637 的 X/Y/Z 三轴模拟输出，再经 TCP 数据流进入采集与数字信号处理模块。真机诊断显示设备有效采样率可能低于名义值，因此 2000 Hz 在本文中属于当前配置值，时间基准和有效采样率仍需闭环标定。
 
-TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 \(20.00\text{ mV}/\mu\text{T}\)，典型测量范围为 \(\pm200\ \mu\text{T}\)，在 \(\pm15\text{ V}\) 供电时最大可达 \(\pm500\ \mu\text{T}\)\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界，但不能不加说明地当作三轴模组整机精度。随实物提供的编号 6\# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/\(\sqrt{\text{Hz}}\)。报告中的三轴传输测试和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
+TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 \(20.00\text{ mV}/\mu\text{T}\)，典型测量范围为 \(\pm200\ \mu\text{T}\)，在 \(\pm15\text{ V}\) 供电时最大可达 \(\pm500\ \mu\text{T}\)\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界，但不能不加说明地当作三轴模组整机精度。随实物提供的编号 6\# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/\(\sqrt{\text{Hz}}\)。报告中的三轴性能参数汇总见表~\ref{tab:ch02-tmr8637-test-data}，电压-磁场传输特性和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4000}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2000}}@{}}
+\caption{编号 6\# TMR8637 模组三轴性能参数汇总（随附测试报告）}\label{tab:ch02-tmr8637-test-data}\tabularnewline
+\toprule\noalign{}
+性能参数 & X 轴 & Y 轴 & Z 轴 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+性能参数 & X 轴 & Y 轴 & Z 轴 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+测量范围/\(\mu\text{T}\) & \(-200\sim200\) & \(-200\sim200\) & \(-200\sim200\) \\
+灵敏度/（mV/\(\mu\text{T}\)） & 20.02 & 19.98 & 19.96 \\
+零偏/mV & 96.76 & -3.79 & 14.20 \\
+峰峰输出/mV & 8003.97 & 7986.81 & 7983.95 \\
+磁滞/\(\mu\text{T}\) & 0.05 & 0.10 & 0.31 \\
+非线性/\%FS & 0.010 & 0.038 & 0.013 \\
+1 Hz 电压噪声/（nV/\(\sqrt{\mathrm{Hz}}\)） & 6000 & 6000 & 6000 \\
+1 Hz 磁场噪声/（pT/\(\sqrt{\mathrm{Hz}}\)） & 200 & 200 & 200 \\
+\end{longtable}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={编号 6\# TMR8637 模组三轴测试汇总与电压-磁场传输曲线（随附纸质测试报告）}]{hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg}
-\caption{编号 6\# TMR8637 模组三轴测试汇总与电压-磁场传输曲线（随附纸质测试报告）}\label{fig:ch02-tmr8637-axis-report}
+\includegraphics[width=0.78\linewidth,height=\textheight,keepaspectratio,alt={编号 6\# TMR8637 模组三轴电压-磁场传输特性曲线}]{hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg}
+\caption{编号 6\# TMR8637 模组三轴电压-磁场传输特性曲线（随附测试报告）}\label{fig:ch02-tmr8637-axis-report}
 \end{figure}
 \FloatBarrier
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={编号 6\# TMR8637 模组三轴电压噪声与磁场噪声谱密度曲线（50 Hz 处约为 20--30 pT/\textbackslash sqrt\{\textbackslash mathrm\{Hz\}\}）}]{hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg}
-\caption{编号 6\# TMR8637 模组三轴电压噪声与磁场噪声谱密度曲线（50 Hz 处约为 20--30 pT/\(\sqrt{\mathrm{Hz}}\)）}\label{fig:ch02-tmr8637-noise-psd}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={编号 6\# TMR8637 模组三轴电压噪声与磁场噪声谱密度特性曲线}]{hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg}
+\caption{编号 6\# TMR8637 模组三轴电压噪声与磁场噪声谱密度特性曲线（50 Hz 处约为 20--30 pT/\(\sqrt{\mathrm{Hz}}\)）}\label{fig:ch02-tmr8637-noise-psd}
 \end{figure}
 \FloatBarrier
 

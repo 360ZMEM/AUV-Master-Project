@@ -14,26 +14,26 @@
 
 | 文件 | 尺寸 | SHA-256 | 内容 |
 |---|---|---|---|
-| `source_02_axis_report_scan.jpg` | 1474×2048 | `261c538776a78b4af873d26b4d55687afeea8eb9c9b307bf828d6b753befdbce` | 编号 6# 模组三轴测试汇总与电压-磁场传输曲线 |
+| `source_02_axis_report_scan.jpg` | 1474×2048 | `261c538776a78b4af873d26b4d55687afeea8eb9c9b307bf828d6b753befdbce` | 编号 6# 模组三轴性能参数汇总与电压-磁场传输曲线 |
 | `source_03_noise_psd_scan.jpg` | 1346×2048 | `859818e3b9a5f1fe84ecce6935aa921413f9892641c33302c245405af0480559` | 三轴电压噪声谱、磁场噪声谱及引脚定义 |
 
 ## 2. 出版裁剪
 
-两张扫描件本身为平整白底扫描（Hough 检测倾斜角中位数 ≈ 0.000°，背景亮度 p50=255），因此无需透视校正或去背景，仅执行矩形裁剪：三轴报告图裁去四周留白与左缘装订孔痕；噪声谱图裁去左缘边痕，并去除页面下方的联系人/电话/时间等个人信息栏与相机水印，只保留噪声曲线、说明文字与引脚定义表。裁剪未重绘曲线、修改像素值或人工增强数据。
+两张扫描件本身为平整白底扫描（Hough 检测倾斜角中位数 ≈ 0.000°，背景亮度 p50=255），因此无需透视校正或去背景。2026-08-13 按论文图表职责重新裁剪：三轴性能参数从扫描件转录为正文表格，图 2-5 只保留电压-磁场传输特性曲线；图 2-6 只保留电压噪声与磁场噪声两幅特性曲线，不再包含引脚定义。裁剪未重绘曲线、修改像素值或人工增强数据。
 
 裁剪参数（`x0, y0, x1, y1` 像素矩形，OpenCV 切片）：
 
 ```text
-source_02_axis_report_scan.jpg  ->  tmr8637_axis_calibration_report.jpg   crop (95, 185, 1365, 1615)  -> 1270×1430
-source_03_noise_psd_scan.jpg    ->  tmr8637_noise_psd_report.jpg          crop (10, 155, 1295, 1345)  -> 1285×1190
+source_02_axis_report_scan.jpg  ->  tmr8637_axis_calibration_report.jpg   crop (275, 850, 1220, 1470)  -> 945×620
+source_03_noise_psd_scan.jpg    ->  tmr8637_noise_psd_report.jpg          crop (50, 240, 1295, 710)    -> 1245×470
 ```
 
 出版裁剪文件 SHA-256：
 
 | 文件 | SHA-256 |
 |---|---|
-| `tmr8637_axis_calibration_report.jpg` | `7f546ea0495e6fc6c214a1f46d0ab3c89f110e94279a458ec786a09a5f4e56e2` |
-| `tmr8637_noise_psd_report.jpg` | `c73b1d9d276204eafce0ce9784596bc1c9ae10fc86a20791b5ec5949bbd2536a` |
+| `tmr8637_axis_calibration_report.jpg` | `34a405fcdbe7ce8aba71c928eac5d1029209c8d8708de1c4cb6195670f615c1f` |
+| `tmr8637_noise_psd_report.jpg` | `ca5695fe2e20dc02255fc6b390ce5f2fbf1ace321818acf71084b60d025e5e59` |
 
 ## 3. 可直接读取的报告数据
 

@@ -7,11 +7,11 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 文件的路径、字节数与 SHA256；历史实验未记录的 Git commit 不用当前 commit
 冒充，而是保留为 provenance gap。
 
-- 生成时间（UTC）：`2026-08-10T15:14:39.682492+00:00`
-- 当前仓库 commit：`46fc798d42eeec621417affb526dab86978f7d2c`
+- 生成时间（UTC）：`2026-08-12T16:25:23.952771+00:00`
+- 当前仓库 commit：`6e91f369ad5ec77dcdf937bc836b807fdf6deef7`
 - 当前工作树状态：`not_evaluated`
-- Catalog SHA256：`aedbbef3a161669eba26ab0c05f3fb72a6da60fc6e783f2238b916cf491d82b8`
-- JSON SHA256：`8dac7871470f1cf55da349f93aaf681ed1cd108699ffbb6fc6e16e2c7974aeaa`
+- Catalog SHA256：`4727a59689ef3cca799b26e81c3e1d5efda7605b046a6e44ccb44605a1fb16c1`
+- JSON SHA256：`8ea94be1b7d376f5cd03307f5cc7c0635f901af4c35ba69691c40a9f824e9215`
 
 ## 2. 证据等级
 
@@ -26,7 +26,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 | ID | 证据 | 数据层 | 等级 | 状态 | 样本范围 | 文件 | 原始输入 | 必需项 |
 |---|---|---|---:|---|---|---:|---:|---:|
-| BUILD-R00 | ThuThesis 论文构建基线 | document_build | A | complete | 192 页 A4 PDF，90 条 Biber 记录 | 15/15 | 0/0 | 完整 |
+| BUILD-R00 | ThuThesis 论文构建基线 | document_build | A | complete | 180 页 A4 PDF，47 图，63 表，90 条 Biber 记录（R30 写作审计 + AUV-Master-Mag 电缆算法内容迁移后） | 15/15 | 0/0 | 完整 |
+| MAG-CABLE-ALGORITHM-BOUNDARY | 专用磁探测仓库电缆探测算法级边界与迁移图 | algorithm_simulation | C | complete_with_boundaries | 专用电缆跟踪算法（AUV-Master-Mag，审计基线 commit 12e1884b59737dbe14e83c825b6cea9bb3c7a4bb）；确定性单次纯仿真复现（n=1）；覆盖先验轻/中/重档、稀疏/中断声呐、30--120 m 曲率、留一法消融、50/70 m 跨车道压力、20--36° 之字形埋深调优等多场景离线扫描 | 27/27 | 0/0 | 完整 |
 | MAG-BG-45 | TMR/SK2301 45 Hz 短时背景记录 | sensor_hardware_raw | B | partial | 2000 Hz，7839 样本，3.9195 s，三轴 | 8/8 | 1/1 | 完整 |
 | MAG-JOINT-45 | 45 Hz 电缆、TMR 与 ArUco 联合拟合 | sensor_hardware_analysis | B | complete_with_boundaries | 106821 ADC 样本，832 位姿记录，777 对齐点 | 43/43 | 2/2 | 完整 |
 | MAG-ADC-ENOB-CH4 | SK2301 CH4 短接噪声、ENOB 与 45 Hz 等效磁噪声 | adc_hardware_raw | B | complete_with_boundaries | CH4 短接；2000/4000/8000/16000 Hz 各 10 s；最高 160000 样本 | 10/10 | 1/1 | 完整 |
@@ -64,11 +65,20 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### BUILD-R00 ThuThesis 论文构建基线
 
-- Artifact digest：`36280d13d099bc8cfb91339279d5e49a2cf50147dcf4b6ddb69eca154c65a3cb`
-- 可访问字节数：`16331639`
-- 可支持结论：Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF；最终日志不存在 undefined command/citation/reference
-- 不可外推：构建通过不等于占位符、论证或排版质量已经最终验收
+- Artifact digest：`e21ebf4cf3300bae2ad3b8ead42d385ee90ff603aba58d4dd7298e03c2d57342`
+- 可访问字节数：`13549150`
+- 可支持结论：Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF；最终日志不存在 undefined command/citation/reference；R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8；AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论
+- 不可外推：构建通过不等于占位符、论证或排版质量已经最终验收；写作审计只压缩了主文叙事与图表数量，未新增、删除或改判任何实验证据；被移出主文的图对应的原始实验证据仍以本清单其余条目为准
 - 主要文件：`thuthesis/auv-thesis.pdf`
+
+### MAG-CABLE-ALGORITHM-BOUNDARY 专用磁探测仓库电缆探测算法级边界与迁移图
+
+- Artifact digest：`d06ffaab3a84285562cbcfd66c3979cb57975b3e512fcc683bb5e753ada4b389`
+- 可访问字节数：`1194305`
+- 可支持结论：关闭在线先验修正会在重档错位先验下引发横偏累积（漂移至 30--40 m）并在约 2119 s 触发 +57.5 m 跨车道投影跳变；map-frame 投影连续与先验物理配准是两个不同机制：关闭在线修正时全局路由跳变 686.4/724.1 m 但地图系投影跳变仍约 0.2 m，基线累计约 7.53 m 平移与约 -3.18 度旋转把错位地图拉回真实电缆；当前场景中在线先验修正与自适应之字形是关闭即失败的载荷机制，进度窗口投影与磁路径观测在该场景下为冗余安全网；之字形主动激励在调优后显示进入 0.15 m 参考线的算法级潜力：1.0/1.5/2.0 m 埋深在 36/32/25 度摆幅下达 0.124/0.079/0.123 m 单周期平均误差；30--120 m 曲率扫描未击穿曲率边界，30 m 为环境硬下限、瓶颈接近电缆几何物理下限而非固定曲率半径
+- 不可外推：全部是专用算法仓库的单次确定性纯仿真（n=1），不等于主仓 ROS/PVS 端到端、多种子或实物结论；30 m 是扫描下限而非实际失效阈值；埋深达标点是参数扫描最优点，不代表固定幅值全场景达标；幅值需按埋深/信号状态自适应；无声呐初始捕获仍失败，是可观测性负边界；综合健康分是任务级复合指标，机制判断需同时引用原始横偏、完成度、跳变和通过状态；results/ 在子仓库内不受 Git 跟踪、docs/figure 相对提交为 modified，故本 artifact 以各文件当前 SHA256 而非子仓库 commit 唯一确定
+- Provenance gaps：随机种子未透传，当前 n=1，无法给出多种子统计分布；真值字段仅允许离线评价，不进入在线感知管线；算法级边界尚未在主仓 ROS/PVS 端到端或真机链路上复核
+- 主要文件：`AUV-Master-Mag/results/20260628_dr_ins_boundary/critical_sweep_after_estimator_guard.csv`；`AUV-Master-Mag/results/20260630_ablation/ablation_sweep.csv`；`AUV-Master-Mag/results/20260630_radius_boundary/radius_sweep.csv`；`AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_50.csv`；`AUV-Master-Mag/results/20260705_lane_shortcut/lane_shortcut_prior_alignment_70.csv`；`AUV-Master-Mag/results/20260705_radius_causality/radius_causality.csv`；`AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_sweep.csv`；`AUV-Master-Mag/results/20260705_zigzag_burial/zigzag_burial_tuning_depth2.csv`；另有 2 项见 JSON
 
 ### MAG-BG-45 TMR/SK2301 45 Hz 短时背景记录
 
@@ -99,8 +109,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### MAG-R08-HANDOFF TMR/SK2301 M0/M1/M4 最小采集 handoff
 
-- Artifact digest：`9dbfd7de89532f0b3c9a241dbdf83786201f4adb8f10debf7ef26f47c2e3aa14`
-- 可访问字节数：`51854`
+- Artifact digest：`279a2d799d24bb87febdba4b8f152ad800c323ae5e29ac3c2c7f82ecf517e025`
+- 可访问字节数：`52354`
 - 可支持结论：单命令可编排 M0/M1/M4 并生成统一返回 bundle；新 NPZ 契约强制保存 45 Hz 频率来源、硬件状态、有效样本和失败事件
 - 不可外推：dry-run 的 valid_run_count=0、contract_complete=false；不能用于声称 TMR/SK2301 噪声、检测概率或 0.05 nT 指标已验证
 - Provenance gaps：真实 R24 需在连接 TMR/SK2301 的现场执行并返回完整 bundle

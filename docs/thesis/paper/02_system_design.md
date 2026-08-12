@@ -318,15 +318,28 @@ TMR8637 的 8 针接口分别给出电源正、负端，电源地（PWR GND）�
 
 隔离供电之上是三通道 24 位数据采集。当前实物接口采用 SK2301 以太网采集模块，按 $\pm10\text{ V}$ 量程和名义 2000 Hz 采样率读取 TMR8637 的 X/Y/Z 三轴模拟输出，再经 TCP 数据流进入采集与数字信号处理模块。真机诊断显示设备有效采样率可能低于名义值，因此 2000 Hz 在本文中属于当前配置值，时间基准和有效采样率仍需闭环标定。
 
-TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 $20.00\text{ mV}/\mu\text{T}$，典型测量范围为 $\pm200\ \mu\text{T}$，在 $\pm15\text{ V}$ 供电时最大可达 $\pm500\ \mu\text{T}$\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界，但不能不加说明地当作三轴模组整机精度。随实物提供的编号 6# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/$\mu$T，在 $\pm200\ \mu\text{T}$ 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/$\sqrt{\text{Hz}}$。报告中的三轴传输测试和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
+TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 $20.00\text{ mV}/\mu\text{T}$，典型测量范围为 $\pm200\ \mu\text{T}$，在 $\pm15\text{ V}$ 供电时最大可达 $\pm500\ \mu\text{T}$\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界，但不能不加说明地当作三轴模组整机精度。随实物提供的编号 6# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/$\mu$T，在 $\pm200\ \mu\text{T}$ 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/$\sqrt{\text{Hz}}$。报告中的三轴性能参数汇总见表~\ref{tab:ch02-tmr8637-test-data}，电压-磁场传输特性和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
 
-![TMR8637 三轴测试汇总与传输曲线](../figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg)
+| 性能参数 | X 轴 | Y 轴 | Z 轴 |
+|---|---:|---:|---:|
+| 测量范围/μT | -200 至 200 | -200 至 200 | -200 至 200 |
+| 灵敏度/(mV/μT) | 20.02 | 19.98 | 19.96 |
+| 零偏/mV | 96.76 | -3.79 | 14.20 |
+| 峰峰输出/mV | 8003.97 | 7986.81 | 7983.95 |
+| 磁滞/μT | 0.05 | 0.10 | 0.31 |
+| 非线性/%FS | 0.010 | 0.038 | 0.013 |
+| 1 Hz 电压噪声/(nV/$\sqrt{\text{Hz}}$) | 6000 | 6000 | 6000 |
+| 1 Hz 磁场噪声/(pT/$\sqrt{\text{Hz}}$) | 200 | 200 | 200 |
 
-**图 2-5　编号 6# TMR8637 模组三轴测试汇总与电压-磁场传输曲线（随附纸质测试报告）** \label{fig:ch02-tmr8637-axis-report}
+**表 2-10　编号 6# TMR8637 模组三轴性能参数汇总（随附测试报告）** \label{tab:ch02-tmr8637-test-data}
+
+![TMR8637 三轴电压-磁场传输特性曲线](../figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg)
+
+**图 2-5　编号 6# TMR8637 模组三轴电压-磁场传输特性曲线（随附测试报告）** \label{fig:ch02-tmr8637-axis-report}
 
 ![TMR8637 本底噪声谱密度](../figures/hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg)
 
-**图 2-6　编号 6# TMR8637 模组三轴电压噪声与磁场噪声谱密度曲线（50 Hz 处约为 20–30 pT/$\sqrt{\mathrm{Hz}}$）** \label{fig:ch02-tmr8637-noise-psd}
+**图 2-6　编号 6# TMR8637 模组三轴电压噪声与磁场噪声谱密度特性曲线（50 Hz 处约为 20–30 pT/$\sqrt{\mathrm{Hz}}$）** \label{fig:ch02-tmr8637-noise-psd}
 
 设 ADC 双极性满量程跨度为 $V_{\mathrm{FS}}$、有效位数为 $N$、传感器电压灵敏度为 $S_V$，则只考虑量化时的等效磁场步长为
 
