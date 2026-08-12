@@ -1,0 +1,17 @@
+/**:
+  ros__parameters:
+    magnetic_block_topic: /auv/sensors/magnetic_block
+    sonar_observation_topic: /auv/sensors/cable_sonar_observation
+    target_frequency_hz: 45.0
+    minimum_target_cycles: 8.0
+    maximum_age_s: 0.5
+    cross_track_tolerance_m: 2.0
+
+    # Empty means probabilities remain NaN and cannot drive autonomy.
+    magnetic_calibration_file: ""
+    sonar_calibration_file: ""
+
+    # Disabled keeps magnetic detection active but cross-track unobservable.
+    magnetic_geometry_context_enabled: false
+    cable_heading_rad: 0.0
+    vertical_separation_m: 0.0

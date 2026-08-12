@@ -20,6 +20,8 @@
 | 9 | [09_dlt1278_digital_twin_outputs.md](09_dlt1278_digital_twin_outputs.md) | DLT1278 风格数字孪生产物、评分字段和导出物 |
 | 10 | [10_sim_vs_real_link_and_wrapper_map.md](10_sim_vs_real_link_and_wrapper_map.md) | 仿真 / 真机链路区别、配置分层、fan-out 用法与 wrapper 接入建议 |
 | 11 | [11_sensor_wrapper_ip_coordination.md](11_sensor_wrapper_ip_coordination.md) | Jetson 侧多个真实传感器 wrapper 的 IP/网段规划、主仓 override 规则与故障定位顺序 |
+| 12 | [12_pc104_timing_port_forward_and_fanout.md](12_pc104_timing_port_forward_and_fanout.md) | PC104/AMD 物理 UDP timing 的宿主机端口转发与 fan-out 取舍 |
+| 13 | [13_physical_handoff_next_plan.md](13_physical_handoff_next_plan.md) | 实物 handoff 下一步优先级、01-05 阶段映射与论文未验证边界 |
 
 ---
 
@@ -86,7 +88,7 @@ bash scripts/real_deployment/kill_switch.sh --target mock
 ## 与既有文档的关系
 
 - **明线速记**: [user-guide/08_real_hardware_sop.md](../user-guide/08_real_hardware_sop.md) — 6 步表格，5 分钟读完
-- **本目录（详尽路线图）**: 9 篇 SOP，每篇 < 200 行，逐阶段照单执行
+- **本目录（详尽路线图）**: 分阶段 SOP 与专项拓扑决策文档，逐项照单执行
 - **过程日志**: [docs/experiment/real_deployment/](../experiment/real_deployment/) — 每次跑出来的命令实录与发现
 - **配置参数地图**: [user-guide/09_config_reference.md](../user-guide/09_config_reference.md)
 

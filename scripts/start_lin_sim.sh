@@ -234,6 +234,7 @@ case "$MODE" in
       fi
       pkill -KILL -f "run_zenoh_bridge.py" >/dev/null 2>&1 || true
       pkill -KILL -f "sim_holoocean/apps/main.py" >/dev/null 2>&1 || true
+      pkill -KILL -f "python3 main.py --config" >/dev/null 2>&1 || true
     }
     trap sim_cleanup EXIT
     trap 'echo "[AUV] received SIGINT, treating as manual termination."; sim_cleanup; exit 0' INT

@@ -7,7 +7,7 @@ from pathlib import Path
 
 def generate_nodes(context, *args, **kwargs):
     params = LaunchConfiguration('params_file')
-    feature_flags = str(Path(__file__).resolve().parents[1] / 'config' / 'feature_flags.yaml')
+    feature_flags = LaunchConfiguration('feature_flags_file')
     
     minimal = context.launch_configurations.get('minimal', 'false').lower() == 'true'
     passive_mode = context.launch_configurations.get('passive_mode', 'false').lower() == 'true'
@@ -18,7 +18,13 @@ def generate_nodes(context, *args, **kwargs):
                     {'main_motor_rpm_scale': LaunchConfiguration('main_motor_rpm_scale')}]
     
     controller_params = [{'params_file': params}, feature_flags,
-                        {'bypass_ekf': LaunchConfiguration('bypass_ekf')}]
+                        {'bypass_ekf': LaunchConfiguration('bypass_ekf')},
+                        {'heading_mode': LaunchConfiguration('heading_mode')},
+                        {
+                            'quality_control.enable': LaunchConfiguration('enable_quality_control'),
+                            'quality_control.accept_shadow': LaunchConfiguration('quality_control_accept_shadow'),
+                            'quality_control.allowed_calibration_domain': LaunchConfiguration('quality_control_calibration_domain'),
+                        }]
     
     decision_params = [{'params_file': params}, feature_flags, {
         'confidence_threshold': 0.7,
@@ -144,6 +150,24 @@ def generate_nodes(context, *args, **kwargs):
         ],
     )
 
+    perception_quality = Node(
+        package='auv_decision_ros',
+        executable='perception_quality_node',
+        name='auv_perception_quality_node',
+        condition=IfCondition(LaunchConfiguration('enable_perception_quality_shadow')),
+        output='screen',
+        parameters=[LaunchConfiguration('perception_quality_params_file')],
+    )
+
+    tracking_authority = Node(
+        package='auv_decision_ros',
+        executable='tracking_authority_node',
+        name='auv_tracking_authority_shadow_node',
+        condition=IfCondition(LaunchConfiguration('enable_tracking_authority_shadow')),
+        output='screen',
+        parameters=[LaunchConfiguration('tracking_authority_params_file')],
+    )
+
     mock_magnetic_wrapper = Node(
         package='auv_decision_ros',
         executable='magnetic_sensor_wrapper_node',
@@ -212,6 +236,8 @@ def generate_nodes(context, *args, **kwargs):
         TimerAction(period=2.0, actions=[localization]),
         TimerAction(period=3.0, actions=[viz_bridge]),
         TimerAction(period=3.5, actions=[sensor_supervisor]),
+        TimerAction(period=3.6, actions=[perception_quality]),
+        TimerAction(period=3.65, actions=[tracking_authority]),
         TimerAction(period=3.7, actions=[real_magnetic_wrapper]),
         TimerAction(period=3.8, actions=[mock_magnetic_wrapper]),
         TimerAction(period=3.9, actions=[mock_forward_sonar_wrapper]),
@@ -229,6 +255,12 @@ def generate_launch_description() -> LaunchDescription:
         'params_file',
         default_value=default_params,
         description='Unified params file path, relative to brain_linux workspace',
+    )
+
+    feature_flags_file_arg = DeclareLaunchArgument(
+        'feature_flags_file',
+        default_value=feature_flags,
+        description='Per-run feature flags parameter file path',
     )
 
     minimal_arg = DeclareLaunchArgument(
@@ -273,6 +305,30 @@ def generate_launch_description() -> LaunchDescription:
         description='Enable controller node',
     )
 
+    heading_mode_arg = DeclareLaunchArgument(
+        'heading_mode',
+        default_value='CONSTANT',
+        description='Controller heading source; use SETPOINT for cable-tracking full-flow runs',
+    )
+
+    enable_quality_control_arg = DeclareLaunchArgument(
+        'enable_quality_control',
+        default_value='false',
+        description='Enable P6 source-specific conservative control mapping',
+    )
+
+    quality_control_accept_shadow_arg = DeclareLaunchArgument(
+        'quality_control_accept_shadow',
+        default_value='false',
+        description='Allow shadow authority to drive simulation-only control',
+    )
+
+    quality_control_calibration_domain_arg = DeclareLaunchArgument(
+        'quality_control_calibration_domain',
+        default_value='physical',
+        description='Required calibration domain for P6 mapping',
+    )
+
     enable_decision_arg = DeclareLaunchArgument(
         'enable_decision',
         default_value='true',
@@ -295,6 +351,30 @@ def generate_launch_description() -> LaunchDescription:
         'sensor_supervisor_config',
         default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'sensor_supervisor.yaml'),
         description='YAML config file for sensor_supervisor_node',
+    )
+
+    enable_perception_quality_shadow_arg = DeclareLaunchArgument(
+        'enable_perception_quality_shadow',
+        default_value='true',
+        description='Publish source-specific confidence in shadow mode only',
+    )
+
+    perception_quality_params_file_arg = DeclareLaunchArgument(
+        'perception_quality_params_file',
+        default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'perception_quality_shadow.yaml'),
+        description='ROS parameter file for source-specific perception quality',
+    )
+
+    enable_tracking_authority_shadow_arg = DeclareLaunchArgument(
+        'enable_tracking_authority_shadow',
+        default_value='true',
+        description='Enable P5 cable authority in mandatory shadow mode',
+    )
+
+    tracking_authority_params_file_arg = DeclareLaunchArgument(
+        'tracking_authority_params_file',
+        default_value=str(Path(__file__).resolve().parents[1] / 'config' / 'tracking_authority_shadow.yaml'),
+        description='ROS parameter file for P5 tracking authority shadow',
     )
 
     enable_mock_magnetic_wrapper_arg = DeclareLaunchArgument(
@@ -618,6 +698,7 @@ def generate_launch_description() -> LaunchDescription:
     return LaunchDescription(
         [
             params_arg,
+            feature_flags_file_arg,
             minimal_arg,
             start_ros2dds_arg,
             enable_bridge_arg,
@@ -625,10 +706,18 @@ def generate_launch_description() -> LaunchDescription:
             bridge_backend_arg,
             enable_localization_arg,
             enable_controller_arg,
+            heading_mode_arg,
+            enable_quality_control_arg,
+            quality_control_accept_shadow_arg,
+            quality_control_calibration_domain_arg,
             enable_decision_arg,
             enable_cable_tracking_arg,
             enable_sensor_supervisor_arg,
             sensor_supervisor_config_arg,
+            enable_perception_quality_shadow_arg,
+            perception_quality_params_file_arg,
+            enable_tracking_authority_shadow_arg,
+            tracking_authority_params_file_arg,
             enable_real_magnetic_wrapper_arg,
             magnetic_wrapper_params_file_arg,
             enable_mock_magnetic_wrapper_arg,

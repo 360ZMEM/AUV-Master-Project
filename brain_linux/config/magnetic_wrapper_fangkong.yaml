@@ -1,8 +1,10 @@
 /**:
   ros__parameters:
     output_topic: /auv/sensors/magnetic
+    block_output_topic: /auv/sensors/magnetic_block
     frame_id: mag_link
     publish_rate_hz: 50.0
+    block_publish_rate_hz: 5.0
     input_unit: tesla
     retry_interval_s: 5.0
 

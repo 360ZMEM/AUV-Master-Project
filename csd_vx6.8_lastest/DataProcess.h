@@ -473,6 +473,9 @@ extern _From_IMU IMU_Prase_Data;
 
 extern void Pack_Data_To_UI12(_To_UI12 *temp);
 extern void Pack_Data_To_UI3(_ToUI3 *temp);
+extern void PC104_Timing_Record_WIFI_Downlink(u8 frame_number);
+extern void PC104_Timing_Echo_Test(int frame_number);
+extern void PC104_Timing_Echo_Clear(void);
 
 extern void Pack_Data_To_PSD(_ToPSD *temp);
 extern void Remote_Assignment(_To_MCUFD *temp);

@@ -29,6 +29,7 @@ from .behaviors import (
 )
 from .decorators import AnomalySpeedLimiter
 from .decorators import SeabedSafetyLimiter
+from .decision_filters import ConfidenceHysteresisGate
 from .models import SensorStatusData
 
 
@@ -41,9 +42,19 @@ class DecisionTreeEngine:
 
     MISSION_TARGET_KEY = 'mission_target'
 
-    def __init__(self, confidence_threshold: float = 0.7) -> None:
+    def __init__(
+        self,
+        confidence_threshold: float = 0.7,
+        confidence_hysteresis: float = 0.0,
+        confidence_debounce_ticks: int = 1,
+    ) -> None:
         """初始化行为树、黑板缓存和冷启动默认状态。"""
         self.confidence_threshold = confidence_threshold
+        self.confidence_gate = ConfidenceHysteresisGate(
+            threshold=confidence_threshold,
+            hysteresis=confidence_hysteresis,
+            debounce_ticks=confidence_debounce_ticks,
+        )
         self.root = self._build_tree(confidence_threshold)
         self.tree = py_trees.trees.BehaviourTree(self.root)
 
@@ -107,7 +118,10 @@ class DecisionTreeEngine:
         # L3: 主任务流（原有逻辑）
         precise_sequence = py_trees.composites.Sequence(name='PreciseInspectionSequence', memory=False)
         precise_sequence.add_children([
-            ConfidenceAboveThreshold(threshold=confidence_threshold),
+            ConfidenceAboveThreshold(
+                threshold=confidence_threshold,
+                gate=self.confidence_gate,
+            ),
             AnomalySpeedLimiter(ParallelTracking(), slow_down_factor=0.4),
         ])
 

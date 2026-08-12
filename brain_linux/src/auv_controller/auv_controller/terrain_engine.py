@@ -6,7 +6,6 @@
 结合期望的离底高度和动态斜率约束输出下发给 AMD 的深度指令。
 """
 
-import math
 import time
 from collections import deque
 from typing import Tuple
@@ -14,16 +13,44 @@ from typing import Tuple
 from .terrain_perception import BaseTerrainPerception
 
 class TerrainFollower:
-    def __init__(self, lookahead_time_s: float = 2.0, lpf_alpha: float = 0.2):
+    def __init__(
+        self,
+        lookahead_time_s: float = 2.0,
+        lpf_alpha: float = 0.2,
+        min_clearance_m: float = 1.8,
+        cbf_alpha: float = 0.7,
+        cbf_dt_s: float = 0.2,
+        max_descend_rate_mps: float = 0.4,
+        emergency_clearance_m: float = 1.2,
+        emergency_rise_m: float = 2.0,
+        slowdown_clearance_margin_m: float = 1.5,
+        min_depth_m: float = 0.5,
+    ):
         """
         初始化地形跟随引擎。
         
         Args:
             lookahead_time_s (float): 前瞻预测的时间窗口大小（秒）。
             lpf_alpha (float): 目标深度的低通滤波系数 (0.0~1.0)，用于约束俯仰变化率。
+            min_clearance_m (float): CBF 要求保持的最小离底高度。
+            cbf_alpha (float): 离散 CBF 收敛系数，越大越允许接近边界。
+            cbf_dt_s (float): 指令层 CBF 的离散步长。
+            max_descend_rate_mps (float): 安全过滤后的最大下潜速率。
+            emergency_clearance_m (float): 低于该净空时强制上浮。
+            emergency_rise_m (float): 紧急上浮时目标深度相对当前深度的上浮量。
+            slowdown_clearance_margin_m (float): CBF barrier 低于该裕度时线性降速。
+            min_depth_m (float): 防冲出水面的最小目标深度。
         """
         self._lookahead_time_s = lookahead_time_s
         self._lpf_alpha = lpf_alpha
+        self._min_clearance_m = max(0.0, float(min_clearance_m))
+        self._cbf_alpha = min(max(float(cbf_alpha), 0.0), 1.0)
+        self._cbf_dt_s = max(1.0e-3, float(cbf_dt_s))
+        self._max_descend_rate_mps = max(0.0, float(max_descend_rate_mps))
+        self._emergency_clearance_m = max(0.0, float(emergency_clearance_m))
+        self._emergency_rise_m = max(0.0, float(emergency_rise_m))
+        self._slowdown_clearance_margin_m = max(1.0e-6, float(slowdown_clearance_margin_m))
+        self._min_depth_m = max(0.0, float(min_depth_m))
         
         # 历史海床深度队列：存储 (timestamp, seafloor_depth)
         self._history_queue: deque[Tuple[float, float]] = deque()
@@ -31,6 +58,95 @@ class TerrainFollower:
         
         self._last_z_target: float = -1.0
         self._first_run = True
+
+    def _apply_depth_cbf(
+        self,
+        *,
+        z_candidate: float,
+        current_depth: float,
+        current_altitude: float,
+        seafloor_now: float,
+        seafloor_future: float,
+    ) -> tuple[float, dict]:
+        """@brief Filter a depth command with a previewed seabed CBF.
+
+        The barrier state is h = seabed_depth - depth - min_clearance.  The
+        command is constrained so the next-step barrier remains above
+        (1 - alpha) h_now, using the more conservative of current and previewed
+        seabed depths.  This is intentionally a guidance-level filter; it does
+        not weaken the downstream MPC/PID constraints.
+        """
+        debug = {
+            "cbf_enabled": True,
+            "cbf_min_clearance_m": self._min_clearance_m,
+            "cbf_alpha": self._cbf_alpha,
+            "cbf_dt_s": self._cbf_dt_s,
+            "cbf_candidate_depth_m": float(z_candidate),
+        }
+        if current_altitude <= 0.01:
+            z_filtered = max(float(z_candidate), self._min_depth_m)
+            debug.update(
+                {
+                    "cbf_active": False,
+                    "cbf_reason": "invalid_altitude",
+                    "cbf_filtered_depth_m": z_filtered,
+                        "cbf_speed_scale": 1.0,
+                }
+            )
+            return z_filtered, debug
+
+        barrier_now = float(current_altitude) - self._min_clearance_m
+        conservative_seafloor = min(float(seafloor_now), float(seafloor_future))
+        preview_barrier = conservative_seafloor - float(current_depth) - self._min_clearance_m
+        barrier_decay_reference = min(
+            max(0.0, barrier_now),
+            self._slowdown_clearance_margin_m,
+        )
+        cbf_limit = (
+            conservative_seafloor
+            - self._min_clearance_m
+            - max(0.0, 1.0 - self._cbf_alpha) * barrier_decay_reference
+        )
+
+        speed_barrier = min(barrier_now, preview_barrier)
+        descend_limit = float(current_depth) + self._max_descend_rate_mps * self._cbf_dt_s
+        descend_rate_limited = speed_barrier < self._slowdown_clearance_margin_m
+        depth_upper = min(cbf_limit, descend_limit) if descend_rate_limited else cbf_limit
+        emergency_active = current_altitude < self._emergency_clearance_m
+        if emergency_active:
+            depth_upper = min(depth_upper, float(current_depth) - self._emergency_rise_m)
+
+        speed_scale = min(
+            1.0,
+            max(0.0, speed_barrier / self._slowdown_clearance_margin_m),
+        )
+        if emergency_active:
+            speed_scale = 0.0
+
+        z_filtered = min(float(z_candidate), depth_upper)
+        z_filtered = max(z_filtered, self._min_depth_m)
+        cbf_active = z_filtered < float(z_candidate) - 1.0e-9
+        debug.update(
+            {
+                "cbf_active": cbf_active,
+                "cbf_reason": (
+                    "emergency_clearance"
+                    if emergency_active
+                    else ("barrier_or_descend_rate" if cbf_active else "inactive")
+                ),
+                "cbf_barrier_now_m": barrier_now,
+                "cbf_preview_barrier_m": preview_barrier,
+                "cbf_barrier_decay_reference_m": barrier_decay_reference,
+                "cbf_conservative_seafloor_depth_m": conservative_seafloor,
+                "cbf_depth_upper_m": depth_upper,
+                "cbf_descend_limit_m": descend_limit,
+                "cbf_descend_rate_limited": descend_rate_limited,
+                "cbf_filtered_depth_m": z_filtered,
+                "cbf_speed_scale": speed_scale,
+                "cbf_slowdown_clearance_margin_m": self._slowdown_clearance_margin_m,
+            }
+        )
+        return z_filtered, debug
 
     def _estimate_slope(self, current_time: float) -> float:
         """
@@ -130,11 +246,13 @@ class TerrainFollower:
             self._first_run = False
             
         z_target = (1.0 - self._lpf_alpha) * self._last_z_target + self._lpf_alpha * z_target_raw
-        
-        # 进一步的俯仰角限制：通过最大深度变化率限制
-        # 如果 z_target 变化过快，可能导致 AUV 产生过大俯仰角。
-        # 这里交由底层的 PID 速度前馈或深度外环控制（外部），
-        # 仅在此维持平滑。
+        z_target, cbf_debug = self._apply_depth_cbf(
+            z_candidate=z_target,
+            current_depth=current_depth,
+            current_altitude=current_altitude,
+            seafloor_now=S_now,
+            seafloor_future=S_future,
+        )
         self._last_z_target = z_target
         
         debug_info = {
@@ -145,5 +263,6 @@ class TerrainFollower:
             "lookahead_z_target": z_target_raw,
             "filtered_z_target": z_target,
         }
+        debug_info.update(cbf_debug)
         
         return z_target, debug_info

@@ -57,6 +57,22 @@
 ]{biblatex}
 \addbibresource{ref/auv-references.bib}
 
+% A DOI is a persistent identifier, not evidence that a formally published
+% journal, conference, or book item is online-only. Keep /OL for entries whose
+% effective BibLaTeX type is online, while preserving DOI and URL output.
+\DeclareFieldFormat{gbtypeflag}{%
+  \nobreak\printtext{[}%
+  \nobreak#1\nobreak
+  \iftoggle{bbx:gbmedium}{%
+    \ifentrytype{online}
+      {\printtext{\texttt{/}OL}}
+      {\iffieldundef{medium}
+         {}
+         {\printtext{\texttt{/}\thefield{medium}}}}%
+  }{}%
+  \printtext{]}%
+}
+
 \graphicspath{{../docs/thesis/figures/}}
 
 \newcommand{\migrationplaceholder}[1]{%

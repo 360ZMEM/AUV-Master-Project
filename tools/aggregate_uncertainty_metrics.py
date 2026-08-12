@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import math
 import subprocess
 import sys
@@ -30,6 +31,14 @@ METRICS = [
     "r_scale_trigger_ratio",
     "p_trace_xy_mean",
     "p_trace_z_mean",
+]
+SOURCE_METRICS = [
+    "nis_mean",
+    "nis_p95",
+    "nis_per_dof_mean",
+    "coverage_95",
+    "upper_exceed_ratio",
+    "r_scale_trigger_ratio",
 ]
 
 
@@ -121,9 +130,60 @@ def read_uncertainty_timeseries(path: Path) -> dict[str, float]:
     }
 
 
+def to_bool(value: object) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes"}
+
+
+def read_nis_event_metrics(path: Path) -> list[dict[str, object]]:
+    if not path.is_file():
+        return []
+    grouped: dict[tuple[str, int], list[dict[str, str]]] = defaultdict(list)
+    for row in read_csv_rows(path):
+        source = str(row.get("source", "")).strip()
+        try:
+            dimension = int(row.get("dimension", "0"))
+        except (TypeError, ValueError):
+            continue
+        if source and dimension > 0:
+            grouped[(source, dimension)].append(row)
+
+    summaries: list[dict[str, object]] = []
+    for (source, dimension), rows in sorted(grouped.items()):
+        nis = finite(to_float(row.get("nis")) for row in rows)
+        nis_per_dof = finite(to_float(row.get("nis_per_dof")) for row in rows)
+        r_scale = finite(to_float(row.get("r_scale_after_update")) for row in rows)
+        summaries.append(
+            {
+                "source": source,
+                "dimension": dimension,
+                "event_count": len(nis),
+                "nis_mean": safe_mean(nis),
+                "nis_p95": safe_p95(nis),
+                "nis_per_dof_mean": safe_mean(nis_per_dof),
+                "coverage_95": (
+                    float(np.mean([to_bool(row.get("in_two_sided_95")) for row in rows]))
+                    if rows
+                    else NAN
+                ),
+                "upper_exceed_ratio": (
+                    float(np.mean([to_bool(row.get("above_upper_95")) for row in rows]))
+                    if rows
+                    else NAN
+                ),
+                "r_scale_trigger_ratio": (
+                    float(np.mean(np.asarray(r_scale) > 1.0 + 1e-6))
+                    if r_scale
+                    else NAN
+                ),
+            }
+        )
+    return summaries
+
+
 def run_uncertainty_tool(mcap: Path, out_dir: Path, nis_window: int, reuse: bool) -> tuple[str, str]:
     csv_path = out_dir / "uncertainty_timeseries.csv"
-    if reuse and csv_path.exists():
+    nis_path = out_dir / "nis_events.csv"
+    if reuse and csv_path.exists() and nis_path.exists():
         return "reused", ""
     out_dir.mkdir(parents=True, exist_ok=True)
     cmd = [
@@ -161,6 +221,7 @@ def main() -> int:
     per_run_root = output_dir / "per_run"
     source_rows = read_csv_rows(args.sweep_results)
     run_rows: list[dict[str, object]] = []
+    nis_source_rows: list[dict[str, object]] = []
 
     for index, source in enumerate(source_rows):
         scenario = source.get("scenario", "")
@@ -205,6 +266,17 @@ def main() -> int:
         row["error"] = error
         row.update(read_uncertainty_timeseries(out_dir / "uncertainty_timeseries.csv") if not error else {metric: NAN for metric in METRICS})
         run_rows.append(row)
+        if not error:
+            for source_metrics in read_nis_event_metrics(out_dir / "nis_events.csv"):
+                nis_source_rows.append(
+                    {
+                        "scenario": scenario,
+                        "seed": seed,
+                        "mpc_mode": mode,
+                        "analysis_dir": str(out_dir),
+                        **source_metrics,
+                    }
+                )
 
     run_fieldnames = [
         "scenario",
@@ -218,6 +290,22 @@ def main() -> int:
         *METRICS,
     ]
     write_csv(output_dir / "per_run_uncertainty_results.csv", run_fieldnames, run_rows)
+
+    nis_source_fieldnames = [
+        "scenario",
+        "seed",
+        "mpc_mode",
+        "analysis_dir",
+        "source",
+        "dimension",
+        "event_count",
+        *SOURCE_METRICS,
+    ]
+    write_csv(
+        output_dir / "per_run_nis_by_source.csv",
+        nis_source_fieldnames,
+        nis_source_rows,
+    )
 
     groups: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
     for row in run_rows:
@@ -244,44 +332,118 @@ def main() -> int:
         summary_fieldnames.extend([f"{metric}_mean", f"{metric}_std", f"{metric}_available_count"])
     write_csv(output_dir / "summary_by_scenario_mode.csv", summary_fieldnames, summary_rows)
 
+    source_groups: dict[
+        tuple[str, str, str, int], list[dict[str, object]]
+    ] = defaultdict(list)
+    for row in nis_source_rows:
+        source_groups[
+            (
+                str(row["scenario"]),
+                str(row["mpc_mode"]),
+                str(row["source"]),
+                int(row["dimension"]),
+            )
+        ].append(row)
+    source_summary_rows: list[dict[str, object]] = []
+    for (scenario, mode, source, dimension), group in sorted(
+        source_groups.items()
+    ):
+        summary: dict[str, object] = {
+            "scenario": scenario,
+            "mpc_mode": mode,
+            "source": source,
+            "dimension": dimension,
+            "run_count": len(group),
+            "event_count": sum(int(row["event_count"]) for row in group),
+        }
+        for metric in SOURCE_METRICS:
+            values = finite_column(group, metric)
+            summary[f"{metric}_mean"] = safe_mean(values)
+            summary[f"{metric}_std"] = safe_stdev(values)
+        source_summary_rows.append(summary)
+    source_summary_fields = [
+        "scenario",
+        "mpc_mode",
+        "source",
+        "dimension",
+        "run_count",
+        "event_count",
+    ]
+    for metric in SOURCE_METRICS:
+        source_summary_fields.extend([f"{metric}_mean", f"{metric}_std"])
+    write_csv(
+        output_dir / "summary_nis_by_scenario_source.csv",
+        source_summary_fields,
+        source_summary_rows,
+    )
+
     report = [
         "# Uncertainty Aggregate Report",
         "",
         f"- Source sweep: `{args.sweep_results}`",
         f"- Output dir: `{output_dir}`",
         "",
-        "| scenario | mode | ok/total | NIS real mean | NIS real p95 | R scale mean | R trigger ratio | Pxy trace mean |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "## Standard NIS by source",
+        "",
+        "| scenario | mode | source | dof | runs | events | NIS/dof mean | 95% coverage | upper exceed | R trigger |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
-    for row in summary_rows:
+    for row in source_summary_rows:
         report.append(
-            "| {scenario} | {mode} | {ok}/{total} | {nis}±{nis_std} | {p95}±{p95_std} | {rmean}±{rmean_std} | {trig}±{trig_std} | {pxy}±{pxy_std} |".format(
+            "| {scenario} | {mode} | {source} | {dimension} | {runs} | {events} | "
+            "{nis}±{nis_std} | {coverage}±{coverage_std} | "
+            "{exceed}±{exceed_std} | {trigger}±{trigger_std} |".format(
                 scenario=row["scenario"],
                 mode=row["mpc_mode"],
-                ok=row["ok_count"],
-                total=row["run_count"],
-                nis=format_value(row["nis_real_mean_mean"]),
-                nis_std=format_value(row["nis_real_mean_std"]),
-                p95=format_value(row["nis_real_p95_mean"]),
-                p95_std=format_value(row["nis_real_p95_std"]),
-                rmean=format_value(row["r_scale_mean_mean"]),
-                rmean_std=format_value(row["r_scale_mean_std"]),
-                trig=format_value(row["r_scale_trigger_ratio_mean"]),
-                trig_std=format_value(row["r_scale_trigger_ratio_std"]),
-                pxy=format_value(row["p_trace_xy_mean_mean"]),
-                pxy_std=format_value(row["p_trace_xy_mean_std"]),
+                source=row["source"],
+                dimension=row["dimension"],
+                runs=row["run_count"],
+                events=row["event_count"],
+                nis=format_value(row["nis_per_dof_mean_mean"]),
+                nis_std=format_value(row["nis_per_dof_mean_std"]),
+                coverage=format_value(row["coverage_95_mean"]),
+                coverage_std=format_value(row["coverage_95_std"]),
+                exceed=format_value(row["upper_exceed_ratio_mean"]),
+                exceed_std=format_value(row["upper_exceed_ratio_std"]),
+                trigger=format_value(row["r_scale_trigger_ratio_mean"]),
+                trigger_std=format_value(row["r_scale_trigger_ratio_std"]),
             )
         )
     report.extend(
         [
             "",
-            "Notes:",
-            "- `nis_real_*` uses the ES-EKF internal NIS history when available.",
-            "- `nis_dvl_proxy_*` and `nis_depth_proxy_*` are innovation/gate proxy values from `tools/uncertainty_metrics.py`.",
-            "- `r_scale_trigger_ratio` is the fraction of samples whose adaptive R scale is greater than 1.0.",
+            "## Semantic audit",
+            "",
+            "- Standard NIS is reported only at measurement updates and is split by source and dimension.",
+            "- `nis_dvl_proxy` and `nis_depth_proxy` remain non-standard diagnostics and are not used for chi-square claims.",
+            "- The current ES-EKF adaptive-R window mixes 3-D DVL and 1-D depth raw NIS, then compares the mixed mean with `nis_threshold=9.0`.",
+            "- Therefore the historical adaptive-R trigger can be described operationally, but not as a valid chi-square consistency decision.",
         ]
     )
     (output_dir / "aggregate_report.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    audit = {
+        "schema_version": 1,
+        "standard_nis_source": "per_run/*/nis_events.csv",
+        "standard_nis_split_by_source_and_dimension": True,
+        "proxy_used_for_chi_square_claims": False,
+        "adaptive_r_semantics_valid": False,
+        "blocking_reason": (
+            "algorithm/es_ekf.py pools raw NIS from dimensions 3 and 1 in "
+            "one window and compares their mean against a fixed threshold 9.0"
+        ),
+        "allowed_claim": (
+            "adaptive R was operationally triggered; source-specific NIS "
+            "distributions and chi-square coverage are separately auditable"
+        ),
+        "disallowed_claim": (
+            "the historical adaptive-R trigger is a calibrated 95 percent "
+            "chi-square consistency test"
+        ),
+    }
+    (output_dir / "nis_semantic_audit.json").write_text(
+        json.dumps(audit, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(f"[uncertainty-agg] wrote {output_dir / 'summary_by_scenario_mode.csv'}", flush=True)
     print(f"[uncertainty-agg] wrote {output_dir / 'aggregate_report.md'}", flush=True)
     return 0

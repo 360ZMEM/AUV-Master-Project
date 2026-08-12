@@ -19,6 +19,8 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
 
+from auv_interfaces.msg import MagneticSampleBlock
+
 from .fangkong_adc_client import (
     DEFAULT_FANGKONG_CONFIG,
     DEFAULT_FANGKONG_ROOT,
@@ -40,8 +42,10 @@ class MagneticSensorWrapperNode(Node):
     def __init__(self) -> None:
         super().__init__("magnetic_sensor_wrapper_node")
         self.declare_parameter("output_topic", "/auv/sensors/magnetic")
+        self.declare_parameter("block_output_topic", "/auv/sensors/magnetic_block")
         self.declare_parameter("frame_id", "mag_link")
         self.declare_parameter("publish_rate_hz", 50.0)
+        self.declare_parameter("block_publish_rate_hz", 5.0)
         self.declare_parameter("input_unit", "tesla")
         self.declare_parameter("device_uri", "TODO://configure-device-uri")
         self.declare_parameter("mock_mode", False)
@@ -70,8 +74,14 @@ class MagneticSensorWrapperNode(Node):
         self.declare_parameter("axis_signs", [1.0, 1.0, 1.0])
 
         self.output_topic = str(self.get_parameter("output_topic").value)
+        self.block_output_topic = str(
+            self.get_parameter("block_output_topic").value
+        )
         self.frame_id = str(self.get_parameter("frame_id").value)
         self.publish_rate_hz = float(self.get_parameter("publish_rate_hz").value)
+        self.block_publish_rate_hz = float(
+            self.get_parameter("block_publish_rate_hz").value
+        )
         self.input_unit = str(self.get_parameter("input_unit").value).strip().lower()
         self.device_uri = str(self.get_parameter("device_uri").value)
         self.mock_mode = bool(self.get_parameter("mock_mode").value)
@@ -102,12 +112,18 @@ class MagneticSensorWrapperNode(Node):
         self.axis_signs = self._parse_float_list(self.get_parameter("axis_signs").value)
 
         self.publisher = self.create_publisher(MagneticField, self.output_topic, 10)
+        self.block_publisher = self.create_publisher(
+            MagneticSampleBlock,
+            self.block_output_topic,
+            5,
+        )
         self.timer = self.create_timer(1.0 / max(self.publish_rate_hz, 1.0e-3), self._on_timer)
         self._warn_count = 0
         self._runtime: FangkongAdcMagneticClient | None = None
         self._connect_thread: threading.Thread | None = None
         self._next_retry_monotonic_s = 0.0
         self._last_connect_error = ""
+        self._last_block_time_s = float("-inf")
         mode_text = "mock" if self.mock_mode else "fangkong_adc"
         self.get_logger().info(
             f"magnetic wrapper ready mode={mode_text} topic={self.output_topic} frame_id={self.frame_id} "
@@ -189,6 +205,9 @@ class MagneticSensorWrapperNode(Node):
         msg.magnetic_field.z = bz_t
         try:
             self.publisher.publish(msg)
+            block = decoded.get("_block")
+            if block is not None:
+                self._publish_block(block)
         except Exception:
             if not rclpy.ok():
                 return
@@ -205,15 +224,49 @@ class MagneticSensorWrapperNode(Node):
             self._maybe_start_runtime()
             return None
         try:
-            field = self._runtime.latest_field()
+            block = self._runtime.latest_block()
         except Exception as exc:
             self._last_connect_error = str(exc)
             self.get_logger().error(f"fangkong_adc runtime read failed: {exc}")
             self._teardown_runtime()
             return None
-        if field is None:
+        if block is None or block.field_t.size == 0:
             return None
-        return {"x": field.x_t, "y": field.y_t, "z": field.z_t, "sample_time_s": field.sample_time_s}
+        vector = block.field_t[-1]
+        return {
+            "x": float(vector[0]),
+            "y": float(vector[1]),
+            "z": float(vector[2]),
+            "sample_time_s": float(block.sample_time_s[-1]),
+            "_block": block,
+        }
+
+    def _publish_block(self, block) -> None:
+        block_time_s = float(block.sample_time_s[-1])
+        minimum_period_s = 1.0 / max(self.block_publish_rate_hz, 1e-6)
+        if block_time_s - self._last_block_time_s < minimum_period_s:
+            return
+        self._last_block_time_s = block_time_s
+        msg = MagneticSampleBlock()
+        msg.header.stamp = self._seconds_to_header_stamp(block_time_s)
+        msg.header.frame_id = self.frame_id
+        msg.sample_rate_hz = float(block.sample_rate_hz)
+        msg.sample_count = int(block.field_t.shape[0])
+        msg.time_offset_s = [
+            float(value - block_time_s) for value in block.sample_time_s
+        ]
+        block_nt = block.field_t * 1.0e9
+        msg.x_nt = block_nt[:, 0].astype(float).tolist()
+        msg.y_nt = block_nt[:, 1].astype(float).tolist()
+        msg.z_nt = block_nt[:, 2].astype(float).tolist()
+        msg.clipping_ratio = float(block.clipping_ratio)
+        msg.data_completeness = float(block.data_completeness)
+        msg.dropped_sample_count = int(block.dropped_sample_count)
+        msg.calibration_valid = bool(block.calibration_valid)
+        msg.calibration_id = str(block.calibration_id)
+        msg.sample_clock_verified = bool(block.sample_clock_verified)
+        msg.status = str(block.status_message)
+        self.block_publisher.publish(msg)
 
     def _maybe_start_runtime(self) -> None:
         if self.mock_mode:

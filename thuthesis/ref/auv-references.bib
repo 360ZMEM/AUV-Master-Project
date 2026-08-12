@@ -1,5 +1,5 @@
 % ===========================================================================
-%  references.bib — AUV 海缆巡检硕士论文 参考文献库（第 1–4 章）
+%  references.bib — AUV 海缆巡检硕士论文统一参考文献库
 % ---------------------------------------------------------------------------
 %  编码       ：UTF-8（务必以 UTF-8 保存/打开，勿转 GBK）
 %  目标引擎   ：xelatex + biblatex + biblatex-gb7714-2015 + biber
@@ -10,7 +10,7 @@
 %  索引对照   ：见同目录 00_引用点总索引.md（C*/D*/E*/G* 编号）及各主题 .md
 %  provenance ：每条上方注释给出 [索引号] 引用点 章节 + 来源核验状态
 %  中文条目   ：已加 langid={chinese}，使 gb7714 正确切换中英文著录格式
-%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 6 条（官网核实，DOI 非 Crossref 体系）｜C 区 7 条（政策/报告/标准/网页），合计 83 条
+%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 7 条（官网核实，DOI 非 Crossref 体系）｜C 区 22 条（政策/报告/标准/网页/产品资料），合计 99 条
 %              └ A 区含"展望/未来趋势"子区 F1–F8（8 条，第 6 章结论与展望引用）
 %              └ A.5：01 章现状综述正文编号 [1]–[36]（[4] 归 C 区）+ A6 教材 + A10 DLIA
 %  维护       ：谢冠文 xgw24@mails.tsinghua.edu.cn  2026-08
@@ -1027,11 +1027,80 @@
   note      = {题录经 Jicable'15 官网论文集核实；无 DOI，Crossref 不可解析},
 }
 
+% [G3] §1.1.3 — 海上风电海缆运维技术、状态监测与全生命周期风险综述（中文）｜期刊官网核实
+@article{ning2026cableom,
+  title   = {海上风电用海底电缆运维技术发展现状及趋势},
+  author  = {宁欣欣 and 刘潇 and 李雷 and 顾建威 and 胡皓 and 王团结},
+  journal = {电线电缆},
+  year    = {2026},
+  volume  = {69},
+  number  = {2},
+  pages   = {1--11},
+  doi     = {10.16105/j.dxdl.1672-6901.20250182},
+  url     = {https://jwc.cwc.net.cn/article/doi/10.16105/j.dxdl.1672-6901.20250182},
+  urldate = {2026-08-09},
+  langid  = {chinese},
+  note    = {题录经《电线电缆》官网核实；DOI 属期刊自有/CSTR 体系，Crossref 不可解析},
+}
+
 
 % ###########################################################################
 % #  C 区：政策 / 行业报告（无 DOI，[EB/OL]/[R]）
 % #  ⚠ 待核对：正式文件名 / 发布号 / 访问日期；建议正文首次出现处标 [EB/OL] 或 [R]
 % ###########################################################################
+
+% [G1-0] §1.1.1 — 国家可再生能源规划（深远海海上风电规划与近海规模化开发）｜国家发改委/能源局一手文件
+@online{ndrc2022renewableplan,
+  title    = {关于印发《“十四五”可再生能源发展规划》的通知},
+  author   = {{国家发展改革委} and {国家能源局} and {财政部} and {自然资源部} and {生态环境部} and {住房和城乡建设部} and {农业农村部} and {中国气象局} and {国家林业和草原局}},
+  year     = {2022},
+  url      = {https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/t20220601_1326719.html},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {发改能源〔2021〕1445号；附件为《“十四五”可再生能源发展规划》[EB/OL]},
+}
+
+% [G1-4] §1.1.1 — “十四五”能源高质量发展官方发布会（海上风电新增装机）｜国新办一手实录
+@online{scio2025energyachievement,
+  title    = {介绍“十四五”时期能源高质量发展成就},
+  author   = {{国务院新闻办公室}},
+  year     = {2025},
+  url      = {http://www.scio.gov.cn/live/2025/37113/},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {“高质量完成‘十四五’规划”系列主题新闻发布会实录；2025-08-26 [EB/OL]},
+}
+
+% [G1-5] §1.1.1 — 全球海上风电装机与市场展望（行业报告）｜GWEC 官方
+@online{gwec2025offshore,
+  title    = {Global Offshore Wind Report 2025},
+  author   = {{Global Wind Energy Council}},
+  year     = {2025},
+  url      = {https://www.gwec.net/news/offshore-wind-installed-capacity-reaches-83-gw-as-new-report-finds-2024-a-record-year-for-construction-and-auctions},
+  urldate  = {2026-08-09},
+  note     = {GWEC 官方报告发布说明；报告统计 2024 年全球海上风电累计装机 83 GW [R/OL]},
+}
+
+% [G3-1] §1.1.3 — 海上风电运维中的机器人与自主系统（行业报告）｜ORE Catapult/RenewableUK 官方
+@online{orecatapult2025ras,
+  title    = {Robotics \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind},
+  author   = {{Offshore Renewable Energy Catapult and RenewableUK}},
+  year     = {2025},
+  url      = {https://ore.catapult.org.uk/resource-hub/analysis-reports/robotics-autonomous-systems-for-operations-and-maintenance-in-uk-offshore-wind},
+  urldate  = {2026-08-09},
+  note     = {行业分析报告；2025-07-01 发布，讨论 RAS 对海上风电运维成本与安全性的作用 [R/OL]},
+}
+
+% [G3-2] §1.1.2/§1.1.3 — 海上风电场海缆路由与运维期定期监测（海事监管文件）｜上海海事局
+@online{shanghai2022windtraffic,
+  title    = {上海海事局关于印发《上海海事局海上风电场海上交通安全管理规定》的通知},
+  author   = {{上海海事局}},
+  year     = {2022},
+  url      = {https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=F39F265BDF560E50E0533A0820C6FB7D},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {沪海通航〔2022〕191号；要求定期监测海缆路由及附近海域水下地形 [EB/OL]},
+}
 
 % [G1-1] A1 §1.1.1 — 深远海风电国家战略（一手，中文）
 @online{nea2026shenlan,
@@ -1120,7 +1189,100 @@
   note     = {[EB/OL]；待核对发布日期},
 }
 
+% [G4-1] §1.2.4 — HydroPACT 350 有源音频海缆跟踪与埋深测量产品规格｜Teledyne Marine 官方
+@manual{teledyne2021hydropact350,
+  title        = {HydroPACT 350 Subsea Cable Tracking System: Product Datasheet},
+  author       = {{Teledyne Marine}},
+  organization = {Teledyne Marine},
+  year         = {2021},
+  url          = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf},
+  urldate      = {2026-08-09},
+  note         = {产品规格书；给出探测范围、测量精度、线圈阵列及耐压等级 [EB/OL]},
+}
+
+% [G4-2] §1.2.4 — HydroPACT 350/440/660E/Dualtrack 产品谱系｜Teledyne Marine 官方
+@online{teledyne2026hydropactline,
+  title    = {Subsea Pipe and Cable Detection Systems},
+  author   = {{Teledyne Marine}},
+  year     = {2026},
+  url      = {https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/},
+  urldate  = {2026-08-09},
+  note     = {HydroPACT 产品线官方页面；说明 350 有源音频、440 脉冲感应、660E 小型化及 Dualtrack 组合方案 [EB/OL]},
+}
+
+% [G4-3] §1.2.4 — HydroPACT 350 琼州海峡 500 kV 带电海缆路由与埋深试验｜Teledyne Marine 官方案例
+@online{teledyne2017hainan350,
+  title    = {HydroPACT 350 Cable Tracker Works on Fully Operational Live Sub-Sea Power Cables},
+  author   = {{Teledyne TSS} and {China ORE}},
+  year     = {2017},
+  url      = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/HydroPACT%20350%20-%20China%20ORE%20powered%20cable%20root%20survey.pdf},
+  urldate  = {2026-08-09},
+  note     = {产品应用案例；琼州海峡福康线 500 kV 带电海缆路由和埋深测量 [EB/OL]},
+}
+
+% [G4-4] §1.2.4 — SMARTRAK 被动磁/有源 AC/有源 DC 多模式管缆跟踪工具｜Innovatum 官方
+@manual{innovatum_smartrak,
+  title        = {{SMARTRAK}: The Cable and Pipeline Survey Tool},
+  author       = {{Innovatum International Ltd.}},
+  organization = {Innovatum International Ltd.},
+  url          = {https://www.innovatum.co.uk/media/1051/smartrak-datasheet.pdf},
+  urldate      = {2026-08-09},
+  note         = {未标注发布日期的产品规格书；支持 ROV、AUV、拖体和水面平台 [EB/OL]},
+}
+
+% [G4-5] §1.2.4 — 国产 T180 有源电磁海缆路由、埋深和故障测量系统｜海鹰企业官方
+@online{haiying_t180,
+  title    = {海鹰 T180 海缆探测系统},
+  author   = {{无锡海鹰电子医疗系统有限公司}},
+  url      = {https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {国产有源电磁探测产品页面；给出 25/50/133 Hz 工作频率、路由和埋深误差指标 [EB/OL]},
+}
+
+% [G4-6] §1.2.4 — 国内海缆专用无缆自主探测巡检样机｜华中科技大学深圳研究院
+@online{hust2023cableauv,
+  title    = {成果推介：海缆智能探测巡检水下机器人},
+  author   = {{华中科技大学深圳研究院}},
+  year     = {2023},
+  url      = {http://shenzhen.hust.edu.cn/info/1026/1834.htm},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {飞行式长艏翼无缆自主样机；搭载双三轴正交电磁探测设备 [EB/OL]},
+}
+
+% [G4-7] §1.2.4 — 国产便携式 P200 AUV 海底电缆巡检平台｜企业官方
+@online{fsea_p200,
+  title    = {精灵 P200 自主水下机器人（AUV）},
+  author   = {{湖北海派瑞恩科技有限公司}},
+  url      = {https://www.f-sea.com/productinfo/105514.html},
+  urldate  = {2026-08-09},
+  langid   = {chinese},
+  note     = {产品页面；标称潜深 300 m、3 kn 航速下续航 12 h，可用于海底电缆巡检 [EB/OL]},
+}
+
+% [G4-8] §1.2.4 — HUGIN AUV 海底管缆自主跟踪与长航程巡检｜Kongsberg 官方
+@online{kongsberg2025hugin,
+  title    = {{HUGIN}: Safeguarding Our Critical Undersea Infrastructure},
+  author   = {{Kongsberg Discovery}},
+  year     = {2025},
+  url      = {https://www.kongsberg.com/discovery/news/our-stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/},
+  urldate  = {2026-08-09},
+  note     = {HUGIN 系列 AUV 官方说明；包含海底电缆/管道自主跟踪、长航程和多传感载荷能力 [EB/OL]},
+}
+
+% [G4-9] §1.2.4 — DIVE-LD 岸基布放海缆全自主巡检示范｜美国海上风电研发联盟
+@online{nowrdc2024diveld,
+  title    = {Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV},
+  author   = {{National Offshore Wind Research and Development Consortium}},
+  year     = {2024},
+  url      = {https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/},
+  urldate  = {2026-08-09},
+  note     = {Anduril DIVE-LD 在 Point Judith--Block Island 海缆开展侧扫声呐、测深与异常复核示范 [EB/OL]},
+}
+
 % ---------------------------------------------------------------------------
+% 说明：A2 的行业/保险统计口径（Acteon/Strathclyde 0.003 failures/km/year、
 % 说明：A2 的行业/保险统计口径（Acteon/Strathclyde 0.003 failures/km/year、
 %       DNV·Lloyd Warwick 83%、GCube 2015 77%、Nexans/ESCA/IMCA 80% 外部因素、
 %       CPEM 30–40%）多为网页转引、无稳定题录，建议正文以脚注或转引方式处理，

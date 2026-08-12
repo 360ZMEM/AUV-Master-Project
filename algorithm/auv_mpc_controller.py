@@ -18,6 +18,14 @@ import numpy as np
 import casadi as ca
 
 
+class MPCSolveError(RuntimeError):
+    """MPC solve failure carrying diagnostics for the current control cycle."""
+
+    def __init__(self, message, diagnostics):
+        super().__init__(message)
+        self.diagnostics = dict(diagnostics)
+
+
 class AUVKinematicsModel:
     """AUV 4-DOF 运动学/动力学模型（欠驱动）。
 
@@ -79,9 +87,13 @@ class AUVKinematicsModel:
         # NED convention: z is positive downward, while positive pitch (theta)
         # is nose-up. A deeper target therefore requires negative pitch so that
         # -u*sin(theta) contributes positive dz (downward motion).
-        theta_approx = ca.fmax(-self.max_pitch_rad,
-                               ca.fmin(self.max_pitch_rad,
-                                       -self.pitch_depth_gain * depth_err))
+        # A hard clamp creates a zero-gradient plateau once the depth error
+        # exceeds max_pitch / pitch_depth_gain. The smooth saturation preserves
+        # the same physical bound while keeping the NLP differentiable.
+        theta_raw = -self.pitch_depth_gain * depth_err
+        theta_approx = self.max_pitch_rad * ca.tanh(
+            theta_raw / self.max_pitch_rad
+        )
 
         sin_theta = ca.sin(theta_approx)
         cos_theta = ca.cos(theta_approx)
@@ -180,6 +192,25 @@ class AUVMPCOptimizer:
         # E3 — sigmoid 平滑 + 消融开关（论文 §4.4.2）
         self.confidence_smoothness_k = float(weights.get("confidence_smoothness_k", 8.0))
         self.confidence_alpha = float(weights.get("confidence_alpha", 1.5))
+        self.confidence_policy = str(
+            weights.get("confidence_policy", "legacy_aggressive")
+        ).strip().lower()
+        if self.confidence_policy not in {
+            "legacy_aggressive",
+            "conservative",
+        }:
+            raise ValueError(
+                f"unsupported confidence_policy={self.confidence_policy!r}"
+            )
+        self.low_conf_control_penalty_scale = float(
+            weights.get("low_conf_control_penalty_scale", 3.0)
+        )
+        self.low_conf_tracking_floor = float(
+            weights.get("low_conf_tracking_floor", 0.5)
+        )
+        self.W_delta_psi_cmd = float(weights.get("delta_psi_cmd", 0.0))
+        self.W_delta_z_cmd = float(weights.get("delta_z_cmd", 0.0))
+        self.W_delta_T_cmd = float(weights.get("delta_T_cmd", 0.0))
         self.mpc_mode = str(weights.get("mpc_mode", "ua")).lower()
         if self.mpc_mode not in ("ua", "baseline"):
             self.mpc_mode = "ua"
@@ -213,6 +244,37 @@ class AUVMPCOptimizer:
         self.enable_band_constraints = bool(
             constraints.get("enable_band_constraints", True)
         )
+        self.enable_constraint_slack = bool(
+            constraints.get("enable_constraint_slack", False)
+        )
+        self.constraint_slack_weight = float(
+            constraints.get("constraint_slack_weight", 1e4)
+        )
+        self.max_speed_slack = float(
+            constraints.get("max_speed_slack_ms", max(self.min_speed, 0.1))
+        )
+        self.max_depth_rate_slack = float(
+            constraints.get(
+                "max_depth_rate_slack_m",
+                max(self.delta_z_max_per_step, 0.1),
+            )
+        )
+        self.max_heading_rate_slack = float(
+            constraints.get(
+                "max_heading_rate_slack_rad",
+                max(self.delta_psi_max_per_step, np.deg2rad(1.0)),
+            )
+        )
+        self.max_depth_band_slack = float(
+            constraints.get("max_depth_band_slack_m", max(self.z_band, 0.1))
+        )
+        self.max_heading_band_slack = float(
+            constraints.get(
+                "max_heading_band_slack_rad",
+                max(self.psi_band, np.deg2rad(1.0)),
+            )
+        )
+        self._last_x0 = None
 
         self._build_solver()
 
@@ -233,6 +295,8 @@ class AUVMPCOptimizer:
         x0_param = opti.parameter(n_s)
         ref_X_param = opti.parameter(n_s, N + 1)
         confidence_param = opti.parameter()
+        delta_u_penalty_scale_param = opti.parameter()
+        previous_control_param = opti.parameter(n_c)
 
         # 初始状态约束
         opti.subject_to(X[:, 0] == x0_param)
@@ -242,8 +306,24 @@ class AUVMPCOptimizer:
             x_next = self.kinematics.discrete_step(X[:, k], U[:, k], dt)
             opti.subject_to(X[:, k + 1] == x_next)
 
-        # 硬约束：航速下限（确保舵效）
-        opti.subject_to(X[4, 1:] >= self.min_speed)
+        slack_variables = []
+        slack_penalties = []
+
+        def add_slack(name, count, maximum):
+            slack = opti.variable(1, count)
+            opti.subject_to(opti.bounded(0.0, slack, maximum))
+            opti.set_initial(slack, 0.0)
+            slack_variables.append(slack)
+            scale = max(float(maximum), 1e-6)
+            slack_penalties.append(ca.sum2(slack / scale))
+            return slack
+
+        # 航速下限用于维持舵效；恢复模式允许显式、有界的软化。
+        if self.enable_constraint_slack:
+            speed_slack = add_slack("speed", N, self.max_speed_slack)
+            opti.subject_to(X[4, 1:] + speed_slack >= self.min_speed)
+        else:
+            opti.subject_to(X[4, 1:] >= self.min_speed)
 
         # 硬约束：制导指令边界，防止优化器输出不可执行的极端参考。
         opti.subject_to(opti.bounded(self.min_psi_cmd, U[0, :], self.max_psi_cmd))
@@ -254,43 +334,98 @@ class AUVMPCOptimizer:
 
         # P1: 参考速率约束（z_cmd / psi_cmd 每个 dt 的最大变化量）
         if self.enable_rate_constraints and N >= 2:
-            for k in range(N - 1):
+            if self.enable_constraint_slack:
+                depth_rate_slack = add_slack(
+                    "depth_rate", N, self.max_depth_rate_slack
+                )
+                heading_rate_slack = add_slack(
+                    "heading_rate", N, self.max_heading_rate_slack
+                )
+                depth_deltas = [U[1, 0] - x0_param[2]]
+                heading_deltas = [U[0, 0] - x0_param[3]]
+                depth_deltas.extend(
+                    U[1, k + 1] - U[1, k] for k in range(N - 1)
+                )
+                heading_deltas.extend(
+                    U[0, k + 1] - U[0, k] for k in range(N - 1)
+                )
+                for k, delta in enumerate(depth_deltas):
+                    opti.subject_to(
+                        delta <= self.delta_z_max_per_step + depth_rate_slack[k]
+                    )
+                    opti.subject_to(
+                        delta >= -self.delta_z_max_per_step - depth_rate_slack[k]
+                    )
+                for k, delta in enumerate(heading_deltas):
+                    opti.subject_to(
+                        delta
+                        <= self.delta_psi_max_per_step + heading_rate_slack[k]
+                    )
+                    opti.subject_to(
+                        delta
+                        >= -self.delta_psi_max_per_step - heading_rate_slack[k]
+                    )
+            else:
+                for k in range(N - 1):
+                    opti.subject_to(opti.bounded(
+                        -self.delta_z_max_per_step,
+                        U[1, k + 1] - U[1, k],
+                        self.delta_z_max_per_step,
+                    ))
+                    # psi 速率约束（差分 wrap 不严格，但 N·dt 内 psi 不会绕圈）
+                    opti.subject_to(opti.bounded(
+                        -self.delta_psi_max_per_step,
+                        U[0, k + 1] - U[0, k],
+                        self.delta_psi_max_per_step,
+                    ))
+                # 第一步参考相对当前态的速率限制
                 opti.subject_to(opti.bounded(
                     -self.delta_z_max_per_step,
-                    U[1, k + 1] - U[1, k],
+                    U[1, 0] - x0_param[2],
                     self.delta_z_max_per_step,
                 ))
-                # psi 速率约束（差分 wrap 不严格，但 N·dt 内 psi 不会绕圈）
                 opti.subject_to(opti.bounded(
                     -self.delta_psi_max_per_step,
-                    U[0, k + 1] - U[0, k],
+                    U[0, 0] - x0_param[3],
                     self.delta_psi_max_per_step,
                 ))
-            # 第一步参考相对当前态的速率限制
-            opti.subject_to(opti.bounded(
-                -self.delta_z_max_per_step,
-                U[1, 0] - x0_param[2],
-                self.delta_z_max_per_step,
-            ))
-            opti.subject_to(opti.bounded(
-                -self.delta_psi_max_per_step,
-                U[0, 0] - x0_param[3],
-                self.delta_psi_max_per_step,
-            ))
 
         # P1: 参考带宽约束（z_cmd / psi_cmd 与当前 z, psi 偏差不超过带宽）
         if self.enable_band_constraints:
-            for k in range(N):
-                opti.subject_to(opti.bounded(
-                    -self.z_band,
-                    U[1, k] - x0_param[2],
-                    self.z_band,
-                ))
-                opti.subject_to(opti.bounded(
-                    -self.psi_band,
-                    U[0, k] - x0_param[3],
-                    self.psi_band,
-                ))
+            if self.enable_constraint_slack:
+                depth_band_slack = add_slack(
+                    "depth_band", N, self.max_depth_band_slack
+                )
+                heading_band_slack = add_slack(
+                    "heading_band", N, self.max_heading_band_slack
+                )
+                for k in range(N):
+                    depth_delta = U[1, k] - x0_param[2]
+                    heading_delta = U[0, k] - x0_param[3]
+                    opti.subject_to(
+                        depth_delta <= self.z_band + depth_band_slack[k]
+                    )
+                    opti.subject_to(
+                        depth_delta >= -self.z_band - depth_band_slack[k]
+                    )
+                    opti.subject_to(
+                        heading_delta <= self.psi_band + heading_band_slack[k]
+                    )
+                    opti.subject_to(
+                        heading_delta >= -self.psi_band - heading_band_slack[k]
+                    )
+            else:
+                for k in range(N):
+                    opti.subject_to(opti.bounded(
+                        -self.z_band,
+                        U[1, k] - x0_param[2],
+                        self.z_band,
+                    ))
+                    opti.subject_to(opti.bounded(
+                        -self.psi_band,
+                        U[0, k] - x0_param[3],
+                        self.psi_band,
+                    ))
 
         # 软约束：指令物理合理性 (作为代价函数的惩罚项而非硬约束)
         # 这些约束通过代价函数中的控制权重自然限制
@@ -308,6 +443,18 @@ class AUVMPCOptimizer:
                 w_y = self.W_y
                 w_z = self.W_z
                 w_psi = self.W_psi
+            elif self.confidence_policy == "conservative":
+                conf_pow = ca.power(
+                    ca.fmax(0.0, 1.0 - conf),
+                    self.confidence_alpha,
+                )
+                tracking_scale = self.low_conf_tracking_floor + (
+                    1.0 - self.low_conf_tracking_floor
+                ) * conf
+                w_x = self.W_x * tracking_scale
+                w_y = self.W_y * tracking_scale
+                w_z = self.W_z
+                w_psi = self.W_psi * tracking_scale
             else:
                 # UA-MPC：(1 - conf)^alpha 平滑放大跟踪权重
                 conf_pow = ca.power(ca.fmax(0.0, 1.0 - conf), self.confidence_alpha)
@@ -335,6 +482,14 @@ class AUVMPCOptimizer:
             conf = confidence_param
             if self.mpc_mode == "baseline":
                 control_scale = 1.0
+            elif self.confidence_policy == "conservative":
+                conf_pow = ca.power(
+                    ca.fmax(0.0, 1.0 - conf),
+                    self.confidence_alpha,
+                )
+                control_scale = 1.0 + (
+                    self.low_conf_control_penalty_scale - 1.0
+                ) * conf_pow
             else:
                 # sigmoid 平滑：conf 高 → control_scale ≈ 1；conf 低 → low_conf_ctrl_scale
                 sig = 1.0 / (1.0 + ca.exp(
@@ -345,6 +500,26 @@ class AUVMPCOptimizer:
                     + (1.0 - self.low_conf_ctrl_scale) * (1.0 - sig)
                 )
             J += control_scale * ctrl_effort
+            previous_control = (
+                previous_control_param if k == 0 else U[:, k - 1]
+            )
+            if (
+                self.W_delta_psi_cmd > 0.0
+                or self.W_delta_z_cmd > 0.0
+                or self.W_delta_T_cmd > 0.0
+            ):
+                delta_cost = (
+                    self.W_delta_psi_cmd
+                    * (U[0, k] - previous_control[0]) ** 2
+                    + self.W_delta_z_cmd
+                    * (U[1, k] - previous_control[1]) ** 2
+                    + self.W_delta_T_cmd
+                    * (U[2, k] - previous_control[2]) ** 2
+                )
+                J += delta_u_penalty_scale_param * delta_cost
+
+        if slack_penalties:
+            J += self.constraint_slack_weight * sum(slack_penalties)
 
         opti.minimize(J)
 
@@ -362,8 +537,241 @@ class AUVMPCOptimizer:
         self.x0_param = x0_param
         self.ref_X_param = ref_X_param
         self.confidence_param = confidence_param
+        self.delta_u_penalty_scale_param = delta_u_penalty_scale_param
+        self.previous_control_param = previous_control_param
+        self.slack_vector = (
+            ca.vertcat(*slack_variables) if slack_variables else None
+        )
 
-    def solve(self, x0, ref_trajectory, confidence, warm_start_U=None):
+    @staticmethod
+    def _slack_metrics(values):
+        if values is None:
+            return {
+                "slack_max": 0.0,
+                "slack_l1": 0.0,
+                "slack_l2": 0.0,
+                "slack_active_count": 0,
+            }
+        values = np.asarray(values, dtype=float).reshape(-1)
+        if not values.size:
+            return {
+                "slack_max": 0.0,
+                "slack_l1": 0.0,
+                "slack_l2": 0.0,
+                "slack_active_count": 0,
+            }
+        values = np.maximum(values, 0.0)
+        return {
+            "slack_max": float(np.max(values)),
+            "slack_l1": float(np.sum(values)),
+            "slack_l2": float(np.linalg.norm(values)),
+            "slack_active_count": int(np.count_nonzero(values > 1e-6)),
+        }
+
+    def _evaluate_slack(self, *, solution=None):
+        if self.slack_vector is None:
+            return self._slack_metrics(None)
+        try:
+            values = (
+                solution.value(self.slack_vector)
+                if solution is not None
+                else self.opti.debug.value(self.slack_vector)
+            )
+        except RuntimeError:
+            return {
+                "slack_max": None,
+                "slack_l1": None,
+                "slack_l2": None,
+                "slack_active_count": None,
+            }
+        return self._slack_metrics(values)
+
+    def _reference_control_guess(self, x0, ref_trajectory):
+        guess = np.zeros((self.N_CONTROLS, self.N), dtype=float)
+        guess[0, :] = np.asarray(ref_trajectory[3, : self.N], dtype=float)
+        guess[1, :] = np.asarray(ref_trajectory[2, : self.N], dtype=float)
+        target_speed = np.asarray(ref_trajectory[4, : self.N], dtype=float)
+        guess[2, :] = (
+            self.kinematics.drag_u * target_speed * np.abs(target_speed)
+        )
+        return guess
+
+    def _project_control_guess(self, x0, guess):
+        projected = np.asarray(guess, dtype=float).copy()
+        projected[0, :] = np.clip(
+            projected[0, :], self.min_psi_cmd, self.max_psi_cmd
+        )
+        projected[1, :] = np.clip(
+            projected[1, :], self.min_z_cmd, self.max_z_cmd
+        )
+        projected[2, :] = np.clip(
+            projected[2, :], self.min_thrust, self.max_thrust
+        )
+
+        previous_heading = float(x0[3])
+        previous_depth = float(x0[2])
+        for k in range(self.N):
+            heading_low = self.min_psi_cmd
+            heading_high = self.max_psi_cmd
+            depth_low = self.min_z_cmd
+            depth_high = self.max_z_cmd
+            if self.enable_rate_constraints:
+                heading_low = max(
+                    heading_low,
+                    previous_heading - self.delta_psi_max_per_step,
+                )
+                heading_high = min(
+                    heading_high,
+                    previous_heading + self.delta_psi_max_per_step,
+                )
+                depth_low = max(
+                    depth_low,
+                    previous_depth - self.delta_z_max_per_step,
+                )
+                depth_high = min(
+                    depth_high,
+                    previous_depth + self.delta_z_max_per_step,
+                )
+            if self.enable_band_constraints:
+                heading_low = max(heading_low, float(x0[3]) - self.psi_band)
+                heading_high = min(heading_high, float(x0[3]) + self.psi_band)
+                depth_low = max(depth_low, float(x0[2]) - self.z_band)
+                depth_high = min(depth_high, float(x0[2]) + self.z_band)
+            if heading_low <= heading_high:
+                projected[0, k] = np.clip(
+                    projected[0, k], heading_low, heading_high
+                )
+            if depth_low <= depth_high:
+                projected[1, k] = np.clip(
+                    projected[1, k], depth_low, depth_high
+                )
+            previous_heading = float(projected[0, k])
+            previous_depth = float(projected[1, k])
+        return projected
+
+    def _rollout_state_guess(self, x0, control_guess):
+        states = np.zeros((self.N_STATES, self.N + 1), dtype=float)
+        states[:, 0] = np.asarray(x0, dtype=float)
+        model = self.kinematics
+        for k in range(self.N):
+            x, y, z, psi, u, w = states[:, k]
+            psi_cmd, z_cmd, thrust_cmd = control_guess[:, k]
+            depth_error = z_cmd - z
+            theta_raw = -model.pitch_depth_gain * depth_error
+            theta = model.max_pitch_rad * np.tanh(
+                theta_raw / model.max_pitch_rad
+            )
+            derivatives = np.array(
+                [
+                    u * np.cos(psi),
+                    u * np.sin(psi),
+                    -u * np.sin(theta) + w * np.cos(theta),
+                    model.yaw_rate_gain * (psi_cmd - psi),
+                    (
+                        max(0.0, thrust_cmd)
+                        - model.drag_u * u * abs(u)
+                    )
+                    / model.mass_u,
+                    (
+                        -model.drag_w * w
+                        + model.depth_to_heave_gain * depth_error
+                        + model.buoyancy_term
+                    )
+                    / model.mass_w,
+                ],
+                dtype=float,
+            )
+            states[:, k + 1] = states[:, k] + self.dt * derivatives
+        return states
+
+    @staticmethod
+    def _constraint_metrics(values, lower_bounds, upper_bounds):
+        """Summarize bound violations without exposing solver-sized arrays."""
+        values = np.asarray(values, dtype=float).reshape(-1)
+        lower = np.asarray(lower_bounds, dtype=float).reshape(-1)
+        upper = np.asarray(upper_bounds, dtype=float).reshape(-1)
+        if not (values.size == lower.size == upper.size):
+            return {
+                "constraint_count": 0,
+                "constraint_violation_max": None,
+                "constraint_violation_l2": None,
+                "active_constraint_count": 0,
+            }
+
+        lower_violation = np.where(
+            np.isfinite(lower), np.maximum(lower - values, 0.0), 0.0
+        )
+        upper_violation = np.where(
+            np.isfinite(upper), np.maximum(values - upper, 0.0), 0.0
+        )
+        violation = np.maximum(lower_violation, upper_violation)
+
+        tolerance = 1e-4
+        equality = (
+            np.isfinite(lower)
+            & np.isfinite(upper)
+            & (np.abs(upper - lower) <= tolerance)
+        )
+        active_lower = np.isfinite(lower) & (np.abs(values - lower) <= tolerance)
+        active_upper = np.isfinite(upper) & (np.abs(values - upper) <= tolerance)
+        active = equality | active_lower | active_upper
+        return {
+            "constraint_count": int(values.size),
+            "constraint_violation_max": float(np.max(violation))
+            if violation.size
+            else 0.0,
+            "constraint_violation_l2": float(np.linalg.norm(violation)),
+            "active_constraint_count": int(np.count_nonzero(active)),
+        }
+
+    def _evaluate_constraints(self, *, solution=None, initial=False):
+        """Evaluate constraints at the configured initial point or latest iterate."""
+        opti = self.opti
+        try:
+            if solution is not None:
+                values = solution.value(opti.g)
+                lower = solution.value(opti.lbg)
+                upper = solution.value(opti.ubg)
+            elif initial:
+                values = opti.value(opti.g, opti.initial())
+                lower = opti.value(opti.lbg, opti.initial())
+                upper = opti.value(opti.ubg, opti.initial())
+            else:
+                values = opti.debug.value(opti.g)
+                lower = opti.debug.value(opti.lbg)
+                upper = opti.debug.value(opti.ubg)
+        except RuntimeError:
+            return {
+                "constraint_count": 0,
+                "constraint_violation_max": None,
+                "constraint_violation_l2": None,
+                "active_constraint_count": 0,
+            }
+        return self._constraint_metrics(values, lower, upper)
+
+    @staticmethod
+    def _prefixed_metrics(prefix, metrics):
+        return {
+            f"{prefix}_constraint_violation_max": metrics[
+                "constraint_violation_max"
+            ],
+            f"{prefix}_constraint_violation_l2": metrics[
+                "constraint_violation_l2"
+            ],
+            f"{prefix}_active_constraint_count": metrics[
+                "active_constraint_count"
+            ],
+        }
+
+    def solve(
+        self,
+        x0,
+        ref_trajectory,
+        confidence,
+        warm_start_U=None,
+        delta_u_penalty_scale=1.0,
+        previous_control=None,
+    ):
         """求解 MPC 优化问题。
 
         Args:
@@ -371,6 +779,8 @@ class AUVMPCOptimizer:
             ref_trajectory (np.ndarray): 参考轨迹 (6, N+1)
             confidence (float): 传感器置信度 [0, 1]
             warm_start_U (np.ndarray | None): 上一次最优控制序列 (3, N)
+            delta_u_penalty_scale (float): 当前置信度对应的控制增量惩罚倍率
+            previous_control (np.ndarray | None): 上一周期实际应用的控制量 (3,)
 
         Returns:
             dict: 包含最优控制、预测轨迹、求解统计
@@ -380,21 +790,87 @@ class AUVMPCOptimizer:
         opti.set_value(self.x0_param, x0)
         opti.set_value(self.ref_X_param, ref_trajectory)
         opti.set_value(self.confidence_param, float(np.clip(confidence, 0.0, 1.0)))
+        opti.set_value(
+            self.delta_u_penalty_scale_param,
+            max(float(delta_u_penalty_scale), 1.0),
+        )
+        if previous_control is None:
+            previous_control_value = self._reference_control_guess(
+                x0,
+                ref_trajectory,
+            )[:, 0]
+        else:
+            previous_control_value = np.asarray(
+                previous_control,
+                dtype=float,
+            ).reshape(self.N_CONTROLS)
+        opti.set_value(
+            self.previous_control_param,
+            previous_control_value,
+        )
 
+        x0_array = np.asarray(x0, dtype=float).reshape(-1)
+        warm_start_provided = warm_start_U is not None
+        warm_start_used = False
+        warm_start_shift_rms = None
+        initial_guess_source = "reference_projected"
         if warm_start_U is not None:
-            for k in range(self.N):
-                if k < self.N - 1:
-                    u_guess = warm_start_U[:, k + 1]
-                else:
-                    u_guess = warm_start_U[:, -1]
-                opti.set_initial(self.U[:, k], u_guess)
+            warm_start_array = np.asarray(warm_start_U, dtype=float)
+            warm_start_used = (
+                warm_start_array.shape == (self.N_CONTROLS, self.N)
+                and np.all(np.isfinite(warm_start_array))
+            )
+        if warm_start_used:
+            shifted_warm_start = np.column_stack(
+                [warm_start_array[:, 1:], warm_start_array[:, -1]]
+            )
+            warm_start_shift_rms = float(
+                np.sqrt(np.mean((shifted_warm_start - warm_start_array) ** 2))
+            )
+            raw_control_guess = shifted_warm_start
+            initial_guess_source = "warm_shifted_projected"
+        else:
+            raw_control_guess = self._reference_control_guess(
+                x0_array,
+                ref_trajectory,
+            )
 
+        control_guess = self._project_control_guess(
+            x0_array,
+            raw_control_guess,
+        )
+        projection_rms = float(
+            np.sqrt(np.mean((control_guess - raw_control_guess) ** 2))
+        )
+        state_guess = self._rollout_state_guess(x0_array, control_guess)
+        opti.set_initial(self.U, control_guess)
+        opti.set_initial(self.X, state_guess)
+
+        state_initial_jump_l2 = None
+        if self._last_x0 is not None and self._last_x0.shape == x0_array.shape:
+            state_initial_jump_l2 = float(np.linalg.norm(x0_array - self._last_x0))
+        self._last_x0 = x0_array.copy()
+
+        initial_metrics = self._evaluate_constraints(initial=True)
+        diagnostics = {
+            "warm_start_provided": bool(warm_start_provided),
+            "warm_start_used": bool(warm_start_used),
+            "warm_start_control_shift_rms": warm_start_shift_rms,
+            "initial_guess_source": initial_guess_source,
+            "initial_guess_projection_rms": projection_rms,
+            "state_initial_jump_l2": state_initial_jump_l2,
+            "constraint_slack_enabled": bool(self.enable_constraint_slack),
+            "constraint_count": initial_metrics["constraint_count"],
+            **self._prefixed_metrics("initial", initial_metrics),
+        }
+
+        t0 = time.perf_counter()
         try:
-            t0 = time.perf_counter()
             sol = opti.solve()
             wall_ms = (time.perf_counter() - t0) * 1000.0
-            status = str(sol.stats()["return_status"])
-            ipopt_ms = float(sol.stats().get("t_proc_total", 0)) * 1000.0
+            stats = sol.stats()
+            status = str(stats["return_status"])
+            ipopt_ms = float(stats.get("t_proc_total", 0)) * 1000.0
             if ipopt_ms > 0.0:
                 solve_time_ms = ipopt_ms
                 solve_time_source = "ipopt_t_proc"
@@ -402,26 +878,87 @@ class AUVMPCOptimizer:
                 solve_time_ms = wall_ms
                 solve_time_source = "wall_perf_counter"
         except RuntimeError as e:
-            status = f"FAILED: {str(e)}"
-            solve_time_ms = 0.0
-            solve_time_source = "failed"
-            raise RuntimeError(f"MPC solver failed: {status}") from e
+            wall_ms = (time.perf_counter() - t0) * 1000.0
+            try:
+                stats = opti.stats()
+            except RuntimeError:
+                stats = {}
+            status = str(stats.get("return_status") or f"FAILED: {str(e)}")
+            final_metrics = self._evaluate_constraints()
+            slack_metrics = self._evaluate_slack()
+            diagnostics.update(
+                {
+                    "solver_status": status,
+                    "solver_success": False,
+                    "solver_iterations": int(stats.get("iter_count", 0)),
+                    "solve_time_ms": wall_ms,
+                    "solve_time_source": "wall_perf_counter_failed",
+                    "solver_wall_time_current_ms": wall_ms,
+                    "control_period_ms": self.dt * 1000.0,
+                    "control_period_blocked": wall_ms > self.dt * 1000.0,
+                    "constraint_count": max(
+                        diagnostics["constraint_count"],
+                        final_metrics["constraint_count"],
+                    ),
+                    **self._prefixed_metrics("final", final_metrics),
+                    **slack_metrics,
+                }
+            )
+            raise MPCSolveError(f"MPC solver failed: {status}", diagnostics) from e
 
         if status not in (
             "Solve_Succeeded",
             "Search_Direction_Becomes_Too_Small",
         ):
-            raise RuntimeError(f"MPC infeasible: {status}")
+            final_metrics = self._evaluate_constraints(solution=sol)
+            slack_metrics = self._evaluate_slack(solution=sol)
+            diagnostics.update(
+                {
+                    "solver_status": status,
+                    "solver_success": False,
+                    "solver_iterations": int(stats.get("iter_count", 0)),
+                    "solve_time_ms": solve_time_ms,
+                    "solve_time_source": solve_time_source,
+                    "solver_wall_time_current_ms": wall_ms,
+                    "control_period_ms": self.dt * 1000.0,
+                    "control_period_blocked": wall_ms > self.dt * 1000.0,
+                    "constraint_count": max(
+                        diagnostics["constraint_count"],
+                        final_metrics["constraint_count"],
+                    ),
+                    **self._prefixed_metrics("final", final_metrics),
+                    **slack_metrics,
+                }
+            )
+            raise MPCSolveError(f"MPC infeasible: {status}", diagnostics)
 
         U_opt = sol.value(self.U)
         X_opt = sol.value(self.X)
         cost_val = float(sol.value(opti.f))
+        final_metrics = self._evaluate_constraints(solution=sol)
+        slack_metrics = self._evaluate_slack(solution=sol)
+        diagnostics.update(
+            {
+                "solver_status": status,
+                "solver_success": True,
+                "solver_iterations": int(stats.get("iter_count", 0)),
+                "solve_time_ms": solve_time_ms,
+                "solve_time_source": solve_time_source,
+                "solver_wall_time_current_ms": wall_ms,
+                "control_period_ms": self.dt * 1000.0,
+                "control_period_blocked": wall_ms > self.dt * 1000.0,
+                "constraint_count": max(
+                    diagnostics["constraint_count"],
+                    final_metrics["constraint_count"],
+                ),
+                **self._prefixed_metrics("final", final_metrics),
+                **slack_metrics,
+            }
+        )
 
         return {
             "U_opt": np.array(U_opt),
             "X_opt": np.array(X_opt),
-            "solver_status": status,
-            "solve_time_ms": solve_time_ms,
-            "solve_time_source": solve_time_source,
             "cost_value": cost_val,
+            **diagnostics,
         }

@@ -146,9 +146,9 @@ Jetson 与上位机之间的二进制通信链路需要在实物环境下测试�
 
 ### 5.3.2 TMR8637 随附测试报告与 50 Hz 噪声裕度核验
 
-随实物 TMR8637 提供的编号 6# 模组纸质测试报告构成了当前第一份直接面向该三轴模组的硬件文档证据。报告中的端子页确认信号输入、X/Y/Z 三轴输出、电源输入和公共信号地；三轴测试汇总给出 X、Y、Z 轴灵敏度分别为 20.02、19.98 和 19.96 mV/$\mu$T，在 $\pm200\ \mu\text{T}$ 测试区间内传输曲线近似线性，三轴在 1 Hz 处的磁场噪声谱密度均为 200 pT/$\sqrt{\text{Hz}}$。原始资料与出版裁剪见图~\ref{fig:ch02-tmr8637-terminal}至图~\ref{fig:ch02-tmr8637-noise-psd}。
+随实物 TMR8637 提供的编号 6# 模组纸质测试报告构成了当前第一份直接面向该三轴模组的硬件文档证据。报告中的三轴测试汇总给出 X、Y、Z 轴灵敏度分别为 20.02、19.98 和 19.96 mV/$\mu$T，在 $\pm200\ \mu\text{T}$ 测试区间内传输曲线近似线性，三轴在 1 Hz 处的磁场噪声谱密度均为 200 pT/$\sqrt{\text{Hz}}$。原始扫描资料与出版裁剪见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
 
-磁场噪声谱采用双对数坐标，横轴覆盖约 0.1 Hz 至 10 kHz，纵轴单位为 pT/$\sqrt{\text{Hz}}$。50 Hz 位于 10 Hz 与 100 Hz 主刻度之间，按三轴曲线线宽读取约为 20–30 pT/$\sqrt{\text{Hz}}$，即约 $2\times10^1\ \text{pT}/\sqrt{\text{Hz}}$ 量级。由于现有证据是纸质曲线照片而非数值数据导出，本文把"约 20 pT/$\sqrt{\text{Hz}}$"作为中心近似，并采用 20–30 pT/$\sqrt{\text{Hz}}$ 区间完成保守计算，不报告虚假的个位精度。
+磁场噪声谱采用双对数坐标，横轴覆盖约 0.1 Hz 至 10 kHz，纵轴单位为 pT/$\sqrt{\text{Hz}}$。50 Hz 位于 10 Hz 与 100 Hz 主刻度之间，按三轴曲线线宽读取约为 20–30 pT/$\sqrt{\text{Hz}}$，即约 $2\times10^1\ \text{pT}/\sqrt{\text{Hz}}$ 量级。由于现有证据是纸质曲线扫描件而非数值数据导出，本文把"约 20 pT/$\sqrt{\text{Hz}}$"作为中心近似，并采用 20–30 pT/$\sqrt{\text{Hz}}$ 区间完成保守计算，不报告虚假的个位精度。
 
 按 $\sigma_B\approx S_B(50\text{ Hz})\sqrt{B_{\mathrm{ENBW}}}$ 估算，若只考虑模组本体噪声，要使 $\sigma_B\leq0.05\text{ nT}$，20–30 pT/$\sqrt{\text{Hz}}$ 区间对应的带宽上限为 6.25–2.78 Hz；按 30 pT/$\sqrt{\text{Hz}}$ 的区间上界作最保守设计时，应满足 $B_{\mathrm{ENBW}}\leq2.78\text{ Hz}$。第 3.2.3 节采用的四阶 Butterworth 低通在 $f_c=0.5\text{ Hz}$ 时对应 $B_{\mathrm{ENBW}}\approx0.513\text{ Hz}$，由此得到模组本体 RMS 噪声约 0.014–0.022 nT，低于 0.05 nT 系统目标。
 

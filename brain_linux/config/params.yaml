@@ -69,6 +69,16 @@ limits:
   thrust_max: 100.0
 
 control:
+  terrain_cbf:
+    lookahead_time_s: 2.0
+    lpf_alpha: 0.2
+    min_clearance_m: 1.8
+    alpha: 0.7
+    max_descend_rate_mps: 0.4
+    emergency_clearance_m: 1.2
+    emergency_rise_m: 2.0
+    slowdown_clearance_margin_m: 1.5
+    min_depth_m: 0.5
   target_u: 1.1
   u0: 1.0
   u_min: 0.6
@@ -167,6 +177,7 @@ mpc_constraints:
   psi_band_rad: 0.7854             # rad：45° 带宽
   enable_rate_constraints: true
   enable_band_constraints: true
+  enable_constraint_slack: false
 
 ekf:
   gravity: 9.81

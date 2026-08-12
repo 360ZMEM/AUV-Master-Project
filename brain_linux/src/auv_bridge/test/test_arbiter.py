@@ -24,6 +24,7 @@ from common.protocol import (
     KEY_PRESET_TIME_TENTHS_MIN,
     KEY_RIGHT,
     KEY_SIDE_MOTOR_RPM,
+    KEY_TARGET_DEPTH_M,
     KEY_THRUST,
     KEY_TOP,
     KEY_WORK_INSTRUCTION,
@@ -90,6 +91,7 @@ def test_autonomous_mode_overrides_control_surfaces_and_thrust() -> None:
             "left_fin_deg": -8.0,
             "bottom_fin_deg": -9.0,
             "thrust_percent": 10.0,
+            KEY_TARGET_DEPTH_M: 11.8,
             "valid": True,
             "healthy": True,
         },
@@ -108,6 +110,7 @@ def test_autonomous_mode_overrides_control_surfaces_and_thrust() -> None:
     assert decision.command_payload[KEY_OBJ_ADDRESS] == 2
     assert decision.command_payload[KEY_SIDE_MOTOR_RPM] == 33
     assert decision.command_payload[KEY_ORIENTATION_DEG] == 15.0
+    assert decision.command_payload[KEY_TARGET_DEPTH_M] == 11.8
 
 
 def test_manual_override_forces_remote_mode_immediately() -> None:

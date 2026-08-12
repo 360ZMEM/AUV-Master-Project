@@ -44,10 +44,13 @@ $(PACKAGE).pdf: cls FORCE_MAKE
 $(THESIS).pdf: cls FORCE_MAKE
 	$(LATEXMK) $(THESIS)
 
+# The maintained AUV thesis sources are the TeX files under thuthesis/data/
+# and ref/auv-references.bib.  Legacy Markdown migration/sync tools must never
+# run implicitly here because they can overwrite newer thesis edits.
 $(AUV_THESIS).pdf: cls FORCE_MAKE
-	python3 ../tools/migrate_thesis_chapters.py --check
-	python3 ../tools/sync_latex_references.py --check
 	$(LATEXMK) $(AUV_THESIS)
+	@test -s $(AUV_THESIS).pdf
+	@awk 'BEGIN { failed = 0 } /Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber/ { print; failed = 1 } END { exit failed }' $(AUV_THESIS).log
 
 viewdoc: doc
 	$(LATEXMK) -pv $(PACKAGE).dtx

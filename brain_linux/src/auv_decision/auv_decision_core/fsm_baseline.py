@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import time
 
+from .decision_filters import ConfidenceHysteresisGate
 from .models import MotionGoal, SensorStatusData
 
 
@@ -31,8 +32,18 @@ class FiniteStateMachineEngine:
 
     DIVE_TARGET_DEPTH = 4.0
 
-    def __init__(self, confidence_threshold: float = 0.7) -> None:
+    def __init__(
+        self,
+        confidence_threshold: float = 0.7,
+        confidence_hysteresis: float = 0.0,
+        confidence_debounce_ticks: int = 1,
+    ) -> None:
         self.confidence_threshold = confidence_threshold
+        self.confidence_gate = ConfidenceHysteresisGate(
+            threshold=confidence_threshold,
+            hysteresis=confidence_hysteresis,
+            debounce_ticks=confidence_debounce_ticks,
+        )
         self.current_state: str = 'IDLE'
         self.last_goal: MotionGoal = MotionGoal()
         self._state_history: list[tuple[int, str, float]] = []
@@ -110,7 +121,7 @@ class FiniteStateMachineEngine:
         if self._is_emergency(sensor):
             return self._transition('EMERGENCY_SURFACE', self._emergency_goal(sensor), sensor)
         if sensor.depth_m >= self.DIVE_TARGET_DEPTH:
-            if sensor.confidence > self.confidence_threshold:
+            if self.confidence_gate.update(sensor.confidence):
                 return self._transition(
                     'PARALLEL_TRACKING',
                     self._make_goal(
@@ -150,7 +161,7 @@ class FiniteStateMachineEngine:
     def _handle_parallel_tracking(self, sensor: SensorStatusData) -> MotionGoal:
         if self._is_emergency(sensor):
             return self._transition('EMERGENCY_SURFACE', self._emergency_goal(sensor), sensor)
-        if sensor.confidence < self.confidence_threshold:
+        if not self.confidence_gate.update(sensor.confidence):
             return self._transition(
                 'ZIGZAG_SEARCH',
                 self._make_goal(
@@ -179,7 +190,7 @@ class FiniteStateMachineEngine:
     def _handle_zigzag_search(self, sensor: SensorStatusData) -> MotionGoal:
         if self._is_emergency(sensor):
             return self._transition('EMERGENCY_SURFACE', self._emergency_goal(sensor), sensor)
-        if sensor.confidence >= self.confidence_threshold:
+        if self.confidence_gate.update(sensor.confidence):
             return self._transition(
                 'PARALLEL_TRACKING',
                 self._make_goal(
@@ -322,6 +333,7 @@ class FiniteStateMachineEngine:
         self._hold_target_depth = 0.0
         self._hold_target_heading = 0.0
         self._enter_count = 0
+        self.confidence_gate.reset()
 
     def count_transitions(self) -> int:
         if len(self._state_history) < 2:

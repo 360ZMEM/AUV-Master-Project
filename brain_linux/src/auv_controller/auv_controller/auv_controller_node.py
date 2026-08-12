@@ -37,7 +37,12 @@ import os
 
 import rclpy
 from rclpy.executors import ExternalShutdownException
-from auv_interfaces.msg import Setpoint, MpcCmd, ArbiterStatus
+from auv_interfaces.msg import (
+    ArbiterStatus,
+    CableTrackingAuthority,
+    MpcCmd,
+    Setpoint,
+)
 from geometry_msgs.msg import Twist, TwistStamped
 from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import SetParametersResult
@@ -59,6 +64,10 @@ from .terrain_engine import TerrainFollower
 from .terrain_perception import ROSTerrainPerception
 from .virtual_sonar_wrapper import VirtualSonarWrapper
 from .mappers import clamp_int16
+from .quality_control_policy import (
+    AuthoritySnapshot,
+    ConservativeQualityControlPolicy,
+)
 
 def _resolve_project_root() -> Path:
     """解析工程根目录，优先使用环境变量和 ament 安装路径。"""
@@ -131,6 +140,22 @@ class AUVControllerNode(Node):
         self.declare_parameter('heading_ramp_rate_deg_s', 10.0)
         self.declare_parameter('runtime_status_topic', '/auv/sensors/runtime_status')
         self.declare_parameter('enable_capability_gate', True)
+        self.declare_parameter('quality_control.enable', False)
+        self.declare_parameter('quality_control.accept_shadow', False)
+        self.declare_parameter(
+            'quality_control.allowed_calibration_domain',
+            'physical',
+        )
+        self.declare_parameter('quality_control.maximum_age_s', 0.75)
+        self.declare_parameter('quality_control.minimum_speed_scale', 0.35)
+        self.declare_parameter(
+            'quality_control.maximum_delta_u_penalty_scale',
+            4.0,
+        )
+        self.declare_parameter(
+            'quality_control.maximum_safety_margin_scale',
+            1.5,
+        )
 
         # --- 特征开关 (Feature Flags) ---
         self.declare_parameter('depth_mode', 'CONSTANT')
@@ -142,7 +167,10 @@ class AUVControllerNode(Node):
         params_file = str(self.get_parameter('params_file').value)
         cfg = self._load_config(params_file)
 
-        ctrl_cfg = cfg.get('control', {})
+        ctrl_cfg = dict(cfg.get('control', {}))
+        for section in ('mpc', 'mpc_model', 'mpc_weights', 'mpc_constraints'):
+            if section in cfg:
+                ctrl_cfg[section] = cfg[section]
         lim_cfg = cfg.get('limits', {})
         mapper_cfg = cfg.get('mappers', {})
         self.control_rate_hz = float(self.get_parameter('control_rate_hz').value)
@@ -179,8 +207,33 @@ class AUVControllerNode(Node):
         self._last_chain_status = ""
 
         # 实例化地形跟踪模块
+        terrain_cbf_cfg = dict(ctrl_cfg.get('terrain_cbf', {}) or {})
         self._terrain_perception = ROSTerrainPerception()
-        self._terrain_follower = TerrainFollower(lookahead_time_s=2.0, lpf_alpha=0.2)
+        self._terrain_follower = TerrainFollower(
+            lookahead_time_s=float(terrain_cbf_cfg.get('lookahead_time_s', 2.0)),
+            lpf_alpha=float(terrain_cbf_cfg.get('lpf_alpha', 0.2)),
+            min_clearance_m=float(terrain_cbf_cfg.get('min_clearance_m', 1.8)),
+            cbf_alpha=float(terrain_cbf_cfg.get('alpha', 0.7)),
+            cbf_dt_s=float(
+                terrain_cbf_cfg.get(
+                    'dt_s',
+                    1.0 / max(self.control_rate_hz, 1.0e-3),
+                )
+            ),
+            max_descend_rate_mps=float(
+                terrain_cbf_cfg.get('max_descend_rate_mps', 0.4)
+            ),
+            emergency_clearance_m=float(
+                terrain_cbf_cfg.get('emergency_clearance_m', 1.2)
+            ),
+            emergency_rise_m=float(
+                terrain_cbf_cfg.get('emergency_rise_m', 2.0)
+            ),
+            slowdown_clearance_margin_m=float(
+                terrain_cbf_cfg.get('slowdown_clearance_margin_m', 1.5)
+            ),
+            min_depth_m=float(terrain_cbf_cfg.get('min_depth_m', 0.5)),
+        )
 
         self.latest_setpoint: Setpoint | None = None
         self.latest_filtered_state: Odometry | None = None
@@ -195,6 +248,40 @@ class AUVControllerNode(Node):
         self.latest_arbiter_status: ArbiterStatus | None = None
         self.latest_runtime_status: dict | None = None
         self._last_capability_gate_reason = ""
+        self.latest_tracking_authority: CableTrackingAuthority | None = None
+        self.latest_tracking_authority_monotonic_s = 0.0
+        self._quality_control_policy = ConservativeQualityControlPolicy(
+            enabled=bool(
+                self.get_parameter('quality_control.enable').value
+            ),
+            accept_shadow=bool(
+                self.get_parameter('quality_control.accept_shadow').value
+            ),
+            allowed_calibration_domain=str(
+                self.get_parameter(
+                    'quality_control.allowed_calibration_domain'
+                ).value
+            ),
+            maximum_age_s=float(
+                self.get_parameter('quality_control.maximum_age_s').value
+            ),
+            minimum_speed_scale=float(
+                self.get_parameter(
+                    'quality_control.minimum_speed_scale'
+                ).value
+            ),
+            maximum_delta_u_penalty_scale=float(
+                self.get_parameter(
+                    'quality_control.maximum_delta_u_penalty_scale'
+                ).value
+            ),
+            maximum_safety_margin_scale=float(
+                self.get_parameter(
+                    'quality_control.maximum_safety_margin_scale'
+                ).value
+            ),
+        )
+        self._latest_quality_control_decision = None
 
         # E4 — EKF 协方差驱动的置信度（论文 §4.4 主创新点）
         self._latest_p_trace_xy = float('nan')
@@ -220,6 +307,12 @@ class AUVControllerNode(Node):
         self.forward_sonar_sub = self.create_subscription(Float32, '/auv/sensors/forward_sonar_slope', self._on_forward_sonar, 20)
         self.cov_sub = self.create_subscription(Float32MultiArray, '/auv/state/covariance', self._on_covariance, 20)
         self.runtime_status_sub = self.create_subscription(String, self._runtime_status_topic, self._on_runtime_status, 20)
+        self.tracking_authority_sub = self.create_subscription(
+            CableTrackingAuthority,
+            '/auv/perception/cable_tracking_authority_shadow',
+            self._on_tracking_authority,
+            20,
+        )
 
         self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 20)
         self.debug_pub = self.create_publisher(String, '/auv/controller/debug', 20)
@@ -229,8 +322,14 @@ class AUVControllerNode(Node):
 
         self._lat_count = 0
         self._lat_sum = 0.0
+        self._control_cycle_count_total = 0
+        self._solver_attempt_count_total = 0
+        self._solver_success_count_total = 0
+        self._solver_fallback_count_total = 0
+        self._solver_blocked_count_total = 0
+        self._debug_publish_period_s = 0.5
         self.create_timer(2.0, self._log_latency)
-        self.create_timer(0.5, self._publish_debug)
+        self.create_timer(self._debug_publish_period_s, self._publish_debug)
         self._param_callback = self.add_on_set_parameters_callback(self._on_parameters_changed)
 
         mode_str = 'MPC' if self._use_mpc else 'PID'
@@ -248,6 +347,13 @@ class AUVControllerNode(Node):
     def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
         """缓存最新仲裁器状态。"""
         self.latest_arbiter_status = msg
+
+    def _on_tracking_authority(
+        self,
+        msg: CableTrackingAuthority,
+    ) -> None:
+        self.latest_tracking_authority = msg
+        self.latest_tracking_authority_monotonic_s = time.monotonic()
 
     def _on_setpoint(self, msg: Setpoint) -> None:
         """缓存最新控制目标并记录时间戳。"""
@@ -475,6 +581,7 @@ class AUVControllerNode(Node):
         
         # 1. 深度源选择
         work_instruction = 0x00
+        terrain_debug: dict[str, object] = {}
         if is_altitude_follow:
             target_altitude_m = float(self.latest_setpoint.target_depth_m)
             z_target, terrain_debug = self._terrain_follower.compute(self._terrain_perception, target_altitude_m)
@@ -487,6 +594,12 @@ class AUVControllerNode(Node):
             # 安全仲裁：防冲出水面
             z_target = max(z_target, 0.5)
             sp.target_depth_m = z_target
+            cbf_speed_scale = float(terrain_debug.get("cbf_speed_scale", 1.0))
+            cbf_speed_scale = min(1.0, max(0.0, cbf_speed_scale))
+            original_speed_mps = float(sp.target_speed_mps)
+            sp.target_speed_mps = original_speed_mps * cbf_speed_scale
+            terrain_debug["cbf_original_speed_mps"] = original_speed_mps
+            terrain_debug["cbf_filtered_speed_mps"] = float(sp.target_speed_mps)
             work_instruction = 0xEF
             
             # 发布地形调试信息
@@ -582,6 +695,65 @@ class AUVControllerNode(Node):
             setpoint['confidence'] = conf_from_cov
             self._latest_confidence = conf_from_cov
 
+        authority_snapshot = None
+        if self.latest_tracking_authority is not None:
+            authority_snapshot = AuthoritySnapshot(
+                mode=int(self.latest_tracking_authority.mode),
+                tracking_authorized=bool(
+                    self.latest_tracking_authority.tracking_authorized
+                ),
+                p_track=float(self.latest_tracking_authority.p_track),
+                calibration_domain=str(
+                    self.latest_tracking_authority.calibration_domain
+                ),
+                shadow_only=bool(
+                    self.latest_tracking_authority.shadow_only
+                ),
+                age_s=max(
+                    time.monotonic()
+                    - self.latest_tracking_authority_monotonic_s,
+                    0.0,
+                ),
+            )
+        policy_input_target_speed_mps = float(setpoint['target_speed_mps'])
+        # Doxygen telemetry contract: expose the R13 authority decision without changing the control law.
+        authority_debug_snapshot = None
+        if authority_snapshot is not None:
+            authority_debug_snapshot = {
+                'mode': int(authority_snapshot.mode),
+                'tracking_authorized': bool(authority_snapshot.tracking_authorized),
+                'p_track': float(authority_snapshot.p_track),
+                'calibration_domain': str(authority_snapshot.calibration_domain),
+                'shadow_only': bool(authority_snapshot.shadow_only),
+                'age_s': float(authority_snapshot.age_s),
+            }
+        quality_decision = self._quality_control_policy.apply(
+            policy_input_target_speed_mps,
+            authority_snapshot,
+        )
+        self._latest_quality_control_decision = quality_decision
+        if quality_decision.accepted:
+            setpoint['target_speed_mps'] = (
+                quality_decision.target_speed_mps
+            )
+            setpoint['confidence'] = float(quality_decision.confidence)
+            setpoint['delta_u_penalty_scale'] = (
+                quality_decision.delta_u_penalty_scale
+            )
+            setpoint['safety_margin_scale'] = (
+                quality_decision.safety_margin_scale
+            )
+            self._latest_confidence = float(quality_decision.confidence)
+        applied_target_speed_mps = float(
+            setpoint.get('target_speed_mps', policy_input_target_speed_mps)
+        )
+        if abs(policy_input_target_speed_mps) > 1.0e-9:
+            quality_speed_scale = (
+                applied_target_speed_mps / policy_input_target_speed_mps
+            )
+        else:
+            quality_speed_scale = 0.0 if abs(applied_target_speed_mps) <= 1.0e-9 else None
+
         if self._bypass_zero_effort:
             # 零推力零舵角保底输出，跳过控制器计算
             from auv_controller.base_controller import ControlOutput
@@ -596,6 +768,20 @@ class AUVControllerNode(Node):
         else:
             # 调用当前活跃控制器
             ctrl_output = self._active_controller.compute(state, setpoint)
+
+        self._control_cycle_count_total += 1
+        if ctrl_output.debug.get('controller_type') == 'MPC':
+            self._solver_attempt_count_total += 1
+            solver_status = str(ctrl_output.debug.get('solver_status', ''))
+            if solver_status in (
+                'Solve_Succeeded',
+                'Search_Direction_Becomes_Too_Small',
+            ):
+                self._solver_success_count_total += 1
+            if solver_status.startswith('FALLBACK'):
+                self._solver_fallback_count_total += 1
+            if bool(ctrl_output.debug.get('control_period_blocked', False)):
+                self._solver_blocked_count_total += 1
 
         if self._use_mpc or is_altitude_follow:
             # MPC 模式或高度跟随模式：发布 MpcCmd 消息（供 auv_bridge/arbiter 消费）
@@ -649,9 +835,87 @@ class AUVControllerNode(Node):
             'control_mode_byte': self._control_mode_byte,
             'controller_type': ctrl_output.debug.get('controller_type', 'MPC' if self._use_mpc else 'PID'),
             'solver_status': ctrl_output.debug.get('solver_status', ''),
+            'solver_return_status': ctrl_output.debug.get('solver_return_status', ''),
+            'prediction_horizon': ctrl_output.debug.get('prediction_horizon', None),
+            'mpc_prediction_dt_s': ctrl_output.debug.get('dt', None),
+            'solver_iterations': ctrl_output.debug.get('solver_iterations', None),
             'solve_time_ms': ctrl_output.debug.get('solve_time_ms', None),
+            'solve_time_source': ctrl_output.debug.get('solve_time_source', ''),
+            'solver_wall_time_current_ms': ctrl_output.debug.get('solver_wall_time_current_ms', None),
             'total_compute_ms': ctrl_output.debug.get('total_compute_ms', None),
             'fallback_reason': ctrl_output.debug.get('fallback_reason', ''),
+            'fallback_type': ctrl_output.debug.get('fallback_type', 'none'),
+            'confidence': ctrl_output.debug.get(
+                'confidence', self._latest_confidence
+            ),
+            'confidence_policy': ctrl_output.debug.get(
+                'confidence_policy', ''
+            ),
+            'delta_u_previous_control_available': ctrl_output.debug.get(
+                'delta_u_previous_control_available', False
+            ),
+            'quality_control_policy': {
+                'accepted': bool(
+                    self._latest_quality_control_decision
+                    and self._latest_quality_control_decision.accepted
+                ),
+                'reason': (
+                    self._latest_quality_control_decision.reason
+                    if self._latest_quality_control_decision
+                    else 'not_evaluated'
+                ),
+                'input_target_speed_mps': policy_input_target_speed_mps,
+                'target_speed_mps': (
+                    self._latest_quality_control_decision.target_speed_mps
+                    if self._latest_quality_control_decision
+                    else policy_input_target_speed_mps
+                ),
+                'applied_target_speed_mps': applied_target_speed_mps,
+                'speed_scale': quality_speed_scale,
+                'confidence': (
+                    self._latest_quality_control_decision.confidence
+                    if self._latest_quality_control_decision
+                    else None
+                ),
+                'delta_u_penalty_scale': (
+                    self._latest_quality_control_decision.delta_u_penalty_scale
+                    if self._latest_quality_control_decision
+                    else 1.0
+                ),
+                'safety_margin_scale': (
+                    self._latest_quality_control_decision.safety_margin_scale
+                    if self._latest_quality_control_decision
+                    else 1.0
+                ),
+                'authority_snapshot': authority_debug_snapshot,
+            },
+            'debug_publish_period_s': self._debug_publish_period_s,
+            'control_cycle_count_total': self._control_cycle_count_total,
+            'solver_attempt_count_total': self._solver_attempt_count_total,
+            'solver_success_count_total': self._solver_success_count_total,
+            'solver_fallback_count_total': self._solver_fallback_count_total,
+            'solver_blocked_count_total': self._solver_blocked_count_total,
+            'control_period_ms': ctrl_output.debug.get('control_period_ms', None),
+            'control_period_blocked': ctrl_output.debug.get('control_period_blocked', False),
+            'warm_start_provided': ctrl_output.debug.get('warm_start_provided', False),
+            'warm_start_used': ctrl_output.debug.get('warm_start_used', False),
+            'warm_start_control_shift_rms': ctrl_output.debug.get('warm_start_control_shift_rms', None),
+            'initial_guess_source': ctrl_output.debug.get('initial_guess_source', ''),
+            'initial_guess_projection_rms': ctrl_output.debug.get('initial_guess_projection_rms', None),
+            'state_initial_jump_l2': ctrl_output.debug.get('state_initial_jump_l2', None),
+            'constraint_slack_enabled': ctrl_output.debug.get('constraint_slack_enabled', False),
+            'slack_max': ctrl_output.debug.get('slack_max', None),
+            'slack_l1': ctrl_output.debug.get('slack_l1', None),
+            'slack_l2': ctrl_output.debug.get('slack_l2', None),
+            'slack_active_count': ctrl_output.debug.get('slack_active_count', None),
+            'constraint_count': ctrl_output.debug.get('constraint_count', None),
+            'initial_constraint_violation_max': ctrl_output.debug.get('initial_constraint_violation_max', None),
+            'initial_constraint_violation_l2': ctrl_output.debug.get('initial_constraint_violation_l2', None),
+            'initial_active_constraint_count': ctrl_output.debug.get('initial_active_constraint_count', None),
+            'final_constraint_violation_max': ctrl_output.debug.get('final_constraint_violation_max', None),
+            'final_constraint_violation_l2': ctrl_output.debug.get('final_constraint_violation_l2', None),
+            'final_active_constraint_count': ctrl_output.debug.get('final_active_constraint_count', None),
+            'capability_gate_status': 'passed',
             'thrust_cmd': ctrl_output.thrust_percent,
             'guidance_heading': smoothed_heading,
             'guidance_depth': setpoint.get('target_depth_m', 0.0),
@@ -669,7 +933,32 @@ class AUVControllerNode(Node):
             'target_depth_m': round(float(sp.target_depth_m), 3),
             'current_depth_m': round(float(-st.pose.pose.position.z), 3),
             'target_speed_mps': round(float(sp.target_speed_mps), 3),
+            'requested_target_speed_mps': round(policy_input_target_speed_mps, 3),
+            'applied_target_speed_mps': round(applied_target_speed_mps, 3),
             'current_speed_mps': round(float(st.twist.twist.linear.x), 3),
+            'terrain_cbf': {
+                key: terrain_debug.get(key)
+                for key in (
+                    'cbf_enabled',
+                    'cbf_active',
+                    'cbf_reason',
+                    'cbf_min_clearance_m',
+                    'cbf_barrier_now_m',
+                    'cbf_preview_barrier_m',
+                    'cbf_barrier_decay_reference_m',
+                    'cbf_depth_upper_m',
+                    'cbf_descend_rate_limited',
+                    'cbf_filtered_depth_m',
+                    'cbf_speed_scale',
+                    'cbf_original_speed_mps',
+                    'cbf_filtered_speed_mps',
+                    'S_now',
+                    'S_future',
+                    'slope_source',
+                    'estimated_slope',
+                )
+                if key in terrain_debug
+            },
             'pitch_saturated': bool(ctrl_output.debug.get('pitch_saturated', False)),
             'yaw_saturated': bool(ctrl_output.debug.get('yaw_saturated', False)),
             'thrust_saturated': bool(ctrl_output.debug.get('thrust_saturated', False)),
@@ -708,6 +997,8 @@ class AUVControllerNode(Node):
             'mode': 'CAPABILITY_DEGRADED_HOLD',
             'controller_type': 'CAPABILITY_GATE',
             'fallback_reason': reason,
+            'fallback_type': 'capability_gate_hold',
+            'capability_gate_status': 'blocked',
             'thrust_cmd': 0.0,
             'guidance_heading': float(sp.target_heading_rad),
             'guidance_depth': float(sp.target_depth_m),

@@ -36,7 +36,14 @@ import rclpy
 from rclpy.executors import ExternalShutdownException
 
 from . import PROJECT_ROOT
-from auv_interfaces.msg import ArbiterStatus, MpcCmd, SensorStatus, Setpoint
+from auv_interfaces.msg import (
+    ArbiterStatus,
+    MagneticSampleBlock,
+    MpcCmd,
+    SensorStatus,
+    Setpoint,
+    SonarCableObservation,
+)
 from geometry_msgs.msg import Twist, TwistStamped
 from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
@@ -170,6 +177,18 @@ class AUVBridgeNode(Node):
         self.dvl_key = str(self.bridge_cfg.get('dvl_key', 'rt/auv/sensors/dvl'))
         self.depth_key = str(self.bridge_cfg.get('depth_key', 'rt/auv/sensors/depth'))
         self.magnetic_key = str(self.bridge_cfg.get('magnetic_key', 'rt/auv/sensors/magnetic'))
+        self.magnetic_block_key = str(
+            self.bridge_cfg.get(
+                'magnetic_block_key',
+                'rt/auv/sensors/magnetic_block',
+            )
+        )
+        self.cable_sonar_observation_key = str(
+            self.bridge_cfg.get(
+                'cable_sonar_observation_key',
+                'rt/auv/sensors/cable_sonar_observation',
+            )
+        )
         self.arbiter_cfg = self.bridge_cfg.get('arbiter', {})
         self.arbiter_enabled = bool(self.arbiter_cfg.get('enabled', False))
         self.arbiter_status_topic = str(self.arbiter_cfg.get('arbiter_status_topic', '/auv/arbiter/status'))
@@ -206,10 +225,25 @@ class AUVBridgeNode(Node):
         self.dvl_pub = self.create_publisher(TwistStamped, '/auv/sensors/dvl', 10)
         self.depth_pub = self.create_publisher(Float32, '/auv/sensors/depth', 10)
         self.altitude_pub = self.create_publisher(Float32, '/auv/sensors/altitude', 10)
+        self.forward_sonar_slope_pub = self.create_publisher(
+            Float32,
+            '/auv/sensors/forward_sonar_slope',
+            10,
+        )
         # 新增：任务指令发布者（供行为树订阅）
         self.mission_command_pub = self.create_publisher(String, '/auv/mission_command', 10)
         self._current_bt_status = "IDLE"
         self.magnetic_pub = self.create_publisher(MagneticField, '/auv/sensors/magnetic', 10)
+        self.magnetic_block_pub = self.create_publisher(
+            MagneticSampleBlock,
+            '/auv/sensors/magnetic_block',
+            5,
+        )
+        self.cable_sonar_observation_pub = self.create_publisher(
+            SonarCableObservation,
+            '/auv/sensors/cable_sonar_observation',
+            10,
+        )
         self.magnetic_msg_frame_id = 'auv/base_link'
         mag_status_cfg = dict(self.bridge_cfg.get('magnetic_extrinsics_status', {}) or {})
         self.mag_extrinsics_status_enabled = bool(mag_status_cfg.get('enabled', True))
@@ -1024,6 +1058,82 @@ class AUVBridgeNode(Node):
             msg.magnetic_field.z = float(magnetic_vec[2])
             self._safe_publish_ros(self.magnetic_pub, msg)
             self._publish_magnetic_extrinsics_status(data)
+            return
+
+        if keyexpr == self.magnetic_block_key:
+            arrays = [
+                data.get('time_offset_s'),
+                data.get('x_nt'),
+                data.get('y_nt'),
+                data.get('z_nt'),
+            ]
+            if not all(isinstance(values, list) for values in arrays):
+                return
+            count = min(
+                int(data.get('sample_count', 0)),
+                *(len(values) for values in arrays),
+            )
+            if count <= 0:
+                return
+            msg = MagneticSampleBlock()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = str(data.get('frame_id', 'mag_link'))
+            msg.sample_rate_hz = float(data.get('sample_rate_hz', 0.0))
+            msg.sample_count = count
+            msg.time_offset_s = [float(value) for value in arrays[0][:count]]
+            msg.x_nt = [float(value) for value in arrays[1][:count]]
+            msg.y_nt = [float(value) for value in arrays[2][:count]]
+            msg.z_nt = [float(value) for value in arrays[3][:count]]
+            msg.clipping_ratio = float(data.get('clipping_ratio', 0.0))
+            msg.data_completeness = float(data.get('data_completeness', 0.0))
+            msg.dropped_sample_count = int(
+                data.get('dropped_sample_count', 0)
+            )
+            msg.calibration_valid = bool(
+                data.get('calibration_valid', False)
+            )
+            msg.calibration_id = str(data.get('calibration_id', ''))
+            msg.sample_clock_verified = bool(
+                data.get('sample_clock_verified', False)
+            )
+            msg.status = str(data.get('status', ''))
+            self._safe_publish_ros(self.magnetic_block_pub, msg)
+            return
+
+        if keyexpr == self.cable_sonar_observation_key:
+            point_x = data.get('point_x_m')
+            point_y = data.get('point_y_m')
+            if not isinstance(point_x, list) or not isinstance(point_y, list):
+                return
+            count = min(len(point_x), len(point_y))
+            msg = SonarCableObservation()
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = str(data.get('frame_id', 'sonar_link'))
+            msg.valid = bool(data.get('valid', False))
+            msg.detector_score = float(data.get('detector_score', 0.0))
+            msg.point_x_m = [float(value) for value in point_x[:count]]
+            msg.point_y_m = [float(value) for value in point_y[:count]]
+            raw_weights = data.get('point_weight', [])
+            if isinstance(raw_weights, list) and len(raw_weights) == count:
+                msg.point_weight = [float(value) for value in raw_weights]
+            msg.contrast_to_noise_ratio = float(
+                data.get('contrast_to_noise_ratio', 0.0)
+            )
+            msg.visible_length_m = float(
+                data.get('visible_length_m', 0.0)
+            )
+            msg.ambiguity_margin = float(
+                data.get('ambiguity_margin', 0.0)
+            )
+            msg.field_of_view_truncated = bool(
+                data.get('field_of_view_truncated', False)
+            )
+            msg.detector_id = str(data.get('detector_id', ''))
+            flags = data.get('quality_flags', [])
+            if isinstance(flags, list):
+                msg.quality_flags = [str(value) for value in flags]
+            self._safe_publish_ros(self.cable_sonar_observation_pub, msg)
+            return
 
     def handle_protocol_telemetry(self, telemetry: ProtocolUplinkTelemetry) -> None:
         if not rclpy.ok():
@@ -1077,6 +1187,13 @@ class AUVBridgeNode(Node):
         altitude_msg = Float32()
         altitude_msg.data = float(telemetry.altitude_m)
         self._safe_publish_ros(self.altitude_pub, altitude_msg)
+
+        forward_sonar_slope_msg = Float32()
+        forward_sonar_slope_msg.data = float(telemetry.forward_sonar_slope)
+        self._safe_publish_ros(
+            self.forward_sonar_slope_pub,
+            forward_sonar_slope_msg,
+        )
 
         guard_decision = None
         if self.arbiter_enabled:

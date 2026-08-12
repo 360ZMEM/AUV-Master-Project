@@ -69,6 +69,31 @@ def _load_guidance_module():
 
 _guidance_mod = _load_guidance_module()
 
+_SOLVER_DIAGNOSTIC_KEYS = (
+    "solver_iterations",
+    "solver_wall_time_current_ms",
+    "control_period_ms",
+    "control_period_blocked",
+    "warm_start_provided",
+    "warm_start_used",
+    "warm_start_control_shift_rms",
+    "initial_guess_source",
+    "initial_guess_projection_rms",
+    "state_initial_jump_l2",
+    "constraint_slack_enabled",
+    "slack_max",
+    "slack_l1",
+    "slack_l2",
+    "slack_active_count",
+    "constraint_count",
+    "initial_constraint_violation_max",
+    "initial_constraint_violation_l2",
+    "initial_active_constraint_count",
+    "final_constraint_violation_max",
+    "final_constraint_violation_l2",
+    "final_active_constraint_count",
+)
+
 
 def _wrap_angle(angle: float) -> float:
     return (angle + np.pi) % (2 * np.pi) - np.pi
@@ -107,10 +132,10 @@ class MPCController(BaseController):
         lim_cfg: dict,
         mapper_cfg: dict | None = None,
     ) -> None:
-        mpc_cfg = ctrl_cfg.get("mpc", {})
+        mpc_cfg = dict(ctrl_cfg.get("mpc", {}))
         model_cfg = ctrl_cfg.get("mpc_model", {})
         weights_cfg = dict(ctrl_cfg.get("mpc_weights", {}))
-        constraints_cfg = ctrl_cfg.get("mpc_constraints", {})
+        constraints_cfg = dict(ctrl_cfg.get("mpc_constraints", {}))
         solver_max_iter = int(mpc_cfg.get("max_iter", 100))
 
         # E3 — sweep harness 通过 AUV_MPC_MODE 注入消融模式 (ua/baseline)
@@ -124,8 +149,26 @@ class MPCController(BaseController):
             try:
                 overrides = json.loads(overrides_json)
                 if isinstance(overrides, dict):
-                    if "max_iter" in overrides:
-                        solver_max_iter = int(overrides.pop("max_iter"))
+                    solver_max_iter = int(
+                        overrides.pop("max_iter", solver_max_iter)
+                    )
+                    for key in ("warm_start",):
+                        if key in overrides:
+                            mpc_cfg[key] = overrides.pop(key)
+                    constraint_override_keys = {
+                        "enable_rate_constraints",
+                        "enable_band_constraints",
+                        "enable_constraint_slack",
+                        "constraint_slack_weight",
+                        "max_speed_slack_ms",
+                        "max_depth_rate_slack_m",
+                        "max_heading_rate_slack_rad",
+                        "max_depth_band_slack_m",
+                        "max_heading_band_slack_rad",
+                    }
+                    for key in constraint_override_keys:
+                        if key in overrides:
+                            constraints_cfg[key] = overrides.pop(key)
                     weights_cfg.update(overrides)
             except Exception:
                 pass
@@ -134,6 +177,7 @@ class MPCController(BaseController):
         self._dt = float(mpc_cfg.get("dt", 0.1))
         self._max_solve_time_ms = float(mpc_cfg.get("max_solve_time_ms", 50.0))
         self._fail_safe_fallback = bool(mpc_cfg.get("fail_safe_fallback", True))
+        self._warm_start_enabled = bool(mpc_cfg.get("warm_start", True))
         self._fallback_thrust_percent = float(constraints_cfg.get("min_thrust_percent", 15.0))
 
         # WP-C C2: 输出级深度积分补偿（抗稳态漂移），抗饱和 clamp。
@@ -154,6 +198,7 @@ class MPCController(BaseController):
         )
 
         self._prev_U: np.ndarray | None = None
+        self._previous_applied_control: np.ndarray | None = None
         self._solve_time_ms: float = 0.0
         self._solve_time_source: str = "not_run"
         self._solver_status: str = "NOT_RUN"
@@ -178,7 +223,7 @@ class MPCController(BaseController):
         Raises:
             RuntimeError: 如果 MPC 求解失败，调用方应捕获并回退到 PID
         """
-        t_start = time.time()
+        t_start = time.perf_counter()
 
         # MPC 内部统一使用 NED 深度：z 正向下、w 正向下。
         # 新版 auv_controller_node 已传入 state["z"] = state["depth"] = 正深度；
@@ -209,25 +254,109 @@ class MPCController(BaseController):
             x0, target_heading, target_depth, target_speed,
             cable_points=cable_points,
         )
+        previous_control = (
+            self._previous_applied_control.copy()
+            if self._previous_applied_control is not None
+            else None
+        )
+        previous_control_available = previous_control is not None
 
         try:
             result = self._optimizer.solve(
                 x0=x0,
                 ref_trajectory=ref_traj,
                 confidence=confidence,
-                warm_start_U=self._prev_U,
+                warm_start_U=self._prev_U if self._warm_start_enabled else None,
+                delta_u_penalty_scale=float(
+                    setpoint.get("delta_u_penalty_scale", 1.0)
+                ),
+                previous_control=previous_control,
             )
         except RuntimeError as exc:
             if not self._fail_safe_fallback:
                 raise
-            self._solver_status = f"FALLBACK: {exc}"
+            cycle_diagnostics = dict(getattr(exc, "diagnostics", {}))
+            elapsed_ms = (time.perf_counter() - t_start) * 1000.0
+            solver_wall_ms = float(
+                cycle_diagnostics.get("solver_wall_time_current_ms", elapsed_ms)
+            )
+            control_period_ms = (
+                max(float(setpoint.get("dt", self._dt)), 1e-6) * 1000.0
+            )
+            cycle_diagnostics["control_period_ms"] = control_period_ms
+            cycle_diagnostics["control_period_blocked"] = (
+                solver_wall_ms > control_period_ms
+            )
+            self._solve_time_ms = solver_wall_ms
+            self._solve_time_source = str(
+                cycle_diagnostics.get(
+                    "solve_time_source", "controller_wall_perf_counter_failed"
+                )
+            )
             # WP-C C2: 求解失败时重置积分器，避免 windup。
             self._z_integral = 0.0
+            fallback_type = (
+                "last_output" if self._last_output is not None else "setpoint"
+            )
+            self._solver_status = (
+                "FALLBACK_LAST_OUTPUT"
+                if self._last_output is not None
+                else "FALLBACK_SETPOINT"
+            )
+            debug = {
+                "controller_type": "MPC",
+                "solver_status": self._solver_status,
+                "solver_return_status": cycle_diagnostics.get(
+                    "solver_status", "FAILED"
+                ),
+                "fallback_reason": str(exc),
+                "fallback_type": fallback_type,
+                "solve_time_ms": round(solver_wall_ms, 2),
+                "solve_time_source": self._solve_time_source,
+                "solver_wall_time_current_ms": round(solver_wall_ms, 2),
+                "total_compute_ms": round(elapsed_ms, 2),
+                "confidence": round(confidence, 3),
+                "confidence_policy": self._optimizer.confidence_policy,
+                "delta_u_penalty_scale": float(
+                    setpoint.get("delta_u_penalty_scale", 1.0)
+                ),
+                "delta_u_previous_control_available": (
+                    previous_control_available
+                ),
+                "prediction_horizon": self._N,
+                "dt": self._dt,
+                "warm_start_enabled": self._warm_start_enabled,
+            }
+            debug.update(
+                {
+                    key: cycle_diagnostics[key]
+                    for key in _SOLVER_DIAGNOSTIC_KEYS
+                    if key in cycle_diagnostics
+                }
+            )
             if self._last_output is not None:
-                self._last_output.debug["solver_status"] = "FALLBACK_LAST_OUTPUT"
-                self._last_output.debug["fallback_reason"] = str(exc)
-                return self._last_output
-            return ControlOutput(
+                self._previous_applied_control = np.array(
+                    [
+                        self._last_output.guidance_heading,
+                        self._last_output.guidance_depth,
+                        self._last_output.thrust_percent,
+                    ],
+                    dtype=float,
+                )
+                debug["last_successful_solver_status"] = self._last_output.debug.get(
+                    "solver_status", ""
+                )
+                return ControlOutput(
+                    thrust_percent=self._last_output.thrust_percent,
+                    right_fin_deg=self._last_output.right_fin_deg,
+                    top_fin_deg=self._last_output.top_fin_deg,
+                    left_fin_deg=self._last_output.left_fin_deg,
+                    bottom_fin_deg=self._last_output.bottom_fin_deg,
+                    guidance_heading=self._last_output.guidance_heading,
+                    guidance_depth=self._last_output.guidance_depth,
+                    debug=debug,
+                )
+            fallback_output = ControlOutput(
                 thrust_percent=float(np.clip(self._fallback_thrust_percent, 0.0, 100.0)),
                 right_fin_deg=None,
                 top_fin_deg=None,
@@ -235,23 +364,33 @@ class MPCController(BaseController):
                 bottom_fin_deg=None,
                 guidance_heading=float(target_heading),
                 guidance_depth=float(target_depth),
-                debug={
-                    "controller_type": "MPC",
-                    "solver_status": "FALLBACK_SETPOINT",
-                    "fallback_reason": str(exc),
-                    "solve_time_ms": round((time.time() - t_start) * 1000.0, 2),
-                    "solve_time_source": "fallback_wall",
-                    "confidence": round(confidence, 3),
-                    "prediction_horizon": self._N,
-                    "dt": self._dt,
-                },
+                debug=debug,
             )
+            self._previous_applied_control = np.array(
+                [
+                    fallback_output.guidance_heading,
+                    fallback_output.guidance_depth,
+                    fallback_output.thrust_percent,
+                ],
+                dtype=float,
+            )
+            return fallback_output
 
         self._solve_time_ms = result["solve_time_ms"]
+        control_period_ms = (
+            max(float(setpoint.get("dt", self._dt)), 1e-6) * 1000.0
+        )
+        result["control_period_ms"] = control_period_ms
+        result["control_period_blocked"] = (
+            float(result.get("solver_wall_time_current_ms", self._solve_time_ms))
+            > control_period_ms
+        )
         self._solver_status = result["solver_status"]
         self._solve_time_source = result.get("solve_time_source", "unknown")
         self._last_cost = result["cost_value"]
-        self._prev_U = result["U_opt"].copy()
+        self._prev_U = (
+            result["U_opt"].copy() if self._warm_start_enabled else None
+        )
 
         U_first = result["U_opt"][:, 0]
         psi_opt = float(U_first[0])
@@ -272,8 +411,12 @@ class MPCController(BaseController):
         else:
             z_cmd_out = z_cmd_raw
         z_opt = z_cmd_out
+        self._previous_applied_control = np.array(
+            [psi_opt, z_opt, T_opt],
+            dtype=float,
+        )
 
-        elapsed = (time.time() - t_start) * 1000.0
+        elapsed = (time.perf_counter() - t_start) * 1000.0
 
         X_opt = result["X_opt"]
         pred_trajectory = []
@@ -313,8 +456,16 @@ class MPCController(BaseController):
                 "total_compute_ms": round(elapsed, 2),
                 "cost_value": round(self._last_cost, 4),
                 "confidence": round(confidence, 3),
+                "confidence_policy": self._optimizer.confidence_policy,
+                "delta_u_penalty_scale": float(
+                    setpoint.get("delta_u_penalty_scale", 1.0)
+                ),
+                "delta_u_previous_control_available": (
+                    previous_control_available
+                ),
                 "prediction_horizon": self._N,
                 "dt": self._dt,
+                "warm_start_enabled": self._warm_start_enabled,
                 "optimal_control": {
                     "psi_cmd_rad": round(psi_opt, 4),
                     "z_cmd_m": round(z_opt, 2),
@@ -325,6 +476,12 @@ class MPCController(BaseController):
                 "z_integral": round(self._z_integral, 4),
                 "pred_trajectory": pred_trajectory,
                 "ref_trajectory": ref_traj_list,
+                "fallback_type": "none",
+                **{
+                    key: result[key]
+                    for key in _SOLVER_DIAGNOSTIC_KEYS
+                    if key in result
+                },
             },
         )
         self._last_output = output
@@ -457,10 +614,13 @@ class MPCController(BaseController):
     def reset(self) -> None:
         """重置 MPC 内部状态（热启动缓存清零）。"""
         self._prev_U = None
+        self._previous_applied_control = None
         self._solve_time_ms = 0.0
+        self._solve_time_source = "not_run"
         self._solver_status = "NOT_RUN"
         self._last_cost = 0.0
         self._z_integral = 0.0
+        self._last_output = None
 
     @property
     def solve_time_ms(self) -> float:

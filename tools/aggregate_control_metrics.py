@@ -36,6 +36,14 @@ DEFAULT_MPC_CMD_TOPIC = "/auv/control/mpc_cmd"
 DEFAULT_CMD_VEL_TOPIC = "/cmd_vel"
 NAN = "nan"
 
+CONTRACT_DIAGNOSTIC_COLUMNS = [
+    "effective_sample_count",
+    "failure_event_count",
+    "capability_gate_status",
+    "solver_wall_time_current_ms",
+    "fallback_type",
+]
+
 
 CONTROL_METRIC_COLUMNS = [
     "lateral_error_rmse_m",
@@ -43,6 +51,23 @@ CONTROL_METRIC_COLUMNS = [
     "mpc_solve_time_mean_ms",
     "mpc_solve_time_p95_ms",
     "mpc_solve_time_max_ms",
+    "solver_wall_time_current_mean_ms",
+    "solver_wall_time_current_p95_ms",
+    "solver_wall_time_current_max_ms",
+    "solver_iterations_mean",
+    "solver_iterations_max",
+    "control_period_block_rate",
+    "warm_start_used_rate",
+    "initial_guess_projection_rms_mean",
+    "initial_guess_projection_rms_max",
+    "initial_constraint_violation_max",
+    "final_constraint_violation_max",
+    "constraint_slack_enabled_rate",
+    "slack_max_mean",
+    "slack_max_max",
+    "slack_l1_mean",
+    "slack_active_rate",
+    "solver_diagnostic_complete_rate",
     "fallback_rate",
     "state_source_fallback_rate",
     "control_rate_rms_per_s",
@@ -69,6 +94,16 @@ RUN_FIELDNAMES = [
     "debug_available",
     "control_topic",
     "control_available",
+    "effective_sample_count",
+    "failure_event_count",
+    "capability_gate_status",
+    "solver_wall_time_current_ms",
+    "fallback_type",
+    "solver_attempt_count_total",
+    "solver_success_count_total",
+    "solver_fallback_count_total",
+    "solver_blocked_count_total",
+    "solver_counter_rate_source",
     "mpc_solve_sample_count",
     "fallback_sample_count",
     "control_sample_count",
@@ -82,8 +117,26 @@ class ControlTopicMetrics:
     control_available: bool = False
     control_topic: str = ""
     solve_times_ms: list[float] = field(default_factory=list)
+    solver_wall_times_ms: list[float] = field(default_factory=list)
+    solver_iterations: list[float] = field(default_factory=list)
+    control_period_blocked_flags: list[bool] = field(default_factory=list)
+    warm_start_used_flags: list[bool] = field(default_factory=list)
+    initial_guess_projection_rms_values: list[float] = field(default_factory=list)
+    initial_constraint_violations: list[float] = field(default_factory=list)
+    final_constraint_violations: list[float] = field(default_factory=list)
+    constraint_slack_enabled_flags: list[bool] = field(default_factory=list)
+    slack_maximums: list[float] = field(default_factory=list)
+    slack_l1_values: list[float] = field(default_factory=list)
+    slack_active_flags: list[bool] = field(default_factory=list)
+    solver_diagnostic_complete_flags: list[bool] = field(default_factory=list)
     fallback_flags: list[bool] = field(default_factory=list)
+    fallback_types: list[str] = field(default_factory=list)
+    capability_gate_statuses: list[str] = field(default_factory=list)
     state_source_fallback_flags: list[bool] = field(default_factory=list)
+    solver_attempt_counts: list[int] = field(default_factory=list)
+    solver_success_counts: list[int] = field(default_factory=list)
+    solver_fallback_counts: list[int] = field(default_factory=list)
+    solver_blocked_counts: list[int] = field(default_factory=list)
     control_timestamps_ns: list[int] = field(default_factory=list)
     control_vectors: list[list[float]] = field(default_factory=list)
 
@@ -314,9 +367,76 @@ def parse_control_topics(
                 solve_time = to_float(payload.get("solve_time_ms"))
                 if math.isfinite(solve_time):
                     metrics.solve_times_ms.append(solve_time)
-                metrics.fallback_flags.append(is_fallback_payload(payload))
+                wall_time = to_float(payload.get("solver_wall_time_current_ms"))
+                if math.isfinite(wall_time):
+                    metrics.solver_wall_times_ms.append(wall_time)
+                iterations = to_float(payload.get("solver_iterations"))
+                if math.isfinite(iterations):
+                    metrics.solver_iterations.append(iterations)
+                if "control_period_blocked" in payload:
+                    metrics.control_period_blocked_flags.append(
+                        bool(payload.get("control_period_blocked"))
+                    )
+                if "warm_start_used" in payload:
+                    metrics.warm_start_used_flags.append(
+                        bool(payload.get("warm_start_used"))
+                    )
+                projection_rms = to_float(
+                    payload.get("initial_guess_projection_rms")
+                )
+                if math.isfinite(projection_rms):
+                    metrics.initial_guess_projection_rms_values.append(
+                        projection_rms
+                    )
+                initial_violation = to_float(
+                    payload.get("initial_constraint_violation_max")
+                )
+                if math.isfinite(initial_violation):
+                    metrics.initial_constraint_violations.append(initial_violation)
+                final_violation = to_float(
+                    payload.get("final_constraint_violation_max")
+                )
+                if math.isfinite(final_violation):
+                    metrics.final_constraint_violations.append(final_violation)
+                if "constraint_slack_enabled" in payload:
+                    metrics.constraint_slack_enabled_flags.append(
+                        bool(payload.get("constraint_slack_enabled"))
+                    )
+                slack_maximum = to_float(payload.get("slack_max"))
+                if math.isfinite(slack_maximum):
+                    metrics.slack_maximums.append(max(0.0, slack_maximum))
+                slack_l1 = to_float(payload.get("slack_l1"))
+                if math.isfinite(slack_l1):
+                    metrics.slack_l1_values.append(max(0.0, slack_l1))
+                slack_active_count = to_float(payload.get("slack_active_count"))
+                if math.isfinite(slack_active_count):
+                    metrics.slack_active_flags.append(slack_active_count > 0.0)
+                fallback = is_fallback_payload(payload)
+                metrics.fallback_flags.append(fallback)
+                fallback_type = str(payload.get("fallback_type", "")).strip()
+                if not fallback_type:
+                    fallback_type = "unspecified" if fallback else "none"
+                metrics.fallback_types.append(fallback_type)
+                gate_status = str(
+                    payload.get("capability_gate_status", "")
+                ).strip()
+                if gate_status:
+                    metrics.capability_gate_statuses.append(gate_status)
+                metrics.solver_diagnostic_complete_flags.append(
+                    has_complete_solver_diagnostics(payload)
+                )
                 if "state_source_fallback" in payload:
                     metrics.state_source_fallback_flags.append(bool(payload.get("state_source_fallback")))
+                counter_targets = (
+                    ("solver_attempt_count_total", metrics.solver_attempt_counts),
+                    ("solver_success_count_total", metrics.solver_success_counts),
+                    ("solver_fallback_count_total", metrics.solver_fallback_counts),
+                    ("solver_blocked_count_total", metrics.solver_blocked_counts),
+                )
+                for key, target in counter_targets:
+                    value = to_float(payload.get(key))
+                    if math.isfinite(value) and value >= 0:
+                        target.append(int(value))
                 continue
 
             if topic == mpc_cmd_topic:
@@ -384,6 +504,34 @@ def is_fallback_payload(payload: dict[str, object]) -> bool:
     return "FALLBACK" in status or bool(reason) or "FALLBACK" in note
 
 
+def has_complete_solver_diagnostics(payload: dict[str, object]) -> bool:
+    required = (
+        "solver_wall_time_current_ms",
+        "solver_iterations",
+        "warm_start_used",
+        "initial_constraint_violation_max",
+        "final_constraint_violation_max",
+        "final_active_constraint_count",
+        "control_period_blocked",
+        "fallback_type",
+    )
+    return all(
+        key in payload and payload.get(key) not in (None, "", "not_observed")
+        for key in required
+    )
+
+
+def summarize_capability_gate(statuses: Sequence[str]) -> str:
+    normalized = {str(value).strip().lower() for value in statuses if str(value).strip()}
+    if not normalized:
+        return "not_observed"
+    if "blocked" in normalized:
+        return "blocked"
+    if normalized == {"passed"}:
+        return "passed"
+    return ";".join(sorted(normalized))
+
+
 def compute_control_rate_metrics(timestamps_ns: Sequence[int], vectors: Sequence[Sequence[float]]) -> dict[str, float]:
     if len(timestamps_ns) < 2 or len(vectors) < 2:
         return {
@@ -425,6 +573,14 @@ def compute_control_effort(vectors: Sequence[Sequence[float]]) -> float:
     return float(np.mean(np.linalg.norm(values, axis=1)))
 
 
+def terminal_monotonic_counter(values: Sequence[int]) -> int | None:
+    if not values:
+        return None
+    if any(current < previous for previous, current in zip(values, values[1:])):
+        return None
+    return int(values[-1])
+
+
 def build_run_metrics(
     *,
     source_row: dict[str, str],
@@ -435,14 +591,47 @@ def build_run_metrics(
     control_metrics: ControlTopicMetrics,
 ) -> dict[str, object]:
     solve_times = control_metrics.solve_times_ms
+    solver_wall_times = control_metrics.solver_wall_times_ms
     control_rate = compute_control_rate_metrics(
         control_metrics.control_timestamps_ns,
         control_metrics.control_vectors,
     )
-    fallback_rate = (
+    snapshot_fallback_rate = (
         float(np.mean(control_metrics.fallback_flags))
         if control_metrics.fallback_flags
         else float("nan")
+    )
+    solver_attempt_count = terminal_monotonic_counter(
+        control_metrics.solver_attempt_counts
+    )
+    solver_success_count = terminal_monotonic_counter(
+        control_metrics.solver_success_counts
+    )
+    solver_fallback_count = terminal_monotonic_counter(
+        control_metrics.solver_fallback_counts
+    )
+    solver_blocked_count = terminal_monotonic_counter(
+        control_metrics.solver_blocked_counts
+    )
+    exact_counters_available = (
+        solver_attempt_count is not None
+        and solver_fallback_count is not None
+        and solver_blocked_count is not None
+        and solver_attempt_count > 0
+    )
+    fallback_rate = (
+        solver_fallback_count / solver_attempt_count
+        if exact_counters_available
+        else snapshot_fallback_rate
+    )
+    control_period_block_rate = (
+        solver_blocked_count / solver_attempt_count
+        if exact_counters_available
+        else (
+            float(np.mean(control_metrics.control_period_blocked_flags))
+            if control_metrics.control_period_blocked_flags
+            else float("nan")
+        )
     )
     state_source_fallback_rate = (
         float(np.mean(control_metrics.state_source_fallback_flags))
@@ -450,6 +639,7 @@ def build_run_metrics(
         else float("nan")
     )
     safety_violation = composite_safety_violation_rate(summary_metrics)
+    fallback_types = sorted(set(control_metrics.fallback_types))
 
     return {
         "scenario": source_row.get("scenario", ""),
@@ -464,6 +654,36 @@ def build_run_metrics(
         "debug_available": bool_text(control_metrics.debug_available),
         "control_topic": control_metrics.control_topic,
         "control_available": bool_text(control_metrics.control_available),
+        "effective_sample_count": solver_attempt_count
+        if exact_counters_available
+        else len(control_metrics.fallback_flags),
+        "failure_event_count": solver_fallback_count
+        if exact_counters_available
+        else sum(control_metrics.fallback_flags),
+        "capability_gate_status": summarize_capability_gate(
+            control_metrics.capability_gate_statuses
+        ),
+        "solver_wall_time_current_ms": max(solver_wall_times)
+        if solver_wall_times
+        else "not_observed",
+        "fallback_type": ";".join(fallback_types)
+        if fallback_types
+        else "not_observed",
+        "solver_attempt_count_total": solver_attempt_count
+        if solver_attempt_count is not None
+        else "not_observed",
+        "solver_success_count_total": solver_success_count
+        if solver_success_count is not None
+        else "not_observed",
+        "solver_fallback_count_total": solver_fallback_count
+        if solver_fallback_count is not None
+        else "not_observed",
+        "solver_blocked_count_total": solver_blocked_count
+        if solver_blocked_count is not None
+        else "not_observed",
+        "solver_counter_rate_source": "cumulative_counter"
+        if exact_counters_available
+        else "debug_snapshot",
         "mpc_solve_sample_count": len(solve_times),
         "fallback_sample_count": len(control_metrics.fallback_flags),
         "control_sample_count": len(control_metrics.control_vectors),
@@ -472,6 +692,67 @@ def build_run_metrics(
         "mpc_solve_time_mean_ms": mean(solve_times) if solve_times else float("nan"),
         "mpc_solve_time_p95_ms": percentile(solve_times, 95.0),
         "mpc_solve_time_max_ms": max(solve_times) if solve_times else float("nan"),
+        "solver_wall_time_current_mean_ms": mean(solver_wall_times)
+        if solver_wall_times
+        else float("nan"),
+        "solver_wall_time_current_p95_ms": percentile(solver_wall_times, 95.0),
+        "solver_wall_time_current_max_ms": max(solver_wall_times)
+        if solver_wall_times
+        else float("nan"),
+        "solver_iterations_mean": mean(control_metrics.solver_iterations)
+        if control_metrics.solver_iterations
+        else float("nan"),
+        "solver_iterations_max": max(control_metrics.solver_iterations)
+        if control_metrics.solver_iterations
+        else float("nan"),
+        "control_period_block_rate": control_period_block_rate,
+        "warm_start_used_rate": float(
+            np.mean(control_metrics.warm_start_used_flags)
+        )
+        if control_metrics.warm_start_used_flags
+        else float("nan"),
+        "initial_guess_projection_rms_mean": mean(
+            control_metrics.initial_guess_projection_rms_values
+        )
+        if control_metrics.initial_guess_projection_rms_values
+        else float("nan"),
+        "initial_guess_projection_rms_max": max(
+            control_metrics.initial_guess_projection_rms_values
+        )
+        if control_metrics.initial_guess_projection_rms_values
+        else float("nan"),
+        "initial_constraint_violation_max": max(
+            control_metrics.initial_constraint_violations
+        )
+        if control_metrics.initial_constraint_violations
+        else float("nan"),
+        "final_constraint_violation_max": max(
+            control_metrics.final_constraint_violations
+        )
+        if control_metrics.final_constraint_violations
+        else float("nan"),
+        "constraint_slack_enabled_rate": float(
+            np.mean(control_metrics.constraint_slack_enabled_flags)
+        )
+        if control_metrics.constraint_slack_enabled_flags
+        else float("nan"),
+        "slack_max_mean": mean(control_metrics.slack_maximums)
+        if control_metrics.slack_maximums
+        else float("nan"),
+        "slack_max_max": max(control_metrics.slack_maximums)
+        if control_metrics.slack_maximums
+        else float("nan"),
+        "slack_l1_mean": mean(control_metrics.slack_l1_values)
+        if control_metrics.slack_l1_values
+        else float("nan"),
+        "slack_active_rate": float(np.mean(control_metrics.slack_active_flags))
+        if control_metrics.slack_active_flags
+        else float("nan"),
+        "solver_diagnostic_complete_rate": float(
+            np.mean(control_metrics.solver_diagnostic_complete_flags)
+        )
+        if control_metrics.solver_diagnostic_complete_flags
+        else float("nan"),
         "fallback_rate": fallback_rate,
         "state_source_fallback_rate": state_source_fallback_rate,
         "control_rate_rms_per_s": control_rate["control_rate_rms_per_s"],
@@ -513,6 +794,11 @@ def build_error_row(source_row: dict[str, str], bag_path: Path, analysis_dir: Pa
         "debug_available": "false",
         "control_topic": "",
         "control_available": "false",
+        "effective_sample_count": 0,
+        "failure_event_count": 1,
+        "capability_gate_status": "not_observed",
+        "solver_wall_time_current_ms": "not_observed",
+        "fallback_type": "analysis_error",
         "mpc_solve_sample_count": 0,
         "fallback_sample_count": 0,
         "control_sample_count": 0,
@@ -520,6 +806,72 @@ def build_error_row(source_row: dict[str, str], bag_path: Path, analysis_dir: Pa
     for metric in CONTROL_METRIC_COLUMNS:
         row[metric] = float("nan")
     return row
+
+
+def enrich_contract_rows_with_control_diagnostics(
+    rows: Sequence[dict[str, object]],
+    *,
+    debug_topic: str = DEFAULT_DEBUG_TOPIC,
+    mpc_cmd_topic: str = DEFAULT_MPC_CMD_TOPIC,
+    cmd_vel_topic: str = DEFAULT_CMD_VEL_TOPIC,
+) -> list[dict[str, object]]:
+    """Read each successful bag and attach R04 diagnostics before finalization."""
+    enriched: list[dict[str, object]] = []
+    for source in rows:
+        row = dict(source)
+        status = str(row.get("status", ""))
+        bag_value = str(row.get("mcap", "")).strip()
+        if status != "ok" or not bag_value:
+            enriched.append(row)
+            continue
+
+        bag_path = Path(bag_value).expanduser()
+        if not bag_path.is_absolute():
+            bag_path = (PROJECT_ROOT / bag_path).resolve()
+        try:
+            control = parse_control_topics(
+                bag_path=bag_path,
+                debug_topic=debug_topic,
+                mpc_cmd_topic=mpc_cmd_topic,
+                cmd_vel_topic=cmd_vel_topic,
+            )
+            metrics = build_run_metrics(
+                source_row={key: str(value) for key, value in row.items()},
+                bag_path=bag_path,
+                analysis_dir=bag_path.parent,
+                summary_metrics={},
+                summary_status="control_diagnostics_only",
+                control_metrics=control,
+            )
+        except Exception as exc:  # noqa: BLE001 - preserve the experiment row.
+            row["control_diagnostic_collection_error"] = str(exc)
+            enriched.append(row)
+            continue
+
+        for key in (
+            *CONTRACT_DIAGNOSTIC_COLUMNS,
+            "solver_diagnostic_complete_rate",
+            "solver_wall_time_current_mean_ms",
+            "solver_wall_time_current_p95_ms",
+            "solver_wall_time_current_max_ms",
+            "solver_iterations_mean",
+            "solver_iterations_max",
+            "control_period_block_rate",
+            "warm_start_used_rate",
+            "initial_guess_projection_rms_mean",
+            "initial_guess_projection_rms_max",
+            "initial_constraint_violation_max",
+            "final_constraint_violation_max",
+            "constraint_slack_enabled_rate",
+            "slack_max_mean",
+            "slack_max_max",
+            "slack_l1_mean",
+            "slack_active_rate",
+            "fallback_rate",
+        ):
+            row[key] = metrics[key]
+        enriched.append(row)
+    return enriched
 
 
 def write_summary(rows: Sequence[dict[str, object]], out_path: Path) -> list[dict[str, object]]:
@@ -636,6 +988,8 @@ def write_markdown_report(
             "",
             "- `lateral_error_*` and seabed safety metrics come from `tools/analyze_bag.py` summary statistics.",
             "- `mpc_solve_time_*` and `fallback_rate` come from `/auv/controller/debug` when that topic is present.",
+            "- `solver_wall_time_current_*` includes the current failed cycle; it never reuses the previous successful solve time.",
+            "- `solver_wall_time_current_ms` in the per-run table is the maximum observed cycle wall time for the R04 contract.",
             "- `control_rate_*` prefers `/auv/control/mpc_cmd`; it falls back to `/cmd_vel` for PID runs.",
             "- Missing topics are represented as `nan` with availability columns in the per-run table.",
             "",

@@ -290,6 +290,12 @@ class AUVLocalizationNode(Node):
         quat_norm = float(np.linalg.norm(quat))
         if quat_norm > 1.0e-6:
             self._last_imu_orientation = quat / quat_norm
+            # @note 仿真/设备若显式提供姿态观测，则将其同步到 EKF
+            # 内部四元数，避免 DVL body-frame 速度按漂移航向积分。
+            if self.use_imu_orientation_measurement:
+                self.filter.initialize_from_observation(
+                    quat=self._last_imu_orientation,
+                )
         # 严格保存消息的 Header Stamp，用于后续状态发布
         self._last_imu_header_stamp = msg.header.stamp
         self._last_imu_ts = float(msg.header.stamp.sec) + float(msg.header.stamp.nanosec) * 1e-9

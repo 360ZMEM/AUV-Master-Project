@@ -166,6 +166,7 @@ if [[ "${AUV_SKIP_BRAIN_BUILD:-0}" == "1" ]]; then
 else
   echo "[AUV] colcon build with PYTHON_EXECUTABLE=$ROS_PYTHON"
   colcon build \
+    --executor sequential \
     --cmake-clean-cache \
     --packages-select "${PKGS[@]}" \
     --cmake-args \

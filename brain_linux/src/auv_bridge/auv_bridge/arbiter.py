@@ -368,5 +368,7 @@ class CommandArbiter:
         normalized[KEY_VALID] = bool(canonical_payload.get(KEY_VALID, canonical_payload.get("valid", True)))
         normalized[KEY_HEALTHY] = bool(canonical_payload.get(KEY_HEALTHY, canonical_payload.get("healthy", True)))
         normalized[KEY_NOTE] = str(canonical_payload.get(KEY_NOTE, canonical_payload.get("note", "")))
+        if KEY_TARGET_DEPTH_M in canonical_payload:
+            normalized[KEY_TARGET_DEPTH_M] = float(canonical_payload[KEY_TARGET_DEPTH_M])
         normalized[KEY_TS] = ts
         return normalized

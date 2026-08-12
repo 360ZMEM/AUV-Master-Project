@@ -71,6 +71,8 @@ zenoh:
     dvl: rt/auv/sensors/dvl
     depth: rt/auv/sensors/depth
     magnetic: rt/auv/sensors/magnetic
+    magnetic_block: rt/auv/sensors/magnetic_block
+    cable_sonar_observation: rt/auv/sensors/cable_sonar_observation
     sonar: rt/auv/sensors/sonar
     seabed_cloud: rt/auv/visual/seabed_cloud
     cable_marker: rt/auv/visual/cable_marker

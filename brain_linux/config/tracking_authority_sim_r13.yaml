@@ -1,0 +1,14 @@
+/**:
+  ros__parameters:
+    maximum_age_s: 0.75
+    track_enter_probability: 0.75
+    track_exit_probability: 0.55
+    search_enter_probability: 0.55
+    search_exit_probability: 0.35
+    enter_debounce_count: 3
+    exit_debounce_count: 5
+    publish_rate_hz: 5.0
+    runtime_status_topic: /auv/sensors/runtime_status
+    required_capability: ""
+    calibration_domain: simulation_proxy
+    output_topic: /auv/perception/cable_tracking_authority_shadow

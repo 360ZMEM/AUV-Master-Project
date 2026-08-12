@@ -12,6 +12,7 @@ from dataclasses import asdict
 
 import py_trees
 
+from .decision_filters import ConfidenceHysteresisGate
 from .models import MotionGoal, SensorStatusData
 
 
@@ -80,15 +81,25 @@ class ConfidenceAboveThreshold(_BaseBehavior):
     当 `confidence > threshold` 时返回 SUCCESS，表示走精准巡检分支。
     """
 
-    def __init__(self, threshold: float = 0.7) -> None:
+    def __init__(
+        self,
+        threshold: float = 0.7,
+        gate: ConfidenceHysteresisGate | None = None,
+    ) -> None:
         super().__init__(name=f'ConfidenceAbove({threshold:.2f})')
         self.threshold = threshold
+        self.gate = gate
 
     def update(self) -> py_trees.common.Status:
         status = self._get_sensor_status()
+        above = (
+            self.gate.update(status.confidence)
+            if self.gate is not None
+            else status.confidence > self.threshold
+        )
         return (
             py_trees.common.Status.SUCCESS
-            if status.confidence > self.threshold
+            if above
             else py_trees.common.Status.FAILURE
         )
 

@@ -733,6 +733,7 @@ cleanup() {
   # Last-resort sweep: any orphaned simulation children that escaped the group kill.
   pkill -KILL -f "run_zenoh_bridge.py" >/dev/null 2>&1 || true
   pkill -KILL -f "sim_holoocean/apps/main.py" >/dev/null 2>&1 || true
+  pkill -KILL -f "python3 main.py --config" >/dev/null 2>&1 || true
   pkill -KILL -f "mock_amd_server" >/dev/null 2>&1 || true
   if [[ -n "${EMU_PID:-}" ]]; then
     echo "[AUV] stopping auto_activate_emu ($EMU_PID)"

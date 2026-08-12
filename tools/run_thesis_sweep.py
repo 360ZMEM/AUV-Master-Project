@@ -27,6 +27,14 @@ from pathlib import Path
 from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from tools.experiment_contract import finalize_bundle, initialize_bundle  # noqa: E402
+from tools.aggregate_control_metrics import (  # noqa: E402
+    enrich_contract_rows_with_control_diagnostics,
+)
+
 SCENARIOS_DIR = REPO_ROOT / "scenarios"
 START_SCRIPT = REPO_ROOT / "scripts" / "start_experiment.sh"
 BENCH_TOOL = REPO_ROOT / "tools" / "offline_ekf_benchmark.py"
@@ -180,6 +188,12 @@ def run_one(
         contract_args += ["--arbiter-profile"]
     if "--auto-activate" not in user_args:
         contract_args += ["--auto-activate"]
+    if (
+        sim_backend == "pvs"
+        and "--enable-mock-forward-sonar-wrapper" not in user_args
+        and "--inject-missing-forward-sonar" not in user_args
+    ):
+        contract_args += ["--enable-mock-forward-sonar-wrapper"]
     if "--bag-arg" not in user_args:
         # Thesis metrics only need sensor/state/control/truth topics. Full
         # visual topics can be large enough to starve rosbag finalization under
@@ -561,6 +575,30 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(manifest, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+    initialize_bundle(
+        sweep_root,
+        experiment_id=f"thesis_sweep_{stamp}{label}",
+        runner=_display_runner_path(),
+        argv=sys.argv,
+        data_layer=f"{args.sim_backend}_closed_loop",
+        matrix={
+            "scenarios": scenarios,
+            "seeds": seeds,
+            "mpc_modes": modes,
+            "param_combos": param_combos,
+        },
+        duration_s=args.duration,
+        config_paths=[
+            *(path for _, path in resolved),
+            REPO_ROOT / "brain_linux" / "config" / "params.yaml",
+        ],
+        extra_manifest={
+            "record_format": args.record_format,
+            "skip_benchmark": args.skip_benchmark,
+            "benchmark_frame_args": benchmark_frame_args,
+            "start_args": args.start_arg,
+        },
+    )
 
     csv_path = sweep_root / "results.csv"
     fail_path = sweep_root / "failures.log"
@@ -573,6 +611,7 @@ def main(argv: list[str] | None = None) -> int:
         "xy_rmse", "z_rmse", "cep50", "max_drift",
         "run_dir", "mcap", "benchmark_dir", "error",
     ]
+    contract_rows: list[dict[str, object]] = []
     with open(csv_path, "w", encoding="utf-8", newline="") as csv_f:
         writer = csv.DictWriter(csv_f, fieldnames=fieldnames)
         writer.writeheader()
@@ -627,6 +666,7 @@ def main(argv: list[str] | None = None) -> int:
                         for k in param_keys:
                             row[k] = combo.get(k, "")
                         writer.writerow(row)
+                        contract_rows.append(dict(row))
                         csv_f.flush()
                         if res.status == "ok":
                             ok_count += 1
@@ -644,10 +684,27 @@ def main(argv: list[str] | None = None) -> int:
 
     if param_keys:
         write_sensitivity_summary(csv_path, sweep_root, param_keys)
+    contract_rows = enrich_contract_rows_with_control_diagnostics(contract_rows)
+    finalize_bundle(
+        sweep_root,
+        contract_rows,
+        success_statuses={"ok", "dry_run"},
+    )
 
-    print(f"[sweep] done. {ok_count}/{total} ok. results -> {csv_path}",
-          flush=True)
+    accepted_count = sum(
+        1 for row in contract_rows if row.get("status") in {"ok", "dry_run"}
+    )
+    print(
+        f"[sweep] done. {ok_count}/{total} ok, "
+        f"{accepted_count}/{total} accepted including dry-run. "
+        f"results -> {csv_path}",
+        flush=True,
+    )
     return 0
+
+
+def _display_runner_path() -> str:
+    return str(Path(__file__).resolve().relative_to(REPO_ROOT))
 
 
 def write_sensitivity_summary(

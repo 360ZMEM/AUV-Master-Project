@@ -19,6 +19,9 @@ from common.protocol import (
     KEY_ORIENTATION_DEG,
     KEY_PARAMETERS,
     KEY_PRESET_TIME_TENTHS_MIN,
+    KEY_PC104_DOWNLINK_ECHO_FRAME,
+    KEY_PC104_DOWNLINK_ECHO_VALID,
+    KEY_PC104_DOWNLINK_RECV_UPTIME_MS,
     KEY_PC104_DVL_BI_TIME_VALID,
     KEY_PC104_DVL_BI_UPTIME_MS,
     KEY_PC104_TIME_VALID,
@@ -27,13 +30,18 @@ from common.protocol import (
     KEY_SIDE_MOTOR_RPM,
     KEY_SPARE_PARAMS,
     KEY_TELEMETRY_FRESHNESS_MS,
+    KEY_TARGET_DEPTH_M,
     KEY_THRUST,
     KEY_TOP,
     KEY_WORK_INSTRUCTION,
+    PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER,
     PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER,
+    PROTOCOL_UPLINK_PARA1_OFFSET,
     PROTOCOL_UPLINK_PARA3_OFFSET,
     PROTOCOL_UPLINK_PARA4_OFFSET,
     PROTOCOL_UPLINK_PARA12_OFFSET,
+    PROTOCOL_UPLINK_SPARE1_OFFSET,
+    PROTOCOL_UPLINK_SPARE2_OFFSET,
     build_bridge_telemetry_payload,
     build_downlink_packet,
     build_downlink_packet_from_payload,
@@ -84,6 +92,22 @@ def test_downlink_payload_roundtrip_preserves_auxiliary_fields() -> None:
     assert decoded[KEY_PRESET_TIME_TENTHS_MIN] == 50
     assert decoded[KEY_SPARE_PARAMS] == (-11, 22)
     assert decoded[KEY_PARAMETERS] == (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+
+
+def test_downlink_packet_reads_target_depth_from_payload_dict() -> None:
+    payload = {
+        KEY_RIGHT: 0.0,
+        KEY_TOP: 0.0,
+        KEY_LEFT: 0.0,
+        KEY_BOTTOM: 0.0,
+        KEY_THRUST: 20.0,
+        KEY_TARGET_DEPTH_M: 11.8,
+    }
+
+    packet = build_downlink_packet(payload, main_motor_rpm_scale=10.0)
+    decoded = parse_downlink_packet(packet)
+
+    assert abs(decoded.target_depth_m - 11.8) < 1.0e-9
 
 
 def test_bridge_telemetry_payload_adds_arbiter_metadata() -> None:
@@ -495,6 +519,47 @@ def test_uplink_pc104_relative_time_fields_are_decoded() -> None:
     assert payload[KEY_PC104_DVL_BI_TIME_VALID] is True
 
 
+def test_uplink_pc104_downlink_echo_fields_are_decoded() -> None:
+    packet = build_uplink_packet(
+        pc104_uptime_ms=123500,
+        pc104_downlink_echo_frame=42,
+        pc104_downlink_recv_uptime_ms=123450,
+    )
+    parsed = parse_uplink_packet(packet)
+
+    assert packet[PROTOCOL_UPLINK_SPARE1_OFFSET:PROTOCOL_UPLINK_SPARE1_OFFSET + 2] == (
+        PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER
+    ).to_bytes(2, "big", signed=True)
+    assert packet[PROTOCOL_UPLINK_SPARE2_OFFSET:PROTOCOL_UPLINK_SPARE2_OFFSET + 2] == (42).to_bytes(
+        2,
+        "big",
+        signed=True,
+    )
+    assert packet[PROTOCOL_UPLINK_PARA1_OFFSET:PROTOCOL_UPLINK_PARA1_OFFSET + 4] == (123450).to_bytes(
+        4,
+        "big",
+        signed=True,
+    )
+    assert parsed.pc104_downlink_echo_valid is True
+    assert parsed.pc104_downlink_echo_frame == 42
+    assert parsed.pc104_downlink_recv_uptime_ms == 123450
+
+    payload = build_bridge_telemetry_payload(parsed, ts=10.0)
+    assert payload[KEY_PC104_DOWNLINK_ECHO_VALID] is True
+    assert payload[KEY_PC104_DOWNLINK_ECHO_FRAME] == 42
+    assert payload[KEY_PC104_DOWNLINK_RECV_UPTIME_MS] == 123450
+
+
+def test_uplink_decodes_forward_sonar_slope_from_para11() -> None:
+    packet = build_uplink_packet(
+        parameter_values=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1234, 0),
+    )
+    parsed = parse_uplink_packet(packet)
+
+    assert packet[68:70] == (-1234).to_bytes(2, "big", signed=True)
+    assert math.isclose(parsed.forward_sonar_slope, -0.1234)
+
+
 def test_uplink_pc104_relative_time_is_legacy_safe_without_marker() -> None:
     packet = build_uplink_packet(parameter_values=(0, 0, 123456, 0, 0, 0, 0, 0, 0, 0, 0, 0))
     parsed = parse_uplink_packet(packet)
@@ -502,3 +567,4 @@ def test_uplink_pc104_relative_time_is_legacy_safe_without_marker() -> None:
     assert parsed.pc104_uptime_ms == 123456
     assert parsed.pc104_time_valid is False
     assert parsed.pc104_dvl_bi_time_valid is False
+    assert parsed.pc104_downlink_echo_valid is False

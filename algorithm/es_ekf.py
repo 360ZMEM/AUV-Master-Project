@@ -152,9 +152,21 @@ class ES_EKF:
         # nis_window_size=0 ⇒ disable window (no adaptive R, history still recorded if size>0)
         self.nis_window_size = int(cfg.get("nis_window_size", 50))
         self.nis_threshold = float(cfg.get("nis_threshold", 9.0))
+        self.adaptive_r_mode = str(
+            cfg.get("adaptive_r_mode", "global")
+        ).strip().lower()
+        if self.adaptive_r_mode not in {"fixed", "global", "per_source"}:
+            raise ValueError(
+                "adaptive_r_mode must be fixed, global, or per_source"
+            )
+        self.adaptive_r_normalized_threshold = float(
+            cfg.get("adaptive_r_normalized_threshold", 1.5)
+        )
         self.adaptive_r_scale_max = float(cfg.get("adaptive_r_scale_max", 5.0))
         self.adaptive_r_scale_decay = float(cfg.get("adaptive_r_scale_decay", 0.95))
+        self.robust_huber_delta = float(cfg.get("robust_huber_delta", 0.0))
         self._adaptive_r_scale = 1.0
+        self._source_adaptive_r_scale: dict[str, float] = {}
         self.nis_history: list = []  # entries: {"source", "dim", "nis"}
         # 暴露最近一次观测更新的 Kalman 增益/创新协方差/创新向量，供离线诊断
         # （如网络抖动边界分析）观察增益范数随时延退化的趋势。
@@ -402,9 +414,25 @@ class ES_EKF:
             r (np.ndarray): 观测噪声协方差。
             source (str): 观测来源标签（用于 NIS 历史与论文 §3.4.1 分析）。
         """
-        r_eff = r * self._adaptive_r_scale
         innov = (y - h)
+        if self.adaptive_r_mode == "per_source":
+            adaptive_scale = self._source_adaptive_r_scale.get(source, 1.0)
+        elif self.adaptive_r_mode == "global":
+            adaptive_scale = self._adaptive_r_scale
+        else:
+            adaptive_scale = 1.0
+        r_eff = r * adaptive_scale
         s = h_mat @ self.P @ h_mat.T + r_eff
+        robust_scale = 1.0
+        if self.robust_huber_delta > 0.0:
+            preliminary_nis = float(innov.T @ np.linalg.pinv(s) @ innov)
+            normalized_residual = np.sqrt(
+                max(preliminary_nis, 0.0) / max(int(np.asarray(y).shape[0]), 1)
+            )
+            if normalized_residual > self.robust_huber_delta:
+                robust_scale = normalized_residual / self.robust_huber_delta
+                r_eff = r_eff * robust_scale
+                s = h_mat @ self.P @ h_mat.T + r_eff
         s_inv = np.linalg.pinv(s)
         k = self.P @ h_mat.T @ s_inv
         self.last_K = k.copy()
@@ -422,9 +450,19 @@ class ES_EKF:
         except Exception:
             nis_val = float("nan")
         self.nis_history.append(
-            {"source": source, "dim": int(np.asarray(y).shape[0]), "nis": nis_val}
+            {
+                "source": source,
+                "dim": int(np.asarray(y).shape[0]),
+                "nis": nis_val,
+                "r_scale": adaptive_scale,
+                "robust_scale": robust_scale,
+            }
         )
-        if self.nis_window_size > 0 and len(self.nis_history) >= self.nis_window_size:
+        if (
+            self.adaptive_r_mode == "global"
+            and self.nis_window_size > 0
+            and len(self.nis_history) >= self.nis_window_size
+        ):
             recent = self.nis_history[-self.nis_window_size:]
             mean_nis = float(np.nanmean([e["nis"] for e in recent]))
             if np.isfinite(mean_nis) and mean_nis > self.nis_threshold:
@@ -435,6 +473,30 @@ class ES_EKF:
                 self._adaptive_r_scale = max(
                     self._adaptive_r_scale * self.adaptive_r_scale_decay, 1.0
                 )
+        elif self.adaptive_r_mode == "per_source" and self.nis_window_size > 0:
+            recent = [
+                entry
+                for entry in self.nis_history
+                if entry["source"] == source
+            ][-self.nis_window_size :]
+            if len(recent) >= self.nis_window_size:
+                normalized_mean = float(
+                    np.nanmean(
+                        [
+                            entry["nis"] / max(int(entry["dim"]), 1)
+                            for entry in recent
+                        ]
+                    )
+                )
+                scale = self._source_adaptive_r_scale.get(source, 1.0)
+                if (
+                    np.isfinite(normalized_mean)
+                    and normalized_mean > self.adaptive_r_normalized_threshold
+                ):
+                    scale = min(scale * 1.5, self.adaptive_r_scale_max)
+                else:
+                    scale = max(scale * self.adaptive_r_scale_decay, 1.0)
+                self._source_adaptive_r_scale[source] = scale
 
     def get_nis_stats(self):
         """返回滑动窗内的 NIS 统计与当前自适应 R 比例（论文 §3.4.1）。"""

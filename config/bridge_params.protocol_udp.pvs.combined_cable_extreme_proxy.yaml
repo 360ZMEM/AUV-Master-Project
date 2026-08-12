@@ -71,6 +71,8 @@ zenoh:
     dvl: rt/auv/sensors/dvl
     depth: rt/auv/sensors/depth
     magnetic: rt/auv/sensors/magnetic
+    magnetic_block: rt/auv/sensors/magnetic_block
+    cable_sonar_observation: rt/auv/sensors/cable_sonar_observation
     sonar: rt/auv/sensors/sonar
     seabed_cloud: rt/auv/visual/seabed_cloud
     cable_marker: rt/auv/visual/cable_marker
@@ -106,6 +108,7 @@ cable_path:
     - [8.0, -8.0, 13.2]
     - [0.0, 0.0, 12.4]
 perception:
+  dvl_measurement_frame: sensor
   hvdc_current_amp: 500.0
   noise:
     magnetic_sigma: [5.0e-08, 5.0e-08, 5.0e-08]
@@ -117,11 +120,22 @@ perception:
     base_noise_sigma: 0.05
     peak_gain: 0.5
     peak_width_bins: 4.0
+  quality_sim:
+    sonar:
+      # Combined extreme contains several curved/returning cable branches inside
+      # the sonar FOV. A line detector should report the locally trackable
+      # branch, while the downstream quality node still computes p_track.
+      local_line_max_arc_m: 12.0
+      local_line_min_points: 10
 pvs:
   control_mode: stepInput
+  autonomy_motion_model: kinematic_setpoint
+  kinematic_max_yaw_rate_deg_s: 12.0
+  kinematic_depth_time_constant_s: 4.0
+  kinematic_max_speed_mps: 0.6
   initial_depth_m: 12.0
   initial_heading_deg: 0.0
-  initial_speed_mps: 0.5
+  initial_speed_mps: 0.0
   initial_rpm: 0.0
   reference_rpm: 520.0
   reference_speed_rpm_slope: 581.0

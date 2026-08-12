@@ -1,0 +1,14 @@
+# Feature flags for native PVS execution-chain smoke tests.
+# This file is intentionally separate from feature_flags.yaml because terrain
+# benchmark scripts rewrite that file.
+/**:
+  ros__parameters:
+    enable_behavior_tree: true
+    bypass_to_manual_setpoint: false
+    bypass_zero_effort: false
+    use_mpc: true
+    depth_mode: 'CONSTANT'
+    heading_mode: 'CONSTANT'
+    constant_depth_m: 10.0
+    constant_heading_rad: 0.5235987756
+    passive_mode: false

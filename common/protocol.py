@@ -61,6 +61,8 @@ Z_PATH_ALTITUDE = "rt/auv/sensors/altitude"  # 离底高度传感器
 Z_PATH_MAGNETIC = "rt/auv/sensors/magnetic"  # 磁传感器（地磁场）
 Z_PATH_SONAR = "rt/auv/sensors/sonar"  # 声纳传感器
 Z_PATH_FORWARD_SONAR = "rt/auv/sensors/forward_sonar"  # 前视声呐地形预瞄
+Z_PATH_MAGNETIC_BLOCK = "rt/auv/sensors/magnetic_block"
+Z_PATH_CABLE_SONAR_OBSERVATION = "rt/auv/sensors/cable_sonar_observation"
 
 # 可视化主题（用于 Foxglove 3D 场景、轨迹显示等）
 Z_PATH_SEABED_CLOUD = "rt/auv/visual/seabed_cloud"  # 海床点云（来自声纳或视觉）
@@ -109,6 +111,14 @@ KEY_B_NORM = "B_norm"  # 磁场模值 (T)
 KEY_SONAR_BINS = "bins"  # 声纳扫描数据 (bin 数组)
 KEY_SLOPE = "slope"  # 前视声呐估计的地形坡度 dz/dx
 KEY_LOOKAHEAD_M = "lookahead_m"  # 前视距离 (m)
+KEY_SAMPLE_RATE_HZ = "sample_rate_hz"
+KEY_SAMPLE_COUNT = "sample_count"
+KEY_TIME_OFFSET_S = "time_offset_s"
+KEY_X_NT = "x_nt"
+KEY_Y_NT = "y_nt"
+KEY_Z_NT = "z_nt"
+KEY_POINT_X_M = "point_x_m"
+KEY_POINT_Y_M = "point_y_m"
 KEY_POINTS_NED = "points_ned"  # 3D 点集 [[x,y,z], ...]
 KEY_TRAIL_NED = "trail_ned"  # 轨迹点集 [[x,y,z], ...]
 KEY_CENTER_NED = "center_ned"  # 圆心位置 [x,y,z]
@@ -154,6 +164,9 @@ KEY_PC104_UPTIME_MS = "pc104_uptime_ms"
 KEY_PC104_TIME_VALID = "pc104_time_valid"
 KEY_PC104_DVL_BI_UPTIME_MS = "pc104_dvl_bi_uptime_ms"
 KEY_PC104_DVL_BI_TIME_VALID = "pc104_dvl_bi_time_valid"
+KEY_PC104_DOWNLINK_ECHO_VALID = "pc104_downlink_echo_valid"
+KEY_PC104_DOWNLINK_ECHO_FRAME = "pc104_downlink_echo_frame"
+KEY_PC104_DOWNLINK_RECV_UPTIME_MS = "pc104_downlink_recv_uptime_ms"
 KEY_TARGET_DEPTH_M = "target_depth_m"  # 目标深度 (m)
 
 # =============================================================================
@@ -179,6 +192,8 @@ PROTOCOL_DOWNLINK_PARA11_OFFSET = 65  # offset +65: Para11 (int16)
 PROTOCOL_DOWNLINK_PARA12_OFFSET = 67  # offset +67: Para12 (int16)
 
 # 上行协议 ($AUV) 中的参数字段位置
+PROTOCOL_UPLINK_SPARE1_OFFSET = 18  # offset +18: Spare1 (int16)
+PROTOCOL_UPLINK_SPARE2_OFFSET = 20  # offset +20: Spare2 (int16)
 PROTOCOL_UPLINK_PARA1_OFFSET = 40  # offset +40: Para1 (int32)
 PROTOCOL_UPLINK_PARA2_OFFSET = 44  # offset +44: Para2 (int32)
 PROTOCOL_UPLINK_PARA3_OFFSET = 48  # offset +48: Para3 (int32)
@@ -195,6 +210,8 @@ PROTOCOL_UPLINK_PC104_UPTIME_PARA_INDEX = 2
 PROTOCOL_UPLINK_DVL_BI_UPTIME_PARA_INDEX = 3
 PROTOCOL_UPLINK_TIME_MARKER_PARA_INDEX = 11
 PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER = 0x5453
+PROTOCOL_UPLINK_DOWNLINK_RECV_UPTIME_PARA_INDEX = 0
+PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER = 0x4543
 
 # 控制键组合（用于验证完整性）
 CONTROL_KEYS = (KEY_RIGHT, KEY_TOP, KEY_LEFT, KEY_BOTTOM, KEY_THRUST)  # 5 元控制向量
@@ -354,10 +371,15 @@ class ProtocolUplinkTelemetry:
     gyro_x_rps: float = 0.0
     gyro_y_rps: float = 0.0
     gyro_z_rps: float = 0.0
+    # 前视地形坡度 tan(alpha)，从 Para11 解析；协议按 ×10000 编码。
+    forward_sonar_slope: float = 0.0
     pc104_uptime_ms: int = 0
     pc104_time_valid: bool = False
     pc104_dvl_bi_uptime_ms: int = 0
     pc104_dvl_bi_time_valid: bool = False
+    pc104_downlink_echo_valid: bool = False
+    pc104_downlink_echo_frame: int = 0
+    pc104_downlink_recv_uptime_ms: int = 0
 
 REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_GROUND_TRUTH: (KEY_POSITION_NED, KEY_RPY_NED, KEY_CABLE_CLOSEST_NED, KEY_CABLE_DISTANCE_M),
@@ -368,6 +390,22 @@ REQUIRED_BY_TOPIC: dict[str, tuple[str, ...]] = {
     Z_PATH_MAGNETIC: (KEY_B_NED, KEY_B_NORM),
     Z_PATH_SONAR: (KEY_SONAR_BINS,),
     Z_PATH_FORWARD_SONAR: (KEY_SLOPE, KEY_LOOKAHEAD_M),
+    Z_PATH_MAGNETIC_BLOCK: (
+        KEY_SAMPLE_RATE_HZ,
+        KEY_SAMPLE_COUNT,
+        KEY_TIME_OFFSET_S,
+        KEY_X_NT,
+        KEY_Y_NT,
+        KEY_Z_NT,
+    ),
+    Z_PATH_CABLE_SONAR_OBSERVATION: (
+        KEY_POINT_X_M,
+        KEY_POINT_Y_M,
+        "detector_score",
+        "contrast_to_noise_ratio",
+        "visible_length_m",
+        "ambiguity_margin",
+    ),
     Z_PATH_SEABED_CLOUD: (KEY_POINTS_NED,),
     Z_PATH_CABLE_MARKER: (KEY_POINTS_NED,),
     Z_PATH_TRUTH_POSE: (KEY_POSITION_NED, KEY_RPY_NED),
@@ -580,6 +618,45 @@ def validate_sensor_payload(topic: str, payload: Any) -> tuple[bool, list[str]]:
             errors.append("slope must be a number")
         if KEY_LOOKAHEAD_M in payload and not _is_number(payload[KEY_LOOKAHEAD_M]):
             errors.append("lookahead_m must be a number")
+
+    elif topic == Z_PATH_MAGNETIC_BLOCK:
+        if KEY_SAMPLE_RATE_HZ in payload and not _is_number(payload[KEY_SAMPLE_RATE_HZ]):
+            errors.append("sample_rate_hz must be a number")
+        if KEY_SAMPLE_COUNT in payload and not isinstance(payload[KEY_SAMPLE_COUNT], int):
+            errors.append("sample_count must be int")
+        for key in (KEY_TIME_OFFSET_S, KEY_X_NT, KEY_Y_NT, KEY_Z_NT):
+            if key in payload and not _is_number_list(payload[key]):
+                errors.append(f"{key} must be a list of numbers")
+        lengths = [
+            len(payload[key])
+            for key in (KEY_TIME_OFFSET_S, KEY_X_NT, KEY_Y_NT, KEY_Z_NT)
+            if isinstance(payload.get(key), list)
+        ]
+        if lengths and len(set(lengths)) != 1:
+            errors.append("magnetic block arrays must have equal lengths")
+        if (
+            isinstance(payload.get(KEY_SAMPLE_COUNT), int)
+            and lengths
+            and lengths[0] != payload[KEY_SAMPLE_COUNT]
+        ):
+            errors.append("sample_count must match magnetic block array lengths")
+
+    elif topic == Z_PATH_CABLE_SONAR_OBSERVATION:
+        for key in (KEY_POINT_X_M, KEY_POINT_Y_M):
+            if key in payload and not _is_number_list(payload[key]):
+                errors.append(f"{key} must be a list of numbers")
+        point_x = payload.get(KEY_POINT_X_M)
+        point_y = payload.get(KEY_POINT_Y_M)
+        if isinstance(point_x, list) and isinstance(point_y, list) and len(point_x) != len(point_y):
+            errors.append("sonar point arrays must have equal lengths")
+        for key in (
+            "detector_score",
+            "contrast_to_noise_ratio",
+            "visible_length_m",
+            "ambiguity_margin",
+        ):
+            if key in payload and not _is_number(payload[key]):
+                errors.append(f"{key} must be a number")
 
     elif topic == Z_PATH_SEABED_CLOUD:
         if KEY_POINTS_NED in payload and not _is_point_list(payload[KEY_POINTS_NED]):
@@ -930,6 +1007,9 @@ def build_bridge_telemetry_payload(
         KEY_PC104_TIME_VALID: bool(telemetry.pc104_time_valid),
         KEY_PC104_DVL_BI_UPTIME_MS: int(telemetry.pc104_dvl_bi_uptime_ms),
         KEY_PC104_DVL_BI_TIME_VALID: bool(telemetry.pc104_dvl_bi_time_valid),
+        KEY_PC104_DOWNLINK_ECHO_VALID: bool(telemetry.pc104_downlink_echo_valid),
+        KEY_PC104_DOWNLINK_ECHO_FRAME: int(telemetry.pc104_downlink_echo_frame),
+        KEY_PC104_DOWNLINK_RECV_UPTIME_MS: int(telemetry.pc104_downlink_recv_uptime_ms),
     }
 
     active_arbiter_value = _enum_value(active_arbiter)
@@ -1169,8 +1249,10 @@ def build_downlink_packet(
     parameters = list(_coerce_parameters(parameter_values))
     if isinstance(command_payload, dict):
         if KEY_TARGET_DEPTH_M in command_payload:
+            target_depth_m = float(command_payload.get(KEY_TARGET_DEPTH_M, target_depth_m))
             parameters[0] = _clamp_int(round(target_depth_m * 10.0), -2147483648, 2147483647)
         if KEY_MOCK_AMD_TIMESTAMP_US in command_payload:
+            mock_amd_timestamp_us = int(command_payload.get(KEY_MOCK_AMD_TIMESTAMP_US, mock_amd_timestamp_us))
             parameters[1] = _clamp_int(mock_amd_timestamp_us, -2147483648, 2147483647)
     else:
         if target_depth_m != 0.0:
@@ -1343,6 +1425,8 @@ def build_uplink_packet(
     parameter_values: Sequence[int] | None = None,
     pc104_uptime_ms: int | None = None,
     dvl_bi_uptime_ms: int | None = None,
+    pc104_downlink_echo_frame: int | None = None,
+    pc104_downlink_recv_uptime_ms: int | None = None,
 ) -> bytes:
     """
     @brief 从各工程量参数构建 145 字节 $AUV 上行遥测帧
@@ -1366,6 +1450,8 @@ def build_uplink_packet(
     @param [in] parameter_values 扩展参数（12 元组）
     @param [in] pc104_uptime_ms PC104 relative uptime in milliseconds, encoded in uplink Para3 when provided.
     @param [in] dvl_bi_uptime_ms PC104 uptime when the latest DVL BI sample was parsed, encoded in Para4.
+    @param [in] pc104_downlink_echo_frame Latest received $CKTH frame number echoed from VxWorks.
+    @param [in] pc104_downlink_recv_uptime_ms PC104 uptime when that downlink was received, encoded in Para1.
     
     @return bytes，145 字节的完整上行遥测数据包
     
@@ -1401,6 +1487,16 @@ def build_uplink_packet(
                 0x7FFFFFFF,
             )
         parameters[PROTOCOL_UPLINK_TIME_MARKER_PARA_INDEX] = PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER
+    downlink_echo_valid = (
+        pc104_downlink_echo_frame is not None
+        and pc104_downlink_recv_uptime_ms is not None
+    )
+    if downlink_echo_valid:
+        parameters[PROTOCOL_UPLINK_DOWNLINK_RECV_UPTIME_PARA_INDEX] = _clamp_int(
+            int(pc104_downlink_recv_uptime_ms),
+            0,
+            0x7FFFFFFF,
+        )
     packet = bytearray(PROTOCOL_UPLINK_SIZE)
     packet[0:5] = PROTOCOL_UPLINK_HEADER
     packet[5] = frame_counter & 0xFF
@@ -1412,8 +1508,17 @@ def build_uplink_packet(
     struct.pack_into(">H", packet, 12, 0)
     struct.pack_into(">H", packet, 14, 0)
     struct.pack_into(">H", packet, 16, 0)
-    struct.pack_into(">h", packet, 18, 0)
-    struct.pack_into(">h", packet, 20, 0)
+    if downlink_echo_valid:
+        struct.pack_into(">h", packet, PROTOCOL_UPLINK_SPARE1_OFFSET, PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER)
+        struct.pack_into(
+            ">h",
+            packet,
+            PROTOCOL_UPLINK_SPARE2_OFFSET,
+            _clamp_int(int(pc104_downlink_echo_frame), 0, 255),
+        )
+    else:
+        struct.pack_into(">h", packet, PROTOCOL_UPLINK_SPARE1_OFFSET, 0)
+        struct.pack_into(">h", packet, PROTOCOL_UPLINK_SPARE2_OFFSET, 0)
     packet[22] = work_instruction & 0xFF
 
     struct.pack_into(">h", packet, 23, _clamp_int(main_motor_rpm, -32768, 32767))
@@ -1529,6 +1634,23 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
     dvl_bi_uptime_ms = struct.unpack(">i", packet[PROTOCOL_UPLINK_PARA4_OFFSET:PROTOCOL_UPLINK_PARA4_OFFSET + 4])[0]
     time_marker = struct.unpack(">h", packet[PROTOCOL_UPLINK_PARA12_OFFSET:PROTOCOL_UPLINK_PARA12_OFFSET + 2])[0]
     pc104_time_valid = time_marker == PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER and pc104_uptime_ms >= 0
+    downlink_echo_marker = struct.unpack(
+        ">h",
+        packet[PROTOCOL_UPLINK_SPARE1_OFFSET:PROTOCOL_UPLINK_SPARE1_OFFSET + 2],
+    )[0]
+    downlink_echo_frame = struct.unpack(
+        ">h",
+        packet[PROTOCOL_UPLINK_SPARE2_OFFSET:PROTOCOL_UPLINK_SPARE2_OFFSET + 2],
+    )[0]
+    downlink_recv_uptime_ms = struct.unpack(
+        ">i",
+        packet[PROTOCOL_UPLINK_PARA1_OFFSET:PROTOCOL_UPLINK_PARA1_OFFSET + 4],
+    )[0]
+    downlink_echo_valid = (
+        downlink_echo_marker == PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER
+        and 0 <= downlink_echo_frame <= 255
+        and downlink_recv_uptime_ms >= 0
+    )
 
     return ProtocolUplinkTelemetry(
         frame_number=int(packet[5]),
@@ -1578,10 +1700,15 @@ def parse_uplink_packet(packet: bytes) -> ProtocolUplinkTelemetry:
         gyro_x_rps=struct.unpack(">h", packet[62:64])[0] * 0.001,
         gyro_y_rps=struct.unpack(">h", packet[64:66])[0] * 0.001,
         gyro_z_rps=struct.unpack(">h", packet[66:68])[0] * 0.001,
+        # Para11: forward terrain slope (tan(alpha) ×10000 → tan(alpha)).
+        forward_sonar_slope=struct.unpack(">h", packet[68:70])[0] * 0.0001,
         pc104_uptime_ms=int(pc104_uptime_ms),
         pc104_time_valid=pc104_time_valid,
         pc104_dvl_bi_uptime_ms=int(dvl_bi_uptime_ms),
         pc104_dvl_bi_time_valid=(
             pc104_time_valid and dvl_bi_uptime_ms > 0 and dvl_bi_uptime_ms <= pc104_uptime_ms
         ),
+        pc104_downlink_echo_valid=downlink_echo_valid,
+        pc104_downlink_echo_frame=int(downlink_echo_frame) if downlink_echo_valid else 0,
+        pc104_downlink_recv_uptime_ms=int(downlink_recv_uptime_ms) if downlink_echo_valid else 0,
     )

@@ -1,0 +1,11 @@
+{
+  "schema_version": "r13_conservative_mpc_overrides.v1",
+  "preflight_bundle": "results/control/r13_conservative_weight_preflight/20260810T000414",
+  "selection_rule": "lowest tested regularization passing all hard gates and at least 1 percent normalized control-variation reduction",
+  "mpc_param_overrides": {
+    "confidence_policy": "conservative",
+    "delta_psi_cmd": 50.0,
+    "delta_z_cmd": 10.0,
+    "delta_T_cmd": 2.0
+  }
+}

@@ -106,4 +106,9 @@ docs/real_experiment/
 /thubeamer-1.2/*.snm
 /thubeamer-1.2/*.synctex*
 /thubeamer-1.2/*.toc
-/thubeamer-1.2/*.xdv
+/thubeamer-1.2/*.xdv、
+
+
+*.bak
+
+thuthesis/.audit_backup_20260811/

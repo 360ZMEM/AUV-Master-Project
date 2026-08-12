@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 
 DEFAULT_FANGKONG_ROOT = "hardware_wrappers/fangkong_adc"
 DEFAULT_FANGKONG_CONFIG = "hardware_wrappers/fangkong_adc/config/default_config.yaml"
@@ -125,6 +127,20 @@ class FangkongLatestField:
     status_message: str
 
 
+@dataclass
+class FangkongLatestBlock:
+    field_t: Any
+    sample_time_s: Any
+    sample_rate_hz: float
+    clipping_ratio: float
+    data_completeness: float
+    dropped_sample_count: int
+    calibration_valid: bool
+    calibration_id: str
+    sample_clock_verified: bool
+    status_message: str
+
+
 class FangkongAdcMagneticClient:
     def __init__(
         self,
@@ -178,6 +194,7 @@ class FangkongAdcMagneticClient:
         self.axis_signs = [float(item) for item in (axis_signs if axis_signs is not None else [1.0, 1.0, 1.0])]
         self.api = None
         self.controller = None
+        self._last_filled_sample_count = 0
 
     def start(self) -> None:
         self.api = load_fangkong_api(fangkong_root=self.fangkong_root)
@@ -214,14 +231,27 @@ class FangkongAdcMagneticClient:
         self.controller = None
 
     def latest_field(self) -> FangkongLatestField | None:
+        block = self.latest_block()
+        if block is None or block.field_t.size == 0:
+            return None
+        vector = block.field_t[-1]
+        return FangkongLatestField(
+            x_t=float(vector[0]),
+            y_t=float(vector[1]),
+            z_t=float(vector[2]),
+            sample_time_s=float(block.sample_time_s[-1]),
+            status_message=block.status_message,
+        )
+
+    def latest_block(self) -> FangkongLatestBlock | None:
         if self.controller is None or self.api is None:
             return None
         snapshot = self.controller.get_latest_snapshot()
         if snapshot.waveform.size == 0:
             return None
-        latest_voltage = snapshot.waveform[-1:, :]
+        waveform = np.asarray(snapshot.waveform, dtype=float)
         magnetic_ut = self.api.voltage_to_magnetic_field(
-            latest_voltage,
+            waveform,
             self.controller.config.device.sensor_sensitivity_mv_per_ut,
         )
         magnetic_ut = self.api.apply_calibration(
@@ -229,13 +259,39 @@ class FangkongAdcMagneticClient:
             self.controller.calibration_profile,
             self.controller.config.calibration.enabled,
         )
-        vector = magnetic_ut[0]
-        ordered = [vector[index] for index in self.axis_order]
-        signed = [value * sign for value, sign in zip(ordered, self.axis_signs)]
-        return FangkongLatestField(
-            x_t=signed[0] * 1.0e-6,
-            y_t=signed[1] * 1.0e-6,
-            z_t=signed[2] * 1.0e-6,
-            sample_time_s=float(snapshot.timestamp),
+        ordered = magnetic_ut[:, self.axis_order]
+        signed_t = ordered * np.asarray(self.axis_signs, dtype=float)[None, :] * 1.0e-6
+        sample_rate_hz = max(float(snapshot.sample_rate_hz), 1e-6)
+        sample_count = int(signed_t.shape[0])
+        sample_time_s = (
+            float(snapshot.timestamp)
+            - np.arange(sample_count - 1, -1, -1, dtype=float) / sample_rate_hz
+        )
+        voltage_limit = 10.0
+        clipping_ratio = float(np.mean(np.abs(waveform) >= 0.995 * voltage_limit))
+        filled_total = int(getattr(snapshot.stats, "filled_sample_count", 0))
+        newly_filled = max(filled_total - self._last_filled_sample_count, 0)
+        self._last_filled_sample_count = filled_total
+        data_completeness = 1.0 - min(newly_filled / max(sample_count, 1), 1.0)
+        profile = self.controller.calibration_profile
+        calibration_enabled = bool(self.controller.config.calibration.enabled)
+        calibration_valid = not calibration_enabled or profile is not None
+        calibration_id = ""
+        if profile is not None:
+            calibration_id = str(getattr(profile, "name", ""))
+        dropped_count = (
+            int(getattr(snapshot.stats, "dropped_chunks", 0))
+            + int(getattr(snapshot.stats, "packet_loss_count", 0))
+        )
+        return FangkongLatestBlock(
+            field_t=signed_t,
+            sample_time_s=sample_time_s,
+            sample_rate_hz=sample_rate_hz,
+            clipping_ratio=clipping_ratio,
+            data_completeness=data_completeness,
+            dropped_sample_count=dropped_count,
+            calibration_valid=calibration_valid,
+            calibration_id=calibration_id,
+            sample_clock_verified=False,
             status_message=snapshot.status_message,
         )

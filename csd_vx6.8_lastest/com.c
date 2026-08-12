@@ -671,6 +671,7 @@ bool Recv_From_WIFI(void)
 					}
 					check_flag = true;           /*校验通过*/
 					UI_Channel_Selection_Down = 0x02;/*下行wifi通道标志位打开*/				
+					PC104_Timing_Record_WIFI_Downlink(From_WIFI_Buf[5]);
 					break;
 			   }
 			   else

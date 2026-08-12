@@ -192,6 +192,9 @@ class PVSSimWrapper:
             0.05,
             float(self.pvs_cfg.get("kinematic_depth_time_constant_s", 4.0)),
         )
+        self.kinematic_max_speed_mps = float(
+            self.pvs_cfg.get("kinematic_max_speed_mps", float("inf"))
+        )
 
         # ────────────────────────────────────────
         # 海流和噪声参数
@@ -274,15 +277,27 @@ class PVSSimWrapper:
         self.reference_depth_m = float(depth_m)
         self.reference_heading_deg = float(math.degrees(float(heading_rad)))
         if speed_mps is not None:
-            self.reference_speed_mps = max(0.0, float(speed_mps))
-            mapped_rpm = self.reference_speed_rpm_slope * float(speed_mps) + self.reference_speed_rpm_offset
-            self.reference_rpm = float(
+            # @note protocol_udp currently encodes autonomy speed through
+            # main-motor RPM. The optional kinematic cap keeps simulation
+            # proxy setpoint motion within the mission envelope.
+            self.reference_speed_mps = float(
                 np.clip(
-                    mapped_rpm,
-                    self.reference_rpm_min,
-                    self.max_command_rpm,
+                    max(0.0, float(speed_mps)),
+                    0.0,
+                    self.kinematic_max_speed_mps,
                 )
             )
+            if self.reference_speed_mps <= 1.0e-9:
+                self.reference_rpm = 0.0
+            else:
+                mapped_rpm = self.reference_speed_rpm_slope * self.reference_speed_mps + self.reference_speed_rpm_offset
+                self.reference_rpm = float(
+                    np.clip(
+                        mapped_rpm,
+                        self.reference_rpm_min,
+                        self.max_command_rpm,
+                    )
+                )
         if self.vehicle is not None:
             self.vehicle.ref_z = self.reference_depth_m
             self.vehicle.ref_psi = self.reference_heading_deg
@@ -307,7 +322,13 @@ class PVSSimWrapper:
         self.prev_nu = self.nu.copy()
         self.eta[5] = float((float(self.eta[5]) + yaw_rate_rad_s * self.dt + math.pi) % (2.0 * math.pi) - math.pi)
 
-        speed_mps = max(0.0, float(self.reference_speed_mps))
+        speed_mps = float(
+            np.clip(
+                max(0.0, float(self.reference_speed_mps)),
+                0.0,
+                self.kinematic_max_speed_mps,
+            )
+        )
         depth_error_m = float(self.reference_depth_m) - float(self.eta[2])
         depth_rate_mps = depth_error_m / self.kinematic_depth_time_constant_s
 

@@ -2,45 +2,38 @@
 
 ## 1. 来源
 
-原始图片来自实物 TMR8637 模组随附纸质资料，由作者于 2026-05-21 拍摄，并于 2026-08-08 归档到：
+原始图片来自实物 TMR8637 模组随附纸质资料。早期归档的三张手机翻拍照片（含蓝色衬布背景、纸面弯曲透视）已于 2026-08-11 由作者重新提供的平整扫描件替换；接线端子页按论文需要舍弃，不再收录。扫描件源文件位于：
 
 ```text
 相关附件和参照/本人新增传感器类/
+├── pic_20260809203237_0.jpg   # 三轴测试报告扫描件
+└── pic_20260809203334_0.jpg   # 本底噪声谱与引脚定义扫描件
 ```
 
-本目录保留三张未改动的源照片：
+本目录保留两张未改动的源扫描件：
 
-| 文件 | SHA-256 | 内容 |
-|---|---|---|
-| `source_01_terminal_photo.jpg` | `8d3628191d3815fe6b538303c4bca81b6cf754615bf9c12efc4f717ad9bf359a` | 信号输入、X/Y/Z 输出、电源输入及公共信号地 |
-| `source_02_axis_report_photo.jpg` | `87447ebf8253599aa023bf89e1a453f0d7eef0249978d560fc1ed0b11f927182` | 编号 6# 模组三轴测试汇总与电压-磁场传输曲线 |
-| `source_03_noise_psd_photo.jpg` | `99eeeabf381d8ead3652931fb21f81db1c43aead9a4c476cde9369a325bf0831` | 三轴电压噪声谱、磁场噪声谱及引脚定义 |
+| 文件 | 尺寸 | SHA-256 | 内容 |
+|---|---|---|---|
+| `source_02_axis_report_scan.jpg` | 1474×2048 | `261c538776a78b4af873d26b4d55687afeea8eb9c9b307bf828d6b753befdbce` | 编号 6# 模组三轴测试汇总与电压-磁场传输曲线 |
+| `source_03_noise_psd_scan.jpg` | 1346×2048 | `859818e3b9a5f1fe84ecce6935aa921413f9892641c33302c245405af0480559` | 三轴电压噪声谱、磁场噪声谱及引脚定义 |
 
 ## 2. 出版裁剪
 
-论文使用的三张图片只执行矩形裁剪，未重绘曲线、修改像素值或人工增强数据：
+两张扫描件本身为平整白底扫描（Hough 检测倾斜角中位数 ≈ 0.000°，背景亮度 p50=255），因此无需透视校正或去背景，仅执行矩形裁剪：三轴报告图裁去四周留白与左缘装订孔痕；噪声谱图裁去左缘边痕，并去除页面下方的联系人/电话/时间等个人信息栏与相机水印，只保留噪声曲线、说明文字与引脚定义表。裁剪未重绘曲线、修改像素值或人工增强数据。
 
-```bash
-sips -c 760 1040 --cropOffset 270 120 \
-  source_01_terminal_photo.jpg \
-  --out tmr8637_terminal_definition.jpg
+裁剪参数（`x0, y0, x1, y1` 像素矩形，OpenCV 切片）：
 
-sips -c 1180 1140 --cropOffset 90 70 \
-  source_02_axis_report_photo.jpg \
-  --out tmr8637_axis_calibration_report.jpg
-
-sips -c 760 1140 --cropOffset 160 70 \
-  source_03_noise_psd_photo.jpg \
-  --out tmr8637_noise_psd_report.jpg
+```text
+source_02_axis_report_scan.jpg  ->  tmr8637_axis_calibration_report.jpg   crop (95, 185, 1365, 1615)  -> 1270×1430
+source_03_noise_psd_scan.jpg    ->  tmr8637_noise_psd_report.jpg          crop (10, 155, 1295, 1345)  -> 1285×1190
 ```
 
 出版裁剪文件 SHA-256：
 
 | 文件 | SHA-256 |
 |---|---|
-| `tmr8637_terminal_definition.jpg` | `53c7aa5b5166c0c5e69d0f0d19a10ede7f54d0bf8afcbd40fe7e08947eadf2eb` |
-| `tmr8637_axis_calibration_report.jpg` | `7a939c613361f47ecd17f53e3637ff898777bd0a8990f91247e2e59dd75cda8f` |
-| `tmr8637_noise_psd_report.jpg` | `2e24960c1e32d1b9c806fe46e3755b170bb73391e3208cd16e2e9925cee56e84` |
+| `tmr8637_axis_calibration_report.jpg` | `7f546ea0495e6fc6c214a1f46d0ab3c89f110e94279a458ec786a09a5f4e56e2` |
+| `tmr8637_noise_psd_report.jpg` | `c73b1d9d276204eafce0ce9784596bc1c9ae10fc86a20791b5ec5949bbd2536a` |
 
 ## 3. 可直接读取的报告数据
 
@@ -63,7 +56,7 @@ sips -c 760 1140 --cropOffset 160 70 \
 - 图例包含编号 6# 模组的 X、Y、Z 三轴曲线；
 - 报告文字给出的频带为 0.05 Hz 至 10 kHz。
 
-50 Hz 位于 10 Hz 与 100 Hz 两条主刻度之间。按三轴曲线线宽和照片可辨分辨率读取，该位置约为 20--30 pT/√Hz，即 \(2\times10^1\ \mathrm{pT}/\sqrt{\mathrm{Hz}}\) 量级。由于原始资料是纸质曲线照片而非可导出的数值数据，论文采用区间和量级表述；“约 20 pT/√Hz”只作为中心近似，不写成精确标定值。
+50 Hz 位于 10 Hz 与 100 Hz 两条主刻度之间。按三轴曲线线宽和扫描件可辨分辨率读取，该位置约为 20--30 pT/√Hz，即 \(2\times10^1\ \mathrm{pT}/\sqrt{\mathrm{Hz}}\) 量级。由于原始资料是纸质曲线扫描件而非可导出的数值数据，论文采用区间和量级表述；“约 20 pT/√Hz”只作为中心近似，不写成精确标定值。
 
 ## 5. 证据边界
 

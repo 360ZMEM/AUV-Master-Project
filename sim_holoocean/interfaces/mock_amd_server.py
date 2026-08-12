@@ -14,6 +14,7 @@ Mock AMD (AUV 管理设备) UDP 服务器——将 HoloOcean 仿真数据转换�
   5. 引入现实故障效果（丢包、延迟、传感器漂移等）
 """
 
+import os
 import socket
 import sys
 import time
@@ -31,6 +32,7 @@ for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common']:
 from common.protocol import (
     build_uplink_packet,
     parse_downlink_packet,
+    ProtocolDownlinkState,
     KEY_B_NED,
     KEY_B_NORM,
     KEY_CABLE_CLOSEST_NED,
@@ -51,6 +53,10 @@ from sim_wrapper import create_sim_wrapper, build_scenario, extract_body_velocit
 from ocean_current_model import OceanCurrentModel
 from synthetic_sensors import VirtualEnvironment
 from zenoh_bridge import ZenohBridge
+from cable_quality_sim import (
+    build_magnetic_block_payload,
+    build_sonar_observation_payload,
+)
 
 
 class MockAmdUdpServer:
@@ -97,6 +103,18 @@ class MockAmdUdpServer:
         cable_points = (config.get('cable_path', {}) or {}).get('points_ned')
         self.cable = CablePath(cable_points) if cable_points else None
         self.perception_cfg = dict(config.get('perception', {}) or {})
+        self.quality_sim_cfg = dict(
+            self.perception_cfg.get('quality_sim', {}) or {}
+        )
+        quality_rate_hz = float(
+            self.quality_sim_cfg.get('publish_rate_hz', 5.0)
+        )
+        self._quality_publish_every_n = max(
+            1,
+            int(round(self.rate_hz / max(quality_rate_hz, 1.0e-6))),
+        )
+        scenario_seed = int(os.environ.get('AUV_SCENARIO_SEED', '0') or 0)
+        self._quality_rng = np.random.default_rng(scenario_seed + 45013)
 
         protocol_cfg = config['bridge'].get('protocol_udp', {})
 
@@ -117,6 +135,7 @@ class MockAmdUdpServer:
         self.side_motor_rpm = int(protocol_cfg.get('side_motor_rpm', 0))                    # 侧推电机 RPM（通常为 0）
         self.auv_address = int(protocol_cfg.get('auv_address', 1))                          # AUV 在网络中的地址/ID
         self.default_control_mode_byte = int(protocol_cfg.get('default_control_mode_byte', 0xEE))  # 默认控制模式
+        self._last_downlink_state: ProtocolDownlinkState | None = None
 
         # ────────────────────────────────────────
         # 遥测参数（模拟电池状态等）
@@ -494,6 +513,7 @@ class MockAmdUdpServer:
             }
             self.last_cmd_ts = time.time()
             self._last_downlink_packet = ready_packet
+            self._last_downlink_state = downlink
 
     # ========================================================================
     # 私有 API：遥测数据包构造
@@ -704,15 +724,21 @@ class MockAmdUdpServer:
             pose = agent_state['PoseSensor']
             tf = pose_matrix_ue_to_ned(pose)
             pos_ned = tf["position_ned"]
+            if self.cable is not None:
+                cable_closest, cable_distance = (
+                    self.cable.closest_point_and_distance(pos_ned)
+                )
+            else:
+                cable_closest = np.zeros(3, dtype=float)
+                cable_distance = 0.0
             sim_time = float(step) * self.dt
             base = enrich_meta({}, step=int(step), sim_time=sim_time, ts=sim_time)
             payload = {
                 **base,
                 KEY_POSITION_NED: pos_ned.tolist(),
                 KEY_RPY_NED: tf["rpy_ned"].tolist(),
-                # cable 信息在 mock_amd_server 不可得；填零占位以满足 schema
-                KEY_CABLE_CLOSEST_NED: [0.0, 0.0, 0.0],
-                KEY_CABLE_DISTANCE_M: 0.0,
+                KEY_CABLE_CLOSEST_NED: cable_closest.tolist(),
+                KEY_CABLE_DISTANCE_M: float(cable_distance),
             }
             topic = self.zbridge.get_uplink_topic("ground_truth")
             ok, errors = validate_sensor_payload(topic, payload)
@@ -783,6 +809,105 @@ class MockAmdUdpServer:
         except Exception as exc:
             print(f"[mock-amd][warn] magnetic publish failed at step={step}: {exc}")
 
+    def _publish_quality_inputs_zenoh(self, state, step: int) -> None:
+        """Publish raw simulated measurements for the shared quality stack."""
+        if (
+            self.zbridge is None
+            or self.cable is None
+            or step % self._quality_publish_every_n != 0
+        ):
+            return
+        try:
+            agent_state = get_agent_state(state, self.agent_name)
+            pose = agent_state['PoseSensor']
+            tf = pose_matrix_ue_to_ned(pose)
+            position_ned = np.asarray(tf["position_ned"], dtype=float)
+            heading_rad = float(tf["rpy_ned"][2])
+            sim_time = float(step) * self.dt
+            base = enrich_meta(
+                {},
+                step=int(step),
+                sim_time=sim_time,
+                ts=time.time(),
+            )
+
+            magnetic_topic = self.zbridge.get_uplink_topic("magnetic_block")
+            if magnetic_topic:
+                field_amplitude_t = compute_biot_savart_hvdc(
+                    auv_pos_ned=position_ned,
+                    cable=self.cable,
+                    current_amp=float(
+                        self.perception_cfg.get("hvdc_current_amp", 0.0)
+                    ),
+                )
+                noise_cfg = dict(
+                    self.perception_cfg.get("noise", {}) or {}
+                )
+                block = build_magnetic_block_payload(
+                    field_amplitude_t=field_amplitude_t,
+                    block_end_time_s=sim_time,
+                    magnetic_sigma_t=np.asarray(
+                        noise_cfg.get(
+                            "magnetic_sigma",
+                            [0.0, 0.0, 0.0],
+                        ),
+                        dtype=float,
+                    ),
+                    config=dict(
+                        self.quality_sim_cfg.get("magnetic", {}) or {}
+                    ),
+                    rng=self._quality_rng,
+                )
+                magnetic_payload = {**base, **block}
+                ok, errors = validate_sensor_payload(
+                    magnetic_topic,
+                    magnetic_payload,
+                )
+                if ok:
+                    self.zbridge.publish("magnetic_block", magnetic_payload)
+                else:
+                    print(
+                        "[mock-amd][warn] invalid magnetic block payload: "
+                        f"{errors}"
+                    )
+
+            sonar_topic = self.zbridge.get_uplink_topic(
+                "cable_sonar_observation"
+            )
+            if sonar_topic:
+                sonar_payload = build_sonar_observation_payload(
+                    cable_points_ned=self.cable.points,
+                    position_ned=position_ned,
+                    heading_rad=heading_rad,
+                    sonar_config=dict(
+                        self.perception_cfg.get("sonar", {}) or {}
+                    ),
+                    quality_config=dict(
+                        self.quality_sim_cfg.get("sonar", {}) or {}
+                    ),
+                    rng=self._quality_rng,
+                )
+                sonar_payload = {**base, **sonar_payload}
+                ok, errors = validate_sensor_payload(
+                    sonar_topic,
+                    sonar_payload,
+                )
+                if ok:
+                    self.zbridge.publish(
+                        "cable_sonar_observation",
+                        sonar_payload,
+                    )
+                else:
+                    print(
+                        "[mock-amd][warn] invalid cable sonar payload: "
+                        f"{errors}"
+                    )
+        except Exception as exc:
+            print(
+                "[mock-amd][warn] quality input publish failed "
+                f"at step={step}: {exc}"
+            )
+
     def run_forever(self):
         """
         启动 Mock AMD 服务器的主运行循环 - 持续仿真、通信、故障注入。
@@ -838,10 +963,12 @@ class MockAmdUdpServer:
                 target_speed_mps = self._extract_target_speed_from_downlink()
 
                 # 设置自动驾驶仪参考值
+                # @note 0 m/s is a valid autonomy command for CBF speed gating;
+                # only negative parsed values should preserve the previous speed.
                 self.wrapper.set_reference(
                     depth_m=target_depth_m,
                     heading_rad=np.deg2rad(target_heading_deg),
-                    speed_mps=target_speed_mps if target_speed_mps > 0 else None,
+                    speed_mps=target_speed_mps if target_speed_mps >= 0 else None,
                 )
 
                 # 切换到自动驾驶仪模式（若尚未切换）
@@ -923,6 +1050,7 @@ class MockAmdUdpServer:
             if self.zbridge is not None:
                 self._publish_ground_truth_zenoh(state, step)
                 self._publish_magnetic_zenoh(state, step)
+                self._publish_quality_inputs_zenoh(state, step)
 
             # ────────────────────────────────────────
             # 速率控制：维持 rate_hz
@@ -988,6 +1116,8 @@ class MockAmdUdpServer:
         """
         if self.last_client_addr is None:
             return self.wrapper.reference_depth_m
+        if self._last_downlink_state is not None:
+            return float(self._last_downlink_state.target_depth_m)
         try:
             import struct
             # Para1 位于 offset 37，4 字节大端有符号整数
@@ -1001,6 +1131,8 @@ class MockAmdUdpServer:
         从下行包 orientation_deg (offset 35-36, uint16) 提取目标航向。
         存储的是 deg * 10 的整数值。
         """
+        if self._last_downlink_state is not None:
+            return float(self._last_downlink_state.orientation_deg)
         try:
             import struct
             orientation_raw = struct.unpack('>H', self._last_downlink_packet[35:37])[0]
@@ -1013,11 +1145,17 @@ class MockAmdUdpServer:
         从下行包 main_motor_rpm (offset 23-24, int16) 估算目标速度。
         使用 PVS 的 RPM → speed 反向映射。
         """
+        if self._last_downlink_state is not None:
+            rpm = float(self._last_downlink_state.main_motor_rpm)
+            if rpm < self.wrapper.reference_rpm_min:
+                return 0.0
+            speed = (rpm - self.wrapper.reference_speed_rpm_offset) / self.wrapper.reference_speed_rpm_slope
+            return max(0.0, speed)
         try:
             import struct
             rpm_raw = struct.unpack('>h', self._last_downlink_packet[23:25])[0]
             # 反向映射：speed = (rpm - offset) / slope
-            rpm = float(abs(rpm_raw))
+            rpm = float(rpm_raw)
             if rpm < self.wrapper.reference_rpm_min:
                 return 0.0
             speed = (rpm - self.wrapper.reference_speed_rpm_offset) / self.wrapper.reference_speed_rpm_slope

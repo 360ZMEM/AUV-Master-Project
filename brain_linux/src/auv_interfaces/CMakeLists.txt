@@ -16,6 +16,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AuvDiagnostic.msg"
   "msg/MpcCmd.msg"
   "msg/ArbiterStatus.msg"
+  "msg/PerceptionQuality.msg"
+  "msg/MagneticSampleBlock.msg"
+  "msg/SonarCableObservation.msg"
+  "msg/CableTrackingAuthority.msg"
   DEPENDENCIES std_msgs
 )
 

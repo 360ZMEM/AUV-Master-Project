@@ -11,7 +11,14 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
+        (
+            os.path.join('share', package_name, 'launch'),
+            glob('launch/*.launch.py') + glob('../../launch/*.launch.py'),
+        ),
+        (
+            os.path.join('share', package_name, 'config'),
+            glob('../../config/*.yaml') + glob('../../config/*.json'),
+        ),
     ],
     install_requires=['setuptools', 'py_trees'],
     zip_safe=True,
@@ -30,6 +37,8 @@ setup(
             'sensor_supervisor_node = auv_decision_ros.sensor_supervisor_node:main',
             'magnetic_sensor_wrapper_node = auv_decision_ros.magnetic_sensor_wrapper_node:main',
             'forward_sonar_wrapper_node = auv_decision_ros.forward_sonar_wrapper_node:main',
+            'perception_quality_node = auv_decision_ros.perception_quality_node:main',
+            'tracking_authority_node = auv_decision_ros.tracking_authority_node:main',
         ],
     },
 )

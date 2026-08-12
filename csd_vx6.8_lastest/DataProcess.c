@@ -20,6 +20,11 @@
 #define UIBeidID 0989564
 #define AUVBeidID 0989565
 #define PC104_UPTIME_VALID_MARKER 0x5453
+#define PC104_DOWNLINK_ECHO_MARKER 0x4543
+
+static volatile bool g_pc104_timing_downlink_echo_valid = false;
+static volatile u8 g_pc104_timing_last_downlink_frame = 0;
+static volatile int32 g_pc104_timing_last_downlink_rx_uptime_ms = 0;
 
 /**
  * @brief Return PC104 relative uptime in signed 32-bit milliseconds.
@@ -48,6 +53,49 @@ static int32 Get_PC104_Uptime_Ms(void)
 	remain_ticks = ticks % rate;
 	uptime_ms = (seconds % 2147483UL) * 1000UL + (remain_ticks * 1000UL) / rate;
 	return (int32)uptime_ms;
+}
+
+/**
+ * @brief Record the latest UI WIFI downlink receive timestamp for echo timing.
+ * @details Called immediately after a $CKTH WIFI frame passes checksum in the
+ *          UDP receive path. The timestamp is PC104-relative uptime and is
+ *          echoed in the next $AUV frame for RTT and firmware-internal timing.
+ * @param [in] frame_number Downlink $CKTH frame number at byte offset 5.
+ * @author Tsinghua AUV Group
+ */
+void PC104_Timing_Record_WIFI_Downlink(u8 frame_number)
+{
+	g_pc104_timing_last_downlink_rx_uptime_ms = Get_PC104_Uptime_Ms();
+	g_pc104_timing_last_downlink_frame = frame_number;
+	g_pc104_timing_downlink_echo_valid = true;
+}
+
+/**
+ * @brief Inject a synthetic timing echo sample from the VxWorks shell.
+ * @details This is a telnet-shell diagnostic hook only. It proves that the
+ *          $AUV uplink echo fields are visible, but formal latency tests should
+ *          use PC104_Timing_Record_WIFI_Downlink() from the UDP receive path.
+ * @param [in] frame_number Frame number to expose in the next $AUV echo.
+ * @author Tsinghua AUV Group
+ */
+void PC104_Timing_Echo_Test(int frame_number)
+{
+	PC104_Timing_Record_WIFI_Downlink((u8)(frame_number & 0xFF));
+	printf("[pc104-echo] injected frame=%d rx_uptime_ms=%ld\r\n",
+		(int)g_pc104_timing_last_downlink_frame,
+		(long)g_pc104_timing_last_downlink_rx_uptime_ms);
+}
+
+/**
+ * @brief Clear the synthetic/recorded downlink echo state.
+ * @author Tsinghua AUV Group
+ */
+void PC104_Timing_Echo_Clear(void)
+{
+	g_pc104_timing_downlink_echo_valid = false;
+	g_pc104_timing_last_downlink_frame = 0;
+	g_pc104_timing_last_downlink_rx_uptime_ms = 0;
+	printf("[pc104-echo] cleared\r\n");
 }
 
 void UnpackNetDataTask(void);
@@ -3157,6 +3205,21 @@ void Pack_Data_To_UI12(_To_UI12 *temp)
 	temp->ToUI12_Para3 = Get_PC104_Uptime_Ms();
 	temp->ToUI12_Para4 = DVL_BI_Uptime_Ms;
 	temp->ToUI12_Para12 = PC104_UPTIME_VALID_MARKER;
+
+	/**
+	 * @brief Downlink receive echo extension for PC104 timing probes.
+	 * @details Spare1 carries marker 0x4543, Spare2 carries the latest received
+	 *          $CKTH frame number, and Para1 carries the PC104 receive uptime.
+	 *          Together with Para3 pack uptime, Jetson can compute RTT and the
+	 *          PC104 receive-to-pack interval without synchronized clocks.
+	 * @author Tsinghua AUV Group
+	 */
+	if(g_pc104_timing_downlink_echo_valid == true)
+	{
+		temp->ToUI12_Spare_Para1 = PC104_DOWNLINK_ECHO_MARKER;
+		temp->ToUI12_Spare_Para2 = (short int)g_pc104_timing_last_downlink_frame;
+		temp->ToUI12_Para1 = g_pc104_timing_last_downlink_rx_uptime_ms;
+	}
 		
 	temp->ToUI12_IMU_Heading=(Current_State.Current_IMU_Heading)*10;
 	temp->ToUI12_IMU_Pitch=(Current_State.Current_IMU_Pitch)*10;
@@ -3270,6 +3333,14 @@ void Pack_Data_To_UI12(_To_UI12 *temp)
 	convert_u16_data1 = (u16)(temp->ToUI12_Remain_Time);        
 	To_UI12_Buf[16] = convert_u16_data1>>8;/*�൱��ȡ�߰�λ*/
 	To_UI12_Buf[17] = convert_u16_data1;	 /*ȡ�Ͱ�λ   ת��Ϊ�����ֽ���*/
+
+	convert_u16_data1 = (u16)(temp->ToUI12_Spare_Para1);
+	To_UI12_Buf[18] = convert_u16_data1>>8;
+	To_UI12_Buf[19] = convert_u16_data1;
+
+	convert_u16_data1 = (u16)(temp->ToUI12_Spare_Para2);
+	To_UI12_Buf[20] = convert_u16_data1>>8;
+	To_UI12_Buf[21] = convert_u16_data1;
 	
 	To_UI12_Buf[22] = temp->ToUI12_Work_Cmd;     
 	

@@ -2,7 +2,7 @@
 
 > 由 `references.bib` 自动生成并维护。状态以本机 `~/Downloads/` 的已验证 PDF 为准；归档到 `../文献PDF/` 后，在“本地文件”列更新为归档路径。
 > 下载顺序：优先 A 区 DOI 可解析且开放获取的条目；IEEE/Springer 等出版商页面确认机构访问后下载；B 区使用原刊/会议入口；C 区主要为政策、标准、网页，按需保存权威版本。
-> 最后同步：2026-08-07。当前已下载 13 / 83 篇学术文献。
+> 最后同步：2026-08-09。当前已下载 13 / 99 条来源；其中 77 条为学术文献，22 条为政策、标准、行业报告、产品资料或监管网页。
 
 ## A 区：Crossref/DataCite 已验证（70 条）
 
@@ -79,7 +79,7 @@
 | ✅ 已下载 | `yan2023formation` | Formation control of multiple autonomous underwater vehicles: A review | `article` | [10.20517/ir.2023.01](https://doi.org/10.20517/ir.2023.01) | [论文页面](https://doi.org/10.20517/ir.2023.01) | `~/Downloads/5329_down.pdf`；开放获取；另有重复文件 `5329_down(1).pdf`，未处理 |
 | ⬜ 待下载 | `li2025cooplocalization` | Robust multiple autonomous underwater vehicle cooperative localization based on the principle of maximum entropy | `article` | [10.1109/TASE.2025.3546674](https://doi.org/10.1109/TASE.2025.3546674) | [论文页面](https://doi.org/10.1109/TASE.2025.3546674) | — |
 
-## B 区：原刊/会议核实（6 条）
+## B 区：原刊/会议核实（7 条）
 
 | 状态 | 引用键 | 文献题名 | 类型 | DOI / 入口 | 页面链接 | 本地文件与备注 |
 |---|---|---|---|---|---|---|
@@ -89,18 +89,34 @@
 | ⬜ 待下载 | `sun2026magnetic` | 基于工频磁特征的近岸海底电缆UAV航磁定位方法 | `article` | [10.11993/j.issn.2096-3920.2025-0083](https://doi.org/10.11993/j.issn.2096-3920.2025-0083) | [论文页面](https://doi.org/10.11993/j.issn.2096-3920.2025-0083) | — |
 | ⬜ 待下载 | `zhang2023sinsdvl` | 基于紧组合的SINS/DVL/USBL导航算法 | `article` | [10.11993/j.issn.2096-3920.2022-0076](https://doi.org/10.11993/j.issn.2096-3920.2022-0076) | [论文页面](https://doi.org/10.11993/j.issn.2096-3920.2022-0076) | — |
 | ⬜ 待下载 | `hatlo2015accurate` | Accurate analytic formula for calculation of losses in three-core submarine cables | `inproceedings` | 无 DOI，见 bib 的 URL/注释 | [题名检索](https://scholar.google.com/scholar?q=Accurate+analytic+formula+for+calculation+of+losses+in+three-core+submarine+cables) | — |
+| ⬜ 待下载 | `ning2026cableom` | 海上风电用海底电缆运维技术发展现状及趋势 | `article` | [10.16105/j.dxdl.1672-6901.20250182](https://doi.org/10.16105/j.dxdl.1672-6901.20250182) | [原刊页面](https://jwc.cwc.net.cn/article/doi/10.16105/j.dxdl.1672-6901.20250182) | 原刊官网入口；可经 Edge 下载 PDF |
 
-## C 区：政策、标准、报告与网页（7 条）
+## C 区：政策、标准、报告、产品资料与网页（22 条）
 
 | 状态 | 引用键 | 文献题名 | 类型 | DOI / 入口 | 页面链接 | 本地文件与备注 |
 |---|---|---|---|---|---|---|
+| ⬜ 待下载 | `ndrc2022renewableplan` | 关于印发《“十四五”可再生能源发展规划》的通知 | `online` | 无 DOI，官方文件 | [官方页面](https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/t20220601_1326719.html) | 附件政策 PDF，建议保存正式版本 |
+| ✓ 网页实录 | `scio2025energyachievement` | 介绍“十四五”时期能源高质量发展成就 | `online` | 无 DOI，国新办发布会 | [官方页面](http://www.scio.gov.cn/live/2025/37113/) | 网页实录，PDF 非必需 |
+| ⬜ 待下载 | `gwec2025offshore` | Global Offshore Wind Report 2025 | `online` | 无 DOI，GWEC 行业报告 | [官方页面](https://www.gwec.net/news/offshore-wind-installed-capacity-reaches-83-gw-as-new-report-finds-2024-a-record-year-for-construction-and-auctions) | 报告页；按页面入口下载或保存报告 PDF |
+| ⬜ 待下载 | `orecatapult2025ras` | Robotics \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind | `online` | 无 DOI，ORE Catapult/RenewableUK 报告 | [官方页面](https://ore.catapult.org.uk/resource-hub/analysis-reports/robotics-autonomous-systems-for-operations-and-maintenance-in-uk-offshore-wind) | 公开报告页，优先下载 PDF |
+| ✓ 网页规范 | `shanghai2022windtraffic` | 上海海事局关于印发《上海海事局海上风电场海上交通安全管理规定》的通知 | `online` | 无 DOI，沪海通航〔2022〕191号 | [官方页面](https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=F39F265BDF560E50E0533A0820C6FB7D) | 监管网页；按需保存通知附件 |
 | ⬜ 待下载 | `nea2026shenlan` | 海上风电转向"深蓝" | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](http://www.nea.gov.cn/) | — |
 | ⬜ 待下载 | `nea2025shenlan` | 海上风电加速挺进深蓝 | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](http://www.nea.gov.cn/) | — |
 | ⬜ 待下载 | `scio2026offshore` | China scales up offshore wind capacity | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](http://english.scio.gov.cn/) | — |
 | ⬜ 待下载 | `dlt1278_2025` | 海底电力电缆运行规程: DL/T 1278—2025 | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](http://www.nea.gov.cn/) | — |
+| ⬜ 待下载 | `multidimension2024tmr8607` | TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组） | `manual` | 无 DOI，厂商规格书 | [官方页面](https://www.dowaytech.com/) | 建议保存 Version 1.0 正式规格书 PDF |
 | ⬜ 待下载 | `tcsgpc_cable` | 海底管道及海底电缆检测技术规范: T/CSGPC | `online` | 无 DOI，见 bib 的 URL/注释 | [题名检索](https://scholar.google.com/scholar?q=%E6%B5%B7%E5%BA%95%E7%AE%A1%E9%81%93%E5%8F%8A%E6%B5%B7%E5%BA%95%E7%94%B5%E7%BC%86%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF%E8%A7%84%E8%8C%83%3A+T%2FCSGPC) | — |
 | ⬜ 待下载 | `geomatching2022sbp` | Sub-bottom profiling system helps produce high-resolution seismic datasets | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](https://geo-matching.com/articles/sub-bottom-profiling-system-helps-produce-high-resolution-seismic-datasets) | — |
 | ⬜ 待下载 | `dnv2024cablefailure` | 80\% of insurance claims in offshore wind are related to subsea cable failures — How can the industry manage these risks? | `online` | 无 DOI，见 bib 的 URL/注释 | [官方页面](https://www.dnv.com/article/80-percent-of-insurance-claims-in-offshore-wind-are-related-to-subsea-cable-failures-how-can-the-industry-manage-these-risks/) | — |
+| ⬜ 待下载 | `teledyne2021hydropact350` | HydroPACT 350 Subsea Cable Tracking System: Product Datasheet | `manual` | 无 DOI，官方规格书 | [PDF](https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf) | 产品规格书；待下载归档 |
+| ✓ 官方网页 | `teledyne2026hydropactline` | Subsea Pipe and Cable Detection Systems | `online` | 无 DOI，Teledyne 产品线 | [官方页面](https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/) | 已核验 350/440/660E/Dualtrack 产品谱系 |
+| ⬜ 待下载 | `teledyne2017hainan350` | HydroPACT 350 Cable Tracker Works on Fully Operational Live Sub-Sea Power Cables | `online` | 无 DOI，官方案例 | [PDF](https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/HydroPACT%20350%20-%20China%20ORE%20powered%20cable%20root%20survey.pdf) | 琼州海峡 500 kV 带电海缆案例；待下载归档 |
+| ⬜ 待下载 | `innovatum_smartrak` | SMARTRAK: The Cable and Pipeline Survey Tool | `manual` | 无 DOI，官方规格书 | [PDF](https://www.innovatum.co.uk/media/1051/smartrak-datasheet.pdf) | 被动磁/有源 AC/有源 DC 多模式；待下载归档 |
+| ✓ 官方网页 | `haiying_t180` | 海鹰 T180 海缆探测系统 | `online` | 无 DOI，国产产品资料 | [官方页面](https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304) | 已核验公开技术指标 |
+| ✓ 官方网页 | `hust2023cableauv` | 成果推介：海缆智能探测巡检水下机器人 | `online` | 无 DOI，高校成果页 | [官方页面](http://shenzhen.hust.edu.cn/info/1026/1834.htm) | 国内海缆专用无缆自主样机 |
+| ✓ 官方网页 | `fsea_p200` | 精灵 P200 自主水下机器人（AUV） | `online` | 无 DOI，国产产品资料 | [官方页面](https://www.f-sea.com/productinfo/105514.html) | 已核验潜深、续航与海缆巡检应用 |
+| ✓ 官方网页 | `kongsberg2025hugin` | HUGIN: Safeguarding Our Critical Undersea Infrastructure | `online` | 无 DOI，Kongsberg 官方资料 | [官方页面](https://www.kongsberg.com/discovery/news/our-stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/) | HUGIN 自主管缆跟踪与长航程能力 |
+| ⬜ 待下载 | `nowrdc2024diveld` | Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV | `online` | 无 DOI，NOWRDC 项目 | [官方页面](https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/) | 页面含 Anduril DIVE-LD 最终报告 PDF，待归档 |
 
 ## 操作记录
 
@@ -109,3 +125,4 @@
 - 2026-08-06：`sola2017quaternion`、`chen2023kalman`、`ahmad2025unified` 由 arXiv 官方 PDF 直链经 `curl` 下载，验证命令行直连可绕过 Edge 内置查看器和系统保存窗口。
 - 2026-08-06：12 篇 MDPI 端点均返回 403，`song2020dlia`（PIER）返回 HTML，未保留非 PDF 响应。
 - 2026-08-06：Semantic Scholar 批量开放版本索引新增 `colledanchise2018behavior`、`yordanova2020coverage`、`sprague2018improving`、`ozkahraman2020combining`、`tobin2017domain`、`zarrouki2024stochastic` 六篇有效公开 PDF。
+- 2026-08-09：新增 9 条典型海缆探测载荷与自主巡检平台资料，均已核验官方页面；其中 4 条存在可直接归档的规格书或报告 PDF。

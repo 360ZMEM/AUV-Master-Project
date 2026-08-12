@@ -16,6 +16,7 @@ from common.protocol import (
     KEY_BOTTOM,
     KEY_LEFT,
     KEY_RIGHT,
+    KEY_TARGET_DEPTH_M,
     KEY_TOP,
     KEY_THRUST,
     build_downlink_packet,
@@ -45,6 +46,14 @@ class FakeSocket:
 
     def close(self) -> None:
         return None
+
+
+class FakeWrapper:
+    reference_depth_m = 12.0
+    reference_heading_deg = 0.0
+    reference_rpm_min = 300.0
+    reference_speed_rpm_offset = -115.0
+    reference_speed_rpm_slope = 581.0
 
 
 def _make_config(mock_amd: dict | None = None) -> dict:
@@ -202,6 +211,62 @@ def test_protocol_logging_allows_explicit_multiline_debug() -> None:
 
     assert server.log_every_n == 10
     assert server.log_ascii_format is True
+
+
+def test_downlink_state_cache_preserves_autonomy_reference() -> None:
+    payload = {
+        KEY_RIGHT: 0.0,
+        KEY_TOP: 0.0,
+        KEY_LEFT: 0.0,
+        KEY_BOTTOM: 0.0,
+        KEY_THRUST: 40.0,
+        KEY_TARGET_DEPTH_M: 9.7,
+    }
+    packet = build_downlink_packet(
+        payload,
+        frame_counter=3,
+        control_mode_byte=int(ControlModeByte.JETSON_PROTOCOL),
+        work_instruction=int(WorkInstruction.AUTONOMOUS_CONTROL),
+        orientation_deg=12.3,
+        target_depth_m=9.7,
+        main_motor_rpm_scale=10.0,
+    )
+    server = MockAmdUdpServer(_make_config(), DummyCommandGuard())
+    server.wrapper = FakeWrapper()
+    server.sock = FakeSocket([(packet, ("127.0.0.1", 50001))])
+
+    server._poll_command_packet()
+
+    assert abs(server._extract_target_depth_from_downlink() - 9.7) < 1.0e-9
+    assert abs(server._extract_target_heading_from_downlink() - 12.3) < 1.0e-9
+    assert server._extract_target_speed_from_downlink() > 0.0
+
+
+def test_negative_downlink_rpm_does_not_command_forward_speed() -> None:
+    payload = {
+        KEY_RIGHT: 0.0,
+        KEY_TOP: 0.0,
+        KEY_LEFT: 0.0,
+        KEY_BOTTOM: 0.0,
+        KEY_THRUST: -20.0,
+        KEY_TARGET_DEPTH_M: 9.7,
+    }
+    packet = build_downlink_packet(
+        payload,
+        frame_counter=4,
+        control_mode_byte=int(ControlModeByte.JETSON_PROTOCOL),
+        work_instruction=int(WorkInstruction.AUTONOMOUS_CONTROL),
+        orientation_deg=0.0,
+        target_depth_m=9.7,
+        main_motor_rpm_scale=10.0,
+    )
+    server = MockAmdUdpServer(_make_config(), DummyCommandGuard())
+    server.wrapper = FakeWrapper()
+    server.sock = FakeSocket([(packet, ("127.0.0.1", 50001))])
+
+    server._poll_command_packet()
+
+    assert server._extract_target_speed_from_downlink() == 0.0
 
 
 def test_protocol_verbose_blocks_keep_fixed_line_count() -> None:
