@@ -19,9 +19,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-AUV_ROOT = PROJECT_ROOT.parent.parent / "AUV_Master_Project"
-if str(AUV_ROOT) not in sys.path:
-    sys.path.insert(0, str(AUV_ROOT))
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from common.protocol_debug import format_protocol_packet_ascii, format_protocol_packet_raw
 from src.data_structures import Preferences

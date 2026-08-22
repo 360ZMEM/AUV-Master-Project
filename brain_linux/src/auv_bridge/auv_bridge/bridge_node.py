@@ -65,6 +65,9 @@ from common.protocol import (
     KEY_OBJ_ADDRESS,
     KEY_ORIENTATION_DEG,
     KEY_PARAMETERS,
+    KEY_PC104_DVL_LOST,
+    KEY_PC104_JETSON_TIMEOUT,
+    KEY_PC104_SYSTEM_COMM_FAULT,
     KEY_PRESET_TIME_TENTHS_MIN,
     KEY_RIGHT,
     KEY_SIDE_MOTOR_RPM,
@@ -77,12 +80,14 @@ from common.protocol import (
     KEY_THRUST,
     KEY_TS,
     KEY_WORK_INSTRUCTION,
+    KEY_SYS_ABNORM_INFO,
     KEY_TARGET_DEPTH_M,
     ProtocolUplinkTelemetry,
     Z_PATH_AUV_TELEMETRY,
     Z_PATH_AUV_VIZ_INTERNAL,
     Z_PATH_PC_CMD_RAW,
     build_bridge_telemetry_payload,
+    decode_pc104_sys_abnorm_info,
     map_pc104_uptime_to_ros_seconds,
 )
 
@@ -279,6 +284,7 @@ class AUVBridgeNode(Node):
         self.latest_bridge_telemetry_payload: dict[str, Any] | None = None
         self.latest_cable_monitor_payload: dict[str, Any] | None = None
         self.latest_protocol_telemetry_ts = 0.0
+        self.latest_pc104_fault_flags = decode_pc104_sys_abnorm_info(0)
         self.last_arbiter_decision: ArbiterDecision | None = None
         self._command_keepalive_timer = None
 
@@ -612,7 +618,7 @@ class AUVBridgeNode(Node):
                 # 守卫拒绝：回退到 REMOTE，输出零推力
                 decision = self.command_arbiter.force_remote(
                     payload=self._build_degraded_payload(ts=now),
-                    now=now
+                    now=now,
                 )
                 self.get_logger().warn('[bridge] Autonomy guard rejected, forcing zero-thrust REMOTE')
         else:
@@ -661,7 +667,8 @@ class AUVBridgeNode(Node):
                     self.autonomy_guard.lock(deny_reason=DenyReason.MANUAL_OVERRIDE)
                 decision = self.command_arbiter.force_remote(
                     payload=self._build_degraded_payload(ts=now),
-                    now=now
+                    now=now,
+                    refresh_pc_timestamp=False,
                 )
                 self.last_arbiter_decision = decision
                 self._publish_arbiter_decision(decision, guard_decision=None)
@@ -861,7 +868,11 @@ class AUVBridgeNode(Node):
             telemetry_status=self._current_telemetry_status(now=now),
         )
         if not guard_decision.autonomy_allowed and self.command_arbiter.active_mode == ArbiterMode.AUTONOMOUS:
-            self.last_arbiter_decision = self.command_arbiter.force_remote(now=now)
+            self.last_arbiter_decision = self.command_arbiter.force_remote(
+                payload=self._build_degraded_payload(ts=now),
+                now=now,
+                refresh_pc_timestamp=False,
+            )
             if self.last_arbiter_decision is not None:
                 self._publish_arbiter_decision(self.last_arbiter_decision, guard_decision=guard_decision)
                 return guard_decision
@@ -880,7 +891,8 @@ class AUVBridgeNode(Node):
         }
         if self.latest_bridge_telemetry_payload is not None:
             status.update(self.latest_bridge_telemetry_payload)
-            status[KEY_TELEMETRY_FRESHNESS_MS] = freshness_ms
+        status.update(self.latest_pc104_fault_flags)
+        status[KEY_TELEMETRY_FRESHNESS_MS] = freshness_ms
         return status
 
     def _publish_arbiter_status(self, *, guard_decision: GuardDecision | None = None) -> None:
@@ -914,6 +926,18 @@ class AUVBridgeNode(Node):
             msg.mpc_command_valid = False
         msg.autonomy_allowed = bool(guard.autonomy_allowed) if guard is not None else False
         msg.telemetry_freshness_ms = float(self._current_telemetry_status(now=time.time()).get(KEY_TELEMETRY_FRESHNESS_MS, 0.0))
+        msg.pc104_sys_abnorm_info = int(
+            self.latest_pc104_fault_flags[KEY_SYS_ABNORM_INFO]
+        )
+        msg.pc104_system_comm_fault = bool(
+            self.latest_pc104_fault_flags[KEY_PC104_SYSTEM_COMM_FAULT]
+        )
+        msg.pc104_dvl_lost = bool(
+            self.latest_pc104_fault_flags[KEY_PC104_DVL_LOST]
+        )
+        msg.pc104_jetson_timeout = bool(
+            self.latest_pc104_fault_flags[KEY_PC104_JETSON_TIMEOUT]
+        )
         msg.note = str(active_decision.command_payload.get(KEY_NOTE, '')) if active_decision is not None else ''
         self._safe_publish_ros(self.arbiter_status_pub, msg)
 
@@ -1142,6 +1166,24 @@ class AUVBridgeNode(Node):
         self._rx_count += 1
         now = time.time()
         self.latest_protocol_telemetry_ts = now
+        previous_fault_word = int(
+            self.latest_pc104_fault_flags[KEY_SYS_ABNORM_INFO]
+        )
+        self.latest_pc104_fault_flags = decode_pc104_sys_abnorm_info(
+            telemetry.sys_abnorm_info
+        )
+        current_fault_word = int(
+            self.latest_pc104_fault_flags[KEY_SYS_ABNORM_INFO]
+        )
+        if current_fault_word != previous_fault_word:
+            message = (
+                '[bridge] PC104 Sys_Abnorm_Inf changed '
+                f'0x{previous_fault_word:08X}->0x{current_fault_word:08X}'
+            )
+            if current_fault_word:
+                self.get_logger().warning(message)
+            else:
+                self.get_logger().info(message)
 
         protocol_stamp = self._make_protocol_header_stamp(telemetry)
         dvl_stamp = self._make_pc104_header_stamp(

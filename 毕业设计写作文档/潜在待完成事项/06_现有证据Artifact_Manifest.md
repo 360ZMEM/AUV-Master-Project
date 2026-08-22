@@ -7,11 +7,11 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 文件的路径、字节数与 SHA256；历史实验未记录的 Git commit 不用当前 commit
 冒充，而是保留为 provenance gap。
 
-- 生成时间（UTC）：`2026-08-13T09:48:11.046324+00:00`
-- 当前仓库 commit：`b9dd38a983d5129717d65f881020735c1f202c43`
+- 生成时间（UTC）：`2026-08-22T15:27:00.103995+00:00`
+- 当前仓库 commit：`89699ff1e10f583657c9ad1dcc83b65a981204e1`
 - 当前工作树状态：`not_evaluated`
-- Catalog SHA256：`1d7b3210ee817d711740dce03246abbb64651353b3a572a8a5ed092a53b6e01e`
-- JSON SHA256：`67781299a30cbef4d232a2d1d3ddd19386f542c5bcb543c085ce2d442832ada3`
+- Catalog SHA256：`09e1cb67b79bb638bfe7f18290f3a6e2dc07f64e0ad595723ae199763c15fbcc`
+- JSON SHA256：`0db1a587b77b970f3542ab5371a3b5f5de583dd962300a1e09be804a2784bff5`
 
 ## 2. 证据等级
 
@@ -26,7 +26,7 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 | ID | 证据 | 数据层 | 等级 | 状态 | 样本范围 | 文件 | 原始输入 | 必需项 |
 |---|---|---|---:|---|---|---:|---:|---:|
-| BUILD-R00 | ThuThesis 论文构建基线 | document_build | A | complete | 180 页 A4 PDF，47 图，63 表，90 条 Biber 记录（R30 写作审计 + AUV-Master-Mag 电缆算法内容迁移后） | 15/15 | 0/0 | 完整 |
+| BUILD-R00 | ThuThesis 论文构建基线 | document_build | A | complete | 190 页 A4 PDF，41 个编号图环境，66 个编号表，90 条 Biber 记录（含 PC104 跨层同步故障链与 30 min 稳态证据） | 15/15 | 0/0 | 完整 |
 | MAG-CABLE-ALGORITHM-BOUNDARY | 专用磁探测仓库电缆探测算法级边界与迁移图 | algorithm_simulation | C | complete_with_boundaries | 专用电缆跟踪算法（AUV-Master-Mag，审计基线 commit 12e1884b59737dbe14e83c825b6cea9bb3c7a4bb）；确定性单次纯仿真复现（n=1）；覆盖先验轻/中/重档、稀疏/中断声呐、30--120 m 曲率、留一法消融、50/70 m 跨车道压力、20--36° 之字形埋深调优等多场景离线扫描 | 27/27 | 0/0 | 完整 |
 | MAG-BG-45 | TMR/SK2301 45 Hz 短时背景记录 | sensor_hardware_raw | B | partial | 2000 Hz，7839 样本，3.9195 s，三轴 | 8/8 | 1/1 | 完整 |
 | MAG-JOINT-45 | 45 Hz 电缆、TMR 与 ArUco 联合拟合 | sensor_hardware_analysis | B | complete_with_boundaries | 106821 ADC 样本，832 位姿记录，777 对齐点 | 43/43 | 2/2 | 完整 |
@@ -57,7 +57,9 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 | CONTROL-R22-NATIVE-TERRAIN-CURRENT-120S-STRESS | R22 地形加横流 120 s 长时边界压力测试 | native_factor_simulation_proxy_closed_loop | B | terminal_tail_boundary_identified | 地形与横流开启的 4 个因子组合 x 3 seed x baseline/UA；共 24 次 120 s 离线闭环；dt=0.5 s，预测窗 4.0 s | 36/36 | 0/0 | 完整 |
 | CONTROL-R22-NATIVE-TERRAIN-CURRENT-120S-TERMINAL-EXIT | R22 地形加横流 120 s 任务层终端退出验证 | native_factor_simulation_proxy_closed_loop | A | terminal_exit_boundary_closed | 地形与横流开启的 4 个因子组合 x 3 seed x baseline/UA；共 24 次离线闭环；请求时长 120 s，terminal_policy=exit_at_end，实际有效时长 65.0--105.0 s | 36/36 | 0/0 | 完整 |
 | CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE | native PVS depthHeadingAutopilot 执行链 smoke 审计 | native_pvs_protocol_udp_simulation_execution_chain | B | native_pvs_execution_chain_smoke_complete_with_boundaries | 约 50 s constant-depth/constant-heading native PVS/protocol_udp smoke；ROS2 controller/MPC/arbiter 经 protocol_udp/Mock AMD AUTO dispatch 进入 PVSSimWrapper.depthHeadingAutopilot；1 个 MCAP，setpoint 245 帧，mpc_cmd 720 帧，filtered state 998 帧 | 17/17 | 1/1 | 完整 |
-| HARDWARE-PC104-UDP-TIMING-PROBE | PC104/VxWorks UDP 时序探针与 host-relay 实机记录 | physical_pc104_udp_packet_timing_probe | C | physical_hostrelay_packet_timing_complete_with_boundaries | 30 s PC104 host-relay 实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 300 帧零推力下行，解析 450 帧 $AUV 上行，上行到达频率 15.000 Hz，p95 间隔 85.710 ms，parse error 0 | 28/28 | 0/0 | 完整 |
+| HARDWARE-PC104-UDP-TIMING-PROBE | PC104/VxWorks UDP 时序探针与 host-relay 实机记录 | physical_pc104_udp_packet_timing_probe | C | physical_firmware_echo_timing_complete_with_boundaries | 300 s PC104 host-relay 固件回显实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 3000 帧零执行器下行，解析 4505 帧 $AUV 上行，1001 个可配对固件接收事件，parse error 与上行前向序号缺口均为 0 | 36/36 | 0/0 | 完整 |
+| HARDWARE-PC104-LAYERED-FAULT-SAFETY | PC104 telnetd 零执行器故障注入与分层安全证据 | physical_pc104_fault_injection_plus_production_core_replay | A | layered_hil_complete_with_synchronized_successor | 真实 PC104 79.672 s 零执行器矩阵：1197 帧 $AUV、5 次自然断链、3 次 telnetd 强制 watchdog 超时、固定种子 30/100 应用层丢包、10 s 的 200 ms 排队延迟和 Bit5 注入/撤销；生产 CommandArbiter 2.2 s、10 ms 步长回放；行为树 9 场景 x 3 种子共 27 次确定性回放 | 67/67 | 0/0 | 完整 |
+| HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK | 真实 PC104--ROS2--行为树同步零执行器安全链与 30 min 稳态 | physical_pc104_ros2_behavior_tree_synchronized_zero_actuator | A | complete_with_split_run_boundary | 两个独立真实 PC104 运行包：修正后短时同步故障 run 18/18 通过；另一个 run 的完整 1800 s active_soak 含 124841 个 ArbiterStatus 样本和 30 个分钟级运行样本，ACTIVE 比率 1.0、目标故障状态样本为 0 | 37/37 | 4/4 | 完整 |
 | JETSON-R09-HANDOFF | Jetson clean benchmark 与历史产物回收 handoff | jetson_hardware_infrastructure | D | infrastructure_complete_dry_run_only | baseline/combined 120 s；MPC steady 200 与 stress 50；combined 1800 s soak 计划 | 8/8 | 0/0 | 完整 |
 | JETSON-25W | Jetson Orin NX 25W smoke 与 MPC microbench | jetson_hardware_documented | C | documented_only | 60 s smoke 记录；MPC steady 200 solve；constraint stress 50 solve | 4/9 | 0/3 | 完整 |
 | CONTROL-MPC-EXTREME-E1-MULTISEED | MPC 极端平面路径多种子统计验证 | deterministic_guidance_offline_closed_loop_multiseed | B | complete_with_scope_boundaries | 长波/短波 S 弯、90° 直角折弯、180° 发卡 4 场景 x 仅航向 PID/PID-LOS/预瞄 MPC 3 控制器 x 5 seed；受控扰动（恒定横流≤0.15 m/s、初始横向偏移≤0.8 m、逐步艏向白噪声≤1.5°）；离线制导闭环，不依赖历史 bag | 5/5 | 0/0 | 完整 |
@@ -68,16 +70,16 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### BUILD-R00 ThuThesis 论文构建基线
 
-- Artifact digest：`e44b00ac3f23ee80ad6caefa76a536bc135fd146b2e4a2aa084941926930d7bd`
-- 可访问字节数：`13113116`
-- 可支持结论：Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF；最终日志不存在 undefined command/citation/reference；R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8；AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论
+- Artifact digest：`e595b5c1cb49efa397c3cf16e75391390ff557ce515d273530306cc385a73bc5`
+- 可访问字节数：`7758493`
+- 可支持结论：Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF；最终日志不存在 undefined command/citation/reference；R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8；当前构建在既有写作审计和电缆算法迁移基础上新增 PC104--ROS2--行为树同步故障表、时间线与 30 min 稳态图，形成 190 页、41 个编号图环境和 66 个编号表；实物结论严格限定为零执行器同步安全链
 - 不可外推：构建通过不等于占位符、论证或排版质量已经最终验收；写作审计只压缩了主文叙事与图表数量，未新增、删除或改判任何实验证据；被移出主文的图对应的原始实验证据仍以本清单其余条目为准
 - 主要文件：`thuthesis/auv-thesis.pdf`
 
 ### MAG-CABLE-ALGORITHM-BOUNDARY 专用磁探测仓库电缆探测算法级边界与迁移图
 
-- Artifact digest：`ea21e9b5645fb21903cd3f9a4f62d8d31d3953442fab8735ea65d3ba5c9293f7`
-- 可访问字节数：`1197292`
+- Artifact digest：`f42aa8452c789559b30048fe01d386170163c588296848003951e8a7e908a8e7`
+- 可访问字节数：`1198966`
 - 可支持结论：关闭在线先验修正会在重档错位先验下引发横偏累积（漂移至 30--40 m）并在约 2119 s 触发 +57.5 m 跨车道投影跳变；map-frame 投影连续与先验物理配准是两个不同机制：关闭在线修正时全局路由跳变 686.4/724.1 m 但地图系投影跳变仍约 0.2 m，基线累计约 7.53 m 平移与约 -3.18 度旋转把错位地图拉回真实电缆；当前场景中在线先验修正与自适应之字形是关闭即失败的载荷机制，进度窗口投影与磁路径观测在该场景下为冗余安全网；之字形主动激励在调优后显示进入 0.15 m 参考线的算法级潜力：1.0/1.5/2.0 m 埋深在 36/32/25 度摆幅下达 0.124/0.079/0.123 m 单周期平均误差；30--120 m 曲率扫描未击穿曲率边界，30 m 为环境硬下限、瓶颈接近电缆几何物理下限而非固定曲率半径
 - 不可外推：全部是专用算法仓库的单次确定性纯仿真（n=1），不等于主仓 ROS/PVS 端到端、多种子或实物结论；30 m 是扫描下限而非实际失效阈值；埋深达标点是参数扫描最优点，不代表固定幅值全场景达标；幅值需按埋深/信号状态自适应；无声呐初始捕获仍失败，是可观测性负边界；综合健康分是任务级复合指标，机制判断需同时引用原始横偏、完成度、跳变和通过状态；results/ 在子仓库内不受 Git 跟踪、docs/figure 相对提交为 modified，故本 artifact 以各文件当前 SHA256 而非子仓库 commit 唯一确定
 - Provenance gaps：随机种子未透传，当前 n=1，无法给出多种子统计分布；真值字段仅允许离线评价，不进入在线感知管线；算法级边界尚未在主仓 ROS/PVS 端到端或真机链路上复核
@@ -94,8 +96,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### MAG-JOINT-45 45 Hz 电缆、TMR 与 ArUco 联合拟合
 
-- Artifact digest：`4d0e6f11e31c01f8b538b921f20a4cbdb0d7ccdd8d50411c2c44ac9f40951fc2`
-- 可访问字节数：`5121475`
+- Artifact digest：`091b11de89925be5a727d5538143bc8dcfa6b5407800785f102b2e3b8a8f1792`
+- 可访问字节数：`5247899`
 - 可支持结论：移动单三轴 TMR 加外部位姿可形成合成空间阵列；直导线三轴复 I/Q 自由尺度拟合 complex R²=0.8792；固定峰值电流拟合 complex R²=0.8711；post-hoc 残差归因复算 component RMSE=0.4795 µT、向量残差 p95=1.223 µT，平行/正交残差能量约为 52.0%/48.0%；公共复增益、每轴复增益、每轴固定背景与时间平移只能解释有限残差，剩余误差主要对应直导线/公共复尺度和未标定轴向因素边界
 - 不可外推：不是海缆绝对埋深验收；未完成独立九参数标定和三通道复增益标定；无限长直导线模型不覆盖多芯回流与铠装屏蔽；残差归因为归档数据的事后分析，不是新增硬件采集；归因结果不能替代可溯源电流、距离、转台或多芯海缆标定
 - Provenance gaps：采集与分析时 Git/submodule commit 未进入结果摘要
@@ -121,8 +123,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### ESKF-NIS-8X3 ES-EKF 八场景三种子 NIS/R 聚合
 
-- Artifact digest：`ca4748fc63be1117dd397cd2fbfb7132a388668897c5fb48c6497715a863e726`
-- 可访问字节数：`58389456`
+- Artifact digest：`4d033a65dd38de929c36ae01e439dc20d1d2f95f03d690e8445032982048ea0a`
+- 可访问字节数：`58407103`
 - 可支持结论：24 个源运行与对应 MCAP 当前全部可访问；自适应 R 在八类场景均发生触发；可按观测源和自由度生成标准 NIS、卡方覆盖率、协方差和创新时序
 - 不可外推：历史 adaptive-R 滑窗混合 3 维 DVL 与 1 维深度原始 NIS，固定阈值 9.0 不具备统一卡方语义；innovation/gate proxy 仅作诊断，不得与标准 NIS 混合；30 s 与 3 seed 不构成长时漂移结论
 - Provenance gaps：历史 sweep manifest 未记录 Git commit、子模块 commit 和配置快照
@@ -156,8 +158,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### MPC-R15-DIAGNOSTICS MPC 每周期可解性诊断基础设施
 
-- Artifact digest：`05a6f36557294611bb72c068d02a51d7a9666d3bf1c1996d6c1f9fdf069fa942`
-- 可访问字节数：`227853`
+- Artifact digest：`a6aba30e414e67c380f4e820c1f067f8065a938774b136ad075df448fe2df5d5`
+- 可访问字节数：`228371`
 - 可支持结论：当前成功和失败周期均可记录 wall time、迭代数、warm-start、约束残差与 fallback；上一成功控制输出与当前失败诊断已分离；thesis/proxy sweep 可在正式 bag 返回后自动回填 R04 诊断字段
 - 不可外推：基础设施回归不能替代 R16 的闭环机制对照；尚未据此修改 UA-MPC 默认配置或宣称高 fallback 已修复
 - Provenance gaps：需由 R16/R13 正式运行生成多周期 MCAP 和统计结果
@@ -209,8 +211,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### CONTROL-R13-V2-SOURCE-CONFIDENCE R13-v2 分源置信保守 UA 正式矩阵
 
-- Artifact digest：`a03617f25dda6d542d20ed053f8033d0682505029901069a16b78353b1f834be`
-- 可访问字节数：`7413542481`
+- Artifact digest：`72cef273330387354a295bb1c7efbe1c8b5b52a81fd5c2c6e187d1f6a8f5c604`
+- 可访问字节数：`7413542999`
 - 可支持结论：source-specific 质量链、tracking authority、conservative policy 和 MPC 在 36 个正式运行中端到端闭合；fallback 为 0，平均 p95 wall time 约 10 ms，旧 R13 的高回退问题未复现；全局控制变化率 RMS 从 0.247 降至 0.085；hairpin、combined 与 cross-current 的控制变化率分别下降约 89.8%、84.4% 与 52.0%；buried_gap 的 p_track 跨 SEARCH/TRACK 门限并出现 HOLD/SEARCH/TRACK，可作为分源置信机制主证据；combined extreme 未进入 TRACK，是 tracking authority 硬门拒绝低质量观测的边界证据；CONTROL-R13-V2-TELEMETRY-AUTHORITY-SUPPLEMENT 补充证明 policy 后 applied speed 与 controller 侧 authority snapshot 已进入 debug 遥测，但只作为正式矩阵的可观测性补强
 - 不可外推：不能宣传 R13-v2 全面改善 RMSE；全局 RMSE 从 7.932 m 变为 8.006 m；不能宣传六个场景均完成 TRACK 闭环；combined extreme 的 TRACK 占比为 0；原 36-run 正式矩阵不能单独宣传速度缩放已被 MCAP 量化；速度缩放遥测由 CONTROL-R13-V2-TELEMETRY-AUTHORITY-SUPPLEMENT 单独支撑，不反向修订 paired RMSE 或控制变化率统计；不能把 simulation_proxy 概率标定写成实物部署置信度标定；hairpin 的低 TRACK 占比主要来自观测稀疏和 authority age gate，不能误写成 p_track 低
 - Provenance gaps：原 36-run 正式矩阵 MCAP 不含 policy 后 applied_target_speed_mps 与 controller 侧 authority snapshot；该可观测性缺口已由当前 proxy 配置下的 telemetry supplement 补强，但正式矩阵本身未重跑；物理声呐/磁探测独立验证集和实物概率标定尚未完成；R22 原生因子闭环仍需验证几何、横流、地形和实测噪声交互效应
@@ -303,7 +305,7 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 - 可访问字节数：`1704304`
 - 可支持结论：R21 原生几何、地形与埋设、实测噪声回放和横流四因子已进入制导级 MPC、tracking authority 与 conservative quality-control policy 的完整 2^4 离线闭环矩阵；96/96 次运行有效，fallback 为 0，1.5 m 低净空违规率和海床穿透率均为 0，最小净空为 2.536 m；最坏横向 p95 为 1.716 m；横流是横向 p95 的主导主效应，baseline/UA/all 口径下效应分别约为 0.627/0.652/0.639 m；曲线几何与横流构成主要二阶交互项，baseline/UA 口径下横向 p95 交互效应约为 0.532/0.261 m；UA 将平均控制变化率 RMS 从 4.831 降至 0.814，但平均横向 p95 从 1.173 m 小幅升至 1.206 m；其主要价值仍是控制平滑而非路径精度全面提升；solver p95 最大 24.02 ms，solver max 最大 38.83 ms；相对 ROS 20 Hz、bridge 10 Hz、VxWorks 主控 10 Hz 和 NetRecv 0.3 s 周期均未越界
 - 不可外推：数据层限定为 offline simulation_proxy，不是 native PVS depthHeadingAutopilot、真机或海试证据；本矩阵为 3 seed、20 s/run 的短时闭环验证，不替代长航时 soak、故障注入或最坏边界搜索；实测噪声回放和地形因子在本设置下对闭环指标主效应接近 0，只能说明当前短时代理闭环不敏感，不能外推为真实物理环境不重要；时序审计只比较 MPC solver wall time 与已知周期预算，不测量 Jetson--AMD 物理 UDP 时延、丢包或 VxWorks 接收/解包时间戳
-- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核；若论文需要最坏工况结论，还需扩展更长航时、更多 seed、失败样本和边界搜索
+- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核；若论文需要最坏工况结论，还需扩展更长航时、更多 seed、失败样本和边界搜索
 - 主要文件：`results/control/r22_native_closed_loop_full_3seed_timing_h8_20260810/run_manifest.json`
 
 ### CONTROL-R22-NATIVE-CLOSED-LOOP-60S-FACTORIAL R22 原生声磁--地形--横流 60 s 全因子长时复核
@@ -312,7 +314,7 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 - 可访问字节数：`4573425`
 - 可支持结论：96/96 次运行有效，fallback 为 0，1.5 m 低净空违规率和海床穿透率均为 0；最坏横向 p95 为 2.176 m，最小净空为 2.384 m；相对 20 s 矩阵，长窗口仍保持安全净空与接口闭合；终端审计显示 96/96 次运行均未触发有限参考路径末端，因此 full-window lateral 指标可作为活动巡缆段指标使用；横流仍为横向 p95 主导主效应；跨 baseline/UA 汇总的横流主效应约为 1.144 m；UA 将平均控制变化率 RMS 从 4.634 降至 0.665，但平均横向 p95 从 baseline 的 0.956 m 升至 UA 的 1.212 m；不能写成全局精度改善；solver p95 最大 14.93 ms，solver max 最大 43.70 ms；相对 ROS 20 Hz、bridge 10 Hz、VxWorks 主控 10 Hz 和 NetRecv 0.3 s 周期均未越界
 - 不可外推：数据层限定为 offline simulation_proxy，不是 native PVS depthHeadingAutopilot、真机或海试证据；60 s 全因子结果仍不是长航时 soak；120 s 地形+横流专项显示路径完成后的终端尾段必须单独计量；时序审计只比较 MPC solver wall time 与已知周期预算，不测量 Jetson--AMD 物理 UDP 时延、丢包或 VxWorks 接收/解包时间戳
-- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核；若要给出长航时稳定结论，需继续做 120--300 s 以上全矩阵或自适应边界搜索，并加入失败归因
+- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核；若要给出长航时稳定结论，需继续做 120--300 s 以上全矩阵或自适应边界搜索，并加入失败归因
 - 主要文件：`results/control/r22_native_closed_loop_full_3seed_60s_h8_20260810/run_manifest.json`
 
 ### CONTROL-R22-NATIVE-TERRAIN-CURRENT-120S-STRESS R22 地形加横流 120 s 长时边界压力测试
@@ -330,7 +332,7 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 - 可访问字节数：`1720467`
 - 可支持结论：24/24 次运行有效，24/24 均到达有限参考路径末端并由任务层退出；1.5 m 低净空违规率和海床穿透率均为 0，最小净空为 2.384 m；退出终端尾段后 full-window 横向 p95 最大为 2.152 m，与上一包按 active tracking 分段审计得到的活动段上界一致，说明原 6.839 m 全窗口指标主要来自路径完成后的 terminal tail；baseline 横向 p95 均值/最大值为 1.445/1.616 m，fallback 最大为 0；UA 横向 p95 均值/最大值为 2.112/2.152 m，fallback 最大为 0.018；baseline 平均有效时长为 77.0 s，UA 平均有效时长为 93.6 s，说明 UA 延后部分样本到达终点，但不能写成精度全面改善；solver p95 最大 22.99 ms，solver max 最大 53.27 ms；相对 ROS 20 Hz 的 p95 预算未越界，但单点 max 使最大 20 Hz 周期越界率为 0.006；相对 bridge/VxWorks 10 Hz 和 NetRecv 0.3 s 周期均未越界
 - 不可外推：该专项只覆盖地形与横流开启的 4 个组合，不是完整 2^4 120 s 全矩阵；terminal_policy=exit_at_end 验证的是任务完成后退出/截断指标，不是定点保持、横流悬停或终端 station-keeping 控制能力；数据层限定为 offline simulation_proxy，不是 native PVS depthHeadingAutopilot、真机或海试证据；UA 在该口径下仍有非零 fallback，且平均横向 p95 高于 baseline，不能写成 UA 全局精度改善
-- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核；若要评估长航时活动巡缆稳定性，需延长参考路径或采用路径长度归一化口径，而不是固定时长超过有限路径末端；若要声称终端保持能力，需另行设计具备横流补偿的 terminal hold/station-keeping 实验
+- Provenance gaps：native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证；PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核；若要评估长航时活动巡缆稳定性，需延长参考路径或采用路径长度归一化口径，而不是固定时长超过有限路径末端；若要声称终端保持能力，需另行设计具备横流补偿的 terminal hold/station-keeping 实验
 - 主要文件：`results/control/r22_native_closed_loop_terrain_current_3seed_120s_terminal_exit_h8_20260810/run_manifest.json`
 
 ### CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE native PVS depthHeadingAutopilot 执行链 smoke 审计
@@ -344,12 +346,30 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### HARDWARE-PC104-UDP-TIMING-PROBE PC104/VxWorks UDP 时序探针与 host-relay 实机记录
 
-- Artifact digest：`72b0494bef2cab9faf78970fb379a76fff63a5bfe6539cd2a2e6b241b0a5459e`
-- 可访问字节数：`423240`
-- 可支持结论：已补齐可在 Jetson/PC104 网段上直接运行的 packet-level UDP 时序探针；探针默认发送安全零推力 $CKTH 下行帧，并记录 $AUV 上行帧到达间隔、frame gap、PC104 uptime 和解析错误；host-relay 路径已完成 30 s 实机闭环记录：300 帧零推力下行进入 relay，450 帧 PC104 $AUV 上行进入容器，parse error 0；观测到 PC104 主上行到达频率约 15.000 Hz，inter-arrival p50/p95/p99 分别为 57.983/85.710/85.944 ms；已保存逐包原始 timing CSV，并生成 PC104 上行/下行包间隔与 R22 MPC solver wall-time 直方图；R22 60 s 全矩阵 96 条 trace 共 11520 个 MPC 解算样本，全样本 p95 为 11.167 ms；该结果确认 Docker Desktop 场景下容器侧下行入口应使用 host.docker.internal IPv4 192.168.65.254:10022，并由 host relay 经 192.168.0.11:21 转发给 PC104；探针输出明确标记 one_way_latency_claim=false 与 round_trip_latency_claim=false；当前容器端口映射已完成拓扑判读：若 PC104 仍固定上行到宿主机 21/udp 与 52367/udp，则需宿主机转发到 10021/udp 与 62367/udp；已补充宿主机 full-duplex relay，使 timing probe 下行可经宿主机 192.168.0.11:21 转发到 PC104，而不是由容器 172.18.0.2 直接发往 PC104；fan-out 被定位为并发 ROS2/PySide6/旁路记录与下行安全门控方案，不是物理 timing 基线的必要条件
-- 不可外推：当前结果是 host-relay/Docker Desktop 路径下的 packet arrival timing，不是裸网卡直连 timing；没有共享时钟或 firmware echo 时，该探针只能报告上行到达间隔、序列跳变和 PC104 uptime 单调性，不能报告单向物理时延；当前 30 s 结果不能声明 Jetson--AMD 一程物理 latency 或闭环控制端到端延迟；不能把 10021:21/udp 容器映射本身写成已接通 PC104 固定 21/udp 上行；单向 socat 上行转发只能用于 receive-only 检查，不能证明零推力下行已以宿主机 192.168.0.11:21 身份进入 PC104；若使用 fan-out，报告的到达间隔包含用户态转发路径，不应写成裸链路最小时延
-- Provenance gaps：需要确认 VxWorks 上行 PC104 uptime marker 是否有效；若论文需要单向时延，需增加固件时间戳回显或共享时钟同步；建议后续在最终 Jetson 部署形态下重跑 300 s，并保存宿主机 tcpdump 作为旁路网卡时间证据；需要记录最终宿主机端口转发命令、容器端口映射快照和 PC104 固件上行目标端口
+- Artifact digest：`2591396baba1242b0a3ff78591d40e5e8c28a9718aad8866683ad38e25ecc894`
+- 可访问字节数：`2207091`
+- 可支持结论：已补齐可在 Jetson/PC104 网段上直接运行的 packet-level UDP 时序探针；探针默认发送安全零推力 $CKTH 下行帧，并记录 $AUV 上行帧到达间隔、frame gap、PC104 uptime 和解析错误；host-relay 路径已完成 300 s 实机闭环记录：3000 帧零执行器下行进入 relay，4505 帧 PC104 $AUV 上行进入容器，parse error 0；观测到 PC104 主上行到达频率约 15.017 Hz，inter-arrival p50/p95/p99 分别为 58.005/85.721/86.095 ms；VxWorks 固件 uptime marker 与下行 echo marker 在 4505 帧上行中有效率均为 100%，PC104 uptime 无倒退；按 (echo frame, PC104 receive uptime) 去重后得到 1001 个可配对固件接收事件，first-echo 应用路径 RTT p50/p95/p99/max 为 264.678/313.965/315.607/318.550 ms；PC104 receive-to-first-pack 的 p95/max 均为 16 ms，相邻固件接收事件 1000/1000 个间隔均为 300 ms，与固件 Net_Recv_Task_Period=3 的 0.1 s 基准周期一致；300 s 内上行前向序号缺口与估计丢帧均为 0；1501 个零增量被单独识别为重复状态帧；PC104 uptime 相对容器单调时钟的拟合速率差约为 +962 ppm，绝对拟合残差 p95 为 0.774 ms；已保存逐包原始 timing CSV，并生成 PC104 上行/下行包间隔与 R22 MPC solver wall-time 直方图；R22 60 s 全矩阵 96 条 trace 共 11520 个 MPC 解算样本，全样本 p95 为 11.167 ms；已新增 300 dpi PNG/PDF 固件回显统计图，区分 first-echo RTT、echo observation age、PC104 receive-to-pack 和固件接收事件间隔；该结果确认 Docker Desktop 场景下容器侧下行入口应使用 host.docker.internal IPv4 192.168.65.254:10022，并由 host relay 经 192.168.0.11:21 转发给 PC104；探针输出明确标记 firmware_echo_application_rtt_claim=true、one_way_latency_claim=false 与 strict physical round_trip_latency_claim=false；当前容器端口映射已完成拓扑判读：若 PC104 仍固定上行到宿主机 21/udp 与 52367/udp，则需宿主机转发到 10021/udp 与 62367/udp；已补充宿主机 full-duplex relay，使 timing probe 下行可经宿主机 192.168.0.11:21 转发到 PC104，而不是由容器 172.18.0.2 直接发往 PC104；fan-out 被定位为并发 ROS2/PySide6/旁路记录与下行安全门控方案，不是物理 timing 基线的必要条件
+- 不可外推：当前结果是 host-relay/Docker Desktop 路径下的 packet arrival timing，不是裸网卡直连 timing；固件回显支持 host-relay 应用路径 RTT 与 PC104 同时钟域 receive-to-pack，但没有共享时钟，仍不能报告上下行单向物理时延；当前 300 s 结果不能声明 Jetson--AMD 单向物理 latency、执行器响应或 ADC--EKF--BT--控制--PC104 完整闭环端到端延迟；1001/3000 是当前 3.33 Hz 固件接收任务对 10 Hz 下行的应用层观测覆盖率，不是旁路网卡抓包意义的物理丢包率；本轮 DVL BI uptime 有效样本为 0，只能证明 PC104 时间字段到 ES-EKF 的软件消费路径，不能证明真实 DVL 时间戳改善定位精度；必须实验 5 的故障与安全部分由独立条目 HARDWARE-PC104-LAYERED-FAULT-SAFETY 覆盖，不能回写成该 300 s 正常链路自身的测量结果；不能把 10021:21/udp 容器映射本身写成已接通 PC104 固定 21/udp 上行；单向 socat 上行转发只能用于 receive-only 检查，不能证明零推力下行已以宿主机 192.168.0.11:21 身份进入 PC104；若使用 fan-out，报告的到达间隔包含用户态转发路径，不应写成裸链路最小时延
+- Provenance gaps：若论文需要单向物理时延，仍需共享时钟或双向时间同步，固件单端 uptime 回显不能拆分 RTT；需在最终 Jetson 原生部署形态下复跑，并保存宿主机 tcpdump 作为旁路网卡时间证据；需接入有效 DVL BI 数据，复验 DVL parse uptime 到 ES-EKF 延迟加权的实物收益；最终 Jetson 原生部署仍需把 PC104 故障字、ROS2 仲裁状态与行为树状态接入同一同步时间线
 - 主要文件：`results/control/pc104_udp_timing_nohardware_20260810/run_manifest.json`
+
+### HARDWARE-PC104-LAYERED-FAULT-SAFETY PC104 telnetd 零执行器故障注入与分层安全证据
+
+- Artifact digest：`d27d75f113f2a962294fd73da4dff9cf0f78503928a2dcf5cc0cdc8980785640`
+- 可访问字节数：`5627563`
+- 可支持结论：真实 PC104 自然心跳中断 5/5 触发 Bit14 与 Remote，触发 p50/p95 为 1044.111/1056.357 ms；恢复 Jetson 模式 p50/p95 为 223.207/238.896 ms，Bit14 清除 p50/p95 为 537.003/552.728 ms；telnetd 强制 watchdog 超时 3/3 触发，触发与恢复 p50 分别为 183.648/363.717 ms；离散度由 0.5 s EmergencyTask 相位解释；固定种子精确丢弃 30/100 个逻辑帧；200 ms 排队延迟的实测 p50/p95 为 200.979/203.996 ms；两阶段均未越过 1.0 s watchdog，未误触发 Bit14；Bit5 可由 $AUV 上行观测并在撤销后清除，证明故障位打包、回传与主机解析链成立；全部 $CKTH 在发送前反解验证为主推、侧推和四舵全零；非零上行推进反馈和非零 telnet 命令快照均为 0；实验后板端恢复 Remote、故障字零和原始 DVL 运行时字段；生产 CommandArbiter 回放在 510 ms 进入 MPC 零输出 SAFETY_FALLBACK，PC 链路在 1010/1510 ms 进入 WEAK/LOST，并于 1510 ms 切 Remote 零输出；本地 fallback 不再误刷新 PC 心跳；行为树 27/27 回放有效，漏报和假阳性均为 0；授权丢失、感知丢失、求解超时代理和紧急故障分别进入 SAFE_HOVER、RELOCALIZATION、DEGRADED_MODE 与 RETURN_OR_ABORT；行为树脚本使用 CRC32 稳定场景种子，两次独立进程重跑的 behavior_tree.csv 与 fault_records.csv SHA256 一致
+- 不可外推：PC104 侧 DVL 锁定与 Bit5 均为 telnetd 临时运行时注入，用于隔离耦合和验证状态链，不代表真实 DVL 或 MCU 硬件故障；30% 丢包和 200 ms 延迟注入点位于容器发送器至 host relay 之前，不是 Ethernet PHY 丢包率或共享时钟单向传播时延；本轮始终使用零执行器命令，不支持推进器、舵机、急停或水动力响应结论；上行 +/-180 度舵值是 FMCU 默认位置反馈，不是 PC104 命令；生产仲裁器证据是 10 ms 步长纯核心确定性回放，不包含 ROS executor、网络或硬件调度时延；行为树 heartbeat_timeout 与 solver_timeout 是任务级授权丢失/异常代理，不是该分层运行中的 PC104 Bit14 或真实求解器负载直接输入；该条目自身仍是三层独立证据；后续同一 rosbag 时间轴的直接状态映射由 HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK 独立覆盖，不能反向改写本条原始运行
+- Provenance gaps：执行机构静态/动态响应、共享时钟单向时延与水域安全不在本轮范围内
+- 主要文件：`docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md`
+
+### HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK 真实 PC104--ROS2--行为树同步零执行器安全链与 30 min 稳态
+
+- Artifact digest：`ba1c3690fccb20ff7ab7ee9d4f1fcd7e50b885b17b61de0e4ed799819fb046ac`
+- 可访问字节数：`105346983`
+- 可支持结论：PC104 Sys_Abnorm_Inf 的 Bit5/Bit13/Bit14 已由生产 bridge 发布到 ArbiterStatus，并由 decision node 映射为通信链健康和速度辅助有效性，关闭了真实 PC104 到 ROS2 仲裁与行为树的状态接线缺口；修正后的同步故障运行 18/18 验收项通过：Bit13 到仲裁/行为树为 65.097/349.100 ms，保持 ACTIVE 并进入 ZIGZAG_SEARCH；Bit5 到 DENIED/IDLE 为 102.532/188.463 ms；真实 watchdog Bit14 到 DENIED 为 1071.706 ms；Bit5/Bit14 清除后系统保持 DENIED，必须收到显式零命令授权才恢复 ACTIVE；Bit14 由经过协议反解确认且经过 fan-out 安全门的 Remote 零包完成物理恢复；独立 1800 s active_soak 完整执行：124841 个 ArbiterStatus 样本的 ACTIVE 比率为 1.0，Bit5/Bit13/Bit14 目标故障状态样本为 0，30 个分钟级运行样本完整；两个运行包合计非零板端命令快照、非零上行推进反馈和 fan-out 非零执行器阻断计数均为 0，清理后均为 Remote+zero；聚合报告明确保留 30 min 源包的 failed_acceptance：唯一失败位于稳态结束后的旧 Bit14 clear-hold 附加序列；active_soak_stable=true 与修正后短时 18/18 分别由两个 run 支撑
+- 不可外推：1800 s 稳态与修正后 18/18 故障链是两个独立运行，不能写成同一次全部通过的长时故障实验；全程未授权非零执行器命令，不支持推进器/舵机极性、死区、ESTOP 动态、水动力或水域试验结论；台架上行 total_voltage_v=0.0，通信链实验临时隔离 47 V guard，不构成电源健康验收；DVL 的 BD_Check=2 和 BD_Height=5 m 是临时安全隔离值；Bit13 只验证状态映射，不验证真实 DVL 或固件 DVL 失锁自救执行效果；同步时延来自容器单调时钟上的主机观测，不是共享时钟下的单向物理网络时延；30 min 运行发生在当前容器--host relay--PC104 拓扑，未记录 Jetson tegrastats 温度、频率和功耗，不构成 Jetson thermal soak；归档的 30 min CSV 使用旧启动根进程 RSS 口径，bridge/decision 绝对值不代表节点进程树；runner 已修正为后续运行聚合进程树，但未回写原始数据
+- Provenance gaps：仍需真实电压、DVL 与 ADC--EKF--控制全执行量链验证；仍需 Jetson 目标机 thermal soak、共享时钟单向时延、非零执行机构与水域试验
+- 主要文件：`docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md`
 
 ### JETSON-R09-HANDOFF Jetson clean benchmark 与历史产物回收 handoff
 
@@ -362,8 +382,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### JETSON-25W Jetson Orin NX 25W smoke 与 MPC microbench
 
-- Artifact digest：`f385a4a2eb05c96994ae6a72404c988cc1f3d86163039732e5ec94d056b1932b`
-- 可访问字节数：`75219`
+- Artifact digest：`8c651781699404ecaa1c9b6c9e832ff628ad8d144590b810d3aa3760f9a5cf5a`
+- 可访问字节数：`78265`
 - 可支持结论：带时间戳部署记录表明 PVS/protocol_udp/ROS2/cable tracking/bag 主链曾跑通；文档记录 warm-start p95 约 36 ms 与压力档 0.5--0.6 s
 - 不可外推：当前工作区没有 Jetson 原始 bag、tegrastats 或 microbench CSV/JSON；不能升级为系统级实时性、热稳定或 PC104 真链路验收
 - Provenance gaps：原始结果位于另一设备且未回收；缺少可校验的 Jetson 环境与结果 bundle
@@ -372,8 +392,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### CONTROL-MPC-EXTREME-E1-MULTISEED MPC 极端平面路径多种子统计验证
 
-- Artifact digest：`bb1d5524c9475af4977b905b0764b8797e92fed32c9c00c7ebe52e02e24357c6`
-- 可访问字节数：`82454`
+- Artifact digest：`19d1ab7ba931c702d12d5b243b0d26ba2770e9d98df8ca028e324d72e6a0c173`
+- 可访问字节数：`91365`
 - 可支持结论：把原 n=1 极端路径结论升级为 n=5 统计：长波 S 弯 MPC 横向 RMSE 0.133±0.034 m vs PID-LOS 1.146±0.148 m，均值±1σ 区间互不重叠，MPC 全胜；180° 发卡掉头 MPC 2.363±0.234 m vs PID-LOS 4.246±0.459 m，区间互不重叠，MPC 全胜；短波 S 弯 MPC 1.824±0.190 m 与 PID-LOS 1.672±0.043 m 统计持平，二者均优于仅航向 PID 2.725±0.315 m；同一 seed 下三控制器共享同一扰动实现与噪声流以保证公平，MPC 变体冻结为确定性通道选出的 best 以防逐 seed 樱桃摘取；不传 --seeds 时 plant 逐字节复现旧 n=1（PID/LOS 位精确，MPC 仅 IPOPT ~1e-6 浮点噪声、三位小数不变），向后兼容归档
 - 不可外推：90° 直角折弯 PID-LOS 1.003±0.513 m 最优、MPC 未领先，作为诚实边界保留，不外推为 MPC 全场景最优；该结论为离线制导闭环 + 简化艏向一阶动力学代理，非 PVS 六自由度或原生声磁闭环，也非真机；扰动为受控合成（恒定横流+初始偏移+艏向白噪声），不代表真实海流谱与传感噪声；n=5 种子为统计充分性下界，非大样本蒙特卡洛
 - Provenance gaps：源 run 落在 AUV_DATA_ROOT 隔离目录（.auv_data_e1/results/control/mpc_xy_yaw_extreme/20260813_151303），不随仓库同步；仓库内仅保留 multiseed_summary.csv/multiseed_raw.csv 派生产物；该场景族缺少与真机或 PVS 原生闭环的横向 RMSE 交叉核对
@@ -381,8 +401,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### ESTIMATOR-E2-TRI-ESTIMATOR-FAIR 三估计器公平初始化对比重算（O-1 修复后）
 
-- Artifact digest：`c699b856536cd10d356debfcefacf795c616c9917be78930eab6ca934caf92dc`
-- 可访问字节数：`141825`
+- Artifact digest：`e0ddff7c46e3f30480ae7a8ccf5607e70539438f0f41ddf5784305f2b59e099b`
+- 可访问字节数：`147301`
 - 可支持结论：统一三引擎初始化口径（同一 truth 起点位姿、同一 NED frame、去除手动翻 Z）后，24 次运行水平 RMSE 统计等价：Raw DR 3.197±0.695 m、Std EKF 3.196±0.692 m、ES-EKF 3.200±0.692 m，±1σ 完全重叠；深度维 12 m 恒偏伪影已消除，Z RMSE 落到 0.025/0.110/0.203 m 量级；Raw DR 因直接透传深度计读数、不做协方差融合而 Z RMSE 最小；legacy-auto 口径下 ES-EKF 水平 3.187 m 的微优被证实为首帧自对齐伪影，公平口径下消失，从根上消除 23 号 §8.1 的排序矛盾与开发文档 dvl_fixed_final 不自洽；水平三方等价属结构性可观性边界：观测仅 DVL(测速)+depth(测 z)，x/y 无绝对位置量测项，correct_gps 未接入，任何滤波器都退化为速度积分漂移；O-1 只改 benchmark 脚手架（新增 --es-ekf-init、收敛内联翻 Z 为具名 _ros_up_to_ned），不动 algorithm/es_ekf.py 主线算法
 - 不可外推：水平等价不可通过调 R 突破，须引入绝对横向观测（USBL/GPS/声磁绝对定位）才能改变阶数，属论文展望（O-5）；深度维 Std/ES-EKF 略大于 Raw DR 属协方差整定口径问题（深度 R 偏小、DVL R 过保守），非算法精度结论，可整定项见 O-3/O-4（须批准）；离线滤波误差不等于控制侧 RMSE；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声
 - Provenance gaps：逐 run 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e2_tri_estimator_fair），不随仓库同步；仓库内保留 summary/raw/pooled 派生产物与 legacy-auto 对照；尚未在 O-3/O-4 分源协方差整定后重算以验证深度维一致性改善
@@ -390,8 +410,8 @@ JSON 是机器可读事实源，本 Markdown 只提供审阅摘要。校验值�
 
 ### ESTIMATOR-E3-COVARIANCE-AB 分源自适应 R 协方差整定 A/B（O-3/O-4，独立对照，不改主线默认）
 
-- Artifact digest：`8c9887b8bee4239e8f02e31eb919694ad13ed1bfe0349db981051ff9f9f3cf8c`
-- 可访问字节数：`154928`
+- Artifact digest：`6a71157ccc85aabe24779ab72722382b2ee4b91363ef57502c9ae1701f17c78d`
+- 可访问字节数：`352481`
 - 可支持结论：baseline 臂不传任何覆盖开关即逐字节复现正文引用口径（深度 NIS/自由度 7.205、DVL 0.119），证明 A/B 与正文同口径、既有 24 矩阵与 ESKF-NIS-8X3 产物不失效、不回改；O-3 分源门控消除跨源污染：DVL 实际 R 缩放由 baseline 的 1.69x（上调占比 0.30）落回 1.000x（上调占比 0），全局机制把深度失配施加到 DVL 的伪影被切断；O-4 深度参数整定把负结果翻正：sigma_depth 0.05->0.12 后深度 NIS/自由度 7.205->3.280、95% 带覆盖率 0.561->0.735、上界超限率 0.416->0.215，逐 run 稳健（深度 3.21±1.27、覆盖率 0.739±0.072，n=24）；整定仅经 tools/uncertainty_metrics.py 新增 CLI 覆盖开关（--sigma-dvl/--sigma-depth/--adaptive-r-mode/--adaptive-r-normalized-threshold）在实验进程内改写口径，algorithm/es_ekf.py 与 brain_linux/config/params.yaml 默认协方差不变；新增 applied_r_scale 列如实记录 per_source 模式下逐源实际生效的 R 缩放，弥补 r_scale_after_update 在 per_source 恒为 1.0 而低估分源缩放的问题；既有列数值逐字节不变
 - 不可外推：DVL 过保守（NIS/自由度约 0.05）是结构性下界而非可整定项：自适应 R 仅膨胀（下界 1.0x），分源门控下 DVL 从不触发上调；根治须下调 DVL 名义协方差 sigma_dvl 本身（属改主线默认），本独立实验刻意不做，如实记为下界；整定臂为独立对照口径，未回写 es_ekf.py/params.yaml 默认，正文主结论不依赖 B/C 臂；C 臂 sigma_depth=0.12 未在闭环控制侧验证一致性收益；离线逐量测重算 NIS 不等于在线控制侧协方差一致性；n=3 种子、30 s 片段、数字孪生代理，非真机检测噪声
 - Provenance gaps：逐 bag 输出根落在 AUV_DATA_ROOT 隔离目录（results/state_estimation/e3_covariance_ab），不随仓库同步；仓库内保留 summary/raw/pooled/comparison 派生产物；整定后的默认协方差若要进入主线需单独批准并重跑既有 24 矩阵，本条目不含该主线变更

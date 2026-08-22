@@ -151,7 +151,13 @@ class CommandArbiter:
         self._last_mpc_ts = stamp
         return self.decide(now=stamp)
 
-    def force_remote(self, payload: dict[str, Any] | None = None, *, now: float | None = None) -> ArbiterDecision:
+    def force_remote(
+        self,
+        payload: dict[str, Any] | None = None,
+        *,
+        now: float | None = None,
+        refresh_pc_timestamp: bool = True,
+    ) -> ArbiterDecision:
         """Force the arbiter back to remote mode after guard rejection or manual takeover."""
         stamp = time.time() if now is None else float(now)
         old_mode = self._mode
@@ -160,13 +166,16 @@ class CommandArbiter:
 
         if payload is not None:
             self._last_pc_raw = self._normalize_pc_raw_command(self._coerce_remote_payload(payload), ts=stamp)
-            self._last_pc_ts = stamp
+            if refresh_pc_timestamp:
+                self._last_pc_ts = stamp
         elif self._last_pc_raw is not None:
             self._last_pc_raw = self._normalize_pc_raw_command(self._coerce_remote_payload(self._last_pc_raw), ts=stamp)
-            self._last_pc_ts = stamp
+            if refresh_pc_timestamp:
+                self._last_pc_ts = stamp
         else:
             self._last_pc_raw = self._default_remote_payload(ts=stamp)
-            self._last_pc_ts = stamp
+            if refresh_pc_timestamp:
+                self._last_pc_ts = stamp
 
         return self.decide(now=stamp)
 

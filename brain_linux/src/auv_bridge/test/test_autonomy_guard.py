@@ -10,7 +10,15 @@ from __future__ import annotations
 
 from auv_bridge.autonomy_guard import AutonomyGuard
 from common.enums import AutoState, DenyReason, LeakLevel
-from common.protocol import KEY_CONFIDENCE, KEY_LEAK_LEVEL, KEY_TELEMETRY_FRESHNESS_MS, KEY_TOTAL_VOLTAGE_V
+from common.protocol import (
+    KEY_CONFIDENCE,
+    KEY_LEAK_LEVEL,
+    KEY_PC104_DVL_LOST,
+    KEY_PC104_JETSON_TIMEOUT,
+    KEY_PC104_SYSTEM_COMM_FAULT,
+    KEY_TELEMETRY_FRESHNESS_MS,
+    KEY_TOTAL_VOLTAGE_V,
+)
 
 
 def test_request_activation_succeeds_when_all_checks_pass() -> None:
@@ -37,6 +45,57 @@ def test_request_activation_denies_low_voltage() -> None:
     assert decision.auto_state == AutoState.DENIED
     assert decision.deny_reason == DenyReason.LOW_VOLTAGE
     assert decision.autonomy_allowed is False
+
+
+def test_request_activation_denies_pc104_communication_faults() -> None:
+    healthy_sensor = {
+        KEY_LEAK_LEVEL: int(LeakLevel.NONE),
+        KEY_CONFIDENCE: 0.9,
+    }
+    for fault_key in (
+        KEY_PC104_SYSTEM_COMM_FAULT,
+        KEY_PC104_JETSON_TIMEOUT,
+    ):
+        guard = AutonomyGuard(
+            min_total_voltage_v=47.0,
+            min_confidence=0.5,
+            max_uplink_age_ms=200.0,
+        )
+        decision = guard.request_activation(
+            sensor_status=healthy_sensor,
+            telemetry_status={
+                KEY_TOTAL_VOLTAGE_V: 48.5,
+                KEY_TELEMETRY_FRESHNESS_MS: 20.0,
+                fault_key: True,
+            },
+        )
+
+        assert decision.auto_state == AutoState.DENIED
+        assert decision.deny_reason == DenyReason.COMM_LINK_FAILURE
+        assert decision.autonomy_allowed is False
+
+
+def test_pc104_dvl_loss_does_not_bypass_task_level_degradation() -> None:
+    guard = AutonomyGuard(
+        min_total_voltage_v=47.0,
+        min_confidence=0.5,
+        max_uplink_age_ms=200.0,
+    )
+    decision = guard.request_activation(
+        sensor_status={
+            KEY_LEAK_LEVEL: int(LeakLevel.NONE),
+            KEY_CONFIDENCE: 0.9,
+        },
+        telemetry_status={
+            KEY_TOTAL_VOLTAGE_V: 48.5,
+            KEY_TELEMETRY_FRESHNESS_MS: 20.0,
+            KEY_PC104_DVL_LOST: True,
+        },
+    )
+
+    assert decision.auto_state == AutoState.ACTIVE
+    assert decision.deny_reason == DenyReason.NONE
+    assert decision.autonomy_allowed is True
 
 
 def test_refresh_revokes_active_state_when_uplink_becomes_stale() -> None:

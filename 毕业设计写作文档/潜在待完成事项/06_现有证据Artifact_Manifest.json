@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-13T09:48:11.046324+00:00",
+  "generated_at_utc": "2026-08-22T15:27:00.103995+00:00",
   "catalog_path": "毕业设计写作文档/潜在待完成事项/06_现有证据Artifact_Manifest.catalog.json",
-  "catalog_sha256": "1d7b3210ee817d711740dce03246abbb64651353b3a572a8a5ed092a53b6e01e",
+  "catalog_sha256": "09e1cb67b79bb638bfe7f18290f3a6e2dc07f64e0ad595723ae199763c15fbcc",
   "grade_definitions": {
     "A": "原始输入、配置/运行清单、分析代码和机器可读结果均可访问，且生成版本可追溯。",
     "B": "原始输入和机器可读结果可访问，但历史 commit、配置快照或标准化摘要至少缺一项。",
@@ -10,14 +10,14 @@
     "D": "只有计划、接口或未经数据支撑的声明，不能作为实验结论。"
   },
   "repository": {
-    "current_commit": "b9dd38a983d5129717d65f881020735c1f202c43",
+    "current_commit": "89699ff1e10f583657c9ad1dcc83b65a981204e1",
     "worktree_state": "not_evaluated",
     "note": "This is the manifest-generation revision, not the historical experiment revision unless an experiment manifest records it. Global dirty-state probing is intentionally skipped because this workspace requires an unavailable git-lfs filter; catalogued artifacts are verified by their own SHA256 values.",
     "submodules": [
       {
         "path": "AUV-Master-Mag",
-        "commit": "12e1884b59737dbe14e83c825b6cea9bb3c7a4bb",
-        "status_prefix": "1"
+        "commit": "7e9527f94a463e5b344635f9fea3df0c79972d8f",
+        "status_prefix": "+"
       },
       {
         "path": "hardware_wrappers/fangkong_adc",
@@ -33,12 +33,12 @@
       "data_layer": "document_build",
       "evidence_grade": "A",
       "declared_status": "complete",
-      "sample_scope": "180 页 A4 PDF，47 图，63 表，90 条 Biber 记录（R30 写作审计 + AUV-Master-Mag 电缆算法内容迁移后）",
+      "sample_scope": "190 页 A4 PDF，41 个编号图环境，66 个编号表，90 条 Biber 记录（含 PC104 跨层同步故障链与 30 min 稳态证据）",
       "claims_supported": [
         "Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF",
         "最终日志不存在 undefined command/citation/reference",
         "R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8",
-        "AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论"
+        "当前构建在既有写作审计和电缆算法迁移基础上新增 PC104--ROS2--行为树同步故障表、时间线与 30 min 稳态图，形成 190 页、41 个编号图环境和 66 个编号表；实物结论严格限定为零执行器同步安全链"
       ],
       "claim_boundaries": [
         "构建通过不等于占位符、论证或排版质量已经最终验收",
@@ -52,13 +52,13 @@
       "present_file_count": 15,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 13113116,
+      "total_bytes": 7758493,
       "role_counts": {
         "build_product": 1,
         "build_recipe": 1,
         "source": 13
       },
-      "artifact_digest_sha256": "e44b00ac3f23ee80ad6caefa76a536bc135fd146b2e4a2aa084941926930d7bd",
+      "artifact_digest_sha256": "e595b5c1cb49efa397c3cf16e75391390ff557ce515d273530306cc385a73bc5",
       "files": [
         {
           "path": "thuthesis/Makefile",
@@ -70,7 +70,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2853,
-          "mtime_utc": "2026-08-13T02:37:49.873979+00:00",
+          "mtime_utc": "2026-08-16T02:54:53.144826+00:00",
           "sha256": "8f690738f5d94802a31d1bc696717a1582c8d5dcef646b87181748decc52e9b7"
         },
         {
@@ -82,9 +82,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 12620731,
-          "mtime_utc": "2026-08-13T08:02:25.565681+00:00",
-          "sha256": "e448eb2ec0f17903be6e49d112b148474e96a48fdad42e0a0607a233d1a48450"
+          "size_bytes": 7230733,
+          "mtime_utc": "2026-08-22T15:26:50.092614+00:00",
+          "sha256": "6dd9337438401f7f41e111ae25c159e53ba02943a429f55926d0ac6355d21b36"
         },
         {
           "path": "thuthesis/auv-thesis.tex",
@@ -96,7 +96,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 758,
-          "mtime_utc": "2026-08-13T02:37:49.670873+00:00",
+          "mtime_utc": "2026-08-16T02:54:52.717322+00:00",
           "sha256": "fb04a7d45a59d7f192900ae2074b77d65fee40d0f6a8174f40933c36a14041a9"
         },
         {
@@ -109,7 +109,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 2424,
-          "mtime_utc": "2026-08-13T02:37:49.678068+00:00",
+          "mtime_utc": "2026-08-16T02:54:52.723723+00:00",
           "sha256": "a2520966d784a348a2fc7dd036c0015bc162221a7760c159117c2cd6d94aed62"
         },
         {
@@ -121,9 +121,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 10743,
-          "mtime_utc": "2026-08-13T08:01:57.118620+00:00",
-          "sha256": "bd3834e003c046bfdeaa4865fe00e3fd60d25b10da5597530d285c04aa899066"
+          "size_bytes": 12255,
+          "mtime_utc": "2026-08-22T15:23:21.606629+00:00",
+          "sha256": "7f899bb0de3bb7d64125b64dc8da0579b6bc4855c12072d5b18c06c89d450c86"
         },
         {
           "path": "thuthesis/data/auv-acknowledgements.tex",
@@ -135,7 +135,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 132,
-          "mtime_utc": "2026-08-13T02:37:49.702698+00:00",
+          "mtime_utc": "2026-08-16T02:54:52.763941+00:00",
           "sha256": "768718739811c6c7306ecc0de32c5d66dbeaa5914b3a60fadd807c89483f2fa4"
         },
         {
@@ -147,9 +147,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 27006,
-          "mtime_utc": "2026-08-13T06:17:11.510411+00:00",
-          "sha256": "3263b8cb1bacfa2e231c8a083c86390e684f4ad09fe2793e1e6fae7ca34729e8"
+          "size_bytes": 50216,
+          "mtime_utc": "2026-08-22T15:06:42.233213+00:00",
+          "sha256": "8ff82d0ce8d6d7d54afda8f34350ff3e253c50315867a172163d6308277dd567"
         },
         {
           "path": "thuthesis/data/auv-chap01.tex",
@@ -160,9 +160,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 35344,
-          "mtime_utc": "2026-08-13T04:49:29.834471+00:00",
-          "sha256": "3fdfe3b6de870be11a7b0669de0ef30335e48441a079a1cc122279502dc6876c"
+          "size_bytes": 37255,
+          "mtime_utc": "2026-08-22T15:24:27.835682+00:00",
+          "sha256": "8c01f972e174219e2f6d323ae07e5980b46f6e83a2434c96991ec9a27a8f9a0a"
         },
         {
           "path": "thuthesis/data/auv-chap02.tex",
@@ -173,9 +173,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 71022,
-          "mtime_utc": "2026-08-13T06:17:11.594552+00:00",
-          "sha256": "49f54c7ae58c3e68e89fe1caff78695a30ef7b50ab86f8445ecb750c14d8bfa2"
+          "size_bytes": 79312,
+          "mtime_utc": "2026-08-22T14:41:41.866496+00:00",
+          "sha256": "76e0e049b3de78b15c10e280f8ee6803d14562fe8f022bac7a091d51d93c66d8"
         },
         {
           "path": "thuthesis/data/auv-chap03.tex",
@@ -186,9 +186,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 51689,
-          "mtime_utc": "2026-08-13T06:17:11.796911+00:00",
-          "sha256": "a0911ccfac8571b77f698cb73bb8d2e01dd4c828af271b89d8251d6d0e1260f6"
+          "size_bytes": 54637,
+          "mtime_utc": "2026-08-22T12:05:16.670620+00:00",
+          "sha256": "a15ab34894d0f93a982ab4b6f70b03d50c4e50e9a61d5e2d99acc5294b5d4332"
         },
         {
           "path": "thuthesis/data/auv-chap04.tex",
@@ -199,9 +199,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 64744,
-          "mtime_utc": "2026-08-13T07:20:28.809509+00:00",
-          "sha256": "5b819a7ba4c4b82a8a45053034dbf50de8f7e035e7eb2e1616d0eaac07fd85c8"
+          "size_bytes": 63905,
+          "mtime_utc": "2026-08-22T08:20:06.702713+00:00",
+          "sha256": "544a736936458bfc208ec3bf82be84630aab71607f56201f395fd00a0dfc4eeb"
         },
         {
           "path": "thuthesis/data/auv-chap05.tex",
@@ -212,9 +212,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 151573,
-          "mtime_utc": "2026-08-13T07:56:25.702912+00:00",
-          "sha256": "d0e3cd99c49691d75c81c804f4b3b89e55c732a51105aa65d524887c06197cd3"
+          "size_bytes": 147238,
+          "mtime_utc": "2026-08-22T15:05:27.548295+00:00",
+          "sha256": "81204ec6bd59571998519cbecbe25ac0ac0bf80727d5ebb350c9236b8eb7a215"
         },
         {
           "path": "thuthesis/data/auv-chap06.tex",
@@ -225,9 +225,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 11005,
-          "mtime_utc": "2026-08-13T07:57:36.965988+00:00",
-          "sha256": "a18c144bbd1d23417b961fd652cc181f1015475dcba1b20a2d783d38162de59f"
+          "size_bytes": 13683,
+          "mtime_utc": "2026-08-22T15:06:01.768926+00:00",
+          "sha256": "0570894d3fafb44c22bd8db021c899e05463b84d175b8b9cd7849b33c2fc8a3d"
         },
         {
           "path": "thuthesis/data/auv-denotation.tex",
@@ -239,7 +239,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 3806,
-          "mtime_utc": "2026-08-13T02:37:49.869425+00:00",
+          "mtime_utc": "2026-08-16T02:54:53.128658+00:00",
           "sha256": "a0cd635d1069f035d2115e1b837b098ba498cadf633bf3a4954aef92d167d464"
         },
         {
@@ -291,7 +291,7 @@
       "present_file_count": 27,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 1197292,
+      "total_bytes": 1198966,
       "role_counts": {
         "figure": 5,
         "postprocess_code": 6,
@@ -299,7 +299,7 @@
         "run_index": 10,
         "verification_report": 5
       },
-      "artifact_digest_sha256": "ea21e9b5645fb21903cd3f9a4f62d8d31d3953442fab8735ea65d3ba5c9293f7",
+      "artifact_digest_sha256": "f42aa8452c789559b30048fe01d386170163c588296848003951e8a7e908a8e7",
       "files": [
         {
           "path": "AUV-Master-Mag/docs/28_声磁协同方法论合龙.md",
@@ -310,9 +310,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 27408,
-          "mtime_utc": "2026-07-12T08:38:20.921131+00:00",
-          "sha256": "d7ccb1a1c898c08df21aa1b68bff7aa22db70894a6e779d1c8ba569f5468e9fd"
+          "size_bytes": 27388,
+          "mtime_utc": "2026-08-16T03:52:48.335043+00:00",
+          "sha256": "34e945dfb8923e03bdfdfe3e61040b1c29ba012672042947095e1f5c4fa47d98"
         },
         {
           "path": "AUV-Master-Mag/docs/29_声磁协同实验设计与结果.md",
@@ -324,8 +324,8 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 42139,
-          "mtime_utc": "2026-07-12T08:38:20.921882+00:00",
-          "sha256": "fb26f2688288ae442a9478b4820bd6e3905363f037cd01af59933788193a64ff"
+          "mtime_utc": "2026-08-16T03:53:03.581823+00:00",
+          "sha256": "2644542ccb0dced5550040067d3b44e713ba0afe216f3975bd8268e96fcb8386"
         },
         {
           "path": "AUV-Master-Mag/docs/31_声磁协同算法部署输入输出规范.md",
@@ -544,9 +544,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 2172,
-          "mtime_utc": "2026-08-13T06:17:11.403414+00:00",
-          "sha256": "080b0eb6d6e3e7efcfa821ed3e973dfe6c50df060b6aa75656cc37fc04bcfdbb"
+          "size_bytes": 3670,
+          "mtime_utc": "2026-08-20T06:42:28.940318+00:00",
+          "sha256": "3bc192e0e6bf13693df6ac8794d4f681e9e3e04c7cf27719a32a9ea1d6e5e059"
         },
         {
           "path": "docs/thesis/figures/experiments/cable_mag_integration/CAUSAL_FIGURES_SOURCE.md",
@@ -557,9 +557,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 3097,
-          "mtime_utc": "2026-08-13T06:17:11.449381+00:00",
-          "sha256": "c6b55003737836bfdb229e875a4121c89ae9b9934f7bd660efac663864fee99a"
+          "size_bytes": 3293,
+          "mtime_utc": "2026-08-21T06:47:50.979647+00:00",
+          "sha256": "1601dd540b4ceb043b54a67bfc99138c88ce9e38fee3f749ea99be675303051f"
         },
         {
           "path": "docs/thesis/figures/experiments/cable_mag_integration/prior_alignment_decoupling.png",
@@ -610,7 +610,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 6417,
-          "mtime_utc": "2026-08-13T06:17:11.871834+00:00",
+          "mtime_utc": "2026-08-20T06:42:29.951590+00:00",
           "sha256": "0595b7a4f51fb95fa2591ce92b0fdbdfd9b1bc894b48577c8ce4a789f97c9a3f"
         },
         {
@@ -623,7 +623,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 14371,
-          "mtime_utc": "2026-08-13T06:17:11.887589+00:00",
+          "mtime_utc": "2026-08-20T06:42:29.966031+00:00",
           "sha256": "9aa0e4c2a77f91e05d552684fb8e5b55a524d95a2d4343e6c5ecb19ea95f2641"
         },
         {
@@ -636,7 +636,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 6130,
-          "mtime_utc": "2026-08-13T06:17:11.902044+00:00",
+          "mtime_utc": "2026-08-20T06:42:29.976971+00:00",
           "sha256": "999fb21fb5a6bb6ce67a4e0e42a05a758d013f59b34092a9407654892efcd9f4"
         },
         {
@@ -649,7 +649,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 31698,
-          "mtime_utc": "2026-08-13T06:17:11.960491+00:00",
+          "mtime_utc": "2026-08-20T06:42:30.204021+00:00",
           "sha256": "cc71630ede2eb2a30dccc5563486279998c02381c9c786a96aee5d4285117fe4"
         }
       ]
@@ -825,7 +825,7 @@
       "present_file_count": 43,
       "raw_reference_count": 2,
       "raw_reference_present_count": 2,
-      "total_bytes": 5121475,
+      "total_bytes": 5247899,
       "role_counts": {
         "analysis_code": 4,
         "authority_report": 3,
@@ -834,7 +834,7 @@
         "machine_summary": 3,
         "raw_input": 2
       },
-      "artifact_digest_sha256": "4d0e6f11e31c01f8b538b921f20a4cbdb0d7ccdd8d50411c2c44ac9f40951fc2",
+      "artifact_digest_sha256": "091b11de89925be5a727d5538143bc8dcfa6b5407800785f102b2e3b8a8f1792",
       "files": [
         {
           "path": "hardware_wrappers/fangkong_adc/core/lockin.py",
@@ -871,9 +871,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 287527,
-          "mtime_utc": "2026-08-09T07:04:36.381876+00:00",
-          "sha256": "45170513b1216c038c9ee53d4476da5fc3b5aa8aece06ebfce60bb45120c68e8"
+          "size_bytes": 287530,
+          "mtime_utc": "2026-08-21T08:47:35.511612+00:00",
+          "sha256": "157628a7ef1467e5b371c3e2998b96301802ee297ef194ab404c4c7a687c2bc9"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/b_vs_pose_axes.pdf",
@@ -884,9 +884,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 50898,
-          "mtime_utc": "2026-08-09T07:04:36.842010+00:00",
-          "sha256": "c3f51a8da447e952e99022a78fb2fa9f8680ed5f4a2f9ed716b693ccd7381429"
+          "size_bytes": 50900,
+          "mtime_utc": "2026-08-21T08:47:36.049656+00:00",
+          "sha256": "4f8305aaa8dc8603536c10e5b5ec193c1a75e38a452cd5340236ab9a461692a5"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/b_vs_pose_axes.png",
@@ -897,9 +897,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 339592,
-          "mtime_utc": "2026-08-09T07:04:36.771243+00:00",
-          "sha256": "5ae62e223da4d75a61e6774658263b3a73dcc98685d3230eefbf11f1bf66fd91"
+          "size_bytes": 359994,
+          "mtime_utc": "2026-08-21T08:47:35.951794+00:00",
+          "sha256": "805ba2f80c17eeb9711259e6b7d7f072b8ca9c179a217bd50692ccf316e7f726"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/b_vs_wire_distance.pdf",
@@ -910,9 +910,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 28941,
-          "mtime_utc": "2026-08-09T07:04:36.933318+00:00",
-          "sha256": "98c96511f70eb6dd85c87cda1ee17d31cb28b11ce3c507dca63f9ed743712702"
+          "size_bytes": 28977,
+          "mtime_utc": "2026-08-21T08:47:36.213209+00:00",
+          "sha256": "3067fd7cba13e944cdab48fdbfd1b4c512326011c00bd32c285b24336b7363a8"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/b_vs_wire_distance.png",
@@ -923,9 +923,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 178263,
-          "mtime_utc": "2026-08-09T07:04:36.902143+00:00",
-          "sha256": "43569108d388dde7144f89f112670eff74ae8900a3a1ce08ae9b71a73365ff70"
+          "size_bytes": 192183,
+          "mtime_utc": "2026-08-21T08:47:36.161629+00:00",
+          "sha256": "c112f31b6161c0343a1038b5d7f499ad66e9a81cf7a8417d2ba7671cfb5b4d24"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/complex_iq_fit.pdf",
@@ -936,9 +936,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 88854,
-          "mtime_utc": "2026-08-09T07:04:37.720201+00:00",
-          "sha256": "abedeaa9e520922af10cdd21cdf6bc5b7d07f4c7a11647832804c9169b8ac8de"
+          "size_bytes": 88847,
+          "mtime_utc": "2026-08-21T08:47:37.306655+00:00",
+          "sha256": "88a5a826b9ed5480c666175bd5d08bc9718c7aae714661ce7650b7d5d7e6cb09"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/complex_iq_fit.png",
@@ -949,9 +949,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 677606,
-          "mtime_utc": "2026-08-09T07:04:37.612046+00:00",
-          "sha256": "2961c7261501e8126c592a15ea949380769d80fa2e698b15f5f36f28144c2123"
+          "size_bytes": 706151,
+          "mtime_utc": "2026-08-21T08:47:37.174518+00:00",
+          "sha256": "8f8ffa2ab5cd6784d0d244da837fabfdd86c7c7416285bcdd2018a3ed15fdd51"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/directional_component_fit.pdf",
@@ -962,9 +962,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 49067,
-          "mtime_utc": "2026-08-09T07:04:37.335197+00:00",
-          "sha256": "e7d6dee3403a3d1514d3d3b0545c55cf2274702afb28f311ad48a0028d270f8a"
+          "size_bytes": 49151,
+          "mtime_utc": "2026-08-21T08:47:36.802974+00:00",
+          "sha256": "8828d6ba6561360acb3ace81a2caa78cc9f0c1b692c8f97d50bb657bc8dcdf97"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/directional_component_fit.png",
@@ -975,9 +975,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 449101,
-          "mtime_utc": "2026-08-09T07:04:37.278250+00:00",
-          "sha256": "1367b6da881bf4d5c56cc137b6e633c8be121cb3b949a5b456b558cc2144f598"
+          "size_bytes": 467870,
+          "mtime_utc": "2026-08-21T08:47:36.734851+00:00",
+          "sha256": "69dec9e20e0a338bb7ea7a2a60d2f1a59d2a9168c1854b673e9a495053ce9eca"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/fit_residuals.pdf",
@@ -988,9 +988,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 24885,
-          "mtime_utc": "2026-08-09T07:04:37.129368+00:00",
-          "sha256": "1715cef0b56fe757fba8a93861fdea8cce160d4dd0b69d491b658accf1ecd2e3"
+          "size_bytes": 24886,
+          "mtime_utc": "2026-08-21T08:47:36.531872+00:00",
+          "sha256": "0ff7b9372b836cc6882ad84deb5efbd9784af077f618c9d3a7267b3a6f7e319b"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/fit_residuals.png",
@@ -1001,9 +1001,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 123916,
-          "mtime_utc": "2026-08-09T07:04:37.103517+00:00",
-          "sha256": "c92b5be2c87c1bbe6bfebcc26937316f3c54cf7dbaf916f7b8de831475f50faa"
+          "size_bytes": 132086,
+          "mtime_utc": "2026-08-21T08:47:36.495041+00:00",
+          "sha256": "572597b8530399cf10c9d21da0c88ae35638d40e920eb643cd6402e2e01d766c"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/fit_summary.json",
@@ -1014,9 +1014,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 5122,
-          "mtime_utc": "2026-08-09T07:04:36.382997+00:00",
-          "sha256": "3b5cdb68a2534dc94fa6a014cdf5ee521d656da4bae077ae3730d33d8b46cf0e"
+          "size_bytes": 5121,
+          "mtime_utc": "2026-08-21T08:47:35.514627+00:00",
+          "sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/joint_analysis_report.md",
@@ -1027,9 +1027,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 22949,
-          "mtime_utc": "2026-08-09T10:52:27.187662+00:00",
-          "sha256": "3737de98db80043025fd2cb30b970bb00cf9f487af120e61c839e98c8226eb0e"
+          "size_bytes": 22945,
+          "mtime_utc": "2026-08-21T08:47:37.308138+00:00",
+          "sha256": "1f32b0efa48d754eb1cdd7a06c0f95f766092485cb47e27728df4188b712c233"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/time_alignment.pdf",
@@ -1040,9 +1040,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 37743,
-          "mtime_utc": "2026-08-09T07:04:36.659284+00:00",
-          "sha256": "5eef2d585089222eba6a6bf664611edf29046e1202b19f2488fcbaa16657ac2e"
+          "size_bytes": 37745,
+          "mtime_utc": "2026-08-21T08:47:35.768679+00:00",
+          "sha256": "7bb49e92aeda17b50abeef80a697f064350742809bfaf84a4e5b2e8cb042610f"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/time_alignment.png",
@@ -1053,9 +1053,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 283418,
-          "mtime_utc": "2026-08-09T07:04:36.514876+00:00",
-          "sha256": "391953f19f5629ca32de46a6d588e1302380a2bc33f8d59ba885077ce6403d89"
+          "size_bytes": 309423,
+          "mtime_utc": "2026-08-21T08:47:35.663779+00:00",
+          "sha256": "0bfd54288abd9785c2f6f4ea4e6860f55a60debb7b25587a0cd74c537641dba9"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/trajectory_colored_by_b.pdf",
@@ -1066,9 +1066,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 35306,
-          "mtime_utc": "2026-08-09T07:04:37.059206+00:00",
-          "sha256": "f5d27a7f7139418bb5a20faba1dac8e56fe937256c3f41f2e88848efcbf7bef9"
+          "size_bytes": 35284,
+          "mtime_utc": "2026-08-21T08:47:36.419626+00:00",
+          "sha256": "6955c8b0daac5ca3e0a0b3130f06547e7f76133e9661886b79231553c4c51769"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/trajectory_colored_by_b.png",
@@ -1079,9 +1079,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 217589,
-          "mtime_utc": "2026-08-09T07:04:37.010482+00:00",
-          "sha256": "d6be52eb13a037b6fa7e893c4cd23e04caf252e1e761a772502a4b2d98683e51"
+          "size_bytes": 228108,
+          "mtime_utc": "2026-08-21T08:47:36.345225+00:00",
+          "sha256": "4ecfb9beacd794449b4ae525237e0105670c2ed14573416c96b20c384aa10c46"
         },
         {
           "path": "hardware_wrappers/fangkong_adc/raw_data/relative_pose_log.txt",
@@ -1752,7 +1752,7 @@
       "present_file_count": 91,
       "raw_reference_count": 24,
       "raw_reference_present_count": 24,
-      "total_bytes": 58389456,
+      "total_bytes": 58407103,
       "role_counts": {
         "analysis_code": 2,
         "authority_report": 2,
@@ -1765,7 +1765,7 @@
         "run_manifest": 1,
         "runner_code": 1
       },
-      "artifact_digest_sha256": "ca4748fc63be1117dd397cd2fbfb7132a388668897c5fb48c6497715a863e726",
+      "artifact_digest_sha256": "4d033a65dd38de929c36ae01e439dc20d1d2f95f03d690e8445032982048ea0a",
       "files": [
         {
           "path": "/auv_data/bags/20260612_170618/rosbag/rosbag_0.mcap",
@@ -2920,9 +2920,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 16790,
-          "mtime_utc": "2026-08-10T13:24:31.585150+00:00",
-          "sha256": "95e1a22b3994d71d460390e7574ff540d6cc189830743784edb386ac375ddd03"
+          "size_bytes": 22358,
+          "mtime_utc": "2026-08-21T06:51:33.377266+00:00",
+          "sha256": "89bbf2bcdb4309ebd9b91cf993888fdc459ab4810b09f2b3de05025f9ace3a63"
         },
         {
           "path": "tools/run_thesis_sweep.py",
@@ -2946,9 +2946,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 14990,
-          "mtime_utc": "2026-08-13T08:55:08.644331+00:00",
-          "sha256": "93e98968ddd635dad1bd90f21319a4a94fb2e3aee2a2b8f2f40a74b948b5d769"
+          "size_bytes": 27069,
+          "mtime_utc": "2026-08-21T06:51:35.525508+00:00",
+          "sha256": "3aad817b9a7396f9de63371e482181339145aaac3731178103d6ccad245f7778"
         }
       ]
     },
@@ -5263,7 +5263,7 @@
       "present_file_count": 9,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 227853,
+      "total_bytes": 228371,
       "role_counts": {
         "analysis_code": 1,
         "audit_report": 1,
@@ -5271,7 +5271,7 @@
         "runner_code": 2,
         "test_code": 2
       },
-      "artifact_digest_sha256": "05a6f36557294611bb72c068d02a51d7a9666d3bf1c1996d6c1f9fdf069fa942",
+      "artifact_digest_sha256": "a6aba30e414e67c380f4e820c1f067f8065a938774b136ad075df448fe2df5d5",
       "files": [
         {
           "path": "algorithm/auv_mpc_controller.py",
@@ -5347,9 +5347,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 42770,
-          "mtime_utc": "2026-08-10T13:24:31.559237+00:00",
-          "sha256": "164041ae0edf96e44b1c4a5f2d37c256a8c89bb41204e0ac4e85c93bf5069c80"
+          "size_bytes": 43288,
+          "mtime_utc": "2026-08-21T06:51:33.322969+00:00",
+          "sha256": "0c08d99a85d08f3342c364ac1e0bc6b3d08878092d0855214ea2cc30f0bfe959"
         },
         {
           "path": "tools/run_proxy_cable_sweep.py",
@@ -6358,7 +6358,7 @@
       "present_file_count": 80,
       "raw_reference_count": 36,
       "raw_reference_present_count": 36,
-      "total_bytes": 7413542481,
+      "total_bytes": 7413542999,
       "role_counts": {
         "analysis_code": 2,
         "audit_report": 1,
@@ -6375,7 +6375,7 @@
         "telemetry_gap_audit": 1,
         "telemetry_supplement": 1
       },
-      "artifact_digest_sha256": "a03617f25dda6d542d20ed053f8033d0682505029901069a16b78353b1f834be",
+      "artifact_digest_sha256": "72cef273330387354a295bb1c7efbe1c8b5b52a81fd5c2c6e187d1f6a8f5c604",
       "files": [
         {
           "path": "/auv_data/bags/20260810_000843/rosbag/rosbag_0.mcap",
@@ -7374,9 +7374,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 42770,
-          "mtime_utc": "2026-08-10T13:24:31.559237+00:00",
-          "sha256": "164041ae0edf96e44b1c4a5f2d37c256a8c89bb41204e0ac4e85c93bf5069c80"
+          "size_bytes": 43288,
+          "mtime_utc": "2026-08-21T06:51:33.322969+00:00",
+          "sha256": "0c08d99a85d08f3342c364ac1e0bc6b3d08878092d0855214ea2cc30f0bfe959"
         },
         {
           "path": "tools/plot_r13_v2_formal_audit.py",
@@ -12406,7 +12406,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若论文需要最坏工况结论，还需扩展更长航时、更多 seed、失败样本和边界搜索"
       ],
       "required_complete": true,
@@ -13876,7 +13876,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若要给出长航时稳定结论，需继续做 120--300 s 以上全矩阵或自适应边界搜索，并加入失败归因"
       ],
       "required_complete": true,
@@ -15853,7 +15853,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若要评估长航时活动巡缆稳定性，需延长参考路径或采用路径长度归一化口径，而不是固定时长超过有限路径末端",
         "若要声称终端保持能力，需另行设计具备横流补偿的 terminal hold/station-keeping 实验"
       ],
@@ -16631,44 +16631,54 @@
       "title": "PC104/VxWorks UDP 时序探针与 host-relay 实机记录",
       "data_layer": "physical_pc104_udp_packet_timing_probe",
       "evidence_grade": "C",
-      "declared_status": "physical_hostrelay_packet_timing_complete_with_boundaries",
-      "sample_scope": "30 s PC104 host-relay 实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 300 帧零推力下行，解析 450 帧 $AUV 上行，上行到达频率 15.000 Hz，p95 间隔 85.710 ms，parse error 0",
+      "declared_status": "physical_firmware_echo_timing_complete_with_boundaries",
+      "sample_scope": "300 s PC104 host-relay 固件回显实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 3000 帧零执行器下行，解析 4505 帧 $AUV 上行，1001 个可配对固件接收事件，parse error 与上行前向序号缺口均为 0",
       "claims_supported": [
         "已补齐可在 Jetson/PC104 网段上直接运行的 packet-level UDP 时序探针",
         "探针默认发送安全零推力 $CKTH 下行帧，并记录 $AUV 上行帧到达间隔、frame gap、PC104 uptime 和解析错误",
-        "host-relay 路径已完成 30 s 实机闭环记录：300 帧零推力下行进入 relay，450 帧 PC104 $AUV 上行进入容器，parse error 0",
-        "观测到 PC104 主上行到达频率约 15.000 Hz，inter-arrival p50/p95/p99 分别为 57.983/85.710/85.944 ms",
+        "host-relay 路径已完成 300 s 实机闭环记录：3000 帧零执行器下行进入 relay，4505 帧 PC104 $AUV 上行进入容器，parse error 0",
+        "观测到 PC104 主上行到达频率约 15.017 Hz，inter-arrival p50/p95/p99 分别为 58.005/85.721/86.095 ms",
+        "VxWorks 固件 uptime marker 与下行 echo marker 在 4505 帧上行中有效率均为 100%，PC104 uptime 无倒退",
+        "按 (echo frame, PC104 receive uptime) 去重后得到 1001 个可配对固件接收事件，first-echo 应用路径 RTT p50/p95/p99/max 为 264.678/313.965/315.607/318.550 ms",
+        "PC104 receive-to-first-pack 的 p95/max 均为 16 ms，相邻固件接收事件 1000/1000 个间隔均为 300 ms，与固件 Net_Recv_Task_Period=3 的 0.1 s 基准周期一致",
+        "300 s 内上行前向序号缺口与估计丢帧均为 0；1501 个零增量被单独识别为重复状态帧",
+        "PC104 uptime 相对容器单调时钟的拟合速率差约为 +962 ppm，绝对拟合残差 p95 为 0.774 ms",
         "已保存逐包原始 timing CSV，并生成 PC104 上行/下行包间隔与 R22 MPC solver wall-time 直方图；R22 60 s 全矩阵 96 条 trace 共 11520 个 MPC 解算样本，全样本 p95 为 11.167 ms",
+        "已新增 300 dpi PNG/PDF 固件回显统计图，区分 first-echo RTT、echo observation age、PC104 receive-to-pack 和固件接收事件间隔",
         "该结果确认 Docker Desktop 场景下容器侧下行入口应使用 host.docker.internal IPv4 192.168.65.254:10022，并由 host relay 经 192.168.0.11:21 转发给 PC104",
-        "探针输出明确标记 one_way_latency_claim=false 与 round_trip_latency_claim=false",
+        "探针输出明确标记 firmware_echo_application_rtt_claim=true、one_way_latency_claim=false 与 strict physical round_trip_latency_claim=false",
         "当前容器端口映射已完成拓扑判读：若 PC104 仍固定上行到宿主机 21/udp 与 52367/udp，则需宿主机转发到 10021/udp 与 62367/udp",
         "已补充宿主机 full-duplex relay，使 timing probe 下行可经宿主机 192.168.0.11:21 转发到 PC104，而不是由容器 172.18.0.2 直接发往 PC104",
         "fan-out 被定位为并发 ROS2/PySide6/旁路记录与下行安全门控方案，不是物理 timing 基线的必要条件"
       ],
       "claim_boundaries": [
         "当前结果是 host-relay/Docker Desktop 路径下的 packet arrival timing，不是裸网卡直连 timing",
-        "没有共享时钟或 firmware echo 时，该探针只能报告上行到达间隔、序列跳变和 PC104 uptime 单调性，不能报告单向物理时延",
-        "当前 30 s 结果不能声明 Jetson--AMD 一程物理 latency 或闭环控制端到端延迟",
+        "固件回显支持 host-relay 应用路径 RTT 与 PC104 同时钟域 receive-to-pack，但没有共享时钟，仍不能报告上下行单向物理时延",
+        "当前 300 s 结果不能声明 Jetson--AMD 单向物理 latency、执行器响应或 ADC--EKF--BT--控制--PC104 完整闭环端到端延迟",
+        "1001/3000 是当前 3.33 Hz 固件接收任务对 10 Hz 下行的应用层观测覆盖率，不是旁路网卡抓包意义的物理丢包率",
+        "本轮 DVL BI uptime 有效样本为 0，只能证明 PC104 时间字段到 ES-EKF 的软件消费路径，不能证明真实 DVL 时间戳改善定位精度",
+        "必须实验 5 的故障与安全部分由独立条目 HARDWARE-PC104-LAYERED-FAULT-SAFETY 覆盖，不能回写成该 300 s 正常链路自身的测量结果",
         "不能把 10021:21/udp 容器映射本身写成已接通 PC104 固定 21/udp 上行",
         "单向 socat 上行转发只能用于 receive-only 检查，不能证明零推力下行已以宿主机 192.168.0.11:21 身份进入 PC104",
         "若使用 fan-out，报告的到达间隔包含用户态转发路径，不应写成裸链路最小时延"
       ],
       "provenance_gaps": [
-        "需要确认 VxWorks 上行 PC104 uptime marker 是否有效",
-        "若论文需要单向时延，需增加固件时间戳回显或共享时钟同步",
-        "建议后续在最终 Jetson 部署形态下重跑 300 s，并保存宿主机 tcpdump 作为旁路网卡时间证据",
-        "需要记录最终宿主机端口转发命令、容器端口映射快照和 PC104 固件上行目标端口"
+        "若论文需要单向物理时延，仍需共享时钟或双向时间同步，固件单端 uptime 回显不能拆分 RTT",
+        "需在最终 Jetson 原生部署形态下复跑，并保存宿主机 tcpdump 作为旁路网卡时间证据",
+        "需接入有效 DVL BI 数据，复验 DVL parse uptime 到 ES-EKF 延迟加权的实物收益",
+        "最终 Jetson 原生部署仍需把 PC104 故障字、ROS2 仲裁状态与行为树状态接入同一同步时间线"
       ],
       "required_complete": true,
       "missing_required": [],
       "known_gaps": [],
-      "file_count": 28,
-      "present_file_count": 28,
+      "file_count": 36,
+      "present_file_count": 36,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 423240,
+      "total_bytes": 2207091,
       "role_counts": {
         "audit_report": 1,
+        "firmware_echo_plotter_code": 1,
         "histogram_plotter_code": 1,
         "host_relay_code": 1,
         "machine_metrics": 1,
@@ -16678,6 +16688,13 @@
         "pc104_profile": 1,
         "pc104_timing_histogram_pdf": 1,
         "pc104_timing_histogram_png": 1,
+        "physical_firmware_echo_analysis": 1,
+        "physical_firmware_echo_derived_statistics": 1,
+        "physical_firmware_echo_long_run_status": 1,
+        "physical_firmware_echo_long_run_summary": 1,
+        "physical_firmware_echo_packet_samples": 1,
+        "physical_firmware_echo_timing_pdf": 1,
+        "physical_firmware_echo_timing_png": 1,
         "physical_hostrelay_audit_report": 1,
         "physical_hostrelay_machine_metrics": 1,
         "physical_hostrelay_packet_timing_samples": 1,
@@ -16697,7 +16714,7 @@
         "timing_summary": 1,
         "topology_decision": 1
       },
-      "artifact_digest_sha256": "72b0494bef2cab9faf78970fb379a76fff63a5bfe6539cd2a2e6b241b0a5459e",
+      "artifact_digest_sha256": "2591396baba1242b0a3ff78591d40e5e8c28a9718aad8866683ad38e25ecc894",
       "files": [
         {
           "path": "brain_linux/config/params.protocol_udp_arbiter.real.yaml",
@@ -16734,9 +16751,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 77133,
-          "mtime_utc": "2026-08-10T14:38:02.653321+00:00",
-          "sha256": "4db219b40f4dae80efd072ec530b8b886b9ff3f3c4cb156523681547da9558c8"
+          "size_bytes": 78251,
+          "mtime_utc": "2026-08-22T13:40:50.778870+00:00",
+          "sha256": "6ee3fbdcfec6dd12042902c5d2dc8180bf261faacd016c312368096ba5e8001e"
         },
         {
           "path": "docs/real_deployment/12_pc104_timing_port_forward_and_fanout.md",
@@ -16747,9 +16764,22 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 8971,
-          "mtime_utc": "2026-08-10T14:17:45.298580+00:00",
-          "sha256": "29758a0e92ceb961cd46f3321d85efedaa28f0052367916fc7c9da1197d19f56"
+          "size_bytes": 8958,
+          "mtime_utc": "2026-08-22T12:09:57.751190+00:00",
+          "sha256": "d2fb7788b84f0de73927e633d2e8b02fcb9f473f283070b00e1444a0c7fc4484"
+        },
+        {
+          "path": "docs/real_deployment/14_pc104_firmware_echo_timing.md",
+          "roles": [
+            "physical_firmware_echo_analysis"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 10088,
+          "mtime_utc": "2026-08-22T13:20:40.633573+00:00",
+          "sha256": "5cb6d98c9444429a17facab81acd76665a382af456a7be58172d5caeba9ae30f"
         },
         {
           "path": "results/control/pc104_mpc_timing_histograms_20260810/mpc_solver_wall_time_histogram.pdf",
@@ -16841,6 +16871,84 @@
           "size_bytes": 886,
           "mtime_utc": "2026-08-10T14:26:11.508388+00:00",
           "sha256": "934f20922dfb563a3b01fa00d8e7dba363ad114df4836e9db9c95c63ace128f7"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/firmware_echo_summary.json",
+          "roles": [
+            "physical_firmware_echo_derived_statistics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3779,
+          "mtime_utc": "2026-08-22T12:11:55.666464+00:00",
+          "sha256": "d7cf7fa409fc4f385cde9eb184962ffc5ee37f7a20c2522d992e5f1f1ba645e7"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/pc104_firmware_echo_timing.pdf",
+          "roles": [
+            "physical_firmware_echo_timing_pdf"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 88955,
+          "mtime_utc": "2026-08-22T12:11:55.661813+00:00",
+          "sha256": "dd3d84c94c69903df3da4a597796ed65150c64a359ada6e6ca777568ff7ba008"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/pc104_firmware_echo_timing.png",
+          "roles": [
+            "physical_firmware_echo_timing_png"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 461482,
+          "mtime_utc": "2026-08-22T12:11:55.440865+00:00",
+          "sha256": "f192375e65b7f08ea072833660373e7c8262603c53b78ae0caf8f73ac4f80baa"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/status.json",
+          "roles": [
+            "physical_firmware_echo_long_run_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 823,
+          "mtime_utc": "2026-08-22T11:58:48.064890+00:00",
+          "sha256": "794fb44d1fc5205c9f03eb60b942bb87ad8f4f973d9ae816bc2c9eb73f64920d"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/udp_timing_samples.csv",
+          "roles": [
+            "physical_firmware_echo_packet_samples"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1197420,
+          "mtime_utc": "2026-08-22T11:58:48.061789+00:00",
+          "sha256": "eb801b2e6c61a049e30d53ac41f8b8d0dd2a9cfb706986689add6dde65bf3cc7"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/udp_timing_summary.csv",
+          "roles": [
+            "physical_firmware_echo_long_run_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1837,
+          "mtime_utc": "2026-08-22T11:58:48.062900+00:00",
+          "sha256": "c65335c545633e9567ea51fcb886b31af150f3a49d0e8d7f126fbe8d3f039045"
         },
         {
           "path": "results/control/pc104_udp_timing_hostrelay_sockreturn_zero_30s_20260810_221904/metrics.csv",
@@ -17038,6 +17146,19 @@
           "sha256": "3d5947a40e4a94f9901721db91e5806e47d055dc7f1e13b20c4f88607c714f7e"
         },
         {
+          "path": "tools/plot_pc104_firmware_echo_timing.py",
+          "roles": [
+            "firmware_echo_plotter_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 15320,
+          "mtime_utc": "2026-08-22T12:11:16.263041+00:00",
+          "sha256": "af0092d8e576b0665ce4a7445325ebd4ca5c5dd6c204c6476d1d778ab444e5af"
+        },
+        {
           "path": "tools/plot_timing_histograms.py",
           "roles": [
             "histogram_plotter_code"
@@ -17059,9 +17180,1510 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 21571,
-          "mtime_utc": "2026-08-10T14:39:21.709371+00:00",
-          "sha256": "e189027059834791b8b6beecfa9753a4e3431f715c4ce152e7a53eba14f7b2c1"
+          "size_bytes": 24613,
+          "mtime_utc": "2026-08-22T12:11:32.231352+00:00",
+          "sha256": "a765bef4f7f17566ffef366e46ad4fa72a79b093d70d072a9cb01a0c413c9151"
+        }
+      ]
+    },
+    {
+      "id": "HARDWARE-PC104-LAYERED-FAULT-SAFETY",
+      "title": "PC104 telnetd 零执行器故障注入与分层安全证据",
+      "data_layer": "physical_pc104_fault_injection_plus_production_core_replay",
+      "evidence_grade": "A",
+      "declared_status": "layered_hil_complete_with_synchronized_successor",
+      "sample_scope": "真实 PC104 79.672 s 零执行器矩阵：1197 帧 $AUV、5 次自然断链、3 次 telnetd 强制 watchdog 超时、固定种子 30/100 应用层丢包、10 s 的 200 ms 排队延迟和 Bit5 注入/撤销；生产 CommandArbiter 2.2 s、10 ms 步长回放；行为树 9 场景 x 3 种子共 27 次确定性回放",
+      "claims_supported": [
+        "真实 PC104 自然心跳中断 5/5 触发 Bit14 与 Remote，触发 p50/p95 为 1044.111/1056.357 ms；恢复 Jetson 模式 p50/p95 为 223.207/238.896 ms，Bit14 清除 p50/p95 为 537.003/552.728 ms",
+        "telnetd 强制 watchdog 超时 3/3 触发，触发与恢复 p50 分别为 183.648/363.717 ms；离散度由 0.5 s EmergencyTask 相位解释",
+        "固定种子精确丢弃 30/100 个逻辑帧；200 ms 排队延迟的实测 p50/p95 为 200.979/203.996 ms；两阶段均未越过 1.0 s watchdog，未误触发 Bit14",
+        "Bit5 可由 $AUV 上行观测并在撤销后清除，证明故障位打包、回传与主机解析链成立",
+        "全部 $CKTH 在发送前反解验证为主推、侧推和四舵全零；非零上行推进反馈和非零 telnet 命令快照均为 0；实验后板端恢复 Remote、故障字零和原始 DVL 运行时字段",
+        "生产 CommandArbiter 回放在 510 ms 进入 MPC 零输出 SAFETY_FALLBACK，PC 链路在 1010/1510 ms 进入 WEAK/LOST，并于 1510 ms 切 Remote 零输出；本地 fallback 不再误刷新 PC 心跳",
+        "行为树 27/27 回放有效，漏报和假阳性均为 0；授权丢失、感知丢失、求解超时代理和紧急故障分别进入 SAFE_HOVER、RELOCALIZATION、DEGRADED_MODE 与 RETURN_OR_ABORT",
+        "行为树脚本使用 CRC32 稳定场景种子，两次独立进程重跑的 behavior_tree.csv 与 fault_records.csv SHA256 一致"
+      ],
+      "claim_boundaries": [
+        "PC104 侧 DVL 锁定与 Bit5 均为 telnetd 临时运行时注入，用于隔离耦合和验证状态链，不代表真实 DVL 或 MCU 硬件故障",
+        "30% 丢包和 200 ms 延迟注入点位于容器发送器至 host relay 之前，不是 Ethernet PHY 丢包率或共享时钟单向传播时延",
+        "本轮始终使用零执行器命令，不支持推进器、舵机、急停或水动力响应结论；上行 +/-180 度舵值是 FMCU 默认位置反馈，不是 PC104 命令",
+        "生产仲裁器证据是 10 ms 步长纯核心确定性回放，不包含 ROS executor、网络或硬件调度时延",
+        "行为树 heartbeat_timeout 与 solver_timeout 是任务级授权丢失/异常代理，不是该分层运行中的 PC104 Bit14 或真实求解器负载直接输入",
+        "该条目自身仍是三层独立证据；后续同一 rosbag 时间轴的直接状态映射由 HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK 独立覆盖，不能反向改写本条原始运行"
+      ],
+      "provenance_gaps": [
+        "执行机构静态/动态响应、共享时钟单向时延与水域安全不在本轮范围内"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 67,
+      "present_file_count": 67,
+      "raw_reference_count": 0,
+      "raw_reference_present_count": 0,
+      "total_bytes": 5627563,
+      "role_counts": {
+        "arbiter_config_snapshot": 3,
+        "arbiter_figure": 2,
+        "arbiter_machine_summary": 1,
+        "arbiter_regression_test": 1,
+        "arbiter_run_manifest": 1,
+        "arbiter_run_status": 1,
+        "arbiter_runner_code": 1,
+        "arbiter_timeline": 1,
+        "authority_report": 1,
+        "bt_config_snapshot": 5,
+        "bt_fault_records": 1,
+        "bt_figure": 20,
+        "bt_machine_summary": 1,
+        "bt_run_manifest": 1,
+        "bt_run_status": 1,
+        "bt_runner_code": 1,
+        "bt_timeline": 1,
+        "physical_board_pre_post_state": 1,
+        "physical_config_snapshot": 5,
+        "physical_derived_summary": 1,
+        "physical_failure_events": 1,
+        "physical_figure": 8,
+        "physical_machine_metrics": 1,
+        "physical_machine_summary": 1,
+        "physical_plotter_code": 1,
+        "physical_run_manifest": 1,
+        "physical_run_status": 1,
+        "physical_runner_code": 1,
+        "physical_timeline": 1,
+        "physical_trial_metrics": 1,
+        "production_arbiter_implementation": 1,
+        "production_bridge_policy": 1
+      },
+      "artifact_digest_sha256": "d27d75f113f2a962294fd73da4dff9cf0f78503928a2dcf5cc0cdc8980785640",
+      "files": [
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/arbiter.py",
+          "roles": [
+            "production_arbiter_implementation"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 18992,
+          "mtime_utc": "2026-08-22T12:53:32.550054+00:00",
+          "sha256": "aaed509c3e12f475eefff3e465fa080183358fb565e24758aec7cf907c898e41"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/bridge_node.py",
+          "roles": [
+            "production_bridge_policy"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 66660,
+          "mtime_utc": "2026-08-22T14:01:37.750340+00:00",
+          "sha256": "75cdb0ece7e3771c2bf054e1af8049dae3e63a519d3801deff2b92743fdf94b9"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/test/test_arbiter.py",
+          "roles": [
+            "arbiter_regression_test"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 10959,
+          "mtime_utc": "2026-08-22T13:04:00.005426+00:00",
+          "sha256": "5f48e2d050373e334f2956ae708d9b1b372ee8416f8d299fdb63d13f0341e5e1"
+        },
+        {
+          "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+          "roles": [
+            "authority_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 9931,
+          "mtime_utc": "2026-08-22T15:03:26.939674+00:00",
+          "sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/arbiter_timeline.csv",
+          "roles": [
+            "arbiter_timeline"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 19903,
+          "mtime_utc": "2026-08-22T13:14:55.013791+00:00",
+          "sha256": "e26a214d908e4571bf0420778a33ef5ee714e02409ca964415b9aa388d2f7f68"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/config_snapshot/brain_linux/src/auv_bridge/auv_bridge/arbiter.py",
+          "roles": [
+            "arbiter_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 18992,
+          "mtime_utc": "2026-08-22T12:53:32+00:00",
+          "sha256": "aaed509c3e12f475eefff3e465fa080183358fb565e24758aec7cf907c898e41"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/config_snapshot/brain_linux/src/auv_bridge/auv_bridge/bridge_node.py",
+          "roles": [
+            "arbiter_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 65219,
+          "mtime_utc": "2026-08-22T12:54:15+00:00",
+          "sha256": "dc71e56f14f024e62fe95df3d1bb5331212bdc2bf96baaa3d1d95cac65dee2fb"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/config_snapshot/tools/run_arbiter_timeout_evidence.py",
+          "roles": [
+            "arbiter_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 12165,
+          "mtime_utc": "2026-08-22T13:14:45+00:00",
+          "sha256": "f0a5c985850b4e333dbc2d2d338752a99040b04543ae07c1152c8d2d7aba317b"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/figures/arbiter_timeout_timeline.pdf",
+          "roles": [
+            "arbiter_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 39273,
+          "mtime_utc": "2026-08-22T13:14:55.400446+00:00",
+          "sha256": "e59b508d9b6f86d419cb870e7bd2791bf9e7bebce9b45d68df4188548d8eee1b"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/figures/arbiter_timeout_timeline.png",
+          "roles": [
+            "arbiter_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 212685,
+          "mtime_utc": "2026-08-22T13:14:55.240202+00:00",
+          "sha256": "6e3ba92ebac979aa690f5397daba2d5f91aaa1a6de49699d02d8a21391467771"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/run_manifest.json",
+          "roles": [
+            "arbiter_run_manifest"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2667,
+          "mtime_utc": "2026-08-22T13:14:55.007629+00:00",
+          "sha256": "b756124174099c725d0320891e435382d2901e4832e23590dddbd3da0371913d"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/status.json",
+          "roles": [
+            "arbiter_run_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 823,
+          "mtime_utc": "2026-08-22T13:14:55.403084+00:00",
+          "sha256": "44f6682f2121ab27360f780e80c60629a2943d0ecd48b3876474e795615cc44d"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/summary.json",
+          "roles": [
+            "arbiter_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 797,
+          "mtime_utc": "2026-08-22T13:14:55.404548+00:00",
+          "sha256": "5f5e39ed5aee5457cc4e1e5acecf13a9a1f98ff7e91b6d5f21c1a20edf3984fc"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/board_state.json",
+          "roles": [
+            "physical_board_pre_post_state"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1860,
+          "mtime_utc": "2026-08-22T12:49:14.024905+00:00",
+          "sha256": "1ba91237967ab55b6a6fedc8a888d58e84dcd17d43e456533896316a7daa5038"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/common/protocol.py",
+          "roles": [
+            "physical_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 77133,
+          "mtime_utc": "2026-08-10T14:38:02+00:00",
+          "sha256": "4db219b40f4dae80efd072ec530b8b886b9ff3f3c4cb156523681547da9558c8"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/csd_vx6.8_lastest/DataProcess.c",
+          "roles": [
+            "physical_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 124811,
+          "mtime_utc": "2026-08-21T07:27:07+00:00",
+          "sha256": "f05bd06e833e3bdd9ade97279eae55b4519a6ea911dd55cca59b4f8a5351c03a"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/csd_vx6.8_lastest/SecurityEmergencyManage.c",
+          "roles": [
+            "physical_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 55486,
+          "mtime_utc": "2026-08-22T11:58:01+00:00",
+          "sha256": "d89b40ba111e4a80bdfaef092ef1eeeb00fdc048f1be1b8d47b3d70ca5e02a57"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/csd_vx6.8_lastest/main.c",
+          "roles": [
+            "physical_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 48059,
+          "mtime_utc": "2026-07-10T17:06:30+00:00",
+          "sha256": "32687e58010df8888c35e04d1ce402c781cc001c4802f38e1a3280174229cae7"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/tools/probe_pc104_fault_injection.py",
+          "roles": [
+            "physical_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 48816,
+          "mtime_utc": "2026-08-22T12:47:07+00:00",
+          "sha256": "2277aa792e1a4e9d2e03c40064aa2095c65e2b1cbe5ad2ae0118521cc8a06ca9"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/failure_events.csv",
+          "roles": [
+            "physical_failure_events"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 79,
+          "mtime_utc": "2026-08-22T12:49:14.022672+00:00",
+          "sha256": "4cc1ec83a99b7b2c92976edd11253778b4b0523bb1e7cffb580228ba2f64fbb8"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/fault_timeline.csv",
+          "roles": [
+            "physical_timeline"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 407246,
+          "mtime_utc": "2026-08-22T12:49:14.021235+00:00",
+          "sha256": "f4b4e9f18b61286a752941d4bde7178b428f2e602f5a680b38c3db269723ebab"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/fault_derived_summary.json",
+          "roles": [
+            "physical_derived_summary",
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3141,
+          "mtime_utc": "2026-08-22T13:16:50.942100+00:00",
+          "sha256": "8c90c99a3827110979e7d9cbc68a4c43fc3ecb2d1de9768244e09f83289b93ca"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/fault_trial_metrics.csv",
+          "roles": [
+            "physical_figure",
+            "physical_trial_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 885,
+          "mtime_utc": "2026-08-22T13:16:50.940381+00:00",
+          "sha256": "74e9287378841ed776005c47e1bf6f2999cb4c8adc629c33ec42e5fe51a481db"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_fault_latency_trials.pdf",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26565,
+          "mtime_utc": "2026-08-22T13:16:50.553880+00:00",
+          "sha256": "2efbdad9280e390ffd1c237816fe3533dd6947f93dfd5a9caa26d2400aa00202"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_fault_latency_trials.png",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 147037,
+          "mtime_utc": "2026-08-22T13:16:50.488798+00:00",
+          "sha256": "c6c775df9cff1ae98363f146b82b3ee2bbcc97124a35e7e5f64cbc0dc8883839"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_fault_timeline.pdf",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 61952,
+          "mtime_utc": "2026-08-22T13:16:50.352850+00:00",
+          "sha256": "b57b70f3d388bee2c8482b7a86cd08920e1f8f9a46ba4d968cb0cff21e8a8fde"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_fault_timeline.png",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 432878,
+          "mtime_utc": "2026-08-22T13:16:50.181503+00:00",
+          "sha256": "8992cd59d86084216785b399605b1dac8b795ba3f187824e1191ed6b9f3a8621"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_impairment_summary.pdf",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 70055,
+          "mtime_utc": "2026-08-22T13:16:50.939354+00:00",
+          "sha256": "6d3bd124c7966722f68a54939f06dcacb966c1332d763c33e2b3aaf3cc20776c"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/pc104_impairment_summary.png",
+          "roles": [
+            "physical_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 276780,
+          "mtime_utc": "2026-08-22T13:16:50.810769+00:00",
+          "sha256": "34ea5995d7fe31b1e1c17cfc6b7ab565db7614deadca9246776979ae0b581634"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/metrics.csv",
+          "roles": [
+            "physical_machine_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1343,
+          "mtime_utc": "2026-08-22T12:49:14.022229+00:00",
+          "sha256": "4b611a7ad27b5297b70f77b57f16086ed4e89772b09883a9aee4a8291fab5148"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/run_manifest.json",
+          "roles": [
+            "physical_run_manifest"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3803,
+          "mtime_utc": "2026-08-22T12:47:51.869042+00:00",
+          "sha256": "115a23d60d0af6e5a739219e87fb0c150e4259cb4f0abe9663e013990b3704ef"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/status.json",
+          "roles": [
+            "physical_run_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 823,
+          "mtime_utc": "2026-08-22T12:49:14.023087+00:00",
+          "sha256": "d20408db600f98835ed2c315129be816aebaba1864181919ffda96549681b968"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/summary.json",
+          "roles": [
+            "physical_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1580,
+          "mtime_utc": "2026-08-22T12:49:14.024332+00:00",
+          "sha256": "568c3916343828bb851f3e997c2bdd2a86400ae9d6366e7bbd8275ca10403312"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/behavior_tree.csv",
+          "roles": [
+            "bt_timeline"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2659303,
+          "mtime_utc": "2026-08-22T13:16:01.049343+00:00",
+          "sha256": "e15bd75af8d9b867145eb56259c4c525f8d788fc0f9a2571cf42df5c0b501893"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/brain_linux/src/auv_decision/auv_decision_core/behaviors.py",
+          "roles": [
+            "bt_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 15195,
+          "mtime_utc": "2026-08-10T13:24:28+00:00",
+          "sha256": "1eab2c8171279d6cfa45c98556468b96390bb4c8a4c847cc6a1ad8b3b323bf44"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/brain_linux/src/auv_decision/auv_decision_core/bt_engine.py",
+          "roles": [
+            "bt_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 8033,
+          "mtime_utc": "2026-08-10T13:24:28+00:00",
+          "sha256": "f30b1935e931236317475af245b0badd00a4cc719f13f660b05b28c4c608b813"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/brain_linux/src/auv_decision/auv_decision_core/decision_filters.py",
+          "roles": [
+            "bt_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1727,
+          "mtime_utc": "2026-08-10T13:24:28+00:00",
+          "sha256": "aa8b7a647c50efc7083c842884758d1a423548846cf2a8e748b20aa822fe37cb"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/brain_linux/src/auv_decision/auv_decision_core/decorators.py",
+          "roles": [
+            "bt_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 4493,
+          "mtime_utc": "2026-04-29T07:56:02+00:00",
+          "sha256": "5dc91b970ad4403fb456129e1adb005734409c23e84c4ca8e18bed17a1239b3e"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/tools/run_bt_fault_injection.py",
+          "roles": [
+            "bt_config_snapshot"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 29421,
+          "mtime_utc": "2026-08-22T13:15:30+00:00",
+          "sha256": "f4c1da388e24be852c20f2a5d74b35a8e0d908d0a6b19002aaa30b4e2f2ad7b1"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/fault_records.csv",
+          "roles": [
+            "bt_fault_records"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2288,
+          "mtime_utc": "2026-08-22T13:16:01.050564+00:00",
+          "sha256": "c824e1d94783cbd9d021ed27af8409d3f0d6980b2d0f5b257a2852f34ae49aaf"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/fault_summary.json",
+          "roles": [
+            "bt_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2696,
+          "mtime_utc": "2026-08-22T13:16:01.053270+00:00",
+          "sha256": "24b922cdacbcfcdfc38675a4a2f5b4a5f35683db1eb91fad2046ff741893c443"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/recovery_summary.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 31180,
+          "mtime_utc": "2026-08-22T13:16:02.416574+00:00",
+          "sha256": "16c624d72772ac9314c3163d1173a4a39ae4c1ba94cb0defd14159d316326174"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/recovery_summary.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 39862,
+          "mtime_utc": "2026-08-22T13:16:02.351491+00:00",
+          "sha256": "8aeadba161816948faf345875e151e03955226b11220968bfb1fbdaaf18203b5"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_baseline_patrol.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 21891,
+          "mtime_utc": "2026-08-22T13:16:01.431858+00:00",
+          "sha256": "ced54c8d4b13042d64471eb14617e57fa0fd6eb45b0e05a89799c8be96e977fb"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_baseline_patrol.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24070,
+          "mtime_utc": "2026-08-22T13:16:01.305916+00:00",
+          "sha256": "ba8d189e34b1c9419eaddeb677e8646502e78004438e3647eb8b6f48556dfc64"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_battery_abort.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 22869,
+          "mtime_utc": "2026-08-22T13:16:01.639138+00:00",
+          "sha256": "4accaa74e63036191792e568a84f47e007ffaf49103942d3ad6434f33d2e61e5"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_battery_abort.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24765,
+          "mtime_utc": "2026-08-22T13:16:01.592757+00:00",
+          "sha256": "2d2244aec5d916ca525940ced7e3f3f29f0e579aaae4bab9aac419002f7ab8da"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_dvl_dropout.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 23334,
+          "mtime_utc": "2026-08-22T13:16:01.842617+00:00",
+          "sha256": "f84dcc1e735f2c523f974cbb4b6f187038b590229642c094c3ee410155238679"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_dvl_dropout.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 25774,
+          "mtime_utc": "2026-08-22T13:16:01.797510+00:00",
+          "sha256": "2f6a357f0feb1bff018a8cc3fd8e7af08f459d63ef30db4e3e043082c9b8d1ba"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_heartbeat_timeout.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 25965,
+          "mtime_utc": "2026-08-22T13:16:02.047890+00:00",
+          "sha256": "6b49efc06681e6fd0a8d42046606b88c07bb2edb2e7ccbc4960cd906ea9ade3e"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_heartbeat_timeout.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26934,
+          "mtime_utc": "2026-08-22T13:16:02.001099+00:00",
+          "sha256": "749df8f38e2e81f306e78d8b65a3579b7c3e7abf5a7e7483be90ae3a2386d957"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_leak_abort.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 22254,
+          "mtime_utc": "2026-08-22T13:16:01.537303+00:00",
+          "sha256": "58ac6b492c49ce65273bc6e9a55f659fc8f44a0abe9cd9633d569bb2beb5583b"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_leak_abort.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24821,
+          "mtime_utc": "2026-08-22T13:16:01.491556+00:00",
+          "sha256": "63d743520231c53bf0f757b6dadd0a77729d157c43e8193879617e97942239e4"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_multi_fault.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24061,
+          "mtime_utc": "2026-08-22T13:16:02.260090+00:00",
+          "sha256": "9c7dcfceb4c877a07cd3a9d817e22472bebe4b41bb1eee97928438185cb72325"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_multi_fault.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 28432,
+          "mtime_utc": "2026-08-22T13:16:02.213442+00:00",
+          "sha256": "50a2095523865a043a0e4361cc20286db858ee289335084955ad2c1ce5342c5f"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_penetration_recover.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24872,
+          "mtime_utc": "2026-08-22T13:16:01.743988+00:00",
+          "sha256": "e1185cb3d7b559d0ed34e65ee18a86cb2e7a19b8e08175e03ee59fd147024fa3"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_penetration_recover.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26256,
+          "mtime_utc": "2026-08-22T13:16:01.699129+00:00",
+          "sha256": "0ae6ba62919340521f92c3573844dd9bf6c9945d845685006521d53386282821"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_perception_loss.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 25885,
+          "mtime_utc": "2026-08-22T13:16:01.944621+00:00",
+          "sha256": "1a5c6f4b8d16b7bc805f730281b4e90eca0941a96692fc0b22b66f11f88cace9"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_perception_loss.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26481,
+          "mtime_utc": "2026-08-22T13:16:01.897953+00:00",
+          "sha256": "312da8fc01893fd8d0b05b079a9a3f81b81d5dd49654a4da3373734be9e9899f"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_solver_timeout.pdf",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 24548,
+          "mtime_utc": "2026-08-22T13:16:02.150217+00:00",
+          "sha256": "9d6b66de9e4e90db355f73ab6adbe84cd097994a7cecf6ea332df63520477444"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/figures/timeline_solver_timeout.png",
+          "roles": [
+            "bt_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26388,
+          "mtime_utc": "2026-08-22T13:16:02.102263+00:00",
+          "sha256": "ccccbc9270c3f446b09a67335eabab81a7179210b885dcdf25501c876879df69"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/run_manifest.json",
+          "roles": [
+            "bt_run_manifest"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 4210,
+          "mtime_utc": "2026-08-22T13:15:58.881645+00:00",
+          "sha256": "edc7a15c317f8bac96735f30748d1cc1d34155a94fbac96192c1bc309cac5cdf"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/status.json",
+          "roles": [
+            "bt_run_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 835,
+          "mtime_utc": "2026-08-22T13:16:02.423808+00:00",
+          "sha256": "ad9b666857b9c7dba56675063aa081ba22d3508bf5a2576eac70af0c988e5ce9"
+        },
+        {
+          "path": "tools/plot_pc104_fault_injection.py",
+          "roles": [
+            "physical_plotter_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 18920,
+          "mtime_utc": "2026-08-22T12:52:47.401992+00:00",
+          "sha256": "f69587c2ee05ed0d362eeb63a0d3a3dfd30634ae19fcff3d21b1ab13967fa52e"
+        },
+        {
+          "path": "tools/probe_pc104_fault_injection.py",
+          "roles": [
+            "physical_runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 48816,
+          "mtime_utc": "2026-08-22T12:47:07.614717+00:00",
+          "sha256": "2277aa792e1a4e9d2e03c40064aa2095c65e2b1cbe5ad2ae0118521cc8a06ca9"
+        },
+        {
+          "path": "tools/run_arbiter_timeout_evidence.py",
+          "roles": [
+            "arbiter_runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 12165,
+          "mtime_utc": "2026-08-22T13:14:45.441945+00:00",
+          "sha256": "f0a5c985850b4e333dbc2d2d338752a99040b04543ae07c1152c8d2d7aba317b"
+        },
+        {
+          "path": "tools/run_bt_fault_injection.py",
+          "roles": [
+            "bt_runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 29421,
+          "mtime_utc": "2026-08-22T13:15:30.237717+00:00",
+          "sha256": "f4c1da388e24be852c20f2a5d74b35a8e0d908d0a6b19002aaa30b4e2f2ad7b1"
+        }
+      ]
+    },
+    {
+      "id": "HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK",
+      "title": "真实 PC104--ROS2--行为树同步零执行器安全链与 30 min 稳态",
+      "data_layer": "physical_pc104_ros2_behavior_tree_synchronized_zero_actuator",
+      "evidence_grade": "A",
+      "declared_status": "complete_with_split_run_boundary",
+      "sample_scope": "两个独立真实 PC104 运行包：修正后短时同步故障 run 18/18 通过；另一个 run 的完整 1800 s active_soak 含 124841 个 ArbiterStatus 样本和 30 个分钟级运行样本，ACTIVE 比率 1.0、目标故障状态样本为 0",
+      "claims_supported": [
+        "PC104 Sys_Abnorm_Inf 的 Bit5/Bit13/Bit14 已由生产 bridge 发布到 ArbiterStatus，并由 decision node 映射为通信链健康和速度辅助有效性，关闭了真实 PC104 到 ROS2 仲裁与行为树的状态接线缺口",
+        "修正后的同步故障运行 18/18 验收项通过：Bit13 到仲裁/行为树为 65.097/349.100 ms，保持 ACTIVE 并进入 ZIGZAG_SEARCH；Bit5 到 DENIED/IDLE 为 102.532/188.463 ms；真实 watchdog Bit14 到 DENIED 为 1071.706 ms",
+        "Bit5/Bit14 清除后系统保持 DENIED，必须收到显式零命令授权才恢复 ACTIVE；Bit14 由经过协议反解确认且经过 fan-out 安全门的 Remote 零包完成物理恢复",
+        "独立 1800 s active_soak 完整执行：124841 个 ArbiterStatus 样本的 ACTIVE 比率为 1.0，Bit5/Bit13/Bit14 目标故障状态样本为 0，30 个分钟级运行样本完整",
+        "两个运行包合计非零板端命令快照、非零上行推进反馈和 fan-out 非零执行器阻断计数均为 0，清理后均为 Remote+zero",
+        "聚合报告明确保留 30 min 源包的 failed_acceptance：唯一失败位于稳态结束后的旧 Bit14 clear-hold 附加序列；active_soak_stable=true 与修正后短时 18/18 分别由两个 run 支撑"
+      ],
+      "claim_boundaries": [
+        "1800 s 稳态与修正后 18/18 故障链是两个独立运行，不能写成同一次全部通过的长时故障实验",
+        "全程未授权非零执行器命令，不支持推进器/舵机极性、死区、ESTOP 动态、水动力或水域试验结论",
+        "台架上行 total_voltage_v=0.0，通信链实验临时隔离 47 V guard，不构成电源健康验收",
+        "DVL 的 BD_Check=2 和 BD_Height=5 m 是临时安全隔离值；Bit13 只验证状态映射，不验证真实 DVL 或固件 DVL 失锁自救执行效果",
+        "同步时延来自容器单调时钟上的主机观测，不是共享时钟下的单向物理网络时延",
+        "30 min 运行发生在当前容器--host relay--PC104 拓扑，未记录 Jetson tegrastats 温度、频率和功耗，不构成 Jetson thermal soak",
+        "归档的 30 min CSV 使用旧启动根进程 RSS 口径，bridge/decision 绝对值不代表节点进程树；runner 已修正为后续运行聚合进程树，但未回写原始数据"
+      ],
+      "provenance_gaps": [
+        "仍需真实电压、DVL 与 ADC--EKF--控制全执行量链验证",
+        "仍需 Jetson 目标机 thermal soak、共享时钟单向时延、非零执行机构与水域试验"
+      ],
+      "required_complete": true,
+      "missing_required": [],
+      "known_gaps": [],
+      "file_count": 37,
+      "present_file_count": 37,
+      "raw_reference_count": 4,
+      "raw_reference_present_count": 4,
+      "total_bytes": 105346983,
+      "role_counts": {
+        "aggregate_derived_metrics": 1,
+        "aggregate_figure": 4,
+        "aggregate_machine_summary": 1,
+        "aggregate_plotter_code": 1,
+        "aggregate_report": 1,
+        "authority_report": 1,
+        "behavior_tree_degradation": 1,
+        "cross_layer_interface": 1,
+        "cross_layer_regression_test": 1,
+        "decision_status_mapping": 1,
+        "fault_board_state": 1,
+        "fault_guard_mapping": 1,
+        "fault_machine_summary": 1,
+        "fault_raw_rosbag": 1,
+        "fault_raw_timeline": 1,
+        "fault_rosbag_metadata": 1,
+        "fault_run_manifest": 1,
+        "fault_run_status": 1,
+        "fault_status_publisher": 1,
+        "runner_resource_sampling_test": 1,
+        "runtime_profile": 1,
+        "soak_board_state": 1,
+        "soak_machine_summary": 1,
+        "soak_post_sequence_failure": 1,
+        "soak_raw_rosbag": 1,
+        "soak_raw_timeline": 1,
+        "soak_rosbag_metadata": 1,
+        "soak_run_manifest": 1,
+        "soak_source_status": 1,
+        "synchronized_runner_code": 1,
+        "thesis_figure": 4
+      },
+      "artifact_digest_sha256": "ba1c3690fccb20ff7ab7ee9d4f1fcd7e50b885b17b61de0e4ed799819fb046ac",
+      "files": [
+        {
+          "path": "brain_linux/config/params.protocol_udp_pc104_fanout_relay.yaml",
+          "roles": [
+            "runtime_profile"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2244,
+          "mtime_utc": "2026-08-22T13:53:17.209582+00:00",
+          "sha256": "238e9c406ad6d019905c604a37199d28585646d388484b22d65deb0685b0175e"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/autonomy_guard.py",
+          "roles": [
+            "fault_guard_mapping"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 6351,
+          "mtime_utc": "2026-08-22T13:41:08.939377+00:00",
+          "sha256": "2fb4044d27d006e3fdfbccc03c9b3266db0c00ddbe450f802d16b992c85917be"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/bridge_node.py",
+          "roles": [
+            "fault_status_publisher"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 66660,
+          "mtime_utc": "2026-08-22T14:01:37.750340+00:00",
+          "sha256": "75cdb0ece7e3771c2bf054e1af8049dae3e63a519d3801deff2b92743fdf94b9"
+        },
+        {
+          "path": "brain_linux/src/auv_control/auv_decision_ros/decision_node.py",
+          "roles": [
+            "decision_status_mapping"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 31138,
+          "mtime_utc": "2026-08-22T13:41:56.234629+00:00",
+          "sha256": "cc00c5097dadf5bb7497e9683ab1dfcf82b4d0d29d9ded424acb1a0a0ee71034"
+        },
+        {
+          "path": "brain_linux/src/auv_control/test/test_pc104_cross_layer_status.py",
+          "roles": [
+            "cross_layer_regression_test"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 2393,
+          "mtime_utc": "2026-08-22T13:43:37.684484+00:00",
+          "sha256": "1acf5f1860e47bf479bcf242c483fd2eca23c7481dc74f622f091431094c246e"
+        },
+        {
+          "path": "brain_linux/src/auv_decision/auv_decision_core/behaviors.py",
+          "roles": [
+            "behavior_tree_degradation"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 16108,
+          "mtime_utc": "2026-08-22T13:44:16.424931+00:00",
+          "sha256": "7573a62684daf4bffc3e9a66ec61ae4356f95f216f53216e6aa8000b7684982d"
+        },
+        {
+          "path": "brain_linux/src/auv_interfaces/msg/ArbiterStatus.msg",
+          "roles": [
+            "cross_layer_interface"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 754,
+          "mtime_utc": "2026-08-22T13:41:15.503731+00:00",
+          "sha256": "4764dc43815987d710484d8e1f4edea35ded44e0d467ebf7524234427a73f5f7"
+        },
+        {
+          "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+          "roles": [
+            "authority_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 9931,
+          "mtime_utc": "2026-08-22T15:03:26.939674+00:00",
+          "sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+          "roles": [
+            "thesis_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 62097,
+          "mtime_utc": "2026-08-22T15:02:13+00:00",
+          "sha256": "67a0e6c054e8dcbbab717440fc15e98e84481bbde30eb51a2e4ad5757b46fbe8"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.png",
+          "roles": [
+            "thesis_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 378026,
+          "mtime_utc": "2026-08-22T15:02:13+00:00",
+          "sha256": "5f260e4ed2e9306661607f0687dff79b72f99247ac3954b99d49887ce067d86a"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+          "roles": [
+            "thesis_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 79323,
+          "mtime_utc": "2026-08-22T15:02:16+00:00",
+          "sha256": "a28c63bf8eac8ebe790b6e427ce9c1e61a70f07a4d4499b22748a73260cba881"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.png",
+          "roles": [
+            "thesis_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 512968,
+          "mtime_utc": "2026-08-22T15:02:16+00:00",
+          "sha256": "00ccfe97f7e8ad2c0ebbfcb4ef47e4af08a6d16591520d1ac2f116e2c86055ef"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/aggregate_summary.json",
+          "roles": [
+            "aggregate_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 3827,
+          "mtime_utc": "2026-08-22T15:02:16.582277+00:00",
+          "sha256": "ee5ef5ee1cdc7b23e33379a1e32b42d7f216d457092a284ab649be409daaea68"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/derived_metrics.csv",
+          "roles": [
+            "aggregate_derived_metrics"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1557,
+          "mtime_utc": "2026-08-22T15:02:16.581178+00:00",
+          "sha256": "c60c0f84c04df5974547ac8406ef188abfecc1b1110118205f41d4bda27285d4"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/figures/pc104_cross_layer_fault_timeline.pdf",
+          "roles": [
+            "aggregate_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 62097,
+          "mtime_utc": "2026-08-22T15:02:13.824149+00:00",
+          "sha256": "67a0e6c054e8dcbbab717440fc15e98e84481bbde30eb51a2e4ad5757b46fbe8"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/figures/pc104_cross_layer_fault_timeline.png",
+          "roles": [
+            "aggregate_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 378026,
+          "mtime_utc": "2026-08-22T15:02:13.688722+00:00",
+          "sha256": "5f260e4ed2e9306661607f0687dff79b72f99247ac3954b99d49887ce067d86a"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/figures/pc104_cross_layer_soak_30min.pdf",
+          "roles": [
+            "aggregate_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 79323,
+          "mtime_utc": "2026-08-22T15:02:16.572073+00:00",
+          "sha256": "a28c63bf8eac8ebe790b6e427ce9c1e61a70f07a4d4499b22748a73260cba881"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/figures/pc104_cross_layer_soak_30min.png",
+          "roles": [
+            "aggregate_figure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 512968,
+          "mtime_utc": "2026-08-22T15:02:16.491386+00:00",
+          "sha256": "00ccfe97f7e8ad2c0ebbfcb4ef47e4af08a6d16591520d1ac2f116e2c86055ef"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/report.md",
+          "roles": [
+            "aggregate_report"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1927,
+          "mtime_utc": "2026-08-22T15:02:16.583038+00:00",
+          "sha256": "e949ca626a548a625611667de222f5498d199a7ccbea036c89f1847d3859d32b"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/board_state.json",
+          "roles": [
+            "soak_board_state"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 4569,
+          "mtime_utc": "2026-08-22T14:51:34.774762+00:00",
+          "sha256": "7f756d582beb60587b354c056a7a7c22668dbfab1dc3eed70512b7d312a233b2"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/cross_layer_timeline.csv",
+          "roles": [
+            "soak_raw_timeline"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 45484401,
+          "mtime_utc": "2026-08-22T14:51:34.773373+00:00",
+          "sha256": "134b690407c3dd93b0c80c33f8dce296b530d4654078d7d49e1a65edefcd0866"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/failure_events.csv",
+          "roles": [
+            "soak_post_sequence_failure"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 237,
+          "mtime_utc": "2026-08-22T14:51:35.019783+00:00",
+          "sha256": "fcc494330e856803d1b97a4e5af21628eb6c259b16f6beed99731f8125eb7b77"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/rosbag/metadata.yaml",
+          "roles": [
+            "soak_rosbag_metadata"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 7001,
+          "mtime_utc": "2026-08-22T14:51:32.432940+00:00",
+          "sha256": "f51ebd11f5398674933fc799724713fb2393bbd1b33abf404d824712a8ecd8f4"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/rosbag/rosbag_0.mcap",
+          "roles": [
+            "soak_raw_rosbag"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 56280281,
+          "mtime_utc": "2026-08-22T14:51:32.440324+00:00",
+          "sha256": "1ff626658c5e49e5c325f64f62fa7657819049ef5c51606ca1228187f8ce59a8"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/run_manifest.json",
+          "roles": [
+            "soak_run_manifest"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 5486,
+          "mtime_utc": "2026-08-22T14:21:12.783661+00:00",
+          "sha256": "4d1804dc202cd26df3936b64bc446878102bc6e16da82c4e6b63b89af5f94f51"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/status.json",
+          "roles": [
+            "soak_source_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 837,
+          "mtime_utc": "2026-08-22T14:51:35.020257+00:00",
+          "sha256": "380fc81a3edb85d94686a8050739b940f8bf42549ffe2ab55f6e9fb203bc9c28"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/summary.json",
+          "roles": [
+            "soak_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1680,
+          "mtime_utc": "2026-08-22T14:51:35.017087+00:00",
+          "sha256": "d8e968c1f8249fb4b88d6f0b532be7264e2f76230b63b3b60690d905e54359c3"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/board_state.json",
+          "roles": [
+            "fault_board_state"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 4079,
+          "mtime_utc": "2026-08-22T14:54:57.925415+00:00",
+          "sha256": "18501c3bb8430b872182ece8053a80df81b7860aaed00ec5881d512fedebf442"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/cross_layer_timeline.csv",
+          "roles": [
+            "fault_raw_timeline"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 572018,
+          "mtime_utc": "2026-08-22T14:54:57.923592+00:00",
+          "sha256": "ad1cab4d831903a348f7b7f651834f21680832c6bc1f78f34c4acd7c0bcda415"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/rosbag/metadata.yaml",
+          "roles": [
+            "fault_rosbag_metadata"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 6403,
+          "mtime_utc": "2026-08-22T14:54:56.694089+00:00",
+          "sha256": "bb4b33859eb03e79547ebe0c703747fc66ef6656186ab3370de6f322f3b8fc44"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/rosbag/rosbag_0.mcap",
+          "roles": [
+            "fault_raw_rosbag"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 690993,
+          "mtime_utc": "2026-08-22T14:54:56.698850+00:00",
+          "sha256": "8c87ee482cd0b0e7c3449ce4ef9ed67dd006aafcc3753dc6939bf20e1ae81978"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/run_manifest.json",
+          "roles": [
+            "fault_run_manifest"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 5409,
+          "mtime_utc": "2026-08-22T14:54:36.261871+00:00",
+          "sha256": "2263f9c2fb4b69eb6f1f6314b4dbd37c8989372889aa0f87705e7788d9a9d6b9"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/status.json",
+          "roles": [
+            "fault_run_status"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 823,
+          "mtime_utc": "2026-08-22T14:54:57.932471+00:00",
+          "sha256": "b47d39cbbb13b9da6f9eeddb073edaa67006c239424a2f119cbf5878a950afec"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/summary.json",
+          "roles": [
+            "fault_machine_summary"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1600,
+          "mtime_utc": "2026-08-22T14:54:57.929865+00:00",
+          "sha256": "2895632aad98925ba2ef493c58ad665acb2e7003cbdc699d71e8340f73610073"
+        },
+        {
+          "path": "tests/test_pc104_cross_layer_runner.py",
+          "roles": [
+            "runner_resource_sampling_test"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 1198,
+          "mtime_utc": "2026-08-22T15:02:00.287035+00:00",
+          "sha256": "48892cd8a021d40c8aa3ce97b0c71989eac2f6d6a08b08553e253839946dc436"
+        },
+        {
+          "path": "tools/plot_pc104_cross_layer_evidence.py",
+          "roles": [
+            "aggregate_plotter_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 26454,
+          "mtime_utc": "2026-08-22T15:01:38.707176+00:00",
+          "sha256": "cb10289e5ab94aa9c17c3c356a39c64feea395d78692466fd6fbb016d8bae4a7"
+        },
+        {
+          "path": "tools/run_pc104_cross_layer_fault_sync.py",
+          "roles": [
+            "synchronized_runner_code"
+          ],
+          "required": true,
+          "known_gap": false,
+          "exists": true,
+          "kind": "file",
+          "size_bytes": 45796,
+          "mtime_utc": "2026-08-22T15:01:50.220149+00:00",
+          "sha256": "b02fca059f4c2d8be94614987dc7cae79322528019c6c2d4569c5bdb93c57c96"
         }
       ]
     },
@@ -17241,7 +18863,7 @@
       "present_file_count": 4,
       "raw_reference_count": 3,
       "raw_reference_present_count": 0,
-      "total_bytes": 75219,
+      "total_bytes": 78265,
       "role_counts": {
         "authority_report": 1,
         "configuration": 1,
@@ -17249,7 +18871,7 @@
         "raw_run": 3,
         "runner_code": 2
       },
-      "artifact_digest_sha256": "f385a4a2eb05c96994ae6a72404c988cc1f3d86163039732e5ec94d056b1932b",
+      "artifact_digest_sha256": "8c651781699404ecaa1c9b6c9e832ff628ad8d144590b810d3aa3760f9a5cf5a",
       "files": [
         {
           "path": "/auv_data/bags/20260713_002210",
@@ -17312,9 +18934,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 25123,
-          "mtime_utc": "2026-07-12T17:21:44.902998+00:00",
-          "sha256": "0ceb72b8a2b22c3084e93c2c92ae19cf86bf31512083009dbe40d4d9b99ffa60"
+          "size_bytes": 28169,
+          "mtime_utc": "2026-08-22T11:58:01.784502+00:00",
+          "sha256": "a0cb07bdb02a7f86a5c5374ef155efa470eb55bc7f2297acf3cd4c353f2cb5c2"
         },
         {
           "path": "results/mpc_solve_microbench/jetson_20260713_depth_stress",
@@ -17401,7 +19023,7 @@
       "present_file_count": 5,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 82454,
+      "total_bytes": 91365,
       "role_counts": {
         "audit_report": 1,
         "authority_report": 1,
@@ -17409,7 +19031,7 @@
         "machine_summary": 1,
         "runner_code": 1
       },
-      "artifact_digest_sha256": "bb1d5524c9475af4977b905b0764b8797e92fed32c9c00c7ebe52e02e24357c6",
+      "artifact_digest_sha256": "19d1ab7ba931c702d12d5b243b0d26ba2770e9d98df8ca028e324d72e6a0c173",
       "files": [
         {
           "path": "docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/_SOURCE.md",
@@ -17420,9 +19042,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 2436,
-          "mtime_utc": "2026-08-13T07:18:45.342248+00:00",
-          "sha256": "4c91e3f76c775e22101ddc908ea96db5bff1eba716f62c1b5ed42e6ed4a7df77"
+          "size_bytes": 3837,
+          "mtime_utc": "2026-08-21T06:51:31.197153+00:00",
+          "sha256": "4427e458869d23519d361c83b35569dfbe8a160a85f5193dfdb84969570b88e9"
         },
         {
           "path": "docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/multiseed_raw.csv",
@@ -17459,9 +19081,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 33132,
-          "mtime_utc": "2026-08-13T07:09:46.775115+00:00",
-          "sha256": "482300dbdebc4eed70af330971b65f7db2f5e4c501227b9a4486c647089e2210"
+          "size_bytes": 35166,
+          "mtime_utc": "2026-08-21T06:51:33.439422+00:00",
+          "sha256": "633a81c1c1855eca549fade69ee08637de948b9a81ed70f11996cc62f4d439aa"
         },
         {
           "path": "毕业设计写作文档/潜在待完成事项/24_ESEKF声张核验与全文愿景证据强度审计.md",
@@ -17472,9 +19094,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 34312,
-          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
-          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
+          "size_bytes": 39788,
+          "mtime_utc": "2026-08-21T06:51:35.542036+00:00",
+          "sha256": "a03c4e3be262483eeb361185cf8ddea42a24f27e16454928a88d4e50ce9054e7"
         }
       ]
     },
@@ -17508,7 +19130,7 @@
       "present_file_count": 12,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 141825,
+      "total_bytes": 147301,
       "role_counts": {
         "audit_report": 1,
         "authority_report": 1,
@@ -17523,7 +19145,7 @@
         "runner_code": 1,
         "test_code": 1
       },
-      "artifact_digest_sha256": "c699b856536cd10d356debfcefacf795c616c9917be78930eab6ca934caf92dc",
+      "artifact_digest_sha256": "e0ddff7c46e3f30480ae7a8ccf5607e70539438f0f41ddf5784305f2b59e099b",
       "files": [
         {
           "path": "docs/thesis/figures/experiments/tri_estimator_fair/_SOURCE.md",
@@ -17535,7 +19157,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 3531,
-          "mtime_utc": "2026-08-13T07:55:45.157109+00:00",
+          "mtime_utc": "2026-08-15T12:42:43.493350+00:00",
           "sha256": "55e90912755f6c3459b2b1ca3ec9b776e0c0d1e41d1436771e04de3b0a141da8"
         },
         {
@@ -17652,7 +19274,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 71960,
-          "mtime_utc": "2026-08-13T07:35:05.124331+00:00",
+          "mtime_utc": "2026-08-15T12:42:50.244763+00:00",
           "sha256": "77dee0a8fde9a2d18676fb1bd16ed690b27efe5b4d659a633a6ef0df58bd8ede"
         },
         {
@@ -17665,7 +19287,7 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 8553,
-          "mtime_utc": "2026-08-13T07:37:05.430035+00:00",
+          "mtime_utc": "2026-08-15T12:42:50.275342+00:00",
           "sha256": "cef3053df46c8a671fca9f0f72d406390b330be2d6f41eac86bab47578dfaeb3"
         },
         {
@@ -17677,9 +19299,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 34312,
-          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
-          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
+          "size_bytes": 39788,
+          "mtime_utc": "2026-08-21T06:51:35.542036+00:00",
+          "sha256": "a03c4e3be262483eeb361185cf8ddea42a24f27e16454928a88d4e50ce9054e7"
         }
       ]
     },
@@ -17713,7 +19335,7 @@
       "present_file_count": 9,
       "raw_reference_count": 0,
       "raw_reference_present_count": 0,
-      "total_bytes": 154928,
+      "total_bytes": 352481,
       "role_counts": {
         "audit_report": 1,
         "authority_report": 1,
@@ -17725,7 +19347,7 @@
         "run_index": 1,
         "runner_code": 1
       },
-      "artifact_digest_sha256": "8c9887b8bee4239e8f02e31eb919694ad13ed1bfe0349db981051ff9f9f3cf8c",
+      "artifact_digest_sha256": "6a71157ccc85aabe24779ab72722382b2ee4b91363ef57502c9ae1701f17c78d",
       "files": [
         {
           "path": "docs/thesis/figures/experiments/covariance_ab/_SOURCE.md",
@@ -17736,9 +19358,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 0,
-          "mtime_utc": "2026-08-13T09:47:32.802014+00:00",
-          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          "size_bytes": 2115,
+          "mtime_utc": "2026-08-20T11:23:48.754463+00:00",
+          "sha256": "a36101e278343fd628db2964327df604897b190c018439f44433decc95987a84"
         },
         {
           "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_comparison.png",
@@ -17749,9 +19371,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 72081,
-          "mtime_utc": "2026-08-13T09:06:16.810209+00:00",
-          "sha256": "6309cbf713a9ef44d3efe3164a1eed5720d6b8c18c4a0d15aec21da02a501e2e"
+          "size_bytes": 244450,
+          "mtime_utc": "2026-08-20T11:23:48.753295+00:00",
+          "sha256": "70a859080619fb2533e563b8f8656e0f8d95019007784113e805f16b1ae04510"
         },
         {
           "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_pooled.json",
@@ -17762,9 +19384,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 1115,
-          "mtime_utc": "2026-08-13T09:03:50.478715+00:00",
-          "sha256": "5417b14c07892c9d5bb9fbe40ff9a8aeb52cb76410e39cf29d1800e1fab93adb"
+          "size_bytes": 1116,
+          "mtime_utc": "2026-08-20T11:23:48.599557+00:00",
+          "sha256": "bc6b4a4ed9e8adc9578cc709e7261c8067275fe6d34f4c591eca3af3be137a2d"
         },
         {
           "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_raw.csv",
@@ -17776,8 +19398,8 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 11456,
-          "mtime_utc": "2026-08-13T09:03:50.472198+00:00",
-          "sha256": "071532b80c8efa8f178ce01ebf01bf1b59c9813dfef201cddccbe18b87463065"
+          "mtime_utc": "2026-08-20T11:23:48.445418+00:00",
+          "sha256": "219eab1add39d641b1a24edc0592e1a725e9cc21d6e56908f62474d149774d2a"
         },
         {
           "path": "docs/thesis/figures/experiments/covariance_ab/covariance_ab_summary.csv",
@@ -17789,8 +19411,8 @@
           "exists": true,
           "kind": "file",
           "size_bytes": 516,
-          "mtime_utc": "2026-08-13T09:03:50.477389+00:00",
-          "sha256": "de538e5386cf89b1ce5a111f443549c9d40bf0cb8bad9b55606940449c83fa9f"
+          "mtime_utc": "2026-08-20T11:23:48.598873+00:00",
+          "sha256": "9ebce7eb52625f853f6975f289c03c9dbbb7269b578eb3afe42172d1ecb7735a"
         },
         {
           "path": "log/thesis_sweep/20260612_170618_p1_sensor_3seed/results.csv",
@@ -17814,9 +19436,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 11956,
-          "mtime_utc": "2026-08-13T09:33:30.654233+00:00",
-          "sha256": "c003848bdf845041ec8bdfd7581b52cf1cf5b3861adff9a1497411e0c004e432"
+          "size_bytes": 17469,
+          "mtime_utc": "2026-08-21T06:51:35.480975+00:00",
+          "sha256": "a059a8c56a945ce80d7f86df4e2c6bdf05d4620dcb87e9414fa37eab1438a15b"
         },
         {
           "path": "tools/uncertainty_metrics.py",
@@ -17827,9 +19449,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 14990,
-          "mtime_utc": "2026-08-13T08:55:08.644331+00:00",
-          "sha256": "93e98968ddd635dad1bd90f21319a4a94fb2e3aee2a2b8f2f40a74b948b5d769"
+          "size_bytes": 27069,
+          "mtime_utc": "2026-08-21T06:51:35.525508+00:00",
+          "sha256": "3aad817b9a7396f9de63371e482181339145aaac3731178103d6ccad245f7778"
         },
         {
           "path": "毕业设计写作文档/潜在待完成事项/24_ESEKF声张核验与全文愿景证据强度审计.md",
@@ -17840,9 +19462,9 @@
           "known_gap": false,
           "exists": true,
           "kind": "file",
-          "size_bytes": 34312,
-          "mtime_utc": "2026-08-13T08:12:44.051215+00:00",
-          "sha256": "361dc89e26fff22bb761d4394979aed75d78df662efeb26b427f014c9cb18eb9"
+          "size_bytes": 39788,
+          "mtime_utc": "2026-08-21T06:51:35.542036+00:00",
+          "sha256": "a03c4e3be262483eeb361185cf8ddea42a24f27e16454928a88d4e50ce9054e7"
         }
       ]
     }

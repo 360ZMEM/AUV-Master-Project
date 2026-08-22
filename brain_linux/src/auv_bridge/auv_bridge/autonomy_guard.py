@@ -14,7 +14,14 @@ from dataclasses import dataclass
 from typing import Any
 
 from common.enums import AutoState, DenyReason, LeakLevel
-from common.protocol import KEY_CONFIDENCE, KEY_LEAK_LEVEL, KEY_TELEMETRY_FRESHNESS_MS, KEY_TOTAL_VOLTAGE_V
+from common.protocol import (
+    KEY_CONFIDENCE,
+    KEY_LEAK_LEVEL,
+    KEY_PC104_JETSON_TIMEOUT,
+    KEY_PC104_SYSTEM_COMM_FAULT,
+    KEY_TELEMETRY_FRESHNESS_MS,
+    KEY_TOTAL_VOLTAGE_V,
+)
 
 
 @dataclass(frozen=True)
@@ -121,6 +128,12 @@ class AutonomyGuard:
             confidence = float((sensor_status or {}).get(KEY_CONFIDENCE, 0.0))
             telemetry_freshness_ms = float((telemetry_status or {}).get(KEY_TELEMETRY_FRESHNESS_MS, float("inf")))
             storage_usage = float((telemetry_status or {}).get('storage_usage', 0.0))
+            pc104_system_comm_fault = bool(
+                (telemetry_status or {}).get(KEY_PC104_SYSTEM_COMM_FAULT, False)
+            )
+            pc104_jetson_timeout = bool(
+                (telemetry_status or {}).get(KEY_PC104_JETSON_TIMEOUT, False)
+            )
         except (TypeError, ValueError):
             return DenyReason.UNKNOWN
 
@@ -128,6 +141,8 @@ class AutonomyGuard:
             return DenyReason.LEAK_DETECTED
         if total_voltage_v <= self.min_total_voltage_v:
             return DenyReason.LOW_VOLTAGE
+        if pc104_system_comm_fault or pc104_jetson_timeout:
+            return DenyReason.COMM_LINK_FAILURE
         if confidence <= self.min_confidence:
             return DenyReason.LOW_CONFIDENCE
         if telemetry_freshness_ms >= self.max_uplink_age_ms:

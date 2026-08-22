@@ -13,12 +13,12 @@
       "data_layer": "document_build",
       "evidence_grade": "A",
       "declared_status": "complete",
-      "sample_scope": "180 页 A4 PDF，47 图，63 表，90 条 Biber 记录（R30 写作审计 + AUV-Master-Mag 电缆算法内容迁移后）",
+      "sample_scope": "190 页 A4 PDF，41 个编号图环境，66 个编号表，90 条 Biber 记录（含 PC104 跨层同步故障链与 30 min 稳态证据）",
       "claims_supported": [
         "Tex/Bib 单一权威源可以从干净辅助文件生成最终 PDF",
         "最终日志不存在 undefined command/citation/reference",
         "R30 阶段性写作审计后主文由 185 页压缩到 175 页、图由 59 张压缩到 42 张（净删 17 张过程性/单次样张/UI 产物图），负结果与边界集中到第 5 章 §5.6，n=1 单元验证类归档指向附录 A.7、DL/T 验收与操作员产物类归档指向附录 A.8",
-        "AUV-Master-Mag 电缆算法内容迁移后新增 5 张图（第 2/3 章方法图各 1、第 5.5.11 节算法级因果图 3），主文回到 180 页、47 图；迁移仅补方法/因果图与算法级边界，未改判任何主仓端到端或实物结论"
+        "当前构建在既有写作审计和电缆算法迁移基础上新增 PC104--ROS2--行为树同步故障表、时间线与 30 min 稳态图，形成 190 页、41 个编号图环境和 66 个编号表；实物结论严格限定为零执行器同步安全链"
       ],
       "claim_boundaries": [
         "构建通过不等于占位符、论证或排版质量已经最终验收",
@@ -2584,7 +2584,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若论文需要最坏工况结论，还需扩展更长航时、更多 seed、失败样本和边界搜索"
       ],
       "files": [
@@ -2671,7 +2671,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若要给出长航时稳定结论，需继续做 120--300 s 以上全矩阵或自适应边界搜索，并加入失败归因"
       ],
       "files": [
@@ -2838,7 +2838,7 @@
       ],
       "provenance_gaps": [
         "native PVS depthHeadingAutopilot 执行链 smoke 已由 CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE 覆盖；仍需 native PVS 性能矩阵验证",
-        "PC104 host-relay packet timing 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖到达间隔；仍需最终 Jetson 部署拓扑、固件 echo/共享时钟和目标平台算力复核",
+        "PC104 host-relay packet timing 与 firmware echo 已由 HARDWARE-PC104-UDP-TIMING-PROBE 覆盖；仍需最终 Jetson 原生部署拓扑、共享时钟单向测量和故障注入复核",
         "若要评估长航时活动巡缆稳定性，需延长参考路径或采用路径长度归一化口径，而不是固定时长超过有限路径末端",
         "若要声称终端保持能力，需另行设计具备横流补偿的 terminal hold/station-keeping 实验"
       ],
@@ -2991,35 +2991,72 @@
       "title": "PC104/VxWorks UDP 时序探针与 host-relay 实机记录",
       "data_layer": "physical_pc104_udp_packet_timing_probe",
       "evidence_grade": "C",
-      "declared_status": "physical_hostrelay_packet_timing_complete_with_boundaries",
-      "sample_scope": "30 s PC104 host-relay 实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 300 帧零推力下行，解析 450 帧 $AUV 上行，上行到达频率 15.000 Hz，p95 间隔 85.710 ms，parse error 0",
+      "declared_status": "physical_firmware_echo_timing_complete_with_boundaries",
+      "sample_scope": "300 s PC104 host-relay 固件回显实机探针；remote 192.168.65.254:10022，local 0.0.0.0:21；发送 3000 帧零执行器下行，解析 4505 帧 $AUV 上行，1001 个可配对固件接收事件，parse error 与上行前向序号缺口均为 0",
       "claims_supported": [
         "已补齐可在 Jetson/PC104 网段上直接运行的 packet-level UDP 时序探针",
         "探针默认发送安全零推力 $CKTH 下行帧，并记录 $AUV 上行帧到达间隔、frame gap、PC104 uptime 和解析错误",
-        "host-relay 路径已完成 30 s 实机闭环记录：300 帧零推力下行进入 relay，450 帧 PC104 $AUV 上行进入容器，parse error 0",
-        "观测到 PC104 主上行到达频率约 15.000 Hz，inter-arrival p50/p95/p99 分别为 57.983/85.710/85.944 ms",
+        "host-relay 路径已完成 300 s 实机闭环记录：3000 帧零执行器下行进入 relay，4505 帧 PC104 $AUV 上行进入容器，parse error 0",
+        "观测到 PC104 主上行到达频率约 15.017 Hz，inter-arrival p50/p95/p99 分别为 58.005/85.721/86.095 ms",
+        "VxWorks 固件 uptime marker 与下行 echo marker 在 4505 帧上行中有效率均为 100%，PC104 uptime 无倒退",
+        "按 (echo frame, PC104 receive uptime) 去重后得到 1001 个可配对固件接收事件，first-echo 应用路径 RTT p50/p95/p99/max 为 264.678/313.965/315.607/318.550 ms",
+        "PC104 receive-to-first-pack 的 p95/max 均为 16 ms，相邻固件接收事件 1000/1000 个间隔均为 300 ms，与固件 Net_Recv_Task_Period=3 的 0.1 s 基准周期一致",
+        "300 s 内上行前向序号缺口与估计丢帧均为 0；1501 个零增量被单独识别为重复状态帧",
+        "PC104 uptime 相对容器单调时钟的拟合速率差约为 +962 ppm，绝对拟合残差 p95 为 0.774 ms",
         "已保存逐包原始 timing CSV，并生成 PC104 上行/下行包间隔与 R22 MPC solver wall-time 直方图；R22 60 s 全矩阵 96 条 trace 共 11520 个 MPC 解算样本，全样本 p95 为 11.167 ms",
+        "已新增 300 dpi PNG/PDF 固件回显统计图，区分 first-echo RTT、echo observation age、PC104 receive-to-pack 和固件接收事件间隔",
         "该结果确认 Docker Desktop 场景下容器侧下行入口应使用 host.docker.internal IPv4 192.168.65.254:10022，并由 host relay 经 192.168.0.11:21 转发给 PC104",
-        "探针输出明确标记 one_way_latency_claim=false 与 round_trip_latency_claim=false",
+        "探针输出明确标记 firmware_echo_application_rtt_claim=true、one_way_latency_claim=false 与 strict physical round_trip_latency_claim=false",
         "当前容器端口映射已完成拓扑判读：若 PC104 仍固定上行到宿主机 21/udp 与 52367/udp，则需宿主机转发到 10021/udp 与 62367/udp",
         "已补充宿主机 full-duplex relay，使 timing probe 下行可经宿主机 192.168.0.11:21 转发到 PC104，而不是由容器 172.18.0.2 直接发往 PC104",
         "fan-out 被定位为并发 ROS2/PySide6/旁路记录与下行安全门控方案，不是物理 timing 基线的必要条件"
       ],
       "claim_boundaries": [
         "当前结果是 host-relay/Docker Desktop 路径下的 packet arrival timing，不是裸网卡直连 timing",
-        "没有共享时钟或 firmware echo 时，该探针只能报告上行到达间隔、序列跳变和 PC104 uptime 单调性，不能报告单向物理时延",
-        "当前 30 s 结果不能声明 Jetson--AMD 一程物理 latency 或闭环控制端到端延迟",
+        "固件回显支持 host-relay 应用路径 RTT 与 PC104 同时钟域 receive-to-pack，但没有共享时钟，仍不能报告上下行单向物理时延",
+        "当前 300 s 结果不能声明 Jetson--AMD 单向物理 latency、执行器响应或 ADC--EKF--BT--控制--PC104 完整闭环端到端延迟",
+        "1001/3000 是当前 3.33 Hz 固件接收任务对 10 Hz 下行的应用层观测覆盖率，不是旁路网卡抓包意义的物理丢包率",
+        "本轮 DVL BI uptime 有效样本为 0，只能证明 PC104 时间字段到 ES-EKF 的软件消费路径，不能证明真实 DVL 时间戳改善定位精度",
+        "必须实验 5 的故障与安全部分由独立条目 HARDWARE-PC104-LAYERED-FAULT-SAFETY 覆盖，不能回写成该 300 s 正常链路自身的测量结果",
         "不能把 10021:21/udp 容器映射本身写成已接通 PC104 固定 21/udp 上行",
         "单向 socat 上行转发只能用于 receive-only 检查，不能证明零推力下行已以宿主机 192.168.0.11:21 身份进入 PC104",
         "若使用 fan-out，报告的到达间隔包含用户态转发路径，不应写成裸链路最小时延"
       ],
       "provenance_gaps": [
-        "需要确认 VxWorks 上行 PC104 uptime marker 是否有效",
-        "若论文需要单向时延，需增加固件时间戳回显或共享时钟同步",
-        "建议后续在最终 Jetson 部署形态下重跑 300 s，并保存宿主机 tcpdump 作为旁路网卡时间证据",
-        "需要记录最终宿主机端口转发命令、容器端口映射快照和 PC104 固件上行目标端口"
+        "若论文需要单向物理时延，仍需共享时钟或双向时间同步，固件单端 uptime 回显不能拆分 RTT",
+        "需在最终 Jetson 原生部署形态下复跑，并保存宿主机 tcpdump 作为旁路网卡时间证据",
+        "需接入有效 DVL BI 数据，复验 DVL parse uptime 到 ES-EKF 延迟加权的实物收益",
+        "最终 Jetson 原生部署仍需把 PC104 故障字、ROS2 仲裁状态与行为树状态接入同一同步时间线"
       ],
       "files": [
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/status.json",
+          "role": "physical_firmware_echo_long_run_status"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/udp_timing_summary.csv",
+          "role": "physical_firmware_echo_long_run_summary"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/udp_timing_samples.csv",
+          "role": "physical_firmware_echo_packet_samples"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/firmware_echo_summary.json",
+          "role": "physical_firmware_echo_derived_statistics"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/pc104_firmware_echo_timing.png",
+          "role": "physical_firmware_echo_timing_png"
+        },
+        {
+          "path": "results/control/pc104_udp_timing_echo_300s_20260822/figures/pc104_firmware_echo_timing.pdf",
+          "role": "physical_firmware_echo_timing_pdf"
+        },
+        {
+          "path": "docs/real_deployment/14_pc104_firmware_echo_timing.md",
+          "role": "physical_firmware_echo_analysis"
+        },
         {
           "path": "results/control/pc104_udp_timing_hostrelay_sockreturn_zero_30s_20260810_221904/status.json",
           "role": "physical_hostrelay_run_status"
@@ -3113,6 +3150,10 @@
           "role": "histogram_plotter_code"
         },
         {
+          "path": "tools/plot_pc104_firmware_echo_timing.py",
+          "role": "firmware_echo_plotter_code"
+        },
+        {
           "path": "scripts/pc104_udp_host_relay.py",
           "role": "host_relay_code"
         },
@@ -3131,6 +3172,334 @@
         {
           "path": "docs/real_deployment/12_pc104_timing_port_forward_and_fanout.md",
           "role": "topology_decision"
+        }
+      ]
+    },
+    {
+      "id": "HARDWARE-PC104-LAYERED-FAULT-SAFETY",
+      "title": "PC104 telnetd 零执行器故障注入与分层安全证据",
+      "data_layer": "physical_pc104_fault_injection_plus_production_core_replay",
+      "evidence_grade": "A",
+      "declared_status": "layered_hil_complete_with_synchronized_successor",
+      "sample_scope": "真实 PC104 79.672 s 零执行器矩阵：1197 帧 $AUV、5 次自然断链、3 次 telnetd 强制 watchdog 超时、固定种子 30/100 应用层丢包、10 s 的 200 ms 排队延迟和 Bit5 注入/撤销；生产 CommandArbiter 2.2 s、10 ms 步长回放；行为树 9 场景 x 3 种子共 27 次确定性回放",
+      "claims_supported": [
+        "真实 PC104 自然心跳中断 5/5 触发 Bit14 与 Remote，触发 p50/p95 为 1044.111/1056.357 ms；恢复 Jetson 模式 p50/p95 为 223.207/238.896 ms，Bit14 清除 p50/p95 为 537.003/552.728 ms",
+        "telnetd 强制 watchdog 超时 3/3 触发，触发与恢复 p50 分别为 183.648/363.717 ms；离散度由 0.5 s EmergencyTask 相位解释",
+        "固定种子精确丢弃 30/100 个逻辑帧；200 ms 排队延迟的实测 p50/p95 为 200.979/203.996 ms；两阶段均未越过 1.0 s watchdog，未误触发 Bit14",
+        "Bit5 可由 $AUV 上行观测并在撤销后清除，证明故障位打包、回传与主机解析链成立",
+        "全部 $CKTH 在发送前反解验证为主推、侧推和四舵全零；非零上行推进反馈和非零 telnet 命令快照均为 0；实验后板端恢复 Remote、故障字零和原始 DVL 运行时字段",
+        "生产 CommandArbiter 回放在 510 ms 进入 MPC 零输出 SAFETY_FALLBACK，PC 链路在 1010/1510 ms 进入 WEAK/LOST，并于 1510 ms 切 Remote 零输出；本地 fallback 不再误刷新 PC 心跳",
+        "行为树 27/27 回放有效，漏报和假阳性均为 0；授权丢失、感知丢失、求解超时代理和紧急故障分别进入 SAFE_HOVER、RELOCALIZATION、DEGRADED_MODE 与 RETURN_OR_ABORT",
+        "行为树脚本使用 CRC32 稳定场景种子，两次独立进程重跑的 behavior_tree.csv 与 fault_records.csv SHA256 一致"
+      ],
+      "claim_boundaries": [
+        "PC104 侧 DVL 锁定与 Bit5 均为 telnetd 临时运行时注入，用于隔离耦合和验证状态链，不代表真实 DVL 或 MCU 硬件故障",
+        "30% 丢包和 200 ms 延迟注入点位于容器发送器至 host relay 之前，不是 Ethernet PHY 丢包率或共享时钟单向传播时延",
+        "本轮始终使用零执行器命令，不支持推进器、舵机、急停或水动力响应结论；上行 +/-180 度舵值是 FMCU 默认位置反馈，不是 PC104 命令",
+        "生产仲裁器证据是 10 ms 步长纯核心确定性回放，不包含 ROS executor、网络或硬件调度时延",
+        "行为树 heartbeat_timeout 与 solver_timeout 是任务级授权丢失/异常代理，不是该分层运行中的 PC104 Bit14 或真实求解器负载直接输入",
+        "该条目自身仍是三层独立证据；后续同一 rosbag 时间轴的直接状态映射由 HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK 独立覆盖，不能反向改写本条原始运行"
+      ],
+      "provenance_gaps": [
+        "执行机构静态/动态响应、共享时钟单向时延与水域安全不在本轮范围内"
+      ],
+      "files": [
+        {
+          "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+          "role": "authority_report"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/run_manifest.json",
+          "role": "physical_run_manifest"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/status.json",
+          "role": "physical_run_status"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/summary.json",
+          "role": "physical_machine_summary"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/metrics.csv",
+          "role": "physical_machine_metrics"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/fault_timeline.csv",
+          "role": "physical_timeline"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/board_state.json",
+          "role": "physical_board_pre_post_state"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/failure_events.csv",
+          "role": "physical_failure_events"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/fault_derived_summary.json",
+          "role": "physical_derived_summary"
+        },
+        {
+          "path": "results/control/pc104_fault_injection_formal_v2_20260822/figures/fault_trial_metrics.csv",
+          "role": "physical_trial_metrics"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/run_manifest.json",
+          "role": "arbiter_run_manifest"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/status.json",
+          "role": "arbiter_run_status"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/summary.json",
+          "role": "arbiter_machine_summary"
+        },
+        {
+          "path": "results/control/arbiter_timeout_evidence_20260822/arbiter_timeline.csv",
+          "role": "arbiter_timeline"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/run_manifest.json",
+          "role": "bt_run_manifest"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/status.json",
+          "role": "bt_run_status"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/fault_summary.json",
+          "role": "bt_machine_summary"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/behavior_tree.csv",
+          "role": "bt_timeline"
+        },
+        {
+          "path": "results/decision/bt_fault_injection/reproducible_20260822/fault_records.csv",
+          "role": "bt_fault_records"
+        },
+        {
+          "path": "tools/probe_pc104_fault_injection.py",
+          "role": "physical_runner_code"
+        },
+        {
+          "path": "tools/plot_pc104_fault_injection.py",
+          "role": "physical_plotter_code"
+        },
+        {
+          "path": "tools/run_arbiter_timeout_evidence.py",
+          "role": "arbiter_runner_code"
+        },
+        {
+          "path": "tools/run_bt_fault_injection.py",
+          "role": "bt_runner_code"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/arbiter.py",
+          "role": "production_arbiter_implementation"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/bridge_node.py",
+          "role": "production_bridge_policy"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/test/test_arbiter.py",
+          "role": "arbiter_regression_test"
+        }
+      ],
+      "globs": [
+        {
+          "pattern": "results/control/pc104_fault_injection_formal_v2_20260822/figures/*",
+          "role": "physical_figure",
+          "required": true
+        },
+        {
+          "pattern": "results/control/pc104_fault_injection_formal_v2_20260822/config_snapshot/**/*",
+          "role": "physical_config_snapshot",
+          "required": true
+        },
+        {
+          "pattern": "results/control/arbiter_timeout_evidence_20260822/figures/*",
+          "role": "arbiter_figure",
+          "required": true
+        },
+        {
+          "pattern": "results/control/arbiter_timeout_evidence_20260822/config_snapshot/**/*",
+          "role": "arbiter_config_snapshot",
+          "required": true
+        },
+        {
+          "pattern": "results/decision/bt_fault_injection/reproducible_20260822/figures/*",
+          "role": "bt_figure",
+          "required": true
+        },
+        {
+          "pattern": "results/decision/bt_fault_injection/reproducible_20260822/config_snapshot/**/*",
+          "role": "bt_config_snapshot",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "HARDWARE-PC104-CROSS-LAYER-SYNC-SOAK",
+      "title": "真实 PC104--ROS2--行为树同步零执行器安全链与 30 min 稳态",
+      "data_layer": "physical_pc104_ros2_behavior_tree_synchronized_zero_actuator",
+      "evidence_grade": "A",
+      "declared_status": "complete_with_split_run_boundary",
+      "sample_scope": "两个独立真实 PC104 运行包：修正后短时同步故障 run 18/18 通过；另一个 run 的完整 1800 s active_soak 含 124841 个 ArbiterStatus 样本和 30 个分钟级运行样本，ACTIVE 比率 1.0、目标故障状态样本为 0",
+      "claims_supported": [
+        "PC104 Sys_Abnorm_Inf 的 Bit5/Bit13/Bit14 已由生产 bridge 发布到 ArbiterStatus，并由 decision node 映射为通信链健康和速度辅助有效性，关闭了真实 PC104 到 ROS2 仲裁与行为树的状态接线缺口",
+        "修正后的同步故障运行 18/18 验收项通过：Bit13 到仲裁/行为树为 65.097/349.100 ms，保持 ACTIVE 并进入 ZIGZAG_SEARCH；Bit5 到 DENIED/IDLE 为 102.532/188.463 ms；真实 watchdog Bit14 到 DENIED 为 1071.706 ms",
+        "Bit5/Bit14 清除后系统保持 DENIED，必须收到显式零命令授权才恢复 ACTIVE；Bit14 由经过协议反解确认且经过 fan-out 安全门的 Remote 零包完成物理恢复",
+        "独立 1800 s active_soak 完整执行：124841 个 ArbiterStatus 样本的 ACTIVE 比率为 1.0，Bit5/Bit13/Bit14 目标故障状态样本为 0，30 个分钟级运行样本完整",
+        "两个运行包合计非零板端命令快照、非零上行推进反馈和 fan-out 非零执行器阻断计数均为 0，清理后均为 Remote+zero",
+        "聚合报告明确保留 30 min 源包的 failed_acceptance：唯一失败位于稳态结束后的旧 Bit14 clear-hold 附加序列；active_soak_stable=true 与修正后短时 18/18 分别由两个 run 支撑"
+      ],
+      "claim_boundaries": [
+        "1800 s 稳态与修正后 18/18 故障链是两个独立运行，不能写成同一次全部通过的长时故障实验",
+        "全程未授权非零执行器命令，不支持推进器/舵机极性、死区、ESTOP 动态、水动力或水域试验结论",
+        "台架上行 total_voltage_v=0.0，通信链实验临时隔离 47 V guard，不构成电源健康验收",
+        "DVL 的 BD_Check=2 和 BD_Height=5 m 是临时安全隔离值；Bit13 只验证状态映射，不验证真实 DVL 或固件 DVL 失锁自救执行效果",
+        "同步时延来自容器单调时钟上的主机观测，不是共享时钟下的单向物理网络时延",
+        "30 min 运行发生在当前容器--host relay--PC104 拓扑，未记录 Jetson tegrastats 温度、频率和功耗，不构成 Jetson thermal soak",
+        "归档的 30 min CSV 使用旧启动根进程 RSS 口径，bridge/decision 绝对值不代表节点进程树；runner 已修正为后续运行聚合进程树，但未回写原始数据"
+      ],
+      "provenance_gaps": [
+        "仍需真实电压、DVL 与 ADC--EKF--控制全执行量链验证",
+        "仍需 Jetson 目标机 thermal soak、共享时钟单向时延、非零执行机构与水域试验"
+      ],
+      "files": [
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/aggregate_summary.json",
+          "role": "aggregate_machine_summary"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/derived_metrics.csv",
+          "role": "aggregate_derived_metrics"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_evidence_20260822/report.md",
+          "role": "aggregate_report"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/run_manifest.json",
+          "role": "soak_run_manifest"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/status.json",
+          "role": "soak_source_status"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/summary.json",
+          "role": "soak_machine_summary"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/cross_layer_timeline.csv",
+          "role": "soak_raw_timeline"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/board_state.json",
+          "role": "soak_board_state"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/failure_events.csv",
+          "role": "soak_post_sequence_failure"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112/rosbag/metadata.yaml",
+          "role": "soak_rosbag_metadata"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/run_manifest.json",
+          "role": "fault_run_manifest"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/status.json",
+          "role": "fault_run_status"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/summary.json",
+          "role": "fault_machine_summary"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/cross_layer_timeline.csv",
+          "role": "fault_raw_timeline"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/board_state.json",
+          "role": "fault_board_state"
+        },
+        {
+          "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436/rosbag/metadata.yaml",
+          "role": "fault_rosbag_metadata"
+        },
+        {
+          "path": "tools/run_pc104_cross_layer_fault_sync.py",
+          "role": "synchronized_runner_code"
+        },
+        {
+          "path": "tools/plot_pc104_cross_layer_evidence.py",
+          "role": "aggregate_plotter_code"
+        },
+        {
+          "path": "brain_linux/config/params.protocol_udp_pc104_fanout_relay.yaml",
+          "role": "runtime_profile"
+        },
+        {
+          "path": "brain_linux/src/auv_interfaces/msg/ArbiterStatus.msg",
+          "role": "cross_layer_interface"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/autonomy_guard.py",
+          "role": "fault_guard_mapping"
+        },
+        {
+          "path": "brain_linux/src/auv_bridge/auv_bridge/bridge_node.py",
+          "role": "fault_status_publisher"
+        },
+        {
+          "path": "brain_linux/src/auv_control/auv_decision_ros/decision_node.py",
+          "role": "decision_status_mapping"
+        },
+        {
+          "path": "brain_linux/src/auv_decision/auv_decision_core/behaviors.py",
+          "role": "behavior_tree_degradation"
+        },
+        {
+          "path": "brain_linux/src/auv_control/test/test_pc104_cross_layer_status.py",
+          "role": "cross_layer_regression_test"
+        },
+        {
+          "path": "tests/test_pc104_cross_layer_runner.py",
+          "role": "runner_resource_sampling_test"
+        },
+        {
+          "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+          "role": "authority_report"
+        }
+      ],
+      "globs": [
+        {
+          "pattern": "results/control/pc104_cross_layer_evidence_20260822/figures/*",
+          "role": "aggregate_figure",
+          "required": true
+        },
+        {
+          "pattern": "docs/thesis/figures/hardware/pc104_cross_layer/*",
+          "role": "thesis_figure",
+          "required": true
+        },
+        {
+          "pattern": "results/control/pc104_cross_layer_fault_sync_20260822_222112/rosbag/*.mcap",
+          "role": "soak_raw_rosbag",
+          "required": true
+        },
+        {
+          "pattern": "results/control/pc104_cross_layer_fault_sync_20260822_225436/rosbag/*.mcap",
+          "role": "fault_raw_rosbag",
+          "required": true
         }
       ]
     },

@@ -31,6 +31,9 @@ class SensorStatusData:
         heading_rad: 当前航向（弧度，NED 坐标系）。
         mock_amd_timestamp_us: Mock AMD 时钟时间戳（Unix 微秒）。
         debug_level: 算法透明度级别（0:AUTO, 1:HOLD, 2:PATH, 3:FULL）。
+        execution_fault_word: 执行脑上报的原始故障字，仅用于诊断追溯。
+        communication_link_ok: 执行脑与上层通信是否允许继续自治。
+        velocity_aiding_valid: 执行脑报告的速度辅助信息是否有效。
     """
 
     confidence: float = 0.5
@@ -48,6 +51,9 @@ class SensorStatusData:
     mock_amd_timestamp_us: int = 0
     debug_level: int = 0
     auto_state: str = 'LOCKED'
+    execution_fault_word: int = 0
+    communication_link_ok: bool = True
+    velocity_aiding_valid: bool = True
 
     def is_leaking(self) -> bool:
         """判断当前是否存在漏水风险。"""
@@ -60,6 +66,14 @@ class SensorStatusData:
     def is_seabed_penetrated(self) -> bool:
         """判断当前是否已经穿底。"""
         return self.seabed_penetration_warning
+
+    def autonomy_link_available(self) -> bool:
+        """判断执行脑通信状态是否允许任务层继续自治。"""
+        return self.communication_link_ok
+
+    def localization_aiding_available(self) -> bool:
+        """判断速度辅助是否可用于精准巡检分支。"""
+        return self.velocity_aiding_valid
 
 
 @dataclass

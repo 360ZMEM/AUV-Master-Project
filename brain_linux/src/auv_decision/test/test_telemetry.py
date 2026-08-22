@@ -14,6 +14,7 @@ def test_current_behavior_uses_tree_tip():
             battery_low=False,
             total_voltage_v=48.0,
             anomaly_detected=False,
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -32,6 +33,7 @@ def test_telemetry_snapshot_marks_missing_optional_metrics():
         depth_m=4.2,
         speed_mps=0.3,
         seabed_clearance_m=10.8,
+        auto_state='ACTIVE',
     )
     engine.set_sensor_status(status)
     engine.tick()

@@ -167,7 +167,35 @@ KEY_PC104_DVL_BI_TIME_VALID = "pc104_dvl_bi_time_valid"
 KEY_PC104_DOWNLINK_ECHO_VALID = "pc104_downlink_echo_valid"
 KEY_PC104_DOWNLINK_ECHO_FRAME = "pc104_downlink_echo_frame"
 KEY_PC104_DOWNLINK_RECV_UPTIME_MS = "pc104_downlink_recv_uptime_ms"
+KEY_SYS_ABNORM_INFO = "sys_abnorm_info"
+KEY_PC104_SYSTEM_COMM_FAULT = "pc104_system_comm_fault"
+KEY_PC104_DVL_LOST = "pc104_dvl_lost"
+KEY_PC104_JETSON_TIMEOUT = "pc104_jetson_timeout"
 KEY_TARGET_DEPTH_M = "target_depth_m"  # 目标深度 (m)
+
+# PC104 Sys_Abnorm_Inf bits validated by the 2026-08-22 telnetd matrix.
+PC104_SYS_ABNORM_SYSTEM_COMM_MASK = 1 << 5
+PC104_SYS_ABNORM_DVL_LOST_MASK = 1 << 13
+PC104_SYS_ABNORM_JETSON_TIMEOUT_MASK = 1 << 14
+PC104_SYS_ABNORM_AUTONOMY_BLOCK_MASK = (
+    PC104_SYS_ABNORM_SYSTEM_COMM_MASK
+    | PC104_SYS_ABNORM_JETSON_TIMEOUT_MASK
+)
+
+
+def decode_pc104_sys_abnorm_info(value: int) -> dict[str, int | bool]:
+    """Decode the validated PC104 fault bits used by the ROS2 safety chain."""
+    word = int(value) & 0xFFFFFFFF
+    return {
+        KEY_SYS_ABNORM_INFO: word,
+        KEY_PC104_SYSTEM_COMM_FAULT: bool(
+            word & PC104_SYS_ABNORM_SYSTEM_COMM_MASK
+        ),
+        KEY_PC104_DVL_LOST: bool(word & PC104_SYS_ABNORM_DVL_LOST_MASK),
+        KEY_PC104_JETSON_TIMEOUT: bool(
+            word & PC104_SYS_ABNORM_JETSON_TIMEOUT_MASK
+        ),
+    }
 
 # =============================================================================
 # 二进制协议字节偏移量 - Para1-Para12 可调参数字段位置
@@ -999,7 +1027,7 @@ def build_bridge_telemetry_payload(
         "system_alarm": int(telemetry.system_alarm),
         "depth_alarm": int(telemetry.depth_alarm),
         "bottom_alarm": int(telemetry.bottom_alarm),
-        "sys_abnorm_info": int(telemetry.sys_abnorm_info),
+        KEY_SYS_ABNORM_INFO: int(telemetry.sys_abnorm_info),
         "dev_abnorm_info": int(telemetry.dev_abnorm_info),
         "bms_abnorm_info": int(telemetry.bms_abnorm_info),
         "dev_abnorm_detail": int(telemetry.dev_abnorm_detail),
@@ -1011,6 +1039,7 @@ def build_bridge_telemetry_payload(
         KEY_PC104_DOWNLINK_ECHO_FRAME: int(telemetry.pc104_downlink_echo_frame),
         KEY_PC104_DOWNLINK_RECV_UPTIME_MS: int(telemetry.pc104_downlink_recv_uptime_ms),
     }
+    payload.update(decode_pc104_sys_abnorm_info(telemetry.sys_abnorm_info))
 
     active_arbiter_value = _enum_value(active_arbiter)
     if active_arbiter_value is not None:

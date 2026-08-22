@@ -51,12 +51,19 @@ class Wait_For_Arbiter_Authorization(_BaseBehavior):
 
     def update(self) -> py_trees.common.Status:
         sensor = self._get_sensor_status()
-        if sensor.auto_state != 'ACTIVE':
+        if sensor.auto_state != 'ACTIVE' or not sensor.autonomy_link_available():
+            if not sensor.autonomy_link_available():
+                note = (
+                    'Safe hover: execution-brain communication fault '
+                    f'(fault_word=0x{sensor.execution_fault_word:08X})'
+                )
+            else:
+                note = 'Standby: Waiting for manual authorization'
             self._write_goal(
                 MotionGoal(
                     mode='IDLE',
                     high_priority=False,
-                    note='Standby: Waiting for manual authorization'
+                    note=note,
                 )
             )
             return py_trees.common.Status.SUCCESS
@@ -92,11 +99,14 @@ class ConfidenceAboveThreshold(_BaseBehavior):
 
     def update(self) -> py_trees.common.Status:
         status = self._get_sensor_status()
-        above = (
-            self.gate.update(status.confidence)
-            if self.gate is not None
-            else status.confidence > self.threshold
-        )
+        if not status.localization_aiding_available():
+            above = False
+        else:
+            above = (
+                self.gate.update(status.confidence)
+                if self.gate is not None
+                else status.confidence > self.threshold
+            )
         return (
             py_trees.common.Status.SUCCESS
             if above
@@ -177,6 +187,13 @@ class ZigZagSearch(_BaseBehavior):
 
     def update(self) -> py_trees.common.Status:
         # Implemented based on T/CSGPC 3.4 standard for magnetic survey lines
+        status = self._get_sensor_status()
+        note = '低置信度：切换之字形搜索以提升覆盖率。'
+        if not status.localization_aiding_available():
+            note = (
+                '速度辅助失效：切换之字形重定位搜索 '
+                f'(fault_word=0x{status.execution_fault_word:08X})。'
+            )
         self._write_goal(
             MotionGoal(
                 mode='ZIGZAG_SEARCH',
@@ -184,7 +201,7 @@ class ZigZagSearch(_BaseBehavior):
                 target_speed_mps=0.4,
                 sine_amplitude=0.35,
                 sine_period_s=8.0,
-                note='低置信度：切换之字形搜索以提升覆盖率。',
+                note=note,
             )
         )
         return py_trees.common.Status.SUCCESS
@@ -248,7 +265,9 @@ class TrackAnalyticalTrajectoryBehavior(_BaseBehavior):
         try:
             from algorithm.trajectory_generator import TrajectoryGenerator
 
-            self.trajectory_generator = TrajectoryGenerator(kind=self.trajectory_kind)
+            self.trajectory_generator = TrajectoryGenerator(
+                {'kind': self.trajectory_kind}
+            )
             self.logger.info(f'TrackAnalyticalTrajectory 初始化: trajectory_kind={self.trajectory_kind}')
         except ImportError as e:
             self.logger.error(f'无法导入 TrajectoryGenerator: {e}')
@@ -270,7 +289,7 @@ class TrackAnalyticalTrajectoryBehavior(_BaseBehavior):
 
         # 采样轨迹点
         try:
-            waypoint = self.trajectory_generator.get_waypoint(t_s)
+            waypoint = self.trajectory_generator.sample(t_s)
             if waypoint is None:
                 self.logger.warning(f'轨迹采样失败（t={t_s:.2f}s），返回 FAILURE')
                 return py_trees.common.Status.FAILURE
@@ -280,10 +299,14 @@ class TrackAnalyticalTrajectoryBehavior(_BaseBehavior):
                 MotionGoal(
                     mode='ANALYTICAL_PATH',
                     target_depth_m=float(waypoint.get('z', 4.0)),
-                    target_speed_mps=float(waypoint.get('speed', 0.6)),
+                    target_speed_mps=float(
+                        getattr(self.trajectory_generator, 'surge_speed', 0.6)
+                    ),
                     target_x_m=float(waypoint.get('x', 0.0)),
                     target_y_m=float(waypoint.get('y', 0.0)),
-                    target_heading_rad=float(waypoint.get('yaw', 0.0)),
+                    target_heading_rad=float(
+                        waypoint.get('target_yaw', waypoint.get('yaw', 0.0))
+                    ),
                     high_priority=False,
                     note=f'L2 AnalyticalPath 模式：跟踪解析式轨迹（t={t_s:.2f}s）',
                 )

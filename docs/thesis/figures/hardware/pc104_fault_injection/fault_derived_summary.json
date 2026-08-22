@@ -1,0 +1,79 @@
+{
+  "source_bundle": "/home/auv_user/auv_ws/AUV-Master-Project/results/control/pc104_fault_injection_formal_v2_20260822",
+  "source_timeline": "/home/auv_user/auv_ws/AUV-Master-Project/results/control/pc104_fault_injection_formal_v2_20260822/fault_timeline.csv",
+  "source_status": "ok",
+  "natural_timeout": {
+    "trigger": {
+      "count": 5,
+      "min_ms": 1023.0418339997414,
+      "p50_ms": 1044.1108340000937,
+      "p95_ms": 1056.3566756,
+      "max_ms": 1058.1182089999857
+    },
+    "remote_mode": {
+      "count": 5,
+      "min_ms": 1023.0418339997414,
+      "p50_ms": 1044.1108340000937,
+      "p95_ms": 1056.3566756,
+      "max_ms": 1058.1182089999857
+    },
+    "recovery_mode": {
+      "count": 5,
+      "min_ms": 202.1553340000537,
+      "p50_ms": 223.20700000000215,
+      "p95_ms": 238.8959583999167,
+      "max_ms": 240.89487499986717
+    },
+    "bit_clear": {
+      "count": 5,
+      "min_ms": 516.201125000407,
+      "p50_ms": 537.0031669999662,
+      "p95_ms": 552.7277163999315,
+      "max_ms": 554.6563329999117
+    }
+  },
+  "forced_timeout": {
+    "trigger": {
+      "count": 3,
+      "min_ms": 45.327666999583016,
+      "p50_ms": 183.64849999943544,
+      "p95_ms": 337.84478810011933,
+      "max_ms": 354.9777090001953
+    },
+    "recovery": {
+      "count": 3,
+      "min_ms": 154.80754200052615,
+      "p50_ms": 363.71695899924816,
+      "p95_ms": 459.8260834000939,
+      "max_ms": 470.5048750001879
+    }
+  },
+  "impairment": {
+    "loss_configured_rate": 0.3,
+    "loss_actual_rate": 0.3,
+    "loss_generated_count": 100,
+    "loss_dropped_count": 30,
+    "delay_p50_ms": 200.97883597918553,
+    "delay_p95_ms": 203.99566599917307
+  },
+  "safety": {
+    "uplink_parse_error_count": 0,
+    "dvl_interference_frame_count": 0,
+    "loss_timeout_frame_count": 0,
+    "delay_timeout_frame_count": 0,
+    "nonzero_uplink_motor_frame_count": 0,
+    "nonzero_telnet_command_snapshot_count": 0,
+    "cleanup_remote_zero": true,
+    "fin_feedback_note": "The constant +/-180 deg uplink values are FMCU position feedback from zero/default raw positions, not PC104 commands."
+  },
+  "sample_count": 1197,
+  "plots": [
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.png",
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_latency_trials.png",
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_latency_trials.pdf",
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_impairment_summary.png",
+    "/home/auv_user/auv_ws/AUV-Master-Project/docs/thesis/figures/hardware/pc104_fault_injection/pc104_impairment_summary.pdf"
+  ],
+  "boundary": "Loss and delay were injected at the container sender before the host relay. Bit5 was injected into PC104 runtime state via telnetd."
+}

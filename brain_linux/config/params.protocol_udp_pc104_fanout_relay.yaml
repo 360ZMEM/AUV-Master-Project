@@ -1,0 +1,68 @@
+# PC104 fan-out profile for a Linux container reached through a macOS host relay.
+#
+# Topology:
+#   PC104 192.168.0.101:21
+#     <-> macOS relay 192.168.65.254:10022
+#     <-> container fan-out 0.0.0.0:21
+#     <-> ROS2 bridge 127.0.0.1:52365 -> 127.0.0.1:52364
+#
+# The fan-out remains responsible for rejecting non-zero actuator packets.
+# The optional Zenoh side channel uses peer discovery, so the zero-command
+# authorization emulator can run without a router at tcp/127.0.0.1:7447.
+
+bridge:
+  backend: protocol_udp
+  passive_mode: true
+  command_publish_hz: 10.0
+  protocol_control_mode_byte: 238
+  protocol_work_instruction: 0
+  protocol_send_zero_on_idle: true
+  main_motor_rpm_scale: 15.0
+  downlink_cmd_key: rt/auv/control/cmd_vel
+  shadow_cmd_topic: /auv/bridge/shadow_cmd
+  shadow_telemetry_topic: /auv/bridge/shadow_telemetry
+  imu_key: rt/auv/sensors/imu
+  dvl_key: rt/auv/sensors/dvl
+  depth_key: rt/auv/sensors/depth
+  magnetic_key: rt/auv/sensors/magnetic
+  magnetic_extrinsics_status:
+    enabled: true
+    topic: /auv/sensors/magnetic_extrinsics_status
+    publish_period_s: 1.0
+    include_sim_position_hash: false
+  arbiter:
+    enabled: true
+    arbiter_status_topic: /auv/arbiter/status
+    sensor_status_topic: /auv/sensors/status
+    mpc_topic: /auv/control/mpc_cmd
+    pc_cmd_raw_key: rt/pc/cmd_raw
+    telemetry_key: rt/auv/telemetry
+    viz_internal_key: rt/auv/viz/internal
+    mpc_timeout_s: 0.5
+    default_remote_payload:
+      depth_protect_params: [500, 29]
+      bottom_protect_params: [300, 200]
+      preset_time_tenths_min: 10
+    guard_min_total_voltage_v: 47.0
+    guard_min_confidence: 0.5
+    guard_max_uplink_age_ms: 200.0
+  protocol_udp:
+    local_host: 127.0.0.1
+    local_port: 52365
+    remote_host: 127.0.0.1
+    remote_port: 52364
+    socket_timeout_s: 0.1
+    recv_buffer_size: 2048
+    obj_address: 1
+    main_motor_rpm_scale: 15.0
+    side_motor_rpm: 0
+    zenoh_side_channel_enabled: true
+
+sensor_extrinsics_estimated:
+  mag:
+    translation_b_m: [0.30001230153357483, 0.002987455375084699, -0.05274137855362218]
+    rotation_rpy_deg: [-0.04452959193786371, -0.02273353925858613, 1.950417672250177]
+
+metadata:
+  profile: pc104_fanout_relay
+  transport_boundary: container_to_macos_host_relay

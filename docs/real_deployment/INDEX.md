@@ -22,6 +22,8 @@
 | 11 | [11_sensor_wrapper_ip_coordination.md](11_sensor_wrapper_ip_coordination.md) | Jetson 侧多个真实传感器 wrapper 的 IP/网段规划、主仓 override 规则与故障定位顺序 |
 | 12 | [12_pc104_timing_port_forward_and_fanout.md](12_pc104_timing_port_forward_and_fanout.md) | PC104/AMD 物理 UDP timing 的宿主机端口转发与 fan-out 取舍 |
 | 13 | [13_physical_handoff_next_plan.md](13_physical_handoff_next_plan.md) | 实物 handoff 下一步优先级、01-05 阶段映射与论文未验证边界 |
+| 14 | [14_pc104_firmware_echo_timing.md](14_pc104_firmware_echo_timing.md) | PC104 固件时间戳回显、300 s 双脑 UDP 实测、ES-EKF 时间信息价值与实验边界 |
+| 15 | [15_pc104_fault_injection_and_layered_safety.md](15_pc104_fault_injection_and_layered_safety.md) | PC104 telnetd 故障注入、Bit5/13/14 跨层同步、30 min 零执行器稳态与边界 |
 
 ---
 

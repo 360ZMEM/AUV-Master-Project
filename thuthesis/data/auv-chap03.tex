@@ -81,21 +81,40 @@ DVL & 2 Hz & \(\approx 50\text{ ms}\) & RS422 / UDP \\
 侧扫/浅剖 EdgeTech 2205 & 2--5 Hz & \(150\sim300\text{ ms}\) & 1000Base-T / TCP \\
 \end{longtable}
 
-时延为什么必须显式补偿？做一个量级估算即可看清：当 AUV 以 \(v = 1.0\text{ m/s}\) 巡航、某观测延迟 \(\tau_{delay} = 200\text{ ms}\) 时，若直接把它当作当前时刻观测使用，引入的空间错位为
+时延为什么必须显式处理？做一个量级估算即可看清：当 AUV 以 \(v = 1.0\text{ m/s}\) 巡航、某观测延迟 \(\tau_{delay} = 200\text{ ms}\) 时，若直接把它当作当前时刻观测使用，引入的空间错位为
 
 \[\Delta x_{error} = v \cdot \tau_{delay} = 1.0\text{ m/s} \times 0.2\text{ s} = 0.2\text{ m}\]
 
-恰好触及 T/CSGPC 规定的埋深/路由误差上限。本系统据此采用``硬件锁相 + 软件回溯''的双重同步：其一是硬件层面的 1PPS 秒脉冲锁相，由 DVL/GPS 产生的 1 Hz 方波接入声呐 \texttt{Trig1} 与 Jetson GPIO，各节点在上升沿清零内部计数器，消除晶振漂移（对应第 2.5.1 节的物理基础）；其二是软件层面为每帧观测打上 ROS2 Header 的 Unix 纳秒时间戳，并按硬件时延修正回采样时刻：
+这一量级已经足以影响巡检横偏与埋深判断。本文据此区分``设备侧采样/解析时刻''和``Jetson 接收时刻''，但不把目标设计中的 1PPS 硬件锁相或历史状态回溯写成已经完成。当前真实 PC104 路径采用 VxWorks \texttt{tickGet()} 相对时钟：\texttt{\$AUV} 上行的 \texttt{Para3} 携带打包 uptime，\texttt{Para4} 携带最近一次 DVL BI 数据解析 uptime，固定标志 \texttt{0x5453} 用于区分旧固件。桥接节点以首个有效 PC104 uptime 和当时 ROS 时钟建立基点，在当前单位斜率假设下映射为
 
-\[t_{stamp} = t_{system\_now} - \tau_{hardware\_latency}\]
+\[
+t_{\mathrm{ROS},k}=t_{\mathrm{ROS},0}
+  +\frac{t_{\mathrm{PC104},k}-t_{\mathrm{PC104},0}}{1000}.
+\]
 
-在此基础上处理``低频高延迟观测滞后到达''的问题：为高频状态开辟一个保存过去 \(2.0\text{ s}\)（容量 \(N = 400\)）的双向环形缓冲区；当声呐/视觉等低频观测在 \(t_{recv}\) 到达时，先提取其真实发射时间 \(t_{ping} = t_{recv} - \tau_{delay}\)，在缓冲区中检索满足 \(t_k \le t_{ping} < t_{k+1}\) 的相邻两帧，做一阶线性（或 Hermite）插值得到发射时刻的状态：
+同一 \texttt{\$AUV} 帧派生的惯性/姿态消息使用打包 uptime，DVL 消息使用 DVL BI 解析 uptime，因而最近 DVL 相对打包时刻的陈旧度可直接在 PC104 同一时钟域内计算：
 
-\[\hat{\boldsymbol{x}}(t_{ping}) = \boldsymbol{x}_k + \frac{t_{ping} - t_k}{t_{k+1} - t_k}\left(\boldsymbol{x}_{k+1} - \boldsymbol{x}_k\right)\]
+\[
+\Delta t_{\mathrm{DVL}}
+=\frac{t_{\mathrm{PC104,pack}}-t_{\mathrm{PC104,DVL}}}{1000}.
+\]
 
-随后在该历史位姿处执行观测更新步，再用 IMU 增量把状态推回当前时刻。经此回溯-插值处理，多源时空同步误差可控制在 \(< 1\text{ ms}\)（对应空间误差 \(< 1\text{ mm}\)），从根本上消除了因异步到达导致的虚假相关性。
+ES-EKF 当前并未回退到历史状态执行延迟更新，而是把上述陈旧度作为观测可信度信息。其实现为
 
-需要诚实说明的是，仿真期通过软件模拟的``采样时间戳 + 缓存接口''已经能够支撑算法层面的多速率融合验证，但 PTP 硬件时戳、AMD 与 Jetson 之间真实的时钟漂移补偿等问题仍需要在实物部署阶段进一步完成。本文在写作时把这部分明确划入``接口已识别、硬件级证据待补''的边界，避免把仿真结果直接外推为实物结论。
+\[
+\boldsymbol{R}_{\mathrm{DVL}}(\Delta t)
+=\begin{cases}
+\sigma_{\mathrm{DVL}}^2\boldsymbol{I},
+& \Delta t\leq 0.05\text{ s},\\
+\sigma_{\mathrm{DVL}}^2
+\left[1+\min\!\left(\dfrac{\Delta t}{0.2},\,2\right)\right]\boldsymbol{I},
+& \Delta t>0.05\text{ s}.
+\end{cases}
+\]
+
+超过 50 ms 后，膨胀系数从 1 增大并在 3 截止。该机制降低陈旧观测的卡尔曼增益，属于延迟感知加权，不等同于基于历史状态的 out-of-sequence measurement 更新。
+
+300 s PC104 实测进一步给出时钟边界：PC104 uptime 全程单调且相对容器单调时钟的线性拟合绝对残差 p95 为 \(0.774\text{ ms}\)，但两者相对速率约差 \(+962\text{ ppm}\)。这说明同一 PC104 时钟域内的短时 DVL 陈旧度可用，而固定单位斜率的首帧锚定不适合长期对齐 Jetson 侧磁场或声呐观测。该轮测试中 DVL BI 时间有效样本仍为 0，故当前证据只确认``固件字段--协议解析--ROS Header--ES-EKF 延迟加权''的软件通路成立，尚不证明真实 DVL 时间戳改善了定位精度。完整的跨设备融合仍需在线估计时钟偏移与斜率，并在需要消除相位误差时引入历史状态回溯；这些边界与真机结果见第~\ref{sec:ch05-5-3-1} 节。
 
 \subsection{传感器安装偏差角标定与补偿}\label{sec:ch03-3-2-2}
 

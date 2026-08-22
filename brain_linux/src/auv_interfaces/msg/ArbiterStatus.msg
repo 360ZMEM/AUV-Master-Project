@@ -20,5 +20,11 @@ bool mpc_command_valid
 # Latest AMD uplink freshness used by the guard.
 float32 telemetry_freshness_ms
 
+# PC104 execution-brain fault state decoded from $AUV Sys_Abnorm_Inf.
+uint32 pc104_sys_abnorm_info
+bool pc104_system_comm_fault
+bool pc104_dvl_lost
+bool pc104_jetson_timeout
+
 # Free-form note for debugging.
 string note

@@ -11,7 +11,7 @@
 3. 单向 `socat -u UDP4-RECVFROM:21 -> 127.0.0.1:10021` 只能验证 PC104 上行进入容器，不能验证容器下行以宿主机 `192.168.0.11:21` 身份进入 PC104。若 timing probe 要发送零推力 `$CKTH`，下行也必须经过宿主机 relay。
 4. 物理 timing 证据优先使用宿主机 full-duplex relay 加容器 probe，不默认引入 ROS2/PySide6 fan-out。理由是 fan-out 会增加一层业务复用，适合并发联调，不适合作为最小干扰的时序基线。
 5. 当需要 ROS2 bridge、PySide6 GUI、旁路 timing/sniffer 同时在线，或需要统一阻断非零执行器下行时，启用 fan-out。现有 `scripts/pc104_udp_fanout.py` 已覆盖该需求，不需要重新实现 fan-out 架构。
-6. 无论是否使用转发或 fan-out，在没有 PC104 firmware echo 或共享时钟前，`tools/probe_pc104_udp_timing.py` 仍只能报告上行到达间隔、frame gap 和 PC104 uptime 单调性，不能报告一程物理时延。
+6. 当前 PC104 firmware echo 已能报告 host-relay 应用路径 RTT 和 PC104 receive-to-pack；但没有共享时钟时仍不能把 RTT 拆分为上下行单向物理时延。
 
 ## 2. 端口映射解释
 
@@ -119,7 +119,7 @@ python3 tools/probe_pc104_udp_timing.py \
 边界:
 
 - 该拓扑的到达时间包含宿主机 relay 和 Docker UDP publish 的转发开销；
-- 仍不构成一程物理时延，除非后续增加 firmware echo 或共享时钟；
+- firmware echo 可构成应用路径 RTT，但仍不构成一程物理时延；后者需要共享时钟或双向时间同步；
 - 若需要更接近物理网卡时间，应在宿主机同时运行 `tcpdump -ni <iface> udp port 21 or udp port 52367` 作为旁路证据。
 
 ## 5. 推荐拓扑 B: 容器内 fan-out 并发

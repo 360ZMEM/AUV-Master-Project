@@ -14,6 +14,7 @@ def test_hold_current_pose_activates_when_debug_level_1():
             depth_m=5.0,
             heading_rad=1.5,
             debug_level=1,  # L1 Hold 模式
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -31,6 +32,7 @@ def test_analytical_path_activates_when_debug_level_2():
             confidence=0.9,
             mock_amd_timestamp_us=1000000,  # 1秒
             debug_level=2,  # L2 AnalyticalPath 模式
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -49,6 +51,7 @@ def test_auto_mode_activates_main_mission():
         SensorStatusData(
             confidence=0.9,
             debug_level=0,  # AUTO 模式
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -65,6 +68,7 @@ def test_full_mode_activates_main_mission():
         SensorStatusData(
             confidence=0.2,  # 低置信度
             debug_level=3,  # FULL 模式
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -99,6 +103,7 @@ def test_hold_mode_in_debug_level_2_falls_back_to_path():
             confidence=0.9,
             mock_amd_timestamp_us=1000000,
             debug_level=2,  # 满足 L1 和 L2 条件
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -119,6 +124,7 @@ def test_no_mock_amd_time_in_path_mode_fails():
             confidence=0.9,
             mock_amd_timestamp_us=0,  # 没有 Mock AMD 时间
             debug_level=2,  # L2 模式
+            auto_state='ACTIVE',
         )
     )
     engine.tick()

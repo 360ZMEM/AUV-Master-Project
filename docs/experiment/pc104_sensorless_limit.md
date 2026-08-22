@@ -273,14 +273,15 @@ docs/experiment/assets/pc104_button_field_check/console_pc104_button_check.yaml
 - 低层状态机可继续通过 Telnet 注入验证。
 - 高层任务闭环应转入 `Zenoh + protocol_udp` 仿真。
 
-### 3.3 非零执行器链路未验证
+### 3.3 非零执行器与高层语义闭环未验证
 
-本轮只允许零执行器 `$CKTH`。未验证:
+本轮只允许零执行器 `$CKTH`。GUI 的“主推上电”和 ESTOP 点击已分别验证到 PC104 `UI_WIFI_Instruction.work_cmd=0x11/0x02`，但这只是按钮构包与板端字段接收证据，不是执行机构动作或高层安全语义闭环。尚未验证:
 
 - 非零主推。
 - 非零侧推。
 - 非零舵角。
-- GUI 按钮导致的任务下发、ESTOP、自主授权。
+- GUI 自主授权与任务语义下发。
+- GUI ESTOP 经 Zenoh 被生产 bridge/arbiter 消费并完成锁存。
 
 状态:
 

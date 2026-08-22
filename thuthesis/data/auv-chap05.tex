@@ -795,7 +795,7 @@ R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流
 
 为关闭离线仿真代理尚未覆盖的执行链风险，本文另运行一次 PVS 原生定深定向冒烟实验。专用配置将 PVS 控制模式置为定深定向自驾、运动模型置为原生，ROS2 控制器、MPC 与仲裁器经二进制下行进入模拟管理设备自动分发后触发 PVS 内层自驾。审计显示自动模式命中 149 次、原生自驾后端开启 1 次、运动学代理日志为 0；记录到设定点 245 帧、控制命令 720 帧、滤波状态 998 帧，72 个控制器诊断样本均求解成功，耗时 p95/max 为 19.32/20.40 ms。该结果只支撑``PVS 原生仿真执行链已闭合''，覆盖范围见 \S\ref{sec:ch05-5-6}。
 
-真机侧时序口径由 PC104 UDP 探针补充：主机按 10 Hz 发送安全零推力 \texttt{\$CKTH} 下行包，并记录 \texttt{\$AUV} 上行到达间隔、帧号缺口、解析错误与 PC104 运行时长单调性。30 s 主机中继记录中，300 帧零推力下行进入中继，450 帧上行被容器解析，解析错误为 0；主上行到达频率约 15.000 Hz，到达间隔 p50/p95/p99 为 57.983/85.710/85.944 ms。该探针只能报告到达间隔与抖动，不构成单向物理延迟，边界见 \S\ref{sec:ch05-5-6}。
+真机侧时序口径由 PC104 UDP 探针补充：主机按 10 Hz 发送安全零推力 \texttt{\$CKTH} 下行包，固件在校验通过后记录接收帧号与 PC104 uptime，并随 \texttt{\$AUV} 回传。300 s 主机中继记录中，3000 帧下行进入中继，4505 帧上行被解析，解析错误和大于 1 的前向序号缺口均为 0；上行到达频率约 15.017 Hz，到达间隔 p50/p95/p99 为 58.005/85.721/86.095 ms。按固件接收事件去重得到 1001 个可配对 first-echo 样本，应用路径 RTT 的 p50/p95/p99 为 264.678/313.965/315.607 ms，PC104 接收到首次打包的 p95 为 16 ms。该 RTT 包含容器、Docker Desktop、宿主机 relay、双向网络和固件周期调度，不构成任一方向的单向物理延迟，边界见 \S\ref{sec:ch05-5-6}。
 
 \section{端到端海缆巡检数字孪生仿真}\label{sec:ch05-e2e}
 
@@ -1035,17 +1035,121 @@ R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流
 
 \subsection{``双脑''通信链路与实时性压力测试}\label{sec:ch05-5-3-1}
 
-Jetson 与 PC104/VxWorks 之间的二进制通信链路需要在实物环境下核验端口、帧序与失联保护。该链路的下行帧携带工作模式、任务指令、舵角、推力与一组可调浮点参数，上行帧携带姿态、卫星定位、三轴速度、深度、电压、温度、漏水与故障位图（学术数据契约见附录 A.6）。在上位机端与 VxWorks 端的独立开发过程中已发现若干处协议偏差，包括帧头长度、压力与航向字段的错位、深度缩放因子的不一致、舵角类型与符号约定的差异等，这些偏差已在仿真期通过协议单元测试闭环，实物部署时仍需逐一复核。当前 30 s host-relay 零推力探针已观测到 450 帧可解析上行、0 次解析错误和 0 个大于 1 的前向跨帧；但在缺少固件回显或可信共享时钟时，该探针只能报告 Jetson 侧到达间隔，不能报告单向物理时延或往返时延。
+Jetson 与 PC104/VxWorks 之间的二进制通信链路需要在实物环境下核验端口、帧序与失联保护。该链路的下行帧携带工作模式、任务指令、舵角、推力与一组可调浮点参数，上行帧携带姿态、卫星定位、三轴速度、深度、电压、温度、漏水与故障位图（学术数据契约见附录 A.6）。在上位机端与 VxWorks 端的独立开发过程中已发现若干处协议偏差，包括帧头长度、压力与航向字段的错位、深度缩放因子的不一致、舵角类型与符号约定的差异等，这些偏差已通过协议单元测试和本轮实物报文解析复核。
+
+在长时链路时序实验之前，本文先用分阶段、低风险方法核查 PySide6 上位机从``可启动''到``可到达真实板端字段''的证据链，结果见表~\ref{tab:ch05-gui-pc104-staged}。这里把 GUI 截图、调试摘要和原始日志严格区分：截图用于证明人机界面可复现，真实 PC104/Telnet 记录用于证明协议字段到达，Zenoh probe 只用于证明旁路传输连通。
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{PySide6 上位机至 PC104/Zenoh 的分阶段联调证据}\label{tab:ch05-gui-pc104-staged}
+\begin{tabular}{@{}p{0.17\linewidth}p{0.24\linewidth}p{0.28\linewidth}p{0.23\linewidth}@{}}
+\toprule
+阶段 & 配置与样本 & 观测结果 & 证据边界 \\
+\midrule
+GUI-only 复现 & Xvfb \(1366\times900\)，dummy UDP，Zenoh 关闭 & 浅/深色界面可启动；最终布局无明显裁切，中文与安全控件可读 & 只证明渲染和无头复现，不证明设备在线 \\
+真实上行与零下行 & PC104 \texttt{\$AUV} 只读转发；Stage 2/3 摘要分别记录 19/16 个 \texttt{\$CKTH} & 遥测字段刷新；19 个下行全部丢弃，16 个零执行器包经门控转发并由板端字段读回 & Stage 2/3 原始 relay、端口和 Telnet 文件未随仓完整保存，数量仅作调试摘要 \\
+按钮字段实证 & 真实 GUI ``主推上电''与 ESTOP 各一次；fan-out、GUI、Telnet 原始日志在库 & PC104 \texttt{work\_cmd} 依次为 \texttt{0x11} 与 \texttt{0x02}；电机为 0，舵量为零/中位 & 证明按钮构包和板端接收，不证明非零执行器动作 \\
+Zenoh 旁路 & Stage 4 摘要记录 16 个 72 B \texttt{\$CKTH} 到达 \texttt{rt/pc/cmd\_raw} probe & GUI 原始帧镜像与本地 router 连通，UDP 下行同期全部丢弃 & 未接入生产 bridge/arbiter，不证明 ESTOP 语义消费或整艇闭环 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+其中证据强度最高的是按钮字段实证：受版本控制的 fan-out 日志记录 \texttt{work=17} 和 \texttt{work=2}，两次 Telnet 快照分别读回 \texttt{work\_cmd=0x11} 和 \texttt{0x02}，且最终 MCU 缓存保持主推为零。该结果把操作员点击、72 B 构包、fan-out 安全门控和 PC104 接收字段连成一条可追溯实物链；Zenoh 部分则仍停留在通用原始帧到 probe 的传输层，不能与前者拼接成一次 GUI ESTOP--ROS2 仲裁--PC104 的同步闭环。
+
+实测采用真实 PC104/VxWorks 和 macOS 宿主机 full-duplex relay。容器以 10 Hz 发送 72 B 安全零执行器 \texttt{\$CKTH}，relay 只允许主/侧推和四舵量全零的报文进入 PC104；145 B \texttt{\$AUV} 则从同一宿主机物理端口返回容器。固件扩展在 \texttt{\$CKTH} 校验通过后记录接收帧号和 PC104 uptime，并与上行打包 uptime 一同回传。相同接收事件会被多个上行帧重复携带，因此统计按``下行帧号 + PC104 接收 uptime''去重，只保留首次观测。300 s 内共发送 3000 帧下行、解析 4505 帧上行，解析错误为 0；PC104 uptime 与回显标志有效率均为 100\%，上行 8 位帧号经历 12 次回卷且无大于 1 的前向缺口。
+
+1001 个可配对固件接收事件的 first-echo 应用路径 RTT 均值为 266.295 ms，p50/p95/p99/max 为 264.678/313.965/315.607/318.550 ms；PC104 从记录下行到首次打包的均值为 8.507 ms，p50/p95/p99/max 均为 16 ms。相邻固件接收事件的 1000 个间隔全部为 300 ms，与 \texttt{Net\_Recv\_Task\_Period=3} 和 0.1 s 基准周期一致。由此得到的 1001/3000（33.37\%）是 3.33 Hz 固件接收任务对 10 Hz 下行的\textbf{应用层观测覆盖率}，不能等同于网卡抓包意义上的物理丢包率。该节拍对 0xEE 模式下``低频 setpoint 更新 + PC104 本地内环保持''尚可作为设计输入，但对 0xEF 全执行量透传构成明确的命令带宽上限，仍需结合执行器静态试验评估。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\linewidth,height=0.62\textheight,keepaspectratio,alt={300秒PC104固件回显统计，包括唯一接收事件首次回显RTT、PC104接收到首次打包时间、固件记录下行事件间隔和RTT时间序列}]{hardware/pc104_timing/pc104_firmware_echo_timing.pdf}
+\caption{PC104/VxWorks 固件接收时间戳回显统计（300 s、3000 帧安全零执行器下行、1001 个可配对接收事件）}\label{fig:ch05-pc104-firmware-echo}
+\end{figure}
+\FloatBarrier
+
+需要区分三种时延口径：上行到达间隔描述 Jetson 侧可见的数据节拍；receive-to-first-pack 描述 PC104 同一时钟域内的接收至打包处理时间；first-echo RTT 则覆盖容器、Docker Desktop、宿主机 relay、双向以太网、固件接收和周期性上行调度。后二者已由固件回显得到，但两端仍无共享绝对时钟，故不能从 RTT 拆分出严格上下行单向物理时延。300 s 内 PC104 uptime 相对容器单调时钟的拟合速率差约为 \(+962\text{ ppm}\)，说明后续与 Jetson 磁场/声呐时间轴长期融合时还需估计时钟斜率，而不能只做一次偏移锚定。
+
+在正常链路基线之上，本文进一步利用 VxWorks telnetd 对真实 PC104 的运行时状态实施可恢复故障注入。为隔离执行机构风险，所有 \texttt{\$CKTH} 均在发送前由协议解析器反解并确认主推、侧推和四舵命令全零，同时用板端快照监测 UI 电机/舵命令与 MCU 电机目标；DVL 锁定量只在实验期间临时写入以避免无 DVL 条件下 Bit13 抢先触发，结束后连同故障字恢复原值。正式矩阵持续 79.672 s，共解析 1197 帧 \texttt{\$AUV} 且无解析错误，非零推进反馈和非零板端命令快照均为 0，清理后控制模式为 Remote。
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{PC104 故障注入与上层安全逻辑的分层基线}\label{tab:ch05-pc104-fault-layered}
+\begin{tabular}{@{}p{0.24\linewidth}p{0.27\linewidth}p{0.40\linewidth}@{}}
+\toprule
+证据层 & 实验规模 & 主要结果 \\
+\midrule
+真实 PC104 自然断链 & 5 次 & Bit14 与 Remote 触发 5/5；触发 p50/p95 为 1044.111/1056.357 ms；恢复 Jetson 模式 p50/p95 为 223.207/238.896 ms，Bit14 清除 p50/p95 为 537.003/552.728 ms \\
+真实 PC104 强制超时 & 3 次 & telnetd 写入 watchdog 前先静默排空在途帧；触发 3/3，触发和恢复 p50 分别为 183.648/363.717 ms \\
+应用路径受控扰动 & 100 帧丢包；10 s 延迟 & 固定种子精确丢弃 30/100 帧；200 ms 队列延迟实测 p50/p95 为 200.979/203.996 ms；两阶段均未越过 1.0 s watchdog \\
+错误状态回传 & Bit5 注入/撤销 & Bit5 可由上行观测并在撤销后清除；验证故障位打包与解析，不代表真实 MCU 硬件故障 \\
+生产仲裁器回放 & 10 ms 步长 & MPC 陈旧在 510 ms 进入零输出 \texttt{SAFETY\_FALLBACK}；PC 链路在 1010/1510 ms 进入 WEAK/LOST，并于 1510 ms 切 Remote 零输出 \\
+行为树故障回放 & 9 场景 \(\times\) 3 种子 & 27/27 有效；授权丢失、感知丢失、求解超时代理和紧急故障分别进入安全悬停、重定位、降级和返回/中止角色 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+图~\ref{fig:ch05-pc104-layered-fault} 给出真实 PC104 的统一故障时间线，生产仲裁器的离散时间结果列于表~\ref{tab:ch05-pc104-fault-layered}。自然断链约 1.02--1.06 s 触发，与 1.0 s watchdog 加离散上行采样相符；强制超时的 45--355 ms 离散度来自 0.5 s 应急任务调度相位，不应解释为网络 RTT。受控丢包与延迟位于容器发送器至宿主机 relay 之前，因而是应用路径扰动而非 Ethernet PHY 指标。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.63\textheight,keepaspectratio,alt={真实PC104的五次自然断链、三次强制超时、受控丢包延迟及Bit5反馈时间线}]{hardware/pc104_fault_injection/pc104_fault_timeline.pdf}
+\caption{真实 PC104 零执行器故障注入、Remote 降级与恢复统一时间线}\label{fig:ch05-pc104-layered-fault}
+\end{figure}
+\FloatBarrier
+
+上述分层基线分别固定了板端、仲裁核心与任务规则的响应边界；在此基础上，本文进一步把 PC104 \texttt{Sys\_Abnorm\_Inf} 接入生产 bridge、CommandArbiter 与行为树：bridge 将原始故障字及 Bit5/Bit13/Bit14 写入 ArbiterStatus，decision node 再将 Bit5/Bit14 映射为通信链失效、将 Bit13 映射为速度辅助失效。同步实验在同一 rosbag 时间轴记录真实 \texttt{\$AUV} 故障字、仲裁状态、ControlGoal/Setpoint、行为树状态、shadow command 与板端快照，结果见表~\ref{tab:ch05-pc104-cross-layer}。
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\caption{真实 PC104--ROS2--行为树同步故障链与长时稳态结果}\label{tab:ch05-pc104-cross-layer}
+\begin{tabular}{@{}p{0.22\linewidth}p{0.30\linewidth}p{0.39\linewidth}@{}}
+\toprule
+证据单元 & 观测结果 & 安全语义与边界 \\
+\midrule
+Bit13 DVL 失锁映射 & 到仲裁/行为树分别为 65.097/349.100 ms；自治保持 ACTIVE，任务由精确跟踪转为 \texttt{ZIGZAG\_SEARCH} & 临时写入故障字并保持 DVL 安全隔离值；验证状态映射，不验证真实 DVL 或固件 300 RPM 自救分支 \\
+Bit5 系统通信故障 & 到 DENIED/IDLE 分别为 102.532/188.463 ms；active arbiter 转 Remote，目标速度为零 & 故障清除后仍保持 DENIED，收到显式零命令授权后才恢复 ACTIVE \\
+Bit14 Jetson watchdog & 暂停 bridge 下行后由真实 PC104 watchdog 产生；到 DENIED 为 1071.706 ms，shadow 执行量全零 & 用经协议反解确认的 Remote 零包清除物理 watchdog，再显式恢复零命令授权 \\
+同步故障验收 & 修正后短时运行 18/18 项通过；fan-out 上/下行/阻断为 308/240/0 & 同一主机单调时钟上的跨层触发时延，不是共享时钟下的单向物理网络时延 \\
+零执行器 30 min 稳态 & 1800 s；124841 个 ArbiterStatus 样本，ACTIVE 比率 1.000000，目标故障状态样本为 0；30 个分钟级运行样本完整 & 独立运行；板端非零命令快照和上行非零推进反馈均为 0；不等同 Jetson thermal soak 或执行器动态试验 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+图~\ref{fig:ch05-pc104-cross-layer-fault} 显示 Bit13 保留自治但切换重定位，Bit5/Bit14 撤销自治并输出 IDLE；三类执行量证据在整个同步窗口均为零。图中的故障位短时回落来自固件正常分支清零与注入线程周期维持之间的调度相位，不改变仲裁与任务层已观测到故障的判定。Bit14 清除后至虚线所示显式重授权前，系统保持 DENIED，说明“故障消失”不会自动恢复自治。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.66\textheight,keepaspectratio,alt={真实 PC104 的 Bit13、Bit5 和 Bit14 故障字、ROS2 仲裁状态、行为树任务输出与零执行器证据的同步时间线}]{hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf}
+\caption{真实 PC104--ROS2--行为树同步故障响应时间线（零执行器）}\label{fig:ch05-pc104-cross-layer-fault}
+\end{figure}
+\FloatBarrier
+
+30 min 稳态与修正后的 18/18 故障序列来自两个独立运行包。长时包完整的 1800 s \texttt{active\_soak} 子区间通过，但在稳态结束后的旧 Bit14 clear-hold 附加序列发生一项调度竞争，故原始整包仍保留 \texttt{failed\_acceptance}；修正恢复路径后的短时包单独给出 18/18。本文不把两次运行伪装为一次全通过长时故障实验。图~\ref{fig:ch05-pc104-cross-layer-soak} 给出稳态区间的逐分钟状态与上行频率；其中底部 RSS 是旧 runner 对启动根进程的采样，bridge/decision 绝对值不代表完整节点进程树，只用于检查该代理序列是否随时间增长，后续 runner 已改为递归聚合进程树。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.62\textheight,keepaspectratio,alt={真实 PC104 和 ROS2 零执行器全栈 30 分钟稳态中的仲裁采样率、ACTIVE 比率、PC104 上行频率和旧根进程 RSS 趋势}]{hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf}
+\caption{真实 PC104--ROS2 零执行器全栈 30 min 稳态（RSS 为旧启动根进程口径）}\label{fig:ch05-pc104-cross-layer-soak}
+\end{figure}
+\FloatBarrier
+
+上述同步链使必须实验 5 从“分层证据相互补充”提升为“真实执行脑到任务层的同步零执行器安全链已验证”。台架上行总电压为 0.0 V，故本通信链实验把电压门限临时隔离为 \(-1.0\text{ V}\)，不构成电源健康验收；DVL 字段也采用临时安全隔离值。执行机构动态响应、真实 ADC/DVL 输入、Jetson 热稳定、严格单向物理时延及整艇水域安全仍不在本实验范围内。
 
 \subsection{Jetson Orin NX 在线求解实时性实测}\label{sec:ch05-jetson-realtime}
 
-为把目标平台算力证据与网络到达时序、完整 ROS2 链路时延区分开，本文在 Jetson Orin NX 的 25 W、8 核模式下，对当前 \(N=20\)、\(\Delta t=0.2\text{ s}\) 的 MPC 求解入口实施独立微基准。测试对应仓库提交 \texttt{8419691}；正式运行前记录 5 s 空闲基线，预检未发现软件安装、编译或桌面监控等已知竞争进程。稳态 cold/warm 各运行 200 次，\(8\text{ m}\) 初始深度到 \(3\text{ m}\) 目标深度的约束压力档各运行 50 次。表~\ref{tab:ch05-jetson-realtime} 给出 wall-clock 统计；PC104 行来自独立的 30 s host-relay 原始记录，其数值类型明确为上行到达间隔。
+为把目标平台算力证据与网络到达时序、完整 ROS2 链路时延区分开，本文在 Jetson Orin NX 的 25 W、8 核模式下，对当前 \(N=20\)、\(\Delta t=0.2\text{ s}\) 的 MPC 求解入口实施独立微基准。测试对应仓库提交 \texttt{8419691}；正式运行前记录 5 s 空闲基线，预检未发现软件安装、编译或桌面监控等已知竞争进程。稳态 cold/warm 各运行 200 次，\(8\text{ m}\) 初始深度到 \(3\text{ m}\) 目标深度的约束压力档各运行 50 次。表~\ref{tab:ch05-jetson-realtime} 给出 wall-clock 统计；PC104 三行来自独立的 300 s host-relay 固件回显记录，并分别标出到达间隔、应用路径 RTT 和固件内部处理时间。
 
 \begin{table}[htbp]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{2.7pt}
-\caption{Jetson Orin NX 求解器微基准与 PC104 上行到达间隔}\label{tab:ch05-jetson-realtime}
+\caption{Jetson Orin NX 求解器微基准与 PC104 固件回显时序}\label{tab:ch05-jetson-realtime}
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}llrrrrrrrl@{}}
 \toprule
@@ -1056,7 +1160,9 @@ Jetson 与 PC104/VxWorks 之间的二进制通信链路需要在实物环境下�
 约束压力 & cold & 50 & 81.161 & 81.095 & 122.342 & 140.531 & 142.144 & 100\% & \texttt{Solve\_Succeeded} \\
 约束压力 & warm & 50 & 74.706 & 69.666 & 119.795 & 139.957 & 142.265 & 100\% & \texttt{Solve\_Succeeded} \\
 \midrule
-PC104 上行 & host-relay & 449 & 66.624 & 57.983 & 85.710 & 85.939 & 86.290 & -- & 到达间隔，非单向/RTT \\
+PC104 上行 & host-relay & 4504 & 66.601 & 58.005 & 85.721 & 86.095 & 88.580 & -- & 到达间隔 \\
+PC104 回显 & first echo & 1001 & 266.295 & 264.678 & 313.965 & 315.607 & 318.550 & -- & 应用路径 RTT \\
+PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -- & 同时钟域时差 \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -1070,9 +1176,9 @@ PC104 上行 & host-relay & 449 & 66.624 & 57.983 & 85.710 & 85.939 & 86.290 & -
 \end{figure}
 \FloatBarrier
 
-同一短时 clean run 共记录 60 个整机资源样本，覆盖 30.224 s；CPU mean/p95/max 为 39.9\%/60.0\%/75.1\%，内存 mean/max 为 4838.2/4918.6 MiB，最高温度为 57.4\textdegree C，0.5 s 采样间隔的 p95 为 0.505 s。CPU 分阶段均值为 idle/steady/stress=34.3\%/42.6\%/38.3\%。这些 CPU/GPU、内存和温度是 Jetson 整机遥测，不是求解器进程独占归因；空闲段本身仍含桌面负载，且 30 s 量级测试不能替代 30 min 全栈热稳定实验。
+同一短时 clean run 共记录 60 个整机资源样本，覆盖 30.224 s；CPU mean/p95/max 为 39.9\%/60.0\%/75.1\%，内存 mean/max 为 4838.2/4918.6 MiB，最高温度为 57.4\textdegree C，0.5 s 采样间隔的 p95 为 0.505 s。CPU 分阶段均值为 idle/steady/stress=34.3\%/42.6\%/38.3\%。这些 CPU/GPU、内存和温度是 Jetson 整机遥测，不是求解器进程独占归因；空闲段本身仍含桌面负载。§\ref{sec:ch05-5-3-1} 已完成当前容器--真实 PC104 拓扑的 30 min 通信与控制软件栈稳态，但未记录 Jetson \texttt{tegrastats} 温度、频率和功耗，故不能替代目标机 thermal soak。
 
-通信侧 449 个有效上行到达间隔的 p50/p95/p99 为 57.983/85.710/85.944 ms。帧号审计中的 150 次零增量是重复帧号，而非 150 帧丢失；大于 1 的前向跨帧为 0、估算丢帧为 0。求解 wall time 与该到达间隔来自不同链路和时钟口径，二者不得相加为 ADC--EKF--行为树--控制--PC104 的端到端时延。当前结果关闭的是目标平台求解器的短时可运行性与复现入口，不关闭完整 ROS2 调度、长时热稳定或 Jetson--PC104 单向物理时延；这些边界集中收束于 §\ref{sec:ch05-5-6}，后续刻度见 §\ref{sec:ch06-6-3}。
+通信侧 4504 个有效上行到达间隔的 p50/p95/p99 为 58.005/85.721/86.095 ms。帧号审计中的 1501 次零增量是重复状态帧，而非 1501 帧丢失；大于 1 的前向跨帧为 0、估算丢帧为 0。first-echo RTT 与求解 wall time 来自不同执行路径，仍不得相加为 ADC--EKF--行为树--控制--PC104 的完整端到端时延。当前结果关闭的是目标平台求解器短时可运行性、真实 PC104 正常通信与固件回显、PC104 故障到行为树的同步零执行器触发链，以及当前拓扑 30 min 稳态；尚未关闭真实 ADC/DVL 输入下的完整调度、Jetson thermal soak 或 Jetson--PC104 单向物理时延。这些边界集中收束于 §\ref{sec:ch05-5-6}，后续刻度见 §\ref{sec:ch06-6-3}。
 
 \subsection{TMR8637 本体与 SK2301 数采链噪声表征}\label{sec:ch05-5-3-2}
 
@@ -1240,10 +1346,10 @@ PC104 上行 & host-relay & 449 & 66.624 & 57.983 & 85.710 & 85.939 & 86.290 & -
 
 本节把全章实验的负结果、口径限制和不可外推项集中收束为六个问题域：磁探测计量与验收口径、ES-EKF 统计一致性、在线先验与几何前提、UA/R13-v2 控制证据、CBF/R22 与 PVS 原生闭环、实物通信与端到端时延。各域的边界归因、已采取处置与可写结论、剩余验证逐条汇总于附录表~\ref{tab:ch05-negative-results}；\S\ref{sec:ch05-5-5}、\S\ref{sec:ch05-5-ctrl}、\S\ref{sec:ch05-e2e} 各结果主线只保留正向主结果与最小必要限定，相同局限统一指向该表。需要强调的是，该表``剩余验证''列并非未知缺口清单，而是已按可独立交付的实物证据链拆解的推进路径——每项均可在当前仿真结论之上增量验证，其向实物层推进的路线见 §\ref{sec:ch06-6-3}，不构成对已有结论的否定。
 
-综合这六个问题域可见，当前方法的主要算法链已经闭合，Jetson 目标平台的独立求解器短时 clean run 也已给出稳态周期余量；剩余工作集中在统计标定、分源置信映射、原生耦合闭环、ADC--EKF--行为树--控制--PC104 全栈时序、长时热稳定和系统级计量验证。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
+综合这六个问题域可见，当前方法的主要算法链已经闭合，Jetson 目标平台的独立求解器短时 clean run 已给出稳态周期余量，PC104 通信、watchdog、故障位到 ROS2 仲裁与行为树的同步零执行器安全链以及当前拓扑 30 min 稳态也已形成半实物证据；剩余工作集中在统计标定、分源置信映射、原生耦合闭环、真实 ADC/DVL/电压输入下的完整执行量时序、Jetson thermal soak 和系统级计量验证。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
 
 \section{本章小结}\label{sec:ch05-5-8}
 
 本章把实验结果收束为三条仿真主线和一个面向实物的证据容器。状态估计主线说明，ES-EKF 在多扰动、多随机种子条件下能够保持连续输出，并通过分源 NIS、长时程相位敏感性、实测背景回放和 Huber 更新把统计一致性与观测失配边界拆开说明；控制与安全主线说明，地形跟随、复杂路径预瞄、UA-MPC、CBF、安全仲裁和原生因子闭环共同构成可审计的近底巡检控制证据，但不同控制层级的优势区必须分别解释，不能把某一单项指标扩展为全场景最优；端到端海缆巡检数字孪生主线说明，系统在干净先验、先验畸变和满足磁观测前提的闭环恢复条件下完成了行业标准风格的验收判定，并把横偏、埋深、不确定度、置信度、运行状态和验收标志组织成同一运行话题链；ADC--TMR 噪声回放主线进一步证明，真实采集链背景可以以可追溯的 ROS2 量测输入进入闭环，而不改变本文对安全边界的审慎结论。
 
-三条仿真主线之外，低成本磁采集、SK2301 窄带等效分辨率、45 Hz 复 I/Q 联合反演、磁外参标定链路、PC104 时序探针和双脑通信逻辑为实物部署提供了物理锚点。它们当前支撑的是``关键链路可实现、接口可复用、部署路径可分阶段推进''，而不是完整水下自主巡检已经闭合。全章因此形成的结论边界是清晰的：算法链路已在可重复仿真与半实物口径下闭合，实物层还需沿磁采集链、等效海缆扫描、磁卫生、Jetson 实时性、声呐接口替代和 PC104/VxWorks 接入逐级补强。统计、场景、接口和计量边界已集中于 §\ref{sec:ch05-5-6} 与附录表~\ref{tab:ch05-negative-results}，不在本章小结重复展开。
+三条仿真主线之外，低成本磁采集、SK2301 窄带等效分辨率、45 Hz 复 I/Q 联合反演、磁外参标定链路、PC104 时序探针和同步双脑安全实验为实物部署提供了物理锚点。它们当前支撑的是``关键链路可实现、接口可复用、真实执行脑故障可同步驱动 ROS2 仲裁与任务降级、零执行器软件栈可稳定运行 30 min''，而不是完整水下自主巡检已经闭合。全章因此形成的结论边界是清晰的：算法链路已在可重复仿真与半实物口径下闭合，真实 PC104 通信、watchdog 与跨层状态链已完成验收；实物层还需沿磁采集链、等效海缆扫描、磁卫生、Jetson 热稳定、声呐接入、执行机构静态/动态响应和水域试验逐级补强。统计、场景、接口和计量边界已集中于 §\ref{sec:ch05-5-6} 与附录表~\ref{tab:ch05-negative-results}，不在本章小结重复展开。

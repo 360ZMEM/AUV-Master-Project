@@ -11,16 +11,17 @@
 | 层级 | 已完成 | 能支持什么 | 不能外推什么 |
 |---|---|---|---|
 | native PVS 执行链 | `CONTROL-NATIVE-PVS-EXECUTION-CHAIN-SMOKE`，约 50 s constant-depth/heading smoke | ROS2 controller/MPC/arbiter 可经 `protocol_udp` 与 Mock AMD AUTO dispatch 进入 PVS `depthHeadingAutopilot()`，且未走 `kinematic_setpoint` proxy | 不能替代 PC104/VxWorks 真机接收、调度、执行器响应、R22 native PVS 性能矩阵或海试 |
-| PC104 UDP 到达间隔 | `HARDWARE-PC104-UDP-TIMING-PROBE`，30 s host-relay 零推力记录，450 帧 `$AUV` 上行，p95 到达间隔 85.710 ms | 真实 PC104 上行可经 host relay 进入容器；可报告上行到达频率、到达间隔、parse error 和 frame gap | 无共享时钟或 firmware echo 时，不能报告 Jetson--PC104 单向物理时延或端到端闭环延迟 |
+| Jetson 求解器与短时资源 | Orin NX 25 W/8 核 clean run，稳态 cold/warm 各 200 次、压力档各 50 次 | 稳态 warm/cold p95 为 34.118/36.560 ms 且成功率 100%；压力档越过 50 ms 周期的边界已量化 | 独立求解器微基准不是 ROS2 全栈调度；当前容器--PC104 的 30 min 稳态也不替代 Jetson `tegrastats` thermal soak |
+| PC104 UDP、故障同步与长时稳态 | 300 s 正常链路、79.67 s 板端故障矩阵、18/18 跨层同步故障 run，以及独立 1800 s 零执行器稳态区间 | 真实 PC104 双向链路、应用路径 RTT、内部处理时间、Bit5/13/14 到 ROS2 仲裁与 BT 的同步映射、显式重授权和 30 min 通信/软件栈稳态均可报告 | 无共享时钟时不能拆分单向物理时延；未覆盖真实电压/DVL、非零执行器响应或 Jetson 热稳定 |
 | handoff 基础设施 | R08/R09 dry-run、`scripts/real_deployment/00..05`、`docs/real_deployment/01..05` | 现场执行脚本、返回包结构、阶段化安全流程已具备 | dry-run 不是 Jetson 热稳定、TMR 完整链路或 S1/S2 实物验收 |
 
 因此，下一步 handoff 的任务不是“重新证明算法正确”，而是把已经建立的算法与仿真证据迁移到真实硬件接口上，逐层关闭以下论文边界：
 
-1. Jetson 目标平台算力、温度和长时稳定性仍未由真机 bundle 闭合；
-2. PC104/VxWorks 真实 S1/S2 链路、字节序、scale、故障位、急停和执行器极性仍未完整验收；
+1. Jetson 目标平台的短时求解器与资源曲线已闭合；当前拓扑已完成 30 min PC104--ROS2 零执行器稳态，但 Jetson 温度、频率和功耗口径的 thermal soak 仍待验证；
+2. PC104/VxWorks 的 S1 零执行器通信、watchdog、故障位与 PC104--ROS2--BT 同步安全链已完成半实物验收；S2 急停和执行器极性仍未执行；
 3. TMR/SK2301 完整采集链仍停留在 R08 dry-run 与 ADC 子链路 ENOB，尚无 M0/M1/M4 真采集 bundle；
 4. S3/S4/S5 水中影子导航、单回路闭环和全自主巡检仍是部署 SOP，不是已完成实物结果；
-5. 单向物理时延必须等待 firmware echo 或共享时钟，不得由 host-relay 到达间隔替代。
+5. firmware echo 已给出 host-relay 应用路径 RTT；单向物理时延仍须共享时钟或双向时间同步，不得由 RTT 或到达间隔拆分替代。
 
 ---
 
@@ -63,9 +64,13 @@
 - mock dry-run 产物路径和 report 结构可读；
 - 现场操作者只需要替换 target、时长和 IP 参数。
 
-### H1：R23 Jetson clean benchmark 与 30 min soak
+### H1：PC104--ROS2 30 min 稳态已完成，继续 Jetson thermal soak
 
-对应边界：当前 `JETSON-R09-HANDOFF` 是 dry-run，不能写 Jetson 真机实时性、热稳定或功耗。
+对应边界：Jetson 真机短时 clean benchmark 已完成；当前容器--PC104 拓扑另已
+完成 1800 s ROS2 bridge/decision/fan-out/rosbag 零执行器稳态，124841 个
+ArbiterStatus 样本的 ACTIVE 比率为 1.0，目标故障状态样本和非零推进反馈均为 0。
+这关闭的是当前通信与控制软件栈的 30 min 稳态边界，不提供 Jetson `tegrastats`
+温度、频率或进程独占功耗，故 Jetson thermal soak 仍需在目标机上执行。
 
 最小矩阵：
 
@@ -75,12 +80,13 @@
 | combined short | 25 W / 8 核 | 120 s | 同上 |
 | MPC steady | 固定工作点 | 200 samples | solver wall time、iteration、fallback |
 | MPC stress | 约束压力工作点 | 50 samples | solver tail latency |
-| combined soak | 长时运行 | 30 min | 温度、频率、内存、进程与 bag |
+| PC104--ROS2 zero-actuator soak | 当前容器/relay/真实 PC104 | 30 min | 已完成；bag、状态、上行帧率、零输出和旧根进程 RSS |
+| Jetson combined thermal soak | 25 W / 8 核目标机 | 30 min | 待执行；`tegrastats` 温度、频率、功耗、进程树与 bag |
 
 完成后可写：
 
-- 目标 Jetson 平台在指定功耗/核心配置下的算力余量、热稳定和求解器时序；
-- 与 20 Hz ROS 控制周期、10 Hz bridge/VxWorks 周期和 0.3 s 网络接收周期的预算对齐。
+- 当前容器--PC104 通信与控制软件栈在零执行器条件下的 30 min 稳态；
+- Jetson thermal soak 完成后，目标平台在指定功耗/核心配置下的热稳定与完整资源曲线。
 
 仍不能写：
 
@@ -92,7 +98,7 @@
 
 对应 SOP：S1。
 
-在已有 30 s host-relay 结果基础上，建议补一轮最终拓扑复核：
+已有 300 s host-relay 固件回显结果完成正常链路基线；最终 Jetson 原生部署仍需按下表复核：
 
 | 子项 | 要求 |
 |---|---|
@@ -114,10 +120,11 @@
 - 非零执行器响应；
 - S3/S4 闭环性能。
 
-若论文必须讨论单向 latency，本阶段必须额外增加以下任一机制：
+firmware echo 已完成，只能给出应用路径 RTT。若论文必须讨论单向 latency，
+还必须额外增加以下任一机制：
 
-1. PC104 firmware echo：把收到 `$CKTH` 的序号和 PC104 时间戳回写 `$AUV`；
-2. 共享时钟：Jetson/PC104 PTP/NTP 可信同步，并记录同步误差；
+1. 共享时钟：Jetson/PC104 PTP/NTP 可信同步，并记录同步误差；
+2. 双向时间同步：估计 offset、skew 与不对称路径误差；
 3. 宿主机网卡硬件时间戳：作为旁路证据，但仍需解释端到端定义。
 
 ### H3：R25-S2 静态执行器与急停
@@ -327,9 +334,9 @@ TMR/SK2301 不是 S1/S2 的前置，但它是“海缆巡检验收”的前置�
 |---|---|
 | R23 | 保留 Jetson dry-run 为基础设施，不写真机算力/热稳定结论 |
 | R24/R26 | 保留 ADC ENOB 和 TMR 模组报告，不写完整采集链验收 |
-| R25 | 保留 PC104 host-relay 30 s 到达间隔，不写 S1/S2 完整链路 |
+| R25 故障/执行器部分 | 保留 PC104 host-relay 300 s 固件回显正常链路，不写故障安全闭环或 S2 执行器验收 |
 | S3/S4/S5 | 写为分阶段部署路线，不写实物闭环或全自主结果 |
-| firmware echo | 不报告单向物理 latency |
+| 共享时钟 | 保留 firmware echo 应用 RTT，不报告单向物理 latency |
 
 ---
 
@@ -337,7 +344,7 @@ TMR/SK2301 不是 S1/S2 的前置，但它是“海缆巡检验收”的前置�
 
 ```text
 H0 handoff 包冻结
-  -> H1 R23 Jetson clean benchmark / 30 min soak
+  -> H1 R23 Jetson thermal soak（PC104--ROS2 零执行器 30 min 已完成）
   -> H2 R25-S1 PC104 300 s 通信审计
   -> H3 R25-S2 静态执行器与急停
   -> H4 S3 影子导航

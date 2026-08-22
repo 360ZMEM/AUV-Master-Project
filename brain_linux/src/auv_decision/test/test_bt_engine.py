@@ -12,6 +12,7 @@ def test_switch_to_parallel_when_confidence_high():
             leak_level=0,
             battery_low=False,
             anomaly_detected=False,
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -28,6 +29,7 @@ def test_switch_to_zigzag_when_confidence_low():
             leak_level=0,
             battery_low=False,
             anomaly_detected=False,
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -89,6 +91,7 @@ def test_seabed_proximity_slows_down_goal():
             seabed_clearance_m=0.6,
             seabed_proximity_warning=True,
             seabed_penetration_warning=False,
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -107,6 +110,7 @@ def test_anomaly_decorator_slow_down_parallel_speed():
             leak_level=0,
             battery_low=False,
             anomaly_detected=True,
+            auto_state='ACTIVE',
         )
     )
     engine.tick()
@@ -115,3 +119,42 @@ def test_anomaly_decorator_slow_down_parallel_speed():
     assert goal['mode'] == 'PARALLEL_TRACKING'
     # 原始并行速度为 0.6，降速系数 0.4，期望 0.24
     assert abs(goal['target_speed_mps'] - 0.24) < 1e-6
+
+
+def test_execution_brain_communication_fault_forces_safe_hover() -> None:
+    engine = DecisionTreeEngine(confidence_threshold=0.7)
+    engine.set_sensor_status(
+        SensorStatusData(
+            confidence=0.9,
+            auto_state='ACTIVE',
+            execution_fault_word=(1 << 14),
+            communication_link_ok=False,
+        )
+    )
+
+    engine.tick()
+    goal = engine.get_target_motion_state()
+
+    assert goal is not None
+    assert goal['mode'] == 'IDLE'
+    assert goal['target_speed_mps'] == 0.0
+    assert 'fault_word=0x00004000' in goal['note']
+
+
+def test_execution_brain_dvl_loss_routes_to_relocalization_search() -> None:
+    engine = DecisionTreeEngine(confidence_threshold=0.7)
+    engine.set_sensor_status(
+        SensorStatusData(
+            confidence=0.9,
+            auto_state='ACTIVE',
+            execution_fault_word=(1 << 13),
+            velocity_aiding_valid=False,
+        )
+    )
+
+    engine.tick()
+    goal = engine.get_target_motion_state()
+
+    assert goal is not None
+    assert goal['mode'] == 'ZIGZAG_SEARCH'
+    assert 'fault_word=0x00002000' in goal['note']

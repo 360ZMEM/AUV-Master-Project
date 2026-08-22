@@ -67,6 +67,9 @@ CSV_FIELDS = (
     "pc104_downlink_echo_valid",
     "pc104_downlink_echo_frame",
     "pc104_downlink_recv_uptime_ms",
+    "pc104_downlink_echo_event_first",
+    "pc104_downlink_echo_event_paired",
+    "pc104_downlink_echo_age_ms",
     "pc104_downlink_recv_to_pack_ms",
     "downlink_echo_rtt_ms",
     "control_mode_byte",
@@ -198,18 +201,34 @@ def summarize(rows: list[dict[str, Any]], args: argparse.Namespace) -> dict[str,
     ]
     valid_pc104 = [row for row in uplinks if int(row.get("pc104_time_valid") or 0) == 1]
     valid_echo = [row for row in uplinks if int(row.get("pc104_downlink_echo_valid") or 0) == 1]
+    unique_echo = [
+        row
+        for row in valid_echo
+        if int(row.get("pc104_downlink_echo_event_first") or 0) == 1
+    ]
+    paired_echo = [
+        row
+        for row in unique_echo
+        if int(row.get("pc104_downlink_echo_event_paired") or 0) == 1
+    ]
     echo_rtts = [
         float(row["downlink_echo_rtt_ms"])
-        for row in valid_echo
+        for row in paired_echo
         if str(row.get("downlink_echo_rtt_ms", "")).strip()
     ]
     recv_to_pack = [
         float(row["pc104_downlink_recv_to_pack_ms"])
-        for row in valid_echo
+        for row in paired_echo
         if str(row.get("pc104_downlink_recv_to_pack_ms", "")).strip()
     ]
+    echo_ages = [
+        float(row["pc104_downlink_echo_age_ms"])
+        for row in valid_echo
+        if str(row.get("pc104_downlink_echo_age_ms", "")).strip()
+    ]
     elapsed = float(args.duration)
-    sequence_gap_count = sum(1 for gap in frame_gaps if gap != 1)
+    duplicate_frame_count = sum(1 for gap in frame_gaps if gap == 0)
+    sequence_gap_count = sum(1 for gap in frame_gaps if gap > 1)
     estimated_lost_frames = sum(max(0, gap - 1) for gap in frame_gaps)
     status = "ok" if uplinks and not parse_errors else "parse_errors" if parse_errors else "no_uplink"
 
@@ -237,7 +256,9 @@ def summarize(rows: list[dict[str, Any]], args: argparse.Namespace) -> dict[str,
         "uplink_interarrival_p50_ms": percentile(uplink_intervals, 0.50),
         "uplink_interarrival_p95_ms": percentile(uplink_intervals, 0.95),
         "uplink_interarrival_p99_ms": percentile(uplink_intervals, 0.99),
+        "uplink_interarrival_p999_ms": percentile(uplink_intervals, 0.999),
         "uplink_interarrival_max_ms": max(uplink_intervals) if uplink_intervals else float("nan"),
+        "uplink_duplicate_frame_count": duplicate_frame_count,
         "uplink_sequence_gap_count": sequence_gap_count,
         "uplink_estimated_lost_frames": estimated_lost_frames,
         "pc104_time_valid_rate": len(valid_pc104) / len(uplinks) if uplinks else float("nan"),
@@ -245,13 +266,24 @@ def summarize(rows: list[dict[str, Any]], args: argparse.Namespace) -> dict[str,
         "pc104_uptime_delta_std_ms": finite_std(pc104_deltas),
         "pc104_uptime_delta_p95_ms": percentile(pc104_deltas, 0.95),
         "pc104_downlink_echo_valid_rate": len(valid_echo) / len(uplinks) if uplinks else float("nan"),
+        "pc104_downlink_echo_unique_event_count": len(unique_echo),
+        "pc104_downlink_echo_paired_event_count": len(paired_echo),
+        "pc104_downlink_echo_pairing_rate": (
+            len(paired_echo) / len(sends) if sends else float("nan")
+        ),
         "downlink_echo_rtt_p50_ms": percentile(echo_rtts, 0.50),
         "downlink_echo_rtt_p95_ms": percentile(echo_rtts, 0.95),
+        "downlink_echo_rtt_p99_ms": percentile(echo_rtts, 0.99),
+        "downlink_echo_rtt_p999_ms": percentile(echo_rtts, 0.999),
         "downlink_echo_rtt_max_ms": max(echo_rtts) if echo_rtts else float("nan"),
         "pc104_downlink_recv_to_pack_p50_ms": percentile(recv_to_pack, 0.50),
         "pc104_downlink_recv_to_pack_p95_ms": percentile(recv_to_pack, 0.95),
+        "pc104_downlink_recv_to_pack_p99_ms": percentile(recv_to_pack, 0.99),
+        "pc104_downlink_recv_to_pack_p999_ms": percentile(recv_to_pack, 0.999),
         "pc104_downlink_recv_to_pack_max_ms": max(recv_to_pack) if recv_to_pack else float("nan"),
+        "pc104_downlink_echo_age_p95_ms": percentile(echo_ages, 0.95),
         "firmware_echo_rtt_available": bool(echo_rtts),
+        "firmware_echo_application_rtt_claim": bool(echo_rtts),
         "one_way_latency_claim": False,
         "round_trip_latency_claim": False,
         "capability_gate_status": "passed" if status == "ok" else "failed",
@@ -274,15 +306,20 @@ def write_report(output_dir: Path, summary: dict[str, Any]) -> None:
         f"- Parsed uplink frames: `{summary['uplink_count']}`",
         f"- Uplink observed rate: `{float(summary['observed_uplink_rate_hz']):.3f} Hz`",
         f"- Uplink inter-arrival p95: `{float(summary['uplink_interarrival_p95_ms']):.3f} ms`",
-        f"- Sequence gap count: `{summary['uplink_sequence_gap_count']}`",
+        f"- Duplicate uplink frames: `{summary['uplink_duplicate_frame_count']}`",
+        f"- Forward sequence gaps: `{summary['uplink_sequence_gap_count']}`",
         f"- Firmware echo valid rate: `{float(summary['pc104_downlink_echo_valid_rate']):.3f}`",
-        f"- Firmware echo RTT p95: `{float(summary['downlink_echo_rtt_p95_ms']):.3f} ms`",
-        f"- PC104 receive-to-pack p95: `{float(summary['pc104_downlink_recv_to_pack_p95_ms']):.3f} ms`",
+        f"- Unique/paired firmware echo events: `{summary['pc104_downlink_echo_unique_event_count']}`"
+        f"/`{summary['pc104_downlink_echo_paired_event_count']}`",
+        f"- First-echo application RTT p95: `{float(summary['downlink_echo_rtt_p95_ms']):.3f} ms`",
+        f"- PC104 receive-to-first-pack p95: `{float(summary['pc104_downlink_recv_to_pack_p95_ms']):.3f} ms`",
         "",
         "Boundary: this probe records packet-level host timing, uplink frame gaps, "
-        "PC104 uptime monotonicity, and firmware echo RTT when the VxWorks echo "
-        "extension is present. Without a synchronized Jetson--PC104 clock, it "
-        "must not be reported as strict one-way physical latency.",
+        "PC104 uptime monotonicity, and first-observation firmware echo RTT when "
+        "the VxWorks echo extension is present. The RTT includes container, "
+        "Docker Desktop, host relay, network, firmware receive, and periodic "
+        "uplink scheduling. Without a synchronized Jetson--PC104 clock, it must "
+        "not be reported as strict one-way physical latency.",
         "",
         "Primary artifacts: `udp_timing_samples.csv`, `udp_timing_summary.csv`, "
         "`metrics.csv`, `status.json`.",
@@ -310,6 +347,7 @@ def run_probe(args: argparse.Namespace) -> tuple[list[dict[str, Any]], dict[str,
     prev_uplink_frame: int | None = None
     prev_pc104_uptime_ms: int | None = None
     send_mono_by_frame: dict[int, float] = {}
+    seen_echo_events: set[tuple[int, int]] = set()
 
     try:
         while time.monotonic() < end_time:
@@ -394,17 +432,30 @@ def run_probe(args: argparse.Namespace) -> tuple[list[dict[str, Any]], dict[str,
                 prev_uplink_frame = int(telemetry.frame_number)
                 echo_rtt_ms = ""
                 recv_to_pack_ms = ""
+                echo_age_ms = ""
+                echo_event_first = 0
+                echo_event_paired = 0
                 if telemetry.pc104_downlink_echo_valid:
                     echoed_frame = int(telemetry.pc104_downlink_echo_frame)
+                    echoed_rx_uptime_ms = int(telemetry.pc104_downlink_recv_uptime_ms)
                     sent_mono = send_mono_by_frame.get(echoed_frame)
                     if sent_mono is not None and recv_mono >= sent_mono:
-                        echo_rtt_ms = (recv_mono - sent_mono) * 1000.0
+                        echo_age_ms = (recv_mono - sent_mono) * 1000.0
                     if telemetry.pc104_time_valid:
                         recv_to_pack_candidate = (
                             int(telemetry.pc104_uptime_ms)
-                            - int(telemetry.pc104_downlink_recv_uptime_ms)
+                            - echoed_rx_uptime_ms
                         )
-                        if recv_to_pack_candidate >= 0:
+                    else:
+                        recv_to_pack_candidate = -1
+                    echo_key = (echoed_frame, echoed_rx_uptime_ms)
+                    if echo_key not in seen_echo_events:
+                        seen_echo_events.add(echo_key)
+                        echo_event_first = 1
+                        if sent_mono is not None and recv_mono >= sent_mono:
+                            echo_event_paired = 1
+                            echo_rtt_ms = echo_age_ms
+                        if echo_event_paired and recv_to_pack_candidate >= 0:
                             recv_to_pack_ms = recv_to_pack_candidate
                 rows.append(
                     {
@@ -420,6 +471,9 @@ def run_probe(args: argparse.Namespace) -> tuple[list[dict[str, Any]], dict[str,
                         "pc104_downlink_echo_valid": int(telemetry.pc104_downlink_echo_valid),
                         "pc104_downlink_echo_frame": int(telemetry.pc104_downlink_echo_frame),
                         "pc104_downlink_recv_uptime_ms": int(telemetry.pc104_downlink_recv_uptime_ms),
+                        "pc104_downlink_echo_event_first": echo_event_first,
+                        "pc104_downlink_echo_event_paired": echo_event_paired,
+                        "pc104_downlink_echo_age_ms": echo_age_ms,
                         "pc104_downlink_recv_to_pack_ms": recv_to_pack_ms,
                         "downlink_echo_rtt_ms": echo_rtt_ms,
                         "control_mode_byte": int(telemetry.control_mode_byte),
@@ -484,9 +538,12 @@ def main() -> int:
             "safe_zero_thrust_downlink": not args.receive_only,
             "one_way_latency_claim": False,
             "round_trip_latency_claim": False,
+            "firmware_echo_application_rtt_claim": "conditional_on_valid_echo",
             "notes": (
-                "Use on the Jetson/PC104 subnet. Without parsed uplink frames the "
-                "bundle is a connectivity negative result, not physical timing evidence."
+                "Use on the Jetson/PC104 subnet. Firmware echo RTT is an "
+                "application-path round trip and not a strict one-way physical "
+                "latency. Without parsed uplink frames the bundle is a "
+                "connectivity negative result, not physical timing evidence."
             ),
         },
     )

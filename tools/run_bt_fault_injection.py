@@ -43,6 +43,7 @@ import json
 import math
 import sys
 import time
+import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
@@ -243,7 +244,8 @@ def _derive_role(raw: str, target: dict, ticks_in_track: int, ever_tracked: bool
 
 
 def run_scenario(scenario: Scenario, seed: int) -> dict[str, object]:
-    rng = np.random.default_rng(seed * 7919 + hash(scenario.key) % 104729)
+    scenario_seed = zlib.crc32(scenario.key.encode("utf-8")) % 104729
+    rng = np.random.default_rng(seed * 7919 + scenario_seed)
     engine = DecisionTreeEngine(
         confidence_threshold=CONFIDENCE_THRESHOLD,
         confidence_hysteresis=CONFIDENCE_HYSTERESIS,

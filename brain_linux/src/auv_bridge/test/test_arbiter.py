@@ -229,6 +229,59 @@ def test_force_remote_rewrites_autonomous_request_to_remote() -> None:
     assert decision.command_payload[KEY_THRUST] == 3.0
 
 
+def test_internal_force_remote_does_not_refresh_pc_link_timestamp() -> None:
+    arbiter = CommandArbiter(
+        mpc_timeout_s=0.5,
+        pc_soft_warning_s=1.0,
+        pc_timeout_s=1.5,
+    )
+    arbiter.update_pc_raw_command(
+        {
+            KEY_CONTROL_MODE_BYTE: int(ControlModeByte.JETSON_PROTOCOL),
+            KEY_WORK_INSTRUCTION: int(WorkInstruction.NONE),
+            KEY_THRUST: 0.0,
+            KEY_LEFT: 0.0,
+            KEY_RIGHT: 0.0,
+            KEY_TOP: 0.0,
+            KEY_BOTTOM: 0.0,
+        },
+        now=10.0,
+    )
+    assert arbiter.check_pc_link_health(now=11.6) == "LOST"
+
+    decision = arbiter.force_remote(
+        {
+            KEY_CONTROL_MODE_BYTE: int(ControlModeByte.REMOTE_CONTROL),
+            KEY_WORK_INSTRUCTION: int(WorkInstruction.TASK_CANCEL),
+            KEY_THRUST: 0.0,
+            KEY_LEFT: 0.0,
+            KEY_RIGHT: 0.0,
+            KEY_TOP: 0.0,
+            KEY_BOTTOM: 0.0,
+        },
+        now=11.6,
+        refresh_pc_timestamp=False,
+    )
+
+    assert decision.active_arbiter == ArbiterMode.REMOTE
+    assert decision.command_payload[KEY_THRUST] == 0.0
+    assert arbiter.check_pc_link_health(now=11.7) == "LOST"
+
+    arbiter.update_pc_raw_command(
+        {
+            KEY_CONTROL_MODE_BYTE: int(ControlModeByte.REMOTE_CONTROL),
+            KEY_WORK_INSTRUCTION: int(WorkInstruction.NONE),
+            KEY_THRUST: 0.0,
+            KEY_LEFT: 0.0,
+            KEY_RIGHT: 0.0,
+            KEY_TOP: 0.0,
+            KEY_BOTTOM: 0.0,
+        },
+        now=12.0,
+    )
+    assert arbiter.check_pc_link_health(now=12.0) == "OK"
+
+
 def test_default_remote_payload_can_preserve_pc104_bench_safety_params() -> None:
     arbiter = CommandArbiter(
         mpc_timeout_s=0.5,

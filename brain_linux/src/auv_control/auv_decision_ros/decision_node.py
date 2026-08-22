@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import math
 
 from nav_msgs.msg import Odometry
@@ -201,7 +202,14 @@ class AUVDecisionNode(Node):
 
     def _on_sensor_status(self, msg: SensorStatus) -> None:
         """接收传感器状态并注入决策引擎的黑板缓存。"""
-        status = sensor_msg_to_core(msg)
+        previous = self.latest_sensor_status
+        status = replace(
+            sensor_msg_to_core(msg),
+            auto_state=previous.auto_state,
+            execution_fault_word=previous.execution_fault_word,
+            communication_link_ok=previous.communication_link_ok,
+            velocity_aiding_valid=previous.velocity_aiding_valid,
+        )
         # 注入 debug_level（从 ROS2 参数覆盖）
         status.debug_level = self.debug_level
         self.latest_sensor_status = status
@@ -248,7 +256,24 @@ class AUVDecisionNode(Node):
 
     def _on_arbiter_status(self, msg: ArbiterStatus) -> None:
         """处理仲裁器下发的工作指令，并在自动模式下切换调试等级。"""
-        self.latest_sensor_status.auto_state = str(msg.auto_state)
+        system_comm_fault = bool(
+            getattr(msg, 'pc104_system_comm_fault', False)
+        )
+        jetson_timeout = bool(getattr(msg, 'pc104_jetson_timeout', False))
+        self.latest_sensor_status = replace(
+            self.latest_sensor_status,
+            auto_state=str(msg.auto_state),
+            execution_fault_word=int(
+                getattr(msg, 'pc104_sys_abnorm_info', 0)
+            ),
+            communication_link_ok=not (
+                system_comm_fault or jetson_timeout
+            ),
+            velocity_aiding_valid=not bool(
+                getattr(msg, 'pc104_dvl_lost', False)
+            ),
+        )
+        self.engine.set_sensor_status(self.latest_sensor_status)
 
         # 仅在 AUTO 模式下响应 0xA1/0xA2
         if self.debug_level != 0:

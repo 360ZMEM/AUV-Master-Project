@@ -24,6 +24,9 @@ from common.protocol import (
     KEY_PC104_DOWNLINK_RECV_UPTIME_MS,
     KEY_PC104_DVL_BI_TIME_VALID,
     KEY_PC104_DVL_BI_UPTIME_MS,
+    KEY_PC104_DVL_LOST,
+    KEY_PC104_JETSON_TIMEOUT,
+    KEY_PC104_SYSTEM_COMM_FAULT,
     KEY_PC104_TIME_VALID,
     KEY_PC104_UPTIME_MS,
     KEY_RIGHT,
@@ -34,6 +37,7 @@ from common.protocol import (
     KEY_THRUST,
     KEY_TOP,
     KEY_WORK_INSTRUCTION,
+    KEY_SYS_ABNORM_INFO,
     PROTOCOL_UPLINK_DOWNLINK_ECHO_MARKER,
     PROTOCOL_UPLINK_PC104_TIME_VALID_MARKER,
     PROTOCOL_UPLINK_PARA1_OFFSET,
@@ -47,10 +51,28 @@ from common.protocol import (
     build_downlink_packet_from_payload,
     build_uplink_packet,
     calculate_byte_sum_checksum,
+    decode_pc104_sys_abnorm_info,
     parse_downlink_packet,
     parse_downlink_packet_to_payload,
     parse_uplink_packet,
 )
+
+
+def test_decode_pc104_fault_bits_for_cross_layer_safety() -> None:
+    fault_word = (1 << 5) | (1 << 13) | (1 << 14) | (1 << 31)
+
+    decoded = decode_pc104_sys_abnorm_info(fault_word)
+
+    assert decoded[KEY_SYS_ABNORM_INFO] == fault_word
+    assert decoded[KEY_PC104_SYSTEM_COMM_FAULT] is True
+    assert decoded[KEY_PC104_DVL_LOST] is True
+    assert decoded[KEY_PC104_JETSON_TIMEOUT] is True
+    assert decode_pc104_sys_abnorm_info(0) == {
+        KEY_SYS_ABNORM_INFO: 0,
+        KEY_PC104_SYSTEM_COMM_FAULT: False,
+        KEY_PC104_DVL_LOST: False,
+        KEY_PC104_JETSON_TIMEOUT: False,
+    }
 
 
 def test_downlink_payload_roundtrip_preserves_auxiliary_fields() -> None:
@@ -157,6 +179,10 @@ def test_bridge_telemetry_payload_adds_arbiter_metadata() -> None:
     assert payload[KEY_AUTO_STATE] == AutoState.ACTIVE.value
     assert payload[KEY_DENY_REASON] == DenyReason.NONE.value
     assert payload[KEY_TELEMETRY_FRESHNESS_MS] == 25.0
+    assert payload[KEY_SYS_ABNORM_INFO] == 0
+    assert payload[KEY_PC104_SYSTEM_COMM_FAULT] is False
+    assert payload[KEY_PC104_DVL_LOST] is False
+    assert payload[KEY_PC104_JETSON_TIMEOUT] is False
 
 
 def _control_payload(right: float, top: float, left: float, bottom: float, thrust: float) -> dict[str, float]:

@@ -6,6 +6,17 @@
 
 ---
 
+## 0. 证据归档完整性
+
+截至 2026-08-22，仓库中实际保留了各阶段 PNG 截图和 Stage 4 配置文件，但第 4、9、10、11 节列出的窗口识别、console、relay、端口、Telnet 与 Zenoh probe 等 `.txt/.log` 原始运行文件并未全部随版本控制保存。因此：
+
+- 本文中的 Stage 2--4 包数量与 relay/probe 摘要属于受版本控制的调试记录，可用于说明分阶段验证过程，但不能当作可独立复算的完整原始日志归档。
+- GUI-only 截图只证明无头启动、布局与文字渲染。
+- GUI 按钮到真实 PC104 字段的可追溯原始证据以 `docs/experiment/assets/pc104_button_field_check/` 下的 fan-out、GUI 与 Telnet 日志为准。
+- Zenoh Stage 4 只证明 72 字节原始 `$CKTH` 到达 probe；尚未证明 GUI ESTOP 在同一次运行中被生产 bridge/arbiter 消费并形成语义闭环。
+
+---
+
 ## 1. 当前结论
 
 本轮确认通过:
