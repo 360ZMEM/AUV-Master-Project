@@ -1,0 +1,29 @@
+project_root: ../..
+
+historical_evidence:
+  steady_dir: results/mpc_solve_microbench/jetson_20260713_steady_200
+  stress_dir: results/mpc_solve_microbench/jetson_20260713_depth_stress
+  pc104_dir: results/control/pc104_udp_timing_hostrelay_sockreturn_zero_30s_20260810_221904
+
+benchmark:
+  params: brain_linux/config/params.yaml
+  steady_iters: 200
+  stress_iters: 50
+  stress_start_depth_m: 8.0
+  baseline_duration_s: 5.0
+  sample_interval_s: 0.5
+  expected_arch: aarch64
+  expected_cpu_count: 8
+  expected_power_mode: 25W
+  busy_process_patterns:
+    - apt install
+    - dpkg --status-fd
+    - unattended-upgrade
+    - colcon build
+    - jetsonpowergui
+    - gnome-system-monitor
+
+timing_budgets_ms:
+  ros_controller_20hz: 50.0
+  bridge_command_10hz: 100.0
+  mpc_discretization_dt: 200.0

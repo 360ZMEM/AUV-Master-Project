@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-22T09:07:24.072842+00:00",
+  "evidence_mode": "current_benchmark",
+  "run_dir": "data/runs/20260822_165846",
+  "target_platform": "Jetson Orin NX",
+  "mpc": {
+    "steady": {
+      "source_dir": "/home/auv_dev/AUV-Master-Project/real_experiments/jetson_realtime/data/runs/20260822_165846/steady",
+      "modes": {
+        "cold": {
+          "wall": {
+            "n": 200,
+            "mean_ms": 34.256834000000005,
+            "p50_ms": 34.246399999999994,
+            "p95_ms": 36.560115,
+            "p99_ms": 37.087547,
+            "max_ms": 37.212
+          },
+          "solver_internal": {
+            "n": 200,
+            "mean_ms": 26.9172975,
+            "p50_ms": 26.90195,
+            "p95_ms": 28.808735,
+            "p99_ms": 29.040149,
+            "max_ms": 29.1193
+          },
+          "success_ratio": 1.0,
+          "dominant_status": "Solve_Succeeded"
+        },
+        "warm": {
+          "wall": {
+            "n": 200,
+            "mean_ms": 32.5961345,
+            "p50_ms": 32.38135,
+            "p95_ms": 34.11753,
+            "p99_ms": 34.96837099999999,
+            "max_ms": 36.5805
+          },
+          "solver_internal": {
+            "n": 200,
+            "mean_ms": 25.3497375,
+            "p50_ms": 25.237099999999998,
+            "p95_ms": 26.651539999999997,
+            "p99_ms": 27.332057999999996,
+            "max_ms": 29.0135
+          },
+          "success_ratio": 1.0,
+          "dominant_status": "Solve_Succeeded"
+        }
+      }
+    },
+    "stress": {
+      "source_dir": "/home/auv_dev/AUV-Master-Project/real_experiments/jetson_realtime/data/runs/20260822_165846/stress",
+      "modes": {
+        "cold": {
+          "wall": {
+            "n": 50,
+            "mean_ms": 81.16062400000001,
+            "p50_ms": 81.0951,
+            "p95_ms": 122.34240999999997,
+            "p99_ms": 140.530869,
+            "max_ms": 142.1439
+          },
+          "solver_internal": {
+            "n": 50,
+            "mean_ms": 73.966362,
+            "p50_ms": 73.8957,
+            "p95_ms": 115.24259499999998,
+            "p99_ms": 133.464061,
+            "max_ms": 134.9934
+          },
+          "success_ratio": 1.0,
+          "dominant_status": "Solve_Succeeded"
+        },
+        "warm": {
+          "wall": {
+            "n": 50,
+            "mean_ms": 74.70573399999999,
+            "p50_ms": 69.66645,
+            "p95_ms": 119.79504999999997,
+            "p99_ms": 139.957149,
+            "max_ms": 142.265
+          },
+          "solver_internal": {
+            "n": 50,
+            "mean_ms": 67.211226,
+            "p50_ms": 61.6246,
+            "p95_ms": 112.55806499999998,
+            "p99_ms": 132.008683,
+            "max_ms": 134.3427
+          },
+          "success_ratio": 1.0,
+          "dominant_status": "Solve_Succeeded"
+        }
+      }
+    }
+  },
+  "pc104": {
+    "source_dir": "/home/auv_dev/AUV-Master-Project/results/control/pc104_udp_timing_hostrelay_sockreturn_zero_30s_20260810_221904",
+    "status": "ok",
+    "duration_s": 30.0,
+    "downlink_count": 300,
+    "uplink_count": 450,
+    "parse_error_count": 0,
+    "observed_uplink_rate_hz": 15.0,
+    "interarrival": {
+      "n": 449,
+      "mean_ms": 66.62377684855191,
+      "p50_ms": 57.9827500000647,
+      "p95_ms": 85.70924179994108,
+      "p99_ms": 85.93935467986739,
+      "max_ms": 86.29008299976704
+    },
+    "reported_p50_ms": 57.9827500000647,
+    "reported_p95_ms": 85.7098749997931,
+    "reported_p99_ms": 85.94437499959895,
+    "sequence_gap_count": 150,
+    "estimated_lost_frames": 0,
+    "repeated_frame_counter_count": 150,
+    "forward_gap_over_one_count": 0,
+    "one_way_latency_claim": false,
+    "round_trip_latency_claim": false
+  },
+  "resource_metrics": {
+    "status": "recorded",
+    "source": "/home/auv_dev/AUV-Master-Project/real_experiments/jetson_realtime/data/runs/20260822_165846/resource_samples.csv",
+    "duration_s": 30.224,
+    "sample_count": 60,
+    "phase_sample_count": {
+      "idle_baseline": 9,
+      "steady": 31,
+      "stress": 20
+    },
+    "sample_interval_s": {
+      "n": 59,
+      "mean": 0.5037288135593221,
+      "p50": 0.5039999999999996,
+      "p95": 0.5049999999999999,
+      "p99": 0.5050000000000008,
+      "min": 0.5019999999999989,
+      "max": 0.5050000000000008
+    },
+    "scope": "system-wide Jetson telemetry; not per-process attribution",
+    "by_phase": {
+      "idle_baseline": {
+        "cpu_percent": {
+          "unit": "%",
+          "n": 9,
+          "mean": 34.33333333333333,
+          "p50": 33.2,
+          "p95": 42.92,
+          "p99": 43.304,
+          "min": 25.8,
+          "max": 43.4
+        },
+        "gpu_percent": {
+          "unit": "%",
+          "n": 9,
+          "mean": 56.955555555555556,
+          "p50": 54.8,
+          "p95": 79.61999999999999,
+          "p99": 81.764,
+          "min": 18.3,
+          "max": 82.3
+        },
+        "memory_used_mb": {
+          "unit": "MiB",
+          "n": 9,
+          "mean": 4644.261777777778,
+          "p50": 4645.059,
+          "p95": 4650.3902,
+          "p99": 4650.9940400000005,
+          "min": 4637.098,
+          "max": 4651.145
+        },
+        "load1": {
+          "unit": "count",
+          "n": 9,
+          "mean": 3.3066666666666666,
+          "p50": 3.294,
+          "p95": 3.351,
+          "p99": 3.351,
+          "min": 3.294,
+          "max": 3.351
+        },
+        "max_temp_c": {
+          "unit": "degC",
+          "n": 9,
+          "mean": 56.96144444444443,
+          "p50": 56.937,
+          "p95": 57.068200000000004,
+          "p99": 57.08804000000001,
+          "min": 56.843,
+          "max": 57.093
+        }
+      },
+      "steady": {
+        "cpu_percent": {
+          "unit": "%",
+          "n": 31,
+          "mean": 42.58064516129032,
+          "p50": 42.7,
+          "p95": 62.1,
+          "p99": 71.88999999999999,
+          "min": 29.0,
+          "max": 75.1
+        },
+        "gpu_percent": {
+          "unit": "%",
+          "n": 31,
+          "mean": 45.300000000000004,
+          "p50": 33.0,
+          "p95": 82.8,
+          "p99": 93.00999999999999,
+          "min": 8.1,
+          "max": 96.4
+        },
+        "memory_used_mb": {
+          "unit": "MiB",
+          "n": 31,
+          "mean": 4858.13135483871,
+          "p50": 4894.07,
+          "p95": 4907.5779999999995,
+          "p99": 4914.4736,
+          "min": 4657.469,
+          "max": 4916.828
+        },
+        "load1": {
+          "unit": "count",
+          "n": 31,
+          "mean": 3.2833870967741925,
+          "p50": 3.322,
+          "p95": 3.351,
+          "p99": 3.351,
+          "min": 3.199,
+          "max": 3.351
+        },
+        "max_temp_c": {
+          "unit": "degC",
+          "n": 31,
+          "mean": 57.114516129032246,
+          "p50": 57.125,
+          "p95": 57.296499999999995,
+          "p99": 57.312,
+          "min": 56.812,
+          "max": 57.312
+        }
+      },
+      "stress": {
+        "cpu_percent": {
+          "unit": "%",
+          "n": 20,
+          "mean": 38.27,
+          "p50": 36.45,
+          "p95": 48.08000000000001,
+          "p99": 61.455999999999975,
+          "min": 30.2,
+          "max": 64.8
+        },
+        "gpu_percent": {
+          "unit": "%",
+          "n": 20,
+          "mean": 44.095,
+          "p50": 39.0,
+          "p95": 74.135,
+          "p99": 79.22699999999999,
+          "min": 1.9,
+          "max": 80.5
+        },
+        "memory_used_mb": {
+          "unit": "MiB",
+          "n": 20,
+          "mean": 4894.65105,
+          "p50": 4894.717000000001,
+          "p95": 4910.884,
+          "p99": 4917.0704000000005,
+          "min": 4840.203,
+          "max": 4918.617
+        },
+        "load1": {
+          "unit": "count",
+          "n": 20,
+          "mean": 3.1623500000000004,
+          "p50": 3.183,
+          "p95": 3.199,
+          "p99": 3.199,
+          "min": 3.008,
+          "max": 3.199
+        },
+        "max_temp_c": {
+          "unit": "degC",
+          "n": 20,
+          "mean": 57.09659999999999,
+          "p50": 57.062,
+          "p95": 57.2857,
+          "p99": 57.35714,
+          "min": 56.906,
+          "max": 57.375
+        }
+      }
+    },
+    "cpu_percent": {
+      "unit": "%",
+      "n": 60,
+      "mean": 39.90666666666666,
+      "p50": 37.35,
+      "p95": 60.02999999999999,
+      "p99": 69.02299999999997,
+      "min": 25.8,
+      "max": 75.1
+    },
+    "gpu_percent": {
+      "unit": "%",
+      "n": 60,
+      "mean": 46.64666666666666,
+      "p50": 39.0,
+      "p95": 80.58999999999999,
+      "p99": 89.73299999999996,
+      "min": 1.9,
+      "max": 96.4
+    },
+    "memory_used_mb": {
+      "unit": "MiB",
+      "n": 60,
+      "mean": 4838.224149999999,
+      "p50": 4894.154,
+      "p95": 4909.0548499999995,
+      "p99": 4917.56149,
+      "min": 4637.098,
+      "max": 4918.617
+    },
+    "load1": {
+      "unit": "count",
+      "n": 60,
+      "mean": 3.2465333333333333,
+      "p50": 3.216,
+      "p95": 3.351,
+      "p99": 3.351,
+      "min": 3.008,
+      "max": 3.351
+    },
+    "max_temp_c": {
+      "unit": "degC",
+      "n": 60,
+      "mean": 57.08558333333334,
+      "p50": 57.062,
+      "p95": 57.28255,
+      "p99": 57.33783,
+      "min": 56.812,
+      "max": 57.375
+    }
+  },
+  "repeatability": {
+    "status": "recorded",
+    "run_count": 3,
+    "run_ids": [
+      "20260822_165421",
+      "20260822_165632",
+      "20260822_165846"
+    ],
+    "p95_ms_across_runs": {
+      "steady": {
+        "cold": {
+          "values": [
+            35.816205,
+            33.641665,
+            36.560115
+          ],
+          "min": 33.641665,
+          "max": 36.560115
+        },
+        "warm": {
+          "values": [
+            35.463715,
+            33.94837,
+            34.11753
+          ],
+          "min": 33.94837,
+          "max": 35.463715
+        }
+      },
+      "stress": {
+        "cold": {
+          "values": [
+            123.69141499999998,
+            122.77314999999997,
+            122.34240999999997
+          ],
+          "min": 122.34240999999997,
+          "max": 123.69141499999998
+        },
+        "warm": {
+          "values": [
+            121.73108499999998,
+            122.22972999999999,
+            119.79504999999997
+          ],
+          "min": 119.79504999999997,
+          "max": 122.22972999999999
+        }
+      }
+    }
+  },
+  "full_adc_ekf_bt_ros2_end_to_end_latency": "not_observed",
+  "one_way_latency_claim": false,
+  "round_trip_latency_claim": false,
+  "end_to_end_latency_claim": false
+}

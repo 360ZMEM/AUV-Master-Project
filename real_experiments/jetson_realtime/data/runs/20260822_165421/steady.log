@@ -1,0 +1,16 @@
+[microbench] N=20 dt=0.2 iters=200 params=/home/auv_dev/AUV-Master-Project/brain_linux/config/params.yaml
+
+******************************************************************************
+This program contains Ipopt, a library for large-scale nonlinear optimization.
+ Ipopt is released as open source code under the Eclipse Public License (EPL).
+         For more information visit https://github.com/coin-or/Ipopt
+******************************************************************************
+
+[microbench] running cold-start ...
+[microbench] running warm-start ...
+[microbench] summary -> /home/auv_dev/AUV-Master-Project/real_experiments/jetson_realtime/data/runs/20260822_165421/steady/mpc_solve_microbench_summary.csv
+[microbench] histogram -> /home/auv_dev/AUV-Master-Project/real_experiments/jetson_realtime/data/runs/20260822_165421/steady/mpc_solve_microbench_hist.png
+  cold wall_perf_counter  mean=33.7704ms p50=33.7219ms p95=35.8162ms max=37.2608ms n=200 ok=1.0000 status=Solve_Succeeded
+  cold  solver_internal  mean=26.4277ms p50=26.3151ms p95=28.0548ms max=29.4287ms n=200 ok=1.0000 status=Solve_Succeeded
+  warm wall_perf_counter  mean=33.5894ms p50=33.4353ms p95=35.4637ms max=37.3324ms n=200 ok=1.0000 status=Solve_Succeeded
+  warm  solver_internal  mean=26.0833ms p50=25.9456ms p95=27.5823ms max=29.2745ms n=200 ok=1.0000 status=Solve_Succeeded

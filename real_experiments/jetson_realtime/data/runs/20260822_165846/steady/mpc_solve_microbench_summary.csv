@@ -1,0 +1,5 @@
+mode,timing_source,sample_count,mean_ms,p50_ms,p95_ms,max_ms,success_ratio,dominant_status
+cold,wall_perf_counter,200,34.2568,34.2464,36.5601,37.2120,1.0000,Solve_Succeeded
+cold,solver_internal,200,26.9173,26.9020,28.8087,29.1193,1.0000,Solve_Succeeded
+warm,wall_perf_counter,200,32.5961,32.3814,34.1175,36.5805,1.0000,Solve_Succeeded
+warm,solver_internal,200,25.3497,25.2371,26.6516,29.0135,1.0000,Solve_Succeeded

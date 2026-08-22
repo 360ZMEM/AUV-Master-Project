@@ -1,0 +1,6 @@
+evidence,mode,n,mean_ms,p50_ms,p95_ms,p99_ms,max_ms,success_ratio,claim
+steady,cold,200,34.256834000000005,34.246399999999994,36.560115,37.087547,37.212,1.0,target-platform solver microbenchmark
+steady,warm,200,32.5961345,32.38135,34.11753,34.96837099999999,36.5805,1.0,target-platform solver microbenchmark
+stress,cold,50,81.16062400000001,81.0951,122.34240999999997,140.530869,142.1439,1.0,target-platform solver microbenchmark
+stress,warm,50,74.70573399999999,69.66645,119.79504999999997,139.957149,142.265,1.0,target-platform solver microbenchmark
+pc104_uplink_interarrival,host_relay,449,66.62377684855191,57.9827500000647,85.70924179994108,85.93935467986739,86.29008299976704,,arrival interval only; not one-way/RTT/end-to-end latency

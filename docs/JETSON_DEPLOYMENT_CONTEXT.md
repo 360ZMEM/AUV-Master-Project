@@ -38,7 +38,7 @@ PVS/HoloOcean 仿真
 
 已确认可用：
 
-- `python3`、`pip`、`colcon`
+- `python3`、`pip`、`colcon`、`xelatex`、`latexmk`、`biber`、`git-lfs`
 - ROS2 Humble：`ros2`、`ros2 bag`、`mcap` storage 后端
 - Python 主线依赖：`numpy`、`scipy`、`pandas`、`matplotlib`、`yaml`、`pytest`、`py_trees`、`PySide6`、`zenoh`
 - PVS 真实包名：`python_vehicle_simulator`
@@ -56,7 +56,7 @@ PVS/HoloOcean 仿真
 | Jetson mainline 必需 | ROS2 Humble、`rosbag2_storage_mcap`、`numpy`、`scipy`、`pandas`、`matplotlib`、`yaml`、`py_trees`、`PySide6`、`zenoh`、`python_vehicle_simulator` | PVS/protocol_udp 电缆巡检、bag、DL/T 1278 产物 |
 | 实物部署调试 | `telnet`、`expect`、`tcpdump`、`screen`、`minicom`、`jq`、`ss`、`sudo -n` | PC104/VxWorks shell、fan-out、UDP 抓包、串口/JSON 辅助 |
 | MPC / 磁探测 / 视频回放支线 | `casadi`、`tqdm`、`imageio`、`moviepy`、`rosbags`、`openpyxl` | MPC microbench、AUV-Master-Mag 扫参、视频/离线回放和表格导出 |
-| 文档构建 | `pandoc`、`wkhtmltopdf`，可选 `xelatex` | `scripts/build_docs_pdf.sh` |
+| 文档构建 | `pandoc`、`wkhtmltopdf`、`xelatex`、`latexmk`、`biber`、`git-lfs` | Markdown/PDF 与 `thuthesis/auv-thesis.pdf`；构建前需确认 LFS 图像不是指针 |
 | 暂不纳入 Jetson 主线 | `holoocean` | 3D 仿真后端，需按官方流程单独安装 |
 
 Jetson 上实物 fan-out 的特殊注意事项：
@@ -249,6 +249,32 @@ Messages: 21204
 
 ### 2.7 Jetson MPC 求解压测
 
+2026-08-22 当前正式入口与主证据为：
+
+```bash
+# 新建 clean run；先记录 5 s idle baseline
+real_experiments/jetson_realtime/run.sh
+
+# 不启动负载，复算正式 run bundle
+real_experiments/jetson_realtime/run.sh --run-dir \
+  real_experiments/jetson_realtime/data/runs/20260822_165846
+```
+
+该轮固定 origin 基线 `84196911aedf272a4faeb99d8a0058707dee665a`、25 W、8 核，preflight 未命中已知竞争进程。正式 wall-time 结果：
+
+| 场景 | 模式 | n | mean ms | p50 ms | p95 ms | p99 ms | max ms | success |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| steady | cold | 200 | 34.257 | 34.246 | 36.560 | 37.088 | 37.212 | 1.000 |
+| steady | warm | 200 | 32.596 | 32.381 | 34.118 | 34.968 | 36.581 | 1.000 |
+| constraint stress | cold | 50 | 81.161 | 81.095 | 122.342 | 140.531 | 142.144 | 1.000 |
+| constraint stress | warm | 50 | 74.706 | 69.666 | 119.795 | 139.957 | 142.265 | 1.000 |
+
+短时整机资源共 60 个样本、30.224 s：CPU mean/p95/max 为 39.9%/60.0%/75.1%，内存 mean/max 为 4838.2/4918.6 MiB，最高温度 57.4 °C，采样间隔 p95 为 0.505 s。idle/steady/stress 的 CPU mean 为 34.3%/42.6%/38.3%。CPU/GPU、内存和温度均为整机遥测，不是求解器进程独占归因；该短时 run 不替代真实 ADC--EKF--BT--控制--PC104 全栈或 30 min thermal soak。
+
+结论：同一 commit/功耗/核数下共有 3 轮兼容 clean run，稳态 warm/cold p95 跨轮范围为 33.948--35.464/33.642--36.560 ms，压力档为 119.795--122.230/122.342--123.691 ms，各轮各档成功率均为 100%。稳态只关闭当前独立求解器微基准的 20 Hz 周期余量；压力档 p95 约 120 ms，仍需 deadline、降阶或 fallback。不得把求解 wall time 与 PC104 上行到达间隔相加为端到端时延。
+
+以下 2026-07-13 数据保留为历史回归警示。该历史包缺少与当前同完整度的 git/config/environment 快照，不能与 2026-08-22 clean run 混算，也不再作为论文主表：
+
 工具入口：
 
 ```bash
@@ -300,6 +326,13 @@ MPC blame：
 - 约束压力工况下，求解时间退化到 0.5-0.6 s，且成功率仅 6%-10%。这不是 CasADi 安装失败，也不是简单 CPU 满载问题，而是初始状态与目标/约束组合导致 NLP 难解或不可行，触发 IPOPT 最大迭代。
 - 真机闭环若启用 MPC，必须保留 fallback 策略，并对深度/航向大阶跃做 setpoint ramp、可行性预检查或放宽/重构约束，不能把压力档失败解释为 Jetson 无法运行 MPC。
 - `tools/mpc_xy_yaw_extreme_benchmark.py` 是全场景全变体论文级离线 sweep，规模较大；本次未作为即时 smoke 压测主证据。
+
+### 2.8 origin、Git LFS 与论文构建基线
+
+- `origin` URL：`https://github.com/360ZMEM/AUV-Master-Project.git`；它服务仿真/论文主体，不是 Jetson 专用分支，Jetson 脏工作树禁止直接 blind pull。同步流程见根目录 `AGENTS.md` §7。
+- 2026-08-22 fetch 后，本地 `HEAD` 与 `origin/main` 均为 `84196911aedf272a4faeb99d8a0058707dee665a`，ahead/behind=`0/0`。该对象的作者日期为 2026-07-16、提交者日期为 2026-08-22，必须以哈希识别。
+- 仓库论文图像使用 Git LFS；仅有约百字节 pointer 时 XeLaTeX 会报 `Unable to load picture`。本机已安装 `git-lfs 3.0.2` 并执行 `git lfs pull origin main`。
+- LFS 拉取后，2026-08-22 在 `thuthesis/` 执行 `timeout 300 make auv-thesis` 成功，输出 177 页；最终日志为 0 undefined、0 multiply-defined、0 overfull h/vbox。Jetson 实时性内容实际落在 §5.6.2、表 5.24、图 5.8。
 
 ## 3. 必读入口
 
