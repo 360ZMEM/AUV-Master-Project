@@ -208,6 +208,7 @@ class BagData:
     truth: PositionSeries = field(default_factory=PositionSeries)
     bt_status: StringSeries = field(default_factory=StringSeries)
     diagnostics: DiagnosticsSeries = field(default_factory=DiagnosticsSeries)
+    controller_depth_command: ScalarSeries = field(default_factory=ScalarSeries)
     magnetic: ScalarSeries = field(default_factory=ScalarSeries)
     altitude: ScalarSeries = field(default_factory=ScalarSeries)
     solve_time: ScalarSeries = field(default_factory=ScalarSeries)
@@ -492,6 +493,7 @@ def read_bag_data(
     altitude_topic: str,
     controller_debug_topic: str,
     verbose: bool,
+    mpc_cmd_topic: str = "/auv/control/mpc_cmd",
 ) -> BagData:
     topics_to_read = {
         estimated_topic,
@@ -501,6 +503,7 @@ def read_bag_data(
         cable_topic,
         altitude_topic,
         controller_debug_topic,
+        mpc_cmd_topic,
         *terrain_topics,
         *truth_topics,
     }
@@ -590,6 +593,12 @@ def read_bag_data(
                         data.solve_time_source = str(source)
                 continue
 
+            if topic == mpc_cmd_topic:
+                target_depth_m = getattr(msg, "target_depth_m", None)
+                if target_depth_m is not None:
+                    data.controller_depth_command.append(timestamp_ns, float(target_depth_m))
+                continue
+
             if topic == cable_topic and data.cable_points_xyz is None:
                 cable_points = extract_marker_points(msg)
                 if cable_points.size:
@@ -618,6 +627,7 @@ def read_bag_data(
         print(f"[INFO] BT status samples: {len(data.bt_status.timestamps_ns)}")
         print(f"[INFO] Magnetic samples: {len(data.magnetic.timestamps_ns)}")
         print(f"[INFO] Altitude samples: {len(data.altitude.timestamps_ns)}")
+        print(f"[INFO] Controller depth-command samples: {len(data.controller_depth_command.timestamps_ns)}")
         print(f"[INFO] Solve-time samples: {len(data.solve_time.timestamps_ns)} (source={data.solve_time_source})")
         print(f"[INFO] Cable reference available: {data.cable_points_xyz is not None}")
         print(f"[INFO] Terrain cloud available: {data.terrain_points_xyz is not None}")

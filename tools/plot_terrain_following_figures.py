@@ -34,6 +34,7 @@ from interfaces.synthetic_sensors import berlin_noise_2d  # noqa: E402
 from tools.thesis_plot_style import (  # noqa: E402
     BASELINE_1,
     BASELINE_2,
+    BASELINE_3,
     PROPOSED,
     REFERENCE,
     apply_thesis_style,
@@ -59,7 +60,7 @@ def parse_args() -> argparse.Namespace:
         "--results-dir",
         dest="main_result",
         type=Path,
-        default=PROJECT_ROOT / "results/control/terrain_following_20260619_222639",
+        default=PROJECT_ROOT / "results/control/terrain_following_20260823_215036",
         help="PID/MPC four-group terrain benchmark result directory.",
     )
     parser.add_argument(
@@ -201,6 +202,21 @@ def setup_style() -> None:
     )
 
 
+def opaque_legend(owner, *args, **kwargs):
+    """Create a readable legend over dense terrain traces."""
+    kwargs.update(
+        {
+            "frameon": True,
+            "facecolor": "white",
+            "framealpha": 1.0,
+            "edgecolor": "#BFBFBF",
+        }
+    )
+    legend = owner.legend(*args, **kwargs)
+    legend.get_frame().set_linewidth(0.8)
+    return legend
+
+
 def load_bag_for_phase(main_result: Path, phase: str) -> analyze_bag.BagData:
     bag_path = (main_result / phase / "bag_path.txt").read_text(encoding="utf-8").strip()
     chunks = analyze_bag.resolve_input_chunks(Path(bag_path))
@@ -222,6 +238,54 @@ def load_bag_for_phase(main_result: Path, phase: str) -> analyze_bag.BagData:
     )
     analyze_bag.synthesize_diagnostics_from_odometry(data)
     return data
+
+
+def resolve_pvs_trace_path(main_result: Path, phase: str) -> Path | None:
+    """Resolve the formal PVS sidecar copied into a benchmark phase."""
+    phase_trace = main_result / phase / "pvs_control_trace.csv"
+    if phase_trace.is_file():
+        return phase_trace
+    bag_path_file = main_result / phase / "bag_path.txt"
+    if bag_path_file.is_file():
+        bag_root = Path(bag_path_file.read_text(encoding="utf-8").strip())
+        bag_trace = bag_root / "pvs_control_trace.csv"
+        if bag_trace.is_file():
+            return bag_trace
+    return None
+
+
+def interpolate_pvs_feasible_reference(
+    trace_path: Path | None,
+    target_wall_time_s: np.ndarray,
+) -> np.ndarray:
+    """Interpolate the PVS filtered depth reference onto bag timestamps."""
+    result = np.full(target_wall_time_s.shape, np.nan, dtype=float)
+    if trace_path is None or not trace_path.is_file():
+        return result
+    wall_time_s: list[float] = []
+    z_d_m: list[float] = []
+    with trace_path.open(newline="", encoding="utf-8") as stream:
+        for row in csv.DictReader(stream):
+            try:
+                wall = float(row["wall_time_s"])
+                z_d = float(row["pvs_z_d_m"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if math.isfinite(wall) and math.isfinite(z_d):
+                wall_time_s.append(wall)
+                z_d_m.append(z_d)
+    if not wall_time_s:
+        return result
+    order = np.argsort(np.asarray(wall_time_s, dtype=float))
+    source_t = np.asarray(wall_time_s, dtype=float)[order]
+    source_z_d = np.asarray(z_d_m, dtype=float)[order]
+    return np.interp(
+        target_wall_time_s,
+        source_t,
+        source_z_d,
+        left=np.nan,
+        right=np.nan,
+    )
 
 
 def plot_clearance_rmse(output_dir: Path, main_result: Path) -> None:
@@ -254,7 +318,7 @@ def plot_clearance_rmse(output_dir: Path, main_result: Path) -> None:
     ax.set_ylim(0, max(rmse) * 1.22)
     for bar, value in zip(bars, rmse):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.03, f"{value:.3f}", ha="center", va="bottom", fontsize=9)
-    ax.legend(frameon=False, loc="upper right")
+    opaque_legend(ax, loc="upper right")
     fig.text(0.01, 0.005, provenance_note(summaries), fontsize=7.5, color="#555555", ha="left", va="bottom")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_clearance_rmse_pid_mpc")
@@ -288,7 +352,7 @@ def plot_clearance_safety(output_dir: Path, main_result: Path) -> None:
     y_upper = max(finite_upper + [3.0]) + 0.6 if finite_upper else 5.2
     y_lower = min(finite_lower) - 0.4
     ax.set_ylim(y_lower, y_upper)
-    ax.legend(frameon=False, ncol=2, loc="upper center")
+    opaque_legend(ax, ncol=2, loc="upper center")
     fig.text(0.01, 0.005, provenance_note(summaries), fontsize=7.5, color="#555555", ha="left", va="bottom")
     fig.tight_layout()
     save_figure(fig, output_dir, "terrain_clearance_safety_margin")
@@ -323,7 +387,7 @@ def plot_ablation(output_dir: Path, ablation_summary: Path) -> None:
     axes[1].set_ylabel("海底离地净空（m）")
     axes[1].set_title("不同地形等级下的安全裕度")
     axes[1].set_ylim(1.2, 3.4)
-    axes[1].legend(frameon=False, loc="lower center")
+    opaque_legend(axes[1], loc="lower center")
     fig.tight_layout()
     save_figure(fig, output_dir, "pid_terrain_low_mid_high_ablation")
     plt.close(fig)
@@ -365,14 +429,54 @@ def diagnostics_arrays(
     data: analyze_bag.BagData,
     target_clearance_m: float,
     warmup_skip_s: float = 0.0,
+    pvs_trace_path: Path | None = None,
 ) -> dict[str, np.ndarray]:
-    diag = data.diagnostics
+    diag = analyze_bag.sort_diagnostics_series(data.diagnostics)
     if not diag.timestamps_ns:
         raise RuntimeError("No diagnostics samples available for t-z plotting.")
     start_ns = min(diag.timestamps_ns)
     t = analyze_bag.normalize_time_ns(diag.timestamps_ns, start_ns)
+    wall_time_s = np.asarray(diag.timestamps_ns, dtype=float) / 1.0e9
     depth = np.asarray(diag.depth_m, dtype=float)
-    controller_target_depth = np.asarray(diag.target_depth_m, dtype=float)
+    depth_source = "/auv/diagnostics"
+    truth = analyze_bag.sort_position_series(data.truth)
+    if truth.timestamps_ns:
+        truth_wall_time_s = np.asarray(
+            truth.timestamps_ns,
+            dtype=float,
+        ) / 1.0e9
+        truth_depth = -np.asarray(truth.z, dtype=float)
+        finite_truth = np.isfinite(truth_wall_time_s) & np.isfinite(truth_depth)
+        if np.any(finite_truth):
+            depth = np.interp(
+                wall_time_s,
+                truth_wall_time_s[finite_truth],
+                truth_depth[finite_truth],
+                left=np.nan,
+                right=np.nan,
+            )
+            depth_source = data.truth_topic_used or "ground_truth"
+    diagnostic_target_depth = np.asarray(diag.target_depth_m, dtype=float)
+    command_series = analyze_bag.sort_scalar_series(data.controller_depth_command)
+    if command_series.timestamps_ns:
+        command_t = analyze_bag.normalize_time_ns(command_series.timestamps_ns, start_ns)
+        command_depth = np.asarray(command_series.values, dtype=float)
+        finite_command = np.isfinite(command_t) & np.isfinite(command_depth)
+        if np.any(finite_command):
+            controller_target_depth = np.interp(
+                t,
+                command_t[finite_command],
+                command_depth[finite_command],
+                left=np.nan,
+                right=np.nan,
+            )
+            controller_target_source = "/auv/control/mpc_cmd"
+        else:
+            controller_target_depth = diagnostic_target_depth
+            controller_target_source = "/auv/diagnostics (legacy)"
+    else:
+        controller_target_depth = diagnostic_target_depth
+        controller_target_source = "/auv/diagnostics (legacy)"
     # WP-D: clearance uses the P0-1 real-altitude / point-cloud口径 (resolve_clearance_series),
     # NOT the localization constant-datum (seabed_depth_m=15.0 - depth) which forced a flat
     # seabed and contradicted the 3D undulating surface. seabed_depth is derived as
@@ -383,6 +487,10 @@ def diagnostics_arrays(
         clearance_source = "diag_constant_datum"
     seabed_depth = depth + clearance
     terrain_target_depth = seabed_depth - float(target_clearance_m)
+    pvs_feasible_depth = interpolate_pvs_feasible_reference(
+        pvs_trace_path,
+        wall_time_s,
+    )
     # WP-D: trim warm-up/dive transient so the t-z curves share the same window
     # as the summary statistics (compute_steady_state_mask, time mode).
     mask = analyze_bag.compute_steady_state_mask(
@@ -393,16 +501,22 @@ def diagnostics_arrays(
     )
     if mask.shape[0] == t.shape[0] and np.any(mask):
         t = t[mask]
+        wall_time_s = wall_time_s[mask]
         depth = depth[mask]
         controller_target_depth = controller_target_depth[mask]
+        pvs_feasible_depth = pvs_feasible_depth[mask]
         clearance = clearance[mask]
         seabed_depth = seabed_depth[mask]
         terrain_target_depth = terrain_target_depth[mask]
     return {
         "t": t,
+        "wall_time_s": wall_time_s,
         "depth": depth,
-        "target_depth": terrain_target_depth,
+        "depth_source": depth_source,
+        "geometric_target_depth": terrain_target_depth,
         "controller_target_depth": controller_target_depth,
+        "controller_target_source": controller_target_source,
+        "pvs_feasible_depth": pvs_feasible_depth,
         "clearance": clearance,
         "seabed_depth": seabed_depth,
         "clearance_source": clearance_source,
@@ -416,7 +530,12 @@ def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: fl
     legend_handles = None
     legend_labels = None
     for panel_index, (ax, (phase, title)) in enumerate(zip(axes, phases)):
-        arrays = diagnostics_arrays(load_bag_for_phase(main_result, phase), target_clearance_m, warmup_skip_s)
+        arrays = diagnostics_arrays(
+            load_bag_for_phase(main_result, phase),
+            target_clearance_m,
+            warmup_skip_s,
+            pvs_trace_path=resolve_pvs_trace_path(main_result, phase),
+        )
         t = arrays["t"]
         source_label = {
             "real_altitude": "DVL 实测高度",
@@ -433,17 +552,46 @@ def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: fl
         )
         ax.plot(
             t,
-            arrays["target_depth"],
+            arrays["geometric_target_depth"],
             color=BASELINE_2,
             linestyle="--",
             linewidth=1.4,
-            label=f"目标深度（{target_clearance_m:.0f} m 净空）",
+            label=f"几何净空目标（{target_clearance_m:.0f} m）",
         )
-        ax.plot(t, arrays["depth"], color=PROPOSED, linewidth=1.7, label="AUV 深度")
+        controller_target = np.asarray(arrays["controller_target_depth"], dtype=float)
+        if np.any(np.isfinite(controller_target)):
+            ax.plot(
+                t,
+                controller_target,
+                color=BASELINE_1,
+                linestyle=":",
+                linewidth=1.4,
+                label="实际下发深度命令",
+            )
+        pvs_feasible_depth = np.asarray(
+            arrays["pvs_feasible_depth"],
+            dtype=float,
+        )
+        if np.any(np.isfinite(pvs_feasible_depth)):
+            ax.plot(
+                t,
+                pvs_feasible_depth,
+                color=BASELINE_3,
+                linestyle="-.",
+                linewidth=1.5,
+                label=r"PVS 可行参考 $z_d$",
+            )
+        ax.plot(
+            t,
+            arrays["depth"],
+            color=PROPOSED,
+            linewidth=1.7,
+            label="AUV 实际深度",
+        )
         ax.fill_between(
             t,
-            arrays["target_depth"] - 0.25,
-            arrays["target_depth"] + 0.25,
+            arrays["geometric_target_depth"] - 0.25,
+            arrays["geometric_target_depth"] + 0.25,
             color=BASELINE_2,
             alpha=0.12,
             label="±0.25 m 目标带",
@@ -454,13 +602,13 @@ def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: fl
             legend_handles, legend_labels = ax.get_legend_handles_labels()
     axes[-1].set_xlabel("时间（s）")
     fig.supylabel("深度（向下为正，m）", x=0.01)
-    fig.legend(
+    opaque_legend(
+        fig,
         legend_handles,
         legend_labels,
         loc="upper center",
         bbox_to_anchor=(0.5, 0.995),
-        ncol=4,
-        frameon=True,
+        ncol=3,
         columnspacing=1.0,
         handlelength=2.4,
     )
@@ -477,24 +625,34 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     因此覆盖 AUV 全轨迹（x∈[15.8,62]）且与运行忠实对应。相比之下，bag 中发布的
     ``seabed_cloud`` 只是围绕原点的静态显示帧快照（x∈[-25,25]），与世界系轨迹脱节，
     直接叠加会造成``轨迹悬空''的误导，故不再用于本图。为诚实标注地形可信度，另叠加
-    AUV 实测 DVL 海底高度沿程离散点作为验证锚：其与重建曲面沿程相关系数约 0.91、
-    均值偏差约 0.06 m、标准差约 0.33 m。
+    AUV 实测 DVL 海底高度沿程离散点作为验证锚。正式结果使用同一录包中的 PVS
+    真值轨迹对齐，两者沿程相关系数约 1.00、均方根偏差约 0.03 m。
     """
     plt = analyze_bag.plt
     data = load_bag_for_phase(main_result, "pid_terrain")
-    estimated = analyze_bag.sort_position_series(data.estimated)
-    if not estimated.timestamps_ns:
-        raise RuntimeError("Estimated trajectory is missing.")
+    if data.truth.timestamps_ns:
+        trajectory = analyze_bag.sort_position_series(data.truth)
+        trajectory_source = data.truth_topic_used or "ground_truth"
+    else:
+        trajectory = analyze_bag.sort_position_series(data.estimated)
+        trajectory_source = "/auv/state/filtered"
+    if not trajectory.timestamps_ns:
+        raise RuntimeError("AUV trajectory is missing.")
 
-    traj_x = np.asarray(estimated.x, dtype=float)
-    traj_y = np.asarray(estimated.y, dtype=float)
-    traj_z_display = np.asarray(estimated.z, dtype=float)
+    traj_x = np.asarray(trajectory.x, dtype=float)
+    traj_y = np.asarray(trajectory.y, dtype=float)
+    traj_z_display = np.asarray(trajectory.z, dtype=float)
+    traj_wall_time_s = np.asarray(
+        trajectory.timestamps_ns,
+        dtype=float,
+    ) / 1.0e9
     valid_traj = np.isfinite(traj_x) & np.isfinite(traj_y) & np.isfinite(traj_z_display)
     traj_x = traj_x[valid_traj]
     traj_y = traj_y[valid_traj]
     traj_z_display = traj_z_display[valid_traj]
+    traj_wall_time_s = traj_wall_time_s[valid_traj]
     if traj_x.size == 0:
-        raise RuntimeError("Estimated trajectory has no finite samples.")
+        raise RuntimeError("Selected trajectory has no finite samples.")
 
     # --- 确定性地形重建（忠实于本次运行的地形公式，覆盖全轨迹）--------------------
     terrain_cfg = read_digital_twin_config(terrain_config)
@@ -537,10 +695,20 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     try:
         arrays = diagnostics_arrays(data, target_clearance_m, warmup_skip_s=0.0)
         if str(arrays.get("clearance_source", "")) == "real_altitude":
-            est_t = analyze_bag.normalize_time_ns(estimated.timestamps_ns, min(estimated.timestamps_ns))
-            meas_t = arrays["t"]
-            meas_x = np.interp(meas_t, est_t, np.asarray(estimated.x, dtype=float))
-            meas_y = np.interp(meas_t, est_t, np.asarray(estimated.y, dtype=float))
+            meas_wall_time_s = np.asarray(
+                arrays["wall_time_s"],
+                dtype=float,
+            )
+            meas_x = np.interp(
+                meas_wall_time_s,
+                traj_wall_time_s,
+                traj_x,
+            )
+            meas_y = np.interp(
+                meas_wall_time_s,
+                traj_wall_time_s,
+                traj_y,
+            )
             meas_seabed = np.asarray(arrays["seabed_depth"], dtype=float)
             finite = np.isfinite(meas_x) & np.isfinite(meas_y) & np.isfinite(meas_seabed)
             if np.any(finite):
@@ -567,7 +735,14 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     target_depth = seabed_depth_traj - target_clearance_m
     target_z_display = -target_depth
 
-    ax.plot(traj_x, traj_y, traj_z_display, color=PROPOSED, linewidth=1.8, label="AUV 轨迹")
+    ax.plot(
+        traj_x,
+        traj_y,
+        traj_z_display,
+        color=PROPOSED,
+        linewidth=1.8,
+        label="AUV 实际轨迹",
+    )
     valid = np.isfinite(target_z_display)
     if np.any(valid):
         ax.plot(
@@ -577,14 +752,14 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
             color=BASELINE_2,
             linestyle="--",
             linewidth=1.4,
-            label="3 m 净空目标",
+            label="3 m 几何净空目标",
         )
     ax.set_xlabel("东向 x（m）", labelpad=1)
     ax.set_ylabel("北向 y（m）", labelpad=1)
     ax.set_zlabel("垂向 z（m）", labelpad=1)
     ax.view_init(elev=24, azim=-62)
     ax.set_box_aspect((1.65, 0.85, 0.8))
-    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.98), frameon=True)
+    opaque_legend(ax, loc="upper left", bbox_to_anchor=(0.0, 0.98))
     mappable = plt.cm.ScalarMappable(norm=surface_norm, cmap=surface_cmap)
     mappable.set_array(seabed_depth_grid)
     colorbar_axis = fig.add_axes((0.87, 0.20, 0.025, 0.62))
@@ -593,7 +768,9 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
     save_figure(fig, output_dir, "terrain_3d_pid_terrain_trajectory")
     plt.close(fig)
     if dvl_note:
-        print(f"[terrain-3d] {dvl_note}")
+        print(
+            f"[terrain-3d] trajectory={trajectory_source}; {dvl_note}"
+        )
 
 
 def main() -> None:

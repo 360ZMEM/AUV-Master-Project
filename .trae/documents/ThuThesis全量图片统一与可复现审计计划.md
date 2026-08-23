@@ -224,38 +224,38 @@ python tools/render_thesis_figures.py --id control_pid_pvs --render linux
 
 不得使用手工平滑、抽样或旧图数字化替代 PVS。
 
-### 4.4 Linux 执行记录（2026-08-23）
+### 4.4 Linux 执行记录（2026-08-23，深度控制复核后）
 
 1. **执行边界**
-   - 仅接手 `ch05_terrain_tz`、`ch05_terrain_3d` 与 ADC--TMR 原始链审计。
-   - Chapter 4、Chapter 5 其余 `mac_full`、`mac_render_only`、draw.io、截图和扫描件均未在 Linux 侧重绘。
-   - PVS 两图尚未触发兼容性兜底，因此未在 Linux 侧接管。
-2. **地形 MCAP 固化**
-   - PID terrain：`/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap`，SHA256 `14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5`。
-   - MPC terrain：`/auv_data/bags/20260619_223058/rosbag/rosbag_0.mcap`，SHA256 `1fc5a5b7d64bb78deb3eaa49cb0ad9ad73a790a3d413d5e11ce734844b99e729`。
-   - 两项哈希已写入 manifest；Linux 总渲染入口在执行命令前强制复核，不匹配即终止。
-3. **显示层统一**
-   - 两图均接入 `tools/thesis_plot_style.py`，使用 6.8 inch 通栏、中文标注、STIX 数学字体、统一语义色和 PDF + 600 dpi PNG。
-   - 时序图采用共享图例和 `(a)/(b)` 子图标识；三维图删除重复大标题与长图内说明，压缩坐标标签并保留 DVL 验证锚。
-   - 脚本新增可重复 `--figure` 参数，总入口只生成正文采用的两图，不改写同目录的四幅归档图。
-4. **数值不变性**
-   - 重绘前后 PID/MPC 两组 `t`、`depth`、`target_depth`、`controller_target_depth`、`clearance` 和 `seabed_depth` 共 12 个数组逐字节一致。
-   - 3D 地形校核保持 `r=0.91`、偏差 `-0.06 m`、RMS `0.34 m`，未对轨迹做平滑、裁剪或重采样。
-5. **ADC--TMR 原始链**
-   - 使用三组 `/auv_data/mag_chain_noise_ros/20260821_164532/...` 原始 JSONL 与 MCAP 在临时目录完整复算。
-   - 新旧 `summary.csv` SHA256 均为 `c59f349f80a68c081927f271878836f91f742180dec6b0bf2d73bf0a0cd0906a`；新旧 `metrics.json` SHA256 均为 `bc9dc05995ff8c15caab2584c1d2aaeb6330d757c493fedcde3caef285833487`。
-   - 因此 Mac 侧从归档 `summary.csv` 做 render-only 不改变论文指标。
-6. **论文级验收**
-   - `--check-sources` 覆盖 44 幅正文图并通过；Linux 两幅图的定向 manifest 渲染与校验通过。
-   - 使用独立临时辅助目录完成 188 页 A4 PDF 构建，日志无 undefined command/citation/reference、float too large 或 overfull；图 5.2、图 5.3 分别位于正文第 97、98 页，图注同页且无裁切、越界或遮挡。
-   - 共享 `thuthesis/` 辅助文件当前由 macOS 较新 biblatex 生成，Linux Biber 2.17 无法直接复用；本次未清理或覆盖 Mac 辅助文件，最终全量构建仍以 Mac 侧收口结果为准。
+   - Linux 新接手 `ch04_pid_pvs`、`ch05_terrain_tz` 与 `ch05_terrain_3d`，因为三者分别依赖 PVS 和最新 ROS2 MCAP/sidecar。
+   - 当前图 5.4 是 R13-v2 三联图，不是地形轨迹；仅按用户明确要求把三个源图的 legend 改为不透明白底，数据和结论未改。
+   - 其余 `mac_full`、`mac_render_only`、draw.io、截图和扫描件不在 Linux 侧重绘。
+2. **正式地形 MCAP 与 sidecar 固化**
+   - 结果目录：`results/control/terrain_following_20260823_215036`。
+   - PID terrain MCAP SHA256：`0ea51e9f49a7b4675e176c3c11ab197f6e1443480a652043a34fb56d6da1f407`。
+   - MPC terrain MCAP SHA256：`e465d0b9cf80b54e77693b5654d6ef9f4dbeea1021603404206793b4e65a5014`。
+   - PID/MPC sidecar SHA256：`51989db27eb0c1ad3788c452aaf6ccb50f62bdf2e1acf70dc6a138698af5fe42` / `d8d8689858d4d1cfe2a72aa109462400d5d50d61874e0d9e36da4980778b2cdb`。
+   - manifest 定向渲染前强制复核上述哈希与 terrain YAML 哈希，不匹配即终止。
+3. **执行链与结果**
+   - 四相统一使用 `/auv/control/mpc_cmd → arbiter → 0xEE → PVS depthHeadingAutopilot`；PID 与 MPC 共用同一 PVS 内层。
+   - PID/MPC terrain 的净空 RMSE 为 `0.419/0.605 m`，最小净空为 `2.2/1.7 m`，低于 1.5 m 的比例均为零。
+   - 相对 PVS 可行参考 `z_d` 的 RMSE 为 `0.217/0.197 m`；MPC fallback 为零，terrain 求解耗时 p95 为 `13.10 ms`。
+4. **PVS 默认迟钝与显示层修复**
+   - 严格原生默认参数 `Kp_z=0.1`、`wn_d_z=0.02 rad/s`、`deltaMax=15 deg`；任务匹配 profile 与 adapter-local anti-windup 不修改上游 PVS 源码。
+   - 图 4.7 已改用严格原生默认基线；深度阶跃/正弦 RMSE 由 `3.491/1.132 m` 降至 `1.453/0.202 m`。
+   - 图 5.2 显示海底、3 m 几何目标、实际下发命令、PVS `z_d` 和 AUV 真值深度五层信号；legend 使用白色不透明底和灰边框。
+   - 图 5.3 使用 PVS 真值轨迹；重建海床与 DVL 沿程海床校核为 `r=1.00`、RMS `0.03 m`。旧滤波轨迹的近常量偏置不再混入图中。
+5. **论文级验收**
+   - manifest 对 `ch04_pid_pvs`、`ch05_terrain_tz`、`ch05_terrain_3d` 的源哈希校验与自动重绘通过。
+   - 清除跨平台不兼容辅助文件后，Linux TeX Live/Biber 完成 188 页 A4 PDF 构建；最终日志无 undefined command/citation/reference、float too large 或 overfull。
+   - 图 4.7、表 5.8、图 5.2、图 5.3 分别位于正文第 82、96、97、98 页，图表与图注同页且无裁切、越界或遮挡。
 
 ### 4.5 最终跨平台边界
 
-- 本轮 Linux 必做项已经按 4.4 完成，当前不存在尚未执行的 Linux 图片任务。
-- 后续只有在地形 MCAP、地形绘图逻辑或正文统计发生变化时，才需在 Linux 重跑图 5.2、图 5.3 的原始 MCAP 链。
-- 后续只有在 ADC--TMR ROS2 原始 JSONL/MCAP 或指标计算发生变化时，才需在 Linux 重跑原始指标链；Mac 可继续从已核验的冻结 `summary.csv` 做确定性重绘。
-- PVS MPC/PID 两图已在 Mac 的固定上游提交和本地 `.venv` 中成功重绘，不再属于 Linux 兜底项。
+- 图 5.2、图 5.3 与表 5.8 的执行链、数据和显示层已收口，无需再次重跑。
+- 当前四相仍为每相 `n=1`。如要把调优后的原生 PVS 配置写成稳健统计结论，PID/MPC terrain 至少各补三次重复；既有低/中/高三档多种子矩阵使用 `kinematic_setpoint` 后端，不能替代该重复。
+- ADC--TMR 原始链保持既有哈希审计结论；Mac 可继续从冻结 `summary.csv` 做确定性重绘。
+- 除图 5.4 legend 的明确样式修复外，不覆盖 Mac 侧其他已完成图件。
 
 ## 5. 验证步骤
 
@@ -286,6 +286,7 @@ python tools/render_thesis_figures.py --id control_pid_pvs --render linux
 6. 构建过程中发现跨页 `longtable` 重复写入两个 UA-MPC 表标签，已通过首屏表头与续页表头分离修复；表格数据、编号和引用键未变。
 7. 按图目录抽取 37 个实际含图页面并逐页检查：图 2.7 不再独占一页；所有图与图注同页，无图片裁切、越界、叠字、图例遮挡或浮动体异常。
 8. 本任务范围 `git diff --check` 通过；全仓检查仅报告任务外 `csd_vx6.8_lastest/DataProcess.h` 与 `com.c` 的既有尾随空格，本轮未改动。
+9. 追加快速排版复核：图 5.13 的两个源图由错误的 6.8 inch 通栏画布改为 3.3 inch 半栏画布，并同步将 manifest 标记改为 `single`，图例统一移到绘图区上方；图 4.3 高度由 4.35 inch 压缩为 3.95 inch，收紧 2×3 GridSpec 行列间距，并将重复图例归并为右上子图空白带内的单一图例。全文并排图片扫描未发现第二处通栏源图缩入半栏的尺寸错配。定向重绘后严格校验仍为 44 幅、0 warning；188 页论文重建日志无 overfull、float too large、未定义引用或引文，最终物理第 87 页和第 147 页视觉检查通过。
 
 ## 6. 约束与决策
 

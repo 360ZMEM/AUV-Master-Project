@@ -81,7 +81,7 @@
 | baseline 单次 RMSE/CEP50 | ✅ | [docs/experiment/benchmark_test_log.md](file:///home/auv_user/auv_ws/AUV-Master-Project/docs/experiment/benchmark_test_log.md) |
 | MPC 三场景单次 | ✅ | 同上 |
 | BT vs FSM 单次 | ✅ | 同上 |
-| 地形跟随四相（真口径，n=1） | ✅ | `results/control/terrain_following_20260619_222639/`；T9 §8.2 |
+| 地形跟随四相（原生 PVS 执行链，n=1） | ✅ | `results/control/terrain_following_20260823_215036/`；Figure 5.2/5.3 与 Table 5.8 |
 | 真 solve_time（系统级 + 微基准） | ✅ | T9 §8.3；`tools/mpc_solve_microbench.py` |
 | MPC x/y/yaw 公平口径 | ✅ | `results/control/mpc_xy_yaw_extreme/20260620_011831/`；T9 §8.7 |
 | F1 三相螺旋漏磁 | ✅ | `results/perception/helical_cable_magnetic_scan/20260620_013450/`；T12 |

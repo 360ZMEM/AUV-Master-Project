@@ -14,6 +14,7 @@ Mock AMD (AUV 管理设备) UDP 服务器——将 HoloOcean 仿真数据转换�
   5. 引入现实故障效果（丢包、延迟、传感器漂移等）
 """
 
+import csv
 import os
 import socket
 import sys
@@ -57,6 +58,42 @@ from cable_quality_sim import (
     build_magnetic_block_payload,
     build_sonar_observation_payload,
 )
+
+
+PVS_CONTROL_TRACE_FIELDS = (
+    "wall_time_s",
+    "elapsed_wall_s",
+    "sim_time_s",
+    "step",
+    "control_mode_byte",
+    "control_branch",
+    "autopilot_profile",
+    "downlink_target_depth_m",
+    "downlink_target_heading_deg",
+    "downlink_main_motor_rpm",
+    "pvs_ref_z_m",
+    "pvs_z_d_m",
+    "actual_depth_m",
+    "pitch_deg",
+    "stern_command_raw_deg",
+    "stern_command_deg",
+    "depth_anti_windup_active",
+    "z_int",
+    "theta_int",
+    "pvs_ref_n_rpm",
+    "actual_rpm",
+    "surge_mps",
+    "heave_mps",
+    "external_right_fin_deg",
+    "external_top_fin_deg",
+    "external_left_fin_deg",
+    "external_bottom_fin_deg",
+)
+
+
+def _uses_pvs_depth_heading_autopilot(control_mode_byte: int) -> bool:
+    """Match the VxWorks contract: 0xEE uses local depth/heading control."""
+    return int(control_mode_byte) == 0xEE
 
 
 class MockAmdUdpServer:
@@ -284,6 +321,9 @@ class MockAmdUdpServer:
         # schema 完全一致（rt/auv/sensors/ground_truth）。
         self.zbridge = None
         self._gt_step = 0
+        self._pvs_trace_file = None
+        self._pvs_trace_writer = None
+        self._pvs_trace_path = None
 
     # ========================================================================
     # 公共 API：生命周期管理
@@ -307,6 +347,7 @@ class MockAmdUdpServer:
             show_viewport=bool(sim_cfg.get('show_viewport', False)),
             verbose=bool(sim_cfg.get('verbose', False)),
         ).open()
+        self._open_pvs_control_trace()
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.bind_host, self.bind_port))
         self.sock.settimeout(self.socket_timeout_s)
@@ -324,6 +365,7 @@ class MockAmdUdpServer:
 
     def close(self):
         """关闭 Mock AMD 服务器，释放 socket 和仿真资源。"""
+        self._close_pvs_control_trace()
         if self.zbridge is not None:
             try:
                 self.zbridge.close()
@@ -339,6 +381,105 @@ class MockAmdUdpServer:
         if self.wrapper is not None:
             self.wrapper.close()
             self.wrapper = None
+
+    def _open_pvs_control_trace(self) -> None:
+        """Open the per-run PVS inner-loop sidecar when an experiment dir exists."""
+        run_dir = os.environ.get("AUV_RUN_DIR", "").strip()
+        if not run_dir or not isinstance(self.wrapper, PVSSimWrapper):
+            return
+        trace_path = Path(run_dir) / "pvs_control_trace.csv"
+        trace_path.parent.mkdir(parents=True, exist_ok=True)
+        self._pvs_trace_file = trace_path.open(
+            "w",
+            newline="",
+            encoding="utf-8",
+            buffering=1,
+        )
+        self._pvs_trace_writer = csv.DictWriter(
+            self._pvs_trace_file,
+            fieldnames=PVS_CONTROL_TRACE_FIELDS,
+        )
+        self._pvs_trace_writer.writeheader()
+        self._pvs_trace_path = trace_path
+
+    def _close_pvs_control_trace(self) -> None:
+        """Flush and close the optional PVS inner-loop sidecar."""
+        if self._pvs_trace_file is not None:
+            self._pvs_trace_file.flush()
+            self._pvs_trace_file.close()
+        self._pvs_trace_file = None
+        self._pvs_trace_writer = None
+
+    def _write_pvs_control_trace(
+        self,
+        *,
+        step: int,
+        mode: int,
+        control_branch: str,
+        command_vector,
+        target_depth_m: float | None,
+        target_heading_deg: float | None,
+    ) -> None:
+        """Record the PVS feasible reference and inner-loop state for analysis."""
+        if (
+            self._pvs_trace_writer is None
+            or not isinstance(self.wrapper, PVSSimWrapper)
+            or self.wrapper.vehicle is None
+        ):
+            return
+        cmd = np.asarray(command_vector, dtype=float).reshape(5)
+        vehicle = self.wrapper.vehicle
+        downlink_rpm = (
+            float(self._last_downlink_state.main_motor_rpm)
+            if self._last_downlink_state is not None
+            else float("nan")
+        )
+        now = time.time()
+        self._pvs_trace_writer.writerow(
+            {
+                "wall_time_s": now,
+                "elapsed_wall_s": max(0.0, now - self._start_time),
+                "sim_time_s": float(step) * self.dt,
+                "step": int(step),
+                "control_mode_byte": int(mode),
+                "control_branch": str(control_branch),
+                "autopilot_profile": str(
+                    self.config.get("pvs", {}).get("autopilot_profile", "")
+                ),
+                "downlink_target_depth_m": (
+                    float(target_depth_m)
+                    if target_depth_m is not None
+                    else float("nan")
+                ),
+                "downlink_target_heading_deg": (
+                    float(target_heading_deg)
+                    if target_heading_deg is not None
+                    else float("nan")
+                ),
+                "downlink_main_motor_rpm": downlink_rpm,
+                "pvs_ref_z_m": float(getattr(vehicle, "ref_z", float("nan"))),
+                "pvs_z_d_m": float(getattr(vehicle, "z_d", float("nan"))),
+                "actual_depth_m": float(self.wrapper.eta[2]),
+                "pitch_deg": float(np.degrees(self.wrapper.eta[4])),
+                "stern_command_raw_deg": float(
+                    self.wrapper.last_stern_command_raw_deg
+                ),
+                "stern_command_deg": float(np.degrees(self.wrapper.u_actual[1])),
+                "depth_anti_windup_active": int(
+                    self.wrapper.depth_anti_windup_active
+                ),
+                "z_int": float(getattr(vehicle, "z_int", float("nan"))),
+                "theta_int": float(getattr(vehicle, "theta_int", float("nan"))),
+                "pvs_ref_n_rpm": float(getattr(vehicle, "ref_n", float("nan"))),
+                "actual_rpm": float(self.wrapper.u_actual[2]),
+                "surge_mps": float(self.wrapper.nu[0]),
+                "heave_mps": float(self.wrapper.nu[2]),
+                "external_right_fin_deg": float(cmd[0]),
+                "external_top_fin_deg": float(cmd[1]),
+                "external_left_fin_deg": float(cmd[2]),
+                "external_bottom_fin_deg": float(cmd[3]),
+            }
+        )
 
     # ========================================================================
     # 私有 API：数据包操作
@@ -915,9 +1056,9 @@ class MockAmdUdpServer:
         核心流程（每个 dt 秒一次迭代）：
           1. _poll_command_packet()：从网络接收下行命令（非阻塞）
           2. command_guard.sanitize()：应用安全护栏（推力限幅等）
-          3. 【新增】control_mode_dispatch()：根据 control_mode_byte 选择控制律
-             - mode == 0x01 (REMOTE)：wrapper.stepInput(cmd) 直接驱动
-             - mode == 0xEE/0xEF (AUTONOMY)：PVS set_reference() + depthHeadingAutopilot
+          3. 根据 control_mode_byte 选择控制律
+             - mode == 0xEE (Jetson Shadow)：PVS depthHeadingAutopilot
+             - mode == 0xEF/0x01 (Hybrid/Remote)：wrapper.stepInput(cmd) 直接驱动
           4. wrapper.step(cmd) 或 wrapper._build_state()：推进物理仿真一步
           5. _build_uplink_packet()：从仿真状态构造上行遥测包
                   ├─ 坐标系转换（UE4 → NED）
@@ -951,24 +1092,27 @@ class MockAmdUdpServer:
             self.last_cmd = cmd
 
             # ────────────────────────────────────────
-            # 【新增】控制模式分发：透传 vs PID 自动驾驶
+            # 控制模式分发与 VxWorks 一致：0xEE 内环闭环，0xEF/0x01 舵面透传。
             # ────────────────────────────────────────
             mode = self.last_control_mode_byte
-            is_autonomy_mode = mode in {0xEE, 0xEF, 238}
+            uses_pvs_autopilot = _uses_pvs_depth_heading_autopilot(mode)
+            target_depth_m = None
+            target_heading_deg = None
 
-            if is_autonomy_mode and isinstance(self.wrapper, PVSSimWrapper):
-                # 自主模式：从下行包提取语义目标，注入 PVS 自动驾驶仪
+            if uses_pvs_autopilot and isinstance(self.wrapper, PVSSimWrapper):
+                # 0xEE：从下行包提取语义目标，注入 PVS 自动驾驶仪。
                 target_depth_m = self._extract_target_depth_from_downlink()
                 target_heading_deg = self._extract_target_heading_from_downlink()
                 target_speed_mps = self._extract_target_speed_from_downlink()
+                target_propeller_rpm = self._extract_target_rpm_from_downlink()
 
                 # 设置自动驾驶仪参考值
-                # @note 0 m/s is a valid autonomy command for CBF speed gating;
-                # only negative parsed values should preserve the previous speed.
+                # The protocol already carries the final propeller RPM. Passing
+                # it through avoids a lossy RPM -> speed -> minimum-RPM remap.
                 self.wrapper.set_reference(
                     depth_m=target_depth_m,
                     heading_rad=np.deg2rad(target_heading_deg),
-                    speed_mps=target_speed_mps if target_speed_mps >= 0 else None,
+                    propeller_rpm=target_propeller_rpm,
                 )
 
                 # 切换到自动驾驶仪模式（若尚未切换）
@@ -979,13 +1123,23 @@ class MockAmdUdpServer:
 
                 # 推进仿真一步（自动驾驶仪内部计算控制）
                 state = self.wrapper.step(cmd)
+                control_branch = "pvs_depth_heading_autopilot"
             else:
-                # 手动模式 (0x01)：直接透传推力/舵角到物理引擎
-                # 确保 PVS 使用 stepInput 模式
+                # 0xEF/0x01：直接透传推力/舵角到物理引擎。
                 if isinstance(self.wrapper, PVSSimWrapper):
                     if self.wrapper.control_mode.strip().lower() not in {"stepinput", "manual", "direct"}:
                         self.wrapper.control_mode = "stepInput"
                 state = self.wrapper.step(cmd)
+                control_branch = "direct_actuator"
+
+            self._write_pvs_control_trace(
+                step=step,
+                mode=mode,
+                control_branch=control_branch,
+                command_vector=cmd,
+                target_depth_m=target_depth_m,
+                target_heading_deg=target_heading_deg,
+            )
 
             # ────────────────────────────────────────
             # 构造遥测包
@@ -1020,7 +1174,7 @@ class MockAmdUdpServer:
                             label='mock-amd TX',
                             source=f'{self.last_client_addr[0]}:{self.last_client_addr[1]}',
                             step=step,
-                            mode_tag="AUTO" if is_autonomy_mode else "MANUAL",
+                            mode_tag="PVS_AUTO" if uses_pvs_autopilot else "DIRECT",
                         ), flush=True)
                     else:
                         # 单行摘要格式
@@ -1033,12 +1187,12 @@ class MockAmdUdpServer:
                             max_hex_bytes=self.log_hex_bytes,
                             main_motor_rpm_scale=self.main_motor_rpm_scale,
                         )
-                        mode_tag = "AUTO" if is_autonomy_mode else "MANUAL"
+                        mode_tag = "PVS_AUTO" if uses_pvs_autopilot else "DIRECT"
                         print(f'{uplink_log} step={step:06d} mode={mode_tag}')
                 else:
                     # 简化模式：只打印关键数值（深度和控制向量）
                     depth_m = int.from_bytes(packet[38:40], byteorder='big', signed=False) * 0.1
-                    mode_tag = "AUTO" if is_autonomy_mode else "MANUAL"
+                    mode_tag = "PVS_AUTO" if uses_pvs_autopilot else "DIRECT"
                     print(
                         f'step={step:06d} depth={depth_m:.2f}m mode={mode_tag} '
                         f'cmd=({cmd[0]:.1f},{cmd[1]:.1f},{cmd[2]:.1f},{cmd[3]:.1f},{cmd[4]:.1f})'
@@ -1145,21 +1299,25 @@ class MockAmdUdpServer:
         从下行包 main_motor_rpm (offset 23-24, int16) 估算目标速度。
         使用 PVS 的 RPM → speed 反向映射。
         """
+        rpm = self._extract_target_rpm_from_downlink()
+        if rpm <= 0.0:
+            return 0.0
+        return max(
+            0.0,
+            (rpm - self.wrapper.reference_speed_rpm_offset)
+            / self.wrapper.reference_speed_rpm_slope,
+        )
+
+    def _extract_target_rpm_from_downlink(self) -> float:
+        """Return the non-negative propeller RPM encoded by the protocol."""
         if self._last_downlink_state is not None:
-            rpm = float(self._last_downlink_state.main_motor_rpm)
-            if rpm < self.wrapper.reference_rpm_min:
-                return 0.0
-            speed = (rpm - self.wrapper.reference_speed_rpm_offset) / self.wrapper.reference_speed_rpm_slope
-            return max(0.0, speed)
+            return max(0.0, float(self._last_downlink_state.main_motor_rpm))
         try:
             import struct
-            rpm_raw = struct.unpack('>h', self._last_downlink_packet[23:25])[0]
-            # 反向映射：speed = (rpm - offset) / slope
-            rpm = float(rpm_raw)
-            if rpm < self.wrapper.reference_rpm_min:
-                return 0.0
-            speed = (rpm - self.wrapper.reference_speed_rpm_offset) / self.wrapper.reference_speed_rpm_slope
-            return max(0.0, speed)
+            return max(
+                0.0,
+                float(struct.unpack('>h', self._last_downlink_packet[23:25])[0]),
+            )
         except Exception:
             return 0.0
 

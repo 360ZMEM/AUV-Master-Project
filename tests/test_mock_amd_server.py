@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import csv
 import socket
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 
@@ -22,7 +24,10 @@ from common.protocol import (
     build_downlink_packet,
     parse_uplink_packet,
 )
-from mock_amd_server import MockAmdUdpServer
+from mock_amd_server import (
+    MockAmdUdpServer,
+    _uses_pvs_depth_heading_autopilot,
+)
 
 
 class DummyCommandGuard:
@@ -267,6 +272,97 @@ def test_negative_downlink_rpm_does_not_command_forward_speed() -> None:
     server._poll_command_packet()
 
     assert server._extract_target_speed_from_downlink() == 0.0
+
+
+def test_low_positive_downlink_rpm_is_preserved_for_pvs() -> None:
+    payload = {
+        KEY_RIGHT: 0.0,
+        KEY_TOP: 0.0,
+        KEY_LEFT: 0.0,
+        KEY_BOTTOM: 0.0,
+        KEY_THRUST: 5.0,
+        KEY_TARGET_DEPTH_M: 9.7,
+    }
+    packet = build_downlink_packet(
+        payload,
+        frame_counter=5,
+        control_mode_byte=int(ControlModeByte.JETSON_PROTOCOL),
+        work_instruction=int(WorkInstruction.AUTONOMOUS_CONTROL),
+        orientation_deg=0.0,
+        target_depth_m=9.7,
+        main_motor_rpm_scale=10.0,
+    )
+    server = MockAmdUdpServer(_make_config(), DummyCommandGuard())
+    server.wrapper = FakeWrapper()
+    server.sock = FakeSocket([(packet, ("127.0.0.1", 50001))])
+
+    server._poll_command_packet()
+
+    assert server._extract_target_rpm_from_downlink() == 50.0
+    assert server._extract_target_speed_from_downlink() > 0.0
+
+
+def test_pvs_mode_dispatch_matches_vxworks_contract() -> None:
+    assert _uses_pvs_depth_heading_autopilot(
+        int(ControlModeByte.JETSON_PROTOCOL)
+    )
+    assert not _uses_pvs_depth_heading_autopilot(
+        int(ControlModeByte.JETSON_HYBRID)
+    )
+    assert not _uses_pvs_depth_heading_autopilot(
+        int(ControlModeByte.REMOTE_CONTROL)
+    )
+
+
+def test_pvs_control_trace_records_inner_loop_state(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    server = MockAmdUdpServer(_make_config(), DummyCommandGuard())
+    wrapper = mock_amd_server_module.PVSSimWrapper.__new__(
+        mock_amd_server_module.PVSSimWrapper
+    )
+    wrapper.vehicle = SimpleNamespace(
+        ref_z=9.5,
+        z_d=9.7,
+        z_int=0.4,
+        theta_int=-0.2,
+        ref_n=700.0,
+    )
+    wrapper.eta = np.array([0.0, 0.0, 9.8, 0.0, 0.1, 0.0])
+    wrapper.nu = np.array([1.2, 0.0, -0.05, 0.0, 0.0, 0.0])
+    wrapper.u_actual = np.array([0.0, 0.2, 680.0])
+    wrapper.last_stern_command_raw_deg = 14.0
+    wrapper.depth_anti_windup_active = True
+    server.wrapper = wrapper
+    server._start_time = 100.0
+    server._last_downlink_state = SimpleNamespace(main_motor_rpm=700.0)
+    monkeypatch.setenv("AUV_RUN_DIR", str(tmp_path))
+    monkeypatch.setattr(mock_amd_server_module.time, "time", lambda: 101.0)
+
+    server._open_pvs_control_trace()
+    server._write_pvs_control_trace(
+        step=50,
+        mode=int(ControlModeByte.JETSON_PROTOCOL),
+        control_branch="pvs_depth_heading_autopilot",
+        command_vector=[1.0, 2.0, 3.0, 4.0, 50.0],
+        target_depth_m=9.5,
+        target_heading_deg=12.0,
+    )
+    server._close_pvs_control_trace()
+
+    with (tmp_path / "pvs_control_trace.csv").open(
+        newline="",
+        encoding="utf-8",
+    ) as stream:
+        rows = list(csv.DictReader(stream))
+    assert len(rows) == 1
+    assert rows[0]["control_branch"] == "pvs_depth_heading_autopilot"
+    assert float(rows[0]["pvs_z_d_m"]) == 9.7
+    assert float(rows[0]["actual_depth_m"]) == 9.8
+    assert float(rows[0]["z_int"]) == 0.4
+    assert float(rows[0]["stern_command_raw_deg"]) == 14.0
+    assert int(rows[0]["depth_anti_windup_active"]) == 1
 
 
 def test_protocol_verbose_blocks_keep_fixed_line_count() -> None:

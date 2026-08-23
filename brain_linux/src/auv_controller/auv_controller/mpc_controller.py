@@ -133,7 +133,7 @@ class MPCController(BaseController):
         mapper_cfg: dict | None = None,
     ) -> None:
         mpc_cfg = dict(ctrl_cfg.get("mpc", {}))
-        model_cfg = ctrl_cfg.get("mpc_model", {})
+        model_cfg = dict(ctrl_cfg.get("mpc_model", {}))
         weights_cfg = dict(ctrl_cfg.get("mpc_weights", {}))
         constraints_cfg = dict(ctrl_cfg.get("mpc_constraints", {}))
         solver_max_iter = int(mpc_cfg.get("max_iter", 100))
@@ -160,6 +160,7 @@ class MPCController(BaseController):
                         "enable_band_constraints",
                         "enable_constraint_slack",
                         "constraint_slack_weight",
+                        "min_thrust_percent",
                         "max_speed_slack_ms",
                         "max_depth_rate_slack_m",
                         "max_heading_rate_slack_rad",
@@ -169,6 +170,10 @@ class MPCController(BaseController):
                     for key in constraint_override_keys:
                         if key in overrides:
                             constraints_cfg[key] = overrides.pop(key)
+                    model_override_keys = {"drag_u"}
+                    for key in model_override_keys:
+                        if key in overrides:
+                            model_cfg[key] = overrides.pop(key)
                     weights_cfg.update(overrides)
             except Exception:
                 pass

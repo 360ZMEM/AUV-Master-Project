@@ -153,7 +153,8 @@ perception:
     peak_gain: 0.9
     peak_width_bins: 4.0
 pvs:
-  control_mode: stepInput
+  control_mode: depthHeadingAutopilot
+  autonomy_motion_model: native
   initial_depth_m: 12.0
   initial_heading_deg: 0.0
   initial_speed_mps: 0.5
@@ -164,5 +165,21 @@ pvs:
   reference_rpm_min: 300.0
   command_thrust_rpm_scale: 15.0
   max_command_rpm: 1525.0
-  current_speed_mps: 0.5
+  current_speed_mps: 0.0
   current_direction_deg: 0.0
+  autopilot_profile: sine_tuned_v2
+  Kp_z: 1.0
+  Kp_theta: 6.0
+  Kd_theta: 2.0
+  Ki_theta: 1.5
+  lam: 0.1
+  phi_b: 0.4
+  K_d: 0.1
+  K_sigma: 0.01
+  wn_d_z: 0.4
+  wn_d: 0.6
+  r_max_deg: 12.0
+  deltaMax_deg: 20.0
+  depth_anti_windup_enabled: true
+  z_integral_limit: 10.0
+  theta_integral_limit: 2.0

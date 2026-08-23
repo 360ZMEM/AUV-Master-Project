@@ -35,6 +35,7 @@ MPC_MODE=""
 BAG_FINALIZE_S="${BAG_FINALIZE_S:-30}"
 AUTO_ACTIVATE=false
 AUTO_ACTIVATE_RATE_HZ="${AUTO_ACTIVATE_RATE_HZ:-10}"
+AUTO_ACTIVATE_TARGET_DEPTH_M="${AUTO_ACTIVATE_TARGET_DEPTH_M:-}"
 BRAIN_READY_TOPIC="${BRAIN_READY_TOPIC:-}"
 BRAIN_READY_TIMEOUT_S="${BRAIN_READY_TIMEOUT_S:-0}"
 PREFLIGHT_CLEAN=false
@@ -236,6 +237,8 @@ Options:
                                behavior tree stays in StandbyCheck and the bag
                                will be 0 byte. See docs/experiment/terrain_benchmark_log.md §3.2
   --auto-activate-rate HZ      heartbeat rate for the emulator (default: 10)
+  --auto-activate-depth M      include a valid hold depth in each 0xEE activation
+                               packet; required when Para1 is a depth reference
   --brain-ready-topic TOPIC    wait for a publisher on TOPIC before starting
                                rosbag; empty disables this wait
   --brain-ready-timeout SECONDS
@@ -386,6 +389,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --auto-activate-rate)
       AUTO_ACTIVATE_RATE_HZ="${2:?missing value for --auto-activate-rate}"
+      shift 2
+      ;;
+    --auto-activate-depth)
+      AUTO_ACTIVATE_TARGET_DEPTH_M="${2:?missing value for --auto-activate-depth}"
       shift 2
       ;;
     --brain-ready-topic)
@@ -775,6 +782,7 @@ trap cleanup EXIT INT TERM
   echo "bag_finalize_s=$BAG_FINALIZE_S"
   echo "auto_activate=$AUTO_ACTIVATE"
   echo "auto_activate_rate_hz=$AUTO_ACTIVATE_RATE_HZ"
+  echo "auto_activate_target_depth_m=$AUTO_ACTIVATE_TARGET_DEPTH_M"
   echo "brain_ready_topic=$BRAIN_READY_TOPIC"
   echo "brain_ready_timeout_s=$BRAIN_READY_TIMEOUT_S"
   echo "preflight_clean=$PREFLIGHT_CLEAN"
@@ -821,9 +829,15 @@ if [[ "$AUTO_ACTIVATE" == true ]]; then
   echo "[AUV] starting auto_activate_emu (rate=${AUTO_ACTIVATE_RATE_HZ}Hz, log=$EMU_LOG)"
   # The emu must wait for the bridge's Zenoh router to be up. Give it a long
   # connect timeout; it retries internally.
+  EMU_ARGS=(
+    --rate-hz "$AUTO_ACTIVATE_RATE_HZ"
+    --connect-timeout 60
+  )
+  if [[ -n "$AUTO_ACTIVATE_TARGET_DEPTH_M" ]]; then
+    EMU_ARGS+=(--target-depth-m "$AUTO_ACTIVATE_TARGET_DEPTH_M")
+  fi
   python3 "$SCRIPTS_DIR/auto_activate_emu.py" \
-    --rate-hz "$AUTO_ACTIVATE_RATE_HZ" \
-    --connect-timeout 60 \
+    "${EMU_ARGS[@]}" \
     > "$EMU_LOG" 2>&1 &
   EMU_PID=$!
 fi

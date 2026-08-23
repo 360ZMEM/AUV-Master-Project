@@ -24,6 +24,7 @@ class TerrainFollower:
         emergency_clearance_m: float = 1.2,
         emergency_rise_m: float = 2.0,
         slowdown_clearance_margin_m: float = 1.5,
+        minimum_control_speed_scale: float = 0.0,
         min_depth_m: float = 0.5,
     ):
         """
@@ -39,6 +40,7 @@ class TerrainFollower:
             emergency_clearance_m (float): 低于该净空时强制上浮。
             emergency_rise_m (float): 紧急上浮时目标深度相对当前深度的上浮量。
             slowdown_clearance_margin_m (float): CBF barrier 低于该裕度时线性降速。
+            minimum_control_speed_scale (float): 保留艉舵水动力权限的最小航速比例。
             min_depth_m (float): 防冲出水面的最小目标深度。
         """
         self._lookahead_time_s = lookahead_time_s
@@ -50,6 +52,10 @@ class TerrainFollower:
         self._emergency_clearance_m = max(0.0, float(emergency_clearance_m))
         self._emergency_rise_m = max(0.0, float(emergency_rise_m))
         self._slowdown_clearance_margin_m = max(1.0e-6, float(slowdown_clearance_margin_m))
+        self._minimum_control_speed_scale = min(
+            1.0,
+            max(0.0, float(minimum_control_speed_scale)),
+        )
         self._min_depth_m = max(0.0, float(min_depth_m))
         
         # 历史海床深度队列：存储 (timestamp, seafloor_depth)
@@ -116,12 +122,16 @@ class TerrainFollower:
         if emergency_active:
             depth_upper = min(depth_upper, float(current_depth) - self._emergency_rise_m)
 
-        speed_scale = min(
+        raw_speed_scale = min(
             1.0,
             max(0.0, speed_barrier / self._slowdown_clearance_margin_m),
         )
         if emergency_active:
-            speed_scale = 0.0
+            raw_speed_scale = 0.0
+        speed_scale = max(
+            raw_speed_scale,
+            self._minimum_control_speed_scale,
+        )
 
         z_filtered = min(float(z_candidate), depth_upper)
         z_filtered = max(z_filtered, self._min_depth_m)
@@ -141,8 +151,14 @@ class TerrainFollower:
                 "cbf_depth_upper_m": depth_upper,
                 "cbf_descend_limit_m": descend_limit,
                 "cbf_descend_rate_limited": descend_rate_limited,
+                "cbf_emergency_active": emergency_active,
+                "cbf_emergency_rise_m": self._emergency_rise_m,
                 "cbf_filtered_depth_m": z_filtered,
                 "cbf_speed_scale": speed_scale,
+                "cbf_raw_speed_scale": raw_speed_scale,
+                "cbf_minimum_control_speed_scale": (
+                    self._minimum_control_speed_scale
+                ),
                 "cbf_slowdown_clearance_margin_m": self._slowdown_clearance_margin_m,
             }
         )

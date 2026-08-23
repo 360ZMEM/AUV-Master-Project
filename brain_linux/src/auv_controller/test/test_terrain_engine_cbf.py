@@ -117,5 +117,31 @@ def test_cbf_emergency_clearance_commands_rise() -> None:
 
     assert debug["cbf_active"] is True
     assert debug["cbf_reason"] == "emergency_clearance"
+    assert debug["cbf_emergency_active"] is True
+    assert debug["cbf_emergency_rise_m"] == 1.0
     assert debug["cbf_speed_scale"] == 0.0
     assert z_target <= 13.0 + 1.0e-9
+
+
+def test_cbf_preserves_minimum_speed_for_stern_plane_authority() -> None:
+    follower = TerrainFollower(
+        lookahead_time_s=2.0,
+        lpf_alpha=1.0,
+        min_clearance_m=1.8,
+        emergency_clearance_m=1.2,
+        emergency_rise_m=1.0,
+        max_descend_rate_mps=20.0,
+        minimum_control_speed_scale=0.8,
+    )
+    perception = _FakeTerrainPerception(
+        depth=14.0,
+        altitude=1.0,
+        forward_velocity=1.5,
+    )
+
+    z_target, debug = follower.compute(perception, target_altitude_m=0.5)
+
+    assert z_target <= 13.0 + 1.0e-9
+    assert debug["cbf_emergency_active"] is True
+    assert debug["cbf_raw_speed_scale"] == 0.0
+    assert debug["cbf_speed_scale"] == 0.8

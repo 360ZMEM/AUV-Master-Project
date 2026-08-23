@@ -70,14 +70,15 @@ limits:
 
 control:
   terrain_cbf:
-    lookahead_time_s: 2.0
+    lookahead_time_s: 4.0
     lpf_alpha: 0.2
     min_clearance_m: 1.8
     alpha: 0.7
     max_descend_rate_mps: 0.4
-    emergency_clearance_m: 1.2
+    emergency_clearance_m: 2.0
     emergency_rise_m: 2.0
     slowdown_clearance_margin_m: 1.5
+    minimum_control_speed_scale: 0.8
     min_depth_m: 0.5
   target_u: 1.1
   u0: 1.0
@@ -171,7 +172,7 @@ mpc_constraints:
   # P1 (MPC v2): 制导级参考的速率/带宽约束，避免 z_cmd / psi_cmd 飞出 PVS 内环可执行域。
   # 取值与 PID v2 内环 wn_d_z / r_max 相容（dt=0.2s 下每步上限）。
   min_thrust_percent: 15.0
-  delta_z_max_per_step: 1.0        # m/step：每步最大 z_cmd 变化
+  delta_z_max_per_step: 0.3        # m/step：与 PVS 20 deg 艉舵包线匹配
   delta_psi_max_per_step: 0.0419   # rad/step：12 deg/s * 0.2s ≈ 2.4 deg/step（保守 0.0419≈2.4°）
   z_band_m: 4.0                    # m：z_cmd 与当前 z 的最大偏差
   psi_band_rad: 0.7854             # rad：45° 带宽

@@ -27,7 +27,7 @@ JETSON_PROTOCOL = 0xEE
 PC_CMD_RAW_KEY = "rt/pc/cmd_raw"
 
 
-def _build_payload(frame_number: int) -> bytes:
+def _build_payload(frame_number: int, *, target_depth_m: float | None = None) -> bytes:
     cmd = {
         "frame_number": frame_number & 0xFFFF,
         "obj_address": 1,
@@ -47,6 +47,8 @@ def _build_payload(frame_number: int) -> bytes:
         "parameters": (0,) * 12,
         "ts": time.time(),
     }
+    if target_depth_m is not None:
+        cmd["target_depth_m"] = float(target_depth_m)
     return json.dumps(cmd, ensure_ascii=False).encode("utf-8")
 
 
@@ -75,6 +77,12 @@ def main() -> int:
                         help="Zenoh session bring-up timeout (s)")
     parser.add_argument("--key", default=PC_CMD_RAW_KEY,
                         help=f"Zenoh key to publish on (default {PC_CMD_RAW_KEY})")
+    parser.add_argument(
+        "--target-depth-m",
+        type=float,
+        default=None,
+        help="Optional valid hold depth embedded in the 0xEE activation packet.",
+    )
     parser.add_argument("--log-level", default="INFO")
     args = parser.parse_args()
 
@@ -102,7 +110,7 @@ def main() -> int:
     try:
         while not stop["flag"]:
             try:
-                publisher.put(_build_payload(frame))
+                publisher.put(_build_payload(frame, target_depth_m=args.target_depth_m))
             except Exception as exc:
                 logging.warning("publish failed: %s", exc)
             frame += 1
@@ -121,4 +129,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

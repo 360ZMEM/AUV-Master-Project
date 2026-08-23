@@ -1,22 +1,26 @@
 # 地形跟随论文图像生成指引
 
-**日期**: 2026-06-10  
+**日期**: 2026-08-23
 **定位**: 给毕业设计/论文中“地形跟随控制实验”提供可直接引用的图像清单、caption、生成依据、分析脚本位置和 benchmark 命令契约。  
 **图像目录**: `docs/thesis/figures/terrain_following/`  
 **统一生成脚本**: `tools/plot_terrain_following_figures.py`
 
 ---
 
-## 0. 2026-06-20 真口径重生成更新（WP-D）
+## 0. 2026-08-23 原生 PVS 执行链重跑
 
-> **重要**：下文 §1–§3 多处仍写 `20260610_175154` 路径，那是 datum bug 修复前的旧数据源。**6 张图已用 P0 真口径主结果 `results/control/terrain_following_20260619_222639/` 重新生成**，引用图像数据时以此为准。
+> **当前正式数据源**：`results/control/terrain_following_20260823_215036/`。旧的
+> `20260610_175154` 和 `20260619_222639` 结果分别存在 datum、执行链和控制器
+> profile 口径问题，不再用于正文 Figure 5.2、Figure 5.3 与 Table 5.8。
 
-本次 WP-D 修复（见 08 文档 §8.1/§8.2）：
+本次重跑的关键口径：
 
-- **clearance 真口径**：[plot_terrain_following_figures.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/plot_terrain_following_figures.py) `diagnostics_arrays` 改用 `resolve_clearance_series` 读真 altitude/点云（`clearance_source=real_altitude`），不再用常值 datum；`load_bag_for_phase` 补 `altitude_topic`/`controller_debug_topic` 参数（P0-1/P0-2 后原已坏）。
-- **2D 海底起伏修复**：`seabed_depth = depth + real_clearance` 现随真地形起伏（pid_terrain std=0.443、range[12.29,14.11]；mpc_terrain std=0.882、range[10.63,15.13]），彻底消除此前"2D 平直 vs 3D 起伏"矛盾。
-- **provenance 标注**：clearance RMSE 柱状图与安全裕度图新增 `provenance_note`（数据来源：real DVL altitude / warm-up trimmed 10s / truth=`/auv/sensors/ground_truth`）；t-z 图标题/图例标注 clearance source。
-- **诚实边界**：图像数据为 **n=1 单次运行**（见 08 文档 §8.2），caption 引用时须标注；ablation 图（Fig.5-3）数据为 low/mid/high 各单次。
+- 四相均走 `/auv/control/mpc_cmd → arbiter → 0xEE → PVS depthHeadingAutopilot`。
+- 车辆深度与三维轨迹取 `/auv/sensors/ground_truth`，离底高度取 DVL altitude。
+- 几何净空目标、实际下发深度命令、PVS 可行参考 `z_d` 和实际深度分层绘制。
+- PVS 内层 sidecar 保存 `z_d`、舵角、anti-windup、积分状态、RPM 与速度。
+- `/auv/diagnostics` 在本次录包中无有效消息，不作为控制性能证据。
+- 图像数据为 **n=1 单次运行**；多种子稳健结论仍由独立消融矩阵承担。
 
 ---
 
@@ -33,7 +37,7 @@ python3 tools/plot_terrain_following_figures.py
 
 ```bash
 python3 tools/plot_terrain_following_figures.py \
-  --main-result results/control/terrain_following_20260610_175154 \
+  --main-result results/control/terrain_following_20260823_215036 \
   --ablation-summary results/control/pid_terrain_ablation_20260610_summary.csv \
   --terrain-config config/bridge_params.protocol_udp.pvs.terrain.yaml \
   --output-dir docs/thesis/figures/terrain_following \
@@ -42,7 +46,7 @@ python3 tools/plot_terrain_following_figures.py \
 
 说明：
 
-- `--main-result` 指向 PID/MPC 四组对比结果目录，默认使用 `results/control/terrain_following_20260610_175154`。
+- `--main-result` 指向 PID/MPC 四组对比结果目录，默认使用 `results/control/terrain_following_20260823_215036`。
 - `--ablation-summary` 指向 low/mid/high 三档 PID terrain 消融汇总，默认使用 `results/control/pid_terrain_ablation_20260610_summary.csv`。
 - `--terrain-config` 用于 3D 图的确定性地形重建，默认使用 `config/bridge_params.protocol_udp.pvs.terrain.yaml`。
 - 3D 图统一采用**确定性地形重建**曲面（覆盖全轨迹、忠实于运行地形公式），并叠加 AUV 沿程 DVL 实测海底高度作为验证锚；bag 中的 `seabed_cloud` 因是静态显示帧快照（覆盖有限且与世界系轨迹去相关）不再用于本图，详见 §3.6。
@@ -55,12 +59,12 @@ python3 tools/plot_terrain_following_figures.py \
 
 | 图号建议 | 文件名 stem | 推荐章节 | 数据源 | 分析脚本位置 |
 |---|---|---|---|---|
-| Fig. 5-1 | `terrain_clearance_rmse_pid_mpc` | 控制算法对比实验 | `results/control/terrain_following_20260610_175154/*/analysis/summary_statistics.csv` | `tools/plot_terrain_following_figures.py::plot_clearance_rmse` |
+| Fig. 5-1 | `terrain_clearance_rmse_pid_mpc` | 控制算法对比实验 | `results/control/terrain_following_20260823_215036/*/analysis/summary_statistics.csv` | `tools/plot_terrain_following_figures.py::plot_clearance_rmse` |
 | Fig. 5-2 | `terrain_clearance_safety_margin` | 安全性与地形跟随性能分析 | 同 Fig. 5-1 | `tools/plot_terrain_following_figures.py::plot_clearance_safety` |
 | Fig. 5-3 | `pid_terrain_low_mid_high_ablation` | 地形强度消融实验 | `results/control/pid_terrain_ablation_20260610_summary.csv` | `tools/plot_terrain_following_figures.py::plot_ablation` |
 | Fig. 5-4 | `terrain_benchmark_command_contract` | 实验设计/SOP 附图 | `scripts/run_terrain_benchmark.sh` | `tools/plot_terrain_following_figures.py::plot_command_contract` |
-| Fig. 5-5 | `terrain_tz_tracking_pid_mpc` | 深度跟踪动态过程分析 | `pid_terrain` 与 `mpc_terrain` 的 MCAP bag diagnostics | `tools/plot_terrain_following_figures.py::plot_tz_tracking` |
-| Fig. 5-6 | `terrain_3d_pid_terrain_trajectory` | 三维地形跟随效果展示 | `pid_terrain` bag trajectory + bag point cloud 或 deterministic terrain YAML | `tools/plot_terrain_following_figures.py::plot_3d_terrain_trajectory` |
+| Fig. 5-5 | `terrain_tz_tracking_pid_mpc` | 深度跟踪动态过程分析 | terrain 两相 MCAP + `pvs_control_trace.csv` | `tools/plot_terrain_following_figures.py::plot_tz_tracking` |
+| Fig. 5-6 | `terrain_3d_pid_terrain_trajectory` | 三维地形跟随效果展示 | PID terrain 真值轨迹 + deterministic terrain YAML | `tools/plot_terrain_following_figures.py::plot_3d_terrain_trajectory` |
 
 输出文件：
 
@@ -88,11 +92,11 @@ docs/thesis/figures/terrain_following/
 
 **文件**: `terrain_clearance_rmse_pid_mpc.pdf/png`  
 **分析脚本位置**: `tools/plot_terrain_following_figures.py::plot_clearance_rmse`  
-**数据源**: `results/control/terrain_following_20260610_175154/*/analysis/summary_statistics.csv`
+**数据源**: `results/control/terrain_following_20260823_215036/*/analysis/summary_statistics.csv`
 
  caption：
 
-> 图 X 地形跟随任务中 PID 与 MPC 在固定深度和地形跟随模式下的离底高度 RMSE 对比。结果表明，固定深度 baseline 无法稳定保持 3m 离底高度；terrain-following 模式显著降低离底误差。其中 PID terrain 的 RMSE 为 0.175m，是当前最优方案；MPC terrain 相比 MPC baseline 有改善，但仍弱于 PID terrain。
+> 图 X 地形跟随任务中 PID 与 MPC 在固定深度和地形跟随模式下的离底高度 RMSE 对比。固定深度 baseline 无法稳定保持 3 m 离底高度；terrain-following 模式显著降低离底误差。PID terrain 与 MPC terrain 的 RMSE 分别为 0.419 m 和 0.605 m。
 
 论文中应强调：
 
@@ -104,17 +108,17 @@ docs/thesis/figures/terrain_following/
 
 **文件**: `terrain_clearance_safety_margin.pdf/png`  
 **分析脚本位置**: `tools/plot_terrain_following_figures.py::plot_clearance_safety`  
-**数据源**: `results/control/terrain_following_20260610_175154/*/analysis/summary_statistics.csv`
+**数据源**: `results/control/terrain_following_20260823_215036/*/analysis/summary_statistics.csv`
 
  caption：
 
-> 图 X 地形跟随任务中四组控制策略的离底高度统计分布。圆点和误差棒表示离底高度均值及标准差，倒三角表示最小离底高度，虚线表示 3m 目标离底高度，点线表示 1.5m 安全阈值。所有策略均未触发安全违规，但 PID terrain 最接近目标离底高度且波动最小。
+> 图 X 地形跟随任务中四组控制策略的离底高度统计分布。圆点和误差棒表示离底高度均值及标准差，倒三角表示最小离底高度，虚线表示 3 m 目标离底高度，点线表示 1.5 m 安全阈值。两条 terrain 轨迹均守住安全阈值；两条固定深度 baseline 分别出现 19.77% 和 14.74% 的低净空样本。
 
 论文中应强调：
 
-- 安全结论：四组 `clearance < 1.5m ratio = 0`。
-- 性能结论：PID terrain 最贴近 3m 目标离底高度。
-- baseline 安全但不贴底，不能说明地形跟随成功。
+- 安全结论：PID/MPC terrain 的 `clearance < 1.5m ratio = 0`。
+- 性能结论：PID terrain 更贴近 3 m 目标离底高度。
+- baseline 不是地形跟随器，其低净空结果用于证明固定绝对深度策略不足。
 
 ### 3.3 Low/Mid/High 地形消融图
 
@@ -148,34 +152,37 @@ docs/thesis/figures/terrain_following/
 
 **文件**: `terrain_tz_tracking_pid_mpc.pdf/png`  
 **分析脚本位置**: `tools/plot_terrain_following_figures.py::plot_tz_tracking`  
-**数据源**: `results/control/terrain_following_20260610_175154/pid_terrain/bag_path.txt` 与 `results/control/terrain_following_20260610_175154/mpc_terrain/bag_path.txt`
+**数据源**: `results/control/terrain_following_20260823_215036/{pid_terrain,mpc_terrain}` 的 MCAP 与 PVS sidecar
 
  caption：
 
-> 图 X PID terrain 与 MPC terrain 在地形跟随任务中的 `t-z` 深度跟踪曲线。横轴为实验时间，纵轴为向下为正的深度，棕色曲线表示海底深度，绿色虚线表示由 3m 目标离底高度换算得到的目标深度，蓝色曲线表示 AUV 实际深度。结果显示 PID terrain 能更稳定地贴近动态目标深度，而 MPC terrain 存在更明显的参考跟踪滞后和误差。
+> 图 X PID terrain 与 MPC terrain 的分层深度响应。横轴为实验时间，纵轴为向下为正的深度；曲线依次表示 DVL 海底深度、3 m 几何净空目标、实际下发深度命令、PVS 可行参考 `z_d` 与 AUV 真值深度。两类制导均经同一 PVS 内层。
 
 坐标说明：
 
 - 图中 `depth` 使用 NED 约定，向下为正。
+- `depth` 使用 `/auv/sensors/ground_truth`，`seabed_clearance` 使用 DVL altitude。
 - `seabed_depth = depth + seabed_clearance`。
 - `target_depth = seabed_depth - target_clearance_m`。
+- `controller_target_depth` 使用 `/auv/control/mpc_cmd`。
+- `pvs_feasible_depth` 使用 `pvs_control_trace.csv::pvs_z_d_m`。
 - 绘图时反转 y 轴，使“更深”显示在图像下方，符合深度曲线直觉。
 
 ### 3.6 3D 地形曲面与 AUV 轨迹图
 
 **文件**: `terrain_3d_pid_terrain_trajectory.pdf/png`  
 **分析脚本位置**: `tools/plot_terrain_following_figures.py::plot_3d_terrain_trajectory`  
-**数据源**: `results/control/terrain_following_20260619_222639/pid_terrain/bag_path.txt` + `config/bridge_params.protocol_udp.pvs.terrain.yaml`
+**数据源**: `results/control/terrain_following_20260823_215036/pid_terrain/bag_path.txt` + `config/bridge_params.protocol_udp.pvs.terrain.yaml`
 
  caption：
 
-> 图 X PID terrain 实验中的三维海底曲面与 AUV 轨迹。海底曲面由本次运行所用确定性地形配置离线重建（颜色表示向下为正的海底深度），覆盖 AUV 全轨迹；蓝色曲线为 AUV 三维运动轨迹，绿色虚线为由 3 m 目标离底高度换算的目标深度路径，红色散点为 AUV 沿程 DVL 实测海底高度验证锚。重建曲面与实测海底沿程相关系数约 0.91、均值偏差约 −0.06 m、RMS 约 0.34 m。
+> 图 X PID terrain 实验中的三维海底曲面与 AUV 真值轨迹。海底曲面由本次运行所用确定性地形配置离线重建；蓝色曲线为 AUV 真值轨迹，绿色虚线为 3 m 几何净空目标，橙色散点为 DVL 实测海底验证锚。重建曲面与实测海底沿程相关系数约 1.00、均值偏差约 0.00 m、RMS 约 0.03 m。
 
 可追溯性与口径说明（2026-08-20，P2-1a 更新）：
 
-- 轨迹来自 MCAP 中 `/auv/state/filtered`，覆盖 x∈[15.8, 62.0] m。
+- 轨迹来自 MCAP 中 `/auv/sensors/ground_truth`，覆盖 x∈[1.4, 59.2] m。
 - **地形曲面口径修正**：早先版本在 bag 存在 `/auv/visual/seabed_cloud` 时优先绘制该点云，但该点云是**围绕原点的静态显示帧快照**（仅 x∈[−25, 25]，且其 (x,y) 坐标与世界系轨迹去相关，corr≈−0.04），叠加世界系轨迹会造成``轨迹悬空''的误导。现统一改为由本次运行的确定性地形配置离线重建海底曲面：其公式与仿真 `synthetic_sensors.py::_terrain_height` 完全一致（seed=42、octaves=4、scale=6、amplitude=2.0、slope=3°），对全轨迹均有定义，忠实于运行本身。
-- **诚实验证**：图中叠加 AUV 沿程 DVL 实测海底高度（`clearance_source=real_altitude`）作为验证锚，重建曲面与实测沿程 r≈0.91、偏差≈−0.06 m、RMS≈0.34 m，量化标注地形可信度；样本量为 n=1 单次运行。
+- **诚实验证**：图中叠加 AUV 沿程 DVL 实测海底高度（`clearance_source=real_altitude`）作为验证锚，重建曲面与实测沿程 r≈1.00、偏差≈0.00 m、RMS≈0.03 m，量化标注地形可信度；样本量为 n=1 单次运行。
 - 地形重建公式复用 `sim_holoocean/interfaces/synthetic_sensors.py::berlin_noise_2d`，与仿真侧 deterministic terrain 生成逻辑一致。
 
 ---

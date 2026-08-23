@@ -115,6 +115,35 @@ def quat_to_euler(w: float, x: float, y: float, z: float) -> tuple[float, float,
     return roll, pitch, yaw
 
 
+def _should_publish_semantic_command(
+    *,
+    use_mpc: bool,
+    is_altitude_follow: bool,
+    publish_arbiter_command: bool,
+) -> bool:
+    """Return whether this cycle must use the arbiter command path."""
+    return bool(use_mpc or is_altitude_follow or publish_arbiter_command)
+
+
+def _resolve_guidance_depth(
+    ctrl_output: ControlOutput,
+    *,
+    fallback_depth_m: float,
+    force_fallback: bool = False,
+) -> float:
+    """Select a finite controller guidance depth, falling back to the setpoint."""
+    if force_fallback:
+        return float(fallback_depth_m)
+    if ctrl_output.guidance_depth is not None:
+        try:
+            value = float(ctrl_output.guidance_depth)
+        except (TypeError, ValueError):
+            value = math.nan
+        if math.isfinite(value):
+            return value
+    return float(fallback_depth_m)
+
+
 class AUVControllerNode(Node):
     """AUV 控制节点主类，支持 PID/MPC 混合控制架构。
 
@@ -135,6 +164,7 @@ class AUVControllerNode(Node):
 
         # 混合控制架构参数
         self.declare_parameter('use_mpc', False)
+        self.declare_parameter('publish_arbiter_command', False)
         self.declare_parameter('control_mode_byte', int(ControlModeByte.JETSON_HYBRID))
         self.declare_parameter('heading_ramp_limit_deg', 30.0)
         self.declare_parameter('heading_ramp_rate_deg_s', 10.0)
@@ -183,6 +213,9 @@ class AUVControllerNode(Node):
         self._mpc_controller = MPCController(ctrl_cfg, lim_cfg, mapper_cfg)
         self._active_controller: BaseController = self._pid_controller
         self._use_mpc = bool(self.get_parameter('use_mpc').value)
+        self._publish_arbiter_command = bool(
+            self.get_parameter('publish_arbiter_command').value
+        )
         if self._use_mpc:
             self._active_controller = self._mpc_controller
 
@@ -231,6 +264,9 @@ class AUVControllerNode(Node):
             ),
             slowdown_clearance_margin_m=float(
                 terrain_cbf_cfg.get('slowdown_clearance_margin_m', 1.5)
+            ),
+            minimum_control_speed_scale=float(
+                terrain_cbf_cfg.get('minimum_control_speed_scale', 0.0)
             ),
             min_depth_m=float(terrain_cbf_cfg.get('min_depth_m', 0.5)),
         )
@@ -586,9 +622,8 @@ class AUVControllerNode(Node):
             target_altitude_m = float(self.latest_setpoint.target_depth_m)
             z_target, terrain_debug = self._terrain_follower.compute(self._terrain_perception, target_altitude_m)
             
-            # 安全仲裁：防撞底
-            if self._terrain_perception.get_altitude() < 1.5 and self._terrain_perception.get_altitude() > 0.01:
-                z_target = self._terrain_perception.get_current_depth() - 2.0
+            # 紧急上浮由 CBF 配置统一触发，并在 MPC 求解后保持最高优先级。
+            if bool(terrain_debug.get("cbf_emergency_active", False)):
                 terrain_debug["safety_override"] = "EMERGENCY_RISE"
             
             # 安全仲裁：防冲出水面
@@ -769,6 +804,11 @@ class AUVControllerNode(Node):
             # 调用当前活跃控制器
             ctrl_output = self._active_controller.compute(state, setpoint)
 
+        guidance_depth_m = _resolve_guidance_depth(
+            ctrl_output,
+            fallback_depth_m=float(sp.target_depth_m),
+            force_fallback=bool(terrain_debug.get("safety_override")),
+        )
         self._control_cycle_count_total += 1
         if ctrl_output.debug.get('controller_type') == 'MPC':
             self._solver_attempt_count_total += 1
@@ -783,11 +823,15 @@ class AUVControllerNode(Node):
             if bool(ctrl_output.debug.get('control_period_blocked', False)):
                 self._solver_blocked_count_total += 1
 
-        if self._use_mpc or is_altitude_follow:
-            # MPC 模式或高度跟随模式：发布 MpcCmd 消息（供 auv_bridge/arbiter 消费）
+        if _should_publish_semantic_command(
+            use_mpc=self._use_mpc,
+            is_altitude_follow=is_altitude_follow,
+            publish_arbiter_command=self._publish_arbiter_command,
+        ):
+            # 语义控制路径：由 arbiter 统一下发推力和 PVS 内层参考。
             mpc_msg = MpcCmd()
             mpc_msg.header.stamp = self.get_clock().now().to_msg()
-            mpc_msg.source = 'JETSON_MPC'
+            mpc_msg.source = 'JETSON_MPC' if self._use_mpc else 'JETSON_PID'
             mpc_msg.valid = True
             mpc_msg.healthy = True
             mpc_msg.thrust_percent = float(ctrl_output.thrust_percent)
@@ -795,7 +839,7 @@ class AUVControllerNode(Node):
             mpc_msg.top_fin_deg = float(ctrl_output.top_fin_deg or 0.0)
             mpc_msg.left_fin_deg = float(ctrl_output.left_fin_deg or 0.0)
             mpc_msg.bottom_fin_deg = float(ctrl_output.bottom_fin_deg or 0.0)
-            mpc_msg.target_depth_m = float(sp.target_depth_m)
+            mpc_msg.target_depth_m = guidance_depth_m
             mpc_msg.work_instruction = work_instruction
             mpc_msg.note = str(ctrl_output.debug.get('note', ''))
 
@@ -918,7 +962,7 @@ class AUVControllerNode(Node):
             'capability_gate_status': 'passed',
             'thrust_cmd': ctrl_output.thrust_percent,
             'guidance_heading': smoothed_heading,
-            'guidance_depth': setpoint.get('target_depth_m', 0.0),
+            'guidance_depth': guidance_depth_m,
             'rate_source': rate_source,
             KEY_STATE_SOURCE: state_source.value,
             'state_source_requested': StateEstimateSource.RAW_DR.value if self.bypass_ekf else StateEstimateSource.FILTERED.value,
@@ -948,8 +992,12 @@ class AUVControllerNode(Node):
                     'cbf_barrier_decay_reference_m',
                     'cbf_depth_upper_m',
                     'cbf_descend_rate_limited',
+                    'cbf_emergency_active',
+                    'cbf_emergency_rise_m',
                     'cbf_filtered_depth_m',
                     'cbf_speed_scale',
+                    'cbf_raw_speed_scale',
+                    'cbf_minimum_control_speed_scale',
                     'cbf_original_speed_mps',
                     'cbf_filtered_speed_mps',
                     'S_now',

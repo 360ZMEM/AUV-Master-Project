@@ -101,8 +101,18 @@ SINE_PROFILE = Profile(
     delta_max_deg=20.0,
 )
 
+PVS_NATIVE_PROFILE = Profile(
+    name="pvs_native_default",
+    depth_params=(0.1, 5.0, 2.0, 0.3),
+    yaw_params=(0.1, 0.1, 0.5, 0.05),
+    wn_d_z=0.02,
+    wn_d=0.1,
+    r_max_deg=5.0,
+    delta_max_deg=15.0,
+)
+
 COMPARISON_PROFILES = [
-    Profile("pvs_default_baseline", (1.0, 15.0, 2.0, 1.0), (0.05, 0.2, 0.3, 0.03)),
+    PVS_NATIVE_PROFILE,
     STEP_PROFILE,
     SINE_PROFILE,
 ]
@@ -261,7 +271,11 @@ def _plot_tracking(case: Case, result: dict[str, np.ndarray | dict[str, float]],
     axes[0].plot(t, actual, label="响应", linewidth=1.8, color="#1f77b4")
     axes[0].set_ylabel(ylabel)
     axes[0].grid(True, alpha=0.3)
-    axes[0].legend(loc="best")
+    legend = axes[0].legend(loc="best")
+    legend.get_frame().set_facecolor("white")
+    legend.get_frame().set_alpha(1.0)
+    legend.get_frame().set_edgecolor("#BFBFBF")
+    legend.get_frame().set_linewidth(0.8)
     axes[0].set_title(f"内层 PID/PVS 跟踪 — {case.name}（{case.profile.name}）")
 
     axes[1].plot(t, error, color="#d62728", linewidth=1.5)
@@ -298,7 +312,7 @@ def _comparison_metrics(kind: str, channel: str) -> list[tuple[str, float]]:
     return values
 
 
-def _plot_summary(output_base: Path) -> None:
+def _plot_summary(output_base: Path) -> dict[str, dict[str, float]]:
     cases = [
         ("step", "depth", "阶跃深度 RMSE（m）"),
         ("step", "yaw", "阶跃艏向 RMSE（deg）"),
@@ -312,35 +326,58 @@ def _plot_summary(output_base: Path) -> None:
         constrained_layout=True,
     )
     profile_labels = {
-        "pvs_default_baseline": "PVS 默认基线",
+        "pvs_native_default": "PVS 原生默认",
         "step_tuned_v2": "阶跃调优",
         "sine_tuned_v2": "正弦调优",
     }
+    comparison_results: dict[str, dict[str, float]] = {}
     for ax, (kind, channel, title) in zip(axes.ravel(), cases):
         values = _comparison_metrics(kind, channel)
+        comparison_results[f"{kind}_{channel}"] = dict(values)
         labels = [profile_labels.get(v[0], v[0]) for v in values]
         rmse = [v[1] for v in values]
-        ax.bar(
+        bars = ax.bar(
             range(len(labels)),
             rmse,
             color=[tps.BASELINE_1, tps.PROPOSED, tps.BASELINE_2],
             hatch=["//", "", ".."],
         )
+        ax.bar_label(
+            bars,
+            labels=[f"{value:.3f}" for value in rmse],
+            padding=2,
+            fontsize=8,
+        )
         ax.set_xticks(range(len(labels)))
         ax.set_xticklabels(labels, rotation=18, ha="right")
-        ax.set_title(title)
+        ax.set_title(f"{title}（相对原始指令）")
+        ax.set_ylim(0.0, max(rmse) * 1.18)
         ax.grid(True, axis="y", alpha=0.3)
     tps.save_figure(fig, output_base.with_suffix(""))
     plt.close(fig)
+    return comparison_results
 
 
-def _write_report(output_dir: Path, figures: dict[str, Path], results: dict[str, dict[str, float]]) -> None:
+def _write_report(
+    output_dir: Path,
+    figures: dict[str, Path],
+    results: dict[str, dict[str, float]],
+    comparison_results: dict[str, dict[str, float]],
+) -> None:
     lines = [
         "# PID/PVS Inner-Loop Tracking Figures",
         "",
         f"Generated: {datetime.now().isoformat(timespec='seconds')}",
         "",
         "## Profiles",
+        "",
+        "PVS native baseline (unmodified upstream defaults): "
+        f"Kp_z={PVS_NATIVE_PROFILE.depth_params[0]}, "
+        f"Kp_theta={PVS_NATIVE_PROFILE.depth_params[1]}, "
+        f"Kd_theta={PVS_NATIVE_PROFILE.depth_params[2]}, "
+        f"Ki_theta={PVS_NATIVE_PROFILE.depth_params[3]}, "
+        f"wn_d_z={PVS_NATIVE_PROFILE.wn_d_z}, "
+        f"deltaMax={PVS_NATIVE_PROFILE.delta_max_deg} deg.",
         "",
         "Shared relaxed plant limits (runtime, not source edit): "
         f"deltaMax={STEP_PROFILE.delta_max_deg} deg, r_max={STEP_PROFILE.r_max_deg} deg/s, wn_d={STEP_PROFILE.wn_d}.",
@@ -358,6 +395,22 @@ def _write_report(output_dir: Path, figures: dict[str, Path], results: dict[str,
     for name, metrics in results.items():
         rendered = ", ".join(f"{k}={v:.3f}" for k, v in metrics.items())
         lines.append(f"| `{name}` | {rendered} |")
+    lines.extend(
+        [
+            "",
+            "## Profile Comparison (RMSE to raw command)",
+            "",
+            "| case | PVS native default | step tuned v2 | sine tuned v2 |",
+            "| --- | ---: | ---: | ---: |",
+        ]
+    )
+    for name, metrics in comparison_results.items():
+        lines.append(
+            f"| `{name}` | "
+            f"{metrics['pvs_native_default']:.3f} | "
+            f"{metrics['step_tuned_v2']:.3f} | "
+            f"{metrics['sine_tuned_v2']:.3f} |"
+        )
     lines.extend(["", "## Figures", "", "| figure | path |", "| --- | --- |"])
     for name, path in figures.items():
         lines.append(f"| `{name}` | `{path}` |")
@@ -405,7 +458,7 @@ def main() -> None:
         figures[case.name] = path
 
     summary_base = figures_dir / "05_pid_pvs_profile_comparison"
-    _plot_summary(summary_base)
+    comparison_results = _plot_summary(summary_base)
     args.thesis_output_dir.mkdir(parents=True, exist_ok=True)
     for suffix in (".pdf", ".png"):
         shutil.copy2(
@@ -414,7 +467,7 @@ def main() -> None:
         )
     figures["profile_comparison"] = summary_base.with_suffix(".pdf")
 
-    _write_report(run_dir, figures, results)
+    _write_report(run_dir, figures, results, comparison_results)
     print(run_dir)
 
 

@@ -378,7 +378,7 @@ R20 的策略对照图与同源结果文件随图组来源记录归档，正文�
 
 \subsection{地形跟随主结果}\label{sec:ch05-5-5-2}
 
-本表为真口径重跑结果（跳过起始 10 s 预热、四相统一取真值离底高度）；早先旧表约 4.0 m 常值离底与约 7 m 深度误差已确认为分析层基准错误造成的常值假象并被取代，样本量与适用边界见附录 A.7。每相为单次运行（\(n=1\)），引用须标注，后续应补至少三次重复给出均值\allowbreak{}±标准差。
+表~\ref{tab:ch05-terrain-main} 为修复执行链后的原生 PVS 四相重跑结果，四相具有相同初始深度、地形、1.5~m/s 速度设定和 \texttt{0xEE} 深度--航向内环，且均经语义指令、仲裁器和二进制协议下发。PID/PVS 相把安全过滤后的候选深度直接交给 PVS 内层，MPC/PVS 相则先生成受带宽约束的制导深度，再交给同一内层。统计统一跳过起始 10~s：离底高度取 DVL 高度，车辆深度取 \texttt{/auv/sensors/ground\_truth}，下发命令取 \texttt{/auv/control/mpc\_cmd}，PVS 可行参考 \(z_d\)、舵角和积分状态取执行端 sidecar。由于本次 rosbag 中 \texttt{/auv/diagnostics} 无有效消息，正文不使用由状态估计与地形点云合成的 diagnostics 作为控制性能证据。每相仍为单次运行（\(n=1\)），因此只用于执行链与典型响应展示；当前调优 PVS 配置如需形成稳健统计结论，仍须补充多次重复。后文既有三档多种子矩阵使用运动学设定点后端，只能验证地形参考与安全过滤层。
 
 \begin{longtable}[]{@{}lrrrr@{}}
 \caption{地形跟随真口径主结果（每组单次运行）}\label{tab:ch05-terrain-main}\tabularnewline
@@ -392,38 +392,40 @@ R20 的策略对照图与同源结果文件随图组来源记录归档，正文�
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-时长（s） & 59.11 & 59.80 & 59.50 & 59.51 \\
-最小离底高度（m） & 1.600 & 1.000 & 1.400 & 1.400 \\
-平均离底高度（m） & 2.699 & 1.954 & 2.657 & 2.647 \\
-离底高度标准差（m） & 0.470 & 0.442 & 0.495 & 0.500 \\
-相对 3 m 目标 RMSE（m） & 0.558 & 1.136 & 0.602 & 0.612 \\
-深度误差 RMSE（m） & 6.493 & N/A & 6.427 & N/A \\
-离底 \textless{} 1.5 m 比例 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+时长（s） & 59.09 & 58.80 & 57.15 & 56.78 \\
+最小离底高度（m） & 0.100 & 2.200 & 1.000 & 1.700 \\
+平均离底高度（m） & 2.180 & 3.168 & 2.294 & 3.062 \\
+离底高度标准差（m） & 0.910 & 0.384 & 0.832 & 0.602 \\
+相对 3 m 目标 RMSE（m） & 1.225 & 0.419 & 1.091 & 0.605 \\
+PVS 内环 \(z_d\!\rightarrow z\) RMSE（m） & 0.524 & 0.217 & 0.113 & 0.197 \\
+艉舵命令饱和比例 & 0.4868 & 0.1859 & 0.0396 & 0.2159 \\
+离底 \textless{} 1.5 m 比例 & 0.1977 & 0.0000 & 0.1474 & 0.0000 \\
+MPC 求解回退比例 & -- & -- & 0.0000 & 0.0000 \\
 \end{longtable}
 
-真口径下四相的平均离底高度落在 1.95--2.70 m，离底高度随真地形起伏（标准差约 0.44--0.50 m），不再是旧表的 4.0 m 常值假象。地形模式的主指标是相对目标高度的离底 RMSE；深度误差 RMSE 在地形模式下按绝对目标深度评分已无物理意义，故正确标为不适用。本次重跑为单次运行，PID 与 MPC 地形跟随的离底 RMSE 接近，\textbf{不应据此过度解读两者的相对优劣}；地形跟随能力的稳健结论以 §\ref{sec:ch05-5-5-3} 的三档消融为准。此外 MPC 地形相有约 14.3\% 的步触发``保持上次输出''的回退，这是 MPC 在起始深度与目标差距过大（约 8 m 降到 3 m）时带宽/速率约束求解不可行的真实工程边界，须诚实记录。
+固定 12~m 绝对深度基线在海床抬升段分别有 19.77\% 和 14.74\% 的样本低于 1.5~m，最小净空仅 0.1~m 和 1.0~m；这说明仅靠固定深度和末端安全围栏不足以完成近底巡检。加入地形参考后，PID/PVS 与 MPC/PVS 的最小净空分别提高到 2.2~m 和 1.7~m，低于 1.5~m 的比例均为零。PID 地形相的离底 RMSE 为 0.419~m，优于本次 MPC 地形相的 0.605~m，故本组数据不支持``MPC 的地形跟随精度优于 PID''。但两相相对同一 PVS 可行参考 \(z_d\) 的内环 RMSE 分别仅为 0.217~m 和 0.197~m，表明差异主要产生在制导参考与安全过滤层，而不是 MPC 多经历了一套低层控制。MPC 两相均无求解回退，地形相求解耗时 p95 为 13.10~ms；其 4 个紧急净空诊断帧均由安全目标直接覆盖最终制导深度，未再出现紧急上浮被优化器软化的旧异常。
 
-图~\ref{fig:ch05-terrain-tracking}展示 PID/MPC 地形跟随的离底高度跟踪，对应上表的离底高度与违规行；安全裕度只是离底高度对安全阈值的线性平移，信息与跟踪曲线重复，连同离底 RMSE 四组对比与指令契约示意图一并作为同组 \(n=1\) 支撑材料，随附录 A.7/Artifact Manifest 归档，其中``MPC 未优于 PID''这一诚实边界已在上表与 \S\ref{sec:ch05-5-6} 中记录，主文不再逐图展开：
+图~\ref{fig:ch05-terrain-tracking} 展示深度控制链的五层量：DVL 高度与真值深度共同确定的海底深度、3~m 几何净空目标、实际下发深度命令、PVS 一阶参考模型输出 \(z_d\) 以及 AUV 真值深度。橙色命令的离散修正来自地形安全过滤与 MPC 制导，紫色 \(z_d\) 则反映 PVS 内层实际能够消化的参考带宽；蓝色真值深度紧随 \(z_d\)，从而把``制导层偏差''与``内层跟踪偏差''分开。图例采用不透明白底，避免与多条密集曲线混叠。
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}]{terrain_following/terrain_tz_tracking_pid_mpc.pdf}
-\caption{地形离底高度跟踪 PID vs MPC（PVS 地形跟踪基准，\(n=1\)）}\label{fig:ch05-terrain-tracking}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={PID/MPC 地形跟随的分层深度响应：海底、几何目标、下发命令、PVS 可行参考与 AUV 真值深度}]{terrain_following/terrain_tz_tracking_pid_mpc.pdf}
+\caption{PID/MPC 地形跟随的分层深度响应（原生 PVS 执行链，\(n=1\)）：两类制导均经同一 PVS 深度--航向内环}\label{fig:ch05-terrain-tracking}
 \end{figure}
 \FloatBarrier
 
-图~\ref{fig:ch05-terrain-tracking} 从时间维度刻画了离底高度的动态收敛，但难以直观呈现车辆如何在起伏海床上方保持恒定净空。为补足空间直觉，图~\ref{fig:ch05-terrain-3d} 给出 PID 地形跟随相的三维视图：海底曲面由本次运行所用的确定性地形配置离线重建，其起伏公式与仿真地形生成逻辑同源（同一 seed 与噪声参数），因而覆盖 AUV 全程轨迹并忠实对应本次运行的真实地形，而非 bag 中仅围绕原点、坐标系与世界系不一致的静态点云快照。图中蓝色轨迹在起伏海床上方以近似恒定的间隙推进，绿色虚线为按 3~m 目标净空换算的目标深度路径，二者的稳定平行关系正是表~\ref{tab:ch05-terrain-main} 中米级以内离底 RMSE 的空间化印证。为诚实标注地形曲面的可信度，图中另叠加沿程 DVL 实测海底高度作为验证锚点，其与重建曲面沿程相关系数约 0.91、均值偏差约 \(-0.06\)~m、均方根偏差约 0.34~m，说明重建地形与车辆实际经历的海床一致。需要说明的是，该三维视图对应单次运行（\(n=1\)），仅作空间直觉与地形可信度的佐证，近底安全的稳健统计结论仍以 §\ref{sec:ch05-5-5-3} 的三档多种子消融为准。
+图~\ref{fig:ch05-terrain-tracking} 从时间维度刻画了深度控制链，但难以直观呈现车辆如何在起伏海床上方保持净空。为补足空间直觉，图~\ref{fig:ch05-terrain-3d} 给出 PID 地形跟随相的三维真值轨迹。海底曲面由本次运行所用的确定性地形配置离线重建，其起伏公式与仿真地形生成逻辑同源（同一 seed 与噪声参数），因而覆盖 AUV 全程轨迹，而非使用 bag 中仅围绕原点的静态显示点云。图中蓝色轨迹与绿色 3~m 几何净空目标保持一致趋势，二者的局部间距体现安全过滤和内层动力学造成的跟踪偏差。沿程 DVL 实测海底作为独立验证锚点，与重建曲面的相关系数约 1.00、均值偏差约 0.00~m、均方根偏差约 0.03~m。旧图采用存在近常量平移偏置的滤波位姿，曾把该偏差放大到约 0.39~m；本图改用同一录包中的 PVS 真值轨迹后消除了这一坐标口径混杂。该三维视图仍为单次运行（\(n=1\)），只作空间直觉与地形一致性佐证；§\ref{sec:ch05-5-5-3} 的历史多种子消融验证高层地形与安全逻辑，不能替代当前原生 PVS 配置的重复试验。
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,alt={三维海底曲面与 PID 地形跟随轨迹：确定性重建的起伏海床曲面覆盖 AUV 全轨迹，蓝色轨迹在海床上方以近似恒定净空推进，橙色散点为沿程 DVL 实测海底验证锚，重建与实测沿程相关系数约 0.91}]{terrain_following/terrain_3d_pid_terrain_trajectory.pdf}
-\caption{三维海底曲面与 PID 地形跟随轨迹（确定性地形重建 + 沿程 DVL 实测海底验证锚，\(n=1\)）：蓝色为 AUV 轨迹，绿色虚线为 3~m 目标净空对应的目标深度路径，曲面颜色表示向下为正的海底深度，橙色散点为 DVL 实测海底高度，重建与实测沿程相关系数约 0.91}\label{fig:ch05-terrain-3d}
+\includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,alt={三维海底曲面与 PID 地形跟随真值轨迹：蓝色轨迹位于重建海床上方，绿色虚线为 3 m 几何净空目标，橙色散点为 DVL 实测海底验证锚}]{terrain_following/terrain_3d_pid_terrain_trajectory.pdf}
+\caption{三维海底曲面与 PID 地形跟随真值轨迹（确定性地形重建 + 沿程 DVL 验证锚，\(n=1\)）：重建海床与 DVL 沿程海床的相关系数约 1.00、均方根偏差约 0.03~m}\label{fig:ch05-terrain-3d}
 \end{figure}
 \FloatBarrier
 
 \subsection{PID 地形跟随的地形强度消融}\label{sec:ch05-5-5-3}
 
-为把上一节的单次基准提升为可进入论文统计表的结论，本节对低、中、高三档地形强度各跑三个随机种子复验，并对其中两档落盘失败的种子各做一次重跑，最终合并口径如下（部分档的三种子由主跑成功种子与重跑成功种子合并得到，重跑原因是记录落盘不稳定而非算法闭环失败）：
+为验证地形参考与安全过滤层的多种子稳定性，本节对低、中、高三档地形强度各跑三个随机种子复验，并对其中两档落盘失败的种子各做一次重跑。该历史矩阵使用 \texttt{kinematic\_setpoint} 后端，故可支撑高层地形与安全逻辑的稳健性，但不能替代上一节调优后原生 PVS 深度内环的多次重复。最终合并口径如下（部分档的三种子由主跑成功种子与重跑成功种子合并得到，重跑原因是记录落盘不稳定而非算法闭环失败）：
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1304}}
@@ -432,7 +434,7 @@ R20 的策略对照图与同源结果文件随图组来源记录归档，正文�
   >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1739}}@{}}
-\caption{PID 地形跟随三档多种子消融结果}\label{tab:ch05-terrain-ablation}\tabularnewline
+\caption{PID 地形跟随三档多种子消融结果（运动学设定点后端）}\label{tab:ch05-terrain-ablation}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 地形强度
@@ -472,7 +474,7 @@ R20 的策略对照图与同源结果文件随图组来源记录归档，正文�
 高 & 3/3 & 0.610\allowbreak{}±0.081 m & 3.583\allowbreak{}±0.112 m & 3.228\allowbreak{}±0.205 m & 0.0000 \\
 \end{longtable}
 
-三档地形均三次全部完成、无一例低于 1.5 m 的安全违规，离底 RMSE 落在 0.59--0.71 m 区间，说明 PID 地形跟随在当前地形模型下具有稳定的近底安全性，这一均值\allowbreak{}±标准差结论可作为论文近底安全的主结论。
+三档地形均三次全部完成、无一例低于 1.5 m 的安全违规，离底 RMSE 落在 0.59--0.71 m 区间，说明地形参考与安全过滤在当前运动学后端和地形模型下具有稳定的近底安全性；该均值\allowbreak{}±标准差不外推为原生 PVS 内环的稳健统计。
 对应三档消融图与同源结果文件随图组来源记录归档，正文以表~\ref{tab:ch05-terrain-ablation} 为准。
 \FloatBarrier
 

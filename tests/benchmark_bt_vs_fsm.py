@@ -479,10 +479,16 @@ def experiment_state_expansion_cost() -> dict[str, Any]:
 def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     tps.apply_thesis_style(layout="full")
     fig = plt.figure(
-        figsize=tps.figure_size("full", height=4.35),
+        figsize=tps.figure_size("full", height=3.95),
         constrained_layout=True,
     )
-    gs = fig.add_gridspec(2, 3, hspace=0.35, wspace=0.3)
+    gs = fig.add_gridspec(
+        2,
+        3,
+        height_ratios=(0.95, 1.05),
+        hspace=0.14,
+        wspace=0.22,
+    )
 
     dup = results.get('emergency_duplication', {})
     width = 0.35
@@ -511,7 +517,6 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax0.set_title('圈复杂度（McCabe V(G)）')
     ax0.set_xticks(x0)
     ax0.set_xticklabels(cat0)
-    ax0.legend(fontsize=9)
     ax0.grid(axis='y', alpha=0.3)
     for bar, val in zip(bars0, bt0):
         ax0.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
@@ -541,7 +546,6 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax1.set_title('应急处理代码重复度')
     ax1.set_xticks(x1)
     ax1.set_xticklabels(cat1)
-    ax1.legend(fontsize=9)
     ax1.grid(axis='y', alpha=0.3)
     for bar, val in zip(bars1, bt1):
         ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1,
@@ -571,8 +575,16 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax2.set_title('各状态应急检查分布')
     ax2.set_xticks(x2)
     ax2.set_xticklabels(states_names, fontsize=7.5)
-    ax2.legend(fontsize=9)
     ax2.set_ylim(0, 1.5)
+    ax2.legend(
+        loc='upper center',
+        ncols=2,
+        fontsize=8,
+        handlelength=1.5,
+        columnspacing=0.8,
+        handletextpad=0.4,
+        borderpad=0.3,
+    )
     ax2.grid(axis='y', alpha=0.3)
 
     ax3 = fig.add_subplot(gs[1, :2])
@@ -609,7 +621,6 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     )
     ax3.set_xlabel('V(G)')
     ax3.set_title('各函数复杂度对比')
-    ax3.legend(fontsize=9)
     ax3.grid(axis='x', alpha=0.3)
 
     ax4 = fig.add_subplot(gs[1, 2])
@@ -636,7 +647,6 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax4.set_xticks(summary_x, ['平均\n复杂度', '最大\n复杂度'])
     ax4.set_ylabel('复杂度')
     ax4.set_title('平均与最大复杂度')
-    ax4.legend(fontsize=9)
     ax4.grid(axis='y', alpha=0.3)
 
     out_base = output_dir / 'figures' / '03_complexity_comparison'

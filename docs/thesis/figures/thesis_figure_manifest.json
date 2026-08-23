@@ -210,9 +210,10 @@
       "kind": "matplotlib",
       "generator": "tools/pid_pvs_tracking_plots.py",
       "inputs": [],
-      "command": ".venv/bin/python tools/pid_pvs_tracking_plots.py",
-      "reproducibility": "mac_full",
-      "layout": "full"
+      "command": "python3 tools/pid_pvs_tracking_plots.py",
+      "reproducibility": "linux_required",
+      "layout": "full",
+      "notes": "Requires the local PythonVehicleSimulator package; native baseline uses unmodified upstream defaults."
     },
     {
       "id": "ch05_five_layer_architecture",
@@ -269,21 +270,34 @@
       "preview": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.png",
       "kind": "matplotlib",
       "generator": "tools/plot_terrain_following_figures.py",
-      "inputs": ["results/control/terrain_following_20260619_222639/*/bag_path.txt"],
+      "inputs": [
+        "results/control/terrain_following_20260823_215036/pid_terrain/bag_path.txt",
+        "results/control/terrain_following_20260823_215036/pid_terrain/pvs_control_trace.csv",
+        "results/control/terrain_following_20260823_215036/mpc_terrain/bag_path.txt",
+        "results/control/terrain_following_20260823_215036/mpc_terrain/pvs_control_trace.csv"
+      ],
       "source_sha256": [
         {
-          "path": "/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap",
-          "sha256": "14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5"
+          "path": "/auv_data/bags/20260823_215151/rosbag/rosbag_0.mcap",
+          "sha256": "0ea51e9f49a7b4675e176c3c11ab197f6e1443480a652043a34fb56d6da1f407"
         },
         {
-          "path": "/auv_data/bags/20260619_223058/rosbag/rosbag_0.mcap",
-          "sha256": "1fc5a5b7d64bb78deb3eaa49cb0ad9ad73a790a3d413d5e11ce734844b99e729"
+          "path": "/auv_data/bags/20260823_215416/rosbag/rosbag_0.mcap",
+          "sha256": "e465d0b9cf80b54e77693b5654d6ef9f4dbeea1021603404206793b4e65a5014"
+        },
+        {
+          "path": "results/control/terrain_following_20260823_215036/pid_terrain/pvs_control_trace.csv",
+          "sha256": "51989db27eb0c1ad3788c452aaf6ccb50f62bdf2e1acf70dc6a138698af5fe42"
+        },
+        {
+          "path": "results/control/terrain_following_20260823_215036/mpc_terrain/pvs_control_trace.csv",
+          "sha256": "d8d8689858d4d1cfe2a72aa109462400d5d50d61874e0d9e36da4980778b2cdb"
         }
       ],
-      "command": ".venv/bin/python tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260619_222639 --figure terrain_tz_tracking_pid_mpc",
+      "command": "python3 tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260823_215036 --figure terrain_tz_tracking_pid_mpc",
       "reproducibility": "linux_required",
       "layout": "full",
-      "notes": "MCAP paths resolve under /auv_data on Linux; source MCAP is absent on macOS."
+      "notes": "Ground-truth depth and DVL altitude come from MCAP; PVS feasible reference z_d comes from the per-phase sidecar."
     },
     {
       "id": "ch05_terrain_3d",
@@ -293,19 +307,23 @@
       "kind": "matplotlib",
       "generator": "tools/plot_terrain_following_figures.py",
       "inputs": [
-        "results/control/terrain_following_20260619_222639/pid_terrain/bag_path.txt",
+        "results/control/terrain_following_20260823_215036/pid_terrain/bag_path.txt",
         "config/bridge_params.protocol_udp.pvs.terrain.yaml"
       ],
       "source_sha256": [
         {
-          "path": "/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap",
-          "sha256": "14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5"
+          "path": "/auv_data/bags/20260823_215151/rosbag/rosbag_0.mcap",
+          "sha256": "0ea51e9f49a7b4675e176c3c11ab197f6e1443480a652043a34fb56d6da1f407"
+        },
+        {
+          "path": "config/bridge_params.protocol_udp.pvs.terrain.yaml",
+          "sha256": "8dd8fa1b4ad0c3283268e52dbd4a99eb313d0bc7239bc81c5835f18cc2793596"
         }
       ],
-      "command": ".venv/bin/python tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260619_222639 --figure terrain_3d_pid_terrain_trajectory",
+      "command": "python3 tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260823_215036 --figure terrain_3d_pid_terrain_trajectory",
       "reproducibility": "linux_required",
       "layout": "full",
-      "notes": "MCAP path resolves under /auv_data on Linux; source MCAP is absent on macOS."
+      "notes": "Uses the MCAP ground-truth trajectory and deterministic terrain configuration; DVL altitude is an independent validation anchor."
     },
     {
       "id": "ch05_r13_control_rate",
@@ -452,7 +470,7 @@
       "inputs": ["hardware_wrappers/fangkong_adc/raw_data/enob/20260809T161036/ch4_enob_results.json"],
       "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
       "reproducibility": "mac_render_only",
-      "layout": "full"
+      "layout": "single"
     },
     {
       "id": "ch05_enob_psd",
@@ -464,7 +482,7 @@
       "inputs": ["hardware_wrappers/fangkong_adc/raw_data/enob/20260809T161036/ch4_enob_capture.npz"],
       "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
       "reproducibility": "mac_render_only",
-      "layout": "full"
+      "layout": "single"
     },
     {
       "id": "ch05_mag_noise_ros",

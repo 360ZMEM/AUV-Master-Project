@@ -10,9 +10,13 @@
     --id ch05_terrain_3d \
     --render linux
   ```
+- 正式四相结果：`results/control/terrain_following_20260823_215036/`
 - Linux 原始 MCAP（SHA256 同步记录于 `thesis_figure_manifest.json`）：
-  - PID terrain：`/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap`，`14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5`
-  - MPC terrain：`/auv_data/bags/20260619_223058/rosbag/rosbag_0.mcap`，`1fc5a5b7d64bb78deb3eaa49cb0ad9ad73a790a3d413d5e11ce734844b99e729`
+  - PID terrain：`/auv_data/bags/20260823_215151/rosbag/rosbag_0.mcap`，`0ea51e9f49a7b4675e176c3c11ab197f6e1443480a652043a34fb56d6da1f407`
+  - MPC terrain：`/auv_data/bags/20260823_215416/rosbag/rosbag_0.mcap`，`e465d0b9cf80b54e77693b5654d6ef9f4dbeea1021603404206793b4e65a5014`
+- PVS 内环 sidecar：
+  - PID terrain：`pvs_control_trace.csv`，`51989db27eb0c1ad3788c452aaf6ccb50f62bdf2e1acf70dc6a138698af5fe42`
+  - MPC terrain：`pvs_control_trace.csv`，`d8d8689858d4d1cfe2a72aa109462400d5d50d61874e0d9e36da4980778b2cdb`
 - 图像与数据说明详见 `docs/thesis/09_terrain_following_figures.md`。
 
 ## 论文压缩降级记录（2026-08-18，L2 表-图去重）
@@ -35,10 +39,10 @@
   现统一改为**确定性地形重建**：公式与仿真 `sim_holoocean/interfaces/synthetic_sensors.py::_terrain_height`
   完全一致（seed=42、octaves=4、scale=6、amplitude=2.0、slope=3°），对全轨迹均有定义，忠实于本次运行。
 - **诚实验证锚**：图中叠加 AUV 沿程 DVL 实测海底高度（`clearance_source=real_altitude`）散点，
-  重建曲面与实测沿程 **r≈0.91、偏差≈−0.06 m、RMS≈0.34 m**，量化标注地形可信度。
+  重建曲面与实测沿程 **r≈1.00、偏差≈0.00 m、RMS≈0.03 m**，量化标注地形可信度。
 - 生成脚本：`tools/plot_terrain_following_figures.py::plot_3d_terrain_trajectory`（走 `thesis_plot_style`，中文字体、STIX 数学字体、PDF + 600 dpi PNG）。
-- **数据来源（复用，不重跑）**：`results/control/terrain_following_20260619_222639/pid_terrain`
-  （轨迹 `/auv/state/filtered`）+ 运行同源配置 `config/bridge_params.protocol_udp.pvs.terrain.yaml`。
+- **数据来源（2026-08-23 原生 PVS 重跑）**：`results/control/terrain_following_20260823_215036/pid_terrain`
+  （轨迹 `/auv/sensors/ground_truth`）+ 运行同源配置 `config/bridge_params.protocol_udp.pvs.terrain.yaml`。
 - **诚实边界**：单次运行（n=1），仅作空间直觉与地形可信度佐证；近底安全稳健结论仍以 `tab:ch05-terrain-ablation` 三档多种子消融为准。
 - 复算入口只重绘两幅正文图，不改写同目录归档图；渲染前由总入口校验原始 MCAP SHA256。
 
@@ -46,5 +50,5 @@
 
 - `terrain_tz_tracking_pid_mpc`：6.8 inch 通栏、两子图共享图例、统一 `(a)/(b)` 标识；移除重复总标题，图例置于数据区外。
 - `terrain_3d_pid_terrain_trajectory`：6.8 inch 通栏、`cividis` 海底深度色标、统一语义色；移除图内长来源说明，完整来源与边界保留在本文件和论文 caption。
-- 显示层修改前后，PID/MPC 两组 `t`、`depth`、`target_depth`、`controller_target_depth`、`clearance` 和 `seabed_depth` 共 12 个数组逐字节一致。
-- 3D 地形重建校核保持 `r=0.91`、偏差 `-0.06 m`、RMS `0.34 m`；没有平滑、裁剪或重采样原始轨迹。
+- 2026-08-23 执行链审计后，时序图明确分离几何净空目标、`/auv/control/mpc_cmd` 实际命令、PVS 可行参考 \(z_d\) 与 AUV 真值深度；legend 使用不透明白底和 0.8 线宽灰边框。
+- 3D 图由滤波位姿改为同一录包的 PVS 真值轨迹，消除了 EKF 近常量平移偏置对地形一致性校核的污染；未对真值轨迹做平滑。

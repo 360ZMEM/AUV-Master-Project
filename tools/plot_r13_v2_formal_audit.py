@@ -113,6 +113,19 @@ def save_figure(fig: plt.Figure, output_dir: Path, stem: str) -> None:
     plt.close(fig)
 
 
+def opaque_legend(axis: plt.Axes, *args, **kwargs) -> None:
+    kwargs.update(
+        {
+            "frameon": True,
+            "facecolor": "white",
+            "framealpha": 1.0,
+            "edgecolor": "#BFBFBF",
+        }
+    )
+    legend = axis.legend(*args, **kwargs)
+    legend.get_frame().set_linewidth(0.8)
+
+
 def read_pt_samples(bundle: Path, output_csv: Path, *, skip_mcap: bool) -> list[dict[str, object]]:
     if skip_mcap:
         return [dict(row) for row in read_csv_rows(output_csv)]
@@ -197,7 +210,7 @@ def plot_rmse(paired_rows: list[dict[str, str]], output_dir: Path) -> None:
     axis.set_ylabel("横向 RMSE (m)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    axis.legend(frameon=False)
+    opaque_legend(axis)
     for idx, value in enumerate(delta):
         axis.text(
             idx,
@@ -242,7 +255,7 @@ def plot_control_rate(paired_rows: list[dict[str, str]], output_dir: Path) -> No
     axis.set_ylabel("控制变化率 RMS (对数轴)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    axis.legend(frameon=False)
+    opaque_legend(axis)
     for idx, value in enumerate(delta):
         axis.text(
             idx,
@@ -288,7 +301,7 @@ def plot_authority(summary_rows: list[dict[str, str]], output_dir: Path) -> None
     axis.set_ylabel("授权模式占比 (%)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    axis.legend(frameon=False, ncol=3, loc="upper right")
+    opaque_legend(axis, ncol=3, loc="upper right")
     for idx, row in enumerate(rows):
         if row["scenario"] == "combined_cable_extreme_proxy":
             axis.text(idx, 103.0, "跟踪 0%", ha="center", va="bottom")
@@ -338,7 +351,7 @@ def plot_p_track(samples: list[dict[str, object]], output_dir: Path) -> None:
     axis.set_ylim(0.0, 1.02)
     axis.set_ylabel(r"声呐跟踪概率 $p_{\mathrm{track}}$")
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    axis.legend(frameon=False, ncol=2, loc="lower right")
+    opaque_legend(axis, ncol=2, loc="lower right")
     save_figure(fig, output_dir, "r13_v2_p_track_boxplot_ua")
 
 

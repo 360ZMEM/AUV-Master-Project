@@ -1,7 +1,7 @@
 # 地形跟随 PID/MPC 当前状态与 MPC 支线结论
 
-**日期**: 2026-06-10  
-**定位**: 固化地形跟随实验、PID/PVS 与 guidance-level MPC 对比、MPC 深度控制回退理由，以及 MPC 在 `x/y/yaw` 平面制导层面的补充优势分析。
+**日期**: 2026-08-23
+**定位**: 固化地形跟随实验、PID/PVS 与 guidance-level MPC 对比、PVS 深度内环诊断，以及 MPC 在 `x/y/yaw` 平面制导层面的补充优势分析。本文档 §2--§8 保留历史演进，当前正式口径以 §9 为准。
 
 ---
 
@@ -264,3 +264,37 @@ mpc_terrain 相 **14.3% 步触发 `FALLBACK_LAST_OUTPUT`**。根因：`z_band=4.
 - **extrinsics seed（P1-b）**：[es_ekf_extrinsics_benchmark.py](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/es_ekf_extrinsics_benchmark.py) `--seeds` 默认已改为 `0,1,2`（3-seed 内建默认）；F2 结果按 3 seed 报告并附 `*_std`。
 - **n=1（P2-a）**：见 §8.2 警示——地形基准单次运行，须标注。
 - **双 INDEX 树（P2-b）**：`docs/thesis/INDEX.md`（工程证据层）与 `docs/thesis/paper/INDEX.md`（论文正文层）为两棵职责不同的平行树，已在各自 INDEX 标注主/从定位；`05_experiments_and_discussion.md` 与 `..._continued.md` 的续写关系已在 paper INDEX 标注。
+
+---
+
+## 9. 原生 PVS 深度内环与地形跟随最终复核（2026-08-23）
+
+### 9.1 当前正式四相
+
+正式结果目录为 `results/control/terrain_following_20260823_215036`。PID/MPC 的 baseline/terrain 四相使用相同初始深度、确定性地形、1.5 m/s 速度设定与 `0xEE` 深度—航向内环，并统一经 `/auv/control/mpc_cmd → arbiter → binary protocol → Mock AMD → PVS` 执行。统计跳过起始 10 s；净空来自 DVL，实际深度和三维轨迹来自 `/auv/sensors/ground_truth`，PVS 可行参考 $z_d$、舵角和积分状态来自 `pvs_control_trace.csv`。该批 bag 的 `/auv/diagnostics` 消息数为零，合成 diagnostics 不作为控制性能证据。
+
+| 指标 | PID baseline | PID terrain | MPC baseline | MPC terrain |
+|---|---:|---:|---:|---:|
+| 最小净空（m） | 0.100 | 2.200 | 1.000 | 1.700 |
+| 净空 RMSE（m） | 1.225 | 0.419 | 1.091 | 0.605 |
+| PVS $z_d\rightarrow z$ RMSE（m） | 0.524 | 0.217 | 0.113 | 0.197 |
+| 艉舵原始命令饱和率 | 0.4868 | 0.1859 | 0.0396 | 0.2159 |
+| `<1.5 m` 比例 | 0.1977 | 0.0000 | 0.1474 | 0.0000 |
+| MPC fallback | — | — | 0.0000 | 0.0000 |
+
+固定 12 m 绝对深度不能替代地形跟随；两类 terrain 相均守住 1.5 m 阈值。PID terrain 的净空 RMSE 小于本次 MPC terrain，但两者相对同一 PVS 可行参考的内环 RMSE 均约为 0.2 m，因此差异主要来自制导参考与安全过滤层，而不是 PID 少经过一级内环。
+
+### 9.2 PVS 迟钝根因与修改边界
+
+严格原生默认参数为 `Kp_z=0.1`、`wn_d_z=0.02 rad/s`、`deltaMax=15 deg`。默认深度参考低通、级联增益、舵限与无 anti-windup 共同造成低带宽；此外旧链还叠加了启动零深度、低正值 RPM 被映射为停车、配置未加载、MPC guidance 未下发和 CBF 停车导致舵效丢失等问题。最终采用任务匹配 profile `Kp_z=1.0`、`wn_d_z=0.4 rad/s`、`Kp_theta=6.0`、`Kd_theta=2.0`、`Ki_theta=1.5`、`deltaMax=20 deg`，并在本地 adapter 加入积分冻结与限幅。上游 `/root/PythonVehicleSimulator` 源码未修改。
+
+严格原生与任务匹配 profile 的深度 RMSE 为：阶跃 `3.491 → 1.453 m`，正弦 `1.132 → 0.202 m`；相对 PVS 可行参考的调优后 RMSE 分别为 0.345 m 和 0.049 m。该对照说明默认控制迟钝主要由参考模型带宽与执行包线共同形成，不应归因于单一比例增益。
+
+### 9.3 图像与重跑判定
+
+- 图 4.7 已改为严格原生默认和两套任务匹配 profile 的同对象对照；旧图把调过增益的 profile 标成默认基线，已废止。
+- 图 5.2 已显示海底、3 m 几何目标、实际下发命令、PVS 可行参考和 AUV 真值深度五层信号；所有图例为不透明白底。
+- 图 5.3 已由带近常量偏置的滤波轨迹改为 PVS 真值轨迹；重建海床与 DVL 沿程海床由 `r=0.94`、RMS `0.39 m` 改善为 `r=1.00`、RMS `0.03 m`。
+- 当前图 5.4 为 R13-v2 三联图，不是地形曲线；其三个源图的 legend 也已统一为不透明白底。
+- 图 5.2、图 5.3 与表 5.8 无需再重跑，当前单次四相足以支撑执行链和典型响应。
+- 若论文要声称当前调优原生 PVS 配置具有稳健统计优势，仍需对 PID/MPC terrain 至少各补三次重复。既有低/中/高三档多种子矩阵使用 `kinematic_setpoint` 后端，只证明地形参考与安全过滤层，不能替代原生 PVS 多次重复。

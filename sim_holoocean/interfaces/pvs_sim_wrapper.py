@@ -215,6 +215,19 @@ class PVSSimWrapper:
         }
         self.r_max = np.deg2rad(float(self.pvs_cfg.get("r_max_deg", 5.0)))
         self.deltaMax = np.deg2rad(float(self.pvs_cfg.get("deltaMax_deg", 15.0)))
+        self.depth_anti_windup_enabled = bool(
+            self.pvs_cfg.get("depth_anti_windup_enabled", False)
+        )
+        self.z_integral_limit = max(
+            0.0,
+            float(self.pvs_cfg.get("z_integral_limit", 10.0)),
+        )
+        self.theta_integral_limit = max(
+            0.0,
+            float(self.pvs_cfg.get("theta_integral_limit", 2.0)),
+        )
+        self.depth_anti_windup_active = False
+        self.last_stern_command_raw_deg = 0.0
 
         # ────────────────────────────────────────
         # 三维洋流干扰模型
@@ -255,7 +268,14 @@ class PVSSimWrapper:
         self.reference_speed_mps = float(self.initial_speed_mps)
 
 
-    def set_reference(self, *, depth_m: float, heading_rad: float, speed_mps: float | None = None) -> None:
+    def set_reference(
+        self,
+        *,
+        depth_m: float,
+        heading_rad: float,
+        speed_mps: float | None = None,
+        propeller_rpm: float | None = None,
+    ) -> None:
         """
         设置自动驾驶仪的参考值（仅在自动驾驶仪模式下有效）。
 
@@ -264,6 +284,8 @@ class PVSSimWrapper:
             heading_rad (float)：目标航向（弧度，0-2π）
             speed_mps (float or None)：目标前进速度（m/s）；
                                        若为 None，参考 RPM 保持不变
+            propeller_rpm (float or None)：协议已编码的推进器转速；
+                                           设置时直接写入 PVS，不重复执行速度映射
 
         实现细节：
           1. 存储目标值到 self.reference_*
@@ -276,7 +298,21 @@ class PVSSimWrapper:
         """
         self.reference_depth_m = float(depth_m)
         self.reference_heading_deg = float(math.degrees(float(heading_rad)))
-        if speed_mps is not None:
+        if speed_mps is not None and propeller_rpm is not None:
+            raise ValueError("speed_mps and propeller_rpm are mutually exclusive")
+        if propeller_rpm is not None:
+            self.reference_rpm = float(
+                np.clip(max(0.0, float(propeller_rpm)), 0.0, self.max_command_rpm)
+            )
+            if self.reference_rpm <= 1.0e-9:
+                self.reference_speed_mps = 0.0
+            else:
+                self.reference_speed_mps = max(
+                    0.0,
+                    (self.reference_rpm - self.reference_speed_rpm_offset)
+                    / self.reference_speed_rpm_slope,
+                )
+        elif speed_mps is not None:
             # @note protocol_udp currently encodes autonomy speed through
             # main-motor RPM. The optional kinematic cap keeps simulation
             # proxy setpoint motion within the mission envelope.
@@ -487,6 +523,40 @@ class PVSSimWrapper:
         thrust_rpm = float(np.clip(float(cmd[4]) * self.command_thrust_rpm_scale, 0.0, self.max_command_rpm))
         return np.array([np.deg2rad(rudder_deg), np.deg2rad(stern_deg), thrust_rpm], dtype=float)
 
+    def _depth_heading_autopilot_control(self) -> np.ndarray:
+        """Evaluate the PVS autopilot with adapter-local integral protection."""
+        previous_z_int = float(self.vehicle.z_int)
+        previous_theta_int = float(self.vehicle.theta_int)
+        u_control = self.vehicle.depthHeadingAutopilot(
+            self.eta,
+            self.nu,
+            self.dt,
+        )
+        self.last_stern_command_raw_deg = float(np.degrees(u_control[1]))
+        stern_saturated = abs(float(u_control[1])) >= self.deltaMax
+        self.depth_anti_windup_active = bool(
+            self.depth_anti_windup_enabled and stern_saturated
+        )
+        if self.depth_anti_windup_active:
+            self.vehicle.z_int = previous_z_int
+            self.vehicle.theta_int = previous_theta_int
+        if self.depth_anti_windup_enabled:
+            self.vehicle.z_int = float(
+                np.clip(
+                    self.vehicle.z_int,
+                    -self.z_integral_limit,
+                    self.z_integral_limit,
+                )
+            )
+            self.vehicle.theta_int = float(
+                np.clip(
+                    self.vehicle.theta_int,
+                    -self.theta_integral_limit,
+                    self.theta_integral_limit,
+                )
+            )
+        return u_control
+
     def _build_state(self):
         """
         从仿真状态构造兼容 HoloOcean 的状态字典。
@@ -598,10 +668,12 @@ class PVSSimWrapper:
 
         if mode in {"depthheadingautopilot", "depth_heading_autopilot", "autopilot", "reference"}:
             self._apply_autopilot_params()
-            u_control = self.vehicle.depthHeadingAutopilot(self.eta, self.nu, self.dt)
+            u_control = self._depth_heading_autopilot_control()
             u_control[0] = float(np.clip(u_control[0], -self.deltaMax, self.deltaMax))
             u_control[1] = float(np.clip(u_control[1], -self.deltaMax, self.deltaMax))
         else:
+            self.depth_anti_windup_active = False
+            self.last_stern_command_raw_deg = 0.0
             u_control = self._command_to_actuators(command5)
 
         # ────────────────────────────────────────

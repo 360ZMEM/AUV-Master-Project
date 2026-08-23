@@ -168,7 +168,7 @@
 | D08 | P1 NIS/自适应 R 聚合 | `results/uncertainty_aggregates/20260612_170618_p1_sensor_3seed/` | 8 场景 × 3 seed |
 | D09 | baseline 单次基准（定位/控制/决策） | `docs/experiment/benchmark_test_log.md` | n=1 |
 | D10 | 60 s terrain PID/MPC | `docs/experiment/terrain_benchmark_log.md` | n=1/组 |
-| D11 | terrain-following 真口径重跑 | `results/control/terrain_following_20260619_222639/` | n=1/组 |
+| D11 | terrain-following 原生 PVS 执行链重跑 | `results/control/terrain_following_20260823_215036/` | n=1/组；含四相 MCAP、配置快照与 PVS sidecar |
 | D12 | PID terrain low/mid/high 3 seed 复验 | `results/control/terrain_pid_seed_sweep_20260613_162512_terrain_pid_3seed/` + low/mid retry | n=3/档 |
 | D13 | MPC x/y/yaw 极端路径（公平口径） | `/auv_data/results/control/mpc_xy_yaw_extreme/20260620_011831/` | n=1/场景 |
 | D14 | 磁传感器杆臂/安装角标定（仿真） | `results/mag_extrinsics/fullflow_20260705_2145/` | n=1 全流程 |
