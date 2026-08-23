@@ -9,7 +9,7 @@
 
 #include <tickLib.h>
 
-/*ÒÔÌ«ÍøËùÐèµÄÍ·ÎÄ¼þ*/
+/*ï¿½ï¿½Ì«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½*/
 #include <sockLib.h>
 #include <inetLib.h>
 #include <stdioLib.h>
@@ -19,7 +19,7 @@
 #include <ioctl.h>
 #include <fioLib.h>
 
-/*´®¿ÚËùÐèÍ·ÎÄ¼þ*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½*/
 #include <selectLib.h>
 
 #include "com.h"
@@ -32,12 +32,12 @@
 
 
 
-/*¶¨ÒåÒÔÌ«ÍøÉè±¸IPµØÖ·*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½ï¿½è±¸IPï¿½ï¿½Ö·*/
 #define LocalIP  "192.168.0.101"
 #define UIControllerIP "192.168.0.11"
-#define FMCUIP "192.168.0.30"/*µÚÒ»Î¢¿ØÖÆÆ÷*/
+#define FMCUIP "192.168.0.30"/*ï¿½ï¿½Ò»Î¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 
-/*¶¨ÒåÒÔÌ«ÍøÉè±¸¶Ë¿ÚºÅ*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½ï¿½è±¸ï¿½Ë¿Úºï¿½*/
 #define LocalPort 5000
 #define FMCUPort 8089
 #define UIControllerPort 21
@@ -67,14 +67,14 @@ void UartRecvFormBMSTask(void);
 
 STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort);
 
-/*·¢ËÍÊý¾Ý¸ø¸÷¸öÉè±¸º¯Êý*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½*/
 int Send_To_BEIDOU(void);
 int Send_To_FMCU(void);
 int Send_To_PSD(void);
 int Send_To_LORA(void);
 int Send_To_WIFI(void);
 
-/*½ÓÊÕÊý¾Ý¸ø¸÷¸öÉè±¸º¯Êý*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½*/
 bool Recv_From_BEIDOU(u8 *temp, int length);
 bool Recv_From_PSD(u8 *temp, int length);
 bool Recv_From_GPS_GGA(u8 *temp, int length);
@@ -94,16 +94,16 @@ bool Recv_From_FMCU(void);
 void Perror(const char *s);
 bool Lan_Recv_Data_Validity_check(u8 *check_head_buf, u8 *check_end_buf, u8 *receive_data, u16 received_len);
 
-#define BEID_COM_BAUD_RATE           115200  /* ±±¶·´®¿Ú²¨ÌØÂÊ */
-#define GPS_COM_BAUD_RATE           9600  /* GPS´®¿Ú²¨ÌØÂÊ */
-#define PSD_COM_BAUD_RATE           9600  /* ÆµÉÁµÆ´®¿Ú²¨ÌØÂÊ */
-#define DVL_COM_BAUD_RATE           38400  /* DVL´®¿Ú²¨ÌØÂÊ ,×¢ÒâÕâÀï²¨ÌØÂÊÒª¸Ä³É38400£¬¶ÔÓ¦dvlÉè±¸*/
-#define IMU_COM_BAUD_RATE           115200  /* ÍÓÂÝÒÇ´®¿Ú²¨ÌØÂÊ */
-#define LORA_COM_BAUD_RATE           38400  /* LORA´®¿Ú²¨ÌØÂÊ */
-#define BMS_COM_BAUD_RATE           115200  /* LORA´®¿Ú²¨ÌØÂÊ */
+#define BEID_COM_BAUD_RATE           115200  /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define GPS_COM_BAUD_RATE           9600  /* GPSï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define PSD_COM_BAUD_RATE           9600  /* Æµï¿½ï¿½ï¿½Æ´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define DVL_COM_BAUD_RATE           38400  /* DVLï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ ,×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï²¨ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³ï¿½38400ï¿½ï¿½ï¿½ï¿½Ó¦dvlï¿½è±¸*/
+#define IMU_COM_BAUD_RATE           115200  /* ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define LORA_COM_BAUD_RATE           38400  /* LORAï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define BMS_COM_BAUD_RATE           115200  /* LORAï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
 
-/*±êÖ¾¶¨Òå*/
+/*ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½*/
 bool Recv_From_WIFI_Correct_Flag = false;
 bool WIFI_Socket_Initial_Flag = false;
 
@@ -138,13 +138,13 @@ bool Recv_From_PSD_Correct_Flag = false;
 
 
 
-u16 ToUI12_Msg_Length = 145;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬cpu¸øÉÏÎ»»ú·¢µÄÊý¾ÝÊÇ144¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ145*/
-u16 From_UI_WIFI_Length = 72;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬ÉÏÎ»»ú·¢À´µÄÊý¾ÝÊÇ71¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ72*/
+u16 ToUI12_Msg_Length = 145;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬cpuï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½144ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½145*/
+u16 From_UI_WIFI_Length = 72;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½71ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½72*/
 
-u16 ToLORALength = 145;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ144¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ145*/
-u16 FromLORALength = 72;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ71¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ72*/
+u16 ToLORALength = 145;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½144ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½145*/
+u16 FromLORALength = 72;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½71ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½72*/
 
-u16 ToUI3_Msg_Length = 72;/*ÔÝ¶¨£¬ÐèÒªÐÞ¸Ä*/
+u16 ToUI3_Msg_Length = 72;/*ï¿½Ý¶ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Þ¸ï¿½*/
 u16 From_UI_BEIDOU_Length = 34;
 
 u16 From_DVL_BI_Length = 240;
@@ -157,9 +157,9 @@ u16 From_DVL_WD_Length = 240;
 u16 From_BMS_SS_Length = 28;
 u16 From_BMS_CS_Length = 8;
 
-u16 FromMCULength = 86;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ  ¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ  Ô­À´ÊÇ45*/
+u16 FromMCULength = 86;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  Ô­ï¿½ï¿½ï¿½ï¿½45*/
 
-u16 FromPSDLength = 4;/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ  ¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ  */
+u16 FromPSDLength = 4;/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  */
 
 
 u16 From_IMU_Length =32;
@@ -170,7 +170,7 @@ u8 From_WIFI_Buf[72] = {0};
 u8 to_LORA_buf[145] = {0};
 u8 From_LORA_Buf[72] = {0};
 
-/*bmsÁ½´Î²éÑ¯·¢ËÍ ·Ö¿ª·¢£¬½ÓÊÕ¸ù¾Ý"¹¦ÄÜÂë"ºÍ"×Ö½ÚÊý"Á½¸ö±äÁ¿ÅÐ¶ÏÊÇsummary_state»¹ÊÇcritical_stateµÄÊý¾ÝÖ¡*/
+/*bmsï¿½ï¿½ï¿½Î²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½"ï¿½Ö½ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½summary_stateï¿½ï¿½ï¿½ï¿½critical_stateï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡*/
 u8 to_BMS_summary_state_buf[8] = {0x01,0x03,0x21,0x00,0x00,0x0D,0x8E,0x33};
 u8 to_BMS_critical_state_buf[8] = {0x01,0x03,0x21,0x40,0x00,0x02,0xCF,0xE3};
 u8 From_BMS_SS_Buf[240] = {0};
@@ -194,8 +194,8 @@ u8 CCTXA_Buf[256] = {0};
 
 
 
-u8 to_MCU_buf[200]={0};/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ    ¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ  */
-u8 From_FMCU_Buf[200] = {0};/*¸ù¾Ý×îÐÂµÄÐ­Òé£¬Êý¾ÝÊÇ39¸ö×Ö½Ú£¬¼ÓÉÏ½áÊø·ûÊÇ40*/
+u8 to_MCU_buf[200]={0};/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  */
+u8 From_FMCU_Buf[200] = {0};/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Ð­ï¿½é£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½39ï¿½ï¿½ï¿½Ö½Ú£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½40*/
 
 
 
@@ -212,7 +212,7 @@ u8 From_PSD_Buf[5] = {0};
 u8 GPS_Recv_num=0;
 
 
-/*¶¨ÒåÒÔÌ«ÍøÉè±¸UDP·þÎñÆ÷¶ËÌ×½Ó×Ö*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½ï¿½è±¸UDPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×½ï¿½ï¿½ï¿½*/
 
 short int MCUFd = 0;
 short int UIControllerFd = 0;
@@ -226,7 +226,7 @@ void UartSendToLORATask(void)
 {
 	        FOREVER
 			{
-				if(semTake(semUartSendToLORATask,WAIT_FOREVER)==OK)/*½«Êý¾Ý·¢ËÍ¸ø¸÷¸öÉè±¸£¬Éî¶ÈÐ¡ÓÚ1mÊ±ÊÍ·ÅÐÅºÅÁ¿*/
+				if(semTake(semUartSendToLORATask,WAIT_FOREVER)==OK)/*ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½1mÊ±ï¿½Í·ï¿½ï¿½Åºï¿½ï¿½ï¿½*/
 				{
 					printf("UartSendToLORATask start::::\r\n");
 					Pack_Data_To_UI12(&To_UI12);
@@ -247,25 +247,25 @@ int Send_To_LORA(void)
 		int usart_sent_to_LORA = 0;
 		int ret = 0;
 					
-		/* ´ò¿ª·¢ËÍ´®¿Ú1 */
+		/* ï¿½ò¿ª·ï¿½ï¿½Í´ï¿½ï¿½ï¿½1 */
 		fd = open(g_ExtComName[TxCom], O_RDWR, 0);
 		if (fd == ERROR)
 		{
 			printf("Open %s failed!\n", g_ExtComName[TxCom]);
 			return fd;
 		}
-		/* ÅäÖÃ´®¿Ú²ÎÊý */
-		/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½  */
+		/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+		/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½  */
 		ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-		ret += ioctl(fd, FIOBAUDRATE, LORA_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-		ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-		ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+		ret += ioctl(fd, FIOBAUDRATE, LORA_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+		ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+		ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 		usart_sent_to_LORA = write(fd, (char *)To_UI12_Buf, 145);
-		/* VxWorks´®¿Ú·¢ËÍº¯ÊýÎÞ·¨×èÈûËùÒÔ·¢ËÍ×îºóÐèÒªÖ÷¶¯µÈ´ýÍê³É ÔÝÊ±Ê¹ÓÃÑÓÊ±ÊµÏÖ */
-		taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+		/* VxWorksï¿½ï¿½ï¿½Ú·ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ê±Ê¹ï¿½ï¿½ï¿½ï¿½Ê±Êµï¿½ï¿½ */
+		taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 		memset(to_LORA_buf, 0, 145);/**/
 		/*printf("COM:%d usart_sent_to_LORA:%d\n", TxCom + 1, usart_sent_to_Compass);*/
-		/* ±ØÐë±£Ö¤Êý¾Ý·¢ËÍÍê³Éºó ²ÅÄÜ¹Ø±Õ´®¿Ú */
+		/* ï¿½ï¿½ï¿½ë±£Ö¤ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½ ï¿½ï¿½ï¿½Ü¹Ø±Õ´ï¿½ï¿½ï¿½ */
 		close(fd);
 		taskDelay(sysClkRateGet() / 10);
 		return usart_sent_to_LORA;
@@ -279,7 +279,7 @@ void UartSendToPSDTask(void)
 {
 	FOREVER
 		{
-			if(semTake(semUartSendToPSDTask,WAIT_FOREVER)==OK)/*½«Êý¾Ý·¢ËÍ¸ø¸÷¸öÉè±¸£¬Éî¶ÈÐ¡ÓÚ1mÊ±ÊÍ·ÅÐÅºÅÁ¿*/
+			if(semTake(semUartSendToPSDTask,WAIT_FOREVER)==OK)/*ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½1mÊ±ï¿½Í·ï¿½ï¿½Åºï¿½ï¿½ï¿½*/
 			{
 				printf("UartSendToPSDTask start::::\r\n");
 				Pack_Data_To_PSD(&AnswerDataToPSD);
@@ -297,25 +297,25 @@ int Send_To_PSD(void)
 	int usart_sent_to_PSD = 0;
 	int ret = 0;
 				
-	/* ´ò¿ª·¢ËÍ´®¿Ú1 */
+	/* ï¿½ò¿ª·ï¿½ï¿½Í´ï¿½ï¿½ï¿½1 */
 	fd = open(g_ExtComName[TxCom], O_RDWR, 0);
 	if (fd == ERROR)
 	{
 		printf("Open %s failed!\n", g_ExtComName[TxCom]);
 		return fd;
 	}
-	/* ÅäÖÃ´®¿Ú²ÎÊý */
-	/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½ */
+	/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+	/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½ */
 	ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8);
-	ret += ioctl(fd, FIOBAUDRATE, PSD_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-	ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-	ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+	ret += ioctl(fd, FIOBAUDRATE, PSD_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+	ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+	ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	usart_sent_to_PSD = write(fd, (char *)to_PSD_buf, 5);
-	/* VxWorks´®¿Ú·¢ËÍº¯ÊýÎÞ·¨×èÈûËùÒÔ·¢ËÍ×îºóÐèÒªÖ÷¶¯µÈ´ýÍê³É ÔÝÊ±Ê¹ÓÃÑÓÊ±ÊµÏÖ */
-	taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+	/* VxWorksï¿½ï¿½ï¿½Ú·ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ê±Ê¹ï¿½ï¿½ï¿½ï¿½Ê±Êµï¿½ï¿½ */
+	taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 	memset(to_PSD_buf, 0, 5);
 	/*printf("COM:%d usart_sent_to_PSD:%d\n", TxCom + 1, usart_sent_to_PSD);*/
-	/* ±ØÐë±£Ö¤Êý¾Ý·¢ËÍÍê³Éºó ²ÅÄÜ¹Ø±Õ´®¿Ú */
+	/* ï¿½ï¿½ï¿½ë±£Ö¤ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½ ï¿½ï¿½ï¿½Ü¹Ø±Õ´ï¿½ï¿½ï¿½ */
 	close(fd);
 	taskDelay(sysClkRateGet() / 10);
 	return usart_sent_to_PSD;	
@@ -323,8 +323,8 @@ int Send_To_PSD(void)
 
 
 /*
- BW_Data[] ËùÒª·¢ËÍµÄ±¨ÎÄÄÚÈÝ
- Len_BW ±¨ÎÄ³¤¶È*/
+ BW_Data[] ï¿½ï¿½Òªï¿½ï¿½ï¿½ÍµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ Len_BW ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½*/
 
 unsigned char CCTXA(unsigned char BW_Data[],uint8_t Len_BW) 
 {
@@ -391,7 +391,7 @@ void UartSendToBEIDOUTask(void)
 {
 	FOREVER
 	{
-		if(semTake(semUartSendToBEIDOUTask,WAIT_FOREVER)==OK)/*½«Êý¾Ý·¢ËÍ¸ø¸÷¸öÉè±¸£¬Éî¶ÈÐ¡ÓÚ1mÊ±ÊÍ·ÅÐÅºÅÁ¿*/
+		if(semTake(semUartSendToBEIDOUTask,WAIT_FOREVER)==OK)/*ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½1mÊ±ï¿½Í·ï¿½ï¿½Åºï¿½ï¿½ï¿½*/
 		{
 			printf("UartSendToBEIDOUTask start::::\r\n");		
 	
@@ -410,7 +410,7 @@ void NetSendTask(void)
 	
 	FOREVER
 	{
-		if(semTake(semNetSendTask,WAIT_FOREVER)==OK)/*½«Êý¾Ý·¢ËÍ¸ø¸÷¸öÉè±¸£¬*/
+		if(semTake(semNetSendTask,WAIT_FOREVER)==OK)/*ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½*/
 		{
 			printf("NetSendTask start::::\r\n");
 			
@@ -454,7 +454,7 @@ void NetRecvTask(void)
 		if(OK == semTake(semNetRecvTask,WAIT_FOREVER))
 		{
 	      printf("semNetRecvTask start::::\r\n");
-		  if(1)/*Ô­À´µÄÅÐ¶ÏÌõ¼þÊÇ£º((Instruction_To_FMCU.McuFD_Power_Control)&0x40)==0x40*/
+		  if(1)/*Ô­ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç£ï¿½((Instruction_To_FMCU.McuFD_Power_Control)&0x40)==0x40*/
 		  {
 			if(Recv_From_WIFI_Correct_Flag == false)
 			{
@@ -506,22 +506,22 @@ void NetRecvTask(void)
 
 int Send_To_FMCU(void)
 {
-	struct sockaddr_in serverAddr;   /*·þÎñÆ÷¶ËµØÖ·½á¹¹Ìå*/
+	struct sockaddr_in serverAddr;   /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½Ö·ï¿½á¹¹ï¿½ï¿½*/
 	int sent_to_MCU = 0;
 	
 	
-	/* ±ØÐëÇåÁã */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	memset(&serverAddr, 0x00, sizeof(struct sockaddr_in));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr(FMCUIP);
 	serverAddr.sin_port = htons(FMCUPort);
 	
 	
-	 /* ·¢ËÍÊý¾Ý */
+	 /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	sent_to_MCU = sendto(MCUFd, (char *)to_MCU_buf, sizeof(to_MCU_buf), 0, (struct sockaddr *)&serverAddr, sizeof(struct sockaddr_in));
-	memset(to_MCU_buf, 0, 60);/*30ÊÇto_MCU_bufÊý×éµÄ³¤¶È£¬¼ÓÉÏ½áÊø·ûµÄ*/
+	memset(to_MCU_buf, 0, 60);/*30ï¿½ï¿½to_MCU_bufï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	
-	taskDelay(sysClkRateGet() *0.03);    /* VxWorks sendtoº¯ÊýÓÐbug ÎÞ·¨×èÈûµ½Êý¾Ý·¢ËÍÍê±Ï,ÑÓÊ±30ms */
+	taskDelay(sysClkRateGet() *0.03);    /* VxWorks sendtoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bug ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ê±30ms */
 	/*printf("sent_to_UIController = %d\n", sent_to_UIController);
 	printf("Packets are sent to %s:%d.\n", UIControllerIP, UIControllerPort);*/
 	
@@ -532,22 +532,22 @@ int Send_To_FMCU(void)
 
 int Send_To_WIFI(void)
 {
-	struct sockaddr_in serverAddr;   /*·þÎñÆ÷¶ËµØÖ·½á¹¹Ìå*/
+	struct sockaddr_in serverAddr;   /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½Ö·ï¿½á¹¹ï¿½ï¿½*/
 	int sent_to_UIController = 0;
 	
 	
-	/* ±ØÐëÇåÁã */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	memset(&serverAddr, 0x00, sizeof(struct sockaddr_in));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr(UIControllerIP);
 	serverAddr.sin_port = htons(UIControllerPort);
 	
 	
-	 /* ·¢ËÍÊý¾Ý */
+	 /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	sent_to_UIController = sendto(UIControllerFd, (char *)To_UI12_Buf, sizeof(To_UI12_Buf), 0, (struct sockaddr *)&serverAddr, sizeof(struct sockaddr_in));
 	memset(To_UI12_Buf, 0, ToUI12_Msg_Length);
 	
-	taskDelay(sysClkRateGet() *0.03);    /* VxWorks sendtoº¯ÊýÓÐbug ÎÞ·¨×èÈûµ½Êý¾Ý·¢ËÍÍê±Ï,ÑÓÊ±30ms */
+	taskDelay(sysClkRateGet() *0.03);    /* VxWorks sendtoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bug ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Ê±30ms */
 	/*printf("sent_to_UIController = %d\n", sent_to_UIController);
 	printf("Packets are sent to %s:%d.\n", UIControllerIP, UIControllerPort);*/
 	
@@ -559,13 +559,13 @@ bool Recv_From_FMCU(void)
 {
 	
 	u16 ii = 0, jj = 0;
-	struct sockaddr_in serverAddr;   /*·þÎñÆ÷¶ËµØÖ·½á¹¹Ìå*/
+	struct sockaddr_in serverAddr;   /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½Ö·ï¿½á¹¹ï¿½ï¿½*/
 	int socketLength = sizeof(struct sockaddr_in);
 	int length = 0;
 	u8 temp_buf[1024] = {0};
 	bool check_flag = false;
 	
-	/* ±ØÐëÇåÁã */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	memset(&serverAddr, 0x00, sizeof(struct sockaddr_in));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr(FMCUIP);
@@ -576,11 +576,11 @@ bool Recv_From_FMCU(void)
 	/*printf("length=%d",length);*/
 	for(ii = 0; ii < length; ii++)
 	{
-		/**************************************************** Ò£   ¿Ø  Ä£    Ê½   *****************************************************/
+		/**************************************************** Ò£   ï¿½ï¿½  Ä£    Ê½   *****************************************************/
 		/*printf("length:%d",length);*/
 		if((ii + FromMCULength - 1) < length)
 		{
-			/*Ö¡Í·Ö¡Î²ÅÐ¶Ï*/
+			/*Ö¡Í·Ö¡Î²ï¿½Ð¶ï¿½*/
 			/*printf("1:%c%c%c%c%c%c",temp_buf[0],temp_buf[1],temp_buf[2],temp_buf[3],temp_buf[4],temp_buf[5]);*/
 			   if((temp_buf[ii] == '$') && (temp_buf[ii + 1] == 'M') && 
 			   (temp_buf[ii + 2] == 'C') && (temp_buf[ii + 3] == 'U') && (temp_buf[ii + 4] == 'F') && (temp_buf[ii + 5] == 'U') 
@@ -591,7 +591,7 @@ bool Recv_From_FMCU(void)
 					{
 						From_FMCU_Buf[jj] = temp_buf[jj + ii];						
 					}				
-					check_flag = true;           /*Ð£ÑéÍ¨¹ý*/
+					check_flag = true;           /*Ð£ï¿½ï¿½Í¨ï¿½ï¿½*/
 					break;
 			   }
 			   else
@@ -606,7 +606,7 @@ bool Recv_From_FMCU(void)
 			      break;
 		    }
 	}
-	/* ´òÓ¡½ÓÊÕµ½Êý¾Ý */
+	/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ */
 	if(DEBUG)
 	{
 		
@@ -624,13 +624,13 @@ bool Recv_From_WIFI(void)
 	u8 bytesum = 0;
 	u16 ii = 0, jj = 0;
 	int length = 0;
-	struct sockaddr_in serverAddr;   /*·þÎñÆ÷¶ËµØÖ·½á¹¹Ìå*/
+	struct sockaddr_in serverAddr;   /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½Ö·ï¿½á¹¹ï¿½ï¿½*/
 	int socketLength = sizeof(struct sockaddr_in);
 
 	u8 temp_buf[1024] = {0};
 	bool check_flag = false;
 	
-	/* ±ØÐëÇåÁã */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	memset(&serverAddr, 0x00, sizeof(struct sockaddr_in));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr(UIControllerIP);
@@ -642,11 +642,11 @@ bool Recv_From_WIFI(void)
 	
 	for(ii = 0; ii < length; ii++)
 	{
-		/**************************************************** Ò£   ¿Ø  Ä£    Ê½   *****************************************************/
+		/**************************************************** Ò£   ï¿½ï¿½  Ä£    Ê½   *****************************************************/
 		if((ii + From_UI_WIFI_Length - 1) < length)
 		{
 			 
-			/*Ö¡Í·Ö¡Î²ÅÐ¶Ï*/
+			/*Ö¡Í·Ö¡Î²ï¿½Ð¶ï¿½*/
 			if((temp_buf[ii] == 0x24) && (temp_buf[ii + 1] == 0x43) && 
 			   (temp_buf[ii + 2] == 0x4b) && (temp_buf[ii + 3] == 0x54) && (temp_buf[ii + 4] == 0x48) &&      
 			   (temp_buf[ii + 70] == 0xFF) && (temp_buf[ii + 71] == 0xFF))
@@ -659,7 +659,7 @@ bool Recv_From_WIFI(void)
 					
 					bytesum = Check_Sum(From_WIFI_Buf, From_UI_WIFI_Length - 3);
 					
-					/*Ð£ÑéºÍÅÐ¶Ï£¬ÀÛ¼ÓºÍ*/
+					/*Ð£ï¿½ï¿½ï¿½ï¿½Ð¶Ï£ï¿½ï¿½Û¼Óºï¿½*/
 					if(bytesum != (From_WIFI_Buf[69]))
 					{
 						printf("data_from_UIWifi check sum is wrong!::\n");
@@ -669,8 +669,8 @@ bool Recv_From_WIFI(void)
 						check_flag = false;
 						return check_flag;
 					}
-					check_flag = true;           /*Ð£ÑéÍ¨¹ý*/
-					UI_Channel_Selection_Down = 0x02;/*ÏÂÐÐwifiÍ¨µÀ±êÖ¾Î»´ò¿ª*/				
+					check_flag = true;           /*Ð£ï¿½ï¿½Í¨ï¿½ï¿½*/
+					UI_Channel_Selection_Down = 0x02;/*ï¿½ï¿½ï¿½ï¿½wifiÍ¨ï¿½ï¿½ï¿½ï¿½Ö¾Î»ï¿½ï¿½*/				
 					PC104_Timing_Record_WIFI_Downlink(From_WIFI_Buf[5]);
 					break;
 			   }
@@ -689,7 +689,7 @@ bool Recv_From_WIFI(void)
 	
 
 	
-	/* ´òÓ¡½ÓÊÕµ½Êý¾Ý */
+	/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ */
 	if(DEBUG)
 	{
 		
@@ -709,7 +709,7 @@ int Send_To_BEIDOU(void)
 		int usart_sent_to_beid = 0;
 		int ret = 0;
 				
-		 /* ´ò¿ª·¢ËÍ´®¿Ú1 */
+		 /* ï¿½ò¿ª·ï¿½ï¿½Í´ï¿½ï¿½ï¿½1 */
 		fd = open(g_ExtComName[TxCom], O_RDWR, 0);
 		if (fd == ERROR)
 		{
@@ -717,18 +717,18 @@ int Send_To_BEIDOU(void)
 			return fd;
 		}
 		/*printf("fd=%d", fd);*/
-		/* ÅäÖÃ´®¿Ú²ÎÊý */
-			/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½   */
+		/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+			/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½   */
 		ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8);
-		ret += ioctl(fd, FIOBAUDRATE, BEID_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-		ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-		ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+		ret += ioctl(fd, FIOBAUDRATE, BEID_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+		ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+		ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 		usart_sent_to_beid = write(fd, (char *)CCTXA_Buf, 256);
-		/* VxWorks´®¿Ú·¢ËÍº¯ÊýÎÞ·¨×èÈûËùÒÔ·¢ËÍ×îºóÐèÒªÖ÷¶¯µÈ´ýÍê³É ÔÝÊ±Ê¹ÓÃÑÓÊ±ÊµÏÖ */
-		taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+		/* VxWorksï¿½ï¿½ï¿½Ú·ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ê±Ê¹ï¿½ï¿½ï¿½ï¿½Ê±Êµï¿½ï¿½ */
+		taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 		memset(To_UI3_Buf, 0, 97);
 		/*printf("COM:%d usart_sent_to_beid:%d\n", TxCom + 1, usart_sent_to_beid);*/
-		/* ±ØÐë±£Ö¤Êý¾Ý·¢ËÍÍê³Éºó ²ÅÄÜ¹Ø±Õ´®¿Ú */
+		/* ï¿½ï¿½ï¿½ë±£Ö¤ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½Éºï¿½ ï¿½ï¿½ï¿½Ü¹Ø±Õ´ï¿½ï¿½ï¿½ */
 		close(fd);
 		taskDelay(sysClkRateGet() / 10);
 		return usart_sent_to_beid;
@@ -755,7 +755,7 @@ void UartRecvFormBMSTask(void)
 					int msg_length_CS = 0;
 					struct timeval timeout;							
 								
-					/* ´ò¿ª½ÓÊÕ´®¿Ú */
+					/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 					fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 					if (fd == ERROR)
 					{
@@ -763,33 +763,33 @@ void UartRecvFormBMSTask(void)
 						return;
 					}
 					
-					/* ÅäÖÃ´®¿Ú²ÎÊý */
-					/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½*/
+					/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+					/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½*/
 					ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-					ret += ioctl(fd, FIOBAUDRATE, BMS_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-				    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+					ret += ioctl(fd, FIOBAUDRATE, BMS_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+				    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 					
-				    write(fd, (char *)to_BMS_critical_state_buf, 8);	/*É¾³ý*/
+				    write(fd, (char *)to_BMS_critical_state_buf, 8);	/*É¾ï¿½ï¿½*/
 				    
-					/* ´òÓ¡½ÓÊÕÊý¾Ý */
-					/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-					/* ÉèÖÃ³¬Ê±Ê±¼ä */
-					timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-					timeout.tv_usec = 130000;   /* 130ms µ¥Î»us*/
+					/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+					/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+					timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+					timeout.tv_usec = 130000;   /* 130ms ï¿½ï¿½Î»us*/
 					/*******************************************************************/	
 					while(!msg_length_SS)
 					{
 						write(fd, (char *)to_BMS_summary_state_buf, 8);				
 						msg_length_SS = com_read_ex(fd, (char *)temp_buf_SS, sizeof(temp_buf_SS), &timeout);
 					}
-					 /*¸³Öµ*/
+					 /*ï¿½ï¿½Öµ*/
 					if(msg_length_SS)
 					{
 						for(ii=0;ii<msg_length_SS;ii++)
 							From_BMS_SS_Buf[ii]=temp_buf_SS[ii];	
 					}	
-					/*Ö¡Í·ÅÐ¶Ï*/
+					/*Ö¡Í·ï¿½Ð¶ï¿½*/
 					Recv_From_BMS_SS_Correct_Flag= Recv_From_BMS_SS(temp_buf_SS, msg_length_SS);	
 					
 					/*******************************************************************/	
@@ -801,16 +801,16 @@ void UartRecvFormBMSTask(void)
 						write(fd, (char *)to_BMS_critical_state_buf, 8);						
 						msg_length_CS = com_read_ex(fd, (char *)temp_buf_CS, sizeof(temp_buf_CS), &timeout);
 					}
-					 /*¸³Öµ*/
+					 /*ï¿½ï¿½Öµ*/
 					if(msg_length_CS)
 					{
 						for(ii=0;ii<msg_length_CS;ii++)
 					        From_BMS_CS_Buf[ii]=temp_buf_CS[ii];	
 					}	
-					/*Ö¡Í·ÅÐ¶Ï*/
+					/*Ö¡Í·ï¿½Ð¶ï¿½*/
 					Recv_From_BMS_CS_Correct_Flag= Recv_From_BMS_CS(temp_buf_CS, msg_length_CS);	
 									
-					taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+					taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 					close(fd);
 					if(((Recv_From_BMS_SS_Correct_Flag)==true)||((Recv_From_BMS_CS_Correct_Flag)==true))
 				    {
@@ -838,7 +838,7 @@ void UartRecvFormLORATask(void)
 					int msg_length = 0;
 					struct timeval timeout;							
 								
-					/* ´ò¿ª½ÓÊÕ´®¿Ú */
+					/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 					fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 					if (fd == ERROR)
 					{
@@ -846,27 +846,27 @@ void UartRecvFormLORATask(void)
 						return;
 					}
 				
-					/* ÅäÖÃ´®¿Ú²ÎÊý */
-					/*  CS8|PARENB :8Î»Êý¾ÝÎ»£¬1Î»Í£Ö¹Î»£¬Å¼Ð£Ñé£»
-					    CS8|PARENB|PARODD:8Î»Êý¾ÝÎ»£¬1Î»Í£Ö¹Î»£¬ÆæÐ£Ñé£»
-					    CS8 :8Î»Êý¾ÝÎ»£¬1Î»Í£Ö¹Î»£¬ÎÞÐ£Ñé£»
-					    CS8|STOPB:8Î»Êý¾ÝÎ»£¬2Î»Í£Ö¹Î»£¬ÎÞÐ£Ñé£»*/
+					/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+					/*  CS8|PARENB :8Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½1Î»Í£Ö¹Î»ï¿½ï¿½Å¼Ð£ï¿½é£»
+					    CS8|PARENB|PARODD:8Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½1Î»Í£Ö¹Î»ï¿½ï¿½ï¿½ï¿½Ð£ï¿½é£»
+					    CS8 :8Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½1Î»Í£Ö¹Î»ï¿½ï¿½ï¿½ï¿½Ð£ï¿½é£»
+					    CS8|STOPB:8Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½2Î»Í£Ö¹Î»ï¿½ï¿½ï¿½ï¿½Ð£ï¿½é£»*/
 					ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-					ret += ioctl(fd, FIOBAUDRATE, LORA_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-				    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+					ret += ioctl(fd, FIOBAUDRATE, LORA_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+				    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 					
-					/* ´òÓ¡½ÓÊÕÊý¾Ý */
-					/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-					/* ÉèÖÃ³¬Ê±Ê±¼ä */
-					timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-					timeout.tv_usec = 130000;   /* 130ms µ¥Î»us*/
+					/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+					/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+					timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+					timeout.tv_usec = 130000;   /* 130ms ï¿½ï¿½Î»us*/
 					while(!msg_length)
 					{
 						msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
 					}
 		
-					 /*Ö±½ÓÊÕµ½Ê²Ã´¾Í¸³ÖµÊ²Ã´*/
+					 /*Ö±ï¿½ï¿½ï¿½Õµï¿½Ê²Ã´ï¿½Í¸ï¿½ÖµÊ²Ã´*/
 					if(msg_length)
 					{
 						for(ii=0;ii<msg_length;ii++)
@@ -874,9 +874,9 @@ void UartRecvFormLORATask(void)
 					}
 				
 					/*printf("Recv_From_LORA[0]:%2x,Recv_From_LORA[1]:%2x",Recv_From_LORA[0],Recv_From_LORA[1]);*/
-					/*Ö¡Í·ÅÐ¶Ï*/
+					/*Ö¡Í·ï¿½Ð¶ï¿½*/
 					Recv_From_LORA_Correct_Flag= Recv_From_LORA(temp_buf, msg_length);	
-					taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+					taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 					close(fd);
 					if((Recv_From_LORA_Correct_Flag)==true)
 					{
@@ -905,7 +905,7 @@ void UartRecvFormIMUTask(void)
 				int msg_length = 0;
 				struct timeval timeout;							
 							
-				/* ´ò¿ª½ÓÊÕ´®¿Ú */
+				/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 				fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 				if (fd == ERROR)
 				{
@@ -913,33 +913,33 @@ void UartRecvFormIMUTask(void)
 					return;
 				}
 			
-				/* ÅäÖÃ´®¿Ú²ÎÊý */
-				/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½ PARODD | PARENB |*/
+				/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+				/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½ PARODD | PARENB |*/
 				ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-				ret += ioctl(fd, FIOBAUDRATE, IMU_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-			    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+				ret += ioctl(fd, FIOBAUDRATE, IMU_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+			    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 				
-				/* ´òÓ¡½ÓÊÕÊý¾Ý */
-				/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-				/* ÉèÖÃ³¬Ê±Ê±¼ä */
-				timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-				timeout.tv_usec = 130000;   /* 130ms µ¥Î»us*/
+				/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+				/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+				timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+				timeout.tv_usec = 130000;   /* 130ms ï¿½ï¿½Î»us*/
 				while(!msg_length)
 				{
 					write(fd, (char *)to_Compass_buf, 1);
 					msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
 				}
 				
-				 /*Ö±½ÓÊÕµ½Ê²Ã´¾Í¸³ÖµÊ²Ã´*/
+				 /*Ö±ï¿½ï¿½ï¿½Õµï¿½Ê²Ã´ï¿½Í¸ï¿½ÖµÊ²Ã´*/
 				if(msg_length)
 				{
 					for(ii=0;ii<msg_length;ii++)
 					From_IMU_Buf[ii]=temp_buf[ii];
 				}
-				/*ÕâÑùÊÇÓÐÖ¡Í·ÅÐ¶Ï*/
+				/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡Í·ï¿½Ð¶ï¿½*/
 				Recv_From_IMU_Correct_Flag= Recv_From_IMU(temp_buf, msg_length);	
-				taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+				taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 				close(fd);
 			    if((Recv_From_IMU_Correct_Flag)==true)
 			    { 
@@ -970,40 +970,40 @@ void UartRecvFormPSDTask(void)
 				int msg_length = 0;
 				struct timeval timeout;							
 							
-				/* ´ò¿ª½ÓÊÕ´®¿Ú */
+				/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 				fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 				if (fd == ERROR)
 				{
 					printf("Open %s COM failed!\n", g_ExtComName[RxCom]);
 					return;
 				}
-				/* ÅäÖÃ´®¿Ú²ÎÊý */
-				/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½*/
+				/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+				/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½*/
 				ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8);
-				ret += ioctl(fd, FIOBAUDRATE, PSD_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-			    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+				ret += ioctl(fd, FIOBAUDRATE, PSD_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+			    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 							
-				/* ´òÓ¡½ÓÊÕÊý¾Ý */
-				/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-				/* ÉèÖÃ³¬Ê±Ê±¼ä */
-				timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-				timeout.tv_usec = 130000;   /* 30ms µ¥Î»us*/
+				/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+				/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+				timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+				timeout.tv_usec = 130000;   /* 30ms ï¿½ï¿½Î»us*/
 				while(!msg_length)
 				{
-					semGive(semUartSendToPSDTask);/*ÊÍ·Å·¢ËÍÐÅºÅÁ¿£¬¾ÍÊÇ·¢ËÍÁË²éÑ¯Ö¸Áî*/				
+					semGive(semUartSendToPSDTask);/*ï¿½Í·Å·ï¿½ï¿½ï¿½ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ë²ï¿½Ñ¯Ö¸ï¿½ï¿½*/				
 					msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
 				}
 				
-				 /*Ö±½ÓÊÕµ½Ê²Ã´¾Í¸³ÖµÊ²Ã´*/
+				 /*Ö±ï¿½ï¿½ï¿½Õµï¿½Ê²Ã´ï¿½Í¸ï¿½ÖµÊ²Ã´*/
 				if(msg_length)
 				{
 					for(ii=0;ii<msg_length;ii++)
 						From_PSD_Buf[ii]=temp_buf[ii];
 				}
-				/*ÕâÑùÊÇÓÐÖ¡Í·ÅÐ¶Ï*/
+				/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡Í·ï¿½Ð¶ï¿½*/
 				Recv_From_PSD_Correct_Flag= Recv_From_PSD(temp_buf, msg_length);	
-				taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+				taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 				close(fd);
 				if((Recv_From_PSD_Correct_Flag)==true)
 				{ 
@@ -1033,25 +1033,25 @@ void UartRecvFormDVLTask(void)
 					char *ptr4 = "";
 					char *ptr5 = "";
 				
-					/* ´ò¿ª½ÓÊÕ´®¿Ú */
+					/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 					fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 					if (fd == ERROR)
 					{
 						printf("Open %s COM failed!\n", g_ExtComName[RxCom]);
 						return;
 					}
-					/* ÅäÖÃ´®¿Ú²ÎÊý */
-					/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½*/
+					/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+					/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½*/
 					ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-					ret += ioctl(fd, FIOBAUDRATE, DVL_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-				    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+					ret += ioctl(fd, FIOBAUDRATE, DVL_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+				    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 								
-					/* ´òÓ¡½ÓÊÕÊý¾Ý */
-					/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-					/* ÉèÖÃ³¬Ê±Ê±¼ä */
-					timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-					timeout.tv_usec = 130000;   /* 30ms µ¥Î»us*/
+					/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+					/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+					/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+					timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+					timeout.tv_usec = 130000;   /* 30ms ï¿½ï¿½Î»us*/
 					while(!msg_length)
 					{
 						msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
@@ -1079,7 +1079,7 @@ void UartRecvFormDVLTask(void)
 					if(ptr5 != NULL)
 						ACK_Data_Valid_Flag = Recv_From_DVL_ACK(temp_buf, msg_length);
 					
-					taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+					taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 					close(fd);
 					
 					if(((BI_Data_Valid_Flag)==true)||((BD_Data_Valid_Flag)==true)||
@@ -1112,24 +1112,24 @@ void UartRecvFormGPSTask(void)
 				char *ptr1 = "";
 				char *ptr2 = "";
 			
-				/* ´ò¿ª½ÓÊÕ´®¿Ú */
+				/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 				fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 				if (fd == ERROR)
 				{
 					printf("Open %s COM failed!\n", g_ExtComName[RxCom]);
 					return;
 				}
-				/* ÅäÖÃ´®¿Ú²ÎÊý */				
+				/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */				
 				ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-				ret += ioctl(fd, FIOBAUDRATE, GPS_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-			    ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+				ret += ioctl(fd, FIOBAUDRATE, GPS_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+			    ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 							
-				/* ´òÓ¡½ÓÊÕÊý¾Ý */
-				/* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-				/* ÉèÖÃ³¬Ê±Ê±¼ä */
-				timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-				timeout.tv_usec = 130000;   /* 30ms µ¥Î»us*/
+				/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+				/* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+				/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+				timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+				timeout.tv_usec = 130000;   /* 30ms ï¿½ï¿½Î»us*/
 				while(!msg_length)
 				{
 					msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
@@ -1145,7 +1145,7 @@ void UartRecvFormGPSTask(void)
 				if(ptr2 != NULL)
 				Recv_From_GPS_VTG_Correct_Flag = Recv_From_GPS_VTG(temp_buf, msg_length);
 				
-				taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+				taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 				close(fd);
 				if(((Recv_From_GPS_GGA_Correct_Flag)==true)||((Recv_From_GPS_VTG_Correct_Flag)==true))
 				{
@@ -1166,7 +1166,7 @@ void UartRecvFormBEIDOUTask(void)
 	FOREVER
 	{
 		
-		if(semTake(semUartRecvFormBEIDOUTask,WAIT_FOREVER)==OK)/*½«Êý¾Ý·¢ËÍ¸ø¸÷¸öÉè±¸£¬*/
+		if(semTake(semUartRecvFormBEIDOUTask,WAIT_FOREVER)==OK)/*ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½*/
 		{
 			printf("UartRecvFormBEIDOUTask start::::\r\n");
 			int fd = 0;
@@ -1178,25 +1178,25 @@ void UartRecvFormBEIDOUTask(void)
 			char *ptr1 = "";
 		
 
-			/* ´ò¿ª½ÓÊÕ´®¿Ú */
+			/* ï¿½ò¿ª½ï¿½ï¿½Õ´ï¿½ï¿½ï¿½ */
 			fd = open(g_ExtComName[RxCom], O_RDWR, 0);
 			if (fd == ERROR)
 			{
 				printf("Open %s COM failed!\n", g_ExtComName[RxCom]);
 				return;
 			}
-			/* ÅäÖÃ´®¿Ú²ÎÊý */
-			/* Êý¾ÝÎ»8Î» Í£Ö¹Î»1Î» ÎÞÐ£Ñé ±¾µØÄ£Ê½*/
+			/* ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ */
+			/* ï¿½ï¿½ï¿½ï¿½Î»8Î» Í£Ö¹Î»1Î» ï¿½ï¿½Ð£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä£Ê½*/
 			ret += ioctl(fd, SIO_HW_OPTS_SET, CLOCAL | CS8 );
-			ret += ioctl(fd, FIOBAUDRATE, BEID_COM_BAUD_RATE);   /* ²¨ÌØÂÊ */
-			ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ÐÐÄ£Ê½OPT_LINE ¸ù¾ÝÇé¿öÑ¡Ôñ */
-			ret += ioctl(fd, FIOFLUSH, 0);                  /* Çå¿Õ»º³åÇø */
+			ret += ioctl(fd, FIOBAUDRATE, BEID_COM_BAUD_RATE);   /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+			ret += ioctl(fd, FIOSETOPTIONS, OPT_RAW);       /* Ô­Ê¼Ä£Ê½OPT_RAW ï¿½ï¿½Ä£Ê½OPT_LINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ */
+			ret += ioctl(fd, FIOFLUSH, 0);                  /* ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
-			/* ´òÓ¡½ÓÊÕÊý¾Ý */
-		    /* ³¬Ê±¶ÁÈ¡Ä£Ê½ */
-			/* ÉèÖÃ³¬Ê±Ê±¼ä */
-			timeout.tv_sec = 0;         /* 0 µ¥Î»s */
-			timeout.tv_usec = 130000;   /* 130ms µ¥Î»us*/
+			/* ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+		    /* ï¿½ï¿½Ê±ï¿½ï¿½È¡Ä£Ê½ */
+			/* ï¿½ï¿½ï¿½Ã³ï¿½Ê±Ê±ï¿½ï¿½ */
+			timeout.tv_sec = 0;         /* 0 ï¿½ï¿½Î»s */
+			timeout.tv_usec = 130000;   /* 130ms ï¿½ï¿½Î»us*/
 			while(!msg_length)
 			{
 				msg_length = com_read_ex(fd, (char *)temp_buf, sizeof(temp_buf), &timeout);
@@ -1208,7 +1208,7 @@ void UartRecvFormBEIDOUTask(void)
 			Recv_From_BEIDOU_Correct_Flag = Recv_From_BEIDOU(temp_buf, msg_length);		
 			
 			
-			taskDelay(sysClkRateGet()*0.03);   /*ÑÓÊ±30ms*/
+			taskDelay(sysClkRateGet()*0.03);   /*ï¿½ï¿½Ê±30ms*/
 			close(fd);
 			if((Recv_From_BEIDOU_Correct_Flag)==true)
 			{
@@ -1229,14 +1229,14 @@ bool Recv_From_IMU(u8 *temp, int length)
 
 bool Recv_From_BMS_SS(u8 *temp, int length)
 {
-	if((0x03 == temp[1]) && (0x1A == temp[2]))/*Òª¶ÁÈ¡µÄ×Ö½ÚÊýÊÇ26£¬16½øÖÆÊÇ1A,2*N=2*13=26   */
+	if((0x03 == temp[1]) && (0x1A == temp[2]))/*Òªï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½26ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1A,2*N=2*13=26   */
 			     return true;
 			 else
 				 return false; 
 }
 bool Recv_From_BMS_CS(u8 *temp, int length)
 {
-	if((0x03 == temp[1]) && (0x04 == temp[2]))/*Òª¶ÁÈ¡µÄ×Ö½ÚÊýÊÇ4£¬16½øÖÆÊÇ04,2*N=2*2=4    */
+	if((0x03 == temp[1]) && (0x04 == temp[2]))/*Òªï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½04,2*N=2*2=4    */
 			     return true;
 			 else
 				 return false; 
@@ -1247,15 +1247,15 @@ bool Recv_From_LORA(u8 *temp, int length)
   u8 bytesum = 0;	
   bytesum = Check_Sum(temp, FromLORALength - 3);
  
-  /*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+  /*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
   if(length>71)
   {
-	/*Ö¡Í·Ö¡Î²£¬Ð£ÑéºÍÅÐ¶Ï*/ 
+	/*Ö¡Í·Ö¡Î²ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/ 
 	if((temp[0] == 0x24) && (temp[1] == 0x43) && (temp[2] == 0x4b) && (temp[3] == 0x54) && (temp[4] == 0x48) &&      
 								   (temp[70] == 0xFF) && (temp[71] == 0xFF)&& (temp[69] == bytesum))
 	{
-		UI_Channel_Selection_Down = 0x01;/*ÏÂÐÐloraÍ¨µÀ±êÖ¾Î»´ò¿ª*/	
-		UI_Channel_Selection_Up = 0x01;/*ÉÏÐÐloraÍ¨µÀ±êÖ¾Î»´ò¿ª*/	
+		UI_Channel_Selection_Down = 0x01;/*ï¿½ï¿½ï¿½ï¿½loraÍ¨ï¿½ï¿½ï¿½ï¿½Ö¾Î»ï¿½ï¿½*/	
+		UI_Channel_Selection_Up = 0x01;/*ï¿½ï¿½ï¿½ï¿½loraÍ¨ï¿½ï¿½ï¿½ï¿½Ö¾Î»ï¿½ï¿½*/	
 		return true;
 	}	         
 	else
@@ -1273,7 +1273,7 @@ bool Recv_From_LORA(u8 *temp, int length)
 
 bool Recv_From_PSD(u8 *temp, int length)
 {
-	/*Ö¡Í·ÅÐ¶Ï*/
+	/*Ö¡Í·ï¿½Ð¶ï¿½*/
 	if((0xAA == temp[0]) && (0x11 == temp[1]))
 		     return true;
 		 else
@@ -1285,12 +1285,12 @@ bool Recv_From_DVL_BI(u8 *temp, int length)
 	    u16 ii = 0, jj = 0;
 		bool check_flag = false;
 		
-	if(length>0)/*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+	if(length>0)/*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
 	{
 		for(ii = 0; ii < length; ii++)
 		{
-			/**************************************************** ½ÓÊÕDVLµÄBIÊý¾Ý*****************************************************/
-			if((':' == temp[ii]) && ('B' == temp[ii+1])/*Ö¡Í·ÅÐ¶¨ÒÔ¼°¶ººÅÎ»ÖÃÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½DVLï¿½ï¿½BIï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if((':' == temp[ii]) && ('B' == temp[ii+1])/*Ö¡Í·ï¿½Ð¶ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð¶ï¿½*/
 					&&('I' == temp[ii+2]))  
 			{
 				for(jj = 0; (jj < 240) && (ii+jj < length); jj++)
@@ -1299,7 +1299,7 @@ bool Recv_From_DVL_BI(u8 *temp, int length)
 				}	
 				check_flag = true;
 				Not_Recv_From_BI_DVL_No = 0;
-				BI_Cal_Data_Flag = true;/*BIÍÆËã ±êÖ¾Î»Õý³£*/
+				BI_Cal_Data_Flag = true;/*BIï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ö¾Î»ï¿½ï¿½ï¿½ï¿½*/
 			}
 			else
 			{
@@ -1320,12 +1320,12 @@ bool Recv_From_DVL_BD(u8 *temp, int length)
 {
 	    u16 ii = 0, jj = 0;
 		bool check_flag = false;
-    if(length>0)/*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+    if(length>0)/*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
 	{	
 		for(ii = 0; ii < length; ii++)
 		{
-			/**************************************************** ½ÓÊÕDVLµÄBDÊý¾Ý*****************************************************/
-			if((':' == temp[ii]) && ('B' == temp[ii+1]) &&       /*Ö¡Í·ÅÐ¶¨ÒÔ¼°¶ººÅÎ»ÖÃÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½DVLï¿½ï¿½BDï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if((':' == temp[ii]) && ('B' == temp[ii+1]) &&       /*Ö¡Í·ï¿½Ð¶ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð¶ï¿½*/
 			   ('D' == temp[ii+2]))
 			{
 				for(jj = 0; (jj < 240) && (ii+jj < length); jj++)
@@ -1353,12 +1353,12 @@ bool Recv_From_DVL_WI(u8 *temp, int length)
 {
 	    u16 ii = 0, jj = 0;
 		bool check_flag = false;
-    if(length>0)/*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+    if(length>0)/*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
 	{	
 		for(ii = 0; ii < length; ii++)
 		{
-			/**************************************************** ½ÓÊÕDVLµÄWIÊý¾Ý*****************************************************/
-			if((':' == temp[ii]) && ('W' == temp[ii+1]) &&       /*Ö¡Í·ÅÐ¶¨ÒÔ¼°¶ººÅÎ»ÖÃÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½DVLï¿½ï¿½WIï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if((':' == temp[ii]) && ('W' == temp[ii+1]) &&       /*Ö¡Í·ï¿½Ð¶ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð¶ï¿½*/
 			   ('I' == temp[ii+2]) )
 			{
 				for(jj = 0; (jj < 240) && (ii+jj < length); jj++)
@@ -1367,7 +1367,7 @@ bool Recv_From_DVL_WI(u8 *temp, int length)
 				}	
 				check_flag = true;
 				Not_Recv_From_WI_DVL_No = 0;
-				WI_Cal_Data_Flag = true;/*WIÍÆËã ±êÖ¾Î»Õý³£*/
+				WI_Cal_Data_Flag = true;/*WIï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ö¾Î»ï¿½ï¿½ï¿½ï¿½*/
 			}
 			else
 			{
@@ -1388,12 +1388,12 @@ bool Recv_From_DVL_WD(u8 *temp, int length)
 {
 	    u16 ii = 0, jj = 0;
 		bool check_flag = false;
-	if(length>0)/*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+	if(length>0)/*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
 	{		
 		for(ii = 0; ii < length; ii++)
 		{
-			/**************************************************** ½ÓÊÕDVLµÄWDÊý¾Ý*****************************************************/
-			if((':' == temp[ii]) && ('W' == temp[ii+1]) &&         /*Ö¡Í·ÅÐ¶¨ÒÔ¼°¶ººÅÎ»ÖÃÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½DVLï¿½ï¿½WDï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if((':' == temp[ii]) && ('W' == temp[ii+1]) &&         /*Ö¡Í·ï¿½Ð¶ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Ð¶ï¿½*/
 			   ('D' == temp[ii+2]) )
 			{
 				for(jj = 0; (jj < 240) && (ii+jj < length); jj++)
@@ -1420,12 +1420,12 @@ bool Recv_From_DVL_ACK(u8 *temp, int length)
 {
 	    u16 ii = 0, jj = 0;
 		bool check_flag = false;
-	if(length>0)/*Êý¾Ý³¤¶ÈÅÐ¶Ï*/
+	if(length>0)/*ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½*/
 	{		
 		for(ii = 0; ii< length; ii++)
 		{
-			/**************************************************** ½ÓÊÕDVLµÄACKÊý¾Ý*****************************************************/
-			if((':' == temp[ii]) && ('A' == temp[ii+1]) &&         /*Ö¡Í·ÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½DVLï¿½ï¿½ACKï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if((':' == temp[ii]) && ('A' == temp[ii+1]) &&         /*Ö¡Í·ï¿½Ð¶ï¿½*/
 			   ('C' == temp[ii+2])&& ('K' == temp[ii+3]))
 			{
 				for(jj = 0; (jj < 240) && (ii+jj < length); jj++)
@@ -1457,8 +1457,8 @@ bool Recv_From_GPS_GGA(u8 *temp, int length)
 	
 	for(ii = 0; ii+5 < length; ii++)
 	{
-		/**************************************************** ½ÓÊÕGPGGAÊý¾Ý*****************************************************/
-		if(('$' == temp[ii]) && ('G' == temp[ii+1]) &&         /*Ö¡Í·ÅÐ¶¨*/
+		/**************************************************** ï¿½ï¿½ï¿½ï¿½GPGGAï¿½ï¿½ï¿½ï¿½*****************************************************/
+		if(('$' == temp[ii]) && ('G' == temp[ii+1]) &&         /*Ö¡Í·ï¿½Ð¶ï¿½*/
 		   ('N' == temp[ii+2]) && ('G' == temp[ii+3]) &&
 		   ('G' == temp[ii+4]) && ('A' == temp[ii+5]))
 		{
@@ -1484,8 +1484,8 @@ bool Recv_From_GPS_VTG(u8 *temp, int length)
 		
 		for(ii = 0; ii+5 < length; ii++)
 		{
-			/**************************************************** ½ÓÊÕGPVTGÊý¾Ý*****************************************************/
-			if(('$' == temp[ii]) && ('G' == temp[ii+1]) &&         /*Ö¡Í·ÅÐ¶¨*/
+			/**************************************************** ï¿½ï¿½ï¿½ï¿½GPVTGï¿½ï¿½ï¿½ï¿½*****************************************************/
+			if(('$' == temp[ii]) && ('G' == temp[ii+1]) &&         /*Ö¡Í·ï¿½Ð¶ï¿½*/
 			   ('N' == temp[ii+2]) && ('V' == temp[ii+3]) &&
 			   ('T' == temp[ii+4]) && ('G' == temp[ii+5]))
 			{
@@ -1515,8 +1515,8 @@ bool Recv_From_BEIDOU(u8 *temp, int length)
 	for(ii = 0; ii+5 < 1024; ii++)
 	{	
 		
-		/**************************************************** ½ÓÊÕBDTXRÊý¾Ý*****************************************************/
-		if(('$' == temp[ii]) && ('B' == temp[ii+1]) &&         /*Ö¡Í·ÅÐ¶¨*/
+		/**************************************************** ï¿½ï¿½ï¿½ï¿½BDTXRï¿½ï¿½ï¿½ï¿½*****************************************************/
+		if(('$' == temp[ii]) && ('B' == temp[ii+1]) &&         /*Ö¡Í·ï¿½Ð¶ï¿½*/
 		   ('D' == temp[ii+2]) && ('T' == temp[ii+3])&& ('X' == temp[ii+4])&& ('R' == temp[ii+5]))
 		{
 			
@@ -1531,9 +1531,9 @@ bool Recv_From_BEIDOU(u8 *temp, int length)
 				/*From_BEIDOU_Buf_Self[kk-22] = ASCII_to_HEX(From_BEIDOU_Buf_Self[kk-22]);*/
 			}
 				
-			bytesum = Check_Sum(From_BEIDOU_Buf_Self, 34 - 3);/*34ÊÇÊý×é³¤¶È£¬¼õÈ¥3¾ÍÊÇ¼õÈ¥×îºóµÄÁ½¸öÖ¡Î²ºÍÐ£ÑéºÍÎ»*/
+			bytesum = Check_Sum(From_BEIDOU_Buf_Self, 34 - 3);/*34ï¿½ï¿½ï¿½ï¿½ï¿½é³¤ï¿½È£ï¿½ï¿½ï¿½È¥3ï¿½ï¿½ï¿½Ç¼ï¿½È¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡Î²ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Î»*/
 								
-			/*Ð£ÑéºÍÅÐ¶Ï£¬ÀÛ¼ÓºÍ*/
+			/*Ð£ï¿½ï¿½ï¿½ï¿½Ð¶Ï£ï¿½ï¿½Û¼Óºï¿½*/
 			if(bytesum != (From_BEIDOU_Buf_Self[31]))
 			{
 				printf("From_BEIDOU_Buf_Self check sum is wrong!::\n");
@@ -1556,7 +1556,7 @@ bool Recv_From_BEIDOU(u8 *temp, int length)
 
 STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 {
-	short int UdpSockFd;   /*¿Í»§¶ËÌ×½Ó×Ö*/
+	short int UdpSockFd;   /*ï¿½Í»ï¿½ï¿½ï¿½ï¿½×½ï¿½ï¿½ï¿½*/
 	u32 OptVal = 1;
     int ret;
     int to_send = 2048;
@@ -1564,14 +1564,14 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 	struct sockaddr_in serverAddr;
 	
 	
-	/*²ÎÊýÓÐÐ§ÐÔÐ£Ñé*/
+	/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½Ð£ï¿½ï¿½*/
 	if(INADDR_NONE == inet_addr(deviceIP))
 	{
 		printf("deviceIP error\n");
 		return(ERROR);
 	}
 	
-	/* Éè¶¨±¾µØ¶Ë¿ÚºÅºÍIP */
+	/* ï¿½è¶¨ï¿½ï¿½ï¿½Ø¶Ë¿ÚºÅºï¿½IP */
 	memset (&serverAddr, 0, sizeof(struct sockaddr_in));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = inet_addr(LocalIP); /* the local address */
@@ -1579,7 +1579,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 	serverAddr.sin_port = htons(devicePort);
 	serverAddr.sin_len = sizeof(serverAddr);
 	
-	/* ´´½¨Ì×½Ó×Ö */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½×½ï¿½ï¿½ï¿½ */
 	UdpSockFd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (UdpSockFd == ERROR)
 	{
@@ -1590,7 +1590,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 	
 	
 	
-	  /* bind the socketÕâÀï±¾À´ÊÇÒª°ó¶¨µÄ£¬µ«°ó¶¨ÁËÐÐ²»Í¨£¬ÆÁ±Îµô¾Í¿ÉÒÔ,Ö÷»úipÓë±»°ó¶¨µÄÉè±¸ÒªÒ»ÖÂ£¬²ÅÄÜ°ó¶¨³É¹¦£¬·ñÔò¾ÍÏàµ±ÓÚ¹ã²¥*/
+	  /* bind the socketï¿½ï¿½ï¿½ï±¾ï¿½ï¿½ï¿½ï¿½Òªï¿½ó¶¨µÄ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð²ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½ï¿½Í¿ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ipï¿½ë±»ï¿½ó¶¨µï¿½ï¿½è±¸ÒªÒ»ï¿½Â£ï¿½ï¿½ï¿½ï¿½Ü°ó¶¨³É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½àµ±ï¿½Ú¹ã²¥*/
 	
 	ret=bind (UdpSockFd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 	if(ret < 0)
@@ -1600,7 +1600,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 	}
 	
 
-	/* ÉèÖÃ·¢ËÍ»º³åÇø´óÐ¡ */
+	/* ï¿½ï¿½ï¿½Ã·ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ */
 	ret = setsockopt(UdpSockFd, SOL_SOCKET, SO_SNDBUF, (char *)&to_send, sizeof(to_send));
 	if (ret < 0)
 	{
@@ -1608,7 +1608,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 		goto Exit;
 	}
 
-	/* ÉèÖÃ½ÓÊÕ»º³åÇø´óÐ¡ */
+	/* ï¿½ï¿½ï¿½Ã½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ */
 	ret = setsockopt(UdpSockFd, SOL_SOCKET, SO_RCVBUF, (char *)&to_send, sizeof(to_send));
 	if (ret < 0)
 	{
@@ -1616,7 +1616,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 		goto Exit;
 	}
 	
-   /* ÉèÖÃ½ÓÊÕ³¬Ê±Ê±¼ä30ms,³¬Ê±Ê±¼äÉèÖÃÐè¸ù¾ÝÍ¨ÐÅÇé¿ö¸ü¸Ä */
+   /* ï¿½ï¿½ï¿½Ã½ï¿½ï¿½Õ³ï¿½Ê±Ê±ï¿½ï¿½30ms,ï¿½ï¿½Ê±Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	struct timeval timeout = {0,30};  
 	ret = setsockopt(UdpSockFd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(struct timeval));
 	if (ret < 0)
@@ -1625,7 +1625,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 		goto Exit;
 	}
 	
-	ioctl(UdpSockFd, (int)FIONBIO, (int)&OptVal);   /*ÉèÖÃ³É·Ç×èÈû·½Ê½*/
+	ioctl(UdpSockFd, (int)FIONBIO, (int)&OptVal);   /*ï¿½ï¿½ï¿½Ã³É·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½*/
 		 
 	 switch(devicePort)
 	 {
@@ -1646,7 +1646,7 @@ STATUS UdpSocketInit (const char * deviceIP, const u16 devicePort)
 	 }
 	 
 	 Exit:
-	 /* ¹Ø±ÕÌ×½Ó×Ö */
+	 /* ï¿½Ø±ï¿½ï¿½×½ï¿½ï¿½ï¿½ */
 	 if (UdpSockFd != 0)
 	 {
 		 close(UdpSockFd);

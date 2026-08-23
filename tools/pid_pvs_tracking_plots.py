@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import shutil
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -53,6 +54,9 @@ sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 
 from tools.pid_tuner_pvs import PVSControlSim, _wrap  # noqa: E402
+from tools import thesis_plot_style as tps  # noqa: E402
+
+tps.apply_thesis_style(layout="full")
 
 
 @dataclass(frozen=True)
@@ -294,25 +298,39 @@ def _comparison_metrics(kind: str, channel: str) -> list[tuple[str, float]]:
     return values
 
 
-def _plot_summary(output: Path) -> None:
+def _plot_summary(output_base: Path) -> None:
     cases = [
         ("step", "depth", "阶跃深度 RMSE（m）"),
         ("step", "yaw", "阶跃艏向 RMSE（deg）"),
         ("sine", "depth", "正弦深度 RMSE（m）"),
         ("sine", "yaw", "正弦艏向 RMSE（deg）"),
     ]
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    fig, axes = plt.subplots(
+        2,
+        2,
+        figsize=tps.figure_size("full", height=4.65),
+        constrained_layout=True,
+    )
+    profile_labels = {
+        "pvs_default_baseline": "PVS 默认基线",
+        "step_tuned_v2": "阶跃调优",
+        "sine_tuned_v2": "正弦调优",
+    }
     for ax, (kind, channel, title) in zip(axes.ravel(), cases):
         values = _comparison_metrics(kind, channel)
-        labels = [v[0] for v in values]
+        labels = [profile_labels.get(v[0], v[0]) for v in values]
         rmse = [v[1] for v in values]
-        ax.bar(range(len(labels)), rmse, color=["#7f7f7f", "#1f77b4", "#ff7f0e"])
+        ax.bar(
+            range(len(labels)),
+            rmse,
+            color=[tps.BASELINE_1, tps.PROPOSED, tps.BASELINE_2],
+            hatch=["//", "", ".."],
+        )
         ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, rotation=25, ha="right", fontsize=8)
+        ax.set_xticklabels(labels, rotation=18, ha="right")
         ax.set_title(title)
         ax.grid(True, axis="y", alpha=0.3)
-    fig.tight_layout()
-    fig.savefig(output, dpi=160)
+    tps.save_figure(fig, output_base.with_suffix(""))
     plt.close(fig)
 
 
@@ -351,8 +369,16 @@ def main() -> None:
     parser.add_argument(
         "--output-root",
         type=Path,
-        default=Path("/auv_data/results/control/pid_pvs_tuning"),
+        default=PROJECT_ROOT / "results/control/pid_pvs_tuning",
         help="Directory where a timestamped run folder will be created.",
+    )
+    parser.add_argument(
+        "--thesis-output-dir",
+        type=Path,
+        default=(
+            PROJECT_ROOT
+            / "docs/thesis/figures/experiments/control_pid_pvs"
+        ),
     )
     args = parser.parse_args()
 
@@ -378,9 +404,15 @@ def main() -> None:
         _plot_tracking(case, result, path)
         figures[case.name] = path
 
-    summary_path = figures_dir / "05_pid_pvs_profile_comparison.png"
-    _plot_summary(summary_path)
-    figures["profile_comparison"] = summary_path
+    summary_base = figures_dir / "05_pid_pvs_profile_comparison"
+    _plot_summary(summary_base)
+    args.thesis_output_dir.mkdir(parents=True, exist_ok=True)
+    for suffix in (".pdf", ".png"):
+        shutil.copy2(
+            summary_base.with_suffix(suffix),
+            args.thesis_output_dir / f"05_pid_pvs_profile_comparison{suffix}",
+        )
+    figures["profile_comparison"] = summary_base.with_suffix(".pdf")
 
     _write_report(run_dir, figures, results)
     print(run_dir)

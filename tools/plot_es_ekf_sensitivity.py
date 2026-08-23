@@ -3,9 +3,9 @@
 
 复用优先：不重跑调优（`tools/es_ekf_comprehensive_tuner.py`）——其源数据包为 2026-05
 的单包离线回放，且 `algorithm/es_ekf.py` 分源门控已于 2026-08 细化，重跑会引入与冻结
-产物不一致的漂移。本脚本只\ *读*\ 冻结报告 `results/tuning/ekf_comprehensive/tuning_report.md`
+产物不一致的漂移。本脚本只读冻结报告 `results/tuning/ekf_comprehensive/tuning_report.md`
 （该报告为权威 provenance），把其中的单参数灵敏度扫描与参数-RMSE 相关系数**重排版**为
-期刊级正文图，统一走 `thesis_plot_style`（中文字体 / 黑白可辨 / 300 dpi）。
+期刊级正文图，统一走 `thesis_plot_style`（中文字体 / 黑白可辨 / 600 dpi）。
 
 图的叙事（与 §5.5.5 可观性边界一致）：
   * 焦点面板（左）：四个噪声参数与水平 RMSE 的 Pearson 相关系数——只有 sigma_dvl 强相关
@@ -13,7 +13,7 @@
   * 支撑面板（右）：四个参数的单参数扫描下水平 RMSE 相对基线的偏移（毫米级），全程 < 25 mm、
     始终停在 9.06 m 量级，直观说明在缺绝对横向观测时任何噪声整定都无法压制漂移。
 
-边界（诚实）：该报告为\ *单包（n=1）离线*\ 敏感性探针，仅作机制佐证，不构成多种子统计结论；
+边界（诚实）：该报告为单包（n=1）离线敏感性探针，仅作机制佐证，不构成多种子统计结论；
 正文的多种子鲁棒性主结果仍以表 tab:ch05-eskf-robustness 为准。
 
 用法：
@@ -121,9 +121,20 @@ def _baseline_rmse_xy(sweeps: dict[str, tuple[list[float], list[float]]]) -> flo
 
 def build_figure(sweeps, corr, baseline_xy):
     import matplotlib.pyplot as plt
-    from tools.thesis_plot_style import ACCENT_COLORS, line_style, series_style
+    from tools.thesis_plot_style import (
+        apply_thesis_style,
+        figure_size,
+        line_style,
+        series_style,
+    )
 
-    fig, (ax_corr, ax_sweep) = plt.subplots(1, 2, figsize=(11.0, 4.2))
+    apply_thesis_style(layout="full")
+    fig, (ax_corr, ax_sweep) = plt.subplots(
+        1,
+        2,
+        figsize=figure_size("full", height=3.15),
+        constrained_layout=True,
+    )
 
     # --- 焦点面板（左）：Pearson 相关系数水平条 --------------------------------
     ordered = sorted(_PARAMS, key=lambda p: abs(corr.get(p, 0.0)))
@@ -134,7 +145,7 @@ def build_figure(sweeps, corr, baseline_xy):
         ax_corr.barh(i, abs(v), **st)
         ax_corr.text(
             abs(v) + 0.02, i, f"{v:+.3f}",
-            va="center", ha="left", fontsize=10,
+            va="center", ha="left",
         )
     ax_corr.set_yticks(list(y_pos))
     ax_corr.set_yticklabels([_PARAM_ZH[p] for p in ordered])
@@ -163,7 +174,6 @@ def build_figure(sweeps, corr, baseline_xy):
     ax_sweep.set_title(f"(b) 单参数扫描：始终停留在 {baseline_xy:.2f} m 量级")
     ax_sweep.legend(loc="upper left", ncol=2)
 
-    fig.tight_layout()
     return fig
 
 

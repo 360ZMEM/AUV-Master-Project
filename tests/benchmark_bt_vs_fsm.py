@@ -12,6 +12,7 @@
 
 from __future__ import annotations
 
+import argparse
 import os
 import random
 import sys
@@ -26,12 +27,12 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import matplotlib.font_manager as fm
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / 'brain_linux' / 'src'))
+from tools import thesis_plot_style as tps  # noqa: E402
 
 from auv_decision.auv_decision_core.bt_engine import DecisionTreeEngine
 from auv_decision.auv_decision_core.fsm_baseline import FiniteStateMachineEngine
@@ -42,16 +43,20 @@ TICK_PERIOD_S = 1.0 / TICK_FREQ_HZ
 CONFIDENCE_THRESHOLD = 0.7
 DIVE_TARGET_DEPTH = 4.0
 
-zh_font_path = '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'
-if os.path.exists(zh_font_path):
-    fm.fontManager.addfont(zh_font_path)
-    font_prop = fm.FontProperties(fname=zh_font_path)
-    font_name = font_prop.get_name()
-    plt.rcParams['font.family'] = font_name
-    plt.rcParams['axes.unicode_minus'] = False
-else:
-    plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'SimHei', 'AR PL UKai CN'] + plt.rcParams['font.sans-serif']
-    plt.rcParams['axes.unicode_minus'] = False
+tps.apply_thesis_style(layout="full")
+
+FUNCTION_LABELS = {
+    "_handle_idle": "处理待机状态",
+    "_build_tree": "构建行为树",
+    "set_mission_target": "设置任务目标",
+    "_is_emergency": "检查应急条件",
+    "unicode_tree": "导出行为树文本",
+    "__init__": "初始化",
+    "_make_goal": "构造控制目标",
+    "get_state_history": "获取状态历史",
+    "reset": "重置",
+    "get_current_state": "获取当前状态",
+}
 
 
 def zh(text):
@@ -472,7 +477,11 @@ def experiment_state_expansion_cost() -> dict[str, Any]:
 
 
 def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
-    fig = plt.figure(figsize=(18, 8))
+    tps.apply_thesis_style(layout="full")
+    fig = plt.figure(
+        figsize=tps.figure_size("full", height=4.35),
+        constrained_layout=True,
+    )
     gs = fig.add_gridspec(2, 3, hspace=0.35, wspace=0.3)
 
     dup = results.get('emergency_duplication', {})
@@ -483,8 +492,21 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     bt0 = [results['bt']['file_complexity'], results['bt']['max_function']]
     fsm0 = [results['fsm']['file_complexity'], results['fsm']['max_function']]
     x0 = np.arange(len(cat0))
-    bars0 = ax0.bar(x0 - width/2, bt0, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
-    ax0.bar(x0 + width/2, fsm0, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
+    bars0 = ax0.bar(
+        x0 - width/2,
+        bt0,
+        width,
+        label='行为树',
+        color=tps.PROPOSED,
+    )
+    ax0.bar(
+        x0 + width/2,
+        fsm0,
+        width,
+        label='有限状态机',
+        color=tps.BASELINE_1,
+        hatch='//',
+    )
     ax0.set_ylabel('复杂度数值')
     ax0.set_title('圈复杂度（McCabe V(G)）')
     ax0.set_xticks(x0)
@@ -493,15 +515,28 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax0.grid(axis='y', alpha=0.3)
     for bar, val in zip(bars0, bt0):
         ax0.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
-                f'{val}', ha='center', va='bottom', fontsize=11, fontweight='bold')
+                f'{val}', ha='center', va='bottom')
 
     ax1 = fig.add_subplot(gs[0, 1])
     cat1 = ['应急检查\n声明数', '含应急检查\n的状态数']
     bt1 = [dup.get('bt_emergency_checks', 0), dup.get('bt_states_with_emergency', 0)]
     fsm1 = [dup.get('fsm_emergency_checks', 0), dup.get('fsm_states_with_emergency', 0)]
     x1 = np.arange(len(cat1))
-    bars1 = ax1.bar(x1 - width/2, bt1, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
-    ax1.bar(x1 + width/2, fsm1, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
+    bars1 = ax1.bar(
+        x1 - width/2,
+        bt1,
+        width,
+        label='行为树',
+        color=tps.PROPOSED,
+    )
+    ax1.bar(
+        x1 + width/2,
+        fsm1,
+        width,
+        label='有限状态机',
+        color=tps.BASELINE_1,
+        hatch='//',
+    )
     ax1.set_ylabel('数量')
     ax1.set_title('应急处理代码重复度')
     ax1.set_xticks(x1)
@@ -510,19 +545,32 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     ax1.grid(axis='y', alpha=0.3)
     for bar, val in zip(bars1, bt1):
         ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.1,
-                f'{val}', ha='center', va='bottom', fontsize=11, fontweight='bold')
+                f'{val}', ha='center', va='bottom')
 
     ax2 = fig.add_subplot(gs[0, 2])
-    states_names = ['DIVE_TO_DEPTH', 'PARALLEL_TRACKING', 'ZIGZAG_SEARCH', 'STABILIZE_HOLD', 'ANALYTICAL_PATH']
+    states_names = ['定深\n下潜', '平行\n跟踪', '之字\n搜索', '稳定\n保持', '解析\n路径']
     bt_has = [1, 0, 0, 0, 0]
     fsm_has = [1, 1, 1, 1, 1]
     x2 = np.arange(len(states_names))
-    ax2.bar(x2 - width/2, bt_has, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
-    ax2.bar(x2 + width/2, fsm_has, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
+    ax2.bar(
+        x2 - width/2,
+        bt_has,
+        width,
+        label='行为树',
+        color=tps.PROPOSED,
+    )
+    ax2.bar(
+        x2 + width/2,
+        fsm_has,
+        width,
+        label='有限状态机',
+        color=tps.BASELINE_1,
+        hatch='//',
+    )
     ax2.set_ylabel('是否含应急检查（1=是）')
     ax2.set_title('各状态应急检查分布')
     ax2.set_xticks(x2)
-    ax2.set_xticklabels(states_names, rotation=25, ha='right', fontsize=7)
+    ax2.set_xticklabels(states_names, fontsize=7.5)
     ax2.legend(fontsize=9)
     ax2.set_ylim(0, 1.5)
     ax2.grid(axis='y', alpha=0.3)
@@ -533,10 +581,32 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     y_pos = np.arange(len(all_names))
     bt_vals = [results['bt']['functions'].get(n, 0) for n in all_names]
     fsm_vals = [results['fsm']['functions'].get(n, 0) for n in all_names]
-    ax3.barh(y_pos - width/2, bt_vals, width, label='BT', color='#2196F3', alpha=0.7)
-    ax3.barh(y_pos + width/2, fsm_vals, width, label='FSM', color='#FF5722', alpha=0.7)
+    ax3.barh(
+        y_pos - width/2,
+        bt_vals,
+        width,
+        label='行为树',
+        color=tps.PROPOSED,
+    )
+    ax3.barh(
+        y_pos + width/2,
+        fsm_vals,
+        width,
+        label='有限状态机',
+        color=tps.BASELINE_1,
+        hatch='//',
+    )
     ax3.set_yticks(y_pos)
-    ax3.set_yticklabels([n.split('.')[-1][:30] if '.' in n else n[:30] for n in all_names], fontsize=7)
+    ax3.set_yticklabels(
+        [
+            FUNCTION_LABELS.get(
+                n.rsplit('.', 1)[-1].rstrip("'"),
+                "其他函数",
+            )
+            for n in all_names
+        ],
+        fontsize=8,
+    )
     ax3.set_xlabel('V(G)')
     ax3.set_title('各函数复杂度对比')
     ax3.legend(fontsize=9)
@@ -547,22 +617,42 @@ def plot_complexity(results: dict[str, Any], output_dir: Path) -> Path:
     fsm_avg = results['fsm']['avg_function']
     bt_max = results['bt']['max_function']
     fsm_max = results['fsm']['max_function']
-    ax4.bar(['平均\n复杂度', '最大\n复杂度'], [bt_avg, bt_max], width, color='#2196F3', alpha=0.85, label='BT')
-    ax4.bar(['平均\n复杂度', '最大\n复杂度'], [fsm_avg, fsm_max], width, bottom=[bt_avg, bt_max], color='#FF5722', alpha=0.85, label='FSM')
+    summary_x = np.arange(2)
+    ax4.bar(
+        summary_x - width / 2,
+        [bt_avg, bt_max],
+        width,
+        color=tps.PROPOSED,
+        label='行为树',
+    )
+    ax4.bar(
+        summary_x + width / 2,
+        [fsm_avg, fsm_max],
+        width,
+        color=tps.BASELINE_1,
+        hatch='//',
+        label='有限状态机',
+    )
+    ax4.set_xticks(summary_x, ['平均\n复杂度', '最大\n复杂度'])
     ax4.set_ylabel('复杂度')
     ax4.set_title('平均与最大复杂度')
     ax4.legend(fontsize=9)
     ax4.grid(axis='y', alpha=0.3)
 
-    plt.suptitle('代码复杂度与结构分析：BT vs FSM', fontsize=14, fontweight='bold')
-    out_path = output_dir / 'figures' / '03_complexity_comparison.png'
-    fig.savefig(str(out_path), dpi=150, bbox_inches='tight')
+    out_base = output_dir / 'figures' / '03_complexity_comparison'
+    tps.save_figure(fig, out_base)
     plt.close(fig)
-    return out_path
+    return out_base.with_suffix('.pdf')
 
 
 def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
-    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(14, 5))
+    tps.apply_thesis_style(layout="full")
+    fig, (ax0, ax1) = plt.subplots(
+        1,
+        2,
+        figsize=tps.figure_size("full", height=3.05),
+        constrained_layout=True,
+    )
 
     width = 0.35
 
@@ -571,8 +661,21 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     fsm_vals = [results['fsm_new_state_lines'], results['fsm_new_state_lines'] * 10]
     x = np.arange(len(cat))
 
-    ax0.bar(x - width/2, bt_vals, width, label='BT', color='#2196F3', edgecolor='white', alpha=0.85)
-    ax0.bar(x + width/2, fsm_vals, width, label='FSM', color='#FF5722', edgecolor='white', alpha=0.85)
+    ax0.bar(
+        x - width/2,
+        bt_vals,
+        width,
+        label='行为树',
+        color=tps.PROPOSED,
+    )
+    ax0.bar(
+        x + width/2,
+        fsm_vals,
+        width,
+        label='有限状态机',
+        color=tps.BASELINE_1,
+        hatch='//',
+    )
     ax0.set_ylabel('代码行数')
     ax0.set_title('状态扩展成本对比')
     ax0.set_xticks(x)
@@ -582,14 +685,34 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
 
     for bar, val in zip(ax0.patches, bt_vals + fsm_vals):
         ax0.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
-                f'{val}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+                f'{val}', ha='center', va='bottom')
 
     states = list(range(1, 21))
     bt_cost = [results['bt_new_state_lines'] * s for s in states]
     fsm_cost = [results['fsm_new_state_lines'] * s for s in states]
-    ax1.plot(states, bt_cost, 'o-', color='#2196F3', linewidth=2, markersize=5, label=f'BT（斜率={results["bt_new_state_lines"]}）')
-    ax1.plot(states, fsm_cost, 's-', color='#FF5722', linewidth=2, markersize=5, label=f'FSM（斜率={results["fsm_new_state_lines"]}）')
-    ax1.fill_between(states, bt_cost, fsm_cost, alpha=0.15, color='#FF5722', label='FSM 额外工作量')
+    ax1.plot(
+        states,
+        bt_cost,
+        'o-',
+        color=tps.PROPOSED,
+        label=f'行为树（斜率={results["bt_new_state_lines"]}）',
+    )
+    ax1.plot(
+        states,
+        fsm_cost,
+        's--',
+        color=tps.BASELINE_1,
+        linewidth=1.4,
+        label=f'有限状态机（斜率={results["fsm_new_state_lines"]}）',
+    )
+    ax1.fill_between(
+        states,
+        bt_cost,
+        fsm_cost,
+        alpha=0.15,
+        color=tps.BASELINE_1,
+        label='有限状态机额外工作量',
+    )
     ax1.set_xlabel('新增状态数')
     ax1.set_ylabel('累计新增代码行数')
     ax1.set_title('状态扩展成本增长（1–20 个状态）')
@@ -597,12 +720,10 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     ax1.grid(alpha=0.3)
     ax1.set_xticks(states)
 
-    plt.suptitle('状态扩展成本：BT vs FSM', fontsize=12, fontweight='bold')
-    plt.tight_layout()
-    out_path = output_dir / 'figures' / '04_expansion_cost.png'
-    fig.savefig(str(out_path), dpi=150, bbox_inches='tight')
+    out_base = output_dir / 'figures' / '04_expansion_cost'
+    tps.save_figure(fig, out_base)
     plt.close(fig)
-    return out_path
+    return out_base.with_suffix('.pdf')
 
 
 def experiment_monte_carlo_survival(
@@ -1047,9 +1168,39 @@ def run_bt_vs_fsm_benchmark(
     return all_results, report_path, figure_paths
 
 
+def render_thesis_figures() -> list[Path]:
+    output_dir = (
+        PROJECT_ROOT
+        / 'docs/thesis/figures/experiments/decision_bt_vs_fsm'
+    )
+    (output_dir / 'figures').mkdir(parents=True, exist_ok=True)
+    complexity = plot_complexity(experiment_complexity_analysis(), output_dir)
+    expansion = plot_expansion_cost(
+        experiment_state_expansion_cost(),
+        output_dir,
+    )
+    for path in (complexity, expansion):
+        for suffix in ('.pdf', '.png'):
+            source = path.with_suffix(suffix)
+            target = output_dir / source.name
+            if source != target:
+                target.write_bytes(source.read_bytes())
+    return [
+        output_dir / '03_complexity_comparison.pdf',
+        output_dir / '04_expansion_cost.pdf',
+    ]
+
+
 if __name__ == '__main__':
-    results, report, figs = run_bt_vs_fsm_benchmark(verbose=True)
-    print(f'\n输出目录: {report.parent}')
-    print(f'报告: {report}')
-    for f in figs:
-        print(f'图表: {f}')
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--render-thesis', action='store_true')
+    args = parser.parse_args()
+    if args.render_thesis:
+        for figure_path in render_thesis_figures():
+            print(f'图表: {figure_path}')
+    else:
+        results, report, figs = run_bt_vs_fsm_benchmark(verbose=True)
+        print(f'\n输出目录: {report.parent}')
+        print(f'报告: {report}')
+        for figure_path in figs:
+            print(f'图表: {figure_path}')

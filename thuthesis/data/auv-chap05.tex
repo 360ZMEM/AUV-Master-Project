@@ -279,7 +279,7 @@ DVL 丢包 90\% & 3/3 & 3.55\allowbreak{}±0.23 m & 0.19\allowbreak{}±0.04 m & 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={ES-EKF 噪声参数敏感性：左图为四个噪声参数与水平 RMSE 的皮尔逊相关系数排序，仅 DVL 强相关；右图为单参数扫描下水平 RMSE 相对基线的偏移，全程不足 22 mm}]{experiments/state_estimation/eskf_param_sensitivity.png}
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={ES-EKF 噪声参数敏感性：左图为四个噪声参数与水平 RMSE 的皮尔逊相关系数排序，仅 DVL 强相关；右图为单参数扫描下水平 RMSE 相对基线的偏移，全程不足 22 mm}]{experiments/state_estimation/eskf_param_sensitivity.pdf}
 \caption{ES-EKF 噪声参数敏感性（单包离线扫描，$n=1$）：（左）各噪声参数与水平 RMSE 的皮尔逊相关系数，仅 $\sigma_{\mathrm{DVL}}$ 强相关；（右）单参数扫描下水平 RMSE 相对基线的偏移，全程停留在 $9.06$ m 量级}\label{fig:ch05-eskf-param-sensitivity}
 \end{figure}
 
@@ -416,8 +416,8 @@ R20 的策略对照图与同源结果文件随图组来源记录归档，正文�
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,alt={三维海底曲面与 PID 地形跟随轨迹：确定性重建的起伏海床曲面覆盖 AUV 全轨迹，蓝色轨迹在海床上方以近似恒定净空推进，红色散点为沿程 DVL 实测海底验证锚，重建与实测沿程相关系数约 0.91}]{terrain_following/terrain_3d_pid_terrain_trajectory.pdf}
-\caption{三维海底曲面与 PID 地形跟随轨迹（确定性地形重建 + 沿程 DVL 实测海底验证锚，\(n=1\)）：蓝色为 AUV 轨迹，绿色虚线为 3~m 目标净空对应的目标深度路径，曲面颜色表示向下为正的海底深度，红色散点为 DVL 实测海底高度，重建与实测沿程相关系数约 0.91}\label{fig:ch05-terrain-3d}
+\includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,alt={三维海底曲面与 PID 地形跟随轨迹：确定性重建的起伏海床曲面覆盖 AUV 全轨迹，蓝色轨迹在海床上方以近似恒定净空推进，橙色散点为沿程 DVL 实测海底验证锚，重建与实测沿程相关系数约 0.91}]{terrain_following/terrain_3d_pid_terrain_trajectory.pdf}
+\caption{三维海底曲面与 PID 地形跟随轨迹（确定性地形重建 + 沿程 DVL 实测海底验证锚，\(n=1\)）：蓝色为 AUV 轨迹，绿色虚线为 3~m 目标净空对应的目标深度路径，曲面颜色表示向下为正的海底深度，橙色散点为 DVL 实测海底高度，重建与实测沿程相关系数约 0.91}\label{fig:ch05-terrain-3d}
 \end{figure}
 \FloatBarrier
 
@@ -548,6 +548,10 @@ MPC 最优横向 RMSE
   >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.15}}
   >{\raggedleft\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.09}}@{}}
 \caption{不确定性感知控制主消融结果（定位侧与控制侧并列）}\label{tab:ch05-uampc-control}\label{tab:ch05-uampc-localization}\tabularnewline
+\toprule\noalign{}
+场景 & 模式 & 水平 RMSE（m） & 深度 RMSE（m） & 横向 RMSE（m） & 控制变化率 & 违规 \\
+\midrule\noalign{}
+\endfirsthead
 \toprule\noalign{}
 场景 & 模式 & 水平 RMSE（m） & 深度 RMSE（m） & 横向 RMSE（m） & 控制变化率 & 违规 \\
 \midrule\noalign{}
@@ -725,11 +729,11 @@ R13-v2 的主要性能结果见表~\ref{tab:ch05-r13-v2-main-results}。为突�
 \begin{figure}[htbp]
 \centering
 \subcaptionbox{保守 UA 对控制变化率的影响\label{fig:ch05-r13-v2-control-rate}}{%
-  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 六类代理场景中固定权重与 conservative UA 的控制变化率成对对比；发卡、横流和综合极端显著下降}]{experiments/control/r13_v2_control_rate_paired.png}}\\[2pt]
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 六类代理场景中固定权重与 conservative UA 的控制变化率成对对比；发卡、横流和综合极端显著下降}]{experiments/control/r13_v2_control_rate_paired.pdf}}\\[2pt]
 \subcaptionbox{分源置信下的授权模式分布\label{fig:ch05-r13-v2-authority}}{%
-  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景的 HOLD、SEARCH、TRACK 授权占比堆叠图}]{experiments/control/r13_v2_authority_modes_ua.png}}\\[2pt]
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景的 HOLD、SEARCH、TRACK 授权占比堆叠图}]{experiments/control/r13_v2_authority_modes_ua.pdf}}\\[2pt]
 \subcaptionbox{分源置信 \(p_{\mathrm{track}}\) 分布\label{fig:ch05-r13-v2-ptrack}}{%
-  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景 sonar p_track 分布箱线图；埋设间断动态范围最大，综合极端未达到 TRACK 进入门}]{experiments/control/r13_v2_p_track_boxplot_ua.png}}
+  \includegraphics[width=0.86\linewidth,height=0.27\textheight,keepaspectratio,alt={R13-v2 UA 模式下六类代理场景 sonar p_track 分布箱线图；埋设间断动态范围最大，综合极端未达到 TRACK 进入门}]{experiments/control/r13_v2_p_track_boxplot_ua.pdf}}
 \caption{R13-v2 分源置信证据三面板：(a) 保守 UA 对控制变化率的影响；(b) 授权模式分布；(c) \(p_{\mathrm{track}}\) 分布}\label{fig:ch05-r13-v2-evidence}
 \end{figure}
 \FloatBarrier
@@ -813,7 +817,7 @@ R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={DL/T 1278 风格评分卡·第 1 次运行（数字孪生确定性先验；总分 24、最差项 16、注意状态，扣分为埋深不足与埋深精度未达 0.15 m；三次运行评分一致）}]{cable_acceptance/cable_dlt1278_scorecard_fresh1.png}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={DL/T 1278 风格评分卡·第 1 次运行（数字孪生确定性先验；总分 24、最差项 16、注意状态，扣分为埋深不足与埋深精度未达 0.15 m；三次运行评分一致）}]{cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf}
 \caption{DL/T 1278 风格评分卡（数字孪生确定性先验；总分 24、最差项 16、注意状态，扣分为埋深不足与埋深精度未达 0.15 m；三次运行评分一致）}\label{fig:ch05-dlt-scorecard-run1}
 \end{figure}
 \FloatBarrier
@@ -950,7 +954,7 @@ R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_recovery_prior_alignment.png}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf}
 \caption{六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 \(n=3\)）}\label{fig:ch05-pvs-closedloop-recovery}
 \end{figure}
 \FloatBarrier
@@ -1022,7 +1026,7 @@ R22 全矩阵覆盖曲线几何、地形/埋设、实测磁噪声回放与横流
 
 \begin{figure}[tp]
 \centering
-\includegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio,alt={六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_acceptance_convergence.png}
+\includegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio,alt={六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}]{cable_acceptance/pvs_closedloop_acceptance_convergence.pdf}
 \caption{六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 \(n=3\)）}\label{fig:ch05-pvs-closedloop-convergence}
 \end{figure}
 \FloatBarrier
@@ -1194,11 +1198,11 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 \centering
 \begin{minipage}[t]{0.49\linewidth}
 \centering
-\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入下噪声 ENOB 随非重叠块平均过采样率的变化}]{hardware/adc_enob/ch4_enob_vs_osr.png}
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入下噪声 ENOB 随非重叠块平均过采样率的变化}]{hardware/adc_enob/ch4_enob_vs_osr.pdf}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.49\linewidth}
 \centering
-\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入在不同采样率下的电压幅度谱密度}]{hardware/adc_enob/ch4_noise_spectral_density.png}
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio,alt={SK2301 CH4 短接输入在不同采样率下的电压幅度谱密度}]{hardware/adc_enob/ch4_noise_spectral_density.pdf}
 \end{minipage}
 \caption{SK2301 短接输入噪声表征：（左）噪声 ENOB 与过采样率的关系；（右）不同采样率下的幅度谱密度}\label{fig:ch05-adc-enob-osr}
 \end{figure}
@@ -1246,7 +1250,7 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\linewidth,height=0.38\textheight,keepaspectratio,alt={ADC--TMR 实测背景噪声在 ROS2 闭环中的三模式对照柱状图}]{experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.png}
+\includegraphics[width=0.92\linewidth,height=0.38\textheight,keepaspectratio,alt={ADC--TMR 实测背景噪声在 ROS2 闭环中的三模式对照柱状图}]{experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf}
 \caption{ADC--TMR 实测背景噪声 ROS2 闭环对照：清洁、同协方差高斯与实测回放三种磁观测输入在同一 Direction A 轻量闭环中的横偏 p95、平均置信度和噪声幅值 p95}\label{fig:ch05-mag-chain-noise-ros}
 \end{figure}
 \FloatBarrier
@@ -1281,7 +1285,7 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}]{experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.png}
+\includegraphics[width=0.95\linewidth,height=\textheight,keepaspectratio,alt={磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}]{experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf}
 \caption{磁外参标定残差收敛曲线（仿真标定框架，\(n=1\)；验证状态为通过，非真机转台外场标定）}\label{fig:ch05-mag-residual}
 \end{figure}
 \FloatBarrier
@@ -1302,7 +1306,7 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.76\linewidth,height=\textheight,keepaspectratio,alt={TMR 运动轨迹及其 45 Hz 磁场模量空间分布}]{experiments/magnetic_joint/trajectory_colored_by_b.png}
+\includegraphics[width=0.76\linewidth,height=\textheight,keepaspectratio,alt={TMR 运动轨迹及其 45 Hz 磁场模量空间分布}]{experiments/magnetic_joint/trajectory_colored_by_b.pdf}
 \caption{TMR 运动轨迹与 45 Hz 磁场模量空间分布}\label{fig:ch05-joint-trajectory}
 \end{figure}
 \FloatBarrier
@@ -1325,7 +1329,7 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.96\linewidth,height=\textheight,keepaspectratio,alt={三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型拟合结果}]{experiments/magnetic_joint/complex_iq_fit.png}
+\includegraphics[width=0.96\linewidth,height=\textheight,keepaspectratio,alt={三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型拟合结果}]{experiments/magnetic_joint/complex_iq_fit.pdf}
 \caption{三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型联合拟合}\label{fig:ch05-joint-complex-fit}
 \end{figure}
 \FloatBarrier

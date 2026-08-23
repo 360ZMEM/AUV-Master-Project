@@ -128,7 +128,13 @@ def plot_fault_timeline(
     origin = first_phase_time(rows, "active_baseline")
     end = first_phase_time(rows, "remote_cleanup")
 
-    fig, axes = plt.subplots(4, 1, figsize=(12.8, 9.2), sharex=True)
+    fig, axes = plt.subplots(
+        4,
+        1,
+        figsize=tps.figure_size("full", height=4.8),
+        sharex=True,
+        constrained_layout=True,
+    )
     fault_spans = (
         ("bit13_dvl_loss", "bit13_clear", "#55a868", "Bit13 DVL 失锁"),
         ("bit5_system_comm", "bit5_clear_hold", "#dd8452", "Bit5 系统通信"),
@@ -136,7 +142,7 @@ def plot_fault_timeline(
             "bit14_watchdog_outage",
             "bit14_clear_hold",
             "#c44e52",
-            "Bit14 watchdog",
+            "Bit14 看门狗",
         ),
     )
     for start_phase, end_phase, color, label in fault_spans:
@@ -181,7 +187,13 @@ def plot_fault_timeline(
     axes[0].set_yticks((0, 1))
     axes[0].set_ylim(-0.12, 1.20)
     axes[0].set_ylabel("故障位")
-    axes[0].legend(loc="upper center", ncols=6)
+    phase_handles, phase_labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        phase_handles,
+        phase_labels,
+        loc="outside upper center",
+        ncols=6,
+    )
 
     arbiter_codes = {"LOCKED": 0, "ACTIVE": 1, "DENIED": 2}
     axes[1].step(
@@ -190,7 +202,7 @@ def plot_fault_timeline(
         where="post",
         color=tps.ACCENT_COLORS[0],
     )
-    axes[1].set_yticks((0, 1, 2), ("LOCKED", "ACTIVE", "DENIED"))
+    axes[1].set_yticks((0, 1, 2), ("锁定", "有效", "拒绝"))
     axes[1].set_ylim(-0.25, 2.25)
     axes[1].set_ylabel("仲裁状态")
 
@@ -208,7 +220,7 @@ def plot_fault_timeline(
     )
     axes[2].set_yticks(
         (0, 1, 2),
-        ("IDLE", "PARALLEL", "ZIGZAG"),
+        ("待机", "平行跟踪", "之字搜索"),
     )
     axes[2].set_ylim(-0.25, 2.25)
     axes[2].set_ylabel("任务输出")
@@ -234,7 +246,7 @@ def plot_fault_timeline(
                 for key in ("thrust", "left", "right", "top", "bottom")
             )
         )
-        command_sources.append("shadow 执行量")
+        command_sources.append("影子执行量")
     for row in snapshots:
         command_times.append(elapsed(row) - origin)
         command_maxima.append(
@@ -243,7 +255,7 @@ def plot_fault_timeline(
         command_sources.append("板端命令快照")
     for label, style_index in (
         ("上行推进反馈", 0),
-        ("shadow 执行量", 1),
+        ("影子执行量", 1),
         ("板端命令快照", 2),
     ):
         points = [
@@ -264,7 +276,7 @@ def plot_fault_timeline(
             )
     axes[3].set_ylim(-0.05, 0.15)
     axes[3].set_ylabel("最大绝对命令")
-    axes[3].set_xlabel("相对健康 ACTIVE 基线的时间 / s")
+    axes[3].set_xlabel("相对健康自主基线的时间 (s)")
     axes[3].legend(loc="upper center", ncols=3)
     axes[3].text(
         0.99,
@@ -275,30 +287,22 @@ def plot_fault_timeline(
         transform=axes[3].transAxes,
     )
 
-    axes[0].text(
-        0.01,
-        1.14,
+    axes[0].set_title(
         (
-            f"Bit13→仲裁/BT {summary['bit13_to_arbiter_latency_ms']:.1f}/"
+            f"Bit13→仲裁/行为树 {summary['bit13_to_arbiter_latency_ms']:.1f}/"
             f"{summary['bit13_to_bt_latency_ms']:.1f} ms"
         ),
-        transform=axes[0].transAxes,
-        va="top",
+        loc="left",
     )
-    axes[1].text(
-        0.01,
-        0.93,
+    axes[1].set_title(
         (
-            f"Bit5→DENIED/IDLE {summary['bit5_to_denied_latency_ms']:.1f}/"
+            f"Bit5→拒绝/待机 {summary['bit5_to_denied_latency_ms']:.1f}/"
             f"{summary['bit5_to_idle_latency_ms']:.1f} ms；"
-            f"Bit14→DENIED {summary['bit14_to_denied_latency_ms']:.1f} ms"
+            f"Bit14→拒绝 {summary['bit14_to_denied_latency_ms']:.1f} ms"
         ),
-        transform=axes[1].transAxes,
-        va="top",
+        loc="left",
     )
     axes[3].set_xlim(0.0, max(0.0, end - origin))
-    fig.suptitle("真实 PC104--ROS2--行为树同步故障响应（零执行器）")
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
     paths = tps.save_figure(
         fig, output_dir / "pc104_cross_layer_fault_timeline"
     )
@@ -378,7 +382,13 @@ def plot_soak(
         [(elapsed(row) - soak_origin) / 60.0 for row in runtime]
     )
 
-    fig, axes = plt.subplots(3, 1, figsize=(12.8, 8.8), sharex=True)
+    fig, axes = plt.subplots(
+        3,
+        1,
+        figsize=tps.figure_size("full", height=4.7),
+        sharex=True,
+        constrained_layout=True,
+    )
     axes[0].bar(
         minutes,
         aggregate["status_count"] / 60.0,
@@ -386,7 +396,7 @@ def plot_soak(
         label="ArbiterStatus 采样率",
         **tps.series_style(2),
     )
-    axes[0].set_ylabel("采样率 / Hz")
+    axes[0].set_ylabel("采样率 (Hz)")
     axes[0].legend(loc="upper left")
     active_axis = axes[0].twinx()
     active_axis.plot(
@@ -405,7 +415,7 @@ def plot_soak(
         label="PC104 上行接收率",
         **tps.line_style(1),
     )
-    axes[1].set_ylabel("上行帧率 / Hz")
+    axes[1].set_ylabel("上行帧率 (Hz)")
     axes[1].legend(loc="upper right")
     axes[1].text(
         0.01,
@@ -438,8 +448,8 @@ def plot_soak(
             label=label,
             **tps.line_style(style_index),
         )
-    axes[2].set_ylabel("RSS / MiB")
-    axes[2].set_xlabel("稳态区间 / min")
+    axes[2].set_ylabel("常驻内存 (MiB)")
+    axes[2].set_xlabel("稳态区间 (min)")
     axes[2].set_xlim(0.0, 30.0)
     axes[2].legend(loc="upper center", ncols=4)
     axes[2].text(
@@ -453,7 +463,6 @@ def plot_soak(
         "真实 PC104--ROS2 零执行器全栈 30 min 稳态"
         f"（ACTIVE={summary['soak_active_ratio'] * 100.0:.2f}%）"
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
     paths = tps.save_figure(fig, output_dir / "pc104_cross_layer_soak_30min")
     plt.close(fig)
     return paths, resource_summary
@@ -485,6 +494,7 @@ def relative(path: Path) -> str:
 
 def main() -> int:
     args = parse_args()
+    tps.apply_thesis_style(layout="full")
     soak_bundle = args.soak_bundle.resolve()
     fault_bundle = args.fault_bundle.resolve()
     output_dir = args.output_dir.resolve()

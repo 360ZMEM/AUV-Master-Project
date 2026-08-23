@@ -31,23 +31,14 @@ from typing import Any
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
+from tools import thesis_plot_style as tps  # noqa: E402
+
 CLOSEDLOOP_ROOT = PROJECT_ROOT / "results" / "cable_ops_report" / "closedloop_e2e"
 
 
 def _apply_zh_style() -> None:
-    """图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII。"""
-    import os
-    import matplotlib.font_manager as fm
-    import matplotlib.pyplot as plt  # type: ignore
-
-    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(zh_font):
-        fm.fontManager.addfont(zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
-    else:
-        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-    plt.rcParams["axes.unicode_minus"] = False
-    plt.rcParams.update({"font.size": 12, "axes.titlesize": 13, "axes.labelsize": 12, "legend.fontsize": 9})
+    tps.apply_thesis_style(layout="full")
 
 
 def parse_args() -> argparse.Namespace:
@@ -106,56 +97,71 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     accept_ratio_on = sum(accepted_on) / max(1, len(accepted_on))
     vsep = vsep_on[len(vsep_on) // 2] if vsep_on else 0.0
 
-    fig, axes = plt.subplots(2, 2, figsize=(13, 8))
-    fig.suptitle(
-        "PVS 六自由度闭环复现畸变先验恢复（重载档）\n"
-        f"在线先验对齐接受帧占比={accept_ratio_on*100:.0f}%，"
-        f"垂直间距={vsep:.2f} m（5.5.11(3d) 中曾为 0% 接受 / 近共面）",
-        fontsize=12,
+    fig, axes = plt.subplots(
+        2,
+        2,
+        figsize=tps.figure_size("full", height=4.65),
+        constrained_layout=True,
     )
 
     ax = axes[0, 0]
-    ax.plot(t_on, ct_on, color="tab:green", linewidth=1.8, label="在线校正 ON（已接受）")
-    ax.plot(t_off, ct_off, color="tab:red", linewidth=1.4, alpha=0.8, label="校正 OFF（开环偏移）")
-    ax.axhspan(-corridor_m, corridor_m, color="tab:blue", alpha=0.10, label=f"验收走廊 +/-{corridor_m} m")
+    ax.plot(t_on, ct_on, color=tps.PROPOSED, linewidth=1.8, label="在线校正（已接受）")
+    ax.plot(t_off, ct_off, color=tps.BASELINE_1, linewidth=1.4, label="未校正（开环偏移）")
+    ax.axhspan(
+        -corridor_m,
+        corridor_m,
+        color=tps.PROPOSED,
+        alpha=0.10,
+        label=f"验收走廊 ±{corridor_m} m",
+    )
     ax.axhline(0.0, color="k", linewidth=0.6, alpha=0.4)
-    ax.set_xlabel("经过时间（s）")
-    ax.set_ylabel("相对真电缆的带符号横向偏差（m）")
-    ax.set_title("横向偏差恢复：~10 m 畸变先验 -> 走廊内")
+    ax.set_xlabel("经过时间 (s)")
+    ax.set_ylabel("相对真电缆的带符号横向偏差 (m)")
+    ax.set_title("横向偏差恢复：约 10 m 畸变先验 → 进入走廊")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
     ax = axes[0, 1]
-    ax.plot(t_on, tnorm_on, color="tab:green", linewidth=1.8, label="累计平移校正量（m）")
-    ax.set_xlabel("经过时间（s）")
-    ax.set_ylabel("先验对齐平移范数（m）")
-    ax.set_title("在线校正逐步累积（3d 中恒为 0，观测全被拒）")
+    ax.plot(t_on, tnorm_on, color=tps.PROPOSED, linewidth=1.8, label="累计平移校正量")
+    ax.set_xlabel("经过时间 (s)")
+    ax.set_ylabel("先验对齐平移范数 (m)")
+    ax.set_title("在线校正逐步累积（原对照中位数为 0）")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8)
 
     ax = axes[1, 0]
-    ax.plot(t_on, quality_on, color="tab:purple", linewidth=1.6, label="磁横向拟合质量")
-    ax.axhline(0.35, color="tab:red", linestyle="--", label="min_confidence=0.35")
+    ax.plot(t_on, quality_on, color=tps.BASELINE_3, linewidth=1.6, label="磁横向拟合质量")
+    ax.axhline(
+        0.35,
+        color=tps.WARNING,
+        linestyle="--",
+        label="最低置信度 0.35",
+    )
     ax.set_ylim(0.0, 1.05)
-    ax.set_xlabel("经过时间（s）")
-    ax.set_ylabel("拟合质量 [0,1]")
+    ax.set_xlabel("经过时间 (s)")
+    ax.set_ylabel("拟合质量（0 至 1）")
     ax.set_title("磁观测现已满足直线电缆前置条件")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
     ax = axes[1, 1]
     accept_num = [1 if a else 0 for a in accepted_on]
-    ax.step(t_on, accept_num, where="post", color="tab:blue", label="先验对齐接受（0/1）")
+    ax.step(
+        t_on,
+        accept_num,
+        where="post",
+        color=tps.PROPOSED,
+        label="先验对齐接受标志",
+    )
     ax.set_ylim(-0.1, 1.2)
-    ax.set_xlabel("经过时间（s）")
+    ax.set_xlabel("经过时间 (s)")
     ax.set_ylabel("接受标志")
-    ax.set_title(f"接受：reason_code=1 占 {accept_ratio_on*100:.0f}% 帧")
+    ax.set_title(f"接受标志为 1 的帧占 {accept_ratio_on*100:.0f}%")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="lower right")
 
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=180)
+    tps.save_figure(fig, out.with_suffix(""))
     plt.close(fig)
     print(f"[OK] wrote {out}")
 
@@ -178,20 +184,40 @@ def plot_convergence(root: Path, out: Path) -> None:
     heavy = _agg(root, "_agg_heavy_recovery")
     final = {"mid": mid["pass_count"], "heavy": heavy["pass_count"]}
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
-    fig.suptitle(
-        "畸变先验闭环验收收敛（中载/重载，各 n=3）",
-        fontsize=12,
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=tps.figure_size("full", height=3.2),
+        constrained_layout=True,
     )
 
     ax = axes[0]
     tiers = ["mid", "heavy"]
     x = np.arange(len(tiers))
     w = 0.35
-    ax.bar(x - w / 2, [first[t] for t in tiers], w, color="tab:red", alpha=0.75, label="首次完整运行（修复前）")
-    ax.bar(x + w / 2, [final[t] for t in tiers], w, color="tab:green", alpha=0.85, label="最终完整运行（修复后）")
+    ax.bar(
+        x - w / 2,
+        [first[t] for t in tiers],
+        w,
+        color=tps.BASELINE_1,
+        hatch="//",
+        label="首次完整运行",
+    )
+    ax.bar(
+        x + w / 2,
+        [final[t] for t in tiers],
+        w,
+        color=tps.PROPOSED,
+        label="最终完整运行",
+    )
     ax.set_xticks(x)
-    ax.set_xticklabels([f"{t}\n(t0=(0,{'7.5' if t=='mid' else '10.0'})m)" for t in tiers])
+    ax.set_xticklabels(
+        [
+            f"{'中载' if t == 'mid' else '重载'}\n"
+            f"($t_0=(0,{'7.5' if t=='mid' else '10.0'})$ m)"
+            for t in tiers
+        ]
+    )
     ax.set_ylabel("3 次中就绪/通过次数")
     ax.set_ylim(0, 3.4)
     ax.set_title("就绪/通过计数：2/3,1/3 -> 3/3,3/3")
@@ -203,7 +229,12 @@ def plot_convergence(root: Path, out: Path) -> None:
 
     # right: worst-run acceptance margins for the final run
     ax = axes[1]
-    labels = ["mid 最大\n偏移（m）", "heavy 最大\n偏移（m）", "mid 平均\n偏移（m）", "heavy 平均\n偏移（m）"]
+    labels = [
+        "中载最大\n偏移 (m)",
+        "重载最大\n偏移 (m)",
+        "中载平均\n偏移 (m)",
+        "重载平均\n偏移 (m)",
+    ]
     vals = [
         mid["max_route_offset_m_max"],
         heavy["max_route_offset_m_max"],
@@ -212,22 +243,26 @@ def plot_convergence(root: Path, out: Path) -> None:
     ]
     thresholds = [3.4, 3.4, 2.5, 2.5]
     xx = np.arange(len(labels))
-    ax.bar(xx, vals, 0.5, color="tab:blue", alpha=0.8, label="3 次中最差观测")
+    ax.bar(xx, vals, 0.5, color=tps.PROPOSED, label="3 次中最差观测")
     for i, th in enumerate(thresholds):
-        ax.plot([i - 0.28, i + 0.28], [th, th], color="tab:red", linewidth=2)
-    ax.plot([], [], color="tab:red", linewidth=2, label="验收阈值")
+        ax.plot(
+            [i - 0.28, i + 0.28],
+            [th, th],
+            color=tps.WARNING,
+            linewidth=1.4,
+        )
+    ax.plot([], [], color=tps.WARNING, linewidth=1.4, label="验收阈值")
     ax.set_xticks(xx)
     ax.set_xticklabels(labels, fontsize=8)
-    ax.set_ylabel("航迹偏移（m）")
-    ax.set_title("最终运行保持在阈值以下（valid_burial_ratio=1.0，sigma_over=0）")
+    ax.set_ylabel("航迹偏移 (m)")
+    ax.set_title("最终运行均保持在验收阈值以内")
     ax.grid(True, axis="y", alpha=0.3)
     ax.legend(fontsize=9)
     for i, v in enumerate(vals):
         ax.text(i, v + 0.03, f"{v:.2f}", ha="center", fontsize=8)
 
-    fig.tight_layout(rect=(0, 0, 1, 0.93))
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=180)
+    tps.save_figure(fig, out.with_suffix(""))
     plt.close(fig)
     print(f"[OK] wrote {out}")
 

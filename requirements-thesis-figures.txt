@@ -1,0 +1,13 @@
+# Verified with Python 3.14 on macOS arm64.
+casadi==3.7.2
+matplotlib==3.11.1
+mcap==1.4.0
+mcap-ros2-support==0.5.7
+mccabe==0.7.0
+numpy==2.5.2
+pandas==3.0.5
+pillow==12.3.0
+py-trees==2.5.0
+PyYAML==6.0.3
+rosbags==0.11.5
+scipy==1.18.1

@@ -13,12 +13,19 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+from tools import thesis_plot_style as tps  # noqa: E402
+
+DEFAULT_INPUT = PROJECT_ROOT / "results/mag_extrinsics/fullflow_20260705_2145"
+DEFAULT_OUTPUT = (
+    PROJECT_ROOT
+    / "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145"
+)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input-dir", type=Path, required=True)
-    parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--input-dir", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
 
@@ -46,32 +53,21 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
-    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
-    import os
-    import matplotlib.font_manager as fm
-
-    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(_zh_font):
-        fm.fontManager.addfont(_zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
-    else:
-        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-    plt.rcParams["axes.unicode_minus"] = False
-    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 11})
+    tps.apply_thesis_style(layout="full")
 
     summary = json.loads((input_dir / "validation_summary.json").read_text(encoding="utf-8"))
     times, residuals = _read_residuals(input_dir / "residuals.csv")
 
-    plt.figure(figsize=(7, 4))
-    plt.plot(times, residuals, linewidth=2, label="平移残差（m）")
-    plt.xlabel("时间（s）")
-    plt.ylabel("残差（m）")
-    plt.title("磁力计杆臂标定残差")
-    plt.grid(True, alpha=0.3)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(output_dir / "01_mag_extrinsics_residual.png", dpi=180)
-    plt.close()
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.0),
+        constrained_layout=True,
+    )
+    axis.plot(times, residuals, color=tps.PROPOSED, label="平移残差")
+    axis.set_xlabel("时间 (s)")
+    axis.set_ylabel("残差 (m)")
+    axis.legend()
+    tps.save_figure(fig, output_dir / "01_mag_extrinsics_residual")
+    plt.close(fig)
 
     labels = ["标定前", "标定后"]
     translation_errors = [
@@ -83,26 +79,41 @@ def main() -> None:
         float(summary["estimated_rotation_error_deg"]),
     ]
 
-    fig, axes = plt.subplots(1, 2, figsize=(8, 4))
-    axes[0].bar(labels, translation_errors, color=["tab:orange", "tab:blue"])
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=tps.figure_size("full", height=3.0),
+        constrained_layout=True,
+    )
+    axes[0].bar(
+        labels,
+        translation_errors,
+        color=[tps.BASELINE_1, tps.PROPOSED],
+        hatch=["//", ""],
+    )
     axes[0].set_title("平移误差")
     axes[0].set_ylabel("m")
     axes[0].grid(True, axis="y", alpha=0.3)
 
-    axes[1].bar(labels, rotation_errors, color=["tab:orange", "tab:blue"])
+    axes[1].bar(
+        labels,
+        rotation_errors,
+        color=[tps.BASELINE_1, tps.PROPOSED],
+        hatch=["//", ""],
+    )
     axes[1].set_title("旋转误差")
     axes[1].set_ylabel("deg")
     axes[1].grid(True, axis="y", alpha=0.3)
 
-    fig.suptitle("磁力计外参误差下降")
-    fig.tight_layout()
-    fig.savefig(output_dir / "02_mag_extrinsics_error_reduction.png", dpi=180)
+    tps.save_figure(fig, output_dir / "02_mag_extrinsics_error_reduction")
     plt.close(fig)
 
     manifest = {
         "input_dir": str(input_dir),
         "generated": [
+            "01_mag_extrinsics_residual.pdf",
             "01_mag_extrinsics_residual.png",
+            "02_mag_extrinsics_error_reduction.pdf",
             "02_mag_extrinsics_error_reduction.png",
         ],
     }

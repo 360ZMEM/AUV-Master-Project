@@ -343,12 +343,11 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 为直观显示这种叠加，图~\ref{fig:ch02-three-phase-helical-field} 对无铠装、完全对称的三相螺旋芯线进行了独立离散仿真。仿真取芯线分布半径 \(a=0.06\text{ m}\)、绞距 \(p=1.0\text{ m}\)，沿 7 个绞距把导体中心线离散成有限电流元，再逐项计算毕奥--萨伐尔积分；图中只展示远离两端的中央 3 个绞距。固定时刻有 \(i_A=I_m\)、\(i_B=i_C=-0.5I_m\)，尽管三相电流代数和为零，但三个电流源不在同一空间位置，外部场并不会处处消失，而是形成比单芯场更弱且方向更复杂的漏磁场。该图用于解释场形与方向，不包含铠装、制造偏差、海床介质和背景噪声，因而不作为真实海缆绝对场强的预测。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.97\linewidth,height=0.86\textheight,keepaspectratio,alt={平衡三相螺旋导体的几何、横截面漏磁方向以及沿绞距变化的三轴磁场分量和均方根模量}]{magnetics/three_phase_helical_field.pdf}
-\caption{平衡三相螺旋电缆的定性磁场仿真：（a）三芯螺旋几何与观测线上归一化的瞬时磁场方向；（b）\(i_A+i_B+i_C=0\) 时的横截面漏磁场；（c）瞬时三轴分量随轴向旋转，而三轴 RMS 模量保持近似稳定}\label{fig:ch02-three-phase-helical-field}
+\includegraphics[width=0.96\linewidth,height=0.62\textheight,keepaspectratio,alt={平衡三相螺旋导体的几何、横截面漏磁方向以及沿绞距变化的三轴磁场分量和均方根模量}]{magnetics/three_phase_helical_field.pdf}
+\caption{平衡三相螺旋电缆的定性磁场仿真：（a）三芯螺旋几何与观测线上的瞬时磁场方向；（b）尽管 \(i_A+i_B+i_C=0\)，空间分离的三芯在外部仍产生漏磁；（c）彩色瞬时分量随轴向旋转，而黑色三轴 RMS 合成强度保持近似稳定}\label{fig:ch02-three-phase-helical-field}
 \end{figure}
-\FloatBarrier
 
 \textbf{实验室缩比等效映射。} 为在实验室用可控的缩比电缆复现真实三相海缆的远场磁场，本文建立三相电缆与双相缩比电缆（如双芯 RVV 导线通同频反向电流）之间的偶极矩等效关系。二者的远场磁偶极矩分别为：
 

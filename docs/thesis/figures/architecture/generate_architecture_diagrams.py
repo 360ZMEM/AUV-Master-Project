@@ -16,9 +16,9 @@ INTERNAL_OUT = THESIS_OUT.parents[2] / "internals" / "figures" / "architecture"
 VERSION = "30.3.14"
 
 FONT_FAMILY = "Songti SC"
-FONT = f"fontFamily={FONT_FAMILY};fontSize=19;fontColor=#26323D;"
-LANE_FONT = f"fontFamily={FONT_FAMILY};fontSize=21;fontStyle=1;fontColor=#26323D;"
-EDGE_FONT = f"fontFamily={FONT_FAMILY};fontSize=17;fontColor=#25384A;"
+FONT = f"fontFamily={FONT_FAMILY};fontSize=16;fontColor=#26323D;"
+LANE_FONT = f"fontFamily={FONT_FAMILY};fontSize=19;fontStyle=1;fontColor=#26323D;"
+EDGE_FONT = f"fontFamily={FONT_FAMILY};fontSize=14;fontColor=#25384A;"
 
 PALETTE = {
     "blue": ("#EAF2F8", "#5F8FB8"),
@@ -34,12 +34,12 @@ PALETTE = {
 
 EDGE = (
     "edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;"
-    "html=1;strokeColor=#536F87;strokeWidth=2.4;"
+    "html=1;strokeColor=#536F87;strokeWidth=1.8;"
     f"{EDGE_FONT}labelBackgroundColor=#FFFFFF;labelBorderColor=none;"
     "endArrow=block;endFill=1;endSize=10;"
 )
-EDGE_MAIN = EDGE.replace("strokeWidth=2.4", "strokeWidth=3.2").replace(
-    "fontSize=17", "fontSize=18;fontStyle=1"
+EDGE_MAIN = EDGE.replace("strokeWidth=1.8", "strokeWidth=2.0").replace(
+    "fontSize=14", "fontSize=14;fontStyle=1"
 )
 EDGE_DASH = EDGE + "dashed=1;dashPattern=7 5;"
 EDGE_SAFE = EDGE_MAIN.replace("strokeColor=#536F87", "strokeColor=#A34F55")
@@ -64,7 +64,7 @@ def shape_style(kind: str, color: str, extra: str = "") -> str:
     fill, stroke = PALETTE[color]
     base = (
         "whiteSpace=wrap;html=1;align=center;verticalAlign=middle;"
-        f"fillColor={fill};strokeColor={stroke};strokeWidth=2.4;spacing=8;{FONT}"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.8;spacing=8;{FONT}"
     )
     shapes = {
         "process": "rounded=0;",
@@ -84,7 +84,7 @@ def lane_style(color: str) -> str:
     fill, stroke = PALETTE[color]
     return (
         "swimlane;whiteSpace=wrap;html=1;startSize=38;rounded=0;"
-        f"fillColor={fill};strokeColor={stroke};strokeWidth=2.4;"
+        f"fillColor={fill};strokeColor={stroke};strokeWidth=1.8;"
         f"collapsible=0;childLayout=none;{LANE_FONT}"
     )
 
@@ -149,7 +149,7 @@ def add_note(
     y: float,
     w: float,
     h: float,
-    size: int = 18,
+    size: int = 14,
     bold: bool = False,
     color: str = "#3C4A56",
 ) -> None:

@@ -1,0 +1,103 @@
+{
+  "source_bundle": "/Users/bytedance/coding/AUV-Master-Project/results/control/pc104_udp_timing_echo_300s_20260822",
+  "source_samples": "/Users/bytedance/coding/AUV-Master-Project/results/control/pc104_udp_timing_echo_300s_20260822/udp_timing_samples.csv",
+  "counts": {
+    "downlink_count": 3000,
+    "uplink_count": 4505,
+    "parse_error_count": 0,
+    "duplicate_uplink_count": 1501,
+    "forward_gap_count": 0,
+    "estimated_lost_frames": 0,
+    "valid_pc104_time_count": 4505,
+    "valid_echo_uplink_count": 4505,
+    "unique_echo_event_count": 1002,
+    "paired_echo_event_count": 1001,
+    "valid_dvl_time_count": 0
+  },
+  "series": {
+    "downlink_send_interval_ms": {
+      "name": "downlink_send_interval_ms",
+      "sample_count": 2999,
+      "mean_ms": 100.00491932444145,
+      "std_ms": 8.747916649839832,
+      "p50_ms": 99.93329199960499,
+      "p95_ms": 116.15063389976967,
+      "p99_ms": 120.1732225001615,
+      "p999_ms": 123.21100033613581,
+      "max_ms": 124.00745800005097
+    },
+    "uplink_interarrival_ms": {
+      "name": "uplink_interarrival_ms",
+      "sample_count": 4504,
+      "mean_ms": 66.60055737766432,
+      "std_ms": 12.510870704505601,
+      "p50_ms": 58.005417000003945,
+      "p95_ms": 85.7214498996882,
+      "p99_ms": 86.0945667500664,
+      "p999_ms": 86.62956650090292,
+      "max_ms": 88.57962499996574
+    },
+    "pc104_uptime_delta_ms": {
+      "name": "pc104_uptime_delta_ms",
+      "sample_count": 4504,
+      "mean_ms": 66.66452042628775,
+      "std_ms": 12.264586870785305,
+      "p50_ms": 58.0,
+      "p95_ms": 85.0,
+      "p99_ms": 85.0,
+      "p999_ms": 85.0,
+      "max_ms": 85.0
+    },
+    "first_echo_rtt_ms": {
+      "name": "first_echo_rtt_ms",
+      "sample_count": 1001,
+      "mean_ms": 266.29544222277383,
+      "std_ms": 30.441422225574616,
+      "p50_ms": 264.67779199992947,
+      "p95_ms": 313.96475100018506,
+      "p99_ms": 315.60674999991534,
+      "p999_ms": 316.5357090001635,
+      "max_ms": 318.55016700001215
+    },
+    "receive_to_first_pack_ms": {
+      "name": "receive_to_first_pack_ms",
+      "sample_count": 1001,
+      "mean_ms": 8.507492507492508,
+      "std_ms": 7.4999962574878305,
+      "p50_ms": 16.0,
+      "p95_ms": 16.0,
+      "p99_ms": 16.0,
+      "p999_ms": 16.0,
+      "max_ms": 16.0
+    },
+    "echo_event_interval_ms": {
+      "name": "echo_event_interval_ms",
+      "sample_count": 1000,
+      "mean_ms": 300.0,
+      "std_ms": 0.0,
+      "p50_ms": 300.0,
+      "p95_ms": 300.0,
+      "p99_ms": 300.0,
+      "p999_ms": 300.0,
+      "max_ms": 300.0
+    }
+  },
+  "pc104_to_host_clock_fit": {
+    "sample_count": 4505,
+    "pc104_seconds_per_host_second": 1.0009619666164984,
+    "rate_offset_ppm": 961.9666164983887,
+    "absolute_residual_p95_ms": 0.7736941278835731,
+    "absolute_residual_p99_ms": 1.049773840786088,
+    "absolute_residual_max_ms": 8.359688447058033
+  },
+  "plots": [
+    "/Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/pc104_timing/pc104_packet_cadence.pdf",
+    "/Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/pc104_timing/pc104_packet_cadence.png",
+    "/Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+    "/Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.png"
+  ],
+  "firmware_echo_application_rtt_claim": true,
+  "one_way_latency_claim": false,
+  "strict_physical_round_trip_claim": false,
+  "boundary": "First-echo RTT includes container scheduling, Docker Desktop, host relay, bidirectional Ethernet, firmware receive, and periodic uplink scheduling. It is not a synchronized one-way physical latency."
+}

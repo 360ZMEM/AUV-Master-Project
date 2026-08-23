@@ -28,6 +28,9 @@ import yaml
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXPERIMENT_DIR = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
+sys.path.insert(0, str(PROJECT_ROOT))
+from tools import thesis_plot_style as tps  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,6 +39,11 @@ def parse_args() -> argparse.Namespace:
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--existing", action="store_true", help="Only analyze archived evidence; do not run workloads.")
     source.add_argument("--run-dir", type=Path, help="Re-analyze one current run bundle without starting a new workload.")
+    source.add_argument(
+        "--render-mpc-figure-from-run",
+        type=Path,
+        help="Only redraw the thesis MPC figure from an archived Jetson run.",
+    )
     parser.add_argument("--allow-busy", action="store_true", help="Run despite competing processes and mark contaminated.")
     return parser.parse_args()
 
@@ -276,8 +284,7 @@ def load_wall(source_dir: Path, mode: str) -> np.ndarray:
 
 
 def save_figure(fig, stem: Path) -> None:
-    fig.savefig(stem.with_suffix(".png"), dpi=220, bbox_inches="tight")
-    fig.savefig(stem.with_suffix(".pdf"), bbox_inches="tight")
+    tps.save_figure(fig, stem)
 
 
 def plot_solver_distributions(fig_dir: Path, sources: dict[str, Path], budgets: dict) -> None:
@@ -285,45 +292,67 @@ def plot_solver_distributions(fig_dir: Path, sources: dict[str, Path], budgets: 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    tps.apply_thesis_style(layout="full")
     groups = [
-        ("Steady cold", load_wall(sources["steady"], "cold"), "#C44E52"),
-        ("Steady warm", load_wall(sources["steady"], "warm"), "#4C72B0"),
-        ("Stress cold", load_wall(sources["stress"], "cold"), "#DD8452"),
-        ("Stress warm", load_wall(sources["stress"], "warm"), "#8172B2"),
+        ("稳态冷启动", load_wall(sources["steady"], "cold"), tps.BASELINE_1),
+        ("稳态热启动", load_wall(sources["steady"], "warm"), tps.PROPOSED),
+        ("约束压力冷启动", load_wall(sources["stress"], "cold"), tps.BASELINE_2),
+        ("约束压力热启动", load_wall(sources["stress"], "warm"), tps.BASELINE_3),
     ]
-    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.1), gridspec_kw={"width_ratios": [1.08, 0.92]})
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=tps.figure_size("full", height=2.85),
+        gridspec_kw={"width_ratios": [1.08, 0.92]},
+        constrained_layout=True,
+    )
     ax = axes[0]
     data = [values for _, values, _ in groups]
-    box = ax.boxplot(data, labels=[name for name, _, _ in groups], showfliers=False, patch_artist=True)
+    box = ax.boxplot(
+        data,
+        tick_labels=[name for name, _, _ in groups],
+        showfliers=False,
+        patch_artist=True,
+    )
     for patch, (_, _, color) in zip(box["boxes"], groups):
         patch.set_facecolor(color)
         patch.set_alpha(0.72)
-    ax.axhline(float(budgets["ros_controller_20hz"]), color="#333333", ls="--", lw=1.2, label="20 Hz budget (50 ms)")
-    ax.axhline(float(budgets["mpc_discretization_dt"]), color="#666666", ls=":", lw=1.2, label="MPC dt (200 ms)")
+    ax.axhline(
+        float(budgets["ros_controller_20hz"]),
+        color=tps.REFERENCE,
+        ls="--",
+        lw=1.2,
+        label="20 Hz 控制周期 (50 ms)",
+    )
+    ax.axhline(
+        float(budgets["mpc_discretization_dt"]),
+        color=tps.NEUTRAL,
+        ls=":",
+        lw=1.2,
+        label="MPC 离散周期 (200 ms)",
+    )
     ax.set_yscale("log")
-    ax.set_ylabel("Solve wall time / ms (log scale)")
+    ax.set_ylabel("求解时延 (ms，对数轴)")
     ax.tick_params(axis="x", rotation=18)
     ax.grid(True, axis="y", alpha=0.28)
     ax.legend(fontsize=8, loc="upper left")
-    ax.set_title("Target-platform MPC latency")
+    ax.set_title("(a) 目标平台 MPC 求解时延", loc="left")
 
     ax = axes[1]
     success = [success_ratio(read_csv(path / f"mpc_solve_microbench_{mode}_raw.csv")) for _, path, mode in [
-        ("Steady cold", sources["steady"], "cold"),
-        ("Steady warm", sources["steady"], "warm"),
-        ("Stress cold", sources["stress"], "cold"),
-        ("Stress warm", sources["stress"], "warm"),
+        ("稳态冷启动", sources["steady"], "cold"),
+        ("稳态热启动", sources["steady"], "warm"),
+        ("约束压力冷启动", sources["stress"], "cold"),
+        ("约束压力热启动", sources["stress"], "warm"),
     ]]
     bars = ax.bar([name for name, _, _ in groups], [100.0 * float(v or 0.0) for v in success], color=[color for _, _, color in groups], alpha=0.8)
     for bar, value in zip(bars, success):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2, f"{100.0 * float(value or 0.0):.0f}%", ha="center", fontsize=9)
     ax.set_ylim(0, 112)
-    ax.set_ylabel("Solve success / %")
+    ax.set_ylabel("求解成功率 (%)")
     ax.tick_params(axis="x", rotation=18)
     ax.grid(True, axis="y", alpha=0.28)
-    ax.set_title("Feasibility, not only speed")
-    fig.suptitle("Jetson Orin NX MPC microbenchmark: steady versus constraint stress", y=1.02)
-    fig.tight_layout()
+    ax.set_title("(b) 稳态与约束压力下的可行性", loc="left")
     save_figure(fig, fig_dir / "jetson_mpc_latency_and_success")
     plt.close(fig)
 
@@ -711,6 +740,24 @@ def main() -> None:
     config_path = args.config.resolve()
     cfg = load_yaml(config_path)
     project_root = resolve_project_root(config_path, cfg)
+    if args.render_mpc_figure_from_run:
+        run_dir = args.render_mpc_figure_from_run.resolve()
+        sources = {
+            "steady": run_dir / "steady",
+            "stress": run_dir / "stress",
+        }
+        figure_dir = EXPERIMENT_DIR / "figures"
+        figure_dir.mkdir(parents=True, exist_ok=True)
+        plot_solver_distributions(
+            figure_dir,
+            sources,
+            cfg["timing_budgets_ms"],
+        )
+        print(
+            "[jetson_realtime] figure -> "
+            f"{figure_dir / 'jetson_mpc_latency_and_success.pdf'}"
+        )
+        return
     if args.run_dir:
         run_dir = args.run_dir.resolve()
         if not run_dir.is_dir():

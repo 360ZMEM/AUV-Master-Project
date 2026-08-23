@@ -11,6 +11,26 @@ from typing import Any
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
+from tools import thesis_plot_style as tps  # noqa: E402
+
+CHECK_LABELS = {
+    "min_tracking_samples": "最少跟踪样本",
+    "max_route_offset": "最大航迹偏移",
+    "mean_route_offset": "平均航迹偏移",
+    "confidence_p05": "置信度 5% 分位",
+    "valid_burial_ratio": "有效埋深比例",
+    "burial_sigma_over_limit_ratio": "埋深标准差超限比例",
+    "quality_flags_clear": "质量标志正常",
+    "acceptance_flags_clear": "验收标志正常",
+    "start_health": "启动健康状态",
+}
+ITEM_LABELS = {
+    "route_deviation": "航迹偏移",
+    "burial_profile": "埋深剖面",
+    "burial_accuracy": "埋深精度",
+    "tracking_confidence": "跟踪置信度",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -32,11 +52,18 @@ def _ascii_label(value: Any) -> str:
 
 def _status_color(summary: dict[str, Any]) -> str:
     if bool(summary.get("industrial_acceptance_pass")):
-        return "tab:green"
+        return tps.BASELINE_2
     readiness = str(summary.get("industrial_conclusion_readiness") or "")
     if readiness == "ready":
-        return "tab:orange"
-    return "tab:red"
+        return tps.BASELINE_1
+    return tps.WARNING
+
+
+def _format_metric(value: Any, digits: int = 3) -> str:
+    try:
+        return f"{float(value):.{digits}f}"
+    except (TypeError, ValueError):
+        return "--"
 
 
 def main() -> None:
@@ -51,40 +78,32 @@ def main() -> None:
     except Exception as exc:
         raise SystemExit(f"matplotlib unavailable: {exc}") from exc
 
-    # 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
-    import os
-    import matplotlib.font_manager as fm
-
-    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(_zh_font):
-        fm.fontManager.addfont(_zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
-    else:
-        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-    plt.rcParams["axes.unicode_minus"] = False
-    plt.rcParams.update({"font.size": 12, "axes.titlesize": 14, "axes.labelsize": 12, "legend.fontsize": 10})
+    tps.apply_thesis_style(layout="full")
 
     score_items = summary.get("score_items") or []
     checks = summary.get("acceptance_checks") or {}
     score_labels = [_ascii_label(item.get("item")) for item in score_items] or ["无"]
     score_values = [float(item.get("score") or 0.0) for item in score_items] or [0.0]
-    check_labels = list(checks.keys()) or ["无检查项"]
+    check_labels = [CHECK_LABELS.get(key, key) for key in checks] or ["无检查项"]
     check_values = [1.0 if bool(value) else 0.0 for value in checks.values()] or [0.0]
 
-    fig = plt.figure(figsize=(12, 7))
+    fig = plt.figure(
+        figsize=tps.figure_size("full", height=4.75),
+        constrained_layout=True,
+    )
     grid = fig.add_gridspec(2, 2, width_ratios=[1.05, 1.3], height_ratios=[1.0, 1.1])
     ax_status = fig.add_subplot(grid[0, 0])
     ax_scores = fig.add_subplot(grid[0, 1])
     ax_checks = fig.add_subplot(grid[1, 0])
     ax_metrics = fig.add_subplot(grid[1, 1])
 
-    fig.suptitle(args.title)
-
     ax_status.axis("off")
     total_score = int(summary.get("total_score") or 0)
     status_lines = [
-        f"就绪度：{summary.get('industrial_conclusion_readiness', '--')}",
-        f"验收通过：{bool(summary.get('industrial_acceptance_pass', False))}",
+        "就绪度："
+        + ("就绪" if summary.get("industrial_conclusion_readiness") == "ready" else "未就绪"),
+        "验收通过："
+        + ("是" if bool(summary.get("industrial_acceptance_pass", False)) else "否"),
         f"DL/T 风格状态：{_ascii_label(summary.get('state', '--'))}",
         f"总分：{total_score}",
         f"最差单项得分：{summary.get('worst_single_score', '--')}",
@@ -107,18 +126,24 @@ def main() -> None:
         "\n".join(status_lines),
         va="top",
         ha="left",
-        fontsize=11,
         bbox={"boxstyle": "round", "facecolor": _status_color(summary), "alpha": 0.14, "edgecolor": _status_color(summary)},
     )
 
-    ax_scores.barh(score_labels, score_values, color="tab:red" if score_items else "lightgray")
+    ax_scores.barh(
+        score_labels,
+        score_values,
+        color=tps.WARNING if score_items else "#D9D9D9",
+    )
     ax_scores.set_title("扣分项")
     ax_scores.set_xlabel("扣分")
     ax_scores.grid(True, axis="x", alpha=0.3)
     for y, value in enumerate(score_values):
         ax_scores.text(value + 0.2, y, f"{value:g}", va="center", fontsize=9)
 
-    colors = ["tab:green" if value >= 0.5 else "tab:red" for value in check_values]
+    colors = [
+        tps.BASELINE_2 if value >= 0.5 else tps.WARNING
+        for value in check_values
+    ]
     ax_checks.barh(check_labels, check_values, color=colors)
     ax_checks.set_xlim(0.0, 1.0)
     ax_checks.set_title("验收检查项")
@@ -128,20 +153,23 @@ def main() -> None:
     ax_metrics.axis("off")
     metric_lines = [
         "关键指标：",
-        f"  最大航迹偏移（m）：{summary.get('max_route_offset_m', '--')}",
-        f"  平均航迹偏移（m）：{summary.get('mean_route_offset_m', '--')}",
-        f"  航迹偏移 p95（m）：{summary.get('route_offset_p95_m', '--')}",
-        f"  置信度 p05：{summary.get('confidence_p05', '--')}",
-        f"  有效埋深比例：{summary.get('valid_burial_ratio', '--')}",
-        f"  埋深 sigma 超限比例：{summary.get('burial_sigma_over_limit_ratio', '--')}",
+        f"  最大航迹偏移 (m)：{_format_metric(summary.get('max_route_offset_m'))}",
+        f"  平均航迹偏移 (m)：{_format_metric(summary.get('mean_route_offset_m'))}",
+        f"  航迹偏移 95% 分位 (m)：{_format_metric(summary.get('route_offset_p95_m'))}",
+        f"  置信度 5% 分位：{_format_metric(summary.get('confidence_p05'))}",
+        f"  有效埋深比例：{_format_metric(summary.get('valid_burial_ratio'))}",
+        "  埋深标准差超限比例："
+        + _format_metric(summary.get("burial_sigma_over_limit_ratio")),
         "",
         "已实现的 DL/T 风格项：",
     ]
-    metric_lines.extend(f"  - {_ascii_label(item)}" for item in summary.get("implemented_items") or ["--"])
-    ax_metrics.text(0.02, 0.98, "\n".join(metric_lines), va="top", ha="left", fontsize=10)
+    metric_lines.extend(
+        f"  - {ITEM_LABELS.get(str(item), _ascii_label(item))}"
+        for item in summary.get("implemented_items") or ["--"]
+    )
+    ax_metrics.text(0.02, 0.98, "\n".join(metric_lines), va="top", ha="left")
 
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=180)
+    tps.save_figure(fig, output_path.with_suffix(""))
     plt.close(fig)
     print(f"[OK] wrote scorecard: {output_path}")
 

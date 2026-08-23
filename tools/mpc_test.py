@@ -9,8 +9,10 @@
 输出：RMSE、最大误差、控制量曲线、性能分析
 """
 
+import argparse
 import sys
 import os
+import shutil
 import time
 import datetime
 import numpy as np
@@ -30,6 +32,7 @@ import yaml
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 from common.env_utils import get_output_dir
+from tools import thesis_plot_style as tps
 
 algo_dir = project_root / 'algorithm'
 
@@ -49,28 +52,7 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR = RESULTS_DIR / 'figures'
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-plt.rcParams.update({
-    'figure.dpi': 150,
-    'savefig.dpi': 300,
-    'font.size': 10,
-    'axes.titlesize': 12,
-    'axes.labelsize': 11,
-    'lines.linewidth': 1.5,
-    'lines.markersize': 4,
-    'grid.alpha': 0.3,
-})
-
-# 图内统一中文：注入文泉驿正黑（容器内唯一 CJK 字体），负号用 ASCII
-import os as _os
-import matplotlib.font_manager as _fm
-
-_ZH_FONT = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-if _os.path.exists(_ZH_FONT):
-    _fm.fontManager.addfont(_ZH_FONT)
-    plt.rcParams["font.family"] = _fm.FontProperties(fname=_ZH_FONT).get_name()
-else:
-    plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-plt.rcParams["axes.unicode_minus"] = False
+tps.apply_thesis_style(layout="full")
 
 
 def _wrap_angle(angle):
@@ -669,42 +651,87 @@ def generate_plots(results):
     fig_paths.append(str(path.name))
 
     # 图5: MPC 综合对比
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    fig, axes = plt.subplots(
+        2,
+        2,
+        figsize=tps.figure_size("full", height=4.7),
+        constrained_layout=True,
+    )
 
     t_ds = results['depth_step']['time']
-    axes[0, 0].plot(t_ds, results['depth_step']['depth'], 'b-', linewidth=2)
-    axes[0, 0].axhline(y=5.0, color='r', linestyle='--', linewidth=1.5)
-    axes[0, 0].set_xlabel('时间（s）')
-    axes[0, 0].set_ylabel('深度（m）')
-    axes[0, 0].set_title('MPC 深度阶跃')
+    axes[0, 0].plot(
+        t_ds,
+        results['depth_step']['depth'],
+        color=tps.PROPOSED,
+        label='实际响应',
+    )
+    axes[0, 0].axhline(
+        y=5.0,
+        color=tps.REFERENCE,
+        linestyle='--',
+        linewidth=1.4,
+        label='参考值',
+    )
+    axes[0, 0].set_xlabel('时间 (s)')
+    axes[0, 0].set_ylabel('深度 (m)')
+    axes[0, 0].set_title('(a) 深度阶跃', loc='left')
     axes[0, 0].grid(True)
 
     t_hs = results['heading_step']['time']
-    axes[0, 1].plot(t_hs, np.rad2deg(results['heading_step']['yaw']), 'b-', linewidth=2)
-    axes[0, 1].axhline(y=30.0, color='r', linestyle='--', linewidth=1.5)
-    axes[0, 1].set_xlabel('时间（s）')
-    axes[0, 1].set_ylabel('艏向（deg）')
-    axes[0, 1].set_title('MPC 艏向阶跃')
+    axes[0, 1].plot(
+        t_hs,
+        np.rad2deg(results['heading_step']['yaw']),
+        color=tps.PROPOSED,
+    )
+    axes[0, 1].axhline(
+        y=30.0,
+        color=tps.REFERENCE,
+        linestyle='--',
+        linewidth=1.4,
+    )
+    axes[0, 1].set_xlabel('时间 (s)')
+    axes[0, 1].set_ylabel('艏向 (deg)')
+    axes[0, 1].set_title('(b) 艏向阶跃', loc='left')
     axes[0, 1].grid(True)
 
     t_ct = results['cable_tracking']['time']
-    axes[1, 0].plot(t_ct, results['cable_tracking']['depth'], 'b-', linewidth=1.5)
-    axes[1, 0].plot(t_ct, results['cable_tracking']['target_depth'], 'r--', linewidth=1.5)
-    axes[1, 0].set_xlabel('时间（s）')
-    axes[1, 0].set_ylabel('深度（m）')
-    axes[1, 0].set_title('MPC 电缆跟踪 — 深度')
+    axes[1, 0].plot(
+        t_ct,
+        results['cable_tracking']['depth'],
+        color=tps.PROPOSED,
+    )
+    axes[1, 0].plot(
+        t_ct,
+        results['cable_tracking']['target_depth'],
+        color=tps.REFERENCE,
+        linestyle='--',
+        linewidth=1.4,
+    )
+    axes[1, 0].set_xlabel('时间 (s)')
+    axes[1, 0].set_ylabel('深度 (m)')
+    axes[1, 0].set_title('(c) 电缆跟踪深度', loc='left')
     axes[1, 0].grid(True)
 
-    axes[1, 1].plot(t_ct, np.rad2deg(results['cable_tracking']['yaw']), 'b-', linewidth=1.5)
-    axes[1, 1].plot(t_ct, np.rad2deg(results['cable_tracking']['target_yaw']), 'r--', linewidth=1.5)
-    axes[1, 1].set_xlabel('时间（s）')
-    axes[1, 1].set_ylabel('艏向（deg）')
-    axes[1, 1].set_title('MPC 电缆跟踪 — 艏向')
+    axes[1, 1].plot(
+        t_ct,
+        np.rad2deg(results['cable_tracking']['yaw']),
+        color=tps.PROPOSED,
+    )
+    axes[1, 1].plot(
+        t_ct,
+        np.rad2deg(results['cable_tracking']['target_yaw']),
+        color=tps.REFERENCE,
+        linestyle='--',
+        linewidth=1.4,
+    )
+    axes[1, 1].set_xlabel('时间 (s)')
+    axes[1, 1].set_ylabel('艏向 (deg)')
+    axes[1, 1].set_title('(d) 电缆跟踪艏向', loc='left')
     axes[1, 1].grid(True)
 
-    plt.tight_layout()
-    path = FIGURES_DIR / '05_mpc_combined_summary.png'
-    fig.savefig(path, bbox_inches='tight')
+    axes[0, 0].legend(loc='lower right', ncol=1)
+    path = FIGURES_DIR / '05_mpc_combined_summary.pdf'
+    tps.save_figure(fig, path.with_suffix(''))
     plt.close(fig)
     fig_paths.append(str(path.name))
 
@@ -857,6 +884,16 @@ def generate_report(results, fig_paths):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        '--thesis-output-dir',
+        type=Path,
+        default=(
+            project_root
+            / 'docs/thesis/figures/experiments/control_mpc'
+        ),
+    )
+    args = parser.parse_args()
     print("MPC 控制器离线测试")
     print(f"配置文件: {params_file}")
     print(f"时间: {time.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -892,6 +929,13 @@ def main():
     print(f"{'='*60}")
 
     fig_paths = generate_plots(results)
+    args.thesis_output_dir.mkdir(parents=True, exist_ok=True)
+    combined_base = FIGURES_DIR / '05_mpc_combined_summary'
+    for suffix in ('.pdf', '.png'):
+        shutil.copy2(
+            combined_base.with_suffix(suffix),
+            args.thesis_output_dir / f'05_mpc_combined_summary{suffix}',
+        )
     report_path = generate_report(results, fig_paths)
 
     print(f"\n图表已保存至: {FIGURES_DIR}")

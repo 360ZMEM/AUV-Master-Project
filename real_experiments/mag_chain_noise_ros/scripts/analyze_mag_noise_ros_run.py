@@ -30,12 +30,22 @@ TOOLS_DIR = REPO_ROOT / "tools"
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from thesis_plot_style import apply_thesis_style, save_figure, series_style  # noqa: E402
+from thesis_plot_style import (  # noqa: E402
+    apply_thesis_style,
+    figure_size,
+    save_figure,
+    series_style,
+)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-index", type=Path, default=EXPERIMENT_DIR / "data" / "run_index.csv")
+    parser.add_argument(
+        "--summary-csv",
+        type=Path,
+        help="Render the archived summary without rereading Linux /auv_data.",
+    )
     parser.add_argument("--output-dir", type=Path, default=EXPERIMENT_DIR)
     parser.add_argument(
         "--figure-dir",
@@ -299,10 +309,20 @@ def _plot_summary(rows: list[dict[str, Any]], figure_dir: Path) -> list[Path]:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    apply_thesis_style(base_font_size=11)
-    labels = [str(row["mode"]) for row in rows]
+    apply_thesis_style(layout="full")
+    mode_labels = {
+        "none": "无附加噪声",
+        "covariance_gaussian": "协方差高斯噪声",
+        "measured_replay": "实测噪声回放",
+    }
+    labels = [mode_labels.get(str(row["mode"]), str(row["mode"])) for row in rows]
     x = np.arange(len(labels), dtype=float)
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.0))
+    fig, axes = plt.subplots(
+        1,
+        3,
+        figsize=figure_size("full", height=2.35),
+        constrained_layout=True,
+    )
 
     panels = [
         ("cross_track_abs_p95_m", "横偏 p95 (m)"),
@@ -314,14 +334,12 @@ def _plot_summary(rows: list[dict[str, Any]], figure_dir: Path) -> list[Path]:
         for index, value in enumerate(values):
             ax.bar(x[index], value if math.isfinite(value) else 0.0, 0.65, **series_style(index))
         ax.set_xticks(x)
-        ax.set_xticklabels(labels, rotation=18, ha="right")
+        ax.set_xticklabels(labels, rotation=12, ha="right")
         ax.set_ylabel(ylabel)
         ax.grid(True, axis="y", alpha=0.3)
-    axes[0].set_title("闭环横偏")
-    axes[1].set_title("跟踪置信度")
-    axes[2].set_title("观测层噪声")
-    fig.suptitle("ADC-TMR 实测背景噪声 ROS 闭环对照")
-    fig.tight_layout()
+    axes[0].set_title("(a) 闭环横偏", loc="left")
+    axes[1].set_title("(b) 跟踪置信度", loc="left")
+    axes[2].set_title("(c) 观测层噪声", loc="left")
     written = save_figure(fig, figure_dir / "mag_chain_noise_ros_comparison")
     plt.close(fig)
     return written
@@ -394,6 +412,16 @@ def _fmt(value: Any) -> str:
 
 def main() -> None:
     args = parse_args()
+    if args.summary_csv:
+        summary_path = _resolve(args.summary_csv)
+        with summary_path.open("r", encoding="utf-8", newline="") as handle:
+            rows = [dict(row) for row in csv.DictReader(handle)]
+        figure_dir = _resolve(args.figure_dir)
+        figure_dir.mkdir(parents=True, exist_ok=True)
+        for path in _plot_summary(rows, figure_dir):
+            print(f"[mag-chain-noise-ros] figure {path}")
+        return
+
     run_index = _read_run_index(args.run_index)
     output_dir = _resolve(args.output_dir)
     data_dir = output_dir / "data"

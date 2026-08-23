@@ -31,12 +31,33 @@ sys.path.append(str(PROJECT_ROOT / "sim_holoocean"))
 
 from tools import analyze_bag  # noqa: E402
 from interfaces.synthetic_sensors import berlin_noise_2d  # noqa: E402
+from tools.thesis_plot_style import (  # noqa: E402
+    BASELINE_1,
+    BASELINE_2,
+    PROPOSED,
+    REFERENCE,
+    apply_thesis_style,
+    figure_size,
+    save_figure as save_thesis_figure,
+)
+
+
+FIGURE_NAMES = (
+    "terrain_clearance_rmse_pid_mpc",
+    "terrain_clearance_safety_margin",
+    "pid_terrain_low_mid_high_ablation",
+    "terrain_benchmark_command_contract",
+    "terrain_tz_tracking_pid_mpc",
+    "terrain_3d_pid_terrain_trajectory",
+)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--main-result",
+        "--results-dir",
+        dest="main_result",
         type=Path,
         default=PROJECT_ROOT / "results/control/terrain_following_20260619_222639",
         help="PID/MPC four-group terrain benchmark result directory.",
@@ -70,6 +91,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=PROJECT_ROOT / "config/bridge_params.protocol_udp.pvs.terrain.yaml",
         help="Full bridge YAML used to reconstruct deterministic terrain if the bag lacks point cloud data.",
+    )
+    parser.add_argument(
+        "--figure",
+        action="append",
+        choices=FIGURE_NAMES,
+        help="Generate only the selected figure. Repeat to select multiple figures.",
     )
     return parser.parse_args()
 
@@ -159,37 +186,17 @@ def reconstruct_terrain_grid(
 
 
 def save_figure(fig, output_dir: Path, stem: str) -> None:
-    for ext in ("png", "pdf"):
-        fig.savefig(output_dir / f"{stem}.{ext}", bbox_inches="tight")
+    save_thesis_figure(fig, output_dir / stem)
 
 
 def setup_style() -> None:
     analyze_bag.ensure_runtime_dependencies()
     plt = analyze_bag.plt
-    # 图内统一中文：注入文泉驿正黑（容器内唯一可用 CJK 字体，无思源宋体）
-    import os
-    import matplotlib.font_manager as fm
-    _zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(_zh_font):
-        fm.fontManager.addfont(_zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=_zh_font).get_name()
-    else:
-        plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
+    apply_thesis_style(layout="full")
     plt.rcParams.update(
         {
-            "font.size": 12,
-            "axes.titlesize": 14,
-            "axes.labelsize": 12,
-            "xtick.labelsize": 11,
-            "ytick.labelsize": 11,
-            "legend.fontsize": 11,
-            "figure.dpi": 160,
-            "savefig.dpi": 300,
             "axes.spines.top": False,
             "axes.spines.right": False,
-            "axes.grid": True,
-            "grid.alpha": 0.25,
-            "axes.unicode_minus": False,  # 负号用 ASCII，避免中文字体缺 U+2212 变方块
         }
     )
 
@@ -404,30 +411,60 @@ def diagnostics_arrays(
 
 def plot_tz_tracking(output_dir: Path, main_result: Path, target_clearance_m: float, warmup_skip_s: float = 0.0) -> None:
     plt = analyze_bag.plt
-    phases = [("pid_terrain", "PID 地形"), ("mpc_terrain", "MPC 地形")]
-    fig, axes = plt.subplots(2, 1, figsize=(8.0, 6.2), sharex=False)
-    for ax, (phase, title) in zip(axes, phases):
+    phases = [("pid_terrain", "PID 地形跟踪"), ("mpc_terrain", "MPC 地形跟踪")]
+    fig, axes = plt.subplots(2, 1, figsize=figure_size("full", height=4.75), sharex=True)
+    legend_handles = None
+    legend_labels = None
+    for panel_index, (ax, (phase, title)) in enumerate(zip(axes, phases)):
         arrays = diagnostics_arrays(load_bag_for_phase(main_result, phase), target_clearance_m, warmup_skip_s)
         t = arrays["t"]
         source_label = {
-            "real_altitude": "真实 DVL 高度",
+            "real_altitude": "DVL 实测高度",
             "terrain_cloud": "海底点云",
             "diag_constant_datum": "常值基准（旧）",
         }.get(str(arrays.get("clearance_source", "")), str(arrays.get("clearance_source", "")))
-        ax.plot(t, arrays["seabed_depth"], color="#8c564b", linewidth=1.5, label=f"海底深度（深度 + {source_label}）")
-        ax.plot(t, arrays["target_depth"], color="#2ca02c", linestyle="--", linewidth=1.4, label=f"目标深度（海底 - {target_clearance_m:.0f} m）")
-        ax.plot(t, arrays["depth"], color="#1f77b4", linewidth=1.7, label="AUV 深度")
-        ax.fill_between(t, arrays["target_depth"] - 0.25, arrays["target_depth"] + 0.25, color="#2ca02c", alpha=0.12, label="±0.25 m 目标带")
-        ax.set_title(f"{title}（净空来源：{source_label}）")
-        ax.set_ylabel("深度（向下为正，m）")
+        ax.plot(
+            t,
+            arrays["seabed_depth"],
+            color=REFERENCE,
+            linestyle="-.",
+            linewidth=1.4,
+            label=f"海底深度（{source_label}）",
+        )
+        ax.plot(
+            t,
+            arrays["target_depth"],
+            color=BASELINE_2,
+            linestyle="--",
+            linewidth=1.4,
+            label=f"目标深度（{target_clearance_m:.0f} m 净空）",
+        )
+        ax.plot(t, arrays["depth"], color=PROPOSED, linewidth=1.7, label="AUV 深度")
+        ax.fill_between(
+            t,
+            arrays["target_depth"] - 0.25,
+            arrays["target_depth"] + 0.25,
+            color=BASELINE_2,
+            alpha=0.12,
+            label="±0.25 m 目标带",
+        )
+        ax.set_title(f"({chr(ord('a') + panel_index)}) {title}", loc="left", pad=3)
         ax.invert_yaxis()
-        ax.legend(frameon=False, loc="best")
+        if legend_handles is None:
+            legend_handles, legend_labels = ax.get_legend_handles_labels()
     axes[-1].set_xlabel("时间（s）")
-    suptitle = "地形跟随 t-z 跟踪曲线"
-    if warmup_skip_s > 0.0:
-        suptitle += f"（已裁去预热 {warmup_skip_s:.0f} s）"
-    fig.suptitle(suptitle, y=0.995, fontsize=14, fontweight="bold")
-    fig.tight_layout()
+    fig.supylabel("深度（向下为正，m）", x=0.01)
+    fig.legend(
+        legend_handles,
+        legend_labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.995),
+        ncol=4,
+        frameon=True,
+        columnspacing=1.0,
+        handlelength=2.4,
+    )
+    fig.tight_layout(rect=(0.025, 0.0, 1.0, 0.92), h_pad=0.45)
     save_figure(fig, output_dir, "terrain_tz_tracking_pid_mpc")
     plt.close(fig)
 
@@ -469,25 +506,28 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
         clamp_to_extent=False,  # 轨迹越过静态 ±extent 瓦片，地形公式对全程有定义
     )
     seabed_z_display = -seabed_depth_grid
-    seabed_depth_min = float(np.nanmin(seabed_depth_grid))
-    seabed_depth_span = max(float(np.nanmax(seabed_depth_grid) - seabed_depth_min), 1e-6)
     seabed_depth_traj = np.asarray(
         [terrain_depth_from_config(x_value, y_value, terrain_cfg) for x_value, y_value in zip(traj_x, traj_y)],
         dtype=float,
     )
 
-    fig = plt.figure(figsize=(8.6, 6.4))
-    ax = fig.add_subplot(111, projection="3d")
+    fig = plt.figure(figsize=figure_size("full", height=4.3))
+    ax = fig.add_axes((0.01, 0.03, 0.82, 0.94), projection="3d")
 
+    surface_cmap = plt.get_cmap("cividis")
+    surface_norm = plt.Normalize(
+        vmin=float(np.nanmin(seabed_depth_grid)),
+        vmax=float(np.nanmax(seabed_depth_grid)),
+    )
     ax.plot_surface(
         grid_x,
         grid_y,
         seabed_z_display,
-        facecolors=plt.cm.viridis((seabed_depth_grid - seabed_depth_min) / seabed_depth_span),
+        facecolors=surface_cmap(surface_norm(seabed_depth_grid)),
         linewidth=0,
         antialiased=True,
         shade=False,
-        alpha=0.55,
+        alpha=0.50,
         rstride=1,
         cstride=1,
     )
@@ -510,7 +550,7 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
                 step = max(1, mx.size // 60)  # 稀疏化到约 60 个锚点，避免遮盖曲面
                 ax.scatter(
                     mx[::step], my[::step], mz[::step],
-                    color="#d62728", s=16, depthshade=False, alpha=0.9,
+                    color=BASELINE_1, s=10, depthshade=False, alpha=0.85,
                     label="DVL 实测海底（验证锚）",
                 )
                 cfg_along = np.asarray(
@@ -520,47 +560,59 @@ def plot_3d_terrain_trajectory(output_dir: Path, main_result: Path, terrain_conf
                 corr = float(np.corrcoef(cfg_along, meas_seabed[finite])[0, 1])
                 bias = float(np.mean(cfg_along - meas_seabed[finite]))
                 rms = float(np.sqrt(np.mean((cfg_along - meas_seabed[finite]) ** 2)))
-                dvl_note = f"\n重建 vs 实测：r={corr:.2f}，偏差 {bias:+.2f} m，RMS {rms:.2f} m"
+                dvl_note = f"重建 vs 实测：r={corr:.2f}，偏差 {bias:+.2f} m，RMS {rms:.2f} m"
     except Exception:
         dvl_note = ""
 
     target_depth = seabed_depth_traj - target_clearance_m
     target_z_display = -target_depth
 
-    ax.plot(traj_x, traj_y, traj_z_display, color="#1f77b4", linewidth=2.4, label="AUV 轨迹")
+    ax.plot(traj_x, traj_y, traj_z_display, color=PROPOSED, linewidth=1.8, label="AUV 轨迹")
     valid = np.isfinite(target_z_display)
     if np.any(valid):
-        ax.plot(traj_x[valid], traj_y[valid], target_z_display[valid], color="#2ca02c", linestyle="--", linewidth=1.6, label="目标深度路径")
-    ax.set_xlabel("x（m）")
-    ax.set_ylabel("y（m）")
-    ax.set_zlabel("显示 z（m）")
-    ax.set_title("三维海底曲面与 PID 地形跟随轨迹")
-    ax.text2D(
-        0.02, 0.02,
-        f"地形来源：确定性重建 {terrain_config.name}（seed={int(terrain_cfg.get('terrain_seed', 0))}）{dvl_note}",
-        transform=ax.transAxes, fontsize=8, color="#333333",
-    )
-    ax.view_init(elev=26, azim=-62)
-    ax.legend(frameon=False, loc="upper left")
-    mappable = plt.cm.ScalarMappable(cmap="viridis")
+        ax.plot(
+            traj_x[valid],
+            traj_y[valid],
+            target_z_display[valid],
+            color=BASELINE_2,
+            linestyle="--",
+            linewidth=1.4,
+            label="3 m 净空目标",
+        )
+    ax.set_xlabel("东向 x（m）", labelpad=1)
+    ax.set_ylabel("北向 y（m）", labelpad=1)
+    ax.set_zlabel("垂向 z（m）", labelpad=1)
+    ax.view_init(elev=24, azim=-62)
+    ax.set_box_aspect((1.65, 0.85, 0.8))
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.98), frameon=True)
+    mappable = plt.cm.ScalarMappable(norm=surface_norm, cmap=surface_cmap)
     mappable.set_array(seabed_depth_grid)
-    cbar = fig.colorbar(mappable, ax=ax, shrink=0.72, pad=0.08)
-    cbar.set_label("海底深度（向下为正，m）")
-    fig.tight_layout()
+    colorbar_axis = fig.add_axes((0.87, 0.20, 0.025, 0.62))
+    cbar = fig.colorbar(mappable, cax=colorbar_axis)
+    cbar.set_label("海底深度（m）")
     save_figure(fig, output_dir, "terrain_3d_pid_terrain_trajectory")
     plt.close(fig)
+    if dvl_note:
+        print(f"[terrain-3d] {dvl_note}")
 
 
 def main() -> None:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     setup_style()
-    plot_clearance_rmse(args.output_dir, args.main_result)
-    plot_clearance_safety(args.output_dir, args.main_result)
-    plot_ablation(args.output_dir, args.ablation_summary)
-    plot_command_contract(args.output_dir)
-    plot_tz_tracking(args.output_dir, args.main_result, args.target_clearance_m, args.warmup_skip_s)
-    plot_3d_terrain_trajectory(args.output_dir, args.main_result, args.terrain_config, args.target_clearance_m)
+    selected = set(args.figure or FIGURE_NAMES)
+    if "terrain_clearance_rmse_pid_mpc" in selected:
+        plot_clearance_rmse(args.output_dir, args.main_result)
+    if "terrain_clearance_safety_margin" in selected:
+        plot_clearance_safety(args.output_dir, args.main_result)
+    if "pid_terrain_low_mid_high_ablation" in selected:
+        plot_ablation(args.output_dir, args.ablation_summary)
+    if "terrain_benchmark_command_contract" in selected:
+        plot_command_contract(args.output_dir)
+    if "terrain_tz_tracking_pid_mpc" in selected:
+        plot_tz_tracking(args.output_dir, args.main_result, args.target_clearance_m, args.warmup_skip_s)
+    if "terrain_3d_pid_terrain_trajectory" in selected:
+        plot_3d_terrain_trajectory(args.output_dir, args.main_result, args.terrain_config, args.target_clearance_m)
     print(args.output_dir)
 
 

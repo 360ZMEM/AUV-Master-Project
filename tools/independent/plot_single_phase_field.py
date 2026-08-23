@@ -10,15 +10,24 @@ import argparse
 from pathlib import Path
 
 import matplotlib
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LogNorm
 from matplotlib.patches import Circle
 
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+import thesis_plot_style as tps  # noqa: E402
+
 
 MU0 = 4.0 * np.pi * 1.0e-7
+
+
+def configure_plot_style() -> None:
+    tps.apply_thesis_style(layout="full")
 
 
 def default_output_dir() -> Path:
@@ -58,18 +67,12 @@ def draw_current_symbol(ax: plt.Axes, positive: bool) -> None:
 
 
 def make_figure() -> plt.Figure:
-    plt.rcParams.update(
-        {
-            "font.family": "DejaVu Sans",
-            "font.size": 9,
-            "axes.titlesize": 10,
-            "axes.labelsize": 9,
-            "legend.fontsize": 8,
-            "axes.unicode_minus": False,
-        }
-    )
+    configure_plot_style()
 
-    fig = plt.figure(figsize=(7.25, 5.15), layout="constrained")
+    fig = plt.figure(
+        figsize=tps.figure_size("full", height=4.55),
+        layout="constrained",
+    )
     grid = fig.add_gridspec(2, 2, height_ratios=(1.0, 0.72))
     field_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
     decay_ax = fig.add_subplot(grid[1, :])
@@ -78,7 +81,10 @@ def make_figure() -> plt.Figure:
     for ax, sign, title in zip(
         field_axes,
         (1.0, -1.0),
-        (r"(a) Positive half-cycle: $I(t)>0$", r"(b) Negative half-cycle: $I(t)<0$"),
+        (
+            r"(a) 电流流出截面 $\odot$：磁场逆时针",
+            r"(b) 电流流入截面 $\otimes$：磁场顺时针",
+        ),
     ):
         x, y, bx, by, magnitude_ut = field_map(sign)
         contour = ax.contourf(
@@ -104,44 +110,51 @@ def make_figure() -> plt.Figure:
         ax.set_aspect("equal")
         ax.set_xlim(-1.0, 1.0)
         ax.set_ylim(-1.0, 1.0)
-        ax.set_xlabel(r"$x$ (m)")
-        ax.set_ylabel(r"$y$ (m)")
+        ax.set_xlabel(r"横向位置 $x$ (m)")
+        ax.set_ylabel(r"竖向位置 $y$ (m)")
         ax.set_title(title, loc="left")
 
     assert contour is not None
     colorbar = fig.colorbar(contour, ax=field_axes, orientation="horizontal", shrink=0.72, pad=0.03)
     colorbar.set_ticks((0.2, 0.5, 1.0, 2.0))
     colorbar.set_ticklabels(("0.2", "0.5", "1", "2"))
-    colorbar.set_label(r"$|\mathbf{B}|$ ($\mu$T), $I_{\mathrm{peak}}=1$ A")
+    colorbar.set_label(r"磁场强度 $|\mathbf{B}|$ ($\mu$T，峰值电流 1 A)")
 
     radius = np.geomspace(0.08, 2.0, 240)
     magnitude_ut = MU0 / (2.0 * np.pi * radius) * 1.0e6
     decay_ax.loglog(
         radius,
         magnitude_ut,
-        color="#1f5a85",
-        lw=2.1,
+        color=tps.PROPOSED,
+        lw=1.7,
         label=r"$|\mathbf{B}|=\mu_0 I/(2\pi r)$",
     )
-    reference_radius = np.array([0.12, 1.2])
-    reference = 0.12 / reference_radius
-    decay_ax.loglog(
-        reference_radius,
-        reference,
-        "--",
-        color="#b0473c",
-        lw=1.5,
-        label=r"reference slope $r^{-1}$",
+    sample_radius = np.array([0.1, 1.0])
+    sample_field = MU0 / (2.0 * np.pi * sample_radius) * 1.0e6
+    decay_ax.scatter(
+        sample_radius,
+        sample_field,
+        s=34,
+        color=tps.WARNING,
+        edgecolor="white",
+        linewidth=0.7,
+        zorder=4,
     )
+    decay_ax.text(0.1, sample_field[0] * 1.16, r"$r=0.1$ m，$|B|=2$ $\mu$T", ha="left")
+    decay_ax.text(1.0, sample_field[1] * 0.78, r"$r=1$ m，$|B|=0.2$ $\mu$T", ha="right", va="top")
     decay_ax.annotate(
-        r"$10\times r\ \Rightarrow\ 0.1\times |\mathbf{B}|$",
-        xy=(1.2, 0.1),
-        xytext=(0.43, 0.33),
-        arrowprops={"arrowstyle": "->", "lw": 0.9, "color": "#333333"},
+        "距离增大 10 倍\n场强降至 1/10",
+        xy=(1.0, sample_field[1]),
+        xytext=(0.31, 0.46),
+        ha="center",
+        arrowprops={"arrowstyle": "->", "lw": 1.0, "color": "#333333"},
+        bbox={"facecolor": "white", "edgecolor": "#777777", "alpha": 0.92, "pad": 2.0},
     )
-    decay_ax.set_xlabel(r"Radial distance $r$ (m)")
-    decay_ax.set_ylabel(r"$|\mathbf{B}|$ ($\mu$T)")
-    decay_ax.set_title("(c) Radial amplitude decay", loc="left")
+    decay_ax.set_xlabel(r"距导线中心的距离 $r$ (m)")
+    decay_ax.set_ylabel(r"磁场强度 $|\mathbf{B}|$ ($\mu$T)")
+    decay_ax.set_title(r"(c) 距离越远，磁场按 $1/r$ 规律减弱", loc="left")
+    decay_ax.set_xticks((0.1, 1.0), labels=("0.1", "1"))
+    decay_ax.set_yticks((0.1, 1.0), labels=("0.1", "1"))
     decay_ax.grid(True, which="both", alpha=0.28)
     decay_ax.legend(loc="upper right")
 
@@ -155,9 +168,10 @@ def main() -> None:
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     figure = make_figure()
-    for suffix in ("pdf", "png"):
-        output = args.output_dir / f"single_phase_field_direction.{suffix}"
-        figure.savefig(output, dpi=300, bbox_inches="tight")
+    for output in tps.save_figure(
+        figure,
+        args.output_dir / "single_phase_field_direction",
+    ):
         print(output)
     plt.close(figure)
 

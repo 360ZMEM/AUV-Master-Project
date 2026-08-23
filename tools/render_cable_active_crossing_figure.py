@@ -16,7 +16,7 @@ Output:
 """
 from __future__ import annotations
 
-import os
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -25,26 +25,21 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import thesis_plot_style as tps  # noqa: E402
 
-OUT_DIR = Path(__file__).resolve().parents[1] / "docs/thesis/figures/architecture"
+OUT_DIR = ROOT / "docs/thesis/figures/architecture"
 
 
 def _setup_font() -> None:
-    import matplotlib.font_manager as fm
-
-    zh_font = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
-    if os.path.exists(zh_font):
-        fm.fontManager.addfont(zh_font)
-        plt.rcParams["font.family"] = fm.FontProperties(fname=zh_font).get_name()
-    plt.rcParams["font.sans-serif"] = ["WenQuanYi Zen Hei", "SimHei"] + plt.rcParams["font.sans-serif"]
-    plt.rcParams["axes.unicode_minus"] = False
-    plt.rcParams["mathtext.fontset"] = "stix"
+    tps.apply_thesis_style(layout="full")
 
 
-C_CABLE = "#3B4A57"
-C_TRAJ = "#4A76B8"
-C_PEAK = "#D8973A"
-C_CENTER = "#5C9A6B"
+C_CABLE = tps.REFERENCE
+C_TRAJ = tps.PROPOSED
+C_PEAK = tps.BASELINE_1
+C_CENTER = tps.BASELINE_2
 
 
 def _triangle(x, amp, period, phase=0.0):
@@ -53,7 +48,7 @@ def _triangle(x, amp, period, phase=0.0):
 
 def render() -> None:
     _setup_font()
-    fig = plt.figure(figsize=(8.6, 6.2))
+    fig = plt.figure(figsize=tps.figure_size("full", height=4.8))
     gs = fig.add_gridspec(2, 1, height_ratios=[1.45, 1.0], hspace=0.42)
     ax = fig.add_subplot(gs[0])
     axb = fig.add_subplot(gs[1])
@@ -105,8 +100,7 @@ def render() -> None:
     ax.set_xlim(0, 10)
     ax.set_ylim(-1.45, 1.55)
     ax.axis("off")
-    ax.set_title("局部主动探查（TRACK / REACQUIRE 阶段）：主动横切构造几何可观测性",
-                 fontsize=10.5, color="#26323D", pad=6)
+    ax.set_title("(a) 主动横切构造局部几何可观测性", loc="left")
 
     # ================= bottom: |B| profile of one crossing =================
     e = np.linspace(-2.2, 2.2, 500)
@@ -135,18 +129,20 @@ def render() -> None:
 
     axb.set_xlim(-2.4, 2.4)
     axb.set_ylim(0, 1.35)
-    axb.set_xlabel("相对电缆的横向位置 $e$（m）", fontsize=9)
-    axb.set_ylabel("旋转不变模量 $|B|$（归一化）", fontsize=8.6)
-    axb.tick_params(labelsize=8)
+    axb.set_xlabel("相对电缆的横向位置 $e$ (m)")
+    axb.set_ylabel("旋转不变模量 $|B|$ (归一化)")
     axb.set_yticks([0, 0.5, 1.0])
     axb.spines[["top", "right"]].set_visible(False)
-    axb.set_title("单次横切的 $|B|$ 剖面：一次横切同时给出横向中心与垂直距离",
-                  fontsize=10, color="#26323D", pad=4)
+    axb.set_title(
+        "(b) 单次横切同时给出横向中心与垂直距离",
+        loc="left",
+    )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    for ext in ("png", "pdf"):
-        fig.savefig(OUT_DIR / f"cable_active_crossing_observability.{ext}",
-                    dpi=200, bbox_inches="tight", facecolor="white")
+    tps.save_figure(
+        fig,
+        OUT_DIR / "cable_active_crossing_observability",
+    )
     plt.close(fig)
     print("wrote", OUT_DIR / "cable_active_crossing_observability.{png,pdf}")
 

@@ -21,6 +21,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from tools.experiment_contract import finalize_bundle, initialize_bundle  # noqa: E402
+from tools import thesis_plot_style as tps  # noqa: E402
 
 
 DEFAULT_BEAM_DEG = (30.0, 45.0, 60.0, 75.0)
@@ -243,7 +244,11 @@ def write_plots(output_dir: Path, rows: list[dict[str, object]]) -> list[Path]:
         j = spacings.index(float(row["spacing_ratio"]))
         coverage[i, j] = float(row["guaranteed_coverage_ratio"])
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.5), dpi=180)
+    tps.apply_thesis_style(layout="full")
+    fig, ax = plt.subplots(
+        figsize=tps.figure_size("full", height=3.9),
+        constrained_layout=True,
+    )
     image = ax.imshow(
         coverage,
         origin="lower",
@@ -254,9 +259,8 @@ def write_plots(output_dir: Path, rows: list[dict[str, object]]) -> list[Path]:
     )
     ax.set_xticks(range(len(spacings)), [f"{value:.1f}" for value in spacings])
     ax.set_yticks(range(len(errors)), [f"{value:.2f}" for value in errors])
-    ax.set_xlabel("Track spacing / effective swath")
-    ax.set_ylabel("Lateral error / effective swath")
-    ax.set_title("Guaranteed normalized coverage")
+    ax.set_xlabel("航迹间距 / 有效扫宽")
+    ax.set_ylabel("横向误差 / 有效扫宽")
     for i in range(len(errors)):
         for j in range(len(spacings)):
             color = "white" if coverage[i, j] < 0.86 else "black"
@@ -269,33 +273,39 @@ def write_plots(output_dir: Path, rows: list[dict[str, object]]) -> list[Path]:
                 color=color,
                 fontsize=8,
             )
-    fig.colorbar(image, ax=ax, label="Guaranteed coverage ratio")
-    fig.tight_layout()
+    fig.colorbar(image, ax=ax, label="保证覆盖率")
     heatmap_png = figures_dir / "normalized_coverage_heatmap.png"
     heatmap_pdf = figures_dir / "normalized_coverage_heatmap.pdf"
-    fig.savefig(heatmap_png)
-    fig.savefig(heatmap_pdf)
+    tps.save_figure(fig, figures_dir / "normalized_coverage_heatmap")
     plt.close(fig)
 
     reference_rows = select_reference_rows(rows)
-    fig, ax1 = plt.subplots(figsize=(7.2, 4.5), dpi=180)
+    tps.apply_thesis_style(layout="single")
+    fig, ax1 = plt.subplots(
+        figsize=tps.figure_size("single", height=2.45),
+        constrained_layout=True,
+    )
     x = [float(row["spacing_ratio"]) for row in reference_rows]
     coverage_y = [float(row["guaranteed_coverage_ratio"]) for row in reference_rows]
     time_y = [float(row["mission_time_vs_spacing_0p8"]) for row in reference_rows]
-    ax1.plot(x, coverage_y, "o-", color="#0072B2", label="Guaranteed coverage")
+    ax1.plot(x, coverage_y, "o-", color=tps.PROPOSED, label="保证覆盖率")
     ax1.axvline(0.8, color="#666666", linestyle="--", linewidth=1.0)
-    ax1.set_xlabel("Track spacing / effective swath")
-    ax1.set_ylabel("Guaranteed coverage ratio", color="#0072B2")
+    ax1.set_xlabel("航迹间距 / 有效扫宽")
+    ax1.set_ylabel("保证覆盖率", color=tps.PROPOSED)
     ax1.set_ylim(0.75, 1.02)
     ax2 = ax1.twinx()
-    ax2.plot(x, time_y, "s-", color="#D55E00", label="Mission time index")
-    ax2.set_ylabel("Mission time / 0.8-spacing case", color="#D55E00")
-    ax1.set_title("Coverage-time tradeoff at 10% lateral-error ratio")
-    fig.tight_layout()
+    ax2.plot(
+        x,
+        time_y,
+        "s--",
+        color=tps.BASELINE_1,
+        linewidth=1.4,
+        label="任务时间指数",
+    )
+    ax2.set_ylabel("任务时间 / 间距比 0.8", color=tps.BASELINE_1)
     tradeoff_png = figures_dir / "normalized_coverage_time_tradeoff.png"
     tradeoff_pdf = figures_dir / "normalized_coverage_time_tradeoff.pdf"
-    fig.savefig(tradeoff_png)
-    fig.savefig(tradeoff_pdf)
+    tps.save_figure(fig, figures_dir / "normalized_coverage_time_tradeoff")
     plt.close(fig)
     return [heatmap_png, heatmap_pdf, tradeoff_png, tradeoff_pdf]
 
@@ -422,20 +432,21 @@ def main() -> int:
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    thesis_figure = (
+    thesis_figure_base = (
         REPO_ROOT
         / "docs"
         / "thesis"
         / "figures"
         / "experiments"
         / "coverage"
-        / "normalized_coverage_time_tradeoff.png"
+        / "normalized_coverage_time_tradeoff"
     )
-    thesis_figure.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(
-        output_dir / "figures" / "normalized_coverage_time_tradeoff.png",
-        thesis_figure,
-    )
+    thesis_figure_base.parent.mkdir(parents=True, exist_ok=True)
+    for suffix in (".png", ".pdf"):
+        shutil.copy2(
+            output_dir / "figures" / f"normalized_coverage_time_tradeoff{suffix}",
+            thesis_figure_base.with_suffix(suffix),
+        )
     print(f"[R12] rows={len(rows)} output={output_dir}")
     return 0
 

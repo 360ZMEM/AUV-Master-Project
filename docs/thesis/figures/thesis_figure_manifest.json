@@ -1,0 +1,566 @@
+{
+  "schema_version": 1,
+  "thesis_entrypoint": "thuthesis/auv-thesis.tex",
+  "figure_count": 44,
+  "style_module": "tools/thesis_plot_style.py",
+  "figures": [
+    {
+      "id": "ch01_technical_route",
+      "chapter": "thuthesis/data/auv-chap01.tex",
+      "output": "docs/thesis/figures/architecture/auv_thesis_technical_route.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_thesis_technical_route.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio",
+      "inputs": ["docs/thesis/figures/architecture/auv_thesis_technical_route.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch01_technical_route",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch02_single_phase_field",
+      "chapter": "thuthesis/data/auv-chap02.tex",
+      "output": "docs/thesis/figures/magnetics/single_phase_field_direction.pdf",
+      "preview": "docs/thesis/figures/magnetics/single_phase_field_direction.png",
+      "kind": "matplotlib",
+      "generator": "tools/independent/plot_single_phase_field.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/independent/plot_single_phase_field.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch02_three_phase_field",
+      "chapter": "thuthesis/data/auv-chap02.tex",
+      "output": "docs/thesis/figures/magnetics/three_phase_helical_field.pdf",
+      "preview": "docs/thesis/figures/magnetics/three_phase_helical_field.png",
+      "kind": "matplotlib",
+      "generator": "tools/independent/plot_three_phase_helical_field.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/independent/plot_three_phase_helical_field.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch02_fwhm_depth",
+      "chapter": "thuthesis/data/auv-chap02.tex",
+      "output": "docs/thesis/figures/magnetics/fwhm_depth_principle.pdf",
+      "preview": "docs/thesis/figures/magnetics/fwhm_depth_principle.png",
+      "kind": "matplotlib",
+      "generator": "tools/independent/plot_fwhm_depth_principle.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/independent/plot_fwhm_depth_principle.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch03_perception_pipeline",
+      "chapter": "thuthesis/data/auv-chap03.tex",
+      "output": "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.pdf",
+      "preview": "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.png",
+      "kind": "matplotlib",
+      "generator": "tools/render_cable_perception_pipeline_figure.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/render_cable_perception_pipeline_figure.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch03_active_crossing",
+      "chapter": "thuthesis/data/auv-chap03.tex",
+      "output": "docs/thesis/figures/architecture/cable_active_crossing_observability.pdf",
+      "preview": "docs/thesis/figures/architecture/cable_active_crossing_observability.png",
+      "kind": "matplotlib",
+      "generator": "tools/render_cable_active_crossing_figure.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/render_cable_active_crossing_figure.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch03_autonomy_loop",
+      "chapter": "thuthesis/data/auv-chap03.tex",
+      "output": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch03_autonomy_loop",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch03_verification_ladder",
+      "chapter": "thuthesis/data/auv-chap03.tex",
+      "output": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch03_verification_ladder",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch03_eskf_sensitivity",
+      "chapter": "thuthesis/data/auv-chap03.tex",
+      "output": "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf",
+      "preview": "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_es_ekf_sensitivity.py",
+      "inputs": ["results/tuning/ekf_comprehensive/tuning_report.md"],
+      "command": ".venv/bin/python tools/plot_es_ekf_sensitivity.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_behavior_tree",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch04_behavior_tree",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_emergency_transition",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_emergency_transition.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_emergency_transition.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_emergency_transition.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch04_emergency_transition",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_uncertainty_highway",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch04_uncertainty_highway",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_bt_fsm_complexity",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.pdf",
+      "preview": "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.png",
+      "kind": "matplotlib",
+      "generator": "tests/benchmark_bt_vs_fsm.py",
+      "inputs": [
+        "brain_linux/src/auv_decision/auv_decision_core/bt_engine.py",
+        "brain_linux/src/auv_decision/auv_decision_core/fsm_baseline.py"
+      ],
+      "command": ".venv/bin/python tests/benchmark_bt_vs_fsm.py --render-thesis",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_bt_fsm_expansion",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost.pdf",
+      "preview": "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost.png",
+      "kind": "matplotlib",
+      "generator": "tests/benchmark_bt_vs_fsm.py",
+      "inputs": [
+        "brain_linux/src/auv_decision/auv_decision_core/bt_engine.py",
+        "brain_linux/src/auv_decision/auv_decision_core/fsm_baseline.py"
+      ],
+      "command": ".venv/bin/python tests/benchmark_bt_vs_fsm.py --render-thesis",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_coverage_tradeoff",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff.pdf",
+      "preview": "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff.png",
+      "kind": "matplotlib",
+      "generator": "tools/normalized_coverage_sweep.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/normalized_coverage_sweep.py",
+      "reproducibility": "mac_full",
+      "layout": "single"
+    },
+    {
+      "id": "ch04_mpc_summary",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.pdf",
+      "preview": "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.png",
+      "kind": "matplotlib",
+      "generator": "tools/mpc_test.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/mpc_test.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch04_pid_pvs",
+      "chapter": "thuthesis/data/auv-chap04.tex",
+      "output": "docs/thesis/figures/experiments/control_pid_pvs/05_pid_pvs_profile_comparison.pdf",
+      "preview": "docs/thesis/figures/experiments/control_pid_pvs/05_pid_pvs_profile_comparison.png",
+      "kind": "matplotlib",
+      "generator": "tools/pid_pvs_tracking_plots.py",
+      "inputs": [],
+      "command": ".venv/bin/python tools/pid_pvs_tracking_plots.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_five_layer_architecture",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch05_five_layer_architecture",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_mission_lifecycle",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch05_mission_lifecycle",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_mission_state_machine",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_mission_state_machine.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch05_mission_state_machine",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_dual_brain",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.pdf",
+      "preview": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.png",
+      "kind": "drawio",
+      "generator": "docs/thesis/figures/architecture/generate_architecture_diagrams.py",
+      "inputs": ["docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio"],
+      "command": "python tools/render_thesis_figures.py --id ch05_dual_brain",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_terrain_tz",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+      "preview": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_terrain_following_figures.py",
+      "inputs": ["results/control/terrain_following_20260619_222639/*/bag_path.txt"],
+      "source_sha256": [
+        {
+          "path": "/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap",
+          "sha256": "14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5"
+        },
+        {
+          "path": "/auv_data/bags/20260619_223058/rosbag/rosbag_0.mcap",
+          "sha256": "1fc5a5b7d64bb78deb3eaa49cb0ad9ad73a790a3d413d5e11ce734844b99e729"
+        }
+      ],
+      "command": ".venv/bin/python tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260619_222639 --figure terrain_tz_tracking_pid_mpc",
+      "reproducibility": "linux_required",
+      "layout": "full",
+      "notes": "MCAP paths resolve under /auv_data on Linux; source MCAP is absent on macOS."
+    },
+    {
+      "id": "ch05_terrain_3d",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+      "preview": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_terrain_following_figures.py",
+      "inputs": [
+        "results/control/terrain_following_20260619_222639/pid_terrain/bag_path.txt",
+        "config/bridge_params.protocol_udp.pvs.terrain.yaml"
+      ],
+      "source_sha256": [
+        {
+          "path": "/auv_data/bags/20260619_222811/rosbag/rosbag_0.mcap",
+          "sha256": "14e080d4d82ca06f846e9b10e605042ef4e047e604fe10070fa7167ecd6bd6f5"
+        }
+      ],
+      "command": ".venv/bin/python tools/plot_terrain_following_figures.py --results-dir results/control/terrain_following_20260619_222639 --figure terrain_3d_pid_terrain_trajectory",
+      "reproducibility": "linux_required",
+      "layout": "full",
+      "notes": "MCAP path resolves under /auv_data on Linux; source MCAP is absent on macOS."
+    },
+    {
+      "id": "ch05_r13_control_rate",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+      "preview": "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_r13_v2_formal_audit.py",
+      "inputs": ["results/control_aggregates/20260810_r13_v2_full"],
+      "command": ".venv/bin/python tools/plot_r13_v2_formal_audit.py --skip-mcap",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_r13_authority",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+      "preview": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_r13_v2_formal_audit.py",
+      "inputs": ["results/control_aggregates/20260810_r13_v2_full"],
+      "command": ".venv/bin/python tools/plot_r13_v2_formal_audit.py --skip-mcap",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_r13_ptrack",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf",
+      "preview": "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_r13_v2_formal_audit.py",
+      "inputs": ["results/control_aggregates/20260810_r13_v2_full"],
+      "command": ".venv/bin/python tools/plot_r13_v2_formal_audit.py --skip-mcap",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_scorecard",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf",
+      "preview": "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_cable_dlt1278_scorecard.py",
+      "inputs": ["results/cable_ops_report/acceptance_fresh1_20260706_135331/inspection_summary.json"],
+      "command": ".venv/bin/python tools/plot_cable_dlt1278_scorecard.py --summary results/cable_ops_report/acceptance_fresh1_20260706_135331/inspection_summary.json --output docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.png",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pvs_recovery",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf",
+      "preview": "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pvs_closedloop_recovery.py",
+      "inputs": ["results/cable_ops_report/closedloop_e2e"],
+      "command": ".venv/bin/python tools/plot_pvs_closedloop_recovery.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pvs_acceptance",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.pdf",
+      "preview": "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pvs_closedloop_recovery.py",
+      "inputs": ["results/cable_ops_report/closedloop_e2e"],
+      "command": ".venv/bin/python tools/plot_pvs_closedloop_recovery.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pc104_timing",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+      "preview": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pc104_firmware_echo_timing.py",
+      "inputs": ["results/control/pc104_udp_timing_echo_300s_20260822"],
+      "command": ".venv/bin/python tools/plot_pc104_firmware_echo_timing.py --bundle results/control/pc104_udp_timing_echo_300s_20260822 --output-dir docs/thesis/figures/hardware/pc104_timing",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pc104_fault",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+      "preview": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pc104_fault_injection.py",
+      "inputs": ["results/control/pc104_fault_injection_formal_v2_20260822"],
+      "command": ".venv/bin/python tools/plot_pc104_fault_injection.py --bundle results/control/pc104_fault_injection_formal_v2_20260822 --output-dir docs/thesis/figures/hardware/pc104_fault_injection",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pc104_cross_fault",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "preview": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pc104_cross_layer_evidence.py",
+      "inputs": ["results/control/pc104_cross_layer_fault_sync_20260822_225436"],
+      "command": ".venv/bin/python tools/plot_pc104_cross_layer_evidence.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_pc104_cross_soak",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+      "preview": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_pc104_cross_layer_evidence.py",
+      "inputs": ["results/control/pc104_cross_layer_fault_sync_20260822_222112"],
+      "command": ".venv/bin/python tools/plot_pc104_cross_layer_evidence.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_jetson_mpc",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+      "preview": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.png",
+      "kind": "matplotlib",
+      "generator": "real_experiments/jetson_realtime/scripts/run_jetson_realtime.py",
+      "inputs": [
+        "real_experiments/jetson_realtime/data/runs/20260822_165846/steady",
+        "real_experiments/jetson_realtime/data/runs/20260822_165846/stress"
+      ],
+      "command": ".venv/bin/python real_experiments/jetson_realtime/scripts/run_jetson_realtime.py --render-mpc-figure-from-run real_experiments/jetson_realtime/data/runs/20260822_165846",
+      "reproducibility": "mac_render_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_enob_osr",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "preview": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.png",
+      "kind": "matplotlib",
+      "generator": "hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
+      "inputs": ["hardware_wrappers/fangkong_adc/raw_data/enob/20260809T161036/ch4_enob_results.json"],
+      "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
+      "reproducibility": "mac_render_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_enob_psd",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf",
+      "preview": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.png",
+      "kind": "matplotlib",
+      "generator": "hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
+      "inputs": ["hardware_wrappers/fangkong_adc/raw_data/enob/20260809T161036/ch4_enob_capture.npz"],
+      "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/plot_enob_results.py",
+      "reproducibility": "mac_render_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_mag_noise_ros",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf",
+      "preview": "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.png",
+      "kind": "matplotlib",
+      "generator": "real_experiments/mag_chain_noise_ros/scripts/analyze_mag_noise_ros_run.py",
+      "inputs": ["real_experiments/mag_chain_noise_ros/data/summary.csv"],
+      "command": ".venv/bin/python real_experiments/mag_chain_noise_ros/scripts/analyze_mag_noise_ros_run.py --summary-csv real_experiments/mag_chain_noise_ros/data/summary.csv",
+      "reproducibility": "mac_render_only",
+      "layout": "full",
+      "notes": "Full metric extraction needs Linux /auv_data tracking JSONL and MCAP."
+    },
+    {
+      "id": "ch05_mag_extrinsics",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf",
+      "preview": "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_mag_extrinsics_validation.py",
+      "inputs": ["results/mag_extrinsics/fullflow_20260705_2145"],
+      "command": ".venv/bin/python tools/plot_mag_extrinsics_validation.py",
+      "reproducibility": "mac_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_mag_trajectory",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf",
+      "preview": "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.png",
+      "kind": "matplotlib",
+      "generator": "hardware_wrappers/fangkong_adc/scripts/joint_biot_savart_analysis.py",
+      "inputs": ["hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/aligned_timeseries.npz"],
+      "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/joint_biot_savart_analysis.py --render-existing",
+      "reproducibility": "mac_render_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_mag_iq_fit",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+      "preview": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.png",
+      "kind": "matplotlib",
+      "generator": "hardware_wrappers/fangkong_adc/scripts/joint_biot_savart_analysis.py",
+      "inputs": [
+        "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/aligned_timeseries.npz",
+        "hardware_wrappers/fangkong_adc/raw_data/joint_analysis/1783235358_205719/fit_summary.json"
+      ],
+      "command": ".venv/bin/python hardware_wrappers/fangkong_adc/scripts/joint_biot_savart_analysis.py --render-existing",
+      "reproducibility": "mac_render_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_foxglove_console",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/system/foxglove_cable_tracking_console.png",
+      "kind": "screenshot",
+      "generator": "docs/thesis/figures/system/_SOURCE.md",
+      "inputs": ["docs/thesis/figures/system/foxglove_cable_tracking_console.png"],
+      "command": null,
+      "reproducibility": "evidence_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_operator_interface",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/system/auv_console_operator_interface.png",
+      "kind": "screenshot",
+      "generator": "docs/thesis/figures/system/_SOURCE.md",
+      "inputs": ["docs/thesis/figures/system/auv_console_operator_interface.png"],
+      "command": null,
+      "reproducibility": "evidence_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_tmr_axis_report",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg",
+      "kind": "scan",
+      "generator": "docs/thesis/figures/hardware/tmr8637_test_report/_SOURCE.md",
+      "inputs": ["docs/thesis/figures/hardware/tmr8637_test_report/source_02_axis_report_scan.jpg"],
+      "command": null,
+      "reproducibility": "evidence_only",
+      "layout": "single"
+    },
+    {
+      "id": "ch05_tmr_noise_report",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg",
+      "kind": "scan",
+      "generator": "docs/thesis/figures/hardware/tmr8637_test_report/_SOURCE.md",
+      "inputs": ["docs/thesis/figures/hardware/tmr8637_test_report/source_03_noise_psd_scan.jpg"],
+      "command": null,
+      "reproducibility": "evidence_only",
+      "layout": "single"
+    }
+  ]
+}

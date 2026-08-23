@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import math
+import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -17,8 +18,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from mcap_ros2.reader import read_ros2_messages
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
+from tools import thesis_plot_style as tps  # noqa: E402
 DEFAULT_BUNDLE = (
     PROJECT_ROOT
     / "log/proxy_cable_sweep/20260810_000843_r13_v2_formal_20260810T000842"
@@ -27,6 +29,9 @@ DEFAULT_AGGREGATE = (
     PROJECT_ROOT / "results/control_aggregates/20260810_r13_v2_full"
 )
 DEFAULT_OUTPUT = DEFAULT_AGGREGATE / "r13_v2_thesis_audit"
+DEFAULT_FIGURE_OUTPUT = (
+    PROJECT_ROOT / "docs/thesis/figures/experiments/control"
+)
 SONAR_QUALITY_TOPIC = "/auv/perception/quality/sonar"
 SCENARIO_ORDER = (
     "cable_s_curve_proxy",
@@ -37,12 +42,12 @@ SCENARIO_ORDER = (
     "combined_cable_extreme_proxy",
 )
 SCENARIO_LABELS = {
-    "cable_s_curve_proxy": "S-curve",
-    "cable_hairpin_proxy": "Hairpin",
-    "cable_slope_crossing_proxy": "Slope",
-    "cable_buried_gap_proxy": "Buried gap",
-    "cable_cross_current_proxy": "Cross current",
-    "combined_cable_extreme_proxy": "Combined extreme",
+    "cable_s_curve_proxy": "S 形弯",
+    "cable_hairpin_proxy": "发卡弯",
+    "cable_slope_crossing_proxy": "坡面横穿",
+    "cable_buried_gap_proxy": "埋设间断",
+    "cable_cross_current_proxy": "横向流",
+    "combined_cable_extreme_proxy": "综合极端",
 }
 
 
@@ -51,6 +56,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bundle", type=Path, default=DEFAULT_BUNDLE)
     parser.add_argument("--aggregate-dir", type=Path, default=DEFAULT_AGGREGATE)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--figure-output-dir",
+        type=Path,
+        default=DEFAULT_FIGURE_OUTPUT,
+    )
+    parser.add_argument(
+        "--p-track-csv",
+        type=Path,
+        default=DEFAULT_OUTPUT / "r13_v2_p_track_samples_ua.csv",
+    )
     parser.add_argument(
         "--skip-mcap",
         action="store_true",
@@ -90,27 +105,11 @@ def ordered(rows: Iterable[dict[str, str]]) -> list[dict[str, str]]:
 
 
 def setup_style() -> None:
-    plt.rcParams.update(
-        {
-            "font.size": 10,
-            "axes.titlesize": 11,
-            "axes.labelsize": 10,
-            "xtick.labelsize": 9,
-            "ytick.labelsize": 9,
-            "legend.fontsize": 9,
-            "figure.dpi": 160,
-            "savefig.dpi": 300,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "axes.grid": True,
-            "grid.alpha": 0.25,
-        }
-    )
+    tps.apply_thesis_style(layout="full")
 
 
 def save_figure(fig: plt.Figure, output_dir: Path, stem: str) -> None:
-    for suffix in ("png", "pdf"):
-        fig.savefig(output_dir / f"{stem}.{suffix}", bbox_inches="tight")
+    tps.save_figure(fig, output_dir / stem)
     plt.close(fig)
 
 
@@ -176,10 +175,26 @@ def plot_rmse(paired_rows: list[dict[str, str]], output_dir: Path) -> None:
     ua = [fval(row, "ua_rmse_m") for row in rows]
     delta = [fval(row, "rmse_delta_pct") for row in rows]
 
-    fig, axis = plt.subplots(figsize=(8.8, 3.8))
-    axis.bar(x - width / 2, baseline, width, color="#9aa3ad", label="Baseline")
-    axis.bar(x + width / 2, ua, width, color="#3b7ddd", label="Source-specific UA")
-    axis.set_ylabel("Lateral RMSE (m)")
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.15),
+        constrained_layout=True,
+    )
+    axis.bar(
+        x - width / 2,
+        baseline,
+        width,
+        color=tps.BASELINE_1,
+        hatch="//",
+        label="固定权重基线",
+    )
+    axis.bar(
+        x + width / 2,
+        ua,
+        width,
+        color=tps.PROPOSED,
+        label="分源不确定性感知",
+    )
+    axis.set_ylabel("横向 RMSE (m)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
     axis.legend(frameon=False)
@@ -192,7 +207,6 @@ def plot_rmse(paired_rows: list[dict[str, str]], output_dir: Path) -> None:
             va="bottom",
             fontsize=8,
         )
-    axis.set_title("R13-v2 paired lateral tracking error")
     save_figure(fig, output_dir, "r13_v2_rmse_paired")
 
 
@@ -205,11 +219,27 @@ def plot_control_rate(paired_rows: list[dict[str, str]], output_dir: Path) -> No
     ua = [fval(row, "ua_control_rate_rms") for row in rows]
     delta = [fval(row, "control_rate_delta_pct") for row in rows]
 
-    fig, axis = plt.subplots(figsize=(8.8, 3.8))
-    axis.bar(x - width / 2, baseline, width, color="#9aa3ad", label="Baseline")
-    axis.bar(x + width / 2, ua, width, color="#2ca25f", label="Source-specific UA")
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.15),
+        constrained_layout=True,
+    )
+    axis.bar(
+        x - width / 2,
+        baseline,
+        width,
+        color=tps.BASELINE_1,
+        hatch="//",
+        label="固定权重基线",
+    )
+    axis.bar(
+        x + width / 2,
+        ua,
+        width,
+        color=tps.PROPOSED,
+        label="分源不确定性感知",
+    )
     axis.set_yscale("log")
-    axis.set_ylabel("Control-rate RMS (log scale)")
+    axis.set_ylabel("控制变化率 RMS (对数轴)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
     axis.legend(frameon=False)
@@ -222,7 +252,6 @@ def plot_control_rate(paired_rows: list[dict[str, str]], output_dir: Path) -> No
             va="bottom",
             fontsize=8,
         )
-    axis.set_title("R13-v2 conservative policy smoothness effect")
     save_figure(fig, output_dir, "r13_v2_control_rate_paired")
 
 
@@ -235,19 +264,34 @@ def plot_authority(summary_rows: list[dict[str, str]], output_dir: Path) -> None
     track = np.asarray([100.0 * fval(row, "track_ratio_mean") for row in rows])
     x = np.arange(len(rows))
 
-    fig, axis = plt.subplots(figsize=(8.8, 3.7))
-    axis.bar(x, hold, color="#9aa3ad", label="HOLD")
-    axis.bar(x, search, bottom=hold, color="#f0ad4e", label="SEARCH")
-    axis.bar(x, track, bottom=hold + search, color="#2ca25f", label="TRACK")
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.1),
+        constrained_layout=True,
+    )
+    axis.bar(x, hold, color=tps.NEUTRAL, label="保持")
+    axis.bar(
+        x,
+        search,
+        bottom=hold,
+        color=tps.BASELINE_1,
+        hatch="//",
+        label="搜索",
+    )
+    axis.bar(
+        x,
+        track,
+        bottom=hold + search,
+        color=tps.PROPOSED,
+        label="跟踪",
+    )
     axis.set_ylim(0.0, 100.0)
-    axis.set_ylabel("Authority mode share (%)")
+    axis.set_ylabel("授权模式占比 (%)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
     axis.legend(frameon=False, ncol=3, loc="upper right")
-    axis.set_title("R13-v2 UA tracking-authority mode distribution")
     for idx, row in enumerate(rows):
         if row["scenario"] == "combined_cable_extreme_proxy":
-            axis.text(idx, 103.0, "TRACK 0%", ha="center", va="bottom", fontsize=8)
+            axis.text(idx, 103.0, "跟踪 0%", ha="center", va="bottom")
     save_figure(fig, output_dir, "r13_v2_authority_modes_ua")
 
 
@@ -263,24 +307,38 @@ def plot_p_track(samples: list[dict[str, object]], output_dir: Path) -> None:
         grouped.append(values)
         labels.append(SCENARIO_LABELS[scenario])
 
-    fig, axis = plt.subplots(figsize=(8.8, 3.8))
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.15),
+        constrained_layout=True,
+    )
     axis.boxplot(
         grouped,
         tick_labels=labels,
         showfliers=False,
         patch_artist=True,
-        medianprops={"color": "#222222", "linewidth": 1.2},
-        boxprops={"facecolor": "#d9e8fb", "color": "#3b7ddd"},
-        whiskerprops={"color": "#3b7ddd"},
-        capprops={"color": "#3b7ddd"},
+        medianprops={"color": tps.REFERENCE, "linewidth": 1.2},
+        boxprops={"facecolor": "#D9EAF4", "color": tps.PROPOSED},
+        whiskerprops={"color": tps.PROPOSED},
+        capprops={"color": tps.PROPOSED},
     )
-    axis.axhline(0.75, color="#c0392b", linestyle="--", linewidth=1.0, label="TRACK enter")
-    axis.axhline(0.55, color="#f0ad4e", linestyle="--", linewidth=1.0, label="SEARCH enter")
+    axis.axhline(
+        0.75,
+        color=tps.WARNING,
+        linestyle="--",
+        linewidth=1.0,
+        label="进入跟踪阈值",
+    )
+    axis.axhline(
+        0.55,
+        color=tps.BASELINE_1,
+        linestyle="-.",
+        linewidth=1.0,
+        label="进入搜索阈值",
+    )
     axis.set_ylim(0.0, 1.02)
-    axis.set_ylabel("Sonar p_track")
+    axis.set_ylabel(r"声呐跟踪概率 $p_{\mathrm{track}}$")
     axis.set_xticklabels(labels, rotation=20, ha="right")
     axis.legend(frameon=False, ncol=2, loc="lower right")
-    axis.set_title("R13-v2 UA sonar p_track distribution")
     save_figure(fig, output_dir, "r13_v2_p_track_boxplot_ua")
 
 
@@ -395,20 +453,23 @@ def build_summary_rows(
 def main() -> int:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    args.figure_output_dir.mkdir(parents=True, exist_ok=True)
     setup_style()
 
     paired_path = args.aggregate_dir / "r13_v2_paired_effects.csv"
     authority_path = args.bundle / "r13_v2_authority_policy_summary_by_scenario_mode.csv"
     paired_rows = read_csv_rows(paired_path)
     authority_rows = read_csv_rows(authority_path)
-    pt_sample_path = args.output_dir / "r13_v2_p_track_samples_ua.csv"
+    pt_sample_path = args.p_track_csv if args.skip_mcap else (
+        args.output_dir / "r13_v2_p_track_samples_ua.csv"
+    )
     pt_samples = read_pt_samples(args.bundle, pt_sample_path, skip_mcap=args.skip_mcap)
     stats = p_track_stats(pt_samples)
 
-    plot_rmse(paired_rows, args.output_dir)
-    plot_control_rate(paired_rows, args.output_dir)
-    plot_authority(authority_rows, args.output_dir)
-    plot_p_track(pt_samples, args.output_dir)
+    plot_rmse(paired_rows, args.figure_output_dir)
+    plot_control_rate(paired_rows, args.figure_output_dir)
+    plot_authority(authority_rows, args.figure_output_dir)
+    plot_p_track(pt_samples, args.figure_output_dir)
 
     summary_rows = build_summary_rows(paired_rows, authority_rows, stats)
     write_csv_rows(args.output_dir / "r13_v2_claim_boundary_table.csv", summary_rows)

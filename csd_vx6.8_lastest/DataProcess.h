@@ -226,13 +226,13 @@ typedef struct
 	u8 BEIDOU_CRC_H; 
 	u8 BEIDOU_CRC_L; 
 	u8 BEIDOU_End_Buf[2];
-}_ToUI3;/*CPU·¢ËÍ¸ø±±¶·µÄÍ¨Ñ¶ÐÅÏ¢*/
+}_ToUI3;/*CPUï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨Ñ¶ï¿½ï¿½Ï¢*/
 
 
 
 typedef struct
 {
-	/*$MCUFD ¶ÔÓ¦µÄ16½øÖÆÏÔÊ¾24 4D 43 55 46 44*/
+	/*$MCUFD ï¿½ï¿½Ó¦ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾24 4D 43 55 46 44*/
 	char McuFD_Head_Buf[6];	
 	u8 McuFD_Msg_Num;
 	u32 McuFD_UTC_Date;  
@@ -248,17 +248,17 @@ typedef struct
 	u16 McuFD_UV_Set_Rud_Location;
 	u16 McuFD_LV_Set_Rud_Location;
 	u16 McuFD_Power_Control;
-	/*    *\R\N ¶ÔÓ¦µÄ16½øÖÆÏÔÊ¾2A 5C 52 5C 4E*/
+	/*    *\R\N ï¿½ï¿½Ó¦ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾2A 5C 52 5C 4E*/
 	char McuFD_End_Buf[3];
 }_To_MCUFD;
 
 
 typedef struct
 {
-	/*$MCUFU ¶ÔÓ¦µÄ16½øÖÆÏÔÊ¾ 24 4D 43 55 46 55*/
+	/*$MCUFU ï¿½ï¿½Ó¦ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ 24 4D 43 55 46 55*/
 	char McuFU_Head_Buf[6];
 	u8 McuFU_Msg_Num;
-	char McuFU_Back_ID[2];/*FK ¶ÔÓ¦µÄ16½øÖÆÏÔÊ¾46 4B*/
+	char McuFU_Back_ID[2];/*FK ï¿½ï¿½Ó¦ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾46 4B*/
 	u16 McuFU_Pre_Para1;
 	u16 McuFU_Pre_Para2;
 	u16 McuFU_Pre_Para3;
@@ -275,7 +275,7 @@ typedef struct
 	u32 McuFD_Sys_Abnorm_Inf;
 	u32 McuFD_Dev_Abnorm_Inf;
 	u32 McuFD_Dev_Abnorm_Inf_Detail;	
-	/*    *\R\N ¶ÔÓ¦µÄ16½øÖÆÏÔÊ¾2A 5C 52 5C 4E*/
+	/*    *\R\N ï¿½ï¿½Ó¦ï¿½ï¿½16ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾2A 5C 52 5C 4E*/
 	char McuFU_End_Buf[3];
 }_From_FMCU;
 
@@ -291,7 +291,7 @@ typedef struct
 	 bool BI_Valid_Flag;
 	 float BD_Height;
 	 float BD_Time;
-	 float BD_Check;/*ÕâÀïÈ·¶¨ÊÇcharÂð£¿²»Ó¦¸ÃÊÇfloatÂð£¿*/
+	 float BD_Check;/*ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½charï¿½ð£¿²ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½floatï¿½ï¿½*/
 	 
 	 int WI_X;
 	 int WI_Y;
@@ -335,7 +335,7 @@ typedef struct
 typedef struct
 {
 	u8 head_buf;  /*1*/	
-	float Roll_Pitch_Yaw[3];/*µ¥Î»ÊÇ»¡¶È£¬×ª»»Îª½Ç¶È£¬¾Í¶ÔÓ¦ÉÏÁË£¬1»¡¶ÈÔ¼Îª57.3¶È£¬1»¡¶È=£¨180³ýÒÔ¦Ð£©¶È*/	 
+	float Roll_Pitch_Yaw[3];/*ï¿½ï¿½Î»ï¿½Ç»ï¿½ï¿½È£ï¿½×ªï¿½ï¿½Îªï¿½Ç¶È£ï¿½ï¿½Í¶ï¿½Ó¦ï¿½ï¿½ï¿½Ë£ï¿½1ï¿½ï¿½ï¿½ï¿½Ô¼Îª57.3ï¿½È£ï¿½1ï¿½ï¿½ï¿½ï¿½=ï¿½ï¿½180ï¿½ï¿½ï¿½Ô¦Ð£ï¿½ï¿½ï¿½*/	 
 	float AngRateX_AngRateY_AngRateZ[3];
 	u16 check_sum; /*31*/
 	
@@ -363,7 +363,7 @@ typedef struct
 	u8 FromUI3_Check_Sum; 
 	u8 FromUI3_End_Buf[2]; 
 
-}_From_UI_BEIDOU;/*CPU½ÓÊÕÀ´×Ô±±¶·µÄÍ¨Ñ¶ÐÅÏ¢*/
+}_From_UI_BEIDOU;/*CPUï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Í¨Ñ¶ï¿½ï¿½Ï¢*/
 
 
 typedef struct  
@@ -438,9 +438,9 @@ typedef struct
 {
 	u8 _From_PSD;  
 	
-}_From_PSD;                           /*ÖÐÑë¿ØÖÆµ¥Ôª·¢ÍùÆµÉÁµÆ*/
+}_From_PSD;                           /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½Ôªï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½*/
 
-/*Î»Óò¶¨Òå*/
+/*Î»ï¿½ï¿½ï¿½ï¿½*/
 typedef struct  
 {
 	u8 head_buf;
@@ -451,7 +451,7 @@ typedef struct
 	u8 red_led_power ;
 	u8 yellow_led_power ;
 	u8 check_sum;
-}_ToPSD;                           /*ÖÐÑë¿ØÖÆµ¥Ôª·¢ÍùÆµÉÁµÆ*/
+}_ToPSD;                           /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½Ôªï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½*/
 
 typedef unsigned char       BYTE;
 

@@ -232,7 +232,12 @@ def histogram(axis, values: np.ndarray, *, title: str, xlabel: str, index: int) 
 
 
 def plot_packet_cadence(series: dict[str, np.ndarray], output_dir: Path) -> list[Path]:
-    fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.8), constrained_layout=True)
+    fig, axes = plt.subplots(
+        1,
+        3,
+        figsize=tps.figure_size("full", height=2.6),
+        constrained_layout=True,
+    )
     histogram(
         axes[0],
         series["downlink_send_interval_ms"],
@@ -261,7 +266,12 @@ def plot_packet_cadence(series: dict[str, np.ndarray], output_dir: Path) -> list
 
 
 def plot_firmware_echo(series: dict[str, np.ndarray], output_dir: Path) -> list[Path]:
-    fig, axes = plt.subplots(2, 2, figsize=(10.8, 7.2), constrained_layout=True)
+    fig, axes = plt.subplots(
+        2,
+        2,
+        figsize=tps.figure_size("full", height=4.7),
+        constrained_layout=True,
+    )
     histogram(
         axes[0, 0],
         series["first_echo_rtt_ms"],
@@ -302,8 +312,8 @@ def plot_firmware_echo(series: dict[str, np.ndarray], output_dir: Path) -> list[
         )
         axis.legend()
     axis.set_title("首次回显 RTT 随实验时间变化")
-    axis.set_xlabel("实验时间 / s")
-    axis.set_ylabel("RTT / ms")
+    axis.set_xlabel("实验时间 (s)")
+    axis.set_ylabel("往返时延 (ms)")
 
     fig.suptitle("PC104 固件接收时间戳回显统计")
     paths = tps.save_figure(fig, output_dir / "pc104_firmware_echo_timing")
@@ -394,7 +404,7 @@ def main() -> int:
     output_dir = (args.output_dir or (bundle / "figures")).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    tps.apply_thesis_style(base_font_size=11)
+    tps.apply_thesis_style(layout="full")
     series, counts = read_samples(samples_path)
     plot_paths = [
         *plot_packet_cadence(series, output_dir),

@@ -252,13 +252,25 @@ def plot_timeline(
         [max(abs(int(row[key])) for key in COMMAND_FIELDS) for row in snapshots]
     )
 
-    fig, axes = plt.subplots(4, 1, figsize=(12.8, 8.8), sharex=True)
+    fig, axes = plt.subplots(
+        4,
+        1,
+        figsize=tps.figure_size("full", height=4.8),
+        sharex=True,
+        constrained_layout=True,
+    )
     add_fault_spans(axes, phase_spans(rows))
 
     axes[0].step(t_up, mode, where="post", color=tps.ACCENT_COLORS[0])
-    axes[0].set_yticks((0, 1), ("Remote", "Jetson"))
+    axes[0].set_yticks((0, 1), ("遥控", "Jetson"))
     axes[0].set_ylabel("控制模式")
-    axes[0].legend(loc="upper center", ncols=5)
+    phase_handles, phase_labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        phase_handles,
+        phase_labels,
+        loc="outside upper center",
+        ncols=5,
+    )
 
     bit14_style = tps.line_style(3)
     bit5_style = tps.line_style(1)
@@ -278,10 +290,8 @@ def plot_timeline(
     axes[3].plot(t_snap, command_max, label="命令绝对值最大值", **tps.line_style(0))
     axes[3].set_ylim(-0.05, max(0.5, float(np.max(command_max)) + 0.5))
     axes[3].set_ylabel("命令值")
-    axes[3].set_xlabel("实验时间 / s")
+    axes[3].set_xlabel("实验时间 (s)")
     axes[3].legend(loc="upper right")
-    fig.suptitle("PC104 故障注入、降级与恢复统一时间线")
-    fig.tight_layout()
     paths = tps.save_figure(fig, output_dir / "pc104_fault_timeline")
     plt.close(fig)
     return paths
@@ -301,7 +311,10 @@ def plot_latencies(
         ("强制触发", [float(row["trigger_ms"]) for row in forced]),
         ("强制恢复", [float(row["recovery_mode_ms"]) for row in forced]),
     ]
-    fig, axis = plt.subplots(figsize=(10.8, 4.8), constrained_layout=True)
+    fig, axis = plt.subplots(
+        figsize=tps.figure_size("full", height=3.2),
+        constrained_layout=True,
+    )
     for index, (label, values) in enumerate(categories):
         array = finite(values)
         x = np.full(array.size, index + 1, dtype=float)
@@ -334,7 +347,7 @@ def plot_latencies(
                 fontsize=9,
             )
     axis.set_xticks(range(1, len(categories) + 1), [item[0] for item in categories])
-    axis.set_ylabel("时延 / ms")
+    axis.set_ylabel("时延 (ms)")
     axis.set_title("逐轮故障触发、降级与恢复时延")
     axis.set_ylim(bottom=0)
     paths = tps.save_figure(fig, output_dir / "pc104_fault_latency_trials")
@@ -366,7 +379,12 @@ def plot_impairments(
     ]
     counter_labels = ("解析错误", "DVL干扰", "丢包超时", "延迟超时", "电机反馈", "非零命令")
 
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.2), constrained_layout=True)
+    fig, axes = plt.subplots(
+        1,
+        3,
+        figsize=tps.figure_size("full", height=2.7),
+        constrained_layout=True,
+    )
     configured = float(summary["controlled_loss_configured_rate"]) * 100.0
     actual = float(summary["controlled_loss_actual_rate"]) * 100.0
     axes[0].bar(
@@ -375,7 +393,7 @@ def plot_impairments(
         tick_label=("配置率", "实现率"),
         **tps.series_style(1),
     )
-    axes[0].set_ylabel("丢包率 / %")
+    axes[0].set_ylabel("丢包率 (%)")
     axes[0].set_title(
         f"固定种子丢包 ({summary['deliberate_drop_count']}/"
         f"{summary['controlled_loss_generated_count']})"
@@ -395,7 +413,7 @@ def plot_impairments(
         linewidth=1.5,
         label=f"p95={float(summary['controlled_delay_p95_ms']):.1f} ms",
     )
-    axes[1].set_xlabel("生成至发送 / ms")
+    axes[1].set_xlabel("生成至发送时延 (ms)")
     axes[1].set_ylabel("样本数")
     axes[1].set_title("200 ms 排队延迟实现值")
     axes[1].legend()
@@ -517,7 +535,7 @@ def main() -> int:
     if not trials:
         raise SystemExit("no timeout trials found in timeline")
 
-    tps.apply_thesis_style(base_font_size=11)
+    tps.apply_thesis_style(layout="full")
     plots = [
         *plot_timeline(rows, output_dir),
         *plot_latencies(trials, output_dir),
