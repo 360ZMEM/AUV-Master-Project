@@ -50,27 +50,11 @@
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{传感器系统更新率与传输时延特征}\label{tab:ch03-sensor-rates}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-传感器
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-采样频率
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-典型传输时延
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-链路/接口
-\end{minipage} \\
+传感器 & 采样频率 & 典型传输时延 & 链路/接口 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-传感器
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-采样频率
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-典型传输时延
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-链路/接口
-\end{minipage} \\
+传感器 & 采样频率 & 典型传输时延 & 链路/接口 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -83,25 +67,30 @@ DVL & 2 Hz & \(\approx 50\text{ ms}\) & RS422 / UDP \\
 
 时延为什么必须显式处理？做一个量级估算即可看清：当 AUV 以 \(v = 1.0\text{ m/s}\) 巡航、某观测延迟 \(\tau_{delay} = 200\text{ ms}\) 时，若直接把它当作当前时刻观测使用，引入的空间错位为
 
-\[\Delta x_{error} = v \cdot \tau_{delay} = 1.0\text{ m/s} \times 0.2\text{ s} = 0.2\text{ m}\]
+\begin{equation}
+\Delta x_{error} = v \cdot \tau_{delay} = 1.0\text{ m/s} \times 0.2\text{ s} = 0.2\text{ m}
+\label{eq:ch03-delay-error}
+\end{equation}
 
 这一量级已经足以影响巡检横偏与埋深判断。本文据此区分``设备侧采样/解析时刻''和``Jetson 接收时刻''，但不把目标设计中的 1PPS 硬件锁相或历史状态回溯写成已经完成。当前真实 PC104 路径采用 VxWorks \texttt{tickGet()} 相对时钟：\texttt{\$AUV} 上行的 \texttt{Para3} 携带打包 uptime，\texttt{Para4} 携带最近一次 DVL BI 数据解析 uptime，固定标志 \texttt{0x5453} 用于区分旧固件。桥接节点以首个有效 PC104 uptime 和当时 ROS 时钟建立基点，在当前单位斜率假设下映射为
 
-\[
+\begin{equation}
 t_{\mathrm{ROS},k}=t_{\mathrm{ROS},0}
   +\frac{t_{\mathrm{PC104},k}-t_{\mathrm{PC104},0}}{1000}.
-\]
+\label{eq:ch03-clock-map}
+\end{equation}
 
 同一 \texttt{\$AUV} 帧派生的惯性/姿态消息使用打包 uptime，DVL 消息使用 DVL BI 解析 uptime，因而最近 DVL 相对打包时刻的陈旧度可直接在 PC104 同一时钟域内计算：
 
-\[
+\begin{equation}
 \Delta t_{\mathrm{DVL}}
 =\frac{t_{\mathrm{PC104,pack}}-t_{\mathrm{PC104,DVL}}}{1000}.
-\]
+\label{eq:ch03-dvl-staleness}
+\end{equation}
 
 ES-EKF 当前并未回退到历史状态执行延迟更新，而是把上述陈旧度作为观测可信度信息。其实现为
 
-\[
+\begin{equation}
 \boldsymbol{R}_{\mathrm{DVL}}(\Delta t)
 =\begin{cases}
 \sigma_{\mathrm{DVL}}^2\boldsymbol{I},
@@ -110,11 +99,12 @@ ES-EKF 当前并未回退到历史状态执行延迟更新，而是把上述陈�
 \left[1+\min\!\left(\dfrac{\Delta t}{0.2},\,2\right)\right]\boldsymbol{I},
 & \Delta t>0.05\text{ s}.
 \end{cases}
-\]
+\label{eq:ch03-dvl-inflation}
+\end{equation}
 
 超过 50 ms 后，膨胀系数从 1 增大并在 3 截止。该机制降低陈旧观测的卡尔曼增益，属于延迟感知加权，不等同于基于历史状态的 out-of-sequence measurement 更新。
 
-300 s PC104 实测进一步给出时钟边界：PC104 uptime 全程单调且相对容器单调时钟的线性拟合绝对残差 p95 为 \(0.774\text{ ms}\)，但两者相对速率约差 \(+962\text{ ppm}\)。这说明同一 PC104 时钟域内的短时 DVL 陈旧度可用，而固定单位斜率的首帧锚定不适合长期对齐 Jetson 侧磁场或声呐观测。该轮测试中 DVL BI 时间有效样本仍为 0，故当前证据只确认``固件字段--协议解析--ROS Header--ES-EKF 延迟加权''的软件通路成立，尚不证明真实 DVL 时间戳改善了定位精度。完整的跨设备融合仍需在线估计时钟偏移与斜率，并在需要消除相位误差时引入历史状态回溯；这些边界与真机结果见第~\ref{sec:ch05-5-3-1} 节。
+300 s PC104 实测进一步给出时钟边界：PC104 uptime 全程单调且相对容器单调时钟的线性拟合绝对残差 p95 为 \(0.774\text{ ms}\)，但两者相对速率约差 \(+962\text{ ppm}\)。这说明同一 PC104 时钟域内的短时 DVL 陈旧度可用，而固定单位斜率的首帧锚定不适合长期对齐 Jetson 侧磁场或声呐观测。该轮测试中 DVL BI 时间有效样本仍为 0，故当前证据只确认``固件字段--协议解析--ROS Header--ES-EKF 延迟加权''的软件通路成立，尚不证明真实 DVL 时间戳改善了定位精度。完整的跨设备融合仍需在线估计时钟偏移与斜率，并在需要消除相位误差时引入历史状态回溯；这些边界与真机结果见第 5 章的实物时序实验。
 
 \subsection{传感器安装偏差角标定与补偿}\label{sec:ch03-3-2-2}
 
@@ -129,27 +119,11 @@ ES-EKF 当前并未回退到历史状态执行延迟更新，而是把上述陈�
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{传感器安装偏差与补偿状态}\label{tab:ch03-alignment}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-偏差类型
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-影响
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-补偿方式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前状态
-\end{minipage} \\
+偏差类型 & 影响 & 补偿方式 & 当前状态 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-偏差类型
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-影响
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-补偿方式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前状态
-\end{minipage} \\
+偏差类型 & 影响 & 补偿方式 & 当前状态 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -175,23 +149,35 @@ DVL 安装角同样不可忽视。DVL 输出的是相对底部的速度向量，
 
 设三轴磁力计某一轴的离散信号为
 
-\[s(t) = A(t)\sin(\omega_0 t + \phi) + n(t)\]
+\begin{equation}
+s(t) = A(t)\sin(\omega_0 t + \phi) + n(t)
+\label{eq:ch03-dlia-signal}
+\end{equation}
 
 其中 \(A(t)\) 为待提取的工频幅值包络、\(\phi\) 为相位、\(n(t)\) 为宽带噪声。构造两路正交参考 \(r_I(t) = \sin(\omega_0 t)\)、\(r_Q(t) = \cos(\omega_0 t)\)，分别与 \(s(t)\) 相乘并按积化和差展开：
 
-\[\begin{aligned} x_I(t) &= s(t)\,r_I(t) = \frac{A(t)}{2}\left[\cos\phi - \cos(2\omega_0 t + \phi)\right] + n(t)\sin(\omega_0 t) \\ x_Q(t) &= s(t)\,r_Q(t) = \frac{A(t)}{2}\left[\sin\phi + \sin(2\omega_0 t + \phi)\right] + n(t)\cos(\omega_0 t) \end{aligned}\]
+\begin{equation}
+\begin{aligned} x_I(t) &= s(t)\,r_I(t) = \frac{A(t)}{2}\left[\cos\phi - \cos(2\omega_0 t + \phi)\right] + n(t)\sin(\omega_0 t) \\ x_Q(t) &= s(t)\,r_Q(t) = \frac{A(t)}{2}\left[\sin\phi + \sin(2\omega_0 t + \phi)\right] + n(t)\cos(\omega_0 t) \end{aligned}
+\label{eq:ch03-dlia-mix}
+\end{equation}
 
 再经截止频率 \(f_c = 0.5\text{ Hz}\) 的四阶 Butterworth 低通滤波器滤除 \(2\omega_0\) 倍频分量与带外噪声，得到两路直流正交分量：
 
-\[I(t) = \text{LPF}\{x_I(t)\} = \frac{A(t)}{2}\cos\phi, \qquad Q(t) = \text{LPF}\{x_Q(t)\} = \frac{A(t)}{2}\sin\phi\]
+\begin{equation}
+I(t) = \text{LPF}\{x_I(t)\} = \frac{A(t)}{2}\cos\phi, \qquad Q(t) = \text{LPF}\{x_Q(t)\} = \frac{A(t)}{2}\sin\phi
+\label{eq:ch03-dlia-iq}
+\end{equation}
 
 由此同时恢复幅值包络与相位：
 
-\[R(t) = 2\sqrt{I(t)^2 + Q(t)^2} = A(t), \qquad \phi(t) = \arctan2\big(Q(t),\, I(t)\big)\]
+\begin{equation}
+R(t) = 2\sqrt{I(t)^2 + Q(t)^2} = A(t), \qquad \phi(t) = \arctan2\big(Q(t),\, I(t)\big)
+\label{eq:ch03-dlia-amp-phase}
+\end{equation}
 
-DLIA 的三路输出恰好成为后续三个环节的枢纽：其一，三轴幅值包络合成为 \(|B_{f_0,\mathrm{rms}}(t)| = \sqrt{R_x^2 + R_y^2 + R_z^2}\)，直接供第 3.3.3 节的半高全宽深度反演使用；其二，相位角 \(\phi(t)\) 反映铠装涡流引起的相位滞后 \(\Delta\phi\)（对应第 2.3.3 节的屏蔽相位机制）；其三，由幅值与噪声底得到的瞬时信噪比 \(\text{SNR} = 20\log_{10}\dfrac{R(t)}{\sigma_{noise}}\) 直接驱动 EKF 的观测噪声协方差，SNR 高时 \(R_k\) 接近预设下界 \(R_{\min}\)，SNR 骤降时 \(R_k\) 增大、滤波器逐步转向 DVL 与惯性递推。这样，``预处理''与``融合''通过 SNR 这一标量真正连成一条闭环链路。
+DLIA 的三路输出（式\eqref{eq:ch03-dlia-amp-phase}）恰好成为后续三个环节的枢纽：其一，三轴幅值包络合成为 \(|B_{f_0,\mathrm{rms}}(t)| = \sqrt{R_x^2 + R_y^2 + R_z^2}\)，直接供第 3.3.3 节的半高全宽深度反演使用；其二，相位角 \(\phi(t)\) 反映铠装涡流引起的相位滞后 \(\Delta\phi\)（对应第 2.3.3 节的屏蔽相位机制）；其三，由幅值与噪声底得到的瞬时信噪比 \(\text{SNR} = 20\log_{10}\dfrac{R(t)}{\sigma_{noise}}\) 直接驱动 EKF 的观测噪声协方差，SNR 高时 \(R_k\) 接近预设下界 \(R_{\min}\)，SNR 骤降时 \(R_k\) 增大、滤波器逐步转向 DVL 与惯性递推。这样，``预处理''与``融合''通过 SNR 这一标量真正连成一条闭环链路。
 
-45 Hz 短背景记录的统一重分析进一步显示，矩形窗下向量幅值 p99 为 2.301 nT，改用 Hann 窗并线性去趋势后降至 0.398 nT，降幅约 82.7\%，说明有限记录的频谱泄漏是原始高噪声分位数的主要来源。随后对 \texttt{raw\_data} 中两段无强 45 Hz 目标激励的三轴记录做全链路背景回放，得到 45 Hz 向量锁相幅值中位数 2.584 nT、50 Hz 向量锁相幅值中位数 169.284 nT；这说明宿舍采集环境的主要窄带干扰在工频，而 45 Hz 可控激励能够与其分离。对电缆与 ArUco 联合记录采用同一相干参考后，1049 个锁相窗口全部超过上述短背景阈值；其中 777 个位姿对齐点进入三轴复 I/Q 几何拟合，自由复尺度和固定峰值电流模型分别得到 \(R^2=0.8792\) 与 \(R^2=0.8711\)。这些结果把 DLIA 从接口设计推进为已有实测支撑的信号处理环节，并说明连续 I/Q、窗函数、参考频率和真实背景回放必须作为磁观测的一部分共同记录。短背景时长较短、采集地点非屏蔽所带来的统计限制集中在实验章边界总表讨论。
+45 Hz 短背景记录的统一重分析进一步显示，矩形窗下向量幅值 p99 为 2.301 nT，改用 Hann 窗并线性去趋势后降至 0.398 nT，降幅约 82.7\%，说明有限记录的频谱泄漏是原始高噪声分位数的主要来源。随后对方控 ADC 原始记录中两段无强 45 Hz 目标激励的三轴记录做全链路背景回放，得到 45 Hz 向量锁相幅值中位数 2.584 nT、50 Hz 向量锁相幅值中位数 169.284 nT；这说明宿舍采集环境的主要窄带干扰在工频，而 45 Hz 可控激励能够与其分离。对电缆与 ArUco 联合记录采用同一相干参考后，1049 个锁相窗口全部超过上述短背景阈值；其中 777 个位姿对齐点进入三轴复 I/Q 几何拟合，自由复尺度和固定峰值电流模型分别得到 \(R^2=0.8792\) 与 \(R^2=0.8711\)。这些结果把 DLIA 从接口设计推进为已有实测支撑的信号处理环节，并说明连续 I/Q、窗函数、参考频率和真实背景回放必须作为磁观测的一部分共同记录。这里的短背景时长较短、采集地点非屏蔽，其统计量只作机制佐证。
 
 \section{基于改进 EKF 的声磁协同状态估计}\label{sec:ch03-3-3}
 
@@ -207,29 +193,47 @@ DLIA 的三路输出恰好成为后续三个环节的枢纽：其一，三轴幅
 
 把上述描述写成形式化定义。名义状态由 16 个标量参数表示，但受单位四元数约束而具有 15 个自由度；各分量按位置、速度、姿态、加速度计零偏和陀螺仪零偏五组组织：
 
-\[\boldsymbol{x} = \begin{bmatrix} \boldsymbol{p}^n & \boldsymbol{v}^n & \boldsymbol{q}_b^n & \boldsymbol{b}_a & \boldsymbol{b}_g \end{bmatrix}^T\]
+\begin{equation}
+\boldsymbol{x} = \begin{bmatrix} \boldsymbol{p}^n & \boldsymbol{v}^n & \boldsymbol{q}_b^n & \boldsymbol{b}_a & \boldsymbol{b}_g \end{bmatrix}^T
+\label{eq:ch03-nominal-state}
+\end{equation}
 
 其中 \(\boldsymbol{p}^n, \boldsymbol{v}^n \in \mathbb{R}^3\) 为 NED 系位置与速度，\(\boldsymbol{q}_b^n\) 为体系到导航系的姿态四元数，\(\boldsymbol{b}_a, \boldsymbol{b}_g \in \mathbb{R}^3\) 为加速度计与陀螺仪零偏。对应的 15 维误差状态在四元数处用三维旋转矢量 \(\delta\boldsymbol{\theta}\) 表示，从而回避姿态奇异：
 
-\[\delta\boldsymbol{x} = \begin{bmatrix} \delta\boldsymbol{p} & \delta\boldsymbol{v} & \delta\boldsymbol{\theta} & \delta\boldsymbol{b}_a & \delta\boldsymbol{b}_g \end{bmatrix}^T \in \mathbb{R}^{15}\]
+\begin{equation}
+\delta\boldsymbol{x} = \begin{bmatrix} \delta\boldsymbol{p} & \delta\boldsymbol{v} & \delta\boldsymbol{\theta} & \delta\boldsymbol{b}_a & \delta\boldsymbol{b}_g \end{bmatrix}^T \in \mathbb{R}^{15}
+\label{eq:ch03-error-state}
+\end{equation}
 
 预测步以 IMU 比力 \(\boldsymbol{f}_b\) 与角速度 \(\boldsymbol{\omega}_b\) 递推名义状态（\(\boldsymbol{R}_b^n\) 为四元数对应的旋转矩阵、\(\boldsymbol{g}^n\) 为重力）：
 
-\[\dot{\boldsymbol{p}}^n = \boldsymbol{v}^n, \qquad \dot{\boldsymbol{v}}^n = \boldsymbol{R}_b^n(\boldsymbol{f}_b - \boldsymbol{b}_a) + \boldsymbol{g}^n, \qquad \dot{\boldsymbol{q}}_b^n = \tfrac{1}{2}\,\boldsymbol{q}_b^n \otimes \begin{bmatrix} 0 \\ \boldsymbol{\omega}_b - \boldsymbol{b}_g \end{bmatrix}\]
+\begin{equation}
+\dot{\boldsymbol{p}}^n = \boldsymbol{v}^n, \qquad \dot{\boldsymbol{v}}^n = \boldsymbol{R}_b^n(\boldsymbol{f}_b - \boldsymbol{b}_a) + \boldsymbol{g}^n, \qquad \dot{\boldsymbol{q}}_b^n = \tfrac{1}{2}\,\boldsymbol{q}_b^n \otimes \begin{bmatrix} 0 \\ \boldsymbol{\omega}_b - \boldsymbol{b}_g \end{bmatrix}
+\label{eq:ch03-nominal-propagation}
+\end{equation}
 
 误差状态按一阶线性化传播，其连续时间转移矩阵 \(\boldsymbol{F}\) 与过程噪声协方差 \(\boldsymbol{Q}\) 决定误差协方差 \(\boldsymbol{P}\) 的演化：
 
-\[\delta\dot{\boldsymbol{x}} = \boldsymbol{F}\,\delta\boldsymbol{x} + \boldsymbol{G}\,\boldsymbol{w}, \qquad \dot{\boldsymbol{P}} = \boldsymbol{F}\boldsymbol{P} + \boldsymbol{P}\boldsymbol{F}^T + \boldsymbol{G}\boldsymbol{Q}\boldsymbol{G}^T\]
+\begin{equation}
+\delta\dot{\boldsymbol{x}} = \boldsymbol{F}\,\delta\boldsymbol{x} + \boldsymbol{G}\,\boldsymbol{w}, \qquad \dot{\boldsymbol{P}} = \boldsymbol{F}\boldsymbol{P} + \boldsymbol{P}\boldsymbol{F}^T + \boldsymbol{G}\boldsymbol{Q}\boldsymbol{G}^T
+\label{eq:ch03-error-propagation}
+\end{equation}
 
 其中转移矩阵的非平凡分块来自速度对姿态误差、零偏的依赖：
 
-\[\boldsymbol{F} = \begin{bmatrix} \boldsymbol{0} & \boldsymbol{I}_3 & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & -\boldsymbol{R}_b^n[\boldsymbol{f}_b - \boldsymbol{b}_a]_\times & -\boldsymbol{R}_b^n & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & -[\boldsymbol{\omega}_b - \boldsymbol{b}_g]_\times & \boldsymbol{0} & -\boldsymbol{I}_3 \\ \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \end{bmatrix}\]
+\begin{equation}
+\boldsymbol{F} = \begin{bmatrix} \boldsymbol{0} & \boldsymbol{I}_3 & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & -\boldsymbol{R}_b^n[\boldsymbol{f}_b - \boldsymbol{b}_a]_\times & -\boldsymbol{R}_b^n & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & -[\boldsymbol{\omega}_b - \boldsymbol{b}_g]_\times & \boldsymbol{0} & -\boldsymbol{I}_3 \\ \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \\ \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \end{bmatrix}
+\label{eq:ch03-transition-matrix}
+\end{equation}
 
-式中 \([\cdot]_\times\) 为反对称叉乘矩阵。观测更新采用统一形式：给定观测 \(\boldsymbol{z}_k\) 与观测模型 \(h(\boldsymbol{x})\)，新息（innovation）、新息协方差、卡尔曼增益与误差状态修正依次为
+式\eqref{eq:ch03-transition-matrix}中 \([\cdot]_\times\) 为反对称叉乘矩阵。观测更新采用统一形式：给定观测 \(\boldsymbol{z}_k\) 与观测模型 \(h(\boldsymbol{x})\)，新息（innovation）、新息协方差、卡尔曼增益与误差状态修正依次为
 
-\[\boldsymbol{y}_k = \boldsymbol{z}_k - h(\hat{\boldsymbol{x}}_k^-), \quad \boldsymbol{S}_k = \boldsymbol{H}_k\boldsymbol{P}_k^-\boldsymbol{H}_k^T + \boldsymbol{R}_k, \quad \boldsymbol{K}_k = \boldsymbol{P}_k^-\boldsymbol{H}_k^T\boldsymbol{S}_k^{-1}, \quad \delta\hat{\boldsymbol{x}} = \boldsymbol{K}_k\boldsymbol{y}_k\]
+\begin{equation}
+\boldsymbol{y}_k = \boldsymbol{z}_k - h(\hat{\boldsymbol{x}}_k^-), \quad \boldsymbol{S}_k = \boldsymbol{H}_k\boldsymbol{P}_k^-\boldsymbol{H}_k^T + \boldsymbol{R}_k, \quad \boldsymbol{K}_k = \boldsymbol{P}_k^-\boldsymbol{H}_k^T\boldsymbol{S}_k^{-1}, \quad \delta\hat{\boldsymbol{x}} = \boldsymbol{K}_k\boldsymbol{y}_k
+\label{eq:ch03-measurement-update}
+\end{equation}
 
-更新完成后把 \(\delta\hat{\boldsymbol{x}}\) 注入名义状态（位置/速度/零偏直接相加、姿态按 \(\boldsymbol{q} \leftarrow \boldsymbol{q}\otimes\delta\boldsymbol{q}(\delta\boldsymbol{\theta})\) 复合）并将误差状态重置为零。各观测通道的雅可比 \(\boldsymbol{H}_k\) 分别为：DVL 观测体系速度，\(\boldsymbol{H}_{dvl} = \partial(\boldsymbol{R}_n^b\boldsymbol{v}^n)/\partial\delta\boldsymbol{x}\)；深度计观测 \(z\) 位置，\(\boldsymbol{H}_{dep} = [0,0,1,\,\boldsymbol{0}_{1\times12}]\)；声学与磁学观测模型的雅可比在 §3.3.2、§3.3.3 分别给出。磁学通道中，峰值时刻提供横向中心线约束，FWHM 提供垂直距离或埋深约束，二者共同抑制 AUV 相对电缆的位置漂移。
+更新完成后把 \(\delta\hat{\boldsymbol{x}}\) 注入名义状态（位置/速度/零偏直接相加、姿态按 \(\boldsymbol{q} \leftarrow \boldsymbol{q}\otimes\delta\boldsymbol{q}(\delta\boldsymbol{\theta})\) 复合）并将误差状态重置为零。各观测通道的雅可比 \(\boldsymbol{H}_k\) 分别为：DVL 观测体系速度，\(\boldsymbol{H}_{dvl} = \partial(\boldsymbol{R}_n^b\boldsymbol{v}^n)/\partial\delta\boldsymbol{x}\)；深度计观测 \(z\) 位置，\(\boldsymbol{H}_{dep} = [0,0,1,\,\boldsymbol{0}_{1\times12}]\)；声学与磁学观测模型的雅可比在第~\ref{sec:ch03-3-3-2}节、第~\ref{sec:ch03-3-3-3}节分别给出。磁学通道中，峰值时刻提供横向中心线约束，FWHM 提供垂直距离或埋深约束，二者共同抑制 AUV 相对电缆的位置漂移。
 
 \subsection{声学观测模型：基于侧扫声呐特征的管线定位}\label{sec:ch03-3-3-2}
 
@@ -270,15 +274,24 @@ DLIA 的三路输出恰好成为后续三个环节的枢纽：其一，三轴幅
 
 实际主链路依次为``三轴模拟量采集与标定 → DLIA 幅相提取 → 旋转不变模量包络 → FWHM 拟合 → 横向/垂直观测与质量度量 → ES-EKF 更新''。该链路不直接使用三轴矢量方向，而采用第 2.3.4 节定义的模量包络 \(|B(t)| = \sqrt{R_x^2 + R_y^2 + R_z^2}\)，并调用第 2.3.5 节的半高全宽关系把它转化为几何观测量。回顾该模型：当 AUV 以航速 \(v\)、跨切角 \(\alpha\) 之字形横切电缆时，模量包络呈洛伦兹型
 
-\[|B(x)| = \frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)}, \qquad x(t) = v\sin\alpha\,(t - t_0)\]
+\begin{equation}
+|B(x)| = \frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)}, \qquad x(t) = v\sin\alpha\,(t - t_0)
+\label{eq:ch03-lorentz-envelope}
+\end{equation}
 
 在电缆正上方取得峰值，其半高全宽满足 \(x_{half} = \pm z\)，因此电缆垂直距离由半高时间跨度 \(\Delta t_{FWHM}\) 直接给出：
 
-\[z_{mag} = \frac{1}{2}\,v|\sin\alpha|\cdot\Delta t_{\mathrm{FWHM}}, \qquad d_{depth} = z_{mag} - h_{alt}\]
+\begin{equation}
+z_{mag} = \frac{1}{2}\,v|\sin\alpha|\cdot\Delta t_{\mathrm{FWHM}}, \qquad d_{depth} = z_{mag} - h_{alt}
+\label{eq:ch03-fwhm-depth}
+\end{equation}
 
-其中 \(h_{alt}\) 为高度计读数。这一反演的关键优势在于它\textbf{完全解耦了对未知电流 \(I\)、铠装衰减率 \(\eta\) 与磁偶极矩 \(m_{eq}\) 的依赖}，这些正是海况下最难先验标定的量。据此，磁学观测向 ES-EKF 提供两个绝对约束：横向中心线位置（峰值时刻 \(x = 0\)）与垂直距离 \(z_{mag}\)。前者修正横向偏移 \(d_{lat}\)，后者作为埋深观测 \(z_{mag}\) 并入 §3.3.1 的观测向量。相应的观测方程与雅可比为
+其中 \(h_{alt}\) 为高度计读数。这一反演的关键优势在于它\textbf{完全解耦了对未知电流 \(I\)、铠装衰减率 \(\eta\) 与磁偶极矩 \(m_{eq}\) 的依赖}，这些正是海况下最难先验标定的量。据此，磁学观测向 ES-EKF 提供两个绝对约束：横向中心线位置（峰值时刻 \(x = 0\)）与垂直距离 \(z_{mag}\)。前者修正横向偏移 \(d_{lat}\)，后者作为埋深观测 \(z_{mag}\) 并入第~\ref{sec:ch03-3-3-1}节的观测向量。相应的观测方程与雅可比为
 
-\[\boldsymbol{z}_{mag} = h_{mag}(\boldsymbol{x}) + \boldsymbol{v}_{mag}, \qquad \boldsymbol{H}_{mag} = \frac{\partial h_{mag}}{\partial \delta\boldsymbol{x}}\bigg|_{\hat{\boldsymbol{x}}_k^-}\]
+\begin{equation}
+\boldsymbol{z}_{mag} = h_{mag}(\boldsymbol{x}) + \boldsymbol{v}_{mag}, \qquad \boldsymbol{H}_{mag} = \frac{\partial h_{mag}}{\partial \delta\boldsymbol{x}}\bigg|_{\hat{\boldsymbol{x}}_k^-}
+\label{eq:ch03-mag-observation}
+\end{equation}
 
 在第 2.3.5 节的模型假设成立时，\(z_{mag}\) 是不依赖幅值尺度参数的几何观测量；其观测噪声协方差 \(R_{mag}\) 主要由 DLIA 输出的瞬时 SNR、横切速度与交角误差以及 FWHM 拟合残差决定。峰值位置与 \(z_{mag}\) 分别约束横向中心线和垂直距离，不能把垂直距离单独解释为对 DVL 横向漂移的直接校正。
 
@@ -326,17 +339,26 @@ DLIA 的三路输出恰好成为后续三个环节的枢纽：其一，三轴幅
 
 把上述闭环写成形式化判据。对每次观测计算新息向量与新息协方差，再分别构造标准 NIS 与维数归一化 NIS：
 
-\[\boldsymbol{y}_k = \boldsymbol{z}_k - \boldsymbol{H}_k\hat{\boldsymbol{x}}_k^-, \qquad \boldsymbol{S}_k = \boldsymbol{H}_k\boldsymbol{P}_k^-\boldsymbol{H}_k^T + \boldsymbol{R}_k,\]
+\begin{equation}
+\boldsymbol{y}_k = \boldsymbol{z}_k - \boldsymbol{H}_k\hat{\boldsymbol{x}}_k^-, \qquad \boldsymbol{S}_k = \boldsymbol{H}_k\boldsymbol{P}_k^-\boldsymbol{H}_k^T + \boldsymbol{R}_k,
+\label{eq:ch03-nis-innovation}
+\end{equation}
 
-\[\epsilon_k=\boldsymbol{y}_k^T\boldsymbol{S}_k^{-1}\boldsymbol{y}_k,\qquad \bar{\epsilon}_k=\frac{\epsilon_k}{m}.\]
+\begin{equation}
+\epsilon_k=\boldsymbol{y}_k^T\boldsymbol{S}_k^{-1}\boldsymbol{y}_k,\qquad \bar{\epsilon}_k=\frac{\epsilon_k}{m}.
+\label{eq:ch03-nis-def}
+\end{equation}
 
 在模型自洽的假设下 \(\epsilon_k\sim\chi^2(m)\)，据此取显著性水平 \(\alpha=0.05\) 的上侧门限 \(\epsilon_{\mathrm{th}}=\chi^2_{1-\alpha}(m)\)。当 \(\epsilon_k\) 超过门限时判定该观测为可疑残差，并按残差超标幅度对观测协方差做指数膨胀（软打折），从而平滑压低卡尔曼增益\cite{piche2016online,chen2023kalman}：
 
-\[\boldsymbol{R}_{k,adaptive} = \frac{\boldsymbol{R}_k}{c_k}, \qquad c_k = \exp\!\big(-\lambda\,\max(0,\ \epsilon_k-\epsilon_{\mathrm{th}})\big)\]
+\begin{equation}
+\boldsymbol{R}_{k,adaptive} = \frac{\boldsymbol{R}_k}{c_k}, \qquad c_k = \exp\!\big(-\lambda\,\max(0,\ \epsilon_k-\epsilon_{\mathrm{th}})\big)
+\label{eq:ch03-nis-softdiscount}
+\end{equation}
 
 其中 \(\lambda > 0\) 为衰减速率。残差正常（\(\epsilon_k\le\epsilon_{\mathrm{th}}\)）时 \(c_k=1\)、协方差不变；残差严重超标时 \(c_k\to0\)、\(\boldsymbol{R}_{k,adaptive}\) 增大、卡尔曼增益降低，即该观测被渐进降权而非硬性丢弃。为避免少量脉冲残差在窗口统计尚未收敛时直接支配状态修正，本文还实现 Huber 型即时降权。令 \(r_k=\sqrt{\epsilon_k/m}\)，当 \(r_k>\delta\) 时按 \(w_k=\delta/r_k\) 放大当前观测协方差为 \(\boldsymbol{R}_{k,robust}=\boldsymbol{R}_{k,adaptive}/w_k\)，否则 \(w_k=1\)。窗口级分源缩放处理持续失配，Huber 权重处理单帧异常，两者的时间尺度和统计角色互不替代。
 
-这一``分源卡方诊断 + 窗口软打折 + 即时鲁棒权重''构成 §3.3.4 接力逻辑在协方差层面的实现。对 24 个运行包的 35243 次真实量测更新审计表明，深度与 DVL 的一致性偏差方向相反，因而历史实现中混合两种自由度的固定阈值只能解释为操作性触发，不能解释为统一卡方检验。实验章进一步用固定 R、历史全局缩放、分源缩放和 Huber 更新作同输入对照，并把时间戳噪声膨胀与真正的延迟状态处理区分开来。
+这一``分源卡方诊断 + 窗口软打折 + 即时鲁棒权重''构成第~\ref{sec:ch03-3-3-4}节接力逻辑在协方差层面的实现。对 24 个运行包的 35243 次真实量测更新审计表明，深度与 DVL 的一致性偏差方向相反，因而历史实现中混合两种自由度的固定阈值只能解释为操作性触发，不能解释为统一卡方检验。实验章进一步用固定 R、历史全局缩放、分源缩放和 Huber 更新作同输入对照，并把时间戳噪声膨胀与真正的延迟状态处理区分开来。
 
 \subsection{传感器失效检测与置信度衰减机制}\label{sec:ch03-3-4-2}
 
@@ -364,7 +386,7 @@ DVL 丢包是水下任务中最常见的失效场景，也是验证 ES-EKF 鲁�
 
 需要预先界定该场景的解释边界：在数十秒的短片段中，声学与 DVL 观测通常占主导，磁畸变对水平定位的影响容易被掩盖，因此不宜把该场景的定位数值读作``磁畸变对精度的定量影响''。本文据此把磁畸变场景的核心价值定位为``验证滤波器在磁观测降权时不会发散''，具体的多种子定位数值及其与基线的口径差异统一交由实验章呈现。
 
-轻、重两档磁畸变以及综合压力场景均已纳入三种子结果。该组实验验证的是磁观测降权时的估计连续性；真实频谱、相位畸变和软饱和将由实测噪声回放进一步补充，统一见实验章边界总表。
+轻、重两档磁畸变以及综合压力场景均已纳入三种子结果。该组实验验证的是磁观测降权时的估计连续性；真实频谱、相位畸变和软饱和将由实测噪声回放进一步补充。连同上一小节的 DVL 丢包四档与声呐杂波，本章鲁棒性实验共覆盖八类扰动场景（DVL 四档、磁畸变两档、声呐杂波与综合压力），另设干净基线作对照；各场景的名义强度与用途见附录~\ref{sec:app-a-1}。
 
 \section{本章小结}\label{sec:ch03-3-6}
 

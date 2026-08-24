@@ -19,27 +19,11 @@
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{任务需求与验证状态}\label{tab:ch02-requirements}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-指标
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-设计目标
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-来源
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前验证状态
-\end{minipage} \\
+指标 & 设计目标 & 来源 & 当前验证状态 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-指标
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-设计目标
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-来源
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前验证状态
-\end{minipage} \\
+指标 & 设计目标 & 来源 & 当前验证状态 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -85,27 +69,11 @@
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{AUV 多源异构系统核心硬件配置与标准支撑}\label{tab:ch02-hardware}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-模块类别
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-硬件名称/芯片
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-关键性能参数
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-学术/工程作用
-\end{minipage} \\
+模块类别 & 硬件名称/芯片 & 关键性能参数 & 学术/工程作用 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-模块类别
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-硬件名称/芯片
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-关键性能参数
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-学术/工程作用
-\end{minipage} \\
+模块类别 & 硬件名称/芯片 & 关键性能参数 & 学术/工程作用 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -123,9 +91,9 @@
 
 \subsection{架构选型逻辑}\label{sec:ch02-2-2-1}
 
-确立了三类硬性约束之后，下一步要回答的问题是：用什么样的硬件骨架来承载它？这一节先讨论架构层面的``宏观选型''，再在 2.2.2 节给出软件层面的``微观分层''。本系统采用``执行层 + 感知决策层''的异步双脑架构，执行层由 AMD/VxWorks（实物部署阶段）或等价实时控制端承担，负责底层舵机驱动、推进器控制、遥测采集和失联保护；感知决策层由 Jetson/ROS2 承担，负责状态估计、行为树任务调度、路径生成和控制参考计算。
+确立了三类硬性约束之后，下一步要回答的问题是：用什么样的硬件骨架来承载它？这一节先讨论架构层面的``宏观选型''，再在 2.2.2 节给出软件层面的``微观分层''。本系统采用``执行层 + 感知决策层''的异步双脑架构，执行层由实物部署阶段的 AMD Geode LX 800 实时控制板（或等价实时控制端）承担，负责底层舵机驱动、推进器控制、遥测采集和失联保护；感知决策层由 Jetson/ROS2 承担，负责状态估计、行为树任务调度、路径生成和控制参考计算。
 
-从硬件配置看，两个脑的定位差异是刻意为之的：安全执行脑采用 AMD Geode LX 800（500 MHz 主频、256 MB 内存、VxWorks 6.8 RTOS），其算力不足以毫秒级完成 MPC 浮点矩阵求逆或图像卷积，但换来的是微秒级中断响应和硬实时确定性，专司主/侧推进器 PWM、CAN、舵机驱动与舱压/温度/漏水轮询；感知决策脑采用 NVIDIA Jetson Orin NX（16 GB、100 TOPS、ROS2），承担 FFT、YOLO、EKF 与 UA-MPC 等高算力非实时任务。两脑之间以 UDP 报文通信（决策脑下发 \texttt{\$CKTH} 帧、执行脑上传 \texttt{\$AUV} 帧，详见 2.5.1 节），安全响应采用分层看门狗：ROS2 仲裁层对 PC 原始命令设置 1.0 s 软告警和 1.5 s hard ESTOP，对 MPC 命令设置 0.5 s 超时回退；PC104/VxWorks 执行层则以 0.1 s 周期计数检查 Jetson 模式下的有效指令，约 1.0 s 超时后切回遥控模式、清零推进并上报告警。深度越限、近底或 DVL 失锁等航行安全风险由 PC104 本地逻辑进一步覆盖为上浮或防触底动作。这一``配置低但确定性高''的执行脑设计，正是把``安全边界''从非实时 Linux 进程中剥离出来的物理保证。
+从硬件配置看，两个脑的定位差异是刻意为之的：安全执行脑采用 AMD Geode LX 800（500 MHz 主频、256 MB 内存、VxWorks 6.8 RTOS；下文按其 PC104 板型规格简称 PC104），其算力不足以毫秒级完成 MPC 浮点矩阵求逆或图像卷积，但换来的是微秒级中断响应和硬实时确定性，专司主/侧推进器 PWM、CAN、舵机驱动与舱压/温度/漏水轮询；感知决策脑采用 NVIDIA Jetson Orin NX（16 GB、100 TOPS、ROS2），承担 FFT、YOLO、EKF 与 UA-MPC 等高算力非实时任务。两脑之间以 UDP 报文通信（决策脑下发 \texttt{\$CKTH} 帧、执行脑上传 \texttt{\$AUV} 帧，详见 2.5.1 节），安全响应采用分层看门狗：ROS2 仲裁层对 PC 原始命令设置 1.0 s 软告警和 1.5 s hard ESTOP，对 MPC 命令设置 0.5 s 超时回退；PC104 执行层则以 0.1 s 周期计数检查 Jetson 模式下的有效指令，约 1.0 s 超时后切回遥控模式、清零推进并上报告警。深度越限、近底或 DVL 失锁等航行安全风险由 PC104 本地逻辑进一步覆盖为上浮或防触底动作。这一``配置低但确定性高''的执行脑设计，正是把``安全边界''从非实时 Linux 进程中剥离出来的物理保证。
 
 周期职责据此分为三级：Jetson 侧 ROS 控制更新以 20 Hz（50 ms）为目标预算，协议桥接以 10 Hz（100 ms）为命令节拍，PC104 内部执行与看门狗保持独立硬实时周期。该预算用于约束高算力模块的部署方式，但不把 Jetson 上的单模块求解耗时等同为端到端闭环时延。
 
@@ -149,19 +117,11 @@
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.7000}}@{}}
 \caption{五层软件架构职责}\label{tab:ch02-layers}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-层级
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-职责
-\end{minipage} \\
+层级 & 职责 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-层级
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-职责
-\end{minipage} \\
+层级 & 职责 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -196,31 +156,11 @@
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
 \caption{仿真后端与实物层能力边界}\label{tab:ch02-backends}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-维度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-PVS 仿真
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-HoloOcean 仿真
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Mock AMD
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-VxWorks 实物
-\end{minipage} \\
+维度 & PVS 仿真 & HoloOcean 仿真 & Mock AMD & VxWorks 实物 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-维度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-PVS 仿真
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-HoloOcean 仿真
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Mock AMD
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-VxWorks 实物
-\end{minipage} \\
+维度 & PVS 仿真 & HoloOcean 仿真 & Mock AMD & VxWorks 实物 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -293,9 +233,12 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 单芯电缆是理解海缆磁场的最基础情形。把电缆近似为无限长直导线，由毕奥-萨伐尔定律（Biot-Savart Law）\cite{griffiths2017electrodynamics}沿导线积分，可得径向距离 \(r\) 处的磁感应强度解析解：
 
-\[\boldsymbol{B}_{dc}(r) = \frac{\mu_0 \mu_r I_{dc}}{2\pi r}\,\hat{\boldsymbol{\theta}}\]
+\begin{equation}
+\boldsymbol{B}_{dc}(r) = \frac{\mu_0 \mu_r I_{dc}}{2\pi r}\,\hat{\boldsymbol{\theta}}
+\label{eq:ch02-static-field}
+\end{equation}
 
-其中 \(\mu_0\) 为真空磁导率，\(\mu_r\) 为介质相对磁导率（海水与海床沙石 \(\mu_r \approx 1\)），\(I_{dc}\) 为导线电流，\(\hat{\boldsymbol{\theta}}\) 为绕导线的切向单位矢量。该式表明直流单芯电缆磁场沿 \(1/r\) 规律衰减。对单相交流电缆，电流 \(i(t) = I_{ac}\sin(\omega t)\) 随时间同频交变，磁场幅值的空间分布仍保持 \(1/r\) 衰减律，只是整体随时间做工频振荡。
+其中 \(\mu_0\) 为真空磁导率，\(\mu_r\) 为介质相对磁导率（海水与海床沙石 \(\mu_r \approx 1\)），\(I_{dc}\) 为导线电流，\(\hat{\boldsymbol{\theta}}\) 为绕导线的切向单位矢量。式\eqref{eq:ch02-static-field}表明直流单芯电缆磁场沿 \(1/r\) 规律衰减。对单相交流电缆，电流 \(i(t) = I_{ac}\sin(\omega t)\) 随时间同频交变，磁场幅值的空间分布仍保持 \(1/r\) 衰减律，只是整体随时间做工频振荡。
 
 图~\ref{fig:ch02-single-phase-field} 把上述解析关系画成横截面场图。圆点和叉号分别表示电流沿电缆轴正向和反向：电流过零并换向后，环向磁场同步反向，而相同电流绝对值下的幅值等值线保持不变。下方双对数曲线进一步显示，观测半径增大 10 倍时场强降为原来的 \(1/10\)。因此，单相场的``方向''由右手定则确定，``强弱''则由观测距离决定，两者在几何上可以清楚分开。
 
@@ -333,11 +276,17 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 三相电缆由 A、B、C 三相导体构成，三相电流在时间上彼此相差 \(120^\circ\)：
 
-\[i_A(t) = I_m \sin(\omega t), \quad i_B(t) = I_m \sin\!\left(\omega t - \tfrac{2\pi}{3}\right), \quad i_C(t) = I_m \sin\!\left(\omega t + \tfrac{2\pi}{3}\right)\]
+\begin{equation}
+i_A(t) = I_m \sin(\omega t), \quad i_B(t) = I_m \sin\!\left(\omega t - \tfrac{2\pi}{3}\right), \quad i_C(t) = I_m \sin\!\left(\omega t + \tfrac{2\pi}{3}\right)
+\label{eq:ch02-three-phase-current}
+\end{equation}
 
 三相芯线并非平行直排，而是以绞距 \(p\)（工程上约 \(1\sim3\text{ m}\)）沿海缆轴线 \(z\) 螺旋缠绕，其空间轨迹为：
 
-\[\begin{cases} x_k(z) = d_{core}\cos\!\left(\dfrac{2\pi}{p}z + \phi_k\right) \\[4pt] y_k(z) = d_{core}\sin\!\left(\dfrac{2\pi}{p}z + \phi_k\right) \end{cases} \quad (k \in \{A,B,C\},\ \phi_A = 0,\ \phi_B = \tfrac{2\pi}{3},\ \phi_C = -\tfrac{2\pi}{3})\]
+\begin{equation}
+\begin{cases} x_k(z) = d_{core}\cos\!\left(\dfrac{2\pi}{p}z + \phi_k\right) \\[4pt] y_k(z) = d_{core}\sin\!\left(\dfrac{2\pi}{p}z + \phi_k\right) \end{cases} \quad (k \in \{A,B,C\},\ \phi_A = 0,\ \phi_B = \tfrac{2\pi}{3},\ \phi_C = -\tfrac{2\pi}{3})
+\label{eq:ch02-helix-path}
+\end{equation}
 
 三相电流对空间各点的磁场贡献按毕奥-萨伐尔定律几何叠加，得到一个随轴向 \(z\) 以绞距 \(p\) 为周期做空间旋转的合成磁场 \(\boldsymbol{B}_{3p}(x,y,z,t)\)。逐项理解三种效应：相位抵消使远场三相磁场大部分相互抵消，``远处看不见、近处才看得见''对三相海缆比单芯更显著；螺旋绞合使 AUV 沿电缆走时观测到的磁场按螺距做周期性起伏，而非单调变化；铠装屏蔽的机制在 2.3.3 节单独展开。
 
@@ -351,11 +300,17 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 \textbf{实验室缩比等效映射。} 为在实验室用可控的缩比电缆复现真实三相海缆的远场磁场，本文建立三相电缆与双相缩比电缆（如双芯 RVV 导线通同频反向电流）之间的偶极矩等效关系。二者的远场磁偶极矩分别为：
 
-\[m_{3p} = \sqrt{3}\, I_{3p}\, r_c, \qquad m_{2p} = I_{lab}\, d_{lab}\]
+\begin{equation}
+m_{3p} = \sqrt{3}\, I_{3p}\, r_c, \qquad m_{2p} = I_{lab}\, d_{lab}
+\label{eq:ch02-dipole-moment}
+\end{equation}
 
 其中 \(I_{3p}\) 为三相相电流有效值、\(r_c\) 为芯线分布半径，\(I_{lab}\) 为实验室电流、\(d_{lab}\) 为缩比芯线间距。当实验室控制电流满足映射关系
 
-\[I_{lab} = \sqrt{3}\, I_{3p}\, \frac{r_c}{d_{lab}}\]
+\begin{equation}
+I_{lab} = \sqrt{3}\, I_{3p}\, \frac{r_c}{d_{lab}}
+\label{eq:ch02-lab-current}
+\end{equation}
 
 时，双相缩比电缆产生的远场磁场分布形态与真实三相海缆\textbf{数学同构}，为缩比台架验证提供了理论依据。
 
@@ -363,11 +318,17 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 海缆外层的镀锌钢丝铠装（Steel Wire Armour, SWA）对低频交变磁场同时具有两种屏蔽作用\cite{hatlo2015accurate}：其一是铁磁材料的磁通分流（高磁导率提供低磁阻旁路），其二是交变磁场在铠装中感生涡流所引起的电涡流损耗。二者共同将 AUV 位置可观测的磁场进一步压低，并引入相位滞后。本文引入综合屏蔽衰减因子 \(\eta \in (0,1]\) 与相位滞后 \(\Delta\phi\)，把铠装后的磁场写为对无铠装磁场的调制：
 
-\[\boldsymbol{B}_{armored}(r,t) = \eta \cdot \boldsymbol{B}_{3p}\!\left(r,\, t - \frac{\Delta\phi}{\omega}\right)\]
+\begin{equation}
+\boldsymbol{B}_{armored}(r,t) = \eta \cdot \boldsymbol{B}_{3p}\!\left(r,\, t - \frac{\Delta\phi}{\omega}\right)
+\label{eq:ch02-armored-field}
+\end{equation}
 
 为在实验室等效模拟厚钢丝铠装的屏蔽衰减，本文基于磁路欧姆定律建立薄层高磁导率材料与厚钢丝铠装的等效关系，圆筒状屏蔽层的磁阻与材料相对磁导率 \(\mu_r\) 及厚度 \(t\) 的乘积成反比，故等效条件为：
 
-\[\mu_{r,SWA} \cdot t_{SWA} \approx \mu_{r,perm} \cdot t_{perm}\]
+\begin{equation}
+\mu_{r,SWA} \cdot t_{SWA} \approx \mu_{r,perm} \cdot t_{perm}
+\label{eq:ch02-shield-equivalence}
+\end{equation}
 
 真实海缆钢丝铠装 \(\mu_{r,SWA} \approx 400\)、\(t_{SWA} \approx 3\text{ mm}\)；采用的软态坡莫合金箔带 \(\mu_{r,perm} \approx 30{,}000\)。代入可得，仅需厚度 \(t_{perm} \approx 0.04\text{ mm}\) 的坡莫合金箔带（一层），即可在 \(50\text{ Hz}\) 工频下等效复现真实海缆约 \(25\%\sim35\%\) 的幅值衰减与相位滞后特性。这一等效关系使实验室``双芯偶极子 + 坡莫合金屏蔽''台架与真实``三相铠装海缆''在远场特性上具备可对齐的物理基础。
 
@@ -377,11 +338,17 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 解决之道是转而求解三轴磁场工频幅值的均方根模量（RMS Total Magnitude）：
 
-\[|\boldsymbol{B}_{f_0,\mathrm{rms}}(r)| = \sqrt{A_{x,f_0}^2 + A_{y,f_0}^2 + A_{z,f_0}^2}\]
+\begin{equation}
+|\boldsymbol{B}_{f_0,\mathrm{rms}}(r)| = \sqrt{A_{x,f_0}^2 + A_{y,f_0}^2 + A_{z,f_0}^2}
+\label{eq:ch02-rms-magnitude}
+\end{equation}
 
 \textbf{理想对称模型性质（模量旋转不变性）}：对于无限周期、三芯几何完全对称且三相电流严格平衡的模型，轴向平移一个螺旋相位等价于源几何和磁场矢量的共同旋转；旋转改变三轴分量，却不改变三轴 RMS 模量。因此在径向距离 \(r\) 相同时，\(|\boldsymbol{B}_{f_0,\mathrm{rms}}(r)|\) 对轴向螺旋相位保持不变。有限长度、芯线不对称和外部介质会破坏严格对称性，使实际包络保留小幅轴向纹波；图~\ref{fig:ch02-three-phase-helical-field}(c) 的有限长度离散模型在中央三绞距内给出约 \(1.55\%\) 的最大相对起伏。结合 2.3.2 节远场偶极子主导的近似，模量包络可进一步写成随径向距离单调衰减的二维曲线：
 
-\[|\boldsymbol{B}_{f_0,\mathrm{rms}}(r)| \approx \frac{C_{dipole}}{r^2}, \qquad C_{dipole} = \frac{\mu_0}{2\pi}\,\eta\, m_{eff}\]
+\begin{equation}
+|\boldsymbol{B}_{f_0,\mathrm{rms}}(r)| \approx \frac{C_{dipole}}{r^2}, \qquad C_{dipole} = \frac{\mu_0}{2\pi}\,\eta\, m_{eff}
+\label{eq:ch02-farfield-envelope}
+\end{equation}
 
 这一性质的工程意义在于：在理想对称和远场条件下，可以把复杂的三维螺旋矢量场约化为近似稳定的二维 \(1/r^2\) 径向包络，显著降低螺旋相位对定位量的影响。实验室双芯偶极子 + 坡莫合金屏蔽台架据此用于复现主要远场包络，而不是复刻真实三相铠装海缆的全部局部场细节。2.3.5 节的深度反演关系建立在这一远场、单峰且包络稳定的工作假设上。
 
@@ -391,15 +358,24 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 当 AUV 以航速 \(v\)、跨切角 \(\alpha\) 横切电缆时，其相对电缆的横向距离随时间线性变化 \(x(t) = v\sin\alpha \cdot (t - t_0)\)。由 2.3.4 节的偶极子模量模型，设电缆垂直距离为 \(z\)，则单磁力计测得的模量包络呈洛伦兹型响应：
 
-\[|B(x)| = \frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)}\]
+\begin{equation}
+|B(x)| = \frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)}
+\label{eq:ch02-lorentzian}
+\end{equation}
 
 在电缆正上方 \(x = 0\) 处取得峰值 \(|B|_{max} = \dfrac{\mu_0 m_{eq}}{2\pi z^2}\)。定义响应下降至半峰值（\(|B(x)| = \tfrac{1}{2}|B|_{max}\)）时的横向跨度为半高全宽（full width at half maximum, FWHM）。求解半峰方程：
 
-\[\frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)} = \frac{1}{2}\cdot\frac{\mu_0 m_{eq}}{2\pi z^2} \implies x^2 + z^2 = 2z^2 \implies x_{half} = \pm z\]
+\begin{equation}
+\frac{\mu_0 m_{eq}}{2\pi\,(x^2 + z^2)} = \frac{1}{2}\cdot\frac{\mu_0 m_{eq}}{2\pi z^2} \implies x^2 + z^2 = 2z^2 \implies x_{half} = \pm z
+\label{eq:ch02-half-max}
+\end{equation}
 
 以 \(W_x\) 表示空间半高全宽、以 \(\Delta t_{\mathrm{FWHM}}\) 表示对应的时间跨度，则
 
-\[W_x=2z,\qquad W_x=v|\sin\alpha|\,\Delta t_{\mathrm{FWHM}},\qquad z=\frac{1}{2}v|\sin\alpha|\,\Delta t_{\mathrm{FWHM}}.\]
+\begin{equation}
+W_x=2z,\qquad W_x=v|\sin\alpha|\,\Delta t_{\mathrm{FWHM}},\qquad z=\frac{1}{2}v|\sin\alpha|\,\Delta t_{\mathrm{FWHM}}.
+\label{eq:ch02-fwhm-depth}
+\end{equation}
 
 图~\ref{fig:ch02-fwhm-depth-principle} 从两个互补角度显示这一步为什么成立。左图保持每条曲线峰值归一化，垂直距离 \(z\) 增大时横向响应按相同比例展宽，半峰交点始终位于 \(x=\pm z\)；右图固定 \(z\) 而改变尺度项 \(C=\mu_0m_{eq}/(2\pi)\)，峰值虽随电流、等效偶极矩或屏蔽衰减改变，两个半峰交点却保持不动。因此 FWHM 提取的是曲线的横向几何尺度，而不是绝对场强。
 
@@ -445,27 +421,11 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{磁传感器空间标定项}\label{tab:ch02-calibration}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-标定项
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-含义
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-标定方法
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前状态
-\end{minipage} \\
+标定项 & 含义 & 标定方法 & 当前状态 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-标定项
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-含义
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-标定方法
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-当前状态
-\end{minipage} \\
+标定项 & 含义 & 标定方法 & 当前状态 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -481,15 +441,24 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 杆臂改正的核心是把``磁传感器实际测量点的位置''换算回``AUV 参考点（Control Reference Point, CRP，取 IMU 中心）的位置''。设体坐标系为 \(b\) 系（原点在 CRP）、导航坐标系为 \(n\) 系（NED），磁传感器相对 CRP 的杆臂矢量为 \(\boldsymbol{l}_{mag}^b = [l_x, l_y, l_z]^T\)（本系统约 \(1.0\text{ m}\) 量级），\(\boldsymbol{R}_b^n\) 为体系到导航系的姿态旋转矩阵。则磁传感器测量点在导航系下的位置为：
 
-\[\boldsymbol{P}_{mag}^n = \boldsymbol{P}_{CRP}^n + \boldsymbol{R}_b^n \cdot \boldsymbol{l}_{mag}^b\]
+\begin{equation}
+\boldsymbol{P}_{mag}^n = \boldsymbol{P}_{CRP}^n + \boldsymbol{R}_b^n \cdot \boldsymbol{l}_{mag}^b
+\label{eq:ch02-lever-arm}
+\end{equation}
 
-对埋深反演最关键的是垂直分量。取上式第三分量做改正：
+对埋深反演最关键的是垂直分量。取式\eqref{eq:ch02-lever-arm}第三分量做改正：
 
-\[z_{CRP} = z_{raw} - [0,\ 0,\ 1]\cdot(\boldsymbol{R}_b^n \cdot \boldsymbol{l}_{mag}^b)\]
+\begin{equation}
+z_{CRP} = z_{raw} - [0,\ 0,\ 1]\cdot(\boldsymbol{R}_b^n \cdot \boldsymbol{l}_{mag}^b)
+\label{eq:ch02-lever-arm-z}
+\end{equation}
 
 展开姿态相关项（\(\phi\) 为横摇、\(\theta\) 为俯仰）：
 
-\[z_{CRP} = z_{raw} - \left(-l_x\sin\theta + l_y\sin\phi\cos\theta + l_z\cos\phi\cos\theta\right)\]
+\begin{equation}
+z_{CRP} = z_{raw} - \left(-l_x\sin\theta + l_y\sin\phi\cos\theta + l_z\cos\phi\cos\theta\right)
+\label{eq:ch02-lever-arm-expand}
+\end{equation}
 
 定量地看，若 \(l_x = 1.0\text{ m}\)、俯仰角 \(\theta = 2^\circ\)，仅俯仰一项即引入 \(\Delta z = 1.0\times\sin(2^\circ) \approx 3.49\text{ cm}\) 的伪垂直偏移，已占 0.2 m 埋深误差预算的 17.5\%，这说明杆臂改正对达成 0.2 m 埋深精度是不可省略的前置环节。
 
@@ -497,7 +466,10 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 杆臂改正处理``测量点位置''，而安装偏差角处理``测量方向''。长杆末端的磁传感器坐标系（\(s\) 系）与体系（\(b\) 系）之间存在一个微小的固定旋转偏差 \([\alpha_\phi, \alpha_\theta, \alpha_\psi]\)。在小角度近似下，其旋转矩阵为一阶摄动矩阵：
 
-\[\boldsymbol{R}_s^b \approx \begin{bmatrix} 1 & -\alpha_\psi & \alpha_\theta \\ \alpha_\psi & 1 & -\alpha_\phi \\ -\alpha_\theta & \alpha_\phi & 1 \end{bmatrix}\]
+\begin{equation}
+\boldsymbol{R}_s^b \approx \begin{bmatrix} 1 & -\alpha_\psi & \alpha_\theta \\ \alpha_\psi & 1 & -\alpha_\phi \\ -\alpha_\theta & \alpha_\phi & 1 \end{bmatrix}
+\label{eq:ch02-misalignment}
+\end{equation}
 
 据此把传感器系下的原始磁矢量修正到体系下：\(\boldsymbol{B}_{raw}^b = \boldsymbol{R}_s^b \cdot \boldsymbol{B}_{raw}^s\)。
 
@@ -511,41 +483,21 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
 \caption{杆臂效应与安装角校正前后几何误差对比（缩比台架/转台标定结果，实物海试标定待补）}\label{tab:ch02-lever-arm-results}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-机动工况
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正前几何伪跳变
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正后残差
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正前模量伪波动
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正后残差
-\end{minipage} \\
+机动工况 & 校正前几何伪跳变（cm） & 校正后残差（cm） & 校正前模量伪波动（nT） & 校正后残差（nT） \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-机动工况
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正前几何伪跳变
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正后残差
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正前模量伪波动
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-校正后残差
-\end{minipage} \\
+机动工况 & 校正前几何伪跳变（cm） & 校正后残差（cm） & 校正前模量伪波动（nT） & 校正后残差（nT） \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-纯俯仰 \allowbreak{}±5° & 8.96 cm & \textless{} 0.32 cm & 320 nT & \textless{} 0.41 nT \\
-纯横摇 \allowbreak{}±5° & 1.31 cm & \textless{} 0.11 cm & 45 nT & \textless{} 0.12 nT \\
-复合机动 & 9.85 cm & \textless{} 0.38 cm & 355 nT & \textless{} 0.48 nT \\
+纯俯仰 ±5° & 8.96 & \textless{} 0.32 & 320 & \textless{} 0.41 \\
+纯横摇 ±5° & 1.31 & \textless{} 0.11 & 45 & \textless{} 0.12 \\
+复合机动 & 9.85 & \textless{} 0.38 & 355 & \textless{} 0.48 \\
 \end{longtable}
 
-在复合机动工况下，几何伪跳变从 9.85 cm 压制到 0.38 cm（约为 0.2 m 埋深标准的 1.9\%），验证了杆臂改正与安装角校正模型的有效性。需要说明的是，上表数据来自实验室转台缩比标定，用于验证标定方法与预期精度；真实 AUV 在海试条件下的杆臂/安装角标定仍属实物部署阶段工作，故上表 §2.4.2 三类标定项的``当前状态''仍标注为``待实验''，与后续状态估计与实验章的口径保持一致。
+在复合机动工况下，几何伪跳变从 9.85 cm 压制到 0.38 cm（约为 0.2 m 埋深标准的 1.9\%），验证了杆臂改正与安装角校正模型的有效性。需要说明的是，上表数据来自实验室转台缩比标定，用于验证标定方法与预期精度；真实 AUV 在海试条件下的杆臂/安装角标定仍属实物部署阶段工作，故上表第~\ref{sec:ch02-2-4-2}节三类标定项的``当前状态''仍标注为``待实验''，与后续状态估计与实验章的口径保持一致。
 
 \section{通信拓扑与电气隔离}\label{sec:ch02-2-5}
 
@@ -562,27 +514,11 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
 \caption{双脑 UDP 二进制协议帧}\label{tab:ch02-udp-frames}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-帧方向
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-帧标识
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-长度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-主要载荷
-\end{minipage} \\
+帧方向 & 帧标识 & 长度 & 主要载荷 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-帧方向
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-帧标识
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-长度
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-主要载荷
-\end{minipage} \\
+帧方向 & 帧标识 & 长度 & 主要载荷 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -595,7 +531,7 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 UDP 协议的优点是轻量、易于与 VxWorks 对齐、延迟可控；缺点是开发者必须自己处理字节序（小端序）、帧头、缩放因子、校验和和版本偏差等所有细节，任何一处约定错位都不会在编译期被捕获，只能在联调时通过现象反推。本系统 Python 端与 VxWorks 端在独立开发过程中累计发现 7 处已知偏差，包括帧头长度差异、压力与航向字段错位、深度缩放因子不一致、舵角类型符号约定不同等。这些偏差在仿真期已通过协议单元测试闭环，但其根本教训是，双方独立实现协议时，仅凭书面文档对齐字节布局是不够的，必须配合真实数据回放或位级别校验工具才能发现。本文据此把上述 7 类偏差整理为实物部署期间的协议复核清单，随 Artifact Manifest 一并归档，正文不再逐条展开其发现与修复过程。
 
-在 UDP 二进制协议之下，还有承载它的物理总线与时钟基准。本系统在舱内部署一块微型 5 口千兆交换机 PCBA，把执行脑、决策脑、DVL、声呐、上位机组织为统一子网 \texttt{192.9.0.X}（执行脑 AMD \texttt{.50}、决策脑 Jetson \texttt{.100}、DVL PA600 \texttt{.60}、EdgeTech 2205 声呐 \texttt{.101}、GCS \texttt{.200}），交换机采用全双工非阻塞结构、总背板带宽 10 Gbps。这里的链路规格不等于应用层控制时延；真实 PC104 的周期调度与 host-relay 路径时序由第~\ref{sec:ch05-5-3-1} 节单独实测。舱壁穿舱采用 SubConn DBH13M 水密接口，其引脚与信号映射如下表；穿舱本体经 M16×1.5 不锈钢葛兰头 + 环氧树脂真空灌胶密封，耐受 \(\geq 1.0\text{ MPa}\)（等效 100 m 水深）且零渗漏。
+在 UDP 二进制协议之下，还有承载它的物理总线与时钟基准。本系统在舱内部署一块微型 5 口千兆交换机 PCBA，把执行脑、决策脑、DVL、声呐、上位机组织为统一子网 \texttt{192.9.0.X}（执行脑 AMD \texttt{.50}、决策脑 Jetson \texttt{.100}、DVL PA600 \texttt{.60}、EdgeTech 2205 声呐 \texttt{.101}、GCS \texttt{.200}），交换机采用全双工非阻塞结构、总背板带宽 10 Gbps。这里的链路规格不等于应用层控制时延；真实 PC104 的周期调度与 host-relay 路径时序留待第 5 章的实物时序实验单独实测。舱壁穿舱采用 SubConn DBH13M 水密接口，其引脚与信号映射如下表；穿舱本体经 M16×1.5 不锈钢葛兰头 + 环氧树脂真空灌胶密封，耐受 \(\geq 1.0\text{ MPa}\)（等效 100 m 水深）且零渗漏。
 
 \begin{longtable}[]{@{}lll@{}}
 \caption{SubConn DBH13M 穿舱接口信号映射}\label{tab:ch02-subconn}\tabularnewline
@@ -618,13 +554,13 @@ Pin10/11 & 千兆数据对 B & 差分线对 \\
 Pin12/13 & \texttt{Trig1\ /\allowbreak{}\ Trig\ GND} & 1PPS/外触发预留 / 信号地 \\
 \end{longtable}
 
-Pin12/13 为 1PPS 或外部触发同步预留，可用于把 DVL/GPS 秒脉冲送入声呐 \texttt{Trig1} 与 Jetson GPIO；本阶段尚未完成该线路的接线、时间戳捕获与同步误差标定，因而不报告微秒级跨设备绝对对时精度。当前实物时序采用 PC104 \texttt{tickGet()} uptime 回传与 Jetson 侧首帧锚定，具体实现、时钟速率差和适用边界见第 3.2.1 节及第~\ref{sec:ch05-5-3-1} 节。
+Pin12/13 为 1PPS 或外部触发同步预留，可用于把 DVL/GPS 秒脉冲送入声呐 \texttt{Trig1} 与 Jetson GPIO；本阶段尚未完成该线路的接线、时间戳捕获与同步误差标定，因而不报告微秒级跨设备绝对对时精度。当前实物时序采用 PC104 \texttt{tickGet()} uptime 回传与 Jetson 侧首帧锚定，具体实现、时钟速率差和适用边界见第 3.2.1 节，其实物记录与验证结果见第 5 章。
 
-\subsection{电气隔离与 \allowbreak{}±15V 隔离电源}\label{sec:ch02-2-5-2}
+\subsection{电气隔离与 ±15V 隔离电源}\label{sec:ch02-2-5-2}
 
 通信协议保证了``消息能被正确解析''，但还有一个更底层的物理问题：传感器采集到的信号本身有没有被电磁干扰污染？磁传感器对电磁干扰极为敏感，它要测量的是 nT 量级的微弱磁场，而推进器电机和舵机驱动板在工作时电流瞬变可达数十安培，由此产生的传导和辐射干扰若耦合进磁传感器供电线，足以把目标信号完全淹没。
 
-为了把磁传感器的供电与``嘈杂''的执行器供电隔开，本系统采用独立的 \allowbreak{}±15V 隔离电源专供磁传感器使用。隔离电源在物理上通过变压器或专用 DC-DC 模块实现一次侧与二次侧的电气隔离，使一次侧的开关噪声、共模电压和瞬态尖峰无法直接耦合到二次侧。这种隔离不是``装一个电源就完事''，还需要把磁传感器的信号地与机壳地、电源地之间的连接关系明确设计，避免形成``地环路''再次引入低频共模干扰。
+为了把磁传感器的供电与``嘈杂''的执行器供电隔开，本系统采用独立的 ±15V 隔离电源专供磁传感器使用。隔离电源在物理上通过变压器或专用 DC-DC 模块实现一次侧与二次侧的电气隔离，使一次侧的开关噪声、共模电压和瞬态尖峰无法直接耦合到二次侧。这种隔离不是``装一个电源就完事''，还需要把磁传感器的信号地与机壳地、电源地之间的连接关系明确设计，避免形成``地环路''再次引入低频共模干扰。
 
 TMR8637 的 8 针接口分别给出电源正、负端，电源地（PWR GND），信号地（SIG GND）和三轴模拟输出\cite{multidimension2024tmr8607}。这一区分构成采集链接地设计的直接依据：电源回流与三轴模拟信号回流分线布设，SIG GND 随 X/Y/Z 信号进入 ADC 模拟前端，PWR GND 返回隔离电源二次侧；两者只允许在采集前端的受控单点连接，不与推进器功率地或舱体形成第二条回流路径。该拓扑是本文的接地设计约束，最终效果仍需通过地环路电流、共模抑制比和底噪谱实测确认。
 
@@ -632,7 +568,7 @@ TMR8637 的 8 针接口分别给出电源正、负端，电源地（PWR GND）�
 
 隔离供电之上是三通道 24 位数据采集。当前实物接口采用 SK2301 以太网采集模块，按 \(\pm10\text{ V}\) 量程和名义 2000 Hz 采样率读取 TMR8637 的 X/Y/Z 三轴模拟输出，再经 TCP 数据流进入采集与数字信号处理模块。真机诊断显示设备有效采样率可能低于名义值，因此 2000 Hz 在本文中属于当前配置值，时间基准和有效采样率仍需闭环标定。
 
-TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 \(20.00\text{ mV}/\mu\text{T}\)，典型测量范围为 \(\pm200\ \mu\text{T}\)，在 \(\pm15\text{ V}\) 供电时最大可达 \(\pm500\ \mu\text{T}\)\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界，但不能不加说明地当作三轴模组整机精度。随实物提供的编号 6\# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/\(\sqrt{\text{Hz}}\)。报告中的三轴性能参数汇总见表~\ref{tab:ch02-tmr8637-test-data}，电压-磁场传输特性和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
+TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对单轴单元给出的典型灵敏度为 \(20.00\text{ mV}/\mu\text{T}\)，典型测量范围为 \(\pm200\ \mu\text{T}\)，在 \(\pm15\text{ V}\) 供电时最大可达 \(\pm500\ \mu\text{T}\)\cite{multidimension2024tmr8607}。这些单轴参数用于确定模拟前端增益和防饱和边界。随实物提供的编号 6\# 模组测试报告补充了模组层证据：X、Y、Z 三轴灵敏度分别为 20.02、19.98 和 19.96 mV/\(\mu\)T，在 \(\pm200\ \mu\text{T}\) 测试区间内传输曲线近似线性；三轴在 1 Hz 处的报告噪声均为 200 pT/\(\sqrt{\text{Hz}}\)。报告中的三轴性能参数汇总见表~\ref{tab:ch02-tmr8637-test-data}，电压-磁场传输特性和本底噪声谱分别见图~\ref{fig:ch02-tmr8637-axis-report}和图~\ref{fig:ch02-tmr8637-noise-psd}。
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4000}}
@@ -676,29 +612,44 @@ TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对
 
 设 ADC 双极性满量程跨度为 \(V_{\mathrm{FS}}\)、有效位数为 \(N\)、传感器电压灵敏度为 \(S_V\)，则只考虑量化时的等效磁场步长为
 
-\[q_B = \frac{V_{\mathrm{FS}}}{2^N S_V}.\]
+\begin{equation}
+q_B = \frac{V_{\mathrm{FS}}}{2^N S_V}.
+\label{eq:ch02-quant-step}
+\end{equation}
 
 以 \(V_{\mathrm{FS}}=20\text{ V}\)、\(N=24\) 和 \(S_V=20\text{ mV}/\mu\text{T}\) 计算，标称量化步长为 \(1.1921\ \mu\text{V}\)，等效于 \(0.0596\text{ nT}\)。标称位数只描述数字码宽，不能替代有效位数。本文对 SK2301 的 CH4 差分输入进行短接测试，2000 Hz 直接采样时宽带 RMS 噪声为 \(47.974\ \mu\text{V}\)，按短接噪声反推的 ENOB 为 16.877 bit；提高硬件采样率至 16 kHz，并以 OSR=8 非重叠块平均恢复 2 kHz 输出后，RMS 噪声降至 \(17.375\ \mu\text{V}\)，ENOB 提升至 18.342 bit。实测增益 1.440 bit 接近白噪声模型给出的 1.500 bit，说明该低成本采集模块的噪声中存在可由超采样平均抑制的宽带成分。
 
-量化步长略高于 0.05 nT 并不构成窄带检测的硬下限。噪声抖动使相邻码之间的统计信息能够被多样本估计利用，而相干积分进一步只保留目标频率附近的分量。在 16 kHz 采样、OSR=8、1 s 非重叠 45 Hz 正交解调条件下，短接 ADC 子链的等效磁噪声为 \(0.0230\text{ nT}\) 矢量 RMS，I/Q 单分量 \(3\sigma\) 为 \(0.0514\text{ nT}\)。这组结果说明所选 ADC 子链已进入 0.05 nT 灵敏度量级，并给出了采样率与数字处理参数的实验依据；它描述的是规定带宽和判据下的最小可辨变化，不等同于绝对精度。后者还需要可溯源磁场真值与包含传感器、模拟前端、温漂和标定误差的完整不确定度预算，其实测 ENOB 表征属实验章内容。
+量化步长略高于 0.05 nT 并不构成窄带检测的硬下限。噪声抖动使相邻码之间的统计信息能够被多样本估计利用，而相干积分进一步只保留目标频率附近的分量。在 16 kHz 采样、OSR=8、1 s 非重叠 45 Hz 正交解调条件下，短接 ADC 子链的等效磁噪声为 \(0.0230\text{ nT}\) 矢量 RMS，I/Q 单分量 \(3\sigma\) 为 \(0.0514\text{ nT}\)。这组结果说明所选 ADC 子链已进入 0.05 nT 灵敏度量级，并给出了采样率与数字处理参数的实验依据；它描述的是规定带宽和判据下的最小可辨变化，其可溯源的绝对不确定度预算与实测 ENOB 表征属实验章内容。
 
 上述量化估算也不包含 TMR8637 本体噪声、ADC 输入噪声、电源纹波和地环路耦合。若窄带处理的等效噪声带宽为 \(B_{\mathrm{ENBW}}\)，传感器本体噪声的量级可按
 
-\[\sigma_{B,\mathrm{sensor}} \approx S_B(f_0)\sqrt{B_{\mathrm{ENBW}}}\]
+\begin{equation}
+\sigma_{B,\mathrm{sensor}} \approx S_B(f_0)\sqrt{B_{\mathrm{ENBW}}}
+\label{eq:ch02-sensor-noise}
+\end{equation}
 
 估算。由图~\ref{fig:ch02-tmr8637-noise-psd}按对数坐标读取，三轴在 \(f_0=50\text{ Hz}\) 附近约为 20--30 pT/\(\sqrt{\text{Hz}}\)，即
 
-\[S_B(f_0)\in[0.02,0.03]\ \text{nT}/\sqrt{\text{Hz}}.\]
+\begin{equation}
+S_B(f_0)\in[0.02,0.03]\ \text{nT}/\sqrt{\text{Hz}}.
+\label{eq:ch02-psd-range}
+\end{equation}
 
 若只考察模组本体噪声，要使其 RMS 值不超过 0.05 nT，各轴对应的等效噪声带宽上限为
 
-\[B_{\mathrm{lim}}=\left(\frac{0.05}{S_B(f_0)}\right)^2\in[2.78,6.25]\text{ Hz}.\]
+\begin{equation}
+B_{\mathrm{lim}}=\left(\frac{0.05}{S_B(f_0)}\right)^2\in[2.78,6.25]\text{ Hz}.
+\label{eq:ch02-enbw-limit}
+\end{equation}
 
 因此按区间上界 \(S_B=0.03\text{ nT}/\sqrt{\text{Hz}}\) 作最保守设计时，应满足 \(B_{\mathrm{ENBW}}\leq2.78\text{ Hz}\)。
 
 以后续状态估计所采用的四阶 Butterworth 低通、截止频率 \(f_c=0.5\text{ Hz}\) 为例，其单边等效噪声带宽为
 
-\[B_{\mathrm{ENBW}}=f_c\frac{\pi}{2n}\csc\left(\frac{\pi}{2n}\right)\approx0.513\text{ Hz},\qquad n=4,\]
+\begin{equation}
+B_{\mathrm{ENBW}}=f_c\frac{\pi}{2n}\csc\left(\frac{\pi}{2n}\right)\approx0.513\text{ Hz},\qquad n=4,
+\label{eq:ch02-butterworth-enbw}
+\end{equation}
 
 对应的模组本体 RMS 噪声约为 0.014--0.022 nT，低于 0.05 nT 目标。供应商 50 Hz 谱线与本文 45 Hz ADC 短接实验分别刻画传感器本体和数采子链，两者共同说明窄带方案具有实现裕度；最终系统性能则由 TMR8637、隔离供电与模拟前端、SK2301、数字锁相放大和多周期积分共同决定。本文据此把 0.05 nT 作为受实验约束的系统灵敏度目标，而不把任一子部件结果改写为整机绝对精度。
 
@@ -714,23 +665,11 @@ TMR8637 由三只正交布置的 TMR8607 单轴敏感单元构成；规格书对
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
 \caption{上位机工作模式与安全通信路径}\label{tab:ch02-modes}\tabularnewline
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-模式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-通信方式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-用途
-\end{minipage} \\
+模式 & 通信方式 & 用途 \\
 \midrule\noalign{}
 \endfirsthead
 \toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-模式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-通信方式
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-用途
-\end{minipage} \\
+模式 & 通信方式 & 用途 \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
@@ -748,7 +687,7 @@ ESTOP & 零执行器 \texttt{\$CKTH}；UDP 下发并可镜像至 Zenoh & 立即�
 \caption{PySide6 操作员上位机的最终布局（Xvfb、dummy UDP 回环、Zenoh 关闭）：遥测、地图、任务控制和诊断分区围绕底部常驻的急停与模式授权组织}\label{fig:ch02-operator-console}
 \end{figure}
 
-ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到 \texttt{rt/pc/cmd\_raw}，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第~\ref{sec:ch05-5-3-1} 节的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的 \texttt{work\_cmd} 变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
+ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到 \texttt{rt/pc/cmd\_raw}，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第 5 章的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的 \texttt{work\_cmd} 变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
 
 VxWorks 失联保护则是这套安全闭环的最后一层冗余，当 PC104 在 Jetson 控制模式下约 1 秒未收到有效指令时，会自发切回遥控模式、清零推进并置通信超时告警。这一机制不依赖上位机的主动指令，而是 AMD 端自己的``看门狗式''保护，覆盖了``上位机断电、Jetson 死机、网络全部中断''等极端情形。需要强调的是，零推力回退与主动上浮并不是同一类动作：前者对应控制权或命令链失效，后者对应深度越限、近底或 DVL 失锁等由 PC104 本地检测到的航行安全风险。把这四道防线（行为树 failsafe、安全仲裁器、上位机 ESTOP 分层下发、VxWorks 失联保护）合在一起看，它们构成一条``由内向外、由软到硬''的安全梯度；各层降低了单点故障直接穿透至执行器的风险，但其联合有效性仍须按各自证据层级而非抽象冗余数量判断。四类守卫的触发优先级及其到安全目标态的仲裁关系如图~\ref{fig:ch02-emergency-arbitration}所示；任务执行期间由操作员、仲裁器、决策脑和执行脑共同参与的完整生命周期如图~\ref{fig:ch02-mission-lifecycle}所示。
 
