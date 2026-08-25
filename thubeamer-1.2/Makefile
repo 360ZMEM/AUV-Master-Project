@@ -1,4 +1,5 @@
 LATEXMK ?= latexmk
+PYTHON ?= python
 DEFENSE = auv-defense
 DEFENSE_AUX = $(addprefix $(DEFENSE).,aux bbl blg fdb_latexmk fls log nav out snm synctex.gz toc xdv)
 
@@ -17,7 +18,7 @@ beamer-en:
 	pdflatex -synctex=1 -interaction=nonstopmode main-en
 
 defense:
-	python3 ../tools/sync_latex_references.py --check
+	$(PYTHON) ../tools/sync_latex_references.py --check
 	$(LATEXMK) -xelatex -interaction=nonstopmode -halt-on-error $(DEFENSE).tex
 
 preview-defense: defense

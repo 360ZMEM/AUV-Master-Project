@@ -9,7 +9,18 @@ SOURCES = $(PACKAGE).ins $(PACKAGE).dtx
 CLSFILE = dtx-style.sty $(PACKAGE).cls
 
 LATEXMK = latexmk
-SHELL  := /usr/bin/env bash
+
+# Native Windows GNU Make otherwise bypasses the Cygwin shell and cannot run
+# Cygwin's extensionless awk shim in the post-build gate.
+ifdef SystemRoot
+	SHELL := C:/cygwin64/bin/bash.exe
+	AWK = awk
+	THESIS_LOG_CHECK = powershell.exe -NoProfile -Command "if (Select-String -Path '$(AUV_THESIS).log' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber' -Quiet) { Select-String -Path '$(AUV_THESIS).log' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber'; exit 1 }"
+else
+	SHELL := /usr/bin/env bash
+	AWK = awk
+	THESIS_LOG_CHECK = $(AWK) 'BEGIN { failed = 0 } /Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber/ { print; failed = 1 } END { exit failed }' $(AUV_THESIS).log
+endif
 
 # make deletion work on Windows
 ifdef SystemRoot
@@ -50,7 +61,7 @@ $(THESIS).pdf: cls FORCE_MAKE
 $(AUV_THESIS).pdf: cls FORCE_MAKE
 	$(LATEXMK) $(AUV_THESIS)
 	@test -s $(AUV_THESIS).pdf
-	@awk 'BEGIN { failed = 0 } /Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber/ { print; failed = 1 } END { exit failed }' $(AUV_THESIS).log
+	@$(THESIS_LOG_CHECK)
 
 viewdoc: doc
 	$(LATEXMK) -pv $(PACKAGE).dtx

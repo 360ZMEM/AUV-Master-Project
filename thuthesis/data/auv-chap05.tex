@@ -906,7 +906,7 @@ Jetson 与 PC104/VxWorks 之间的二进制通信链路需要在实物环境下�
 \scriptsize
 \setlength{\tabcolsep}{3pt}
 \caption{PySide6 上位机至 PC104/Zenoh 的分阶段联调证据}\label{tab:ch05-gui-pc104-staged}
-\begin{tabular}{@{}p{0.17\linewidth}p{0.24\linewidth}p{0.28\linewidth}p{0.23\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
 \toprule
 阶段 & 配置与样本 & 观测结果 & 证据边界 \\
 \midrule
@@ -940,7 +940,7 @@ Zenoh 旁路 & Stage 4 摘要记录 16 个 72 B \texttt{\$CKTH} 到达 \texttt{r
 \small
 \setlength{\tabcolsep}{4pt}
 \caption{PC104 故障注入与上层安全逻辑的分层基线}\label{tab:ch05-pc104-fault-layered}
-\begin{tabular}{@{}p{0.24\linewidth}p{0.27\linewidth}p{0.40\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}@{}}
 \toprule
 证据层 & 实验规模 & 主要结果 \\
 \midrule
@@ -970,7 +970,7 @@ Zenoh 旁路 & Stage 4 摘要记录 16 个 72 B \texttt{\$CKTH} 到达 \texttt{r
 \scriptsize
 \setlength{\tabcolsep}{3.5pt}
 \caption{真实 PC104--ROS2--行为树同步故障链与长时稳态结果}\label{tab:ch05-pc104-cross-layer}
-\begin{tabular}{@{}p{0.22\linewidth}p{0.30\linewidth}p{0.39\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.39\linewidth}@{}}
 \toprule
 证据单元 & 观测结果 & 安全语义与边界 \\
 \midrule
@@ -1075,7 +1075,7 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 \small
 \setlength{\tabcolsep}{4pt}
 \caption{ADC--TMR 全链路背景噪声回放与 45 Hz 半实物注入验证}\label{tab:ch05-mag-chain-noise-replay}
-\begin{tabular}{@{}p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}@{}}
 \toprule
 项目 & 结果 & 解释边界 \\
 \midrule
@@ -1197,19 +1197,11 @@ PC104 内部 & rx-to-pack & 1001 & 8.507 & 16.000 & 16.000 & 16.000 & 16.000 & -
 
 \subsection{仿真到实物的迁移性讨论}\label{sec:ch05-5-5-9}
 
-仿真侧的实验已经把``算法层面正确性''的证据建立得较充分，但工程论文必须主动回答一个更尖锐的问题，这些结论能否原样迁移到真实 AUV？把仿真结论直接当作实物结论是常见的过度推断，本节据此把迁移面临的障碍按动力学模型偏差、传感器噪声差异、通信时延分布与算力约束四类逐项展开。
-
-动力学模型偏差方面，仿真所用的船舶动力学水动力系数为经验估计值，与真实 AUV 存在偏差；这一偏差的影响是非对称的，状态估计与决策层结论受影响较小（它们主要依赖观测序列的统计特性），控制层结论受影响较大（控制律对水动力参数直接敏感）。本系统的应对是把 MPC 定位在制导层，让水动力偏差主要由内层 PID 通过实测调参吸收，而不让 MPC 自身假设过于精确的动力学。传感器噪声方面，仿真采用的丢包、线性漂移与脉冲尖峰模型，与真实环境中可能出现的相关噪声、背景磁场的低频噪声等更复杂频谱有差异；本系统的应对是用比预期真实噪声更恶劣的极端配置作压力测试，从而在不依赖噪声谱精确对齐的前提下给出鲁棒性的安全裕度。通信时延方面，仿真使用固定基线延迟叠加均匀抖动，真实声学链路的时延可能呈长尾分布；这对节点拓扑与行为树的影响相对可控（节点级缓冲已吸收大部分抖动），但对失联保护阈值的整定有直接影响，仿真中验证过的 1 秒失联阈值在真实链路中可能需要根据实测时延高分位重新校准。算力约束方面，Jetson 仿真等效测试了求解器的算力接口，但真机的频率限制、内存带宽与散热约束可能改变求解耗时分布；若真机求解时间超过控制周期，热启动机制会被打破，须以更短的预测时域或更稀疏的离散化作为退路。
-
-后续的场景迁移分三步推进：先把 S 弯与发卡路径迁移为仿真场景配置，补齐``几何极端加完整闭环''的组合工况；再把地形高程图与电缆中心线绑定，形成坡面横穿；最后加入声呐短时不可见、磁信号衰减、DVL 丢包与横流，形成综合极端场景。三步迁移的共同特点是``先在仿真内扩展、再迁到真机''，仿真内的扩展给出可重复、可消融的统计基线，真机迁移则只需在该基线之上叠加硬件物理偏差维度，避免一上来就让多个不确定性因素同时进入实验。
-
-上述四类迁移差距并非本文方法的失效项，而是分层验证阶梯有意留待硬件在环与实验室层解决的刻度：磁观测链路噪声、等效通电电缆磁场反演与载荷舱磁卫生构成后续实物证据链中三个各自独立、可交付的单元（其推进路径见第~\ref{sec:ch06-6-3}节），可在不改动上层算法接口的前提下逐层接入，而不构成对当前仿真结论的否定。
+本章仿真和数字孪生结果仅支撑相应模型、场景与评价口径下的算法结论，不能直接外推为真实 AUV 的性能。水动力参数、相关噪声、通信时延分布及 Jetson 的散热和资源竞争均可能改变闭环表现；真实系统还需以实测时延、热稳定性、传感器噪声和执行器响应复验。各项已完成处置、不可外推范围及剩余验证见第~\ref{sec:ch05-5-6}节和附录表~\ref{tab:ch05-negative-results}。
 
 \section{证据边界、负结果归因与剩余验证}\label{sec:ch05-5-6}
 
-本节把全章实验的负结果、口径限制和不可外推项集中收束为六个问题域：磁探测计量与验收口径、ES-EKF 统计一致性、在线先验与几何前提、不确定性感知控制证据、CBF 与原生因子闭环、实物通信与端到端时延。各域的边界归因、已采取处置与可写结论、剩余验证逐条汇总于附录表~\ref{tab:ch05-negative-results}；第~\ref{sec:ch05-5-5}节、第~\ref{sec:ch05-5-ctrl}节、第~\ref{sec:ch05-e2e}节 各结果主线只保留正向主结果与最小必要限定，相同局限统一指向该表。需要强调的是，该表``剩余验证''列并非未知缺口清单，而是已按可独立交付的实物证据链拆解的推进路径——每项均可在当前仿真结论之上增量验证，其向实物层推进的路线见第~\ref{sec:ch06-6-3}节，不构成对已有结论的否定。
-
-综合这六个问题域可见，当前方法的主要算法链已经闭合，Jetson 目标平台的独立求解器短时 clean run 已给出稳态周期余量，PC104 通信、watchdog、故障位到 ROS2 仲裁与行为树的同步零执行器安全链以及当前拓扑 30 min 稳态也已形成半实物证据；剩余工作集中在统计标定、分源置信映射、原生耦合闭环、真实 ADC/DVL/电压输入下的完整执行量时序、Jetson thermal soak 和系统级计量验证。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
+本节是全章证据边界的索引。磁探测计量、ES-EKF 统计一致性、在线先验几何前提、不确定性感知控制、CBF 与原生因子闭环、实物通信与端到端时延的已完成证据、可写结论与剩余验证，统一列于附录表~\ref{tab:ch05-negative-results}。结果小节仅保留与其结论直接相关的限定。
 
 \section{本章小结}\label{sec:ch05-5-8}
 

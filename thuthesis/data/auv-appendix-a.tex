@@ -11,7 +11,7 @@
 
 场景库采用“单因素分级 + 多因素联合”的设计。单因素场景用于识别某类观测退化对估计与控制的独立影响，综合压力场景用于检查多种不确定性同时出现时的闭环鲁棒性。令 \(p_{\mathrm{dvl}}\) 表示 DVL 观测在给定时段内的丢失概率，\(B_{\mathrm{sat}}\) 表示磁场硬饱和阈值，\(\eta_a\) 与 \(\eta_s\) 分别表示加速度计和声呐噪声的相对放大系数，\(v_c\) 表示海流速度。
 
-\begin{longtable}{@{}p{0.22\linewidth}p{0.20\linewidth}p{0.20\linewidth}p{0.28\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
 \caption{仿真场景及其学术用途}\label{tab:app-a-scenarios}\\
 \toprule
 场景 & 主要扰动 & 名义强度 & 用途 \\
@@ -36,7 +36,7 @@ DVL 极重度丢失 & 速度观测近乎不可用 & \(p_{\mathrm{dvl}}=0.90\) & 
 
 综合压力场景同时施加八类扰动。令 \(p_b\) 表示通信帧丢失概率，\(\dot b_a\) 表示加速度计偏置增长率，\(\lambda_z\) 表示深度尖峰的平均发生率，\(A_z\) 表示尖峰幅值。各量的名义值与物理意图列于表~\ref{tab:app-a-combined-stress}。
 
-\begin{longtable}{@{}p{0.24\linewidth}p{0.28\linewidth}p{0.38\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}@{}}
 \caption{综合压力场景的扰动参数}\label{tab:app-a-combined-stress}\\
 \toprule
 扰动源 & 名义参数 & 物理意图 \\
@@ -75,7 +75,7 @@ IMU 慢漂移 & \(\dot b_a=10^{-3}\,\mathrm{m/s^3}\) & 近似无充分温补时�
 
 六类故障模型定义如下。
 
-\begin{longtable}{@{}p{0.20\linewidth}p{0.35\linewidth}p{0.35\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}@{}}
 \caption{故障注入模型及其参数}\label{tab:app-a-chaos}\\
 \toprule
 故障类型 & 数学或逻辑模型 & 名义参数 \\
@@ -121,7 +121,7 @@ IMU 漂移 & \(\tilde{\boldsymbol a}(t)=\boldsymbol a(t)+\boldsymbol b_a(t)\)，
 \end{equation}
 其中 \(w_{e,0}\) 与 \(w_{u,0}\) 为基准权重，\(s_e\) 为低置信度跟踪权重增益，\(\gamma_u\) 为控制代价的最小缩放比例，\(k\) 为 S 型函数陡峭度，\(c_0\) 为置信度转折点。正文式\eqref{eq:ch04-control-scale}的整体缩放因子 \(s_u(c)\) 即本式方括号项，二者关系为 \(w_u(c)=w_{u,0}\,s_u(c)\)。
 
-\begin{longtable}{@{}p{0.20\linewidth}p{0.17\linewidth}p{0.53\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.53\linewidth}@{}}
 \caption{不确定性感知控制的名义参数}\label{tab:app-a-uampc-parameters}\\
 \toprule
 参数 & 名义值 & 含义 \\
@@ -144,7 +144,7 @@ IMU 漂移 & \(\tilde{\boldsymbol a}(t)=\boldsymbol a(t)+\boldsymbol b_a(t)\)，
 
 消融实验不以工程开关命名，而按被移除的机制定义。
 
-\begin{longtable}{@{}p{0.12\linewidth}p{0.25\linewidth}p{0.30\linewidth}p{0.23\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}@{}}
 \caption{不确定性感知控制消融变体}\label{tab:app-a-uampc-ablation}\\
 \toprule
 变体 & 定义 & 被隔离的机制 & 学术用途 \\
@@ -181,7 +181,7 @@ A4 & 令 \(s_e=0\) & 低置信度跟踪增益 & 分离跟踪权重放大作用 \
 \end{equation}
 其中 \(\boldsymbol e_k\) 为状态跟踪误差，\(\Delta\boldsymbol u_k\) 为控制增量，\(\boldsymbol Q(c)\) 与 \(\boldsymbol R(c)\) 分别为随置信度变化的跟踪和控制权重矩阵。
 
-\begin{longtable}{@{}p{0.27\linewidth}p{0.18\linewidth}p{0.45\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}@{}}
 \caption{代价函数的基准权重}\label{tab:app-a-cost-weights}\\
 \toprule
 代价项 & 基准权重 & 说明 \\
@@ -206,7 +206,7 @@ A4 & 令 \(s_e=0\) & 低置信度跟踪增益 & 分离跟踪权重放大作用 \
 
 硬约束用于保证物理可行性，速率约束用于限制相邻预测步的变化，带宽约束用于限制指令相对当前状态的偏离。设 \(u_k\) 为前向速度，\(\psi_{\mathrm{cmd},k}\)、\(z_{\mathrm{cmd},k}\) 和 \(T_{\mathrm{cmd},k}\) 分别为航向、深度和推力指令。
 
-\begin{longtable}{@{}p{0.27\linewidth}p{0.38\linewidth}p{0.25\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}@{}}
 \caption{模型预测控制约束}\label{tab:app-a-hard-constraints}\\
 \toprule
 约束 & 数学表达 & 名义范围 \\
@@ -234,7 +234,7 @@ A4 & 令 \(s_e=0\) & 低置信度跟踪增益 & 分离跟踪权重放大作用 \
 
 优化问题采用内点法求解。每个控制周期只更新当前状态、参考轨迹和置信度，并以上一周期最优控制序列移位后作为初值。名义配置见表~\ref{tab:app-a-solver}。
 
-\begin{longtable}{@{}p{0.25\linewidth}p{0.22\linewidth}p{0.43\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}@{}}
 \caption{数值求解的名义配置}\label{tab:app-a-solver}\\
 \toprule
 项目 & 名义值 & 说明 \\
@@ -324,7 +324,7 @@ A4 & 令 \(s_e=0\) & 低置信度跟踪增益 & 分离跟踪权重放大作用 \
 \small
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.04}
-\begin{longtable}{@{}p{0.235\linewidth}p{0.185\linewidth}p{0.285\linewidth}p{0.235\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.235\linewidth}>{\raggedright\arraybackslash}p{0.185\linewidth}>{\raggedright\arraybackslash}p{0.285\linewidth}>{\raggedright\arraybackslash}p{0.235\linewidth}@{}}
 \caption{核心实验的证据矩阵}\label{tab:app-a-data-sources}\\
 \toprule
 实验对象 & 样本量 & 可支撑结论 & 不可外推范围 \\
@@ -508,7 +508,7 @@ PC104--ROS2 零执行器稳态 & 独立 1800 s 稳态区间、30 个分钟级样
 \small
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.04}
-\begin{longtable}{@{}p{0.23\linewidth}p{0.27\linewidth}p{0.40\linewidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}@{}}
 \caption{代理极端场景的主导因子}\label{tab:app-a-proxy-scenarios}\\
 \toprule
 场景 & 主导因子 & 主要考察问题 \\
@@ -591,13 +591,13 @@ MPC·高 & 3/3 & 2.70 & 3.21 & 0 / 0 & 0.463 / 0.180 & 23.62 \\
 
 \section{证据边界、负结果归因与剩余验证}\label{sec:app-a-12}
 
-本节把全章实验的负结果、口径限制和不可外推项集中收束为问题域，而不是逐条复述前文结果。表~\ref{tab:ch05-negative-results}保留各类边界的原因、处置和剩余验证指向；正文各结果小节只保留正向主结果与最小必要限定，相同局限统一指向本表。需要说明的是，本表``剩余验证''列并非未知缺口清单，而是已按可独立交付的实物证据链拆解的推进路径——每项均可在当前仿真结论之上增量验证，其向实物层推进的路线见第~\ref{sec:ch06-6-3}节，不构成对已有结论的否定。
+本表集中列出各问题域的边界归因、已完成处置、可写结论和剩余验证。正文结果小节只保留其结论所必需的限定；剩余验证的分层推进见第~\ref{sec:ch06-6-3}节。
 
 \begingroup
 \small
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.08}
-\begin{longtable}[]{@{}p{0.16\linewidth}p{0.28\linewidth}p{0.31\linewidth}p{0.20\linewidth}@{}}
+\begin{longtable}[]{@{}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}@{}}
 \caption{证据边界与剩余验证汇总}\label{tab:ch05-negative-results}\tabularnewline
 \toprule\noalign{}
 问题域 & 边界归因 & 已采取处置与可写结论 & 剩余验证 \\
@@ -618,4 +618,4 @@ CBF 与原生因子闭环 & CBF 矩阵仍是手动设定点加运动学代理；
 \end{longtable}
 \endgroup
 
-这些结果共同表明，当前方法的主要算法链与真实 PC104 零执行器同步安全链已经闭合，剩余工作集中在统计标定、分源置信映射、原生耦合闭环、真实传感与执行量链、Jetson 热稳定和系统级计量验证。它们限定结论的适用范围，但不改变本文关于低成本窄带采集、声磁协同估计、不确定性感知控制和闭环恢复机制的核心论证。
+表中各结论均受其对应证据等级约束：仿真、数字孪生、数据回放、零执行器实物链路和执行器/水域试验不可互相替代。未完成项包括统计标定、真实传感与执行量链、Jetson 热稳定、系统级计量和水域试验。

@@ -3,7 +3,9 @@
 > 本文件是 `AGENTS.md` 分流后的 **macwin 侧主索引**（`uname` 返回 Darwin / 命令不存在时读本文件）。
 > **每次上下文清理/重置后，即使不是第一次进入，也必须完整读完本文件**，以在不重复探索的前提下恢复目标与约束。
 > 维护约定：既要「概括」又要「行号对应」（`文件#Lxx-Lyy`），便于精准跳读；发现新关键位置随时补行号。高度专业化子内容分流到子文档并在此登记路径（**不得在仓库根目录新建散文件**）。
-> 最后更新：2026-08-18（**事实源正式切换为 LaTeX**，见下方 §0.1；进入论文压缩阶段，计划见 [25_论文压缩计划.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/潜在待完成事项/25_论文压缩计划.md)）。
+> 最后更新：2026-08-25（本机 Windows/Cygwin 环境实测；写作构建与非 ROS 子模块/绘图依赖均已复验）。
+
+> **本机识别（2026-08-25）**：`uname` = `CYGWIN_NT-10.0-26200`。它既非 Linux 也非 Darwin，故依顶层 `AGENTS.md` 归入本文件的辅助侧；本机为 Windows 10.0.26200（PowerShell 7.4.0）。下文凡标有“macOS 历史记录”的内容均不得作为本机操作依据。
 
 ---
 
@@ -71,14 +73,10 @@
 
 ## 2. 已形成的原则（Principles）
 
-1. **⚠️ 命令必须带超时 + 防硬卡死（本侧头号铁律）**：本机（Darwin）长命令（网络、CLI 冷启动、大 PDF、递归 `find`/`ls -R`、含中文/复杂正则的 `grep`）极易卡死。
+1. **命令必须设置合理超时**：本机为 Windows/Cygwin；网络、TeX 编译、大 PDF 与递归搜索均须设置调用层超时。优先 `rg` 作文本/文件搜索，避免 `ls -R`、深层递归扫描和无时限网络请求。
    - **关键教训（2026-08-06 实测）**：`gtimeout`/`with_timeout.sh` **只能杀子进程，挡不住「工具/harness 层」的硬卡死**——前台 Shell 调用一旦卡死无法中断，事后也无法切后台。故超时包装器**不是**可靠护栏。
-   - **可靠规避（按优先级）**：
-     1. **搜索/遍历一律不用 Shell**：用 **Explore 子代理**（独立上下文，卡死只影响子代理）或直接 **Read** 已知文件。
-     2. **凡必须跑的 Shell，一开始就设 `run_in_background: true`**（切勿指望事后切后台）＋ Read 日志；后台命令即使硬卡死也不阻塞前台。
-     3. 网络类仍用自带开关：`curl --max-time N` / `wget --timeout=N`。
-     4. 万不得已在前台 grep：加 `LC_ALL=C` + 固定串 `-F`，避开中文多字节正则触发的卡死。
-   - **已知会卡死的操作**：`ls -R`、深层 `find /`、无 `--max-time` 的 `curl`、含中文的 `grep -rnE`、全量读 773KB AI 对话。
+   - 网络类可用 `curl.exe --max-time N` 或 Cygwin `wget --timeout=N`；PowerShell 原生命令应显式传入超时参数。
+   - `gtimeout`、`with_timeout.sh` 是 macOS 历史工具，未在本机确认；Windows 侧以调用工具的 `timeout_ms` 为准。
 2. **目标导向 + 上下文回归**：每次上下文重置后必读本文件；不做无意义重复扫描。
 3. **写作优先于指标 / 创新点克制不回避 / 改动走奥卡姆剃刀且正交**（与 Linux 侧一致，红线见 [rating.md](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/rating.md)）。
 4. **本侧只做辅助、不碰实验代码逻辑**：本侧不运行仿真、不改 ROS/控制代码；只做检索、绘图、文件读写、引用维护。涉及实验的改动交 Linux 侧。
@@ -90,35 +88,39 @@
 
 ---
 
-## 3. 能力契约与 SOP（macwin 侧，均已实测）
+## 3. 能力契约与 SOP（Windows 本机实测，2026-08-25）
 
-> 环境：macOS 26.4.1（Darwin arm64）。Homebrew 在 `/opt/homebrew`；另有 `/usr/local`（TeXLive 2026、pandoc、gs）。系统 python3 = 3.9.6（`/usr/bin/python3`，**几乎无第三方库**，pip 21.2.4 可联网）。**Node/npm 缺失**。
+> 环境：Windows 10.0.26200，PowerShell 7.4.0（Core），并装有 Cygwin（`uname` 为 `CYGWIN_NT-10.0-26200`）。`winget 1.29.290` 可用。`python 3.9.18` 来自 Conda 环境；`pip 25.1.1` 可用，已安装 `bibtexparser 1.4.1` 与 PyMuPDF 1.24.14，未安装 `pypdf`。Node 24.14.0 / npm 11.9.0 已安装。2026-08-25 已安装 jq 1.8.2、QPDF 12.4.0、Tesseract 5.4（`chi_sim`/`eng`/`osd`）及 GNU Make 4.4.1；draw.io 31.3.2 位于 `E:\Program Files\draw.io`。
 
-### 3.0 超时兜底契约（贯穿所有命令）
-> ⚠️ **超时包装器只杀子进程，挡不住 harness 层硬卡死**（见 §2.1）。真正可靠的护栏是 **① 搜索用 Explore 子代理/Read；② Shell 一开始就 `run_in_background:true`**。下表为「命令内部」的时长约束，非硬卡死护栏。
+### 3.0 Windows 命令与 PowerShell 契约
+> 默认 Shell 为 PowerShell；`pwsh` 已正确安装在 `C:\Program Files\PowerShell\7\pwsh.exe`，版本 7.4.0；系统另有旧版 Windows PowerShell。用户 profile 通过 Conda hook 后显式 `conda activate pytorch`，即默认进入 `pytorch` 环境。profile 也会仅在 `WINDIR` 缺失时从 `SystemRoot` 补设它：这是 TeX Live 2023 `runscript.tlu`/`latexmk` 在本机会因空变量崩溃的必要兼容修复。自动化仍优先 `pwsh -NoLogo -NoProfile`，但调用 TeX 时须显式设置 `WINDIR` 或加载 profile。
+
+> **非 ROS 工具环境**：另建 Conda 环境 `auv-nonros`（Python 3.14.6），用于论文绘图、MCAP/rosbag 离线解析和子模块测试，避免破坏默认的 Python 3.9 `pytorch` 环境。该环境已安装并通过一致性检查：CasADi、MCAP/`mcap-ros2-support`、rosbags、NumPy/SciPy/Matplotlib/Pandas/Pillow、PySide6/pyqtgraph、PyYAML、pytest、py-trees 等。使用方式：`conda activate auv-nonros`。
 
 | 场景 | 推荐做法 | 备注 |
 |---|---|---|
-| **搜索/遍历（首选）** | **Explore 子代理** 或 **Read** | 不进前台 Shell，杜绝硬卡死 |
-| **必须跑的 Shell** | 一开始就 `run_in_background:true` → Read 日志 | 后台命令硬卡死也不阻塞前台 |
-| 网络（curl/wget） | `curl --max-time 15 -s ...` / `wget --timeout=15` | 网络类优先自带开关 |
-| 命令内部时限 | `gtimeout <秒> <cmd>` 或 `with_timeout.sh` | 仅约束子进程，非硬卡死护栏 |
-| 前台 grep（万不得已） | 加 `LC_ALL=C` + `-F` 固定串 | 避开中文多字节正则卡死 |
+| 场景 | 推荐做法 | 本机状态 |
+|---|---|---|
+| 搜索/遍历 | `rg` / `rg --files`，限定目录 | `rg` 由工作流提供；避免递归扫描系统目录 |
+| 网络 | `curl.exe --max-time 15 -sL …`；或 `wget --timeout=15` | `curl.exe` 8.16.0、Cygwin `wget.exe` 均可用 |
+| PowerShell | `pwsh -NoLogo -NoProfile -Command …` | 已验证可用 |
+| Bash/Make | Makefile 的 Bash/awk/test 由 Cygwin 提供 | GNU Make 4.4.1 已装；`make auv-thesis` 可启动 |
 
-### 3.1 电脑操纵（Computer Use MCP）
-- **权限现状**：`accessibility: granted` + `screenRecording: granted`（**均已授权，可点击/输入/读 UI + 截图看屏**，2026-08-06 用户授权后复测通过）。
-- **可用工具**：`mcp_Computer_Use_*`（click / type_text / press_key / scroll / drag / list_apps / get_app_state / perform_action / set_value 等；schema 需先经 ToolSearch 载入）。
-- **SOP**：可用 accessibility 树（`get_app_state`/`list_apps`）+ 点击/输入 + 截图完成桌面自动化与视觉校验。drawio 视觉自检可用截图或 Read 导出 PNG 两种方式。
+### 3.1 电脑/浏览器操纵
+- macOS accessibility、screen-recording 及 `mcp_Computer_Use_*` 的历史结论不适用于本机，且本次会话未暴露该类桌面 MCP 工具。
+- 已提供 in-app browser 技能；需要登录网页、院校认证或视觉网页操作时，先读取该技能说明并以该能力实测为准。
 
 ### 3.2 互联网检索与抓取
-- **WebSearch / WebFetch**（deferred，用 ToolSearch `select:WebSearch,WebFetch` 载入）：已实测 WebSearch 可返回学术结果（OUP/Wiley/MDPI/IEEE 等，含 DOI）。WebFetch 对 **认证/私有页返回空**，不能替代院校下载。
-- **命令行**：`curl`、`wget`、`jq` 齐备。**Crossref REST 已实测可用**（见 §3.3）。
+- 可用 Web 检索工具与 `curl.exe`/Cygwin `wget.exe`。`jq` **未安装**，因此 Crossref JSON 先用 PowerShell `ConvertFrom-Json` 或 Python 处理；如后续高频检索，可经 `winget` 安装 jq。
+- 本次未重新向 Crossref 发起联网请求，故保留其历史 SOP，但不把“本机端到端已实测”作为事实。
 - **院校认证下载 SOP（待实操验证）**：公开 PDF 直接 `curl --max-time N -L -o`；付费墙走浏览器工具登录注入 cookies，或用户手动下载后放入 `参考文献/文献PDF/`。
 
-### 3.3 文献检索 → BibTeX → GB/T 7714-2015（★核心，已端到端实测通过）
-**工具链已确认**：TeXLive 2026（`xelatex`/`latexmk`/`biber`/`bibtex`）、`biblatex-gb7714-2015` 与 `gbt7714` 宏包均在（`kpsewhich gbt7714.sty` 命中）；pandoc 3.10（含 `+lua`，无独立 pandoc-citeproc）；**无 CSL 版 7714** → 走 biblatex/bst 路线。`bibtexparser` 等 py 库缺失但 pip 可装。
+### 3.3 文献检索 → BibTeX → GB/T 7714-2015
+**本机已确认**：TeX Live 2023 的 `xelatex`、`biber 2.19`、`bibtex`、`pdftotext` 可启动；`biblatex-gb7714-2015`（`gb7714-2015.bbx`）和 `gbt7714.sty` 均存在；Pandoc 3.1.9（`+lua`）可用；`bibtexparser` 已安装。
 
-**SOP（已跑通，产物正确）：**
+**Windows 修复结论**：此前 `latexmk.exe` 的 Lua 错误由缺失的 `WINDIR` 引起，并非 TeX Live 安装损坏；按 §3.0 profile 兼容修复后 `latexmk 4.79` 可启动，GNU Make 也已安装。实际 `make auv-thesis` 会进入 XeTeX，但当前失败于仓库配置 `auvsetup.tex:20` 的 `degree-category` 未定义键；该项属于 ThuThesis 源/配置兼容性，非环境依赖，须单独核对模板版本后再改。
+
+**历史 SOP（macOS 已跑通；本机待在 TeX 修复后复验）：**
 1. **检索**（Crossref）：
    `curl --max-time 15 -s "https://api.crossref.org/works?query.bibliographic=<关键词>&rows=3&select=DOI,title,author,container-title,published" | jq '.message.items[] | {DOI,title:.title[0]}'`
 2. **DOI → BibTeX**（两条路径都实测可用）：
@@ -130,19 +132,22 @@
    - **字段完整性准则**：若渲染缺作者/年份/来源/页码 → bibtex 字段不全，需回 Crossref/出版社补 `author/year/booktitle|journal/pages/volume/number`。
 - 落盘：bibtex 与 GB/T 文本 → [参考文献/文献引用信息/](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/参考文献/文献引用信息)。
 
-### 3.4 多格式文件阅读（macOS 侧比 Linux 侧更全）
+### 3.4 多格式文件阅读（Windows 本机）
 | 格式 | 方法 | 备注 |
 |---|---|---|
-| `.pdf`（文本层） | `with_timeout.sh 15 pdftotext -layout <pdf> -`（poppler 已装）；元信息 `pdfinfo` | **必须带超时**；比 Linux 侧的 gs 方案更准，中文 OK |
-| `.pdf`（扫描/图纸） | 无 OCR（`tesseract` 未装）；选读或截图/交人工 | 图纸类 txtwrite 仅出图框文字 |
-| `.docx` | `pandoc -t plain <file>.docx` | 已在 Linux 侧验证；本侧 pandoc 3.10 同理 |
+| `.pdf`（文本层） | `pdftotext -layout <pdf> -`；元信息 `pdfinfo` | Poppler 23.02.0 已装 |
+| `.pdf`（扫描/图纸） | PyMuPDF 可用；OCR 需另装 Tesseract | `tesseract` 未安装 |
+| `.docx` | `pandoc -t plain <file>.docx` | Pandoc 3.1.9 已装 |
 | `.md`/`.txt`/代码 | Read 工具；结构用 `grep -nE "^#{1,3} "` | 首选 |
 | `.png/.svg/.jpg` | Read 工具（多模态直接看图） | 架构图/结果图 |
 | **大文件（>~80KB / >600 行）** | **Read 分块**（`offset`+`limit`，每次 300–400 行，按行锚点定位）或 **Explore 子代理**（只读摘录） | ⚠️ **整读会触发「系统未知错误」**（如 `05new_experiments_and_discussion.md` 约 93KB）；禁止一次性整读 |
 | `.drawio` | 视为 XML Read；或看同名 `.png/.svg` | |
-- 未装：`mutool`/`qpdf`/`tesseract`/`tree`/`node`。需要时 `brew install`。
+- 已装：`jq`、QPDF、Tesseract（含简体中文语言数据）和 GNU Make。`mutool` 仍未安装，但 PyMuPDF 已满足大多数 PDF 检查任务；Node/npm 已安装。
 
-### 3.5 drawio-skill（架构图直接产出，★本侧独有优势）
+### 3.5 draw.io（Windows 已验证）
+- draw.io 31.3.2 已安装在 `E:\Program Files\draw.io\draw.io.exe`，并已加入用户 PATH；新 PowerShell 中可通过 `draw.io --version` 和 `draw.io --help` 调用。可按既有四件套规范绘制/导出架构图。
+
+> 以下为 macOS 历史流程参考，**未在本机验证**：
 - **技能存在**：`/Users/bytedance/.trae-cn/skills/drawio-skill`（Skill 调用名 `drawio-skill`）。
 - **CLI 已装且可运行**：`drawio`（Homebrew，`/opt/homebrew/bin/drawio`，实测 `--version`=30.3.14）；App 在 `/Applications/draw.io.app`。
 - **基本流程**（详见技能文档）：① 查依赖 → ② 规划 shapes/布局 → ③ 写 `.drawio` XML → ④ **预览导出（不加 `-e`）** `drawio -x -f png -s 2 -o d.png in.drawio` → ⑤ 视觉自检（本侧 accessibility OK 但截图受限，可直接 Read 导出的 PNG 做多模态自检）→ ⑥ 评审改 → ⑦ **最终导出加 `-e`** 并对 PNG 跑 `scripts/repair_png.py`（修 IEND 截断）。
@@ -150,7 +155,11 @@
 - **风格约定**（见 [project_memory](context://memory/projects/-Users-bytedance-coding-AUV-Master-Project/project_memory.md)）：IEEE 风格、Noto Serif/Times New Roman、主干线宽 3/次要 2、反馈虚线 DASH、画布 1440×940、严禁重叠、学术抽象块（非代码文件名）。
 - 现有 13 张系统图（`.drawio/.png/.svg/.drawio.png` 四件套）在 [docs/thesis/figures/architecture/](file:///Users/bytedance/coding/AUV-Master-Project/docs/thesis/figures/architecture)；入选 LaTeX/Beamer 的图按 §3.6 契约额外生成 PDF/slide 变种。
 
-### 3.6 LaTeX 与 Beamer 编译契约（2026-08-07 实测）
+### 3.6 LaTeX 与 Beamer 编译契约（Windows 调整）
+- `thuthesis/Makefile` 依赖 Bash、GNU Make、`awk` 与 `test`；本机现有 Cygwin + GNU Make 4.4.1，且 `latexmk` 已由 `WINDIR` 兼容设置修复。Windows Makefile 的日志门禁改为调用 PowerShell，避免原生 Make 无法执行 Cygwin 的无扩展名 `awk` shim；运行前需加载 PowerShell profile，或显式执行 `$env:WINDIR=$env:SystemRoot`。
+- 2026-08-25 实测：初次 `make auv-thesis` 读取了 TeX Live 自带的旧 ThuThesis 7.3.1 缓存日志，才出现 `degree-category` 未定义；强制重建后正确读取仓库 ThuThesis 7.6.0，正式 `make auv-thesis` 已通过并生成 191 页 `auv-thesis.pdf`（5,953,448 bytes）。`make defense` 也已通过，生成 20 页 `auv-defense.pdf`（1,718,502 bytes）；Beamer Makefile 的 Python 调用现可通过 `PYTHON` 覆盖。
+
+> 以下为 macOS 历史验收记录，**不作为本机能力结论**：
 - 详细事实锚点：[首轮格式化与同步契约：环境与模板状态](file:///Users/bytedance/coding/AUV-Master-Project/毕业设计写作文档/LaTeX迁移与答辩/首轮格式化与同步契约_20260807.md#L48-L128)。
 - **ThuThesis**：仓库内 7.6.0；项目入口 `auv-thesis.tex` 固定 XeLaTeX + BibLaTeX/Biber + `gb7714-2015` + Fandol。`cd thuthesis && gtimeout 300 make auv-thesis` 会先检查第 1–6 章及附录 A 的 Markdown→LaTeX 同步状态和文献暂存，再构建 170 页 A4 F3 文档；当前无未解析引用、缺字或 Overfull。
 - **ThuBeamer 1.2**：官方 `make beamer` 的 PdfLaTeX 路径不可作为 macOS 入口；项目入口 `auv-defense.tex` 固定 XeLaTeX + Fandol + 16:9。`cd thubeamer-1.2 && gtimeout 240 make defense` 已从干净构建状态生成 14 页骨架，BibTeX 引用已解析，日志无溢出。
@@ -189,27 +198,30 @@
 
 ---
 
-## 5. 当前情况（预备操作阶段快照，2026-08-07）
+## 5. 当前情况（Windows 本机快照，2026-08-25）
 
 ### 5.1 预备任务 DoD 核对（本侧计划书 `#L11-L14`）
 | 预备任务 | 状态 | 结论 |
 |---|---|---|
-| 确认电脑操纵能力（computer use） | ✅ | accessibility=granted；screenRecording=**denied**（截图受限，见 §3.1） |
-| 确认联网检索/下载 | ✅ | WebSearch 可用；Crossref 可用；院校认证下载 SOP 待实操 |
-| 确认 bibtex + GB/T 7714-2015 | ✅ | **端到端实测通过**（§3.3），产出格式正确 |
-| 确认多格式阅读（PDF/docx/代码/drawio） | ✅ | pdftotext/pandoc/Read 齐备（§3.4） |
-| 确认 drawio-skill 存在与流程 | ✅ | 技能 + CLI(v30.3.14) + App 均在（§3.5） |
-| 建立 `AGENTS_macwin.md` | ✅ | 本文件 |
-| 超时兜底原则 + 包装器 | ✅ | §2.1 / §3.0 / `工具/with_timeout.sh` |
+| 确认平台与 PowerShell | ✅ | Windows 10.0.26200 / Cygwin；`pwsh` 7.4.0 正常 |
+| 确认电脑操纵能力 | ⚠️ | 本会话未提供原 macOS Computer Use MCP；浏览器能力需按本机会话实测 |
+| 确认联网检索/下载 | ⚠️ | curl/wget 可用；Crossref 本机尚未复验；院校认证下载仍需人工登录 |
+| 确认 BibTeX + GB/T 7714-2015 | ⚠️ | 宏包/Biber/latexmk/Make 均可用；论文构建受 `degree-category` 源配置错误阻断 |
+| 确认多格式阅读 | ✅ | pdftotext/pdfinfo、Pandoc、PyMuPDF、QPDF 与中英文 OCR 可用 |
+| 确认 draw.io 产出 | ✅ | draw.io 31.3.2 已验证，可经用户 PATH 调用 |
+| 建立/维护 `AGENTS_macwin.md` | ✅ | 本文件已更新为本机结论 |
+| 超时原则 | ✅ | 采用 PowerShell/工具调用超时；不依赖 macOS `gtimeout` |
 
 ### 5.2 与 Linux 侧的并行态势
 - Linux 侧已完成 P0 预备并进入 **P1 第五章审核**；已产出 dashboard/plan/rating/审核报告。
 - 本侧已完成引用信息库和正文引用点的首轮收口；文献 PDF 仍待用户经院校认证下载。最终架构图统一在 `docs/thesis/figures/architecture/`，过渡目录 `相关插图（架构图）/` 保持为空。
 
 ### 5.3 已知约束/风险
-- Computer Use 的 accessibility 与 screenRecording 均已授权；drawio 可通过桌面截图或读取导出 PNG 两种方式视觉自检。
-- 付费文献墙 → 需浏览器 cookies 或用户手动下载，尚未实操验证。
-- 系统 python3 第三方库匮乏 → 优先命令行工具链（curl/jq/pdftotext/latexmk），必要时 `pip install`/`brew install`。
+- TeX Live/Make 依赖已修复；当前论文构建被 `auvsetup.tex:20` 的 `degree-category` 未定义键阻断。应先核对该配置键所对应的 ThuThesis 版本，再决定是否修改源文件。
+- `mutool` 仍缺，但不阻碍当前 PDF/OCR/文献任务；需要 MuPDF CLI 时再补。
+- 两个 Git submodule 均已初始化并可测试：`AUV-Master-Mag` 在 `auv-nonros` 下 164 项测试全通过；`hardware_wrappers/fangkong_adc` 的 56 项测试全通过。后者修复了 Windows 将相对校准文件路径序列化为反斜杠的问题，现统一使用跨平台 POSIX 相对路径。
+- 付费文献墙仍需用户人工登录；不自动注入 cookies 抓取。
+- `python` 指向 Conda Python 3.9.18，`py` 启动器不存在；Python 任务统一用 `python -m pip`，避免依赖 `py`。
 
 ### 5.4 LaTeX 首轮格式化快照（F0）
 - 6 章 canonical 正文约 62 个图片引用，路径全部存在，但当前全部引用 PNG；入选论文的架构/曲线图需补同源 PDF，入选答辩的高密度图按需补 `_slide_169` 变种。
