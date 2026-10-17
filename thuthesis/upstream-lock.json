@@ -1,0 +1,26 @@
+{
+  "url": "https://github.com/tuna/thuthesis.git",
+  "tag": "v7.7.1",
+  "tag_object": "7ebfb7c11bb32477e00b37c18f45028524048cc5",
+  "commit": "8b4d9443f39275d0492236ae4bfcd4532b799972",
+  "runtime_sha256": {
+    "LICENSE": "5f05fcf6ef25a6c31bccd2df7c0c46b23107bbeb2ce5cdba74efb5cc357f4dbb",
+    "dtx-style.sty": "3526d857dad65688a065a7a8eed81d488066de39ad911fa852494ee33a37bc67",
+    "thu-fig-logo.pdf": "a49220ee5b4ecd6afcdc694e0cc75a2bb84d42d19e3facee4b88f70268dbbb4d",
+    "thu-text-logo.pdf": "5db987a65995a590fed4b8430a55795097c5be58980dfe6116daa28be32953c8",
+    "thuthesis-author-year.bbx": "7fdf72deab70fe36691e5f4a28ef9e40483de9e55bef5870777002862fdcf8fc",
+    "thuthesis-author-year.bst": "a1c512f3c22bf89485c2eaaca6738fc70882952de41c2ceb7833f0b796f4c771",
+    "thuthesis-author-year.cbx": "93aa95781a1a8cfe8da003eb1e236c4264e3200dcb3a48f454257e6ecbc79742",
+    "thuthesis-bachelor.bbx": "557f6021d5ce2184cc11247a6a76a7449d0b557401125b9143ead3963ee6582d",
+    "thuthesis-bachelor.bst": "3667911331d823a018b1f224237d95c35c1b367506a9d7a028d09a6bc735fd7a",
+    "thuthesis-bachelor.cbx": "a917867267e854335d73a462d59a4fb5b9daf7bdd3d7b384983420acffeb0f32",
+    "thuthesis-inline.cbx": "56ffcee2b830b7255a000dda5bf4884f15e771958c09344fe22cb0bf4f0389dc",
+    "thuthesis-numeric.bbx": "bc3ca176754e90cc74bd5ec964a6d754bd20b824d8e5375f905f25dd40c90270",
+    "thuthesis-numeric.bst": "cc5bc236aecad4404250c6646d338ad0eaa989abbc1e11716eeef0d66751c5f9",
+    "thuthesis-numeric.cbx": "858966c5b1529bebec6fa8b38192a428ed4b524343cdb1e1dc8cf2a4dfac6856",
+    "thuthesis.cls": "4cbb87b799e24dce8b2e089893eafcd2f94c0ca50caa4f4f36fa9ebbb1872021",
+    "thuthesis.dtx": "79bf372b7e9d2ae640dbbb483ae35c9cfd9ac8983b7d807bd6606295037ddec6",
+    "thuthesis.ins": "504c9ae56ece6f9d3fcfada8197bbdf71cc3e9d2e497762bc68c4e4c2c32e8d2"
+  },
+  "rollback_snapshot": "thuthesis/backups/template-switch/20261013T131439138343"
+}

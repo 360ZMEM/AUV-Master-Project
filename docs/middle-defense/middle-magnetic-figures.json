@@ -1,0 +1,99 @@
+{
+  "purpose": "中期报告专用重绘；原学位论文、历史图片、旧脚本和实验结果保持只读",
+  "regenerate": "python3 tools/plot_middle_magnetic.py",
+  "script_sha256": "d21bb7ff3a69bb09a9f52cf8e087cd1233101aca84b192a228508e5f636e084d",
+  "matplotlib_version": "3.5.1",
+  "font": {
+    "path": "/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf",
+    "sha256": "a3820003227d4abe31fe28b493200d94a849ccfd078b50a019264f70353020b0",
+    "family": "FandolSong",
+    "minimum_pt": 9
+  },
+  "expected_include_width_cm": 15,
+  "original_plot_sources_and_data": {
+    "tools/plot_fwhm_v2_publication.py": "0f41ef71eedf68e40f2a21891fc4ed983ab16f2d71deab99ac5f9aaed61e521a",
+    "tools/plot_v2_simulation_closure.py": "137c5bf7f72029ae1275082e8252815b95f5224d5855e3c0136a564d4cf496ea",
+    "tools/plot_v2_robustness_thesis_summary.py": "cb8e6d459dae13a3e6decf84e93cc9cb95b284f47f06cf850c7a43db8d79d6b3",
+    "tools/thesis_plot_style.py": "bbaef5aa64a29647046295d59c14053aaeb0a3d090c683ad5478d27c51a383f0",
+    "AUV-Master-Mag/results/v2/stability_comparison/summary.json": "778ab4f5157c03229d2fc5883d77074c1851b8afa55eb1284c2df9bddb3f29ef",
+    "AUV-Master-Mag/results/v2/stability_comparison/per_run.csv": "024492ee5f3f8875fe7956e133ddee37719f05145ce098b89383043fb5efb403",
+    "AUV-Master-Mag/results/v2/shape_guard_validation/summary.json": "60e9c0da0e2e714aeb0515d1472e8872d940515e3e096eee1016b09a7206c9dc",
+    "AUV-Master-Mag/results/v2/shape_guard_validation/per_run.csv": "70ab6fa11c562e49dd3257e98df702cf5ac9cb39f2b7222b4ac74e5f259dc32e",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/wire_seed_101.csv": "1cb6853993671761b6fc5e04e873d1d2689df817e4cc187bffad73f74a7e07ea",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/no_source_seed_101.csv": "62616d13b38a2d1aec1ded3f57fbcc3d115821d2203cbcde92ca593a1498f8bb",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_102.csv": "ad2e142b1985d9ab7c646af527fdfd3bf41232e5c230996e8007d9b624f26e05",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_103.csv": "d5c8b1ce896628c5fef0ffdaa393fe436a59c6dc189603e7154f1f7c362ad055",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/dipole_seed_101.csv": "55db474534a3daaf03d1e95c5c43df448ebb1677d654f7d368d9f52eb52f19d2",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_102.csv": "ac7facf214f285d4bb79693a88e147a29ef16c49c276e90cb941d25e4ac0690c",
+    "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_103.csv": "6ef15aaf0b7688ce4d76b989127e612b989a27b837e00400c443d6f2ce3268e3",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/plan.json": "1d3e8b20c17db4da4871fc29f9d287ca85144d830380811f6695a0f77aa25fdc",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/manifest.json": "efd3168c22656ef1cf4699bfab6f2d9c710cddd615730bb71955aad869c09d15",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/summary.json": "d43723efc9c52e335ed7631eb1cd2af9dac18d305ab15cb5e4931950629f48eb",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/steady_minus_legacy_seed501.csv": "00cb39a22b302c4c4236e4501de8ee99e24dfd12086272d3269b61eec77315cf",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/steady_minus_supervised_seed501.csv": "d9c6c589912af0d7445526486ad8d6e45404e97ff32e463cdf3f4a28bfa7d1f9",
+    "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/fused_neighbor_legacy_seed501.csv": "ce67a8f94a23226f7896eea714753bd3ae82a48db829dec6910c50a85e5ec8f9"
+  },
+  "figures": [
+    {
+      "name": "magnetic_stability",
+      "original_figure": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "original_figure_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+      "adaptation": "保留四面板；缩短类别标签与标题，图例改为两行，全部文字至少9pt。箱线图与原图一致不显示离群点；风险面板仍计入全部大误差。",
+      "scope": "5600次方法运行，7场景×4方法×200；MAE与箱线图仅发布结果，发布率与大误差发布率分母为全部样本。",
+      "width_cm": 15,
+      "height_cm": 12.573,
+      "minimum_text_pt": 9.0,
+      "canvas_bounds_check": "PASS",
+      "outputs": {
+        "thuthesis/middle/figures/magnetic_stability.pdf": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+        "thuthesis/middle/figures/magnetic_stability.png": "e89d34c6658805ef0fb3aed075399afb8acccd060e2e5eadfc3e0cf7c8d724d8"
+      }
+    },
+    {
+      "name": "magnetic_shape_guard",
+      "original_figure": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "original_figure_sha256": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca",
+      "adaptation": "由四面板精简为两面板：合并正确模型发布率，省略残差散点；完整保留双向失配和全部7组正确声明场景，不改变样本或统计口径。",
+      "scope": "独立种子200–399，9场景×2质量门×200=3600次方法运行；双向失配对应400条唯一剖面。",
+      "width_cm": 15,
+      "height_cm": 10.414,
+      "minimum_text_pt": 9.0,
+      "canvas_bounds_check": "PASS",
+      "outputs": {
+        "thuthesis/middle/figures/magnetic_shape_guard.pdf": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+        "thuthesis/middle/figures/magnetic_shape_guard.png": "3b107c1f110bc6a046804a4d7855bbd688eede6592e4e0966d13714a2dd9d6ed"
+      }
+    },
+    {
+      "name": "magnetic_mission_process",
+      "original_figure": "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+      "original_figure_sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+      "adaptation": "完整过程地图改为通栏，其下保留横向中心与真实横偏两图；去掉图内重复埋深说明并移至图注。未按业务阶段过滤核心误差。",
+      "scope": "地图、中心和无源终点使用种子101；横偏包含两场形×种子101/102/103的全部跟踪样本；核心[5,75]m。",
+      "width_cm": 15,
+      "height_cm": 12.7,
+      "minimum_text_pt": 9.0,
+      "canvas_bounds_check": "PASS",
+      "outputs": {
+        "thuthesis/middle/figures/magnetic_mission_process.pdf": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+        "thuthesis/middle/figures/magnetic_mission_process.png": "7064e462afeec1dfcae6a5eba4efe0ba4eb8a02bff36fd891d337aa322d0ad0d"
+      }
+    },
+    {
+      "name": "magnetic_supervision",
+      "original_figure": "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf",
+      "original_figure_sha256": "2f59e7131034071a9422f4e685afcd47e7f9f1b4675fe6c91c3b772e95c3d619",
+      "adaptation": "保持两个案例与原数据；缩短标题，图例移至下方两行，外部参考条件与监督拒绝结论移入图注。",
+      "scope": "独立留出种子501；steady_minus旧链/监督完整核心轨迹，fused_neighbor旧链发布几何及载体误差。监督含外部目标参考，不是等信息磁精度排名。",
+      "width_cm": 15,
+      "height_cm": 9.270999999999999,
+      "minimum_text_pt": 9.0,
+      "canvas_bounds_check": "PASS",
+      "outputs": {
+        "thuthesis/middle/figures/magnetic_supervision.pdf": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+        "thuthesis/middle/figures/magnetic_supervision.png": "0772235b9f554311737dec7cc2c569ee4270be17014c8c617f673decdbd50fc9"
+      }
+    }
+  ],
+  "validation": "所有聚合量由CSV重算对照；轨迹SHA核验；画布越界检查；最终排版须逐页视觉复核。"
+}

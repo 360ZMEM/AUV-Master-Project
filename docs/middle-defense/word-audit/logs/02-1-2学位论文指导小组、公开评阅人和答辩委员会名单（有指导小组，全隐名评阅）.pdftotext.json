@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "pdftotext",
+    "-layout",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/pdf/02-1-2学位论文指导小组、公开评阅人和答辩委员会名单（有指导小组，全隐名评阅）.pdf",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/text/02-1-2学位论文指导小组、公开评阅人和答辩委员会名单（有指导小组，全隐名评阅）.pdf.txt"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

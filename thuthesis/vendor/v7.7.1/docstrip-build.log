@@ -1,0 +1,31 @@
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xetex)
+ restricted \write18 enabled.
+entering extended mode
+(./thuthesis.ins (/usr/share/texlive/texmf-dist/tex/latex/base/docstrip.tex
+Utility: `docstrip' v2.6a <2020-11-23>
+English documentation    <2020-11-23>
+
+**********************************************************
+* This program converts documented macro-files into fast *
+* loadable files by stripping off (nearly) all comments! *
+**********************************************************
+
+********************************************************
+* No Configuration file found, using default settings. *
+********************************************************
+
+)
+
+Generating file(s) thuthesis.cls dtx-style.sty 
+
+Processing file thuthesis.dtx (cls) -> thuthesis.cls
+                              (dtx-style) -> dtx-style.sty
+File thuthesis.dtx ended by \endinput.
+Lines  processed: 7041
+Comments removed: 2605
+Comments  passed: 0
+Codelines passed: 4427
+
+ )
+No pages of output.
+Transcript written on thuthesis.log.

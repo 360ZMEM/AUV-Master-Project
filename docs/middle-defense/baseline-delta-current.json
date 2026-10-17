@@ -1,0 +1,21 @@
+{
+  "baseline_count": 504,
+  "changed": [
+    "thuthesis/auv-thesis.aux",
+    "thuthesis/auv-thesis.blg",
+    "thuthesis/auv-thesis.fdb_latexmk",
+    "thuthesis/auv-thesis.log",
+    "thuthesis/auv-thesis.pdf",
+    "thuthesis/auv-thesis.synctex.gz",
+    "thuthesis/auv-thesis.xdv",
+    "thuthesis/Makefile",
+    "thuthesis/thuthesis-author-year.cbx",
+    "thuthesis/thuthesis-bachelor.bbx",
+    "thuthesis/thuthesis-bachelor.cbx",
+    "thuthesis/thuthesis-numeric.bbx",
+    "thuthesis/thuthesis-numeric.cbx",
+    "thuthesis/thuthesis.cls",
+    "thuthesis/thuthesis.dtx"
+  ],
+  "unchanged_count": 489
+}

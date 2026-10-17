@@ -1,0 +1,672 @@
+{
+  "source": "相关附件和参照/word模板(202605)/04摘要.doc",
+  "source_sha256": "91be1f63afcae0480d236153c4061f12d9ff52f6b759b630d8dddd283bf75b61",
+  "converted_docx_sha256": "97310e34a5e1c4c5c42bbdc5b7d2ddbe2edb0fcb8a454ef44115c2f7b7462e46",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId2"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "fmt": "upperRoman"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "lines",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "200"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "Style13": {
+      "type": "character",
+      "styleId": "Style13",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style13",
+      "pPr": {},
+      "rPr": {}
+    },
+    "1": {
+      "type": "character",
+      "styleId": "1",
+      "name": "标题 1 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "段落",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420"
+        },
+        "ind": {
+          "firstLine": "520"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "FrameContents": {
+      "type": "paragraph",
+      "styleId": "FrameContents",
+      "name": "Frame Contents",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "摘  要",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "摘",
+          "rPr": {}
+        },
+        {
+          "text": "要",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "论文的摘要是对论文研究内容和成果的高度概括。摘要应对论文所研究的问题及其研究目的进行描述，对研究方法和过程进行简单介绍，对研究成果和所得结论进行概括。摘要应具有独立性和自明性，其内容应包含与论文全文同等量的主要信息。使读者即使不阅读全文，通过摘要就能了解论文的总体内容和主要成果。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "论文的摘要是对论文研究内容和成果的高度概括。摘要应对论文所研究的问题及其研究目的进行描述，对研究方法和过程进行简单介绍，对研究成果和所得结论进行概括。摘要应具有独立性和自明性，其内容应包含与论文全文同等量的",
+          "rPr": {}
+        },
+        {
+          "text": "主要信息。使读者即使不阅读全文，通过摘要就能了解论文的总体内容和主要成果。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "论文摘要的书写应力求精确、简明。切忌写成对论文书写内容进行提要的形式，尤其要避免“第1章……；第2章……；……”这种或类似的陈述方式。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "论文摘要的书写应力求精确、简明。切忌写成对论文书写内容进行提要的形式，尤其要避免“第",
+          "rPr": {}
+        },
+        {
+          "text": "1",
+          "rPr": {}
+        },
+        {
+          "text": "章……；第",
+          "rPr": {}
+        },
+        {
+          "text": "2",
+          "rPr": {}
+        },
+        {
+          "text": "章……；……”这种或类似的陈述方式。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "关键词是为了文献标引工作、用以表示全文主要内容信息的单词或术语。关键词不超过5个，每个关键词中间用分号分隔。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "关键词是为了文献标引工作、用以表示全文主要内容信息的单词或术语。关键词不超过",
+          "rPr": {}
+        },
+        {
+          "text": "5",
+          "rPr": {}
+        },
+        {
+          "text": "个，每个关键词中间用分号分隔",
+          "rPr": {}
+        },
+        {
+          "text": "。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "关键词：关键词1；关键词2；关键词3；关键词4；关键词5",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "widowControl": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "关键词：",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            }
+          }
+        },
+        {
+          "text": "关键词",
+          "rPr": {}
+        },
+        {
+          "text": "1",
+          "rPr": {}
+        },
+        {
+          "text": "；关键词",
+          "rPr": {}
+        },
+        {
+          "text": "2",
+          "rPr": {}
+        },
+        {
+          "text": "；关键词",
+          "rPr": {}
+        },
+        {
+          "text": "3",
+          "rPr": {}
+        },
+        {
+          "text": "；关键词",
+          "rPr": {}
+        },
+        {
+          "text": "4",
+          "rPr": {}
+        },
+        {
+          "text": "；关键词",
+          "rPr": {}
+        },
+        {
+          "text": "5",
+          "rPr": {}
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "摘  要",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "II",
+      "fields": [
+        " PAGE ",
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

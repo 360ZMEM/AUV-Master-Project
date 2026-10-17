@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-09-19T11:18:40",
+  "qt_platform": "offscreen",
+  "dangerous_actions_executed": false,
+  "clicked_controls": [
+    "tab:任务配置",
+    "tab:航点规划",
+    "button:开始选点"
+  ],
+  "dangerous_controls_not_clicked": [
+    "紧急切断 ESTOP",
+    "解除急停",
+    "请求自主",
+    "手动接管",
+    "下发任务",
+    "连接 Zenoh",
+    "任务开启",
+    "任务取消"
+  ],
+  "initial_tab_index": 0,
+  "initial_tab_text": "航点规划",
+  "after_task_tab_text": "任务配置",
+  "after_return_tab_text": "航点规划",
+  "before_button_selecting_waypoint": false,
+  "after_button_selecting_waypoint": true,
+  "after_button_start_enabled": false,
+  "after_button_end_enabled": true,
+  "status_message": "地图选点模式已开启 - 请在地图上点击添加航点",
+  "labels": {
+    "ready": "结论: READY/PASS | track",
+    "metrics": "偏移/埋深/进度: 0.42 m / 1.42 m / 58.7 m",
+    "quality": "置信度/SNR: 0.956 / 87.3 dB / mag 0.931",
+    "dlt": "DL/T状态/扣分合计: 注意状态 / 24",
+    "score_items": "扣分项: 海缆埋深不足(16分)；埋深估计精度未达 0.15m(8分)",
+    "flags": "验收标志: none",
+    "products": "产物链: tracking.jsonl, inspection_summary.json, dlt1278_report.md, operator_view/*.png"
+  },
+  "screenshot_path": "/home/zmem063/AUV-Master-Project/docs/experiment/assets/defense_demo/console_dlt_probe_20260919_111840.png",
+  "screenshot_saved": true
+}

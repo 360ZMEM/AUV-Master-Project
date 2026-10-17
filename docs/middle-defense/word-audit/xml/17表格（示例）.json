@@ -1,0 +1,3158 @@
+{
+  "source": "相关附件和参照/word模板(202605)/17表格（示例）.doc",
+  "source_sha256": "5b8bca37c5154c3eb6acf5a319d9c1fbc3020f456ebd208d13a0acf03c2d7b7e",
+  "converted_docx_sha256": "f41df519789daa8167f68e80e405048623a2af0144389b44bec917b4eded3d08",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId4"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "16",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "lines",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "390"
+        },
+        "jc": {
+          "val": "left"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "宋体;SimSun",
+          "hAnsi": "宋体;SimSun",
+          "cs": "宋体;SimSun"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "33"
+        },
+        "szCs": {
+          "val": "33"
+        }
+      }
+    },
+    "Style13": {
+      "type": "character",
+      "styleId": "Style13",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "StrongEmphasis": {
+      "type": "character",
+      "styleId": "StrongEmphasis",
+      "name": "Strong Emphasis",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    },
+    "InternetLink": {
+      "type": "character",
+      "styleId": "InternetLink",
+      "name": "Hyperlink",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "0000FF"
+        },
+        "u": {
+          "val": "single"
+        }
+      }
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style13",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style14": {
+      "type": "character",
+      "styleId": "Style14",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "1": {
+      "type": "character",
+      "styleId": "1",
+      "name": "表序1 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "22"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Liberation Sans",
+          "hAnsi": "Liberation Sans",
+          "eastAsia": "Noto Sans CJK SC",
+          "cs": "Lohit Devanagari"
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "28"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "列表项目符号",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style16": {
+      "type": "paragraph",
+      "styleId": "Style16",
+      "name": "表题",
+      "basedOn": "Style15",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "120",
+          "after": "60"
+        },
+        "ind": {
+          "left": "227",
+          "right": "227",
+          "hanging": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "6"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "TextBodyIndent": {
+      "type": "paragraph",
+      "styleId": "TextBodyIndent",
+      "name": "Body Text Indent",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "0",
+          "after": "120"
+        },
+        "ind": {
+          "left": "420",
+          "hanging": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "Style17": {
+      "type": "paragraph",
+      "styleId": "Style17",
+      "name": "表文字",
+      "basedOn": "TextBodyIndent",
+      "pPr": {
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "0",
+          "hanging": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "11": {
+      "type": "paragraph",
+      "styleId": "11",
+      "name": "表序1",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "22"
+        }
+      }
+    },
+    "Style18": {
+      "type": "paragraph",
+      "styleId": "Style18",
+      "name": "图表目录",
+      "basedOn": "Normal",
+      "pPr": {
+        "ind": {
+          "left": "150",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "TableContents": {
+      "type": "paragraph",
+      "styleId": "TableContents",
+      "name": "Table Contents",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "TableHeading": {
+      "type": "paragraph",
+      "styleId": "TableHeading",
+      "name": "Table Heading",
+      "basedOn": "TableContents",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "自从6月25日中小企业板推出以来，受到了市场各方的强烈关注，4个多月过去了，中小企业板的业绩如何呢？2004年10月30日，深交所发布了中小企业板2004年前三季度业绩统计表，结果显示如表2.1。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "自从",
+          "rPr": {}
+        },
+        {
+          "text": "6",
+          "rPr": {}
+        },
+        {
+          "text": "月",
+          "rPr": {}
+        },
+        {
+          "text": "25",
+          "rPr": {}
+        },
+        {
+          "text": "日",
+          "rPr": {}
+        },
+        {
+          "text": "推出以来，受到了市场各方的强烈关注，",
+          "rPr": {}
+        },
+        {
+          "text": "4",
+          "rPr": {}
+        },
+        {
+          "text": "个多月过去了，中小企业板的业绩如何呢？",
+          "rPr": {}
+        },
+        {
+          "text": "2004",
+          "rPr": {}
+        },
+        {
+          "text": "年",
+          "rPr": {}
+        },
+        {
+          "text": "10",
+          "rPr": {}
+        },
+        {
+          "text": "月",
+          "rPr": {}
+        },
+        {
+          "text": "30",
+          "rPr": {}
+        },
+        {
+          "text": "日，深交所发布了中小企业板",
+          "rPr": {}
+        },
+        {
+          "text": "2004",
+          "rPr": {}
+        },
+        {
+          "text": "年前三季度业绩统计表，结果显示如",
+          "rPr": {}
+        },
+        {
+          "text": "表",
+          "rPr": {}
+        },
+        {
+          "text": "2",
+          "rPr": {}
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {}
+        },
+        {
+          "text": "。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "表2.1  2004年前三季度分行业业绩统计表",
+      "pPr": {
+        "pStyle": {
+          "val": "11"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "表",
+          "rPr": {}
+        },
+        {
+          "text": "2.1  2004",
+          "rPr": {}
+        },
+        {
+          "text": "年前三季度分行业业绩统计表",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "行业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "行业",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "2004年1-9月",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2004",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "年",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1-9",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "月",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "2004年1-9月",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2004",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "年",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1-9",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "月",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "2003年1-9月",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2003",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "年",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1-9",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "月",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "每股收益（元）",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "每股收益（元）",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "平均净利润（万元）",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "平均净利润（万元）",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "平均净利润（万元）",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "平均净利润（万元）",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "bCs": {
+              "value": ""
+            },
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 15,
+      "text": "采掘业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "采掘业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 16,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 18,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 20,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 21,
+      "text": "传播与文化产业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "传播与文化产业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 22,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 24,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 26,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 27,
+      "text": "电力、煤气及水的生产和供应业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "电力、煤气及水的生产和供应业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 28,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 30,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 32,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 33,
+      "text": "房地产业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "房地产业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 34,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 36,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 38,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 39,
+      "text": "建筑业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "建筑业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 40,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 42,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 44,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 45,
+      "text": "交通运输、仓储业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "交通运输、仓储业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 46,
+      "text": "0.3497",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "0.3497",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 48,
+      "text": " 2741.68",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2741.68",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 50,
+      "text": "1778.75",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "1778.75",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 51,
+      "text": "金融、保险业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "金融、保险业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 52,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 54,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 56,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 57,
+      "text": "农、林、牧、渔业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "农、林、牧、渔业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 58,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 60,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 62,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 63,
+      "text": "批发和零售贸易",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "批发和零售贸易",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 64,
+      "text": "1.0890",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "1.0890",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 66,
+      "text": "10145.39",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "10145.39",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 68,
+      "text": "4654.76",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "4654.76",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 69,
+      "text": "社会服务业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "社会服务业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 70,
+      "text": "0.3299",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "0.3299",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 72,
+      "text": " 3276.42",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3276.42",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 74,
+      "text": "1275.19",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "1275.19",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 75,
+      "text": "信息技术业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "信息技术业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 76,
+      "text": "0.3818",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "0.3818",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 78,
+      "text": " 4274.78",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "4274.78",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 80,
+      "text": "4000.81",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "4000.81",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 81,
+      "text": "制造业",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "制造业",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 82,
+      "text": "0.2993",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "0.2993",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 84,
+      "text": " 2461.51",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2461.51",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 86,
+      "text": "2254.40",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "2254.40",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 87,
+      "text": "综合类",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "综合类",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 88,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 90,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 92,
+      "text": "-",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "-",
+          "rPr": {
+            "kern": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "第2章  ××××××××××××××",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "17",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

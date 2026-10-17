@@ -1,0 +1,5 @@
+status	PASS
+run_dir	/home/zmem063/AUV-Master-Project/.auv_data/defense_assurance/20260919_231558
+config	/home/zmem063/AUV-Master-Project/brain_linux/src/auv_cable_tracking_v2/config/cable_tracking_v2_defense.yaml
+layout	/home/zmem063/AUV-Master-Project/foxglove_layout_project/output/auv_defense_perception_1366.json
+report	/home/zmem063/AUV-Master-Project/.auv_data/defense_assurance/20260919_231558/assurance_report.json

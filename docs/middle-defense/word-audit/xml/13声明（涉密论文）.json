@@ -1,0 +1,582 @@
+{
+  "source": "相关附件和参照/word模板(202605)/13声明（涉密论文）.doc",
+  "source_sha256": "3a9c5318b3fe9657695d541c1f406cea5e0a515da3e5552cf13158a1154a8eaf",
+  "converted_docx_sha256": "ae83f0238c61839e1e010fbfa53dd866a4e99e0aae91d59dda92c5375dda4da9",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId2"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "116",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "default",
+        "linePitch": "326",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "480",
+          "after": "360"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "Style13": {
+      "type": "character",
+      "styleId": "Style13",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style13",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style14": {
+      "type": "character",
+      "styleId": "Style14",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "1": {
+      "type": "character",
+      "styleId": "1",
+      "name": "标题 1 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "240"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "TextBodyIndent": {
+      "type": "paragraph",
+      "styleId": "TextBodyIndent",
+      "name": "Body Text Indent",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "0",
+          "after": "120"
+        },
+        "ind": {
+          "firstLine": "510"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "10"
+        }
+      }
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "段落",
+      "basedOn": "TextBodyIndent",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "声  明",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "声",
+          "rPr": {}
+        },
+        {
+          "text": "明",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "本人郑重声明：所呈交的学位论文，是本人在导师指导下，独立进行研究工作所取得的成果。尽我所知，除文中已经注明引用的内容外，本学位论文的研究成果不包含任何他人享有著作权的内容。对本论文所涉及的研究工作做出贡献的其他个人和集体，均已在文中以明确方式标明。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "120"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本人郑重声明：所呈交的学位论文，是本人在导师指导下，独立进行研究工作所取得的成果。尽我所知，除文中已经注明引用的内容外，本学位论文的研究成果不包含任何他人享有著作权的内容。对本论文所涉及的研究工作做出贡献的其他个人和集体，均已在文中以明确方式标明。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": " 签  名： 日  期：      ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "360",
+          "before": "120",
+          "after": "0"
+        },
+        "ind": {
+          "left": "2940",
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "签",
+          "rPr": {
+            "sz": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "名：",
+          "rPr": {
+            "sz": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "日",
+          "rPr": {
+            "sz": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "期：",
+          "rPr": {
+            "sz": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "声  明",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "116",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

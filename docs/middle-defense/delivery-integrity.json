@@ -1,0 +1,2299 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-13T05:52:29.243354+00:00",
+  "status": "PASS",
+  "scope": "独立交付完整性审计：只读冻结来源和最终产物，校验SHA/源码与编译recorder对应关系；未重跑实验、绘图、LaTeX或make。",
+  "evidence_index": {
+    "path": "docs/middle-defense/evidence.tsv",
+    "sha256": "51a0445f11aec05e882166fd0cda4102b2d1a7d9ef95fc1d314d16ccfdba4b14",
+    "rows": 112,
+    "unique_sources": 66,
+    "unique_evidence_ids": 112,
+    "checks": [
+      {
+        "path": "thuthesis/data/auv-chap02.tex",
+        "expected_sha256": "406d09f4e9b7821e489669033e2a23f2f37a27b6d093f86cfbc500268eb5fbed",
+        "actual_sha256": "406d09f4e9b7821e489669033e2a23f2f37a27b6d093f86cfbc500268eb5fbed",
+        "status": "PASS",
+        "evidence_id": "MAG-01",
+        "source_locator": "sec:ch02-2-3-4、sec:ch02-2-3-5",
+        "validation_level": "物理模型与现有方法"
+      },
+      {
+        "path": "thuthesis/data/auv-chap03.tex",
+        "expected_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "actual_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "status": "PASS",
+        "evidence_id": "MAG-02",
+        "source_locator": "sec:ch03-3-3-3",
+        "validation_level": "条件可辨识性说明"
+      },
+      {
+        "path": "AUV-Master-Mag/src/auv_mag_tracking/v2/search.py",
+        "expected_sha256": "800b3da5e5f9c44137eb1e314f27d085e8d2def41487645a25fe7ea467f98617",
+        "actual_sha256": "800b3da5e5f9c44137eb1e314f27d085e8d2def41487645a25fe7ea467f98617",
+        "status": "PASS",
+        "evidence_id": "MAG-03",
+        "source_locator": "build_prior_guided_search",
+        "validation_level": "实现静态核对"
+      },
+      {
+        "path": "AUV-Master-Mag/src/auv_mag_tracking/v2/detection.py",
+        "expected_sha256": "1dee52e3ce190845602ad7c4e8d239e846f78814f47f5b8c38475dae44907690",
+        "actual_sha256": "1dee52e3ce190845602ad7c4e8d239e846f78814f47f5b8c38475dae44907690",
+        "status": "PASS",
+        "evidence_id": "MAG-04",
+        "source_locator": "MagneticDetector.update",
+        "validation_level": "实现静态核对"
+      },
+      {
+        "path": "AUV-Master-Mag/src/auv_mag_tracking/v2/fwhm.py",
+        "expected_sha256": "2a8abdddc102329bc76f326d36828de0be63eeab06d44179c09220af8641d14e",
+        "actual_sha256": "2a8abdddc102329bc76f326d36828de0be63eeab06d44179c09220af8641d14e",
+        "status": "PASS",
+        "evidence_id": "MAG-05",
+        "source_locator": "estimate_fwhm；shape_support=min(center-xmin,xmax-center)/width",
+        "validation_level": "实现静态核对"
+      },
+      {
+        "path": "AUV-Master-Mag/tools/run_v2_stability_comparison.py",
+        "expected_sha256": "236bac395f5995336207e138e49ac5b30d6f07b1335278885799f6db256c73f2",
+        "actual_sha256": "236bac395f5995336207e138e49ac5b30d6f07b1335278885799f6db256c73f2",
+        "status": "PASS",
+        "evidence_id": "MAG-06",
+        "source_locator": "one_profile、scenario_parameters、profile_fit_estimate",
+        "validation_level": "受控解析剖面仿真"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/stability_comparison/per_run.csv",
+        "expected_sha256": "024492ee5f3f8875fe7956e133ddee37719f05145ce098b89383043fb5efb403",
+        "actual_sha256": "024492ee5f3f8875fe7956e133ddee37719f05145ce098b89383043fb5efb403",
+        "status": "PASS",
+        "evidence_id": "MAG-07",
+        "source_locator": "全部5600行，按scenario/method分28组",
+        "validation_level": "受控解析剖面仿真结果"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/stability_comparison/manifest.json",
+        "expected_sha256": "0f836e519d48250b98caf6617020e5213d2120a55c3c513c38a2f475db19481b",
+        "actual_sha256": "0f836e519d48250b98caf6617020e5213d2120a55c3c513c38a2f475db19481b",
+        "status": "PASS",
+        "evidence_id": "MAG-08",
+        "source_locator": "experiment、repository、config、artifacts",
+        "validation_level": "历史数据溯源"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/shape_guard_validation/per_run.csv",
+        "expected_sha256": "70ab6fa11c562e49dd3257e98df702cf5ac9cb39f2b7222b4ac74e5f259dc32e",
+        "actual_sha256": "70ab6fa11c562e49dd3257e98df702cf5ac9cb39f2b7222b4ac74e5f259dc32e",
+        "status": "PASS",
+        "evidence_id": "MAG-09",
+        "source_locator": "全部3600行；9场景×2模式×200，重点model_mismatch、dipole_as_wire、noise、scan_offset、combined",
+        "validation_level": "独立留出受控剖面仿真"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/shape_guard_validation/manifest.json",
+        "expected_sha256": "37a8bb9b63be737c246cf8ad167db67af1c670e0d450e68960d7bd73db72a234",
+        "actual_sha256": "37a8bb9b63be737c246cf8ad167db67af1c670e0d450e68960d7bd73db72a234",
+        "status": "PASS",
+        "evidence_id": "MAG-10",
+        "source_locator": "config.seed_start、seeds_per_scenario、minimum_shape_support_widths等",
+        "validation_level": "历史数据溯源"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/audit.json",
+        "expected_sha256": "5373c1c904925745b0f357c1b16e1f5f41243efe58971412c9742823b73bc940",
+        "actual_sha256": "5373c1c904925745b0f357c1b16e1f5f41243efe58971412c9742823b73bc940",
+        "status": "PASS",
+        "evidence_id": "MAG-11",
+        "source_locator": "envelope、seed_101_role、runs",
+        "validation_level": "磁算法/PID/72字节编解码/原生PVS，非ROS调度"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/wire_seed_101.csv",
+        "expected_sha256": "1cb6853993671761b6fc5e04e873d1d2689df817e4cc187bffad73f74a7e07ea",
+        "actual_sha256": "1cb6853993671761b6fc5e04e873d1d2689df817e4cc187bffad73f74a7e07ea",
+        "status": "PASS",
+        "evidence_id": "MAG-11-1",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/dipole_seed_101.csv",
+        "expected_sha256": "55db474534a3daaf03d1e95c5c43df448ebb1677d654f7d368d9f52eb52f19d2",
+        "actual_sha256": "55db474534a3daaf03d1e95c5c43df448ebb1677d654f7d368d9f52eb52f19d2",
+        "status": "PASS",
+        "evidence_id": "MAG-11-2",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/no_source_seed_101.csv",
+        "expected_sha256": "62616d13b38a2d1aec1ded3f57fbcc3d115821d2203cbcde92ca593a1498f8bb",
+        "actual_sha256": "62616d13b38a2d1aec1ded3f57fbcc3d115821d2203cbcde92ca593a1498f8bb",
+        "status": "PASS",
+        "evidence_id": "MAG-11-3",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_102.csv",
+        "expected_sha256": "ad2e142b1985d9ab7c646af527fdfd3bf41232e5c230996e8007d9b624f26e05",
+        "actual_sha256": "ad2e142b1985d9ab7c646af527fdfd3bf41232e5c230996e8007d9b624f26e05",
+        "status": "PASS",
+        "evidence_id": "MAG-11-4",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_103.csv",
+        "expected_sha256": "d5c8b1ce896628c5fef0ffdaa393fe436a59c6dc189603e7154f1f7c362ad055",
+        "actual_sha256": "d5c8b1ce896628c5fef0ffdaa393fe436a59c6dc189603e7154f1f7c362ad055",
+        "status": "PASS",
+        "evidence_id": "MAG-11-5",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_102.csv",
+        "expected_sha256": "ac7facf214f285d4bb79693a88e147a29ef16c49c276e90cb941d25e4ac0690c",
+        "actual_sha256": "ac7facf214f285d4bb79693a88e147a29ef16c49c276e90cb941d25e4ac0690c",
+        "status": "PASS",
+        "evidence_id": "MAG-11-6",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_103.csv",
+        "expected_sha256": "6ef15aaf0b7688ce4d76b989127e612b989a27b837e00400c443d6f2ce3268e3",
+        "actual_sha256": "6ef15aaf0b7688ce4d76b989127e612b989a27b837e00400c443d6f2ce3268e3",
+        "status": "PASS",
+        "evidence_id": "MAG-11-7",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/no_source_seed_102.csv",
+        "expected_sha256": "6a49c1a913a1a8df36bcaf29376e64ab5dd2a19bed039192b919be09fa6257d2",
+        "actual_sha256": "6a49c1a913a1a8df36bcaf29376e64ab5dd2a19bed039192b919be09fa6257d2",
+        "status": "PASS",
+        "evidence_id": "MAG-11-8",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/no_source_seed_103.csv",
+        "expected_sha256": "f32705f07ea3b7d343fbc739828c3bb1724a1ea4fd0a23cc629a1d8dec50ee70",
+        "actual_sha256": "f32705f07ea3b7d343fbc739828c3bb1724a1ea4fd0a23cc629a1d8dec50ee70",
+        "status": "PASS",
+        "evidence_id": "MAG-11-9",
+        "source_locator": "所有采样行；mode=track且5<=x_m<=75",
+        "validation_level": "原生PVS轨迹"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/plan.json",
+        "expected_sha256": "1d3e8b20c17db4da4871fc29f9d287ca85144d830380811f6695a0f77aa25fdc",
+        "actual_sha256": "1d3e8b20c17db4da4871fc29f9d287ca85144d830380811f6695a0f77aa25fdc",
+        "status": "PASS",
+        "evidence_id": "MAG-12",
+        "source_locator": "flight_policy、supervisor_contract、directional_rejoin_contract、external_anchor、cases、seeds、methods",
+        "validation_level": "独立原生PVS受控仿真"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/summary.json",
+        "expected_sha256": "d43723efc9c52e335ed7631eb1cd2af9dac18d305ab15cb5e4931950629f48eb",
+        "actual_sha256": "d43723efc9c52e335ed7631eb1cd2af9dac18d305ab15cb5e4931950629f48eb",
+        "status": "PASS",
+        "evidence_id": "MAG-13",
+        "source_locator": "全部120条记录；method=supervised/legacy",
+        "validation_level": "独立原生PVS闭环留出"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/manifest.json",
+        "expected_sha256": "efd3168c22656ef1cf4699bfab6f2d9c710cddd615730bb71955aad869c09d15",
+        "actual_sha256": "efd3168c22656ef1cf4699bfab6f2d9c710cddd615730bb71955aad869c09d15",
+        "status": "PASS",
+        "evidence_id": "MAG-14",
+        "source_locator": "artifacts所列120个CSV；hold尾段与robustness_higher_level_recovery_requested",
+        "validation_level": "独立原生PVS故障响应"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/06_reference_free_ablation/summary.json",
+        "expected_sha256": "52494308999f237d1965613e7e705f6ee829c557ac6a35957b17d5e8071ee8e0",
+        "actual_sha256": "52494308999f237d1965613e7e705f6ee829c557ac6a35957b17d5e8071ee8e0",
+        "status": "PASS",
+        "evidence_id": "MAG-15",
+        "source_locator": "全部9条；method=diagnostic_only",
+        "validation_level": "原生PVS消融"
+      },
+      {
+        "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/07_direction_only_ablation/summary.json",
+        "expected_sha256": "024b0503d995fd116f4e86adec4b06c6bf0d083f3c2e07cfe42e99ede27bf7cf",
+        "actual_sha256": "024b0503d995fd116f4e86adec4b06c6bf0d083f3c2e07cfe42e99ede27bf7cf",
+        "status": "PASS",
+        "evidence_id": "MAG-16",
+        "source_locator": "全部3条；steady_minus/directional_only",
+        "validation_level": "原生PVS消融"
+      },
+      {
+        "path": "thuthesis/middle/figures/magnetic_stability.pdf",
+        "expected_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+        "actual_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+        "status": "PASS",
+        "evidence_id": "MAG-F1",
+        "source_locator": "docs/middle-defense/middle-magnetic-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/middle/figures/magnetic_shape_guard.pdf",
+        "expected_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+        "actual_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+        "status": "PASS",
+        "evidence_id": "MAG-F2",
+        "source_locator": "docs/middle-defense/middle-magnetic-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/middle/figures/magnetic_mission_process.pdf",
+        "expected_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+        "actual_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+        "status": "PASS",
+        "evidence_id": "MAG-F3",
+        "source_locator": "docs/middle-defense/middle-magnetic-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/middle/figures/magnetic_supervision.pdf",
+        "expected_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+        "actual_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+        "status": "PASS",
+        "evidence_id": "MAG-F4",
+        "source_locator": "docs/middle-defense/middle-magnetic-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_raw.csv",
+        "expected_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "actual_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "status": "PASS",
+        "evidence_id": "SYS-EST-FAIR-raw_dr",
+        "source_locator": "engine=raw_dr; rmse_xy",
+        "validation_level": "仿真数据包离线估计"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_raw.csv",
+        "expected_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "actual_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "status": "PASS",
+        "evidence_id": "SYS-EST-FAIR-std_ekf",
+        "source_locator": "engine=std_ekf; rmse_xy",
+        "validation_level": "仿真数据包离线估计"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/tri_estimator_fair/tri_estimator_fair_raw.csv",
+        "expected_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "actual_sha256": "dc51fff16ae40c7d5eedca8e549478461538ff77306396f036dbd945eaaa39e1",
+        "status": "PASS",
+        "evidence_id": "SYS-EST-FAIR-es_ekf",
+        "source_locator": "engine=es_ekf; rmse_xy",
+        "validation_level": "仿真数据包离线估计"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-1-1",
+        "source_locator": "filter_variant=standard_ekf; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-1-2",
+        "source_locator": "filter_variant=standard_ekf; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-1-3",
+        "source_locator": "filter_variant=standard_ekf; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-2-1",
+        "source_locator": "filter_variant=es_fixed_r; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-2-2",
+        "source_locator": "filter_variant=es_fixed_r; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-2-3",
+        "source_locator": "filter_variant=es_fixed_r; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-3-1",
+        "source_locator": "filter_variant=es_global_adaptive; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-3-2",
+        "source_locator": "filter_variant=es_global_adaptive; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-3-3",
+        "source_locator": "filter_variant=es_global_adaptive; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-4-1",
+        "source_locator": "filter_variant=es_per_source_adaptive; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-4-2",
+        "source_locator": "filter_variant=es_per_source_adaptive; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-4-3",
+        "source_locator": "filter_variant=es_per_source_adaptive; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-5-1",
+        "source_locator": "filter_variant=es_per_source_huber; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-5-2",
+        "source_locator": "filter_variant=es_per_source_huber; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-5-3",
+        "source_locator": "filter_variant=es_per_source_huber; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-6-1",
+        "source_locator": "filter_variant=es_per_source_huber_timestamp; scenario=nominal; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-6-2",
+        "source_locator": "filter_variant=es_per_source_huber_timestamp; scenario=impulsive_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-6-3",
+        "source_locator": "filter_variant=es_per_source_huber_timestamp; scenario=delayed_outliers; rmse_3d_m",
+        "validation_level": "同逐样本噪声离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-dvl_world_nis_normalized_mean",
+        "source_locator": "es_per_source_huber/delayed_outliers/dvl_world_nis_normalized_mean",
+        "validation_level": "离线滤波一致性诊断"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-dvl_world_nis_95_coverage",
+        "source_locator": "es_per_source_huber/delayed_outliers/dvl_world_nis_95_coverage",
+        "validation_level": "离线滤波一致性诊断"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-improvement-impulsive_outliers",
+        "source_locator": "impulsive_outliers",
+        "validation_level": "离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/metrics.csv",
+        "expected_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "actual_sha256": "ee00ecdc4a54cf2105babbd330b13469881e6fb1d63e106aa7af56c9c9d58137",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-improvement-delayed_outliers",
+        "source_locator": "delayed_outliers",
+        "validation_level": "离线滤波策略消融"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/run_manifest.json",
+        "expected_sha256": "3e671283123f69e6a848eacf864e44b0b0be9308a5dee3bd438929e29c3a3988",
+        "actual_sha256": "3e671283123f69e6a848eacf864e44b0b0be9308a5dee3bd438929e29c3a3988",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-CONTRACT",
+        "source_locator": "matrix;duration_s;repository;config_snapshots",
+        "validation_level": "仿真"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-cable_s_curve_proxy",
+        "source_locator": "scenario=cable_s_curve_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-cable_hairpin_proxy",
+        "source_locator": "scenario=cable_hairpin_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-cable_slope_crossing_proxy",
+        "source_locator": "scenario=cable_slope_crossing_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-cable_buried_gap_proxy",
+        "source_locator": "scenario=cable_buried_gap_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-cable_cross_current_proxy",
+        "source_locator": "scenario=cable_cross_current_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-combined_cable_extreme_proxy",
+        "source_locator": "scenario=combined_cable_extreme_proxy;按mpc_mode分组",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-global-baseline",
+        "source_locator": "mpc_mode=baseline",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-safety-baseline",
+        "source_locator": "combined_cable_extreme_proxy/baseline/safety_violation_rate",
+        "validation_level": "代理闭环"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-global-ua",
+        "source_locator": "mpc_mode=ua",
+        "validation_level": "ROS2控制栈/代理场景"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/control_metrics_by_run.csv",
+        "expected_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "actual_sha256": "7d4b59e1606fc5801bddc1af918d83d4b67f30d7c279b12ece10192618c81d98",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-safety-ua",
+        "source_locator": "combined_cable_extreme_proxy/ua/safety_violation_rate",
+        "validation_level": "代理闭环"
+      },
+      {
+        "path": "results/control_aggregates/20260810_r13_v2_full/r13_v2_thesis_audit/r13_v2_thesis_audit_manifest.json",
+        "expected_sha256": "97abd74bd212187263a778e3d5994f6e790199a7c83dacb554b1c84b053b15b8",
+        "actual_sha256": "97abd74bd212187263a778e3d5994f6e790199a7c83dacb554b1c84b053b15b8",
+        "status": "PASS",
+        "evidence_id": "SYS-R13-AUTH",
+        "source_locator": "claim_boundary/scenario=combined_cable_extreme_proxy/ua_track_ratio",
+        "validation_level": "代理闭环"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r08_adc_enob_alignment/enob_alignment_summary.json",
+        "expected_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "actual_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "status": "PASS",
+        "evidence_id": "SYS-ADC-BASE",
+        "source_locator": "wideband_noise",
+        "validation_level": "ADC实物子链"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r08_adc_enob_alignment/enob_alignment_summary.json",
+        "expected_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "actual_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "status": "PASS",
+        "evidence_id": "SYS-ADC-OSR",
+        "source_locator": "oversampling",
+        "validation_level": "ADC实物子链"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r08_adc_enob_alignment/enob_alignment_summary.json",
+        "expected_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "actual_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "status": "PASS",
+        "evidence_id": "SYS-ADC-LOCK",
+        "source_locator": "lockin_45hz",
+        "validation_level": "ADC实物子链"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r08_adc_enob_alignment/enob_alignment_summary.json",
+        "expected_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "actual_sha256": "c4eb98b2b8323742598b293d79e44d1c1e707d6f4a071d662d74cae010219745",
+        "status": "PASS",
+        "evidence_id": "SYS-ADC-COND",
+        "source_locator": "source;adc",
+        "validation_level": "ADC实物子链"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/tmr8637_test_report/_SOURCE.md",
+        "expected_sha256": "90379d31100aae8c065fcecc2dd1c96069c56461ce9037a73e5e7530cd98ee81",
+        "actual_sha256": "90379d31100aae8c065fcecc2dd1c96069c56461ce9037a73e5e7530cd98ee81",
+        "status": "PASS",
+        "evidence_id": "SYS-TMR-SENS",
+        "source_locator": "§3三轴参数表",
+        "validation_level": "厂家随附报告"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/fit_summary.json",
+        "expected_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "actual_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-COUNT",
+        "source_locator": "recording;aligned_count",
+        "validation_level": "实验室电缆/TMR/视觉位姿联合"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/fit_summary.json",
+        "expected_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "actual_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-CURRENT",
+        "source_locator": "constants",
+        "validation_level": "实验室电缆/TMR/视觉位姿联合"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/fit_summary.json",
+        "expected_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "actual_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-FREE",
+        "source_locator": "complex_iq_free_scale",
+        "validation_level": "实验室电缆/TMR/视觉位姿联合"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/fit_summary.json",
+        "expected_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "actual_sha256": "37cfe8d638a35cadf66870f6f0e96088b0786a51f173a4c4c9abc67b8e5a6f1a",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-FIXED",
+        "source_locator": "complex_iq_fixed_current",
+        "validation_level": "实验室电缆/TMR/视觉位姿联合"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_reproduction_audit/joint_reanalysis_audit.json",
+        "expected_sha256": "48e72aef61f73afd34f3fa59708ca1d3849ad0f5fa387b36329d194bd89df95d",
+        "actual_sha256": "48e72aef61f73afd34f3fa59708ca1d3849ad0f5fa387b36329d194bd89df95d",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-REPRO",
+        "source_locator": "geometry_reproduction;frequency_contract",
+        "validation_level": "实测记录重分析"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_cold_raw.csv",
+        "expected_sha256": "7abcbcba43381ab04bfc22171cecd733be4cc21aa8b89ccbcf982096d5e54817",
+        "actual_sha256": "7abcbcba43381ab04bfc22171cecd733be4cc21aa8b89ccbcf982096d5e54817",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-steady-cold",
+        "source_locator": "wall_ms;solver_status",
+        "validation_level": "Jetson Orin NX实物计算微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_warm_raw.csv",
+        "expected_sha256": "7382b1f162e7186881b527909e9e3d6e62605fe3fe839049a130cb9c9b8a1e72",
+        "actual_sha256": "7382b1f162e7186881b527909e9e3d6e62605fe3fe839049a130cb9c9b8a1e72",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-steady-warm",
+        "source_locator": "wall_ms;solver_status",
+        "validation_level": "Jetson Orin NX实物计算微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_cold_raw.csv",
+        "expected_sha256": "1a5e2b5a37d426b843274782d9e0c5d0f604344645955458552397c2412d038d",
+        "actual_sha256": "1a5e2b5a37d426b843274782d9e0c5d0f604344645955458552397c2412d038d",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-stress-cold",
+        "source_locator": "wall_ms;solver_status",
+        "validation_level": "Jetson Orin NX实物计算微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_warm_raw.csv",
+        "expected_sha256": "1c48fd83d2487ea4cad625479ceea3f84f6a217fad78ae53a911fcef173b534f",
+        "actual_sha256": "1c48fd83d2487ea4cad625479ceea3f84f6a217fad78ae53a911fcef173b534f",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-stress-warm",
+        "source_locator": "wall_ms;solver_status",
+        "validation_level": "Jetson Orin NX实物计算微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/metrics.json",
+        "expected_sha256": "62e56295f612503b36b58d2f6c14a9a313a774706d267f6556501142a2c7fabc",
+        "actual_sha256": "62e56295f612503b36b58d2f6c14a9a313a774706d267f6556501142a2c7fabc",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-REPEAT-steady",
+        "source_locator": "repeatability/p95_ms_across_runs/steady/warm",
+        "validation_level": "目标机短时重复微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/metrics.json",
+        "expected_sha256": "62e56295f612503b36b58d2f6c14a9a313a774706d267f6556501142a2c7fabc",
+        "actual_sha256": "62e56295f612503b36b58d2f6c14a9a313a774706d267f6556501142a2c7fabc",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-REPEAT-stress",
+        "source_locator": "repeatability/p95_ms_across_runs/stress/warm",
+        "validation_level": "目标机短时重复微基准"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/environment.json",
+        "expected_sha256": "3559082e6e7afa040273be851de9127b3f513c9df883bc146c197f8d28640333",
+        "actual_sha256": "3559082e6e7afa040273be851de9127b3f513c9df883bc146c197f8d28640333",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-ENV",
+        "source_locator": "platform;cpu_count;nvpmodel;git_commit;contaminated",
+        "validation_level": "实物计算平台"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/config.yaml",
+        "expected_sha256": "48526445940d4cdf612f8db3f3617afd89580d112a54b14354ba36cfa14a0a81",
+        "actual_sha256": "48526445940d4cdf612f8db3f3617afd89580d112a54b14354ba36cfa14a0a81",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-CONFIG",
+        "source_locator": "benchmark;timing_budgets_ms",
+        "validation_level": "目标机计算微基准"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_timing/firmware_echo_summary.json",
+        "expected_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "actual_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-COUNTS",
+        "source_locator": "counts",
+        "validation_level": "真实PC104/宿主机中继/零执行器"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_timing/firmware_echo_summary.json",
+        "expected_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "actual_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-RTT",
+        "source_locator": "series/first_echo_rtt_ms;series/receive_to_first_pack_ms",
+        "validation_level": "真实PC104/宿主机中继/零执行器"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_timing/firmware_echo_summary.json",
+        "expected_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "actual_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-CADENCE",
+        "source_locator": "series/echo_event_interval_ms",
+        "validation_level": "真实PC104/宿主机中继/零执行器"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_timing/firmware_echo_summary.json",
+        "expected_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "actual_sha256": "917cf45567814ce21f6b1f877d37bc96b486567fc72464d85f604cd7dd9d09ae",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-CLOCK",
+        "source_locator": "pc104_to_host_clock_fit",
+        "validation_level": "真实PC104/宿主机中继/零执行器"
+      },
+      {
+        "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+        "expected_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "actual_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-FAULT",
+        "source_locator": "§5修正后同步故障运行",
+        "validation_level": "真实执行脑同步零执行器状态链"
+      },
+      {
+        "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+        "expected_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "actual_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-LATENCY",
+        "source_locator": "§5主机观测响应时间",
+        "validation_level": "真实执行脑同步零执行器状态链"
+      },
+      {
+        "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+        "expected_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "actual_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-SOAK",
+        "source_locator": "§5 30min稳态运行",
+        "validation_level": "真实执行脑同步零执行器状态链"
+      },
+      {
+        "path": "docs/real_deployment/15_pc104_fault_injection_and_layered_safety.md",
+        "expected_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "actual_sha256": "1d358c9ba9ba1f3ebed21a919a8e66510d9620e9aa633199d978d38ded7b7dc1",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-ISOLATION",
+        "source_locator": "§5末尾边界",
+        "validation_level": "真实执行脑同步零执行器状态链"
+      },
+      {
+        "path": "tools/run_pc104_cross_layer_fault_sync.py",
+        "expected_sha256": "b02fca059f4c2d8be94614987dc7cae79322528019c6c2d4569c5bdb93c57c96",
+        "actual_sha256": "b02fca059f4c2d8be94614987dc7cae79322528019c6c2d4569c5bdb93c57c96",
+        "status": "PASS",
+        "evidence_id": "SYS-PC104-LATENCY-DEFINITION",
+        "source_locator": "latency_ms():491-513；summary:1239-1270",
+        "validation_level": "历史实测指标定义核验"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "expected_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "actual_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "status": "PASS",
+        "evidence_id": "SYS-FIG-ADC",
+        "source_locator": "单页PDF",
+        "validation_level": "既有实测结果呈现"
+      },
+      {
+        "path": "thuthesis/middle/figures/systems/complex_iq_fit_middle.pdf",
+        "expected_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+        "actual_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+        "status": "PASS",
+        "evidence_id": "SYS-FIG-JOINT",
+        "source_locator": "docs/middle-defense/middle-systems-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.pdf",
+        "expected_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+        "actual_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+        "status": "PASS",
+        "evidence_id": "SYS-FIG-JETSON",
+        "source_locator": "docs/middle-defense/middle-systems-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.pdf",
+        "expected_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+        "actual_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+        "status": "PASS",
+        "evidence_id": "SYS-FIG-PC104",
+        "source_locator": "docs/middle-defense/middle-systems-figures.json",
+        "validation_level": "既有证据重新排版，非新实验"
+      },
+      {
+        "path": "thuthesis/data/auv-chap06.tex",
+        "expected_sha256": "ef9c0aab35f2ce349899165c77dee017743f5723ea6331706564bda23b28b77a",
+        "actual_sha256": "ef9c0aab35f2ce349899165c77dee017743f5723ea6331706564bda23b28b77a",
+        "status": "PASS",
+        "evidence_id": "SYS-PLATFORM-STATUS",
+        "source_locator": "研究局限；未来工作展望",
+        "validation_level": "证据边界/恢复计划"
+      },
+      {
+        "path": "thuthesis/data/auv-chap03.tex",
+        "expected_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "actual_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "status": "PASS",
+        "evidence_id": "SYS-METHOD-EST",
+        "source_locator": "§3.3状态；§3.4 NIS/Huber",
+        "validation_level": "方法设计/实现"
+      },
+      {
+        "path": "thuthesis/data/auv-chap04.tex",
+        "expected_sha256": "4d61947b4f6a45d21adf09b4b8c56e32719fe53e5c911e85350f12fb10a1426a",
+        "actual_sha256": "4d61947b4f6a45d21adf09b4b8c56e32719fe53e5c911e85350f12fb10a1426a",
+        "status": "PASS",
+        "evidence_id": "SYS-METHOD-CONTROL",
+        "source_locator": "置信度权重与控制缩放公式",
+        "validation_level": "方法设计/实现"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady.log",
+        "expected_sha256": "2415dd147a3c4b686aaa1568ed52ef4d28e67e330b45ed248c0440dafa3368d3",
+        "actual_sha256": "2415dd147a3c4b686aaa1568ed52ef4d28e67e330b45ed248c0440dafa3368d3",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-HORIZON",
+        "source_locator": "line1 microbench",
+        "validation_level": "目标机实测日志"
+      },
+      {
+        "path": "tools/mpc_solve_microbench.py",
+        "expected_sha256": "0aba1d353d9493a8c3d8ea237c7ba2cb19f09730219adb83dce01290e4b8fd7d",
+        "actual_sha256": "0aba1d353d9493a8c3d8ea237c7ba2cb19f09730219adb83dce01290e4b8fd7d",
+        "status": "PASS",
+        "evidence_id": "SYS-JETSON-TARGET",
+        "source_locator": "--target-depth default=3.0；runner run_jetson_realtime.py:675只覆盖--start-depth",
+        "validation_level": "微基准实现"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/tmr8637_test_report/source_02_axis_report_scan.jpg",
+        "expected_sha256": "261c538776a78b4af873d26b4d55687afeea8eb9c9b307bf828d6b753befdbce",
+        "actual_sha256": "261c538776a78b4af873d26b4d55687afeea8eb9c9b307bf828d6b753befdbce",
+        "status": "PASS",
+        "evidence_id": "SYS-TMR-SCAN",
+        "source_locator": "上部6#模组三轴数据表",
+        "validation_level": "随附报告实图"
+      },
+      {
+        "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_rect/analysis_summary.json",
+        "expected_sha256": "56a3b968e0a801f1aeafdb81e8a0774bbb09c19c3085b4295c34168f66a5f87e",
+        "actual_sha256": "56a3b968e0a801f1aeafdb81e8a0774bbb09c19c3085b4295c34168f66a5f87e",
+        "status": "PASS",
+        "evidence_id": "SYS-JOINT-WINDOW",
+        "source_locator": "parameters/window_sec,hop_sec,window_samples,hop_samples",
+        "validation_level": "实测磁记录离线处理"
+      },
+      {
+        "path": "tools/aggregate_control_metrics.py",
+        "expected_sha256": "0c08d99a85d08f3342c364ac1e0bc6b3d08878092d0855214ea2cc30f0bfe959",
+        "actual_sha256": "0c08d99a85d08f3342c364ac1e0bc6b3d08878092d0855214ea2cc30f0bfe959",
+        "status": "PASS",
+        "evidence_id": "SYS-CONTROL-METRIC",
+        "source_locator": "mpc_cmd_topic向量:447；compute_control_rate_metrics:539",
+        "validation_level": "指标定义"
+      },
+      {
+        "path": "real_experiments/mag_chain_noise/README.md",
+        "expected_sha256": "ae87f61c638a842ac9e58b84ae34b1a3c12917727520fd0e36bf54fbe77727ce",
+        "actual_sha256": "ae87f61c638a842ac9e58b84ae34b1a3c12917727520fd0e36bf54fbe77727ce",
+        "status": "PASS",
+        "evidence_id": "SYS-NOISE-REPLAY",
+        "source_locator": "数据口径及原始记录入口",
+        "validation_level": "实物噪声/合成目标回放"
+      },
+      {
+        "path": "real_experiments/mag_chain_noise/report.md",
+        "expected_sha256": "145a570d1dd5a841913a0f0bb19c2837ffb5c7d0b3fdf52af81f0750e27bbaa2",
+        "actual_sha256": "145a570d1dd5a841913a0f0bb19c2837ffb5c7d0b3fdf52af81f0750e27bbaa2",
+        "status": "PASS",
+        "evidence_id": "SYS-NOISE-SUMMARY",
+        "source_locator": "背景回放测试结论",
+        "validation_level": "实测背景/合成目标历史汇总"
+      },
+      {
+        "path": "real_experiments/mag_chain_noise_ros/report.md",
+        "expected_sha256": "3a3c9117c36c2d774dbbfbd26820b695e2dd8cf353ee7c109751157976be7fa0",
+        "actual_sha256": "3a3c9117c36c2d774dbbfbd26820b695e2dd8cf353ee7c109751157976be7fa0",
+        "status": "PASS",
+        "evidence_id": "SYS-NOISE-ROS-SUMMARY",
+        "source_locator": "报告",
+        "validation_level": "历史回放汇总"
+      },
+      {
+        "path": "AUV-Master-Mag/docs/v2/INSPECTION_DYNAMIC_REPLAY_TIMING_LIMIT_20260928.md",
+        "expected_sha256": "4ce9fbd88d62b0034b467bde4ddfc5803ea7fa2fa8b096fde1c39673c05d6b66",
+        "actual_sha256": "4ce9fbd88d62b0034b467bde4ddfc5803ea7fa2fa8b096fde1c39673c05d6b66",
+        "status": "PASS",
+        "evidence_id": "LIMIT-DDS",
+        "source_locator": "两次动态短试及时序解释",
+        "validation_level": "独立进程DDS合成短试"
+      },
+      {
+        "path": "中期报告codex指引.md",
+        "expected_sha256": "50be7e974c2c296d9f1b372aac77afb200aaa0d53f96c705190eeb6e882f25d3",
+        "actual_sha256": "50be7e974c2c296d9f1b372aac77afb200aaa0d53f96c705190eeb6e882f25d3",
+        "status": "PASS",
+        "evidence_id": "PLAN-M25",
+        "source_locator": "§8.2/8.3",
+        "validation_level": "本次用户要求及实施建议"
+      },
+      {
+        "path": "PPT制作/2024214397—谢冠文—开题报告文档.pdf",
+        "expected_sha256": "f27b47d5017771ab022bcf953e4823feb8fe2c3032cf6ed66ffaee5f9871d49a",
+        "actual_sha256": "f27b47d5017771ab022bcf953e4823feb8fe2c3032cf6ed66ffaee5f9871d49a",
+        "status": "PASS",
+        "evidence_id": "IDENTITY",
+        "source_locator": "PDF第1页",
+        "validation_level": "身份资料"
+      },
+      {
+        "path": "results/state_estimation/r20_filter_strategies/20260809_r20/config_snapshot/tools/es_ekf_r_strategy_benchmark.py",
+        "expected_sha256": "81e94dedc8ef7b54cce27366c98d482639a9fa25923959d9c613c41d82468a98",
+        "actual_sha256": "81e94dedc8ef7b54cce27366c98d482639a9fa25923959d9c613c41d82468a98",
+        "status": "PASS",
+        "evidence_id": "SYS-R20-INPUTS",
+        "source_locator": "run_case L115–138",
+        "validation_level": "离线受控仿真"
+      }
+    ]
+  },
+  "drawing_manifests": [
+    {
+      "path": "docs/middle-defense/middle-magnetic-figures.json",
+      "sha256": "a2d0f9a5d71e61033e4f463647837ce616aee0bc9e513401d7ed7ed2910c6036",
+      "figures": 4,
+      "checks": [
+        {
+          "path": "tools/plot_middle_magnetic.py",
+          "expected_sha256": "d21bb7ff3a69bb09a9f52cf8e087cd1233101aca84b192a228508e5f636e084d",
+          "actual_sha256": "d21bb7ff3a69bb09a9f52cf8e087cd1233101aca84b192a228508e5f636e084d",
+          "status": "PASS",
+          "role": "generator"
+        },
+        {
+          "path": "/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf",
+          "expected_sha256": "a3820003227d4abe31fe28b493200d94a849ccfd078b50a019264f70353020b0",
+          "actual_sha256": "a3820003227d4abe31fe28b493200d94a849ccfd078b50a019264f70353020b0",
+          "status": "PASS",
+          "role": "font"
+        },
+        {
+          "path": "tools/plot_fwhm_v2_publication.py",
+          "expected_sha256": "0f41ef71eedf68e40f2a21891fc4ed983ab16f2d71deab99ac5f9aaed61e521a",
+          "actual_sha256": "0f41ef71eedf68e40f2a21891fc4ed983ab16f2d71deab99ac5f9aaed61e521a",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "tools/plot_v2_simulation_closure.py",
+          "expected_sha256": "137c5bf7f72029ae1275082e8252815b95f5224d5855e3c0136a564d4cf496ea",
+          "actual_sha256": "137c5bf7f72029ae1275082e8252815b95f5224d5855e3c0136a564d4cf496ea",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "tools/plot_v2_robustness_thesis_summary.py",
+          "expected_sha256": "cb8e6d459dae13a3e6decf84e93cc9cb95b284f47f06cf850c7a43db8d79d6b3",
+          "actual_sha256": "cb8e6d459dae13a3e6decf84e93cc9cb95b284f47f06cf850c7a43db8d79d6b3",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "tools/thesis_plot_style.py",
+          "expected_sha256": "bbaef5aa64a29647046295d59c14053aaeb0a3d090c683ad5478d27c51a383f0",
+          "actual_sha256": "bbaef5aa64a29647046295d59c14053aaeb0a3d090c683ad5478d27c51a383f0",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/stability_comparison/summary.json",
+          "expected_sha256": "778ab4f5157c03229d2fc5883d77074c1851b8afa55eb1284c2df9bddb3f29ef",
+          "actual_sha256": "778ab4f5157c03229d2fc5883d77074c1851b8afa55eb1284c2df9bddb3f29ef",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/stability_comparison/per_run.csv",
+          "expected_sha256": "024492ee5f3f8875fe7956e133ddee37719f05145ce098b89383043fb5efb403",
+          "actual_sha256": "024492ee5f3f8875fe7956e133ddee37719f05145ce098b89383043fb5efb403",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/shape_guard_validation/summary.json",
+          "expected_sha256": "60e9c0da0e2e714aeb0515d1472e8872d940515e3e096eee1016b09a7206c9dc",
+          "actual_sha256": "60e9c0da0e2e714aeb0515d1472e8872d940515e3e096eee1016b09a7206c9dc",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/shape_guard_validation/per_run.csv",
+          "expected_sha256": "70ab6fa11c562e49dd3257e98df702cf5ac9cb39f2b7222b4ac74e5f259dc32e",
+          "actual_sha256": "70ab6fa11c562e49dd3257e98df702cf5ac9cb39f2b7222b4ac74e5f259dc32e",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/wire_seed_101.csv",
+          "expected_sha256": "1cb6853993671761b6fc5e04e873d1d2689df817e4cc187bffad73f74a7e07ea",
+          "actual_sha256": "1cb6853993671761b6fc5e04e873d1d2689df817e4cc187bffad73f74a7e07ea",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/no_source_seed_101.csv",
+          "expected_sha256": "62616d13b38a2d1aec1ded3f57fbcc3d115821d2203cbcde92ca593a1498f8bb",
+          "actual_sha256": "62616d13b38a2d1aec1ded3f57fbcc3d115821d2203cbcde92ca593a1498f8bb",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_102.csv",
+          "expected_sha256": "ad2e142b1985d9ab7c646af527fdfd3bf41232e5c230996e8007d9b624f26e05",
+          "actual_sha256": "ad2e142b1985d9ab7c646af527fdfd3bf41232e5c230996e8007d9b624f26e05",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/wire_seed_103.csv",
+          "expected_sha256": "d5c8b1ce896628c5fef0ffdaa393fe436a59c6dc189603e7154f1f7c362ad055",
+          "actual_sha256": "d5c8b1ce896628c5fef0ffdaa393fe436a59c6dc189603e7154f1f7c362ad055",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_pvs/dipole_seed_101.csv",
+          "expected_sha256": "55db474534a3daaf03d1e95c5c43df448ebb1677d654f7d368d9f52eb52f19d2",
+          "actual_sha256": "55db474534a3daaf03d1e95c5c43df448ebb1677d654f7d368d9f52eb52f19d2",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_102.csv",
+          "expected_sha256": "ac7facf214f285d4bb79693a88e147a29ef16c49c276e90cb941d25e4ac0690c",
+          "actual_sha256": "ac7facf214f285d4bb79693a88e147a29ef16c49c276e90cb941d25e4ac0690c",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/inspection_simulation_closure_20260928/native_seed102_103/dipole_seed_103.csv",
+          "expected_sha256": "6ef15aaf0b7688ce4d76b989127e612b989a27b837e00400c443d6f2ce3268e3",
+          "actual_sha256": "6ef15aaf0b7688ce4d76b989127e612b989a27b837e00400c443d6f2ce3268e3",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/plan.json",
+          "expected_sha256": "1d3e8b20c17db4da4871fc29f9d287ca85144d830380811f6695a0f77aa25fdc",
+          "actual_sha256": "1d3e8b20c17db4da4871fc29f9d287ca85144d830380811f6695a0f77aa25fdc",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/manifest.json",
+          "expected_sha256": "efd3168c22656ef1cf4699bfab6f2d9c710cddd615730bb71955aad869c09d15",
+          "actual_sha256": "efd3168c22656ef1cf4699bfab6f2d9c710cddd615730bb71955aad869c09d15",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/summary.json",
+          "expected_sha256": "d43723efc9c52e335ed7631eb1cd2af9dac18d305ab15cb5e4931950629f48eb",
+          "actual_sha256": "d43723efc9c52e335ed7631eb1cd2af9dac18d305ab15cb5e4931950629f48eb",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/steady_minus_legacy_seed501.csv",
+          "expected_sha256": "00cb39a22b302c4c4236e4501de8ee99e24dfd12086272d3269b61eec77315cf",
+          "actual_sha256": "00cb39a22b302c4c4236e4501de8ee99e24dfd12086272d3269b61eec77315cf",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/steady_minus_supervised_seed501.csv",
+          "expected_sha256": "d9c6c589912af0d7445526486ad8d6e45404e97ff32e463cdf3f4a28bfa7d1f9",
+          "actual_sha256": "d9c6c589912af0d7445526486ad8d6e45404e97ff32e463cdf3f4a28bfa7d1f9",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "AUV-Master-Mag/results/v2/defense_robustness_20260929/05_held_out/fused_neighbor_legacy_seed501.csv",
+          "expected_sha256": "ce67a8f94a23226f7896eea714753bd3ae82a48db829dec6910c50a85e5ec8f9",
+          "actual_sha256": "ce67a8f94a23226f7896eea714753bd3ae82a48db829dec6910c50a85e5ec8f9",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+          "expected_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+          "actual_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_stability.pdf",
+          "expected_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+          "actual_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_stability.png",
+          "expected_sha256": "e89d34c6658805ef0fb3aed075399afb8acccd060e2e5eadfc3e0cf7c8d724d8",
+          "actual_sha256": "e89d34c6658805ef0fb3aed075399afb8acccd060e2e5eadfc3e0cf7c8d724d8",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+          "expected_sha256": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca",
+          "actual_sha256": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_shape_guard.pdf",
+          "expected_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+          "actual_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_shape_guard.png",
+          "expected_sha256": "3b107c1f110bc6a046804a4d7855bbd688eede6592e4e0966d13714a2dd9d6ed",
+          "actual_sha256": "3b107c1f110bc6a046804a4d7855bbd688eede6592e4e0966d13714a2dd9d6ed",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+          "expected_sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+          "actual_sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_mission_process.pdf",
+          "expected_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+          "actual_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_mission_process.png",
+          "expected_sha256": "7064e462afeec1dfcae6a5eba4efe0ba4eb8a02bff36fd891d337aa322d0ad0d",
+          "actual_sha256": "7064e462afeec1dfcae6a5eba4efe0ba4eb8a02bff36fd891d337aa322d0ad0d",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf",
+          "expected_sha256": "2f59e7131034071a9422f4e685afcd47e7f9f1b4675fe6c91c3b772e95c3d619",
+          "actual_sha256": "2f59e7131034071a9422f4e685afcd47e7f9f1b4675fe6c91c3b772e95c3d619",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_supervision.pdf",
+          "expected_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+          "actual_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/magnetic_supervision.png",
+          "expected_sha256": "0772235b9f554311737dec7cc2c569ee4270be17014c8c617f673decdbd50fc9",
+          "actual_sha256": "0772235b9f554311737dec7cc2c569ee4270be17014c8c617f673decdbd50fc9",
+          "status": "PASS",
+          "role": "new_output"
+        }
+      ]
+    },
+    {
+      "path": "docs/middle-defense/middle-systems-figures.json",
+      "sha256": "9a8d8e7eaf857e862238e39f083d0a5b030aa0bdfcaeb6e6eb63da230e5617cb",
+      "figures": 3,
+      "checks": [
+        {
+          "path": "tools/plot_middle_systems.py",
+          "expected_sha256": "67fb7c1e68968030aab8e6357a73a0fcd69a80da38591fae39115e31c1e9c5fc",
+          "actual_sha256": "67fb7c1e68968030aab8e6357a73a0fcd69a80da38591fae39115e31c1e9c5fc",
+          "status": "PASS",
+          "role": "generator"
+        },
+        {
+          "path": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+          "expected_sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+          "actual_sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+          "expected_sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+          "actual_sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+          "expected_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+          "actual_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+          "status": "PASS",
+          "role": "old_figure"
+        },
+        {
+          "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/aligned_timeseries.npz",
+          "expected_sha256": "157628a7ef1467e5b371c3e2998b96301802ee297ef194ab404c4c7a687c2bc9",
+          "actual_sha256": "157628a7ef1467e5b371c3e2998b96301802ee297ef194ab404c4c7a687c2bc9",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/complex_iq_fit_middle.pdf",
+          "expected_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+          "actual_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/complex_iq_fit_middle.png",
+          "expected_sha256": "3169146092aaa3faa6267366090a15819b5f3c32fa06d7a4f34f091cba75d4fd",
+          "actual_sha256": "3169146092aaa3faa6267366090a15819b5f3c32fa06d7a4f34f091cba75d4fd",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_cold_raw.csv",
+          "expected_sha256": "7abcbcba43381ab04bfc22171cecd733be4cc21aa8b89ccbcf982096d5e54817",
+          "actual_sha256": "7abcbcba43381ab04bfc22171cecd733be4cc21aa8b89ccbcf982096d5e54817",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_warm_raw.csv",
+          "expected_sha256": "7382b1f162e7186881b527909e9e3d6e62605fe3fe839049a130cb9c9b8a1e72",
+          "actual_sha256": "7382b1f162e7186881b527909e9e3d6e62605fe3fe839049a130cb9c9b8a1e72",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_cold_raw.csv",
+          "expected_sha256": "1a5e2b5a37d426b843274782d9e0c5d0f604344645955458552397c2412d038d",
+          "actual_sha256": "1a5e2b5a37d426b843274782d9e0c5d0f604344645955458552397c2412d038d",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_warm_raw.csv",
+          "expected_sha256": "1c48fd83d2487ea4cad625479ceea3f84f6a217fad78ae53a911fcef173b534f",
+          "actual_sha256": "1c48fd83d2487ea4cad625479ceea3f84f6a217fad78ae53a911fcef173b534f",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.pdf",
+          "expected_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+          "actual_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.png",
+          "expected_sha256": "088352833c59f3c66538290af7efe7518e09167b70599344352cd1791b6da6b3",
+          "actual_sha256": "088352833c59f3c66538290af7efe7518e09167b70599344352cd1791b6da6b3",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+          "expected_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+          "actual_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+          "status": "PASS",
+          "role": "source"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.pdf",
+          "expected_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+          "actual_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+          "status": "PASS",
+          "role": "new_output"
+        },
+        {
+          "path": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.png",
+          "expected_sha256": "b1b9297749432ce25cf960d262d0ece3e1509f1456c87c57c2315dbf68a4f344",
+          "actual_sha256": "b1b9297749432ce25cf960d262d0ece3e1509f1456c87c57c2315dbf68a4f344",
+          "status": "PASS",
+          "role": "new_output"
+        }
+      ]
+    }
+  ],
+  "protected_original_sources": {
+    "count": 14,
+    "checks": [
+      {
+        "path": "thuthesis/auv-thesis.tex",
+        "expected_sha256": "fb04a7d45a59d7f192900ae2074b77d65fee40d0f6a8174f40933c36a14041a9",
+        "actual_sha256": "fb04a7d45a59d7f192900ae2074b77d65fee40d0f6a8174f40933c36a14041a9",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/auvsetup.tex",
+        "expected_sha256": "a2520966d784a348a2fc7dd036c0015bc162221a7760c159117c2cd6d94aed62",
+        "actual_sha256": "a2520966d784a348a2fc7dd036c0015bc162221a7760c159117c2cd6d94aed62",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-abstract.tex",
+        "expected_sha256": "6bc0a8ef7354119889b3ad9bc17a9f79c0ba02220c1733c592642caed082f4ad",
+        "actual_sha256": "6bc0a8ef7354119889b3ad9bc17a9f79c0ba02220c1733c592642caed082f4ad",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-acknowledgements.tex",
+        "expected_sha256": "768718739811c6c7306ecc0de32c5d66dbeaa5914b3a60fadd807c89483f2fa4",
+        "actual_sha256": "768718739811c6c7306ecc0de32c5d66dbeaa5914b3a60fadd807c89483f2fa4",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-appendix-a.tex",
+        "expected_sha256": "43e6b7245b282c6682a594b403625752051ad28aebe48cde27316e30f155d9da",
+        "actual_sha256": "43e6b7245b282c6682a594b403625752051ad28aebe48cde27316e30f155d9da",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap01.tex",
+        "expected_sha256": "2523d8269ba6e46e870fe918e6b7f0439ec32a63a6fb8b403d52249376a8ee12",
+        "actual_sha256": "2523d8269ba6e46e870fe918e6b7f0439ec32a63a6fb8b403d52249376a8ee12",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap02.tex",
+        "expected_sha256": "406d09f4e9b7821e489669033e2a23f2f37a27b6d093f86cfbc500268eb5fbed",
+        "actual_sha256": "406d09f4e9b7821e489669033e2a23f2f37a27b6d093f86cfbc500268eb5fbed",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap03.tex",
+        "expected_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "actual_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap04.tex",
+        "expected_sha256": "4d61947b4f6a45d21adf09b4b8c56e32719fe53e5c911e85350f12fb10a1426a",
+        "actual_sha256": "4d61947b4f6a45d21adf09b4b8c56e32719fe53e5c911e85350f12fb10a1426a",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap05.tex",
+        "expected_sha256": "7ee940015b6ad53bd4eb2cfc330024298830fda57b84ec8e5acc6a017fef95c0",
+        "actual_sha256": "7ee940015b6ad53bd4eb2cfc330024298830fda57b84ec8e5acc6a017fef95c0",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-chap06.tex",
+        "expected_sha256": "ef9c0aab35f2ce349899165c77dee017743f5723ea6331706564bda23b28b77a",
+        "actual_sha256": "ef9c0aab35f2ce349899165c77dee017743f5723ea6331706564bda23b28b77a",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/data/auv-denotation.tex",
+        "expected_sha256": "f5c5efc80500115905084e5ba814c79987aa9a8aac6f874fb8e88780096c180c",
+        "actual_sha256": "f5c5efc80500115905084e5ba814c79987aa9a8aac6f874fb8e88780096c180c",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/ref/auv-references.bib",
+        "expected_sha256": "a7a8cff73af626000cebfae5a83dd5aaf09853045e00e0c02981aeda77225b74",
+        "actual_sha256": "a7a8cff73af626000cebfae5a83dd5aaf09853045e00e0c02981aeda77225b74",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/ref/refs.bib",
+        "expected_sha256": "4abcbb78fd1c862c30e14e2ad0f692799499021a6fbf3bfa5d9bd1ab1fb3996c",
+        "actual_sha256": "4abcbb78fd1c862c30e14e2ad0f692799499021a6fbf3bfa5d9bd1ab1fb3996c",
+        "status": "PASS"
+      }
+    ]
+  },
+  "protected_original_external_assets": {
+    "count": 48,
+    "checks": [
+      {
+        "path": "docs/thesis/figures/literature/prior_work_equipment/hydropact350_coils.png",
+        "expected_sha256": "1f53df7875dc6c6169db0026a6bb4a73fee9ad4aa709658400609b85401490fd",
+        "actual_sha256": "1f53df7875dc6c6169db0026a6bb4a73fee9ad4aa709658400609b85401490fd",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/literature/prior_work_equipment/haiying_t180.jpg",
+        "expected_sha256": "d521adbca03cdfbaf658de158bacbaad571444d5f1504b1d1fc6e1b05b8168a9",
+        "actual_sha256": "d521adbca03cdfbaf658de158bacbaad571444d5f1504b1d1fc6e1b05b8168a9",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/literature/prior_work_equipment/fsea_p200.png",
+        "expected_sha256": "ec853549f8d57491047e31762d00ada57f4c4f89722479af109634c24f231f78",
+        "actual_sha256": "ec853549f8d57491047e31762d00ada57f4c4f89722479af109634c24f231f78",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.pdf",
+        "expected_sha256": "1e40e325ad5f81530cee817b26bb6a51403bd14a732d4642e89fe35b3f1a64dc",
+        "actual_sha256": "1e40e325ad5f81530cee817b26bb6a51403bd14a732d4642e89fe35b3f1a64dc",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.pdf",
+        "expected_sha256": "841377db58e7f4747e492478ad0bba2c5bb207fbdcb240faff14ae0817194a56",
+        "actual_sha256": "841377db58e7f4747e492478ad0bba2c5bb207fbdcb240faff14ae0817194a56",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.pdf",
+        "expected_sha256": "c53cae0316672be915ca1898600fb5a594d19473b52d1585b6ef7103f46cf3a1",
+        "actual_sha256": "c53cae0316672be915ca1898600fb5a594d19473b52d1585b6ef7103f46cf3a1",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+        "expected_sha256": "b238e958407b271107db515df1d6ebc7f5e92ef6cab71096bf0d6604bc52d5e5",
+        "actual_sha256": "b238e958407b271107db515df1d6ebc7f5e92ef6cab71096bf0d6604bc52d5e5",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.pdf",
+        "expected_sha256": "49e52f1b3d79f665ab28c0544ac83cc8b56259849d3e3ccecdf4d25bdad834ca",
+        "actual_sha256": "49e52f1b3d79f665ab28c0544ac83cc8b56259849d3e3ccecdf4d25bdad834ca",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/system/foxglove_cable_tracking_console.png",
+        "expected_sha256": "a7f157a6a8203f4a9b0d2ddcad54c3cc210100747257b058adedd50bf020cb17",
+        "actual_sha256": "a7f157a6a8203f4a9b0d2ddcad54c3cc210100747257b058adedd50bf020cb17",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/magnetics/single_phase_field_direction.pdf",
+        "expected_sha256": "3f0b536ddb771c890369e4aed968253173af7be1970fed8a673d2f60ed627318",
+        "actual_sha256": "3f0b536ddb771c890369e4aed968253173af7be1970fed8a673d2f60ed627318",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/magnetics/three_phase_helical_field.pdf",
+        "expected_sha256": "14eae31f550da7461c80bbdcdb75fd529a98218d834872f02f8c2371de87ecb3",
+        "actual_sha256": "14eae31f550da7461c80bbdcdb75fd529a98218d834872f02f8c2371de87ecb3",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/magnetics/fwhm_depth_principle.pdf",
+        "expected_sha256": "3bf0d4d32d02a0b5f730d836e653154440f658321d0a6845da7d47bb29b88518",
+        "actual_sha256": "3bf0d4d32d02a0b5f730d836e653154440f658321d0a6845da7d47bb29b88518",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/cable_active_crossing_observability.pdf",
+        "expected_sha256": "2ea77c62131937142ea8fa00bab140137e96624de5fc8df2ccbb0cbe6b3033f9",
+        "actual_sha256": "2ea77c62131937142ea8fa00bab140137e96624de5fc8df2ccbb0cbe6b3033f9",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg",
+        "expected_sha256": "34a405fcdbe7ce8aba71c928eac5d1029209c8d8708de1c4cb6195670f615c1f",
+        "actual_sha256": "34a405fcdbe7ce8aba71c928eac5d1029209c8d8708de1c4cb6195670f615c1f",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg",
+        "expected_sha256": "ca5695fe2e20dc02255fc6b390ce5f2fbf1ace321818acf71084b60d025e5e59",
+        "actual_sha256": "ca5695fe2e20dc02255fc6b390ce5f2fbf1ace321818acf71084b60d025e5e59",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/system/auv_console_operator_interface.png",
+        "expected_sha256": "9afbfd1aa6914bdcea437f73a76356ef2c71203ae81fa65d1cf3276bb1ac6fe3",
+        "actual_sha256": "9afbfd1aa6914bdcea437f73a76356ef2c71203ae81fa65d1cf3276bb1ac6fe3",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.pdf",
+        "expected_sha256": "acdcd62fc65053d7c99369bb4f2d3ad226e04645cdf27a9b9654b881f24d89cd",
+        "actual_sha256": "acdcd62fc65053d7c99369bb4f2d3ad226e04645cdf27a9b9654b881f24d89cd",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.pdf",
+        "expected_sha256": "1e8c000520214c20c3b95e0011c75623b19e25ab299f87df9b01863809943957",
+        "actual_sha256": "1e8c000520214c20c3b95e0011c75623b19e25ab299f87df9b01863809943957",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.pdf",
+        "expected_sha256": "281c9fb04abcaae9b99ad664726b64964c5226d4360b84d9d630a9cf3ddca376",
+        "actual_sha256": "281c9fb04abcaae9b99ad664726b64964c5226d4360b84d9d630a9cf3ddca376",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.pdf",
+        "expected_sha256": "35cd03623ff7bd766c9650b7a387824176fcd7092fca3481d2f364012d90f0eb",
+        "actual_sha256": "35cd03623ff7bd766c9650b7a387824176fcd7092fca3481d2f364012d90f0eb",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.pdf",
+        "expected_sha256": "e440cd4513971ffd6f9071e5082d18d1ba41894c733109262e171b73ccc20e8a",
+        "actual_sha256": "e440cd4513971ffd6f9071e5082d18d1ba41894c733109262e171b73ccc20e8a",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.pdf",
+        "expected_sha256": "c8ef811110ad0555272b549d98f1b362d6f7cc5d5d9c62ebbc52f8ffdeb99af3",
+        "actual_sha256": "c8ef811110ad0555272b549d98f1b362d6f7cc5d5d9c62ebbc52f8ffdeb99af3",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.pdf",
+        "expected_sha256": "f09792119e8df9cc09351b5327a1a4a9999fa35a428df702f286b0f13ac904d4",
+        "actual_sha256": "f09792119e8df9cc09351b5327a1a4a9999fa35a428df702f286b0f13ac904d4",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost.pdf",
+        "expected_sha256": "ef2dc7f553015323192ae3c27eb3c4328514424cd992c66db7c82d1739137b79",
+        "actual_sha256": "ef2dc7f553015323192ae3c27eb3c4328514424cd992c66db7c82d1739137b79",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff.pdf",
+        "expected_sha256": "d564a7d189d83829a063a9ad9f47ef59801a18a0136cb3589687c35ae6ec0584",
+        "actual_sha256": "d564a7d189d83829a063a9ad9f47ef59801a18a0136cb3589687c35ae6ec0584",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.pdf",
+        "expected_sha256": "4b995db0f87115d579c5b9064c1ce83379ef9d0063c7e6f74ce7614672cd36a9",
+        "actual_sha256": "4b995db0f87115d579c5b9064c1ce83379ef9d0063c7e6f74ce7614672cd36a9",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "expected_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "actual_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf",
+        "expected_sha256": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390",
+        "actual_sha256": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf",
+        "expected_sha256": "af37bbce92b659d76cb36ee8cc345f32d2877312f2daaef5a6351bc05ff87244",
+        "actual_sha256": "af37bbce92b659d76cb36ee8cc345f32d2877312f2daaef5a6351bc05ff87244",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf",
+        "expected_sha256": "3e0532dd065601dfccf0c08dbea73e9300fc58a00e354b1ab1d6da69ba13661d",
+        "actual_sha256": "3e0532dd065601dfccf0c08dbea73e9300fc58a00e354b1ab1d6da69ba13661d",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf",
+        "expected_sha256": "a97bcac5b4def0be2ac74ed9b7a994683a34ce9fe74b3c1944cb820e2acac983",
+        "actual_sha256": "a97bcac5b4def0be2ac74ed9b7a994683a34ce9fe74b3c1944cb820e2acac983",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+        "expected_sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+        "actual_sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf",
+        "expected_sha256": "aa26f00e483bed340e3c9a4d8088beac7d05e5fa6bae11d0eb1d140e49ee4dd1",
+        "actual_sha256": "aa26f00e483bed340e3c9a4d8088beac7d05e5fa6bae11d0eb1d140e49ee4dd1",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+        "expected_sha256": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133",
+        "actual_sha256": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+        "expected_sha256": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d",
+        "actual_sha256": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+        "expected_sha256": "5edce17574204a4da9f8ac7c6ba4d7f69bd9258851b7eb783fbbcd143045738c",
+        "actual_sha256": "5edce17574204a4da9f8ac7c6ba4d7f69bd9258851b7eb783fbbcd143045738c",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+        "expected_sha256": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+        "actual_sha256": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf",
+        "expected_sha256": "e14c39e51df414d6d4763c2840aedbbcd28688ad5f76eef34a4e8dd6fe3edc1d",
+        "actual_sha256": "e14c39e51df414d6d4763c2840aedbbcd28688ad5f76eef34a4e8dd6fe3edc1d",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf",
+        "expected_sha256": "7234b1aeade1fba540b2901b8af4f2feef8a9ca6513cf5f709978e615a8e7235",
+        "actual_sha256": "7234b1aeade1fba540b2901b8af4f2feef8a9ca6513cf5f709978e615a8e7235",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+        "expected_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+        "actual_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf",
+        "expected_sha256": "1687bf17b5d110e8a24a9f7256b3288be17c2b99d6652dca9f8089416a42a9a2",
+        "actual_sha256": "1687bf17b5d110e8a24a9f7256b3288be17c2b99d6652dca9f8089416a42a9a2",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf",
+        "expected_sha256": "859c47a06296721168de9c70748f9d2132e9ffc3a100fd80c9f520a95e6c8237",
+        "actual_sha256": "859c47a06296721168de9c70748f9d2132e9ffc3a100fd80c9f520a95e6c8237",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.pdf",
+        "expected_sha256": "f9a688e791512abf174b2884a7abdf88c4057a7416c29566caf53510c548afd5",
+        "actual_sha256": "f9a688e791512abf174b2884a7abdf88c4057a7416c29566caf53510c548afd5",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+        "expected_sha256": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f",
+        "actual_sha256": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+        "expected_sha256": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0",
+        "actual_sha256": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+        "expected_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+        "actual_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+        "status": "PASS"
+      },
+      {
+        "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+        "expected_sha256": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685",
+        "actual_sha256": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685",
+        "status": "PASS"
+      },
+      {
+        "path": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+        "expected_sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+        "actual_sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+        "status": "PASS"
+      }
+    ]
+  },
+  "original_thesis_pdf": {
+    "check": {
+      "path": "thuthesis/auv-thesis.pdf",
+      "expected_sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977",
+      "actual_sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977",
+      "status": "PASS"
+    },
+    "regression_record": "docs/middle-defense/thesis-regression.json",
+    "regression_record_sha256": "c7bb7a2dff7709d85923a1bb33d090e3beea01cce36767e2d4d312b7f8258d05",
+    "matches_regression_record": true,
+    "expected_pages": 170,
+    "actual_pages": 170
+  },
+  "baseline_504": {
+    "manifest_path": "docs/middle-defense/baseline/input-sha256.json",
+    "manifest_sha256": "72b48db195b86750cb0f763de2e50a9a5d0d8aeaf169478cd310f4a25f25ba8b",
+    "count": 504,
+    "unchanged_count": 489,
+    "changed_count": 15,
+    "missing": [],
+    "recorded_delta_path": "docs/middle-defense/baseline-delta-current.json",
+    "recorded_delta_sha256": "8da43be9d5cb6aea62fc7843c9094821f59ca9506aeda636da4f1e3f8ba8d255",
+    "matches_recorded_delta": true,
+    "changes": [
+      {
+        "path": "thuthesis/auv-thesis.aux",
+        "expected_sha256": "04843d6572fd475a1c3b3504168637b8006e715f16dbaa1e046910f5a734001c",
+        "actual_sha256": "755e5c78069c64c49693bc0ee4860880103a6269d9408e0a0358a2f107fa7486",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.blg",
+        "expected_sha256": "97a1e37e1819f020dec7cefa2f515158cb63fe824a83860a365b158545b581fb",
+        "actual_sha256": "2c913b96842f40899e6bb5fab66850887a3f99e205f9c79a91d14c50572d6fe5",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.fdb_latexmk",
+        "expected_sha256": "881e30a2db1905fea98776be2ec64508a9b560f72772193ad40aeb133860b35c",
+        "actual_sha256": "e5f375edb1d92ea09b70ee6c4e878fad8373003597ccea6d00d98890a5ac85d6",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.log",
+        "expected_sha256": "c85cafc4aaa63232b4bfadcba91c342965715701f598d88b0d0faf92312942c1",
+        "actual_sha256": "9b0a59ce6ac0fe27985d2cf8c9ae5724049820b614e6f1462f57403b853fd154",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.pdf",
+        "expected_sha256": "100e96e3eb9fcc29a6ce49de44f8d3908e56591f4410d6abb1181898c4ab0a77",
+        "actual_sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.synctex.gz",
+        "expected_sha256": "37f816a8dbe197adc97dfe2a700e8629a1010745dd2a5c1014dcbfd5b27d73b1",
+        "actual_sha256": "ef661aee0c210fd8a0bdbf1d63fd75e6e219c4bc1d6db2ab230bd71c7f527982",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/auv-thesis.xdv",
+        "expected_sha256": "c9d66b0fc1d3e4bcb9aba0a6f902f8d13f17b21645b077efbce09f709e3f2e92",
+        "actual_sha256": "1d7ecf1a2cd6fdee2c978c45145a8356825ea7cffb6b224f540a9eaf738cdd21",
+        "status": "PASS",
+        "classification": "generated thesis rebuild artifact"
+      },
+      {
+        "path": "thuthesis/Makefile",
+        "expected_sha256": "b3586872f23c63301b697c48c87015f044e10fff1a2417be05a3abe45d613b10",
+        "actual_sha256": "bef439a0777a22f116e2c666431c5288a228ea3fc0ace9d4319bf1a942363021",
+        "status": "PASS",
+        "classification": "authorized make entry additions"
+      },
+      {
+        "path": "thuthesis/thuthesis-author-year.cbx",
+        "expected_sha256": "f66246ee6fb52feaed93c7b4779926f162436b0c6aa4da8d0fe97ec0fb1b2aba",
+        "actual_sha256": "93aa95781a1a8cfe8da003eb1e236c4264e3200dcb3a48f454257e6ecbc79742",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis-bachelor.bbx",
+        "expected_sha256": "25ad3305bf2659dc06a7a0e663ca159ff87931dc4b1ab8c4a299e2ef4be934da",
+        "actual_sha256": "557f6021d5ce2184cc11247a6a76a7449d0b557401125b9143ead3963ee6582d",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis-bachelor.cbx",
+        "expected_sha256": "4e3702d3f74524e3b14afae49c378c1cfab37dcce876b3d79ffe9deeb62d8acb",
+        "actual_sha256": "a917867267e854335d73a462d59a4fb5b9daf7bdd3d7b384983420acffeb0f32",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis-numeric.bbx",
+        "expected_sha256": "973a87a1fb77768421606d9c3273af9e61a2669f9c374cf7552673833f319020",
+        "actual_sha256": "bc3ca176754e90cc74bd5ec964a6d754bd20b824d8e5375f905f25dd40c90270",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis-numeric.cbx",
+        "expected_sha256": "447de74d0730fe4a37eb4f1c3fbd5b773afcd5632403bbc767f0afe205ccb481",
+        "actual_sha256": "858966c5b1529bebec6fa8b38192a428ed4b524343cdb1e1dc8cf2a4dfac6856",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis.cls",
+        "expected_sha256": "2a5b2f23cdf0060adac9615e76426bc822dd3ada216a40c453ab5baa04c2f144",
+        "actual_sha256": "4cbb87b799e24dce8b2e089893eafcd2f94c0ca50caa4f4f36fa9ebbb1872021",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      },
+      {
+        "path": "thuthesis/thuthesis.dtx",
+        "expected_sha256": "bd23a3c06d676f39c9f4d8cbaf248b8d9a5619f01d59945f7d6cfbd06e7d7340",
+        "actual_sha256": "79bf372b7e9d2ae640dbbb483ae35c9cfd9ac8983b7d807bd6606295037ddec6",
+        "status": "PASS",
+        "classification": "authorized locked template update"
+      }
+    ],
+    "unexpected_changes": []
+  },
+  "locked_template_runtime": {
+    "lock_path": "thuthesis/upstream-lock.json",
+    "lock_sha256": "ac3eb2291b536f314825f1c14bd220f122d2a2f001fb3e5cd0733e4be1517e67",
+    "tag": "v7.7.1",
+    "commit": "8b4d9443f39275d0492236ae4bfcd4532b799972",
+    "files": 17,
+    "checks": [
+      {
+        "path": "thuthesis/LICENSE",
+        "expected_sha256": "5f05fcf6ef25a6c31bccd2df7c0c46b23107bbeb2ce5cdba74efb5cc357f4dbb",
+        "actual_sha256": "5f05fcf6ef25a6c31bccd2df7c0c46b23107bbeb2ce5cdba74efb5cc357f4dbb",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/dtx-style.sty",
+        "expected_sha256": "3526d857dad65688a065a7a8eed81d488066de39ad911fa852494ee33a37bc67",
+        "actual_sha256": "3526d857dad65688a065a7a8eed81d488066de39ad911fa852494ee33a37bc67",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thu-fig-logo.pdf",
+        "expected_sha256": "a49220ee5b4ecd6afcdc694e0cc75a2bb84d42d19e3facee4b88f70268dbbb4d",
+        "actual_sha256": "a49220ee5b4ecd6afcdc694e0cc75a2bb84d42d19e3facee4b88f70268dbbb4d",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thu-text-logo.pdf",
+        "expected_sha256": "5db987a65995a590fed4b8430a55795097c5be58980dfe6116daa28be32953c8",
+        "actual_sha256": "5db987a65995a590fed4b8430a55795097c5be58980dfe6116daa28be32953c8",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-author-year.bbx",
+        "expected_sha256": "7fdf72deab70fe36691e5f4a28ef9e40483de9e55bef5870777002862fdcf8fc",
+        "actual_sha256": "7fdf72deab70fe36691e5f4a28ef9e40483de9e55bef5870777002862fdcf8fc",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-author-year.bst",
+        "expected_sha256": "a1c512f3c22bf89485c2eaaca6738fc70882952de41c2ceb7833f0b796f4c771",
+        "actual_sha256": "a1c512f3c22bf89485c2eaaca6738fc70882952de41c2ceb7833f0b796f4c771",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-author-year.cbx",
+        "expected_sha256": "93aa95781a1a8cfe8da003eb1e236c4264e3200dcb3a48f454257e6ecbc79742",
+        "actual_sha256": "93aa95781a1a8cfe8da003eb1e236c4264e3200dcb3a48f454257e6ecbc79742",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-bachelor.bbx",
+        "expected_sha256": "557f6021d5ce2184cc11247a6a76a7449d0b557401125b9143ead3963ee6582d",
+        "actual_sha256": "557f6021d5ce2184cc11247a6a76a7449d0b557401125b9143ead3963ee6582d",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-bachelor.bst",
+        "expected_sha256": "3667911331d823a018b1f224237d95c35c1b367506a9d7a028d09a6bc735fd7a",
+        "actual_sha256": "3667911331d823a018b1f224237d95c35c1b367506a9d7a028d09a6bc735fd7a",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-bachelor.cbx",
+        "expected_sha256": "a917867267e854335d73a462d59a4fb5b9daf7bdd3d7b384983420acffeb0f32",
+        "actual_sha256": "a917867267e854335d73a462d59a4fb5b9daf7bdd3d7b384983420acffeb0f32",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-inline.cbx",
+        "expected_sha256": "56ffcee2b830b7255a000dda5bf4884f15e771958c09344fe22cb0bf4f0389dc",
+        "actual_sha256": "56ffcee2b830b7255a000dda5bf4884f15e771958c09344fe22cb0bf4f0389dc",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-numeric.bbx",
+        "expected_sha256": "bc3ca176754e90cc74bd5ec964a6d754bd20b824d8e5375f905f25dd40c90270",
+        "actual_sha256": "bc3ca176754e90cc74bd5ec964a6d754bd20b824d8e5375f905f25dd40c90270",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-numeric.bst",
+        "expected_sha256": "cc5bc236aecad4404250c6646d338ad0eaa989abbc1e11716eeef0d66751c5f9",
+        "actual_sha256": "cc5bc236aecad4404250c6646d338ad0eaa989abbc1e11716eeef0d66751c5f9",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis-numeric.cbx",
+        "expected_sha256": "858966c5b1529bebec6fa8b38192a428ed4b524343cdb1e1dc8cf2a4dfac6856",
+        "actual_sha256": "858966c5b1529bebec6fa8b38192a428ed4b524343cdb1e1dc8cf2a4dfac6856",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis.cls",
+        "expected_sha256": "4cbb87b799e24dce8b2e089893eafcd2f94c0ca50caa4f4f36fa9ebbb1872021",
+        "actual_sha256": "4cbb87b799e24dce8b2e089893eafcd2f94c0ca50caa4f4f36fa9ebbb1872021",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis.dtx",
+        "expected_sha256": "79bf372b7e9d2ae640dbbb483ae35c9cfd9ac8983b7d807bd6606295037ddec6",
+        "actual_sha256": "79bf372b7e9d2ae640dbbb483ae35c9cfd9ac8983b7d807bd6606295037ddec6",
+        "status": "PASS"
+      },
+      {
+        "path": "thuthesis/thuthesis.ins",
+        "expected_sha256": "504c9ae56ece6f9d3fcfada8197bbdf71cc3e9d2e497762bc68c4e4c2c32e8d2",
+        "actual_sha256": "504c9ae56ece6f9d3fcfada8197bbdf71cc3e9d2e497762bc68c4e4c2c32e8d2",
+        "status": "PASS"
+      }
+    ]
+  },
+  "shared_content_and_independent_format": {
+    "status": "PASS",
+    "shared_sources": [
+      {
+        "path": "thuthesis/auv-middle-defense.tex",
+        "sha256": "876fce1dab72a341c84bb8bd6bf9fb504219ea19b7ab7c8c5ed0b9033b030af2"
+      },
+      {
+        "path": "thuthesis/middle/setup.tex",
+        "sha256": "ea4296350a7f77bb932ff30a6b0c974a5672efb1f91f6bfa648ed3139d11b07f"
+      },
+      {
+        "path": "thuthesis/middle/overview.tex",
+        "sha256": "c10d335ca249f9ca2b1c7e1097925c166309a83cbff372758ca9db4a2428f95a"
+      },
+      {
+        "path": "thuthesis/middle/chap01-background.tex",
+        "sha256": "7e71fd9096d327f9120df263e1b5277f184d334f4c70cb462c1e1e554a5e0084"
+      },
+      {
+        "path": "thuthesis/middle/chap02-design.tex",
+        "sha256": "8f5aec913d053bdea902b197fc6aab781994c5feeda2035019a0292412113a4f"
+      },
+      {
+        "path": "thuthesis/middle/chap03-magnetic.tex",
+        "sha256": "7ab69a759e1b16b2f7e4e35b182fef0a3dc9ae94ebb6920fe02dbc26b3940254"
+      },
+      {
+        "path": "thuthesis/middle/chap04-systems.tex",
+        "sha256": "2ccf660038226afa72a1e90cacfaf6b1bcfa1f8f1bbf8844074dc75337cc0940"
+      },
+      {
+        "path": "thuthesis/middle/chap05-discussion.tex",
+        "sha256": "5edcf8e1feed8d15c8c12db81ca5f49ebdb2c64b8239954a70ea88e0173283b7"
+      },
+      {
+        "path": "thuthesis/middle/chap06-plan.tex",
+        "sha256": "7cd808412eada95d5ff8cb52d805b62f4f08925009c3b9874662dcf67fc92cb2"
+      }
+    ],
+    "common_body_chapters": 6,
+    "bibliography": {
+      "path": "thuthesis/ref/auv-references.bib",
+      "sha256": "a7a8cff73af626000cebfae5a83dd5aaf09853045e00e0c02981aeda77225b74"
+    },
+    "format_profile": {
+      "path": "thuthesis/middle/school-format.tex",
+      "sha256": "dd2976e0a96b2135863043afe6488839a5858cfcff621ab04640e909e0825a2c",
+      "active_commands": "\\ctexset{chapter={beforeskip=24bp,afterskip=18bp}}",
+      "scope": "仅 opt-in 章节标题前24bp/后18bp；正文与文献共用；两个wrapper不复制章节。"
+    },
+    "variants": [
+      {
+        "variant": "main",
+        "status": "PASS",
+        "pdf": {
+          "path": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+          "sha256": "5f1b951e1a54d26cdaaf93f7f5939a7b347dc16dc5f01fb215053969ac4b68d9",
+          "pages": 34
+        },
+        "wrapper": {
+          "path": "thuthesis/auv-middle-defense-main.tex",
+          "sha256": "2e720cef8c0e7d1901a8de58dc62ce4eee84358f22c483d0c5d591574f464ee8",
+          "content": "% Locked upstream layout, shared report identity and content.\n\\input{auv-middle-defense}\n"
+        },
+        "recorder": {
+          "path": "thuthesis/build/middle-main/xelatex8361.fls",
+          "sha256": "2f2e453eec37accd06a038d0dc53b772da2ab1577290525ef18e360bff65cf71",
+          "log_output_bound": "/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis/build/middle-main/auv-middle-defense-main.log",
+          "shared_body_files": [
+            "thuthesis/middle/chap01-background.tex",
+            "thuthesis/middle/chap02-design.tex",
+            "thuthesis/middle/chap03-magnetic.tex",
+            "thuthesis/middle/chap04-systems.tex",
+            "thuthesis/middle/chap05-discussion.tex",
+            "thuthesis/middle/chap06-plan.tex",
+            "thuthesis/middle/overview.tex"
+          ],
+          "format_file_loaded": false
+        },
+        "checks": {
+          "pages_34": true,
+          "build_gate_pass": true,
+          "recorder_output_bound": true,
+          "recorder_not_older_than_log_120s": true,
+          "shared_input_files_all_loaded": true,
+          "school_format_inclusion_correct": true,
+          "same_locked_template": true,
+          "no_final_fatal_or_reference_or_overflow_warnings": true
+        },
+        "final_log": {
+          "path": "thuthesis/build/middle-main/auv-middle-defense-main.log",
+          "sha256": "b3fca44632103bbf478db9135995fd9bb75b0b1dbae4f039d80c1bb835079df0",
+          "bad_lines": [],
+          "underfull_hbox_count": 4
+        }
+      },
+      {
+        "variant": "school",
+        "status": "PASS",
+        "pdf": {
+          "path": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+          "sha256": "bfbae2d0d4ee73c14e68c590096a11326121bc27a988b90f62e196e49e9e29cc",
+          "pages": 34
+        },
+        "wrapper": {
+          "path": "thuthesis/auv-middle-defense-school.tex",
+          "sha256": "7b6fc906080d5f3f835509cfd289278d26b09804fc822f7fdeb989cd1cb8d773",
+          "content": "% Word-example adaptation only; no duplicated report text.\n\\def\\MiddleSchool{1}\n\\input{auv-middle-defense}\n"
+        },
+        "recorder": {
+          "path": "thuthesis/build/middle-school/xelatex8339.fls",
+          "sha256": "bdd48556160e190e50a4b34d487237364946c39c01d2f430c57cdb11bd25971f",
+          "log_output_bound": "/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis/build/middle-school/auv-middle-defense-school.log",
+          "shared_body_files": [
+            "thuthesis/middle/chap01-background.tex",
+            "thuthesis/middle/chap02-design.tex",
+            "thuthesis/middle/chap03-magnetic.tex",
+            "thuthesis/middle/chap04-systems.tex",
+            "thuthesis/middle/chap05-discussion.tex",
+            "thuthesis/middle/chap06-plan.tex",
+            "thuthesis/middle/overview.tex"
+          ],
+          "format_file_loaded": true
+        },
+        "checks": {
+          "pages_34": true,
+          "build_gate_pass": true,
+          "recorder_output_bound": true,
+          "recorder_not_older_than_log_120s": true,
+          "shared_input_files_all_loaded": true,
+          "school_format_inclusion_correct": true,
+          "same_locked_template": true,
+          "no_final_fatal_or_reference_or_overflow_warnings": true
+        },
+        "final_log": {
+          "path": "thuthesis/build/middle-school/auv-middle-defense-school.log",
+          "sha256": "6cacc4c6270aa34c1b95118506b4e68020c471ce830b24be20ee79db4a545413",
+          "bad_lines": [],
+          "underfull_hbox_count": 4
+        }
+      }
+    ],
+    "normalized_pdf_text_equal": false,
+    "text_comparison_note": "该检查删除排版空白后比较整个两版PDF文本；共用正文事实另由实际recorder读取路径证明。",
+    "post_content_review_files": [
+      "thuthesis/middle/chap04-systems.tex",
+      "thuthesis/middle/chap05-discussion.tex"
+    ],
+    "post_content_review_recheck": {
+      "status": "PASS",
+      "observation": "复读当前chap04的核心数字、坐标表述和系统图注：PC104横轴相对健康基线与正文phase_start响应计时已明确分开，当前系统图均转向专用重排资产。复读chap05全文，删去末尾一句过渡语不改变M2.5未完成和后续计划条件。其余已审8个文件哈希仍匹配初次root_final_resolution。",
+      "new_scientific_claims_found": false
+    },
+    "body_text_comparison_excluding_layout": {
+      "status": "PASS",
+      "main_normalized_sha256": "62d04610a888f7d157a6cd4d0a397eb89f184c4d94e174c1744808d39e488e7d",
+      "school_normalized_sha256": "62d04610a888f7d157a6cd4d0a397eb89f184c4d94e174c1744808d39e488e7d",
+      "normalized_character_count": [
+        26497,
+        26497
+      ],
+      "method": "每页删除首个非空行中明确的章/目录/参考文献页眉，删除末行纯罗马/阿拉伯页码；删除目录点引线末尾页码；再删除排版空白。正文、数字、公式、图注与图内文本保留。",
+      "unfiltered_difference_explanation": "章前后距影响分页边界，故未处理的页眉/页脚插入位置移动；目录第2.2节在main为4页、school为3页。"
+    }
+  },
+  "five_make_records": {
+    "path": "docs/middle-defense/final-builds.json",
+    "sha256": "72c592d0715d19ec6895746a37a7da45fc9e323b090040596cd5aa0686a1f270",
+    "commands": [
+      {
+        "name": "school",
+        "command": [
+          "make",
+          "auv-middle-defense"
+        ],
+        "start": "2026-10-13T13:46:52.898142",
+        "end": "2026-10-13T13:47:01.112651",
+        "exit_code": 0,
+        "log": "docs/middle-defense/final-build-school.log",
+        "log_sha256": "3b0958acb8ecd7a632cf8bfb0160fe93554d161840cbd18f96ec59031f5abd63",
+        "log_exists": true
+      },
+      {
+        "name": "main",
+        "command": [
+          "make",
+          "auv-middle-defense-main"
+        ],
+        "start": "2026-10-13T13:47:01.113946",
+        "end": "2026-10-13T13:47:15.902564",
+        "exit_code": 0,
+        "log": "docs/middle-defense/final-build-main.log",
+        "log_sha256": "edac470680d989696ab9beae8ed933c52ed7c7cfd317ba2e148b12ea2d8efe3e",
+        "log_exists": true
+      },
+      {
+        "name": "school-alias",
+        "command": [
+          "make",
+          "auv-middle-defense-school"
+        ],
+        "start": "2026-10-13T13:47:15.903894",
+        "end": "2026-10-13T13:47:16.400966",
+        "exit_code": 0,
+        "log": "docs/middle-defense/final-build-school-alias.log",
+        "log_sha256": "f83ee5ae54cd028ec35481ede1294d99d19f75ccfa164a7e35e9af8735507579",
+        "log_exists": true
+      },
+      {
+        "name": "thesis",
+        "command": [
+          "make",
+          "auv-thesis"
+        ],
+        "start": "2026-10-13T13:47:16.402153",
+        "end": "2026-10-13T13:47:16.553156",
+        "exit_code": 0,
+        "log": "docs/middle-defense/final-build-thesis.log",
+        "log_sha256": "c86f9e86bba1078576604638dd0f1dadfc964f6d655a556d4c9aec21d3e9a90c",
+        "log_exists": true
+      },
+      {
+        "name": "template",
+        "command": [
+          "make",
+          "verify-thuthesis"
+        ],
+        "start": "2026-10-13T13:47:16.554598",
+        "end": "2026-10-13T13:47:16.834545",
+        "exit_code": 0,
+        "log": "docs/middle-defense/final-build-template.log",
+        "log_sha256": "a8f770197b2e11721d099cca55255a8b706d7d17f6f4c9f2e4667a4521e1bbd2",
+        "log_exists": true
+      }
+    ],
+    "all_exit_zero": true,
+    "verification_scope": "读取本轮五次真实调用的记录及对应日志；本审计没有重复执行make。"
+  },
+  "known_source_limitations": [
+    {
+      "path": "hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz",
+      "exists": false,
+      "kind": "historical background raw NPZ",
+      "impact": "已在正文/证据索引/绘图manifest限制为历史汇总或归档图来源；当前未从缺失raw重算，不将其声称为新实验。"
+    },
+    {
+      "path": "hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz",
+      "exists": false,
+      "kind": "historical background raw NPZ",
+      "impact": "已在正文/证据索引/绘图manifest限制为历史汇总或归档图来源；当前未从缺失raw重算，不将其声称为新实验。"
+    },
+    {
+      "path": "results/control/pc104_cross_layer_fault_sync_20260822_225436",
+      "exists": false,
+      "kind": "historical PC104 short fault raw bundle",
+      "impact": "已在正文/证据索引/绘图manifest限制为历史汇总或归档图来源；当前未从缺失raw重算，不将其声称为新实验。"
+    },
+    {
+      "path": "results/control/pc104_cross_layer_fault_sync_20260822_222112",
+      "exists": false,
+      "kind": "historical PC104 soak raw bundle",
+      "impact": "已在正文/证据索引/绘图manifest限制为历史汇总或归档图来源；当前未从缺失raw重算，不将其声称为新实验。"
+    }
+  ],
+  "errors": [],
+  "not_run": [
+    {
+      "item": "重新运行科学仿真、数据拟合或实物实验",
+      "status": "NOT_RUN",
+      "reason": "不在本次交付完整性审计范围；冻结结果保持原样。"
+    },
+    {
+      "item": "本轮全部PDF页面视觉再验收",
+      "status": "NOT_RUN",
+      "reason": "由独立最终视觉验收记录负责；本审计仅绑定最终PDF SHA与来源。"
+    }
+  ]
+}

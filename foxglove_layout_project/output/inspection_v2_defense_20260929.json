@@ -1,0 +1,461 @@
+{
+  "configById": {
+    "3D!inspection_scene": {
+      "cameraState": {
+        "distance": 400,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          -70,
+          0,
+          -12
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 38,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "world",
+      "fixedFrame": "world",
+      "scene": {
+        "syncCamera": false,
+        "backgroundColor": "#07131d",
+        "transforms": {
+          "editable": false,
+          "showLabel": false,
+          "enablePreloading": true,
+          "visible": true,
+          "axisSize": 0.18,
+          "labelSize": 12,
+          "lineWidth": 1,
+          "lineColor": "#345362",
+          "drawBehind": true
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "color": "#1f3542",
+        "divisions": 20,
+        "size": 400,
+        "visible": true
+      },
+      "topics": {
+        "/auv/state/filtered": {
+          "visible": false,
+          "type": "arrow",
+          "axisScale": 5.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/auv_body": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/truth_marker": {
+          "visible": false,
+          "type": "arrow",
+          "axisScale": 1.8,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/seabed_mesh": {
+          "visible": true,
+          "color": "#d2b48c",
+          "showOutlines": true
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        },
+        "/auv/visual/scale_bar": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ffffff"
+        },
+        "/auv/visual/search_corridor": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#26c6da"
+        },
+        "/auv/visual/search_pattern": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff9f43"
+        },
+        "/auv/visual/detection_link": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#2ecc71"
+        },
+        "/auv/visual/cable_target": {
+          "visible": true,
+          "type": "sphere",
+          "axisScale": 1.0,
+          "color": "#2ecc71"
+        },
+        "/auv/visual/mission_label": {
+          "visible": true,
+          "type": "text",
+          "axisScale": 1.0,
+          "color": "#e6f7ff"
+        },
+        "/auv/visual/cable_estimate": {
+          "visible": true,
+          "type": "sphere",
+          "axisScale": 1.0,
+          "color": "#e640ff"
+        },
+        "/auv/visual/burial_estimate": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#f05cd8"
+        },
+        "/auv/visual/position_uncertainty": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#d57cff"
+        },
+        "/auv/visual/magnetic_vector": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#ff731c"
+        },
+        "/auv/visual/fwhm_span": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff3399"
+        },
+        "/auv/visual/perception_label": {
+          "visible": true,
+          "type": "text",
+          "axisScale": 1.0,
+          "color": "#ffe8fa"
+        },
+        "/auv/visual/decoupled_vehicle": {
+          "visible": false,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#3b82f6"
+        },
+        "/auv/visual/decoupled_vehicle_trail": {
+          "visible": false,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#60a5fa"
+        },
+        "/auv/visual/decoupled_true_cable": {
+          "visible": false,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#22c55e"
+        },
+        "/auv/visual/emergency_surface": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#ef4444"
+        }
+      },
+      "layers": {}
+    },
+    "3D!inspection_route": {
+      "cameraState": {
+        "distance": 400,
+        "perspective": false,
+        "phi": 0,
+        "target": [
+          -70,
+          0,
+          -12
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 0,
+        "fovy": 45,
+        "near": 0.1,
+        "far": 5000
+      },
+      "followMode": "follow-none",
+      "followTf": "world",
+      "fixedFrame": "world",
+      "scene": {
+        "syncCamera": false,
+        "backgroundColor": "#07131d",
+        "transforms": {
+          "editable": false,
+          "showLabel": false,
+          "enablePreloading": true,
+          "visible": false
+        },
+        "enableStats": false,
+        "meshUpAxis": "z_up"
+      },
+      "transforms": {},
+      "grid": {
+        "color": "#1f3542",
+        "divisions": 20,
+        "size": 400,
+        "visible": true
+      },
+      "topics": {
+        "/auv/state/filtered": {
+          "visible": false,
+          "type": "arrow",
+          "axisScale": 5.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/auv_body": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#58a6ff"
+        },
+        "/auv/visual/truth_marker": {
+          "visible": false,
+          "type": "arrow",
+          "axisScale": 1.6,
+          "color": "#00b7ff"
+        },
+        "/auv/visual/seabed_mesh": {
+          "visible": true,
+          "color": "#d2b48c",
+          "showOutlines": true
+        },
+        "/auv/visual/cable_marker": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#f6d64a"
+        },
+        "/auv/visual/history_trail": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#4f9cff"
+        },
+        "/auv/visual/view_range": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff4d4d"
+        },
+        "/auv/visual/scale_bar": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ffffff"
+        },
+        "/auv/visual/search_corridor": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#26c6da"
+        },
+        "/auv/visual/search_pattern": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff9f43"
+        },
+        "/auv/visual/detection_link": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#2ecc71"
+        },
+        "/auv/visual/cable_target": {
+          "visible": true,
+          "type": "sphere",
+          "axisScale": 1.0,
+          "color": "#2ecc71"
+        },
+        "/auv/visual/mission_label": {
+          "visible": true,
+          "type": "text",
+          "axisScale": 1.0,
+          "color": "#e6f7ff"
+        },
+        "/auv/visual/cable_estimate": {
+          "visible": true,
+          "type": "sphere",
+          "axisScale": 1.0,
+          "color": "#e640ff"
+        },
+        "/auv/visual/burial_estimate": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#f05cd8"
+        },
+        "/auv/visual/position_uncertainty": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#d57cff"
+        },
+        "/auv/visual/magnetic_vector": {
+          "visible": true,
+          "type": "arrow",
+          "axisScale": 1.0,
+          "color": "#ff731c"
+        },
+        "/auv/visual/fwhm_span": {
+          "visible": true,
+          "type": "lineStrip",
+          "axisScale": 1.0,
+          "color": "#ff3399"
+        },
+        "/auv/visual/perception_label": {
+          "visible": true,
+          "type": "text",
+          "axisScale": 1.0,
+          "color": "#ffe8fa"
+        }
+      },
+      "layers": {}
+    },
+    "Markdown!inspection_permissions": {
+      "renderMode": "message",
+      "messagePath": "/auv/visual/perception_text.data",
+      "fontSize": 16
+    },
+    "Plot!inspection_motion": {
+      "title": "运动证据 · 实测速度与目标速度",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "m/s",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/sensors/dvl.twist.linear.x",
+          "enabled": true,
+          "color": "#4dabf7",
+          "label": "DVL 前向速度"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/control/setpoint.target_speed_mps",
+          "enabled": true,
+          "color": "#ffd166",
+          "label": "目标速度"
+        }
+      ],
+      "sidebarDimension": 135,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 60.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "Plot!inspection_width": {
+      "title": "主动观测 · FWHM 测宽（不是置信度或埋深）",
+      "legendDisplay": "floating",
+      "showLegend": true,
+      "xAxisLabel": "时间",
+      "yAxisLabel": "m",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/auv/cable/fwhm_width_m.data",
+          "enabled": true,
+          "color": "#d57cff",
+          "label": "FWHM 宽度"
+        }
+      ],
+      "sidebarDimension": 135,
+      "timeWindowMode": "sliding",
+      "followingViewWidth": 60.0,
+      "playbackBarPosition": "right",
+      "isSynced": true,
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showPlotValuesInLegend": true
+    },
+    "RawMessages!inspection_bridge": {
+      "title": "桥原始任务与执行许可",
+      "topicPath": "/auv/cable/operational_status",
+      "diffEnabled": false,
+      "expansion": "none",
+      "showFullMessageForDiff": true
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": "3D!inspection_scene",
+    "second": {
+      "direction": "column",
+      "first": "Markdown!inspection_permissions",
+      "second": {
+        "direction": "column",
+        "first": "3D!inspection_route",
+        "second": {
+          "direction": "column",
+          "first": "Plot!inspection_motion",
+          "second": {
+            "direction": "column",
+            "first": "Plot!inspection_width",
+            "second": "RawMessages!inspection_bridge",
+            "splitPercentage": 65
+          },
+          "splitPercentage": 50
+        },
+        "splitPercentage": 40
+      },
+      "splitPercentage": 35
+    },
+    "splitPercentage": 64
+  }
+}

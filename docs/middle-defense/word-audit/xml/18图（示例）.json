@@ -1,0 +1,585 @@
+{
+  "source": "相关附件和参照/word模板(202605)/18图（示例）.doc",
+  "source_sha256": "91e8134a87ff4036946b7bbe824ad00ccd36375e7216e585cda8a71aa84417c2",
+  "converted_docx_sha256": "285b926adc777f07e2959d239c5e650930d73281fd5a61b7fd826a3e3f3fdcb4",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId4"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "30",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "lines",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "24"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Style14": {
+      "type": "character",
+      "styleId": "Style14",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style14",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style15": {
+      "type": "character",
+      "styleId": "Style15",
+      "name": "页眉 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style16": {
+      "type": "character",
+      "styleId": "Style16",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style17": {
+      "type": "character",
+      "styleId": "Style17",
+      "name": "图题 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "Style18": {
+      "type": "character",
+      "styleId": "Style18",
+      "name": "图注 字符",
+      "basedOn": "Style17",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Liberation Sans",
+          "hAnsi": "Liberation Sans",
+          "eastAsia": "Noto Sans CJK SC",
+          "cs": "Lohit Devanagari"
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "28"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style19": {
+      "type": "paragraph",
+      "styleId": "Style19",
+      "name": "插图",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "420",
+          "before": "240",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "20"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style20": {
+      "type": "paragraph",
+      "styleId": "Style20",
+      "name": "英文图题",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "0",
+          "after": "240"
+        },
+        "ind": {
+          "left": "567",
+          "right": "567",
+          "hanging": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style21": {
+      "type": "paragraph",
+      "styleId": "Style21",
+      "name": "中文图题",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "120",
+          "after": "0"
+        },
+        "ind": {
+          "left": "567",
+          "right": "567",
+          "hanging": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style22": {
+      "type": "paragraph",
+      "styleId": "Style22",
+      "name": "图题",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "120",
+          "after": "240"
+        },
+        "ind": {
+          "left": "567",
+          "right": "567",
+          "hanging": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style23": {
+      "type": "paragraph",
+      "styleId": "Style23",
+      "name": "图注",
+      "basedOn": "Style22",
+      "pPr": {
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "left": "0",
+          "right": "0",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 2,
+      "text": "图3.6  不同光源照射30分钟后测定的紫菌样品紫外－可见吸收光谱",
+      "pPr": {
+        "pStyle": {
+          "val": "Style23"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "图",
+          "rPr": {}
+        },
+        {
+          "text": "3.6  ",
+          "rPr": {}
+        },
+        {
+          "text": "不同光源照射",
+          "rPr": {}
+        },
+        {
+          "text": "30",
+          "rPr": {}
+        },
+        {
+          "text": "分钟后测定的紫菌样品紫外－可见吸收光谱",
+          "rPr": {}
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "第3章  ××××××××××××",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "30",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

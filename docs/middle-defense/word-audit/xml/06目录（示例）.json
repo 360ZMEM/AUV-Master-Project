@@ -1,0 +1,3340 @@
+{
+  "source": "相关附件和参照/word模板(202605)/06目录（示例）.docx",
+  "source_sha256": "fe71585c030f99f3b7cc8757c89a56e20a93328c1d7438f3465e0354481d3da4",
+  "converted_docx_sha256": "fe71585c030f99f3b7cc8757c89a56e20a93328c1d7438f3465e0354481d3da4",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:asciiTheme=\"minorHAnsi\" ns0:eastAsiaTheme=\"minorEastAsia\" ns0:hAnsiTheme=\"minorHAnsi\" ns0:cstheme=\"minorBidi\" /><ns0:kern ns0:val=\"2\" /><ns0:sz ns0:val=\"21\" /><ns0:szCs ns0:val=\"22\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"ar-SA\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault /></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "first",
+        "id": "rId12"
+      },
+      "footerReference": {
+        "type": "first",
+        "id": "rId13"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "top": "1701",
+        "right": "1701",
+        "bottom": "1701",
+        "left": "1701",
+        "header": "1247",
+        "footer": "1247",
+        "gutter": "0"
+      },
+      "pgNumType": {
+        "fmt": "upperRoman"
+      },
+      "cols": {
+        "space": "425"
+      },
+      "docGrid": {
+        "type": "lines",
+        "linePitch": "326"
+      }
+    }
+  ],
+  "styles": {
+    "a0": {
+      "type": "paragraph",
+      "default": "1",
+      "styleId": "a0",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "0"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLineChars": "200",
+          "firstLine": "200"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman"
+        },
+        "sz": {
+          "val": "24"
+        }
+      }
+    },
+    "1": {
+      "type": "paragraph",
+      "styleId": "1",
+      "name": "heading 1",
+      "basedOn": "a0",
+      "pPr": {
+        "keepNext": {
+          "value": ""
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360",
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "44"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "2": {
+      "type": "paragraph",
+      "styleId": "2",
+      "name": "heading 2",
+      "basedOn": "a0",
+      "pPr": {
+        "keepNext": {
+          "value": ""
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "480",
+          "after": "120"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "outlineLvl": {
+          "val": "1"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "majorHAnsi",
+          "eastAsia": "黑体",
+          "hAnsiTheme": "majorHAnsi",
+          "cstheme": "majorBidi"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "3": {
+      "type": "paragraph",
+      "styleId": "3",
+      "name": "heading 3",
+      "basedOn": "a0",
+      "pPr": {
+        "keepNext": {
+          "value": ""
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "outlineLvl": {
+          "val": "2"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "4": {
+      "type": "paragraph",
+      "styleId": "4",
+      "name": "heading 4",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "3"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体"
+        }
+      }
+    },
+    "a1": {
+      "type": "character",
+      "default": "1",
+      "styleId": "a1",
+      "name": "Default Paragraph Font",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "a2": {
+      "type": "table",
+      "default": "1",
+      "styleId": "a2",
+      "name": "Normal Table",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "a3": {
+      "type": "numbering",
+      "default": "1",
+      "styleId": "a3",
+      "name": "No List",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "a4": {
+      "type": "paragraph",
+      "styleId": "a4",
+      "name": "header",
+      "basedOn": "a0",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "a5": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "a5",
+      "name": "页眉 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "a6": {
+      "type": "paragraph",
+      "styleId": "a6",
+      "name": "footer",
+      "basedOn": "a0",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "a7": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "a7",
+      "name": "页脚 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "11": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "11",
+      "name": "标题 1 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "eastAsia": "黑体",
+          "hAnsi": "Times New Roman"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "44"
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "44"
+        }
+      }
+    },
+    "20": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "20",
+      "name": "标题 2 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "majorHAnsi",
+          "eastAsia": "黑体",
+          "hAnsiTheme": "majorHAnsi",
+          "cstheme": "majorBidi"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "30": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "30",
+      "name": "标题 3 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "eastAsia": "黑体",
+          "hAnsi": "Times New Roman"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "40": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "40",
+      "name": "标题 4 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "eastAsia": "黑体",
+          "hAnsi": "Times New Roman"
+        },
+        "sz": {
+          "val": "24"
+        }
+      }
+    },
+    "10": {
+      "type": "numbering",
+      "customStyle": "1",
+      "styleId": "10",
+      "name": "样式1",
+      "basedOn": null,
+      "pPr": {
+        "numPr": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "TOC": {
+      "type": "paragraph",
+      "styleId": "TOC",
+      "name": "TOC Heading",
+      "basedOn": "1",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "240",
+          "after": "0",
+          "line": "259",
+          "lineRule": "auto"
+        },
+        "jc": {
+          "val": "left"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "majorHAnsi",
+          "eastAsiaTheme": "majorEastAsia",
+          "hAnsiTheme": "majorHAnsi",
+          "cstheme": "majorBidi"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "val": "0"
+        },
+        "color": {
+          "val": "2E74B5",
+          "themeColor": "accent1",
+          "themeShade": "BF"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "12": {
+      "type": "paragraph",
+      "styleId": "12",
+      "name": "toc 1",
+      "basedOn": "a0",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体"
+        },
+        "noProof": {
+          "value": ""
+        }
+      }
+    },
+    "21": {
+      "type": "paragraph",
+      "styleId": "21",
+      "name": "toc 2",
+      "basedOn": "a0",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "ind": {
+          "leftChars": "100",
+          "left": "720",
+          "hangingChars": "200",
+          "hanging": "480"
+        }
+      },
+      "rPr": {}
+    },
+    "31": {
+      "type": "paragraph",
+      "styleId": "31",
+      "name": "toc 3",
+      "basedOn": "a0",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "ind": {
+          "leftChars": "200",
+          "left": "960",
+          "hangingChars": "200",
+          "hanging": "480"
+        }
+      },
+      "rPr": {}
+    },
+    "a8": {
+      "type": "character",
+      "styleId": "a8",
+      "name": "Hyperlink",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "0563C1",
+          "themeColor": "hyperlink"
+        },
+        "u": {
+          "val": "single"
+        }
+      }
+    },
+    "a9": {
+      "type": "paragraph",
+      "styleId": "a9",
+      "name": "List Paragraph",
+      "basedOn": "a0",
+      "pPr": {
+        "ind": {
+          "firstLine": "420"
+        }
+      },
+      "rPr": {}
+    },
+    "aa": {
+      "type": "paragraph",
+      "styleId": "aa",
+      "name": "Balloon Text",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "ab": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "ab",
+      "name": "批注框文本 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "ac": {
+      "type": "paragraph",
+      "styleId": "ac",
+      "name": "caption",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "before": "120",
+          "after": "240",
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cstheme": "majorBidi"
+        },
+        "sz": {
+          "val": "22"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "ad": {
+      "type": "table",
+      "styleId": "ad",
+      "name": "Table Grid",
+      "basedOn": "a2",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Equation": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "Equation",
+      "name": "Equation",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "before": "120",
+          "after": "120",
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cs": "宋体"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "ae": {
+      "type": "paragraph",
+      "styleId": "ae",
+      "name": "Normal (Web)",
+      "basedOn": "a0",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "100",
+          "beforeAutospacing": "1",
+          "after": "100",
+          "afterAutospacing": "1",
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "宋体",
+          "eastAsia": "宋体",
+          "hAnsi": "宋体",
+          "cs": "宋体"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Char1CharCharChar": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "Char1CharCharChar",
+      "name": "Char1 Char Char Char",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "360",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "楷体_GB2312",
+          "cs": "Times New Roman"
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "28"
+        }
+      }
+    },
+    "Default": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "Default",
+      "name": "Default",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "0"
+        },
+        "autoSpaceDE": {
+          "val": "0"
+        },
+        "autoSpaceDN": {
+          "val": "0"
+        },
+        "adjustRightInd": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "宋体",
+          "eastAsia": "宋体",
+          "cs": "宋体"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Equationnumber": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "Equationnumber",
+      "name": "Equation number",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "right"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cs": "宋体"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "af": {
+      "type": "character",
+      "styleId": "af",
+      "name": "Placeholder Text",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "808080"
+        }
+      }
+    },
+    "af0": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "af0",
+      "name": "!论文表格文字",
+      "basedOn": "a0",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "60",
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cs": "宋体"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "af1": {
+      "type": "paragraph",
+      "styleId": "af1",
+      "name": "No Spacing",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "0"
+        },
+        "ind": {
+          "firstLineChars": "200",
+          "firstLine": "200"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman"
+        },
+        "sz": {
+          "val": "24"
+        }
+      }
+    },
+    "af2": {
+      "type": "table",
+      "styleId": "af2",
+      "name": "Grid Table Light",
+      "basedOn": "a2",
+      "pPr": {},
+      "rPr": {}
+    },
+    "af3": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "af3",
+      "name": "段落",
+      "basedOn": "a0",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "adjustRightInd": {
+          "val": "0"
+        },
+        "spacing": {
+          "line": "420",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLine": "520"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cs": "Times New Roman"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "a": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "a",
+      "name": "例程",
+      "basedOn": "a0",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "topLinePunct": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "0"
+        },
+        "autoSpaceDN": {
+          "val": "0"
+        },
+        "adjustRightInd": {
+          "val": "0"
+        },
+        "snapToGrid": {
+          "val": "0"
+        },
+        "spacing": {
+          "line": "300",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "right": "567",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "left"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "宋体",
+          "cs": "Times New Roman"
+        },
+        "snapToGrid": {
+          "val": "0"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "21"
+        }
+      }
+    },
+    "Title1": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "Title1",
+      "name": "Title1",
+      "basedOn": "af4",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "adjustRightInd": {
+          "val": "0"
+        },
+        "spacing": {
+          "after": "360",
+          "line": "420",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "0"
+        },
+        "bCs": {
+          "val": "0"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "af4": {
+      "type": "paragraph",
+      "styleId": "af4",
+      "name": "Title",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "majorHAnsi",
+          "eastAsia": "宋体",
+          "hAnsiTheme": "majorHAnsi",
+          "cstheme": "majorBidi"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "af5": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "af5",
+      "name": "标题 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "majorHAnsi",
+          "eastAsia": "宋体",
+          "hAnsiTheme": "majorHAnsi",
+          "cstheme": "majorBidi"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "41": {
+      "type": "paragraph",
+      "styleId": "41",
+      "name": "toc 4",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "600",
+          "left": "1260",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "5": {
+      "type": "paragraph",
+      "styleId": "5",
+      "name": "toc 5",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "800",
+          "left": "1680",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "6": {
+      "type": "paragraph",
+      "styleId": "6",
+      "name": "toc 6",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "1000",
+          "left": "2100",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "7": {
+      "type": "paragraph",
+      "styleId": "7",
+      "name": "toc 7",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "1200",
+          "left": "2520",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "8": {
+      "type": "paragraph",
+      "styleId": "8",
+      "name": "toc 8",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "1400",
+          "left": "2940",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "9": {
+      "type": "paragraph",
+      "styleId": "9",
+      "name": "toc 9",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        },
+        "ind": {
+          "leftChars": "1600",
+          "left": "3360",
+          "firstLineChars": "0",
+          "firstLine": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "asciiTheme": "minorHAnsi",
+          "hAnsiTheme": "minorHAnsi"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "50": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "50",
+      "name": "标题5",
+      "basedOn": "af4",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "adjustRightInd": {
+          "val": "0"
+        },
+        "spacing": {
+          "after": "360",
+          "line": "420",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "0"
+        },
+        "bCs": {
+          "val": "0"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "af6": {
+      "type": "paragraph",
+      "customStyle": "1",
+      "styleId": "af6",
+      "name": "表",
+      "basedOn": "ac",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        }
+      },
+      "rPr": {}
+    },
+    "af7": {
+      "type": "character",
+      "styleId": "af7",
+      "name": "annotation reference",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "16"
+        },
+        "szCs": {
+          "val": "16"
+        }
+      }
+    },
+    "af8": {
+      "type": "paragraph",
+      "styleId": "af8",
+      "name": "annotation text",
+      "basedOn": "a0",
+      "pPr": {
+        "spacing": {
+          "line": "240",
+          "lineRule": "auto"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "20"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "af9": {
+      "type": "character",
+      "customStyle": "1",
+      "styleId": "af9",
+      "name": "批注文字 字符",
+      "basedOn": "a1",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman"
+        },
+        "sz": {
+          "val": "20"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "目  录",
+      "pPr": {
+        "pStyle": {
+          "val": "1"
+        },
+        "numPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "目",
+          "rPr": {
+            "rFonts": {
+              "hint": "eastAsia"
+            }
+          }
+        },
+        {
+          "text": "录",
+          "rPr": {
+            "rFonts": {
+              "hint": "eastAsia"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "摘  要………..I",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 3,
+      "text": "Abstract.........II",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 4,
+      "text": "目  录…….……IV",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 5,
+      "text": "插图和附表清单VIII",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 6,
+      "text": "符号和缩略语说明IX",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 7,
+      "text": "第1章  引言………..………………………………………………………………1",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 8,
+      "text": "1.1  研究背景此处是为了给出跨行目录悬挂对齐的示例此处是为了给出跨行目录悬挂对齐的示例…………………………………………………………..….1",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 9,
+      "text": "1.1.1  此处是为了给出跨行目录悬挂对齐的示例此处是为了给出跨行目录悬挂对齐的示例1",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 10,
+      "text": "1.1.2  城市精细化管理对城市排水系统设计提出新要求4",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 11,
+      "text": "1.1.3  传统规划方法的局限与不足6",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 12,
+      "text": "1.2  问题的提出………..……..……………..………………………….……………7",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 13,
+      "text": "1.3  研究目的、内容与意义8",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 14,
+      "text": "1.3.1  研究目的8",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 15,
+      "text": "1.3.2  研究内容8",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 16,
+      "text": "1.3.3  研究意义8",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 17,
+      "text": "1.4  论文结构….9",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 18,
+      "text": "第2章  文献综述11",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 19,
+      "text": "2.1  城市排水系统规划设计内容的研究进展………………………………..11",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 20,
+      "text": "2.1.1  此处给出目录跨行后悬挂对齐的演示此处给出目录跨行后悬挂对齐的演示此处给出目录跨行后悬挂对齐的演示11",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 21,
+      "text": "2.1.2  “网+厂”的传统规划12",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 22,
+      "text": "2.1.3  “面+网+厂”的空间设计15",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 23,
+      "text": "2.2  城市排水系统设计方法和模型的应用综述18",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 24,
+      "text": "2.2.1  “网+厂”的传统规划方法和模型18",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 25,
+      "text": "2.2.2  “面+网+厂”的空间设计方法和模型23",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 26,
+      "text": "2.3  城市排水系统设计中考虑不确定性的实践综述27",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 27,
+      "text": "2.3.1  影响城市排水系统设计的不确定性因素及其分类27",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 28,
+      "text": "2.3.2  考虑不确定性因素的城市排水系统设计实践28",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 29,
+      "text": "2.4  本章小结38",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 30,
+      "text": "第3章  不确定条件下分流制城市排水系统优化设计方法研究40",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 31,
+      "text": "3.1  方法框架40",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 32,
+      "text": "3.2  问题识别41",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 33,
+      "text": "3.3  数据收集和不确定条件量化预测46",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 34,
+      "text": "3.3.1  数据收集生成基准设计条件46",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 35,
+      "text": "3.3.2  不确定条件量化预测生成评估情景集合47",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 36,
+      "text": "3.4  基准条件下多目标优化53",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 37,
+      "text": "3.4.1  雨水系统设计53",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 38,
+      "text": "3.4.2  污水系统设计57",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 39,
+      "text": "3.5  不确定条件下系统性能评估59",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 40,
+      "text": "3.5.1  雨水系统性能评估60",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 41,
+      "text": "3.5.2  污水系统性能评估61",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 42,
+      "text": "3.6  方案优选与最优集合推荐62",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 43,
+      "text": "3.7  本章小结63",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 44,
+      "text": "第4章  含有不确定性参数的城市排水系统优化设计模型64",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 45,
+      "text": "4.1  整体框架64",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 46,
+      "text": "4.2  基本假设65",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 47,
+      "text": "4.2.1  城市地块与设计单元65",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 48,
+      "text": "4.2.2  设施空间位置的选择原则67",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 49,
+      "text": "4.2.3  径流调蓄设施的能力及其空间分布68",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 50,
+      "text": "4.2.4  其他基本假设69",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 51,
+      "text": "4.3  模型输入69",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 52,
+      "text": "4.3.1  设计单元属性数据69",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 53,
+      "text": "4.3.2  排水和再生水数据70",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 54,
+      "text": "4.3.3  空间信息数据72",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 55,
+      "text": "4.3.4  设施参考数据73",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 56,
+      "text": "4.3.5  成本属性数据74",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 57,
+      "text": "4.3.6  模拟降雨数据77",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 58,
+      "text": "4.3.7  产流拟合参数数据77",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 59,
+      "text": "4.3.8  雨水系统和污水系统输入数据一览表78",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 60,
+      "text": "4.4  模型构建79",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 61,
+      "text": "4.4.1  雨水系统模型构建79",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 62,
+      "text": "4.4.2  污水系统模型构建85",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 63,
+      "text": "4.5  算法设计91",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 64,
+      "text": "4.5.1  整体设计思路91",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 65,
+      "text": "4.5.2  雨水系统算法设计91",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 66,
+      "text": "4.5.3  污水系统算法设计99",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 67,
+      "text": "4.5.4  算法性能105",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 68,
+      "text": "4.6  模型输出107",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 69,
+      "text": "4.7  本章小结108",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 70,
+      "text": "第5章  案例研究：昆明市城北片区排水系统设计109",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 71,
+      "text": "5.1  昆明市城北片区概况109",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 72,
+      "text": "5.2  研究区域概化及数据收集110",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 73,
+      "text": "5.2.1  研究区域概化110",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 74,
+      "text": "5.2.2  基础数据收集和不确定条件量化预测111",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 75,
+      "text": "5.3  设计输入信息115",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 76,
+      "text": "5.3.1  基准设计条件115",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 77,
+      "text": "5.3.2  不确定性评估情景集合120",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 78,
+      "text": "5.4  基准条件下的系统设计输出120",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 79,
+      "text": "5.4.1  雨水系统设计方案120",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 80,
+      "text": "5.4.2  污水系统设计方案124",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 81,
+      "text": "5.5  不确定条件下的系统性能评估128",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 82,
+      "text": "5.5.1  雨水系统性能评估128",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 83,
+      "text": "5.5.2  污水系统性能评估130",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 84,
+      "text": "5.6  推荐方案集合134",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 85,
+      "text": "5.6.1  雨水系统推荐方案134",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 86,
+      "text": "5.6.2  污水系统推荐方案135",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 87,
+      "text": "5.7  与城北片区现状系统的性能比较137",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 88,
+      "text": "5.8  本章小结139",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 89,
+      "text": "第6章  不确定条件下城市排水系统设计规律识别与分析141",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 90,
+      "text": "6.1  雨水系统141",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 91,
+      "text": "6.1.1  系统分散/集中程度对雨水系统性能的影响141",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 92,
+      "text": "6.1.2  管道设计重现期与径流空间调蓄的协调关系143",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 93,
+      "text": "6.2  污水系统148",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 94,
+      "text": "6.2.1  设计输入条件变化对污水系统最优解集的影响148",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 95,
+      "text": "6.2.2  DWF设计原则对污水系统性能评估结果的影响151",
+      "pPr": {
+        "pStyle": {
+          "val": "31"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 96,
+      "text": "6.3  本章小结153",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 97,
+      "text": "第7章  结论与建议155",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 98,
+      "text": "7.1  结论……155",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 99,
+      "text": "7.2  建议……158",
+      "pPr": {
+        "pStyle": {
+          "val": "21"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 100,
+      "text": "参考文献…….159",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 101,
+      "text": "附录A 雨水系统和污水系统设计模型的程序文件一览表173",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 102,
+      "text": "附录B 空间降尺度和时间降尺度模型结构与主要程序一览表179",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 103,
+      "text": "致  谢…….…184",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 104,
+      "text": "声  明…….…185",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 105,
+      "text": "个人简历、在学期间完成的相关学术成果186",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 106,
+      "text": "指导教师评语…188",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 107,
+      "text": "答辩委员会决议书189",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": []
+    },
+    {
+      "paragraph_index": 111,
+      "text": "说明此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。阅后删除此框及内容。说明此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。阅后删除此框及内容。",
+      "pPr": {
+        "ind": {
+          "firstLine": "480"
+        }
+      },
+      "runs": [
+        {
+          "text": "说明此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。阅后删除此框及内容。说明此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。阅后删除此框及内容。",
+          "rPr": {
+            "rFonts": {
+              "hint": "eastAsia"
+            },
+            "noProof": {
+              "value": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 112,
+      "text": "说明",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "说明",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体",
+              "eastAsia": "黑体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "32"
+            },
+            "szCs": {
+              "val": "32"
+            },
+            "highlight": {
+              "val": "red"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 113,
+      "text": "此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLine": "600"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "此处引用的",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "目录",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 114,
+      "text": "阅后删除此框及内容。",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLine": "600"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "阅后",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "删除此框",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "及内容",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "32"
+            },
+            "szCs": {
+              "val": "32"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 115,
+      "text": "说明",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLineChars": "0",
+          "firstLine": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "说明",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体",
+              "eastAsia": "黑体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "32"
+            },
+            "szCs": {
+              "val": "32"
+            },
+            "highlight": {
+              "val": "red"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 116,
+      "text": "此处引用的目录例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLine": "600"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "此处引用的",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "目录",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "例子，只作为书写格式的示范，并不代表论文研究内容的示范。望周知。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 117,
+      "text": "阅后删除此框及内容。",
+      "pPr": {
+        "pStyle": {
+          "val": "af3"
+        },
+        "spacing": {
+          "line": "400",
+          "lineRule": "exact"
+        },
+        "ind": {
+          "firstLine": "600"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "阅后",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "删除此框",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "及内容",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体",
+              "hAnsi": "宋体",
+              "hint": "eastAsia"
+            },
+            "color": {
+              "val": "FF0000"
+            },
+            "sz": {
+              "val": "32"
+            },
+            "szCs": {
+              "val": "32"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header3.xml": {
+      "text": "目  录",
+      "fields": []
+    },
+    "word/footer2.xml": {
+      "text": "IV",
+      "fields": [
+        "PAGE   \\* MERGEFORMAT"
+      ]
+    },
+    "word/footer1.xml": {
+      "text": "",
+      "fields": []
+    },
+    "word/header2.xml": {
+      "text": "目  录",
+      "fields": []
+    },
+    "word/footer3.xml": {
+      "text": "",
+      "fields": []
+    },
+    "word/header1.xml": {
+      "text": "",
+      "fields": []
+    }
+  },
+  "footnotes_endnotes": {
+    "word/footnotes.xml": [
+      {
+        "attributes": {
+          "type": "separator",
+          "id": "-1"
+        },
+        "text": "",
+        "xml": "<ns0:footnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"separator\" ns0:id=\"-1\"><ns0:p ns0:rsidR=\"00877C08\" ns0:rsidRDefault=\"00877C08\" ns0:rsidP=\"00A82939\"><ns0:pPr><ns0:spacing ns0:line=\"240\" ns0:lineRule=\"auto\" /><ns0:ind ns0:firstLine=\"480\" /></ns0:pPr><ns0:r><ns0:separator /></ns0:r></ns0:p></ns0:footnote>"
+      },
+      {
+        "attributes": {
+          "type": "continuationSeparator",
+          "id": "0"
+        },
+        "text": "",
+        "xml": "<ns0:footnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"continuationSeparator\" ns0:id=\"0\"><ns0:p ns0:rsidR=\"00877C08\" ns0:rsidRDefault=\"00877C08\" ns0:rsidP=\"00A82939\"><ns0:pPr><ns0:spacing ns0:line=\"240\" ns0:lineRule=\"auto\" /><ns0:ind ns0:firstLine=\"480\" /></ns0:pPr><ns0:r><ns0:continuationSeparator /></ns0:r></ns0:p></ns0:footnote>"
+      }
+    ],
+    "word/endnotes.xml": [
+      {
+        "attributes": {
+          "type": "separator",
+          "id": "-1"
+        },
+        "text": "",
+        "xml": "<ns0:endnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"separator\" ns0:id=\"-1\"><ns0:p ns0:rsidR=\"00877C08\" ns0:rsidRDefault=\"00877C08\" ns0:rsidP=\"00A82939\"><ns0:pPr><ns0:spacing ns0:line=\"240\" ns0:lineRule=\"auto\" /><ns0:ind ns0:firstLine=\"480\" /></ns0:pPr><ns0:r><ns0:separator /></ns0:r></ns0:p></ns0:endnote>"
+      },
+      {
+        "attributes": {
+          "type": "continuationSeparator",
+          "id": "0"
+        },
+        "text": "",
+        "xml": "<ns0:endnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:type=\"continuationSeparator\" ns0:id=\"0\"><ns0:p ns0:rsidR=\"00877C08\" ns0:rsidRDefault=\"00877C08\" ns0:rsidP=\"00A82939\"><ns0:pPr><ns0:spacing ns0:line=\"240\" ns0:lineRule=\"auto\" /><ns0:ind ns0:firstLine=\"480\" /></ns0:pPr><ns0:r><ns0:continuationSeparator /></ns0:r></ns0:p></ns0:endnote>"
+      }
+    ]
+  }
+}

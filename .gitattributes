@@ -43,11 +43,15 @@ docs/internals/figures/**/*.png filter=lfs diff=lfs merge=lfs -text
 /thuthesis/backups/20260928_full_236p/source_and_figures.complete.tar.gz filter=lfs diff=lfs merge=lfs -text
 /PPT制作/V4.7实验叙事与资产冻结版/*.pdf filter=lfs diff=lfs merge=lfs -text
 /PPT制作/V4.7实验叙事与资产冻结版/*.pptx filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/**/*.png filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 /PPT制作/V4.7实验叙事与资产冻结版/必要图片素材/*.png filter=lfs diff=lfs merge=lfs -text
 /PPT制作/V4.7实验叙事与资产冻结版/必要图片素材/*.jpg filter=lfs diff=lfs merge=lfs -text
 /PPT制作/V4.7实验叙事与资产冻结版/现场答问候选/*.png filter=lfs diff=lfs merge=lfs -text
 /PPT制作/assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+/PPT制作/assets/**/*.pdf filter=lfs diff=lfs merge=lfs -text
 /docs/experiment/assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+/docs/experiment/assets/**/*.pdf filter=lfs diff=lfs merge=lfs -text
 /docs/experiment/assets/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 /docs/middle-defense/render-main-final2/*.png filter=lfs diff=lfs merge=lfs -text
 /docs/middle-defense/render-school-final2/*.png filter=lfs diff=lfs merge=lfs -text

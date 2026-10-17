@@ -1,0 +1,11 @@
+Starting >>> auv_viz_bridge
+--- stderr: auv_viz_bridge
+warning: build_py: byte-compiling is disabled, skipping.
+
+warning: install_lib: byte-compiling is disabled, skipping.
+
+---
+Finished <<< auv_viz_bridge [1.85s]
+
+Summary: 1 package finished [2.66s]
+  1 package had stderr output: auv_viz_bridge

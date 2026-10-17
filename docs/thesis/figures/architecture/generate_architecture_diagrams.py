@@ -16,9 +16,9 @@ INTERNAL_OUT = THESIS_OUT.parents[2] / "internals" / "figures" / "architecture"
 VERSION = "30.3.14"
 
 FONT_FAMILY = "Songti SC"
-FONT = f"fontFamily={FONT_FAMILY};fontSize=16;fontColor=#26323D;"
-LANE_FONT = f"fontFamily={FONT_FAMILY};fontSize=19;fontStyle=1;fontColor=#26323D;"
-EDGE_FONT = f"fontFamily={FONT_FAMILY};fontSize=14;fontColor=#25384A;"
+FONT = f"fontFamily={FONT_FAMILY};fontSize=24;fontColor=#26323D;"
+LANE_FONT = f"fontFamily={FONT_FAMILY};fontSize=26;fontStyle=1;fontColor=#26323D;"
+EDGE_FONT = f"fontFamily={FONT_FAMILY};fontSize=20;fontColor=#25384A;"
 
 PALETTE = {
     "blue": ("#EAF2F8", "#5F8FB8"),
@@ -39,7 +39,7 @@ EDGE = (
     "endArrow=block;endFill=1;endSize=10;"
 )
 EDGE_MAIN = EDGE.replace("strokeWidth=1.8", "strokeWidth=2.0").replace(
-    "fontSize=14", "fontSize=14;fontStyle=1"
+    "fontSize=20", "fontSize=20;fontStyle=1"
 )
 EDGE_DASH = EDGE + "dashed=1;dashPattern=7 5;"
 EDGE_SAFE = EDGE_MAIN.replace("strokeColor=#536F87", "strokeColor=#A34F55")
@@ -489,99 +489,117 @@ def autonomy_functional_loop() -> None:
     write("auv_system_autonomy_functional_loop", cells, page_height=640)
 
 
+def thesis_technical_route() -> None:
+    cells: list[str] = []
+    stages = [
+        ("problem", "任务约束", "弱磁目标 / 近底安全 / 感知退化", 35, "blue", "process"),
+        ("observe", "主动形成观测", "声磁协同 / 主动横切", 355, "yellow", "process"),
+        ("state", "形成可信状态", "ES-EKF / R<sub>s</sub> / P / c<sub>s</sub>", 675, "green", "process"),
+        ("action", "采取安全行动", "行为路由 / UA-MPC / 分层保护", 995, "orange", "process"),
+        ("evidence", "分层验证", "仿真 / 孪生 / 部署接口", 1315, "purple", "process"),
+    ]
+    for id_, title, detail, x, color, kind in stages:
+        add_shape(cells, id_, title, detail, x, 105, 275, 100, color, kind)
+    for i, (source, target, label) in enumerate(
+        [
+            ("problem", "observe", "问题 A"),
+            ("observe", "state", "问题 B"),
+            ("state", "action", "问题 C"),
+            ("action", "evidence", "问题 D"),
+        ],
+        1,
+    ):
+        add_edge(cells, f"tr{i}", source, target, "", main=True, extra="exitX=1;entryX=0;")
+        add_note(cells, f"tr{i}_label", label, 290 + (i - 1) * 320, 40, 120, 40, 20, True)
+
+    add_lane(cells, "support", "工程支撑与迁移边界", 180, 315, 1270, 150, "teal")
+    supports = [
+        ("s1", "双脑异步架构", "Jetson + PC104", 60),
+        ("s2", "统一数据契约", "时间 / 坐标 / 置信度", 355),
+        ("s3", "虚实共享算法", "可替换接口后端", 650),
+        ("s4", "证据边界", "成立条件 / 失效范围", 945),
+    ]
+    for id_, title, detail, x in supports:
+        add_shape(cells, id_, title, detail, x, 52, 245, 65, "teal", "module", "support")
+    add_edge(cells, "support_state", "s2", "state", "接口", dashed=True, points=[(657, 300), (812, 300)], extra="exitX=0.5;exitY=0;entryX=0.5;entryY=1;")
+    add_edge(cells, "support_action", "s3", "action", "部署", dashed=True, points=[(952, 275), (1132, 275)], extra="exitX=0.5;exitY=0;entryX=0.5;entryY=1;")
+    add_edge(cells, "support_evidence", "s4", "evidence", "边界", dashed=True, points=[(1247, 250), (1452, 250)], extra="exitX=0.5;exitY=0;entryX=0.5;entryY=1;")
+    write("auv_thesis_technical_route", cells, page_width=1630, page_height=500)
+
+
 def verification_to_deployment_ladder() -> None:
     cells: list[str] = []
     stages = [
-        ("p1", "算法仿真", "基本可控", "e1", "模型证据", 35, 390, "green"),
-        ("p2", "系统仿真", "闭环协同", "e2", "闭环证据", 245, 330, "teal"),
-        ("p3", "协议联调", "通信边界", "e3", "链路证据", 455, 270, "blue"),
-        ("p4", "影子导航", "不夺权观测", "e4", "安全证据", 665, 210, "yellow"),
-        ("p5", "单回路闭环", "小范围执行", "e5", "执行证据", 875, 150, "orange"),
-        ("p6", "全自主试验", "任务完成目标", "e6", "任务证据", 1085, 90, "red"),
+        ("p1", "算法仿真", "基本可控", "模型证据", 30, "green"),
+        ("p2", "系统仿真", "闭环协同", "闭环证据", 290, "teal"),
+        ("p3", "协议联调", "通信边界", "链路证据", 550, "blue"),
+        ("p4", "影子导航", "不夺权观测", "安全证据", 810, "yellow"),
+        ("p5", "单回路闭环", "小范围执行", "执行证据", 1070, "orange"),
+        ("p6", "全自主试验", "准入目标", "任务证据", 1330, "red"),
     ]
-    for pid, title, detail, eid, ev, x, y, color in stages:
-        center_x = x + 88
-        gate_top = y + 90
-        gate_bottom = gate_top + 55
-        add_shape(cells, pid, title, detail, x, y, 175, 72, color, "process")
-        add_shape(cells, f"g_{pid}", "准入门", "风险受控", x + 28, y + 90, 120, 55, color, "gate")
-        add_shape(cells, eid, ev, "指标 / 日志", x + 5, y + 163, 165, 70, color, "data")
-        add_anchor(cells, f"a_top_{pid}", center_x, gate_top)
-        add_anchor(cells, f"a_bottom_{pid}", center_x, gate_bottom)
-        add_edge(
-            cells,
-            f"ev_{pid}",
-            pid,
-            f"a_top_{pid}",
-            "",
-            dashed=True,
-            direct=True,
-            extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0.5;entryPerimeter=0;",
-        )
-        add_edge(
-            cells,
-            f"log_{pid}",
-            f"a_bottom_{pid}",
-            eid,
-            "",
-            dashed=True,
-            direct=True,
-            extra="exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0;",
-        )
+    for pid, title, detail, evidence, x, color in stages:
+        add_shape(cells, pid, title, detail, x, 85, 220, 90, color, "process")
+        add_shape(cells, f"g_{pid}", "准入门", "风险受控", x + 35, 225, 150, 65, color, "gate")
+        add_shape(cells, f"e_{pid}", evidence, "指标 / 日志", x, 345, 220, 78, color, "module")
+        add_edge(cells, f"gate_{pid}", pid, f"g_{pid}", "", dashed=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+        add_edge(cells, f"evidence_{pid}", f"g_{pid}", f"e_{pid}", "", dashed=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     for i in range(1, 6):
         add_edge(cells, f"up{i}", f"p{i}", f"p{i+1}", "", main=True, extra="exitX=1;exitY=0.5;entryX=0;entryY=0.5;")
-    write("auv_system_verification_deployment_ladder", cells, page_height=720)
+    add_note(cells, "goal_note", "能力逐级释放 → 右端为目标，不表示全部阶段已完成", 430, 470, 780, 45, 22, True)
+    write("auv_system_verification_deployment_ladder", cells, page_width=1580, page_height=540)
 
 
 def dual_brain_async_hardware() -> None:
     cells: list[str] = []
-    add_lane(cells, "jetson", "Jetson Orin：非实时感知与决策", 30, 40, 520, 610, "blue")
-    add_lane(cells, "pc104", "PC104 / VxWorks：硬实时执行与保护", 830, 40, 520, 610, "teal")
-    add_shape(cells, "bus", "轻量二进制协议", "72 B 下行 / 145 B 上行", 590, 220, 200, 250, "gray", "data", extra="dashed=1;dashPattern=8 5;fontStyle=1;")
+    add_lane(cells, "jetson", "Jetson Orin：非实时感知与决策", 30, 40, 500, 610, "blue")
+    add_lane(cells, "pc104", "PC104 / VxWorks：硬实时执行与保护", 850, 40, 500, 610, "teal")
+    add_shape(cells, "gcs", "操作员上位机", "任务配置 / 授权 / 急停", 585, 50, 210, 82, "yellow", "io")
+    add_shape(cells, "bus", "双脑协议接口", "$CKTH 72 B / $AUV 145 B", 585, 205, 210, 140, "gray", "module", extra="dashed=1;dashPattern=8 5;fontStyle=1;")
+    add_shape(cells, "sensors", "航行与健康传感", "IMU / DVL / 深度 / 故障字", 585, 415, 210, 82, "green", "io")
+    add_shape(cells, "actuators", "执行机构", "主推 / 舵机", 585, 545, 210, 72, "orange", "io")
     for spec in [
-        ("j0", "运行环境", "Ubuntu / ROS2", 120, 70, 280, 65, "gray", "io", "jetson"),
-        ("j1", "感知与估计", "ES-EKF", 120, 185, 280, 70, "green", "process", "jetson"),
-        ("j2", "任务决策", "Behavior Tree", 120, 305, 280, 70, "yellow", "process", "jetson"),
-        ("j3", "路径与控制意图", "UA-MPC", 120, 425, 280, 70, "purple", "process", "jetson"),
-        ("p0", "运行环境", "VxWorks", 120, 70, 280, 65, "gray", "io", "pc104"),
-        ("p1", "姿态内环", "硬实时 PID", 120, 185, 280, 70, "green", "process", "pc104"),
-        ("p2", "执行器驱动", "电机 / 舵机", 120, 305, 280, 70, "orange", "process", "pc104"),
-        ("p3", "本地失效保护", "看门狗 / 防触底", 120, 425, 280, 70, "red", "decision", "pc104"),
+        ("j0", "运行环境", "Ubuntu / ROS2", 100, 70, 300, 65, "gray", "io", "jetson"),
+        ("j1", "感知与估计", "ES-EKF", 100, 185, 300, 70, "green", "process", "jetson"),
+        ("j2", "任务决策", "Behavior Tree", 100, 305, 300, 70, "yellow", "process", "jetson"),
+        ("j3", "路径与控制意图", "UA-MPC", 100, 425, 300, 70, "purple", "process", "jetson"),
+        ("p0", "运行环境", "VxWorks", 100, 70, 300, 65, "gray", "io", "pc104"),
+        ("p1", "姿态内环", "硬实时 PID", 100, 185, 300, 70, "green", "process", "pc104"),
+        ("p2", "执行器驱动", "电机 / 舵机", 100, 305, 300, 70, "orange", "process", "pc104"),
+        ("p3", "本地失效保护", "看门狗 / 防触底", 100, 425, 300, 70, "red", "decision", "pc104"),
     ]:
         add_shape(cells, *spec)
     add_edge(cells, "d1", "j1", "j2", "", main=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     add_edge(cells, "d2", "j2", "j3", "", main=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     add_edge(cells, "d3", "p1", "p2", "", main=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
     add_edge(cells, "d4", "p2", "p3", "", main=True, extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "d5", "j3", "bus", "控制意图", main=True, extra="exitX=1;entryX=0;")
-    add_edge(cells, "d6", "bus", "p1", "下行", main=True, extra="exitX=1;entryX=0;")
-    add_edge(cells, "d7", "p3", "bus", "健康状态", dashed=True, points=[(930, 585), (690, 585)], extra="exitX=0;entryX=1;entryY=0.75;")
-    add_edge(cells, "d8", "bus", "j1", "上行", dashed=True, points=[(690, 165), (430, 165)], extra="exitX=0;exitY=0.25;entryX=1;")
+    add_edge(cells, "d5", "j3", "bus", "", main=True, points=[(555, 500), (555, 310)], extra="exitX=1;entryX=0;entryY=0.75;")
+    add_edge(cells, "d6", "bus", "p1", "下行", main=True, points=[(825, 240)], extra="exitX=1;exitY=0.25;entryX=0;")
+    add_edge(cells, "d7", "p3", "bus", "", dashed=True, points=[(825, 500), (825, 325)], extra="exitX=0;entryX=1;entryY=0.75;")
+    add_edge(cells, "d8", "bus", "j1", "上行", dashed=True, points=[(555, 220)], extra="exitX=0;exitY=0.2;entryX=1;")
+    add_edge(cells, "d9", "gcs", "j2", "", main=True, points=[(555, 91), (555, 380)], extra="exitX=0;entryX=1;")
+    add_edge(cells, "d10", "sensors", "p1", "", main=True, points=[(825, 456), (825, 260)], extra="exitX=1;entryX=0;")
+    add_edge(cells, "d11", "p2", "actuators", "", main=True, points=[(825, 380), (825, 581)], extra="exitX=0;entryX=1;")
     write("auv_v2_dual_brain_async_hardware", cells, page_height=690)
 
 
 def uncertainty_highway() -> None:
     cells: list[str] = []
     for spec in [
-        ("d", "物理扰动", "丢包 / 磁扰 / 水流", 35, 80, 235, 78, "red", "io"),
-        ("m", "观测退化", "时延 / 噪声 / 缺测", 305, 80, 235, 78, "orange", "io"),
-        ("e", "状态估计", "ES-EKF", 575, 80, 220, 78, "green", "process"),
-        ("u", "不确定性量化", "协方差 → 置信度", 830, 80, 250, 78, "purple", "process"),
-        ("bus", "跨层置信度总线", "统一调度信号", 1115, 70, 230, 98, "gray", "data"),
-        ("bt", "行为决策", "降级 / 上浮 / 保守", 340, 330, 300, 85, "yellow", "decision"),
-        ("ctrl", "安全控制", "权重调度 / 平滑约束", 740, 330, 300, 85, "blue", "process"),
-        ("act", "执行指令", "安全模式 + 平滑控制", 540, 535, 300, 78, "teal", "io"),
+        ("m", "观测质量", "时延 / SNR / 缺测", 30, 75, 220, 90, "orange", "io"),
+        ("r", "分源量测噪声", "质量分 → R<sub>s</sub>", 300, 75, 220, 90, "purple", "process"),
+        ("e", "状态与协方差", "ES-EKF：x 与 P", 570, 75, 220, 90, "green", "process"),
+        ("u", "分源置信度", "P + 源健康 → c<sub>s</sub>", 840, 75, 220, 90, "purple", "process"),
+        ("bt", "行为路由", "精准巡检 / 搜索回落", 660, 285, 300, 88, "yellow", "decision"),
+        ("ctrl", "控制调制", "跟踪权重 / 控制代价 / 速度", 1060, 285, 340, 88, "blue", "process"),
     ]:
         add_shape(cells, *spec)
     for i, (a, b, label) in enumerate(
-        [("d", "m", "数据变质"), ("m", "e", "融合"), ("e", "u", "协方差"), ("u", "bus", "置信度")], 1
+        [("m", "r", "质量分"), ("r", "e", "R_s"), ("e", "u", "P / 源状态")], 1
     ):
         add_edge(cells, f"u{i}", a, b, label, main=True, extra="exitX=1;entryX=0;")
-    add_edge(cells, "u5", "bus", "bt", "决策阈值", main=True, points=[(1230, 255), (490, 255)], extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "u6", "bus", "ctrl", "控制调度", main=True, points=[(1230, 290), (890, 290)], extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "u7", "bt", "act", "安全模式", main=True, extra="exitX=0.5;exitY=1;entryX=0.3;entryY=0;")
-    add_edge(cells, "u8", "ctrl", "act", "约束指令", main=True, extra="exitX=0.5;exitY=1;entryX=0.7;entryY=0;")
-    write("auv_v2_uncertainty_highway", cells, page_height=660)
+    add_edge(cells, "u4", "u", "bt", "阈值与迟滞", main=True, points=[(950, 230), (810, 230)], extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+    add_edge(cells, "u5", "u", "ctrl", "连续参数调度", main=True, points=[(950, 230), (1230, 230)], extra="exitX=0.5;exitY=1;entryX=0.5;entryY=0;")
+    write("auv_v2_uncertainty_highway", cells, page_width=1440, page_height=420)
 
 
 def five_layer_functional_architecture() -> None:
@@ -624,29 +642,48 @@ def five_layer_functional_architecture() -> None:
 
 def behavior_tree_illustration() -> None:
     cells: list[str] = []
-    add_lane(cells, "safe_lane", "安全监督子树（最高优先级）", 30, 185, 520, 370, "red")
-    add_lane(cells, "mission_lane", "任务执行子树", 575, 185, 650, 370, "yellow")
-    add_shape(cells, "root", "Selector", "从左到右选择", 485, 35, 310, 90, "purple", "bt_control")
-    add_shape(cells, "safe_seq", "Sequence", "安全检查 → 处置", 135, 70, 300, 78, "red", "bt_control", "safe_lane")
-    add_shape(cells, "condition", "安全条件？", "漏水 / 低压 / 失联", 65, 205, 185, 90, "red", "decision", "safe_lane")
-    add_shape(cells, "safe_action", "安全动作", "回零 / 上浮 / 急停", 290, 205, 185, 90, "red", "process", "safe_lane")
-    add_shape(cells, "mission_seq", "Sequence", "预检 → 巡线 → 到点", 175, 70, 300, 78, "yellow", "bt_control", "mission_lane")
-    add_shape(cells, "preflight", "预检通过？", "授权与健康", 65, 205, 185, 90, "yellow", "decision", "mission_lane")
-    add_shape(cells, "task_seq", "Sequence", "任务步骤", 300, 205, 185, 90, "yellow", "bt_control", "mission_lane")
-    add_shape(cells, "track", "巡线跟踪", "", 35, 315, 165, 62, "green", "process", "mission_lane")
-    add_shape(cells, "hold", "到点悬停", "", 225, 315, 165, 62, "green", "process", "mission_lane")
-    add_shape(cells, "record", "拍照记录", "", 415, 315, 165, 62, "green", "data", "mission_lane")
-    add_shape(cells, "idle", "Idle", "待机", 1245, 275, 130, 90, "gray", "terminal")
-    add_edge(cells, "b1", "root", "safe_seq", "优先级 1", main=True, points=[(320, 155)], extra="exitX=0.25;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "b2", "root", "mission_seq", "优先级 2", main=True, points=[(900, 155)], extra="exitX=0.75;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "b3", "root", "idle", "回落", extra="exitX=1;entryX=0;")
-    add_edge(cells, "b4", "safe_seq", "condition", "检查", extra="exitX=0.3;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "b5", "safe_seq", "safe_action", "触发", extra="exitX=0.7;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "b6", "mission_seq", "preflight", "检查", extra="exitX=0.3;exitY=1;entryX=0.5;entryY=0;")
-    add_edge(cells, "b7", "mission_seq", "task_seq", "展开", extra="exitX=0.7;exitY=1;entryX=0.5;entryY=0;")
-    for i, (target, x) in enumerate([("track", 0.2), ("hold", 0.5), ("record", 0.8)], 8):
-        add_edge(cells, f"b{i}", "task_seq", target, "", extra=f"exitX={x};exitY=1;entryX=0.5;entryY=0;")
-    write("auv_v2_behavior_tree_illustration", cells, page_height=590)
+    add_lane(cells, "priority_lane", "根节点优先级与调试级联", 30, 30, 1320, 380, "purple")
+    add_lane(cells, "mission_lane", "主任务与置信度路由", 30, 430, 1320, 420, "yellow")
+
+    add_shape(cells, "root", "根选择器", "memory=False；逐 tick 重查", 470, 50, 380, 72, "purple", "bt_control", "priority_lane")
+    add_shape(cells, "emergency_seq", "紧急顺序", "优先级 1", 55, 155, 300, 68, "red", "bt_control", "priority_lane")
+    add_shape(cells, "standby", "待命检查", "未授权 / 链路不可用", 505, 155, 310, 68, "gray", "decision", "priority_lane")
+    add_shape(cells, "debug_selector", "调试级联", "优先级 3", 965, 155, 300, 68, "yellow", "bt_control", "priority_lane")
+    add_shape(cells, "emergency_condition", "紧急条件", "漏水 / 低电 / 穿底", 35, 270, 240, 68, "red", "decision", "priority_lane")
+    add_shape(cells, "emergency_surface", "紧急上浮", "", 300, 270, 180, 68, "red", "process", "priority_lane")
+    add_shape(cells, "idle_goal", "IDLE 目标", "安全悬停", 555, 270, 210, 68, "gray", "state", "priority_lane")
+    add_shape(cells, "hold_seq", "保持", "调试等级 1", 825, 270, 150, 68, "blue", "bt_control", "priority_lane")
+    add_shape(cells, "path_seq", "解析轨迹", "调试等级 2", 990, 270, 155, 68, "teal", "bt_control", "priority_lane")
+    add_shape(cells, "main_entry", "主任务", "调试等级 0 / 3", 1160, 270, 145, 68, "green", "bt_control", "priority_lane")
+
+    add_edge(cells, "bt1", "root", "emergency_seq", "1", main=True, safe=True)
+    add_edge(cells, "bt2", "root", "standby", "2", main=True)
+    add_edge(cells, "bt3", "root", "debug_selector", "3", main=True)
+    add_edge(cells, "bt4", "emergency_seq", "emergency_condition", "", safe=True)
+    add_edge(cells, "bt5", "emergency_seq", "emergency_surface", "", safe=True)
+    add_edge(cells, "bt6", "standby", "idle_goal", "")
+    add_edge(cells, "bt7", "debug_selector", "hold_seq", "1")
+    add_edge(cells, "bt8", "debug_selector", "path_seq", "2")
+    add_edge(cells, "bt9", "debug_selector", "main_entry", "0 / 3", main=True)
+
+    add_shape(cells, "main_seq", "主任务顺序", "Sequence；memory=False", 470, 45, 380, 72, "green", "bt_control", "mission_lane")
+    add_shape(cells, "dive", "定深下潜", "目标深度 4 m", 160, 155, 230, 72, "blue", "process", "mission_lane")
+    add_shape(cells, "seabed", "海底安全限制", "穿底约束；降速 0.5", 535, 145, 280, 90, "red", "gate", "mission_lane")
+    add_shape(cells, "route", "路线路由", "失败回落搜索", 925, 145, 280, 90, "yellow", "bt_control", "mission_lane")
+    add_shape(cells, "precise", "精准巡检顺序", "优先分支", 560, 270, 300, 75, "green", "bt_control", "mission_lane")
+    add_shape(cells, "zigzag", "之字形搜索", "低置信度分支", 1040, 275, 220, 68, "orange", "process", "mission_lane")
+    add_shape(cells, "confidence", "置信度门控", "定位可用且通过门限", 300, 330, 320, 72, "teal", "decision", "mission_lane")
+    add_shape(cells, "tracking", "异常限速", "0.4 × 并行跟踪", 700, 330, 320, 72, "green", "process", "mission_lane")
+
+    add_edge(cells, "bt10", "main_entry", "main_seq", "", main=True, dashed=True, points=[(1330, 390), (1330, 465), (690, 465)], extra="exitX=1;exitY=1;entryX=0.5;entryY=0;")
+    add_edge(cells, "bt11", "main_seq", "dive", "", main=True)
+    add_edge(cells, "bt12", "main_seq", "seabed", "", main=True)
+    add_edge(cells, "bt13", "seabed", "route", "", main=True, safe=True)
+    add_edge(cells, "bt14", "route", "precise", "", main=True)
+    add_edge(cells, "bt15", "route", "zigzag", "回落")
+    add_edge(cells, "bt16", "precise", "confidence", "")
+    add_edge(cells, "bt17", "precise", "tracking", "", main=True)
+    write("auv_v2_behavior_tree_illustration", cells, page_height=880)
 
 
 def mission_state_machine() -> None:
@@ -682,51 +719,34 @@ def mission_state_machine() -> None:
 
 def emergency_transition() -> None:
     cells: list[str] = []
-    add_lane(cells, "guard_lane", "守卫输入", 30, 25, 1320, 175, "red")
-    add_lane(cells, "arb_lane", "ROS2 / AutonomyGuard 权限仲裁", 30, 220, 1320, 195, "purple")
-    add_lane(cells, "local_lane", "PC104 本地安全覆盖", 30, 435, 1320, 195, "teal")
+    add_lane(cells, "trigger_lane", "触发条件", 30, 25, 400, 600, "red")
+    add_lane(cells, "layer_lane", "处置层级", 500, 25, 400, 600, "purple")
+    add_lane(cells, "action_lane", "目标动作", 970, 25, 400, 600, "teal")
     for spec in [
-        ("g1", "链路陈旧", "PC 命令 / 遥测超时", 45, 65, 245, 72, "red", "io", "guard_lane"),
-        ("g2", "状态不可用", "置信度不足", 350, 65, 245, 72, "red", "io", "guard_lane"),
-        ("g3", "硬件守卫", "漏水 / 低电压", 655, 65, 245, 72, "red", "io", "guard_lane"),
-        ("g4", "人工急停", "地面站 ESTOP", 960, 65, 245, 72, "red", "io", "guard_lane"),
-        ("arb", "权限是否继续？", "统一仲裁", 535, 65, 250, 105, "purple", "decision", "arb_lane"),
-        ("zero", "零指令保持", "控制器回退", 80, 65, 250, 75, "gray", "state", "local_lane"),
-        ("remote", "遥控锁定", "切回 REMOTE", 390, 65, 250, 75, "orange", "state", "local_lane"),
-        ("surface", "本地上浮 / 防触底", "深度 / DVL 风险", 700, 65, 270, 75, "yellow", "state", "local_lane"),
-        ("kill", "急停截止", "ESTOP / 漏水", 1030, 65, 250, 75, "red", "terminal", "local_lane"),
+        ("g1", "链路或授权异常", "命令陈旧 / 授权撤销", 55, 65, 310, 78, "red", "io", "trigger_lane"),
+        ("g2", "定位置信不足", "门控未通过", 55, 185, 310, 78, "orange", "io", "trigger_lane"),
+        ("g3", "独立紧急条件", "漏水 / 低电 / 穿底", 55, 305, 310, 78, "red", "io", "trigger_lane"),
+        ("g4", "人工急停", "地面站 ESTOP", 55, 425, 310, 78, "red", "io", "trigger_lane"),
+        ("arb", "ROS2 权限仲裁", "新鲜度 / 授权", 45, 65, 310, 78, "purple", "decision", "layer_lane"),
+        ("task", "行为树任务路由", "置信门控逐 tick 判定", 45, 185, 310, 78, "yellow", "decision", "layer_lane"),
+        ("emergency", "行为树 / PC104 保护", "故障字抢占 / 本地覆盖", 45, 305, 310, 78, "red", "decision", "layer_lane"),
+        ("estop", "ROS2 / PC104 急停链", "锁存并回零", 45, 425, 310, 78, "red", "decision", "layer_lane"),
+        ("zero", "回零与 REMOTE 锁定", "停止释放自主指令", 45, 65, 310, 78, "gray", "state", "action_lane"),
+        ("search", "搜索回落", "低置信度不触发上浮", 45, 185, 310, 78, "yellow", "state", "action_lane"),
+        ("surface", "紧急上浮 / 防触底", "独立安全条件", 45, 305, 310, 78, "orange", "state", "action_lane"),
+        ("kill", "急停截止", "锁存零执行量", 45, 425, 310, 78, "red", "terminal", "action_lane"),
     ]:
         add_shape(cells, *spec)
-    for i, (g, entry) in enumerate([("g1", 0.1), ("g2", 0.35), ("g3", 0.65), ("g4", 0.9)], 1):
-        source_x = [198, 503, 808, 1113][i - 1]
-        target_x = 565 + 250 * entry
-        add_edge(
-            cells,
-            f"eg{i}",
-            g,
-            "arb",
-            "",
-            safe=True,
-            points=[(source_x, 280), (target_x, 280)],
-            extra=f"exitX=0.5;exitY=1;entryX={entry};entryY=0;",
-        )
-    for i, (target, label, exitx) in enumerate(
-        [("zero", "", 0.1), ("remote", "", 0.35), ("surface", "", 0.65), ("kill", "", 0.9)], 5
-    ):
-        target_x = {"zero": 235, "remote": 545, "surface": 865, "kill": 1185}[target]
-        source_x = 565 + 250 * exitx
-        add_edge(
-            cells,
-            f"eg{i}",
-            "arb",
-            target,
-            label,
-            safe=target in {"surface", "kill"},
-            main=target not in {"surface", "kill"},
-            points=[(source_x, 425), (target_x, 425)],
-            extra=f"exitX={exitx};exitY=1;entryX=0.5;entryY=0;",
-        )
-    write("auv_v2_emergency_transition", cells, page_height=665)
+    rows = [
+        ("g1", "arb", "zero", "新鲜度 / 授权", "回零"),
+        ("g2", "task", "search", "置信门控", "任务降级"),
+        ("g3", "emergency", "surface", "安全字 / 本地检测", "安全抢占"),
+        ("g4", "estop", "kill", "ESTOP", "锁存"),
+    ]
+    for i, (trigger, layer, action, in_label, out_label) in enumerate(rows, 1):
+        add_edge(cells, f"eg{i}a", trigger, layer, in_label, safe=i in {3, 4}, main=i in {1, 2}, extra="exitX=1;entryX=0;")
+        add_edge(cells, f"eg{i}b", layer, action, out_label, safe=i in {3, 4}, main=i in {1, 2}, extra="exitX=1;entryX=0;")
+    write("auv_v2_emergency_transition", cells, page_width=1400, page_height=650)
 
 
 def mission_lifecycle_flow() -> None:
@@ -794,6 +814,7 @@ def main() -> None:
     system_capability_map()
     system_subsystem_organization()
     autonomy_functional_loop()
+    thesis_technical_route()
     verification_to_deployment_ladder()
     dual_brain_async_hardware()
     uncertainty_highway()

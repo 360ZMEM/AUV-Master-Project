@@ -1,0 +1,1015 @@
+{
+  "source": "相关附件和参照/word模板(202605)/03关于学位论文使用授权的说明（博士硕士通用）[2026版].doc",
+  "source_sha256": "fc3431f1d5becc88c6188b714db4f57d525f474bd8ec8fdb27a9e3eb18d98d7a",
+  "converted_docx_sha256": "5adca6f76a25451918ac449783dbbaef86c3afcf8825e599343f17f02a95ff7b",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "0",
+        "top": "1701",
+        "footer": "0",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "lines",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "24"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Style14": {
+      "type": "character",
+      "styleId": "Style14",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style15": {
+      "type": "character",
+      "styleId": "Style15",
+      "name": "页眉 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style16": {
+      "type": "character",
+      "styleId": "Style16",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style17": {
+      "type": "character",
+      "styleId": "Style17",
+      "name": "批注框文本 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style18": {
+      "type": "character",
+      "styleId": "Style18",
+      "name": "批注引用",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "21"
+        }
+      }
+    },
+    "Style19": {
+      "type": "character",
+      "styleId": "Style19",
+      "name": "批注文字 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Style20": {
+      "type": "character",
+      "styleId": "Style20",
+      "name": "批注主题 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "spacing": {
+          "before": "240",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Liberation Sans",
+          "hAnsi": "Liberation Sans",
+          "eastAsia": "Noto Sans CJK SC",
+          "cs": "Lohit Devanagari"
+        },
+        "sz": {
+          "val": "28"
+        },
+        "szCs": {
+          "val": "28"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style21": {
+      "type": "paragraph",
+      "styleId": "Style21",
+      "name": "批注框文本",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style22": {
+      "type": "paragraph",
+      "styleId": "Style22",
+      "name": "批注文字",
+      "basedOn": "Normal",
+      "pPr": {
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {}
+    },
+    "Style23": {
+      "type": "paragraph",
+      "styleId": "Style23",
+      "name": "批注主题",
+      "basedOn": "Style22",
+      "pPr": {},
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    },
+    "TableContents": {
+      "type": "paragraph",
+      "styleId": "TableContents",
+      "name": "Table Contents",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "TableHeading": {
+      "type": "paragraph",
+      "styleId": "TableHeading",
+      "name": "Table Heading",
+      "basedOn": "TableContents",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "关于学位论文使用授权的说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "before": "720",
+          "after": "720"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "关于学位论文使用授权的说明",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "44"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "本人完全了解清华大学有关保留、使用学位论文的规定，即：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "520"
+        },
+        "ind": {
+          "firstLine": "560"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本人完全了解清华大学有关保留、使用学位论文的规定，即：",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "清华大学拥有在著作权法规定范围内学位论文的使用权，其中包括：（1）已获学位的研究生必须按学校规定提交学位论文，学校可以采用影印、缩印或其他复制手段保存研究生上交的学位论文；（2）为教学和科研目的，学校可以将公开的学位论文作为资料在图书馆、资料室等场所供校内师生阅读，或在校园网上供校内师生浏览部分内容；（3）根据《中华人民共和国学位法》及上级教育主管部门要求，报送相应的学位论文。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "520"
+        },
+        "ind": {
+          "firstLine": "560"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "清华大学拥有在著作权法规定范围内学位论文的使用权，其中包括：",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "（",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "）",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "已获学位的研究生必须按学校规定提交学位论文，学校可以采用影印、缩印或其他复制手段保存研究生上交的学位论文；",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "（",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "）为教学和科研目的，学校可以将公开的学位论文作为资料在图书馆、资料室等场所供校内师生阅读，或在校园网上供校内师生浏览部分内容；",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "（",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "3",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "）",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "根据《中华人民共和国学位法》",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "及上级教育主管",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "部门",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "要求",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "，报送",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "相应",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "的学位论文。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "本人保证遵守上述规定。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "520"
+        },
+        "ind": {
+          "firstLine": "560"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本人保证遵守上述规定。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "作者签名：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "360",
+          "before": "120",
+          "after": "0"
+        },
+        "jc": {
+          "val": "right"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "作者签名：",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "导师签名：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "360",
+          "before": "120",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "导师签名：",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "日    期：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "360",
+          "before": "120",
+          "after": "0"
+        },
+        "jc": {
+          "val": "right"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "日",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "期：",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "日    期：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "360",
+          "before": "120",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "日",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "期：",
+          "rPr": {
+            "sz": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {},
+  "footnotes_endnotes": {}
+}

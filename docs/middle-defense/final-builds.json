@@ -1,0 +1,57 @@
+[
+  {
+    "name": "school",
+    "command": [
+      "make",
+      "auv-middle-defense"
+    ],
+    "start": "2026-10-13T13:46:52.898142",
+    "end": "2026-10-13T13:47:01.112651",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-school.log"
+  },
+  {
+    "name": "main",
+    "command": [
+      "make",
+      "auv-middle-defense-main"
+    ],
+    "start": "2026-10-13T13:47:01.113946",
+    "end": "2026-10-13T13:47:15.902564",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-main.log"
+  },
+  {
+    "name": "school-alias",
+    "command": [
+      "make",
+      "auv-middle-defense-school"
+    ],
+    "start": "2026-10-13T13:47:15.903894",
+    "end": "2026-10-13T13:47:16.400966",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-school-alias.log"
+  },
+  {
+    "name": "thesis",
+    "command": [
+      "make",
+      "auv-thesis"
+    ],
+    "start": "2026-10-13T13:47:16.402153",
+    "end": "2026-10-13T13:47:16.553156",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-thesis.log"
+  },
+  {
+    "name": "template",
+    "command": [
+      "make",
+      "verify-thuthesis"
+    ],
+    "start": "2026-10-13T13:47:16.554598",
+    "end": "2026-10-13T13:47:16.834545",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-template.log"
+  }
+]

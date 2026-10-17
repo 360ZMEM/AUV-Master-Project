@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "pdftotext",
+    "-layout",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/pdf/14-2个人简历、在学期间完成的相关学术成果（无相关成果）.pdf",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/text/14-2个人简历、在学期间完成的相关学术成果（无相关成果）.pdf.txt"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

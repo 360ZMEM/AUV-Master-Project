@@ -1,0 +1,5791 @@
+{
+  "source": "相关附件和参照/word模板(202605)/10-1参考文献-顺序编码制（示例）.doc",
+  "source_sha256": "6b35e6cc2be1bd22cb710ee92c1dfe5b2967a4bf06102b55c4d1b59189b73ae0",
+  "converted_docx_sha256": "2ebc860ec87b4506aca8396b942d51b1973f75ae1f9bb3b21daeb2f2aeffadaf",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId2"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "108",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "linesAndChars",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "420"
+        },
+        "ind": {
+          "firstLine": "522"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        }
+      }
+    },
+    "Heading2": {
+      "type": "paragraph",
+      "styleId": "Heading2",
+      "name": "Heading 2",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "before": "240",
+          "after": "240"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "outlineLvl": {
+          "val": "1"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "黑体;SimHei",
+          "hAnsi": "黑体;SimHei",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "sz": {
+          "val": "28"
+        }
+      }
+    },
+    "Heading3": {
+      "type": "paragraph",
+      "styleId": "Heading3",
+      "name": "Heading 3",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "before": "360",
+          "after": "240"
+        },
+        "outlineLvl": {
+          "val": "2"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体;SimHei"
+        },
+        "sz": {
+          "val": "26"
+        }
+      }
+    },
+    "Heading4": {
+      "type": "paragraph",
+      "styleId": "Heading4",
+      "name": "Heading 4",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "before": "40",
+          "after": "40"
+        },
+        "ind": {
+          "firstLine": "360"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "outlineLvl": {
+          "val": "3"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "i": {
+          "value": ""
+        },
+        "color": {
+          "val": "auto"
+        },
+        "sz": {
+          "val": "20"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "en-US",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "WW8Num1z0": {
+      "type": "character",
+      "styleId": "WW8Num1z0",
+      "name": "WW8Num1z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num2z0": {
+      "type": "character",
+      "styleId": "WW8Num2z0",
+      "name": "WW8Num2z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num3z0": {
+      "type": "character",
+      "styleId": "WW8Num3z0",
+      "name": "WW8Num3z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5z0": {
+      "type": "character",
+      "styleId": "WW8Num5z0",
+      "name": "WW8Num5z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "i": {
+          "val": "false"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "21"
+        }
+      }
+    },
+    "WW8Num6z0": {
+      "type": "character",
+      "styleId": "WW8Num6z0",
+      "name": "WW8Num6z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7z0": {
+      "type": "character",
+      "styleId": "WW8Num7z0",
+      "name": "WW8Num7z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8z0": {
+      "type": "character",
+      "styleId": "WW8Num8z0",
+      "name": "WW8Num8z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9z0": {
+      "type": "character",
+      "styleId": "WW8Num9z0",
+      "name": "WW8Num9z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num10z0": {
+      "type": "character",
+      "styleId": "WW8Num10z0",
+      "name": "WW8Num10z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style10": {
+      "type": "character",
+      "styleId": "Style10",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style10",
+      "pPr": {},
+      "rPr": {}
+    },
+    "InternetLink": {
+      "type": "character",
+      "styleId": "InternetLink",
+      "name": "Hyperlink",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "0000FF"
+        },
+        "u": {
+          "val": "single"
+        }
+      }
+    },
+    "FootnoteCharacters": {
+      "type": "character",
+      "styleId": "FootnoteCharacters",
+      "name": "Footnote Characters",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "vertAlign": {
+          "val": "superscript"
+        }
+      }
+    },
+    "Style11": {
+      "type": "character",
+      "styleId": "Style11",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "0",
+          "after": "120"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style12": {
+      "type": "paragraph",
+      "styleId": "Style12",
+      "name": "段落",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420"
+        },
+        "ind": {
+          "firstLine": "520"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style13": {
+      "type": "paragraph",
+      "styleId": "Style13",
+      "name": "正文缩进",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "firstLine": "420"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "0"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "公式",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "160",
+          "after": "40"
+        }
+      },
+      "rPr": {}
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "图题",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "240",
+          "after": "240"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "Style16": {
+      "type": "paragraph",
+      "styleId": "Style16",
+      "name": "中文表题",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "120",
+          "after": "0"
+        },
+        "ind": {
+          "left": "227",
+          "right": "227",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "Contents1": {
+      "type": "paragraph",
+      "styleId": "Contents1",
+      "name": "TOC 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "0"
+        },
+        "ind": {
+          "hanging": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体;SimHei"
+        }
+      }
+    },
+    "1": {
+      "type": "paragraph",
+      "styleId": "1",
+      "name": "标 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体;SimHei"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "sz": {
+          "val": "30"
+        }
+      }
+    },
+    "Footnote": {
+      "type": "paragraph",
+      "styleId": "Footnote",
+      "name": "Footnote Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "snapToGrid": {
+          "val": "false"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num2": {
+      "type": "numbering",
+      "styleId": "WW8Num2",
+      "name": "WW8Num2",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3": {
+      "type": "numbering",
+      "styleId": "WW8Num3",
+      "name": "WW8Num3",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4": {
+      "type": "numbering",
+      "styleId": "WW8Num4",
+      "name": "WW8Num4",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5": {
+      "type": "numbering",
+      "styleId": "WW8Num5",
+      "name": "WW8Num5",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6": {
+      "type": "numbering",
+      "styleId": "WW8Num6",
+      "name": "WW8Num6",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7": {
+      "type": "numbering",
+      "styleId": "WW8Num7",
+      "name": "WW8Num7",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8": {
+      "type": "numbering",
+      "styleId": "WW8Num8",
+      "name": "WW8Num8",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9": {
+      "type": "numbering",
+      "styleId": "WW8Num9",
+      "name": "WW8Num9",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num10": {
+      "type": "numbering",
+      "styleId": "WW8Num10",
+      "name": "WW8Num10",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "参考文献",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "参考文献",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "张昆, 冯立群, 余昌钰, 等. 机器人柔性手腕的球面齿轮设计研究[J]. 清华大学学报: 自然科学版, 1994, 34(2): 1-7.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "张昆",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "冯立群",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "余昌钰",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "等",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "机器人柔性手腕的球面齿轮设计研究",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "清华大学学报",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "自然科学版",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1994",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "34",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "(",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "):",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "-",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "7",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "竺可桢. 物理学[M]. 北京: 科学出版社, 1973: 56-60.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "竺可桢",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "物理学",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "科学出版社",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1973",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ":",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 56",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "-",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "60",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "Dupont B. Bone marrow transplantation in severe combined immunodeficiency with an unrelated MLC compatible donor[M]// White H J, Smith R, eds. Proceedings of the Third Annual Meeting of the International Society for Experimental Hematology. Houston: International Society for Experimental Hematology, 1974: 44-46.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Dupont B. Bone marrow transplantation in severe combined immunodeficiency with an unrelated MLC compatible donor[M]",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "//",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " White H J, Smith R, eds. Proceedings of the Third Annual Meeting of the International Society for Experimental Hematology. Houston: International Society for Experimental Hematology, 1974",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ":",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 44",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "-",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "46",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 5,
+      "text": "郑开青. 通讯系统模拟及软件[D]. 北京: 清华大学无线电系, 1987.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "郑开青",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "通讯系统模拟及软件",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "D",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "]. ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "清华大学无线电系",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1987",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "姜锡洲. 一种温热外敷药制备方案: 中国, 88105607.3[P]. 1980-07-26.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "姜锡洲",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "一种温热外敷药制备方",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "案",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "88105607",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "3",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[P]. ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1980-07-26",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 7,
+      "text": "中华人民共和国国家技术监督局. GB3100-3102. 中华人民共和国国家标准－量与单位[S]. 北京: 中国标准出版社, 1994.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "中华人民共和国国家技术监督局",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". GB3100",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "-",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "3102. ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中华人民共和国国家标准－量与单位",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "S]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国标准出版社",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "1994",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "Merkt F, Mackenzie S R, Softley T P. Rotational autoionization dynamics in high Rydberg states of nitrogen[J]. J Chem Phys, 1995, 103: 4509-4518.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Merkt F, Mackenzie S R, Softley T P. Rotational autoionization dynamics in high Rydberg states of nitrogen[J]. J Chem Phys",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1995, 103: 4509-4518",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "Mellinger A,Vidal C R, Jungen Ch. Laser reduced fluorescence study of the carbon-monoxide nd triplet Rydberg series - experimental results and Multichannel Quantum-Defect Analysis[J]. J Chem Phys, 1996, 104: 8913-8921.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Mellinger A,Vidal C R, Jungen Ch. Laser reduced fluorescence study of the carbon-monoxide nd triplet Rydberg series - experimental results and Multichannel Quantum-Defect Analysis[J]. J Chem Phys",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1996, 104: 8913-8921",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "Bixon M, Jortner J. The dynamics of predissociating high Rydberg states of NO[J]. J Chem Phys, 1996, 105: 1363-1382.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Bixon M, Jortner J. The dynamics of predissociating high Rydberg states of NO[J]. J Chem Phys",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1996,",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "105: 1363-1382",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "马辉, 李俭, 刘耀明, 等. 利用REMPI方法测量BaF高里德堡系列光谱[J]. 化学物理学报, 1995, 8: 308-311.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "马辉",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "李俭",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "刘耀明",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "等",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "利用",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "REMPI",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "方法测量",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "BaF",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "高里德堡系列光谱",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "化学物理学报",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1995",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "8: 308-311",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            },
+            "szCs": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "Carlson N W, Taylor A J, Jones K M, et al. Two-step polarization-labeling spectroscopy of excited states of Na2[J]. Phys Rev A, 1981, 24: 822-834.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Carlson N W, Taylor A J, Jones K M, et al. Two-step polarization-labeling spectroscopy of excited states of Na2[J]. Phys Rev A",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1981, 24: 822-834",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 13,
+      "text": "Taylor A J, Jones K M, Schalow A L. Scanning pulsed-polarization spectrometer applied to Na2[J]. J Opt Soc Am, 1983, 73: 994-998.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Taylor A J, Jones K M",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " Schalow A L. Scanning pulsed-polarization spectrometer applied to Na2[J]. J Opt Soc Am",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1983,",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "73: 994-998",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "Taylor A J, Jones K M, Schawlow A L. A study of the excited 1g+ states in Na2[J]. Opt Commun, 1981, 39: 47-50.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Taylor A J, Jones K M",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " Schawlow A L. A study of the excited 1",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "Symbol",
+              "cs": "Symbol",
+              "ascii": "Symbol",
+              "hAnsi": "Symbol"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "g+ states in Na2[J]. Opt Commun",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1981, 39: 47-50",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 15,
+      "text": "Shimizu K, Shimizu F. Laser induced fluorescence spectra of the a3u-X1g+ band of Na2 by molecular beam[J]. J Chem Phys, 1983, 78: 1126-1131.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Shimizu K",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " Shimizu F. Laser induced fluorescence spectra of the a3",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "Symbol",
+              "cs": "Symbol",
+              "ascii": "Symbol",
+              "hAnsi": "Symbol"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "u-X1",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "Symbol",
+              "cs": "Symbol",
+              "ascii": "Symbol",
+              "hAnsi": "Symbol"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "g+ band of Na2 by molecular beam[J]. J Chem Phys",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1983, 78: 1126-1131",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 16,
+      "text": "Atkinson J B, Becker J, Demtröder W. Experimental observation of the a3u state of Na2[J]. Chem Phys Lett, 1982, 87: 92-97.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Atkinson J B, Becker J, Demtröder W. Experimental observation of the a3",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "Symbol",
+              "cs": "Symbol",
+              "ascii": "Symbol",
+              "hAnsi": "Symbol"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "u state of Na2[J]. Chem Phys Lett",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1982, 87: 92-97",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 17,
+      "text": "Kusch P, Hessel M M. Perturbations in the A1u+ state of Na2[J]. J Chem Phys, 1975, 63: 4087-4088.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Kusch P",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " Hessel M M. Perturbations in the A1",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "Symbol",
+              "cs": "Symbol",
+              "ascii": "Symbol",
+              "hAnsi": "Symbol"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "u+ state of Na2[J]. J Chem Phys",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 1975, 63: 4087-4088",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 18,
+      "text": "广西壮族自治区林业厅. 广西自然保护区[M]. 北京: 中国林业出版社, 1993.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "广西壮族自治区林业厅",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "广西自然保护区",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国林业出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1993.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 19,
+      "text": "霍斯尼. 谷物科学与工艺学原理[M]. 李庆龙, 译. 2版. 北京: 中国食品出版社, 1989: 15-20.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "霍斯尼",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "谷物科学与工艺学原理",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "李庆龙",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "译",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". 2",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "版",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国食品出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1989:",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "15-20.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 20,
+      "text": "王夫之. 宋论[M]. 刻本. 金陵: 曾氏, 1865（清同治四年）.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "王夫之",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "宋论",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "刻本",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "金陵",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "曾氏",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1865",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "（清同治四年）",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 21,
+      "text": "赵耀东. 新时代的工业工程师[M/OL]. 台北: 天下文化出版社. 1998 [1998- 09-26]. http://www.ie.nthu.edu.tw/info/ie.newie.htm.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "赵耀东",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "新时代的工业工程师",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[M/OL]. ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "台北",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "天下文化出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". 1998 [1998- 09-26]. http://www.ie.nthu.edu.tw/info/ie.newie.htm.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 22,
+      "text": "全国信息与文献工作标准化技术委员会出版物格式分委员会. 图书书名页: GB/T 12450-2001[S]. 北京: 中国标准出版社, 2002: 1. ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "全国信息与文献工作标准化技术委员会出版物格式分委员会",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "图书书名页",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ":",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "GB/T 12450-2001[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "S]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国标准出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 2002",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": 1",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 23,
+      "text": "全国出版专业职业资格考试办公室. 全国出版专业职业资格考试辅导教材: 出版专业理论与实务•中级[M]. 上海: 上海辞书出版社, 2004: 299-307.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "全国出版专业职业资格考试办公室",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "全国出版专业职业资格考试辅导教材",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "出版专业理论与实务•中级",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "上海",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "上海辞书出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 2004:",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "299-307.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 24,
+      "text": "World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "World Health Organization. Factors regulating the immune response: report of WHO Scientific Group[R]. Geneva: WHO, 1970.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 25,
+      "text": "Peebles P Z, Jr. Probability, random variable, and random signal principles[M]. 4th ed. New York: McGraw Hill, 2001.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "P",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "eebles",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " P Z, Jr. Probability, random variable, and random signal principles[M]. 4th ed. New York: McGraw Hill, 2001.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 26,
+      "text": "白书农. 植物开花研究[M]//李承森. 植物科学进展. 北京: 高等教育出版社, 1998:  146-163.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "白书农",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "植物开花研究",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "M]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "//",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "李承森",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "植物科学进展",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "高等教育出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1998:",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": " 146-163.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 27,
+      "text": "Weinstein L, Swertz M N. Pathogenic properties of invading microorganism[M] //Sodeman W A, Jr, Sodeman W A. Pathologic physiology: mechanisms of disease. Philadephia: Saunders, 1974: 745-772.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Weinstein L, Swertz M N. Pathogenic properties of invading microorganism[M] //Sodeman W A, Jr, Sodeman W A. Pathologic physiology: mechanisms of disease. Philadephia: Saunders, 1974: 745-772.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 28,
+      "text": "韩吉人. 论职工教育的特点[C]//中国职工教育研究会. 职工教育研究论文集. 北京: 人民教育出版社, 1985: 90-99.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "韩吉人",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "论职工教育的特点",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "C]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "//",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "中国职工教育研究会",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "职工教育研究论文集",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "人民教育出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1985:",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "90-99.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 29,
+      "text": "中国地址学会. 地质评论[J]. 1936, 1(1)-. 北京: 地质出版社, 1936-.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "中国地址学会",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "地质评论",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". 1936, 1(1)-. ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "地质出版社",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1936-.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 30,
+      "text": "中国图书馆学会. 图书馆学通讯[J]. 1957(1)-1990(4). 北京: 北京图书馆, 1957- 1990.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "中国图书馆学会",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "图书馆学通讯",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". 1957(1)-1990(4). ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京图书馆",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 1957- 1990.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 31,
+      "text": "American Association for the Advancement of Science. Science[J]. 1883, 1(1)-. Washington, D.C.: American Association for the Advancement of Science, 1883-.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "American Association for the Advancement of Science. Science[J]. 1883, 1(1)-. Washington, D.C.: American Association for the Advancement of Science, 1883-.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 32,
+      "text": "傅刚, 赵承, 李佳路. 大风沙过后的思考[N/OL]. 北京青年报, 2000-04-12(14) [2002-03-06]. http://www.bjyouth.com.cn/Bqb/20000412/B/4216%5ED0412B1401. htm.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "傅刚",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "赵承",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "李佳路",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "大风沙过后的思考",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[N/OL]. ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "北京青年报",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ", 2000-04-12(14) [2002-03-06]. http://www.bjyouth.com.cn/Bqb/20000412/B/4216%5ED0412B1401. htm.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 33,
+      "text": "萧钰. 出版业信息化迈入快车道[EB/OL]. (2001-12-19) [2002-04-15]. http:// www.creader.com/news/200112190019.htm.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "萧钰",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "出版业信息化迈入快车道",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[EB/OL]. (2001-12-19) [2002-04-15]. http:// www.creader.com/news/200112190019.htm.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 34,
+      "text": "Online Computer Library Center, Inc. History of OCLC [EB/OL]. [2000-01-08]. http://www.oclc.org/about/history/default.htm.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Online Computer Library Center, Inc. History of OCLC",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[EB/OL]. [2000-01-08]. http://www.oclc.org/about/history/default.htm.",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 35,
+      "text": "Scitor Corporation. Project scheduler [CP/DK]. Sunnyvale, Calif.: Scitor Cor- poration, c1983",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "60",
+          "after": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Scitor Corporation. Project scheduler",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "[CP/DK]. Sunnyvale, Calif.: Scitor Cor",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "- ",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        },
+        {
+          "text": "poration, c1983",
+          "rPr": {
+            "spacing": {
+              "val": "8"
+            },
+            "sz": {
+              "val": "21"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "参考文献",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "109",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

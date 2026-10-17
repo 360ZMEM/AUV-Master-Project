@@ -1,0 +1,3046 @@
+{
+  "schema_version": 1,
+  "scope": "2026-10-13排版修复前快照；后续修复以post_fix字段为准",
+  "method": {
+    "unit": "PDF point = 1/72 inch，直接提取最终PDF文字尺寸；非TeX pt、非字形bbox高度",
+    "tool": "PyMuPDF 1.28.2，仅用于文字提取；Poppler用于实际渲染",
+    "font_rendering_caveat": "当前嵌入Fandol字体在MuPDF栅格化会错字，Poppler正常；已用Poppler bbox抽查文字尺寸",
+    "threshold_min_pt": 8,
+    "preferred_min_pt": 9,
+    "superscript_policy": "科学计数指数可小于8pt，单列；坐标、图例、条件和关键标注不豁免",
+    "text_width_mm": 150,
+    "text_height_mm": 237,
+    "no_new_experiment": true
+  },
+  "pre_fix_pdfs": {
+    "main": {
+      "path": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+      "sha256": "b03094d846434ad5a53df23dd80321286942aad8013db94a371242860f40e0d1",
+      "pages": 35
+    },
+    "school": {
+      "path": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+      "sha256": "c7c161ee7745d8193fd0e7ec8aa72f5a16b8afe6e67fa5d0429432890340a8ff",
+      "pages": 34
+    }
+  },
+  "figures": [
+    {
+      "id": "architecture",
+      "source": "thuthesis/middle/chap02-design.tex",
+      "pass_8pt": true,
+      "placements": {
+        "main": {
+          "page": 8,
+          "critical_min_final_pt": 10.5,
+          "example": "磁采集、导航"
+        },
+        "school": {
+          "page": 8,
+          "critical_min_final_pt": 10.5,
+          "example": "磁采集、导航"
+        }
+      }
+    },
+    {
+      "id": "stability",
+      "source": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "source_sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+      "source_size_pt": [
+        484.3228454589844,
+        381.4793701171875
+      ],
+      "source_font_sizes_pt": [
+        8.0,
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 8,
+      "placements": {
+        "main": [
+          {
+            "page": 15,
+            "scale": 0.87794,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 118.151,
+            "critical_min_final_pt": 7.0235,
+            "font_sizes_final_pt": [
+              7.0235,
+              7.9015,
+              8.7794
+            ],
+            "small_text_examples": [
+              {
+                "text": "标称",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "增益变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "背景变化噪声",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "扫描偏心",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "组合扰动",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e-2",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e-1",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e0",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "标称",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "增益变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "背景变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "噪声",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "扫描偏心",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "组合扰动",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.6",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.7",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.8",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.9",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 14,
+            "scale": 0.87794,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 118.151,
+            "critical_min_final_pt": 7.0235,
+            "font_sizes_final_pt": [
+              7.0235,
+              7.9015,
+              8.7794
+            ],
+            "small_text_examples": [
+              {
+                "text": "标称",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "增益变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "背景变化噪声",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "扫描偏心",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "组合扰动",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e-2",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e-1",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1e0",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "标称",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "增益变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "背景变化",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "噪声",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "扫描偏心",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "组合扰动",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.6",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.7",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.8",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.9",
+                "final_font_pt": 7.9015,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 425.197,
+      "max_source_width_for_9pt_at_150mm": 377.953,
+      "whole_figure_width_mm_required_for_8pt": 170.858,
+      "whole_figure_height_mm_at_9pt": 151.4,
+      "recommendation": "整图横向已占150mm；8pt原图图例落到7.02pt。优先从冻结汇总重排为150mm宽且全部文字>=9.5pt；或左右列分面各页放宽，同时单独保留共用图例。不得仅继续放大整图越过正文边界。"
+    },
+    {
+      "id": "shape",
+      "source": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "source_sha256": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca",
+      "source_size_pt": [
+        474.5911560058594,
+        341.6771240234375
+      ],
+      "source_font_sizes_pt": [
+        8.0,
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 8,
+      "placements": {
+        "main": [
+          {
+            "page": 16,
+            "scale": 0.89597,
+            "placed_width_mm": 150.008,
+            "placed_height_mm": 107.997,
+            "critical_min_final_pt": 7.1678,
+            "font_sizes_final_pt": [
+              7.1678,
+              8.0637,
+              8.9597
+            ],
+            "small_text_examples": [
+              {
+                "text": "原质量门",
+                "final_font_pt": 7.1678,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "形状判别门",
+                "final_font_pt": 7.1678,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 15,
+            "scale": 0.89597,
+            "placed_width_mm": 150.008,
+            "placed_height_mm": 107.997,
+            "critical_min_final_pt": 7.1678,
+            "font_sizes_final_pt": [
+              7.1678,
+              8.0637,
+              8.9597
+            ],
+            "small_text_examples": [
+              {
+                "text": "原质量门",
+                "final_font_pt": 7.1678,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "形状判别门",
+                "final_font_pt": 7.1678,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 425.197,
+      "max_source_width_for_9pt_at_150mm": 377.953,
+      "whole_figure_width_mm_required_for_8pt": 167.425,
+      "whole_figure_height_mm_at_9pt": 135.603,
+      "recommendation": "只有8pt原图图例低于8pt，9pt刻度约8.06pt。可将共用图例改在图外以9.5pt排印，其余保持；推荐同时按150mm宽重排以达到9pt。"
+    },
+    {
+      "id": "process",
+      "source": "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+      "source_sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+      "source_size_pt": [
+        476.4258728027344,
+        260.2101135253906
+      ],
+      "source_font_sizes_pt": [
+        6.7,
+        7.0,
+        8.0,
+        9.0
+      ],
+      "critical_min_source_pt": 6.7,
+      "placements": {
+        "main": [
+          {
+            "page": 17,
+            "scale": 0.89252,
+            "placed_width_mm": 150.008,
+            "placed_height_mm": 81.93,
+            "critical_min_final_pt": 5.9799,
+            "font_sizes_final_pt": [
+              5.9799,
+              6.2476,
+              7.1402,
+              8.0327
+            ],
+            "small_text_examples": [
+              {
+                "text": "-250",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-200",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-150",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-100",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-50",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "50",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-20",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-10",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "20",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "无源：拒绝跟踪",
+                "final_font_pt": 6.2476,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "600",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "700",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "800",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "900",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1000",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 16,
+            "scale": 0.89252,
+            "placed_width_mm": 150.008,
+            "placed_height_mm": 81.93,
+            "critical_min_final_pt": 5.9799,
+            "font_sizes_final_pt": [
+              5.9799,
+              6.2476,
+              7.1402,
+              8.0327
+            ],
+            "small_text_examples": [
+              {
+                "text": "-250",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-200",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-150",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-100",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-50",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "50",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-20",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-10",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "20",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "无源：拒绝跟踪",
+                "final_font_pt": 6.2476,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "600",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "700",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "800",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "900",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1000",
+                "final_font_pt": 7.1402,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 356.102,
+      "max_source_width_for_9pt_at_150mm": 316.535,
+      "whole_figure_width_mm_required_for_8pt": 200.684,
+      "whole_figure_height_mm_at_9pt": 123.309,
+      "recommendation": "最小图例6.7pt落到5.98pt，地图标注7pt落到6.25pt。必须重排或拆面；可将地图与右侧误差曲线分为两幅/两页，不能把完整图仅以150mm宽缩放。地图分面约250×230pt放满150mm后高138mm，右列约225×230pt高153mm；上下合一页超过237mm。"
+    },
+    {
+      "id": "supervision",
+      "source": "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf",
+      "source_sha256": "2f59e7131034071a9422f4e685afcd47e7f9f1b4675fe6c91c3b772e95c3d619",
+      "source_size_pt": [
+        489.3595275878906,
+        236.70726013183594
+      ],
+      "source_font_sizes_pt": [
+        7.0,
+        8.0,
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 7,
+      "placements": {
+        "main": [
+          {
+            "page": 18,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 72.558,
+            "critical_min_final_pt": 6.0823,
+            "font_sizes_final_pt": [
+              6.0823,
+              6.9512,
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "10",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "20",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "30",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "40",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "50",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "60",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "70",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "旧链未覆盖",
+                "final_font_pt": 6.0823,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "(a) 反向小流：真实核心横偏",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "发布中心",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "门 0.5 m",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "载体 MAE",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "门 1 m",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 17,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 72.558,
+            "critical_min_final_pt": 6.0823,
+            "font_sizes_final_pt": [
+              6.0823,
+              6.9512,
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "10",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "20",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "30",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "40",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "50",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "60",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "70",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "旧链未覆盖",
+                "final_font_pt": 6.0823,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "(a) 反向小流：真实核心横偏",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "发布中心",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "门 0.5 m",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "载体 MAE",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "门 1 m",
+                "final_font_pt": 6.9512,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 372.047,
+      "max_source_width_for_9pt_at_150mm": 330.709,
+      "whole_figure_width_mm_required_for_8pt": 197.297,
+      "whole_figure_height_mm_at_9pt": 107.364,
+      "recommendation": "7pt注释落到6.08pt。左右面分别裁开后按约125mm宽上下排列，单面约245×205pt，合计约209mm（不含共用图例与图注）；若总高超过220mm则分两页，禁止以height强制缩到<8pt。"
+    },
+    {
+      "id": "adc",
+      "source": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "source_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+      "source_size_pt": [
+        237.35952758789062,
+        164.35975646972656
+      ],
+      "source_font_sizes_pt": [
+        8.0,
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 8,
+      "placements": {
+        "main": [
+          {
+            "page": 23,
+            "scale": 1.41534,
+            "placed_width_mm": 118.514,
+            "placed_height_mm": 82.065,
+            "critical_min_final_pt": 11.3227,
+            "font_sizes_final_pt": [
+              11.3227,
+              12.7381,
+              14.1534
+            ],
+            "small_text_examples": []
+          }
+        ],
+        "school": [
+          {
+            "page": 22,
+            "scale": 1.41534,
+            "placed_width_mm": 118.514,
+            "placed_height_mm": 82.065,
+            "critical_min_final_pt": 11.3227,
+            "font_sizes_final_pt": [
+              11.3227,
+              12.7381,
+              14.1534
+            ],
+            "small_text_examples": []
+          }
+        ]
+      },
+      "pass_8pt": true,
+      "max_source_width_for_8pt_at_150mm": 425.197,
+      "max_source_width_for_9pt_at_150mm": 377.953,
+      "whole_figure_width_mm_required_for_8pt": 83.735,
+      "whole_figure_height_mm_at_9pt": 65.23,
+      "recommendation": "原图较窄，0.79linewidth最终放大约1.415倍，最小文字约11.32pt，保持即可。"
+    },
+    {
+      "id": "joint",
+      "source": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+      "source_sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+      "source_size_pt": [
+        489.3595275878906,
+        341.759521484375
+      ],
+      "source_font_sizes_pt": [
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 9,
+      "placements": {
+        "main": [
+          {
+            "page": 25,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 104.759,
+            "critical_min_final_pt": 7.8201,
+            "font_sizes_final_pt": [
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "4",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "6",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-2.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-0.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测正交分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型正交分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 24,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 104.759,
+            "critical_min_final_pt": 7.8201,
+            "font_sizes_final_pt": [
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "4",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "6",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-2.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-0.5",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测正交分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型正交分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "-1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "实测同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "模型同相分量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 478.346,
+      "max_source_width_for_9pt_at_150mm": 425.197,
+      "whole_figure_width_mm_required_for_8pt": 153.453,
+      "whole_figure_height_mm_at_9pt": 120.565,
+      "recommendation": "9pt原图刻度/图例落到7.82pt。优先按150mm宽重新排3×2面板，9.5pt刻度、共用图例；或I/Q两列分别作为两个分页图，高度约215mm以内。"
+    },
+    {
+      "id": "jetson",
+      "source": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+      "source_sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+      "source_size_pt": [
+        489.0765380859375,
+        204.9595184326172
+      ],
+      "source_font_sizes_pt": [
+        6.3,
+        8.0,
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 8,
+      "placements": {
+        "main": [
+          {
+            "page": 26,
+            "scale": 0.86938,
+            "placed_width_mm": 149.999,
+            "placed_height_mm": 62.861,
+            "critical_min_final_pt": 6.955,
+            "font_sizes_final_pt": [
+              5.4771,
+              6.955,
+              7.8244,
+              8.6938
+            ],
+            "small_text_examples": [
+              {
+                "text": "稳态冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "约束压力冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "约束压力热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "3 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "4 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "6 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "2 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "20 Hz 控制周期 (50 ms)",
+                "final_font_pt": 6.955,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "MPC 离散周期 (200 ms)",
+                "final_font_pt": 6.955,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 25,
+            "scale": 0.86938,
+            "placed_width_mm": 149.999,
+            "placed_height_mm": 62.861,
+            "critical_min_final_pt": 6.955,
+            "font_sizes_final_pt": [
+              5.4771,
+              6.955,
+              7.8244,
+              8.6938
+            ],
+            "small_text_examples": [
+              {
+                "text": "稳态冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "约束压力冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "约束压力热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "3 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "4 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "6 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "2 × 10",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 5.4771,
+                "is_mathematical_superscript": true
+              },
+              {
+                "text": "20 Hz 控制周期 (50 ms)",
+                "final_font_pt": 6.955,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "MPC 离散周期 (200 ms)",
+                "final_font_pt": 6.955,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态冷启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "稳态热启动",
+                "final_font_pt": 7.8244,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 425.197,
+      "max_source_width_for_9pt_at_150mm": 377.953,
+      "whole_figure_width_mm_required_for_8pt": 172.535,
+      "whole_figure_height_mm_at_9pt": 81.343,
+      "recommendation": "原图8pt图例仅6.96pt，9pt刻度7.82pt。按150mm宽重排上下两个面板，横坐标换行，普通数字表示对数轴刻度避免指数过小；保留50/200ms两条参考线。"
+    },
+    {
+      "id": "pc104",
+      "source": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "source_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+      "source_size_pt": [
+        489.3595275878906,
+        343.8597717285156
+      ],
+      "source_font_sizes_pt": [
+        9.0,
+        10.0
+      ],
+      "critical_min_source_pt": 9,
+      "placements": {
+        "main": [
+          {
+            "page": 27,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 105.403,
+            "critical_min_final_pt": 7.8201,
+            "font_sizes_final_pt": [
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "锁定",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "有效",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "拒绝",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "待机",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "平行跟踪",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "之字搜索",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "4",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "6",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "8",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "上行推进反馈",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "影子执行量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ],
+        "school": [
+          {
+            "page": 26,
+            "scale": 0.8689,
+            "placed_width_mm": 150.003,
+            "placed_height_mm": 105.403,
+            "critical_min_final_pt": 7.8201,
+            "font_sizes_final_pt": [
+              7.8201,
+              8.689
+            ],
+            "small_text_examples": [
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "锁定",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "有效",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "拒绝",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "待机",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "平行跟踪",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "之字搜索",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "2",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "4",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "6",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "8",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "10",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.0",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "0.1",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "上行推进反馈",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              },
+              {
+                "text": "影子执行量",
+                "final_font_pt": 7.8201,
+                "is_mathematical_superscript": false
+              }
+            ]
+          }
+        ]
+      },
+      "pass_8pt": false,
+      "max_source_width_for_8pt_at_150mm": 478.346,
+      "max_source_width_for_9pt_at_150mm": 425.197,
+      "whole_figure_width_mm_required_for_8pt": 153.453,
+      "whole_figure_height_mm_at_9pt": 121.306,
+      "recommendation": "原图9pt关键状态/刻度仅7.82pt。原raw缺失，保留原PDF曲线作矢量分面适配并以>=9.5pt重排文字，或拆左右时间区间并保持统一坐标/图例；不得重建未存档事件数据。"
+    }
+  ],
+  "summary": {
+    "figures": 9,
+    "pass_8pt": 2,
+    "need_fix": 7,
+    "blocking_ids": [
+      "stability",
+      "shape",
+      "process",
+      "supervision",
+      "joint",
+      "jetson",
+      "pc104"
+    ],
+    "same_scale_in_both_formats": true,
+    "height_rule": "237mm正文区须预留图注、图题与间隔。图像总高建议<=215–220mm；超出则拆页，不能只设height=...导致字缩小。"
+  },
+  "post_fix": {
+    "method": "最终PDF根Form XObject的实际缩放矩阵 × 源PDF字号，并核对最终文本匹配；1 PDF pt=1/72 inch",
+    "minimum_critical_font_pt": 8,
+    "preferred_font_pt": 9,
+    "pdfs": {
+      "main": {
+        "path": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+        "sha256": "5f1b951e1a54d26cdaaf93f7f5939a7b347dc16dc5f01fb215053969ac4b68d9",
+        "pages": 34,
+        "bookmarks": {
+          "count": 41,
+          "all_destinations_inside_pdf": true,
+          "entries": [
+            [
+              1,
+              "面向海上风电电缆运维的 AUV多源异构感知与安全自主巡检研究",
+              1
+            ],
+            [
+              2,
+              "中期进展概述",
+              2
+            ],
+            [
+              2,
+              "目录",
+              3
+            ],
+            [
+              2,
+              "第1章 研究背景与阶段目标",
+              5
+            ],
+            [
+              3,
+              "1.1 海缆巡检任务及研究意义",
+              5
+            ],
+            [
+              3,
+              "1.2 相关研究与本课题问题",
+              5
+            ],
+            [
+              3,
+              "1.3 研究目标与中期工作范围",
+              6
+            ],
+            [
+              2,
+              "第2章 总体研究方案与验证体系",
+              7
+            ],
+            [
+              3,
+              "2.1 存量平台上的功能分工",
+              7
+            ],
+            [
+              3,
+              "2.2 多源观测与状态信息的衔接",
+              8
+            ],
+            [
+              3,
+              "2.3 巡检流程与结果发布原则",
+              8
+            ],
+            [
+              3,
+              "2.4 从可重复仿真到实物的验证层次",
+              9
+            ],
+            [
+              2,
+              "第3章 磁感知与主动横切反演的阶段结果",
+              10
+            ],
+            [
+              3,
+              "3.1 磁观测量与反演几何定义",
+              10
+            ],
+            [
+              3,
+              "3.2 从先验搜索到主动横切的处理流程",
+              11
+            ],
+            [
+              3,
+              "3.3 稳定性比较与场形失配的拒绝",
+              12
+            ],
+            [
+              3,
+              "3.4 有限路线巡检与条件性监督结果",
+              14
+            ],
+            [
+              2,
+              "第4章 状态估计、控制与平台验证进展",
+              18
+            ],
+            [
+              3,
+              "4.1 融合状态估计与异常观测处理",
+              18
+            ],
+            [
+              4,
+              "4.1.1 状态、观测与不确定性的统一表达",
+              18
+            ],
+            [
+              4,
+              "4.1.2 公平对照与鲁棒更新的代表结果",
+              19
+            ],
+            [
+              3,
+              "4.2 置信信息参与控制及其性能权衡",
+              20
+            ],
+            [
+              4,
+              "4.2.1 控制调制与任务授权的职责划分",
+              20
+            ],
+            [
+              4,
+              "4.2.2 六类代理场景的成对比较",
+              21
+            ],
+            [
+              3,
+              "4.3 弱磁测量链的实测基础",
+              22
+            ],
+            [
+              4,
+              "4.3.1 TMR 模组与 ADC 噪声评价",
+              22
+            ],
+            [
+              4,
+              "4.3.2 45 Hz 电缆与相对位姿联合实验",
+              23
+            ],
+            [
+              3,
+              "4.4 目标平台计算与真实通信安全子链",
+              25
+            ],
+            [
+              4,
+              "4.4.1 Jetson 求解预算及压力工况",
+              25
+            ],
+            [
+              4,
+              "4.4.2 PC104 固件回显与跨层故障传播",
+              26
+            ],
+            [
+              3,
+              "4.5 整艇恢复现状与下一验证入口",
+              28
+            ],
+            [
+              2,
+              "第5章 当前问题与研究方案调整",
+              29
+            ],
+            [
+              3,
+              "5.1 从剖面可辨识性到真实目标关联",
+              29
+            ],
+            [
+              3,
+              "5.2 估计、运动与部署之间的证据缺口",
+              29
+            ],
+            [
+              3,
+              "5.3 实施顺序调整与阶段判断",
+              30
+            ],
+            [
+              2,
+              "第6章 后续实施计划与阶段验收",
+              31
+            ],
+            [
+              3,
+              "6.1 以基础平台恢复建立实物验证入口",
+              31
+            ],
+            [
+              3,
+              "6.2 磁载荷集成与完整任务验证",
+              31
+            ],
+            [
+              3,
+              "6.3 工作包、依赖和完成条件",
+              32
+            ],
+            [
+              3,
+              "6.4 阶段更新与预期成果",
+              33
+            ],
+            [
+              2,
+              "参考文献",
+              34
+            ]
+          ],
+          "printed_contents_items_checked": 40,
+          "all_printed_contents_pages_match": true,
+          "contents_item_checks": [
+            {
+              "title": "中期进展概述",
+              "physical_page": 2,
+              "printed_label": "I",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "目录",
+              "physical_page": 3,
+              "printed_label": "II",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第1章 研究背景与阶段目标",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.1 海缆巡检任务及研究意义",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.2 相关研究与本课题问题",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.3 研究目标与中期工作范围",
+              "physical_page": 6,
+              "printed_label": "2",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第2章 总体研究方案与验证体系",
+              "physical_page": 7,
+              "printed_label": "3",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.1 存量平台上的功能分工",
+              "physical_page": 7,
+              "printed_label": "3",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.2 多源观测与状态信息的衔接",
+              "physical_page": 8,
+              "printed_label": "4",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.3 巡检流程与结果发布原则",
+              "physical_page": 8,
+              "printed_label": "4",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.4 从可重复仿真到实物的验证层次",
+              "physical_page": 9,
+              "printed_label": "5",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第3章 磁感知与主动横切反演的阶段结果",
+              "physical_page": 10,
+              "printed_label": "6",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.1 磁观测量与反演几何定义",
+              "physical_page": 10,
+              "printed_label": "6",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.2 从先验搜索到主动横切的处理流程",
+              "physical_page": 11,
+              "printed_label": "7",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.3 稳定性比较与场形失配的拒绝",
+              "physical_page": 12,
+              "printed_label": "8",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.4 有限路线巡检与条件性监督结果",
+              "physical_page": 14,
+              "printed_label": "10",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第4章 状态估计、控制与平台验证进展",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1 融合状态估计与异常观测处理",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1.1 状态、观测与不确定性的统一表达",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1.2 公平对照与鲁棒更新的代表结果",
+              "physical_page": 19,
+              "printed_label": "15",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2 置信信息参与控制及其性能权衡",
+              "physical_page": 20,
+              "printed_label": "16",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2.1 控制调制与任务授权的职责划分",
+              "physical_page": 20,
+              "printed_label": "16",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2.2 六类代理场景的成对比较",
+              "physical_page": 21,
+              "printed_label": "17",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3 弱磁测量链的实测基础",
+              "physical_page": 22,
+              "printed_label": "18",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3.1 TMR 模组与 ADC 噪声评价",
+              "physical_page": 22,
+              "printed_label": "18",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3.2 45 Hz 电缆与相对位姿联合实验",
+              "physical_page": 23,
+              "printed_label": "19",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4 目标平台计算与真实通信安全子链",
+              "physical_page": 25,
+              "printed_label": "21",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4.1 Jetson 求解预算及压力工况",
+              "physical_page": 25,
+              "printed_label": "21",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4.2 PC104 固件回显与跨层故障传播",
+              "physical_page": 26,
+              "printed_label": "22",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.5 整艇恢复现状与下一验证入口",
+              "physical_page": 28,
+              "printed_label": "24",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第5章 当前问题与研究方案调整",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.1 从剖面可辨识性到真实目标关联",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.2 估计、运动与部署之间的证据缺口",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.3 实施顺序调整与阶段判断",
+              "physical_page": 30,
+              "printed_label": "26",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第6章 后续实施计划与阶段验收",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.1 以基础平台恢复建立实物验证入口",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.2 磁载荷集成与完整任务验证",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.3 工作包、依赖和完成条件",
+              "physical_page": 32,
+              "printed_label": "28",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.4 阶段更新与预期成果",
+              "physical_page": 33,
+              "printed_label": "29",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "参考文献",
+              "physical_page": 34,
+              "printed_label": "30",
+              "present_in_printed_contents_with_correct_page": true
+            }
+          ]
+        },
+        "page_breakdown": [
+          {
+            "part": "封面",
+            "pdf_pages": [
+              1,
+              1
+            ],
+            "count": 1,
+            "printed_pages": "无打印页码"
+          },
+          {
+            "part": "中期进展概述",
+            "pdf_pages": [
+              2,
+              2
+            ],
+            "count": 1,
+            "printed_pages": "I"
+          },
+          {
+            "part": "目录",
+            "pdf_pages": [
+              3,
+              4
+            ],
+            "count": 2,
+            "printed_pages": "II–III"
+          },
+          {
+            "part": "第1章",
+            "pdf_pages": [
+              5,
+              6
+            ],
+            "count": 2,
+            "printed_pages": "1–2"
+          },
+          {
+            "part": "第2章",
+            "pdf_pages": [
+              7,
+              9
+            ],
+            "count": 3,
+            "printed_pages": "3–5"
+          },
+          {
+            "part": "第3章",
+            "pdf_pages": [
+              10,
+              17
+            ],
+            "count": 8,
+            "printed_pages": "6–13"
+          },
+          {
+            "part": "第4章",
+            "pdf_pages": [
+              18,
+              28
+            ],
+            "count": 11,
+            "printed_pages": "14–24"
+          },
+          {
+            "part": "第5章",
+            "pdf_pages": [
+              29,
+              30
+            ],
+            "count": 2,
+            "printed_pages": "25–26"
+          },
+          {
+            "part": "第6章",
+            "pdf_pages": [
+              31,
+              33
+            ],
+            "count": 3,
+            "printed_pages": "27–29"
+          },
+          {
+            "part": "参考文献",
+            "pdf_pages": [
+              34,
+              34
+            ],
+            "count": 1,
+            "printed_pages": "30"
+          }
+        ],
+        "total_pages_verified": 34,
+        "body_pages_excluding_frontmatter_and_references": 29,
+        "frontmatter_pages": 4,
+        "reference_pages": 1,
+        "expected_final_sha256_matched": true
+      },
+      "school": {
+        "path": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+        "sha256": "bfbae2d0d4ee73c14e68c590096a11326121bc27a988b90f62e196e49e9e29cc",
+        "pages": 34,
+        "bookmarks": {
+          "count": 41,
+          "all_destinations_inside_pdf": true,
+          "entries": [
+            [
+              1,
+              "面向海上风电电缆运维的 AUV多源异构感知与安全自主巡检研究",
+              1
+            ],
+            [
+              2,
+              "中期进展概述",
+              2
+            ],
+            [
+              2,
+              "目录",
+              3
+            ],
+            [
+              2,
+              "第1章 研究背景与阶段目标",
+              5
+            ],
+            [
+              3,
+              "1.1 海缆巡检任务及研究意义",
+              5
+            ],
+            [
+              3,
+              "1.2 相关研究与本课题问题",
+              5
+            ],
+            [
+              3,
+              "1.3 研究目标与中期工作范围",
+              6
+            ],
+            [
+              2,
+              "第2章 总体研究方案与验证体系",
+              7
+            ],
+            [
+              3,
+              "2.1 存量平台上的功能分工",
+              7
+            ],
+            [
+              3,
+              "2.2 多源观测与状态信息的衔接",
+              7
+            ],
+            [
+              3,
+              "2.3 巡检流程与结果发布原则",
+              8
+            ],
+            [
+              3,
+              "2.4 从可重复仿真到实物的验证层次",
+              9
+            ],
+            [
+              2,
+              "第3章 磁感知与主动横切反演的阶段结果",
+              10
+            ],
+            [
+              3,
+              "3.1 磁观测量与反演几何定义",
+              10
+            ],
+            [
+              3,
+              "3.2 从先验搜索到主动横切的处理流程",
+              11
+            ],
+            [
+              3,
+              "3.3 稳定性比较与场形失配的拒绝",
+              12
+            ],
+            [
+              3,
+              "3.4 有限路线巡检与条件性监督结果",
+              14
+            ],
+            [
+              2,
+              "第4章 状态估计、控制与平台验证进展",
+              18
+            ],
+            [
+              3,
+              "4.1 融合状态估计与异常观测处理",
+              18
+            ],
+            [
+              4,
+              "4.1.1 状态、观测与不确定性的统一表达",
+              18
+            ],
+            [
+              4,
+              "4.1.2 公平对照与鲁棒更新的代表结果",
+              19
+            ],
+            [
+              3,
+              "4.2 置信信息参与控制及其性能权衡",
+              20
+            ],
+            [
+              4,
+              "4.2.1 控制调制与任务授权的职责划分",
+              20
+            ],
+            [
+              4,
+              "4.2.2 六类代理场景的成对比较",
+              21
+            ],
+            [
+              3,
+              "4.3 弱磁测量链的实测基础",
+              22
+            ],
+            [
+              4,
+              "4.3.1 TMR 模组与 ADC 噪声评价",
+              22
+            ],
+            [
+              4,
+              "4.3.2 45 Hz 电缆与相对位姿联合实验",
+              23
+            ],
+            [
+              3,
+              "4.4 目标平台计算与真实通信安全子链",
+              25
+            ],
+            [
+              4,
+              "4.4.1 Jetson 求解预算及压力工况",
+              25
+            ],
+            [
+              4,
+              "4.4.2 PC104 固件回显与跨层故障传播",
+              26
+            ],
+            [
+              3,
+              "4.5 整艇恢复现状与下一验证入口",
+              28
+            ],
+            [
+              2,
+              "第5章 当前问题与研究方案调整",
+              29
+            ],
+            [
+              3,
+              "5.1 从剖面可辨识性到真实目标关联",
+              29
+            ],
+            [
+              3,
+              "5.2 估计、运动与部署之间的证据缺口",
+              29
+            ],
+            [
+              3,
+              "5.3 实施顺序调整与阶段判断",
+              30
+            ],
+            [
+              2,
+              "第6章 后续实施计划与阶段验收",
+              31
+            ],
+            [
+              3,
+              "6.1 以基础平台恢复建立实物验证入口",
+              31
+            ],
+            [
+              3,
+              "6.2 磁载荷集成与完整任务验证",
+              31
+            ],
+            [
+              3,
+              "6.3 工作包、依赖和完成条件",
+              32
+            ],
+            [
+              3,
+              "6.4 阶段更新与预期成果",
+              33
+            ],
+            [
+              2,
+              "参考文献",
+              34
+            ]
+          ],
+          "printed_contents_items_checked": 40,
+          "all_printed_contents_pages_match": true,
+          "contents_item_checks": [
+            {
+              "title": "中期进展概述",
+              "physical_page": 2,
+              "printed_label": "I",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "目录",
+              "physical_page": 3,
+              "printed_label": "II",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第1章 研究背景与阶段目标",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.1 海缆巡检任务及研究意义",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.2 相关研究与本课题问题",
+              "physical_page": 5,
+              "printed_label": "1",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "1.3 研究目标与中期工作范围",
+              "physical_page": 6,
+              "printed_label": "2",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第2章 总体研究方案与验证体系",
+              "physical_page": 7,
+              "printed_label": "3",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.1 存量平台上的功能分工",
+              "physical_page": 7,
+              "printed_label": "3",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.2 多源观测与状态信息的衔接",
+              "physical_page": 7,
+              "printed_label": "3",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.3 巡检流程与结果发布原则",
+              "physical_page": 8,
+              "printed_label": "4",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "2.4 从可重复仿真到实物的验证层次",
+              "physical_page": 9,
+              "printed_label": "5",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第3章 磁感知与主动横切反演的阶段结果",
+              "physical_page": 10,
+              "printed_label": "6",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.1 磁观测量与反演几何定义",
+              "physical_page": 10,
+              "printed_label": "6",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.2 从先验搜索到主动横切的处理流程",
+              "physical_page": 11,
+              "printed_label": "7",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.3 稳定性比较与场形失配的拒绝",
+              "physical_page": 12,
+              "printed_label": "8",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "3.4 有限路线巡检与条件性监督结果",
+              "physical_page": 14,
+              "printed_label": "10",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第4章 状态估计、控制与平台验证进展",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1 融合状态估计与异常观测处理",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1.1 状态、观测与不确定性的统一表达",
+              "physical_page": 18,
+              "printed_label": "14",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.1.2 公平对照与鲁棒更新的代表结果",
+              "physical_page": 19,
+              "printed_label": "15",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2 置信信息参与控制及其性能权衡",
+              "physical_page": 20,
+              "printed_label": "16",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2.1 控制调制与任务授权的职责划分",
+              "physical_page": 20,
+              "printed_label": "16",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.2.2 六类代理场景的成对比较",
+              "physical_page": 21,
+              "printed_label": "17",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3 弱磁测量链的实测基础",
+              "physical_page": 22,
+              "printed_label": "18",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3.1 TMR 模组与 ADC 噪声评价",
+              "physical_page": 22,
+              "printed_label": "18",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.3.2 45 Hz 电缆与相对位姿联合实验",
+              "physical_page": 23,
+              "printed_label": "19",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4 目标平台计算与真实通信安全子链",
+              "physical_page": 25,
+              "printed_label": "21",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4.1 Jetson 求解预算及压力工况",
+              "physical_page": 25,
+              "printed_label": "21",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.4.2 PC104 固件回显与跨层故障传播",
+              "physical_page": 26,
+              "printed_label": "22",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "4.5 整艇恢复现状与下一验证入口",
+              "physical_page": 28,
+              "printed_label": "24",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第5章 当前问题与研究方案调整",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.1 从剖面可辨识性到真实目标关联",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.2 估计、运动与部署之间的证据缺口",
+              "physical_page": 29,
+              "printed_label": "25",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "5.3 实施顺序调整与阶段判断",
+              "physical_page": 30,
+              "printed_label": "26",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "第6章 后续实施计划与阶段验收",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.1 以基础平台恢复建立实物验证入口",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.2 磁载荷集成与完整任务验证",
+              "physical_page": 31,
+              "printed_label": "27",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.3 工作包、依赖和完成条件",
+              "physical_page": 32,
+              "printed_label": "28",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "6.4 阶段更新与预期成果",
+              "physical_page": 33,
+              "printed_label": "29",
+              "present_in_printed_contents_with_correct_page": true
+            },
+            {
+              "title": "参考文献",
+              "physical_page": 34,
+              "printed_label": "30",
+              "present_in_printed_contents_with_correct_page": true
+            }
+          ]
+        },
+        "page_breakdown": [
+          {
+            "part": "封面",
+            "pdf_pages": [
+              1,
+              1
+            ],
+            "count": 1,
+            "printed_pages": "无打印页码"
+          },
+          {
+            "part": "中期进展概述",
+            "pdf_pages": [
+              2,
+              2
+            ],
+            "count": 1,
+            "printed_pages": "I"
+          },
+          {
+            "part": "目录",
+            "pdf_pages": [
+              3,
+              4
+            ],
+            "count": 2,
+            "printed_pages": "II–III"
+          },
+          {
+            "part": "第1章",
+            "pdf_pages": [
+              5,
+              6
+            ],
+            "count": 2,
+            "printed_pages": "1–2"
+          },
+          {
+            "part": "第2章",
+            "pdf_pages": [
+              7,
+              9
+            ],
+            "count": 3,
+            "printed_pages": "3–5"
+          },
+          {
+            "part": "第3章",
+            "pdf_pages": [
+              10,
+              17
+            ],
+            "count": 8,
+            "printed_pages": "6–13"
+          },
+          {
+            "part": "第4章",
+            "pdf_pages": [
+              18,
+              28
+            ],
+            "count": 11,
+            "printed_pages": "14–24"
+          },
+          {
+            "part": "第5章",
+            "pdf_pages": [
+              29,
+              30
+            ],
+            "count": 2,
+            "printed_pages": "25–26"
+          },
+          {
+            "part": "第6章",
+            "pdf_pages": [
+              31,
+              33
+            ],
+            "count": 3,
+            "printed_pages": "27–29"
+          },
+          {
+            "part": "参考文献",
+            "pdf_pages": [
+              34,
+              34
+            ],
+            "count": 1,
+            "printed_pages": "30"
+          }
+        ],
+        "total_pages_verified": 34,
+        "body_pages_excluding_frontmatter_and_references": 29,
+        "frontmatter_pages": 4,
+        "reference_pages": 1,
+        "expected_final_sha256_matched": true
+      }
+    },
+    "figures": [
+      {
+        "variant": "main",
+        "index": 1,
+        "page": 13,
+        "source": "thuthesis/middle/figures/magnetic_stability.pdf",
+        "source_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 125.733,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 42,
+        "source_text_span_count": 42,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 2,
+        "page": 14,
+        "source": "thuthesis/middle/figures/magnetic_shape_guard.pdf",
+        "source_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 104.142,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 29,
+        "source_text_span_count": 29,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 3,
+        "page": 15,
+        "source": "thuthesis/middle/figures/magnetic_mission_process.pdf",
+        "source_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 127.003,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 39,
+        "source_text_span_count": 39,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 4,
+        "page": 16,
+        "source": "thuthesis/middle/figures/magnetic_supervision.pdf",
+        "source_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 92.712,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 31,
+        "source_text_span_count": 31,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 5,
+        "page": 22,
+        "source": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "source_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "scale": 1.41534,
+        "placed_width_mm": 118.514,
+        "placed_height_mm": 82.065,
+        "font_sizes_final_pt": [
+          11.3227,
+          12.7381,
+          14.1534
+        ],
+        "min_final_font_pt": 11.3227,
+        "final_text_spans_matched": 15,
+        "source_text_span_count": 15,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 6,
+        "page": 24,
+        "source": "thuthesis/middle/figures/systems/complex_iq_fit_middle.pdf",
+        "source_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 144.783,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 35,
+        "source_text_span_count": 35,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 7,
+        "page": 25,
+        "source": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.pdf",
+        "source_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 140.973,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 35,
+        "source_text_span_count": 35,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 8,
+        "page": 27,
+        "source": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.pdf",
+        "source_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 170.183,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 27,
+        "source_text_span_count": 27,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "main",
+        "index": 0,
+        "source": "thuthesis/middle/chap02-design.tex",
+        "page": 7,
+        "min_final_font_pt": 10.5,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 1,
+        "page": 13,
+        "source": "thuthesis/middle/figures/magnetic_stability.pdf",
+        "source_sha256": "fa86c8ef19190d17d672202dc23e3bda50b7de24108007c9f9b6de05411fbc88",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 125.733,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 42,
+        "source_text_span_count": 42,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 2,
+        "page": 14,
+        "source": "thuthesis/middle/figures/magnetic_shape_guard.pdf",
+        "source_sha256": "0456c0f808f0d76deae2eea80eba61424c2a54d1fb473bc36d0c5fbf91dfa15b",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 104.142,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 29,
+        "source_text_span_count": 29,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 3,
+        "page": 15,
+        "source": "thuthesis/middle/figures/magnetic_mission_process.pdf",
+        "source_sha256": "38bc60c65024f4a1336754cfb0312590678afcbf643cf44a790b0efe40f2a123",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 127.003,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 39,
+        "source_text_span_count": 39,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 4,
+        "page": 16,
+        "source": "thuthesis/middle/figures/magnetic_supervision.pdf",
+        "source_sha256": "d40df610bb9591ad99d6e1ade0711e019713651976eef96ecc6487305d71597a",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 92.712,
+        "font_sizes_final_pt": [
+          9.0002
+        ],
+        "min_final_font_pt": 9.0002,
+        "final_text_spans_matched": 31,
+        "source_text_span_count": 31,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 5,
+        "page": 22,
+        "source": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "source_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "scale": 1.41534,
+        "placed_width_mm": 118.514,
+        "placed_height_mm": 82.065,
+        "font_sizes_final_pt": [
+          11.3227,
+          12.7381,
+          14.1534
+        ],
+        "min_final_font_pt": 11.3227,
+        "final_text_spans_matched": 15,
+        "source_text_span_count": 15,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 6,
+        "page": 24,
+        "source": "thuthesis/middle/figures/systems/complex_iq_fit_middle.pdf",
+        "source_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 144.783,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 35,
+        "source_text_span_count": 35,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 7,
+        "page": 25,
+        "source": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.pdf",
+        "source_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 140.973,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 35,
+        "source_text_span_count": 35,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 8,
+        "page": 27,
+        "source": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.pdf",
+        "source_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+        "scale": 1.00002,
+        "placed_width_mm": 150.003,
+        "placed_height_mm": 170.183,
+        "font_sizes_final_pt": [
+          9.5002,
+          10.0002
+        ],
+        "min_final_font_pt": 9.5002,
+        "final_text_spans_matched": 27,
+        "source_text_span_count": 27,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      },
+      {
+        "variant": "school",
+        "index": 0,
+        "source": "thuthesis/middle/chap02-design.tex",
+        "page": 7,
+        "min_final_font_pt": 10.5,
+        "pass_8pt": true,
+        "pass_preferred_9pt": true
+      }
+    ],
+    "all_18_placements_pass_8pt": true,
+    "all_18_placements_pass_9pt": true,
+    "scope": "字高与缩放验收；重叠、越界及整页密度仍需Poppler最终页面视觉验收"
+  },
+  "recheck_command": "/home/zmem063/.local/share/auv-middle/venv/bin/python tools/plot_middle_systems.py --audit-final"
+}

@@ -13,14 +13,15 @@
   - 本轮重构后 Draw.io SHA256：`7cef8896bd892afc37d2ac08a33d2cf0a11bc586e0ef625a16d13041e87dd5c7`
   - 本轮重构后预览 PNG SHA256：`8f0208ef5d141ff8a04c1edbe5812b679483295c46e12bab9441534ee191bb8e`
 - 主论文出版物：
-  - PNG SHA256：`6b2ca4b500ee83eb44a48918f2d259165bf5133fb24cfd8e4cc2cdced7773420`
-  - PDF SHA256：`906cd64ef3ce8525cfb3e68eceabb13c33c4e3eeb888bdaef72a9281e1f34f9c`
+  - PNG SHA256：`76bdbf5dfa124fad61857f9b000834fd589ef6d807e415b415db478a55cacecb`
+  - PDF SHA256：`7569d4c8055efb98c1cdf48bbbd08d1e871e44d0d69cdd102c7cdf04366068af`
 - 相对子仓库示意图的修订：
   1. 内层采样从子仓库示意的 200 Hz 改为“按采集配置”，正文示例引用当前 2000 Hz 原始 / 10 Hz 特征步进链；
   2. “滤波/RMS”改为 45/50 Hz DLIA 连续 I/Q 与旋转不变模量；
   3. 明确 `CableTrackingOutput` 与两级估计的上下游边界（载体级 ES-EKF → 电缆几何级在线修正）；
   4. 真值只进入离线评价，不进入在线管线；
   5. 声呐观测标注为“质量分驱动，非无条件可信”。
+  6. 出版图拆为同一图号下的两个互补视图：(a) 磁采集到几何观测，(b) 两级估计到巡缆输出；在线修正模块只出现一次。
 
 ## 2. cable_active_crossing_observability.{png,pdf}
 
@@ -33,8 +34,8 @@
   - 本轮重构后 Draw.io SHA256：`67d223c5bcd42e7f0aaac420ca68094510da1e21278eaff39669dfd21c467bbe`
   - 本轮重构后预览 PNG SHA256：`677dc24042bb6acde0671c9bb72343787140f6dd7e4b7b48f49319965e599ac1`
 - 主论文出版物：
-  - PNG SHA256：`63ad550a3d52adfb79ad9d6e232aa32473921cfceb0294b9dab6298d7c263b6e`
-  - PDF SHA256：`216f29abd4993d24b3f0fd99c1661cca41fbb21c2d09c2d133156da813931c26`
+  - PNG SHA256：`0c5dd47894dff50eef077940886b6031d66c2b55b277040ef30e8e236a72fa0c`
+  - PDF SHA256：`4f878857c1154c4c14e3bd879676b6a954dea51179906297b4e32b6de78beacd`
 - 精简与修订：
   1. 只保留真值电缆、AUV 横切航迹、穿缆峰值观测点、横切角 θ、估计中心线；
   2. 增补 `|B|` 剖面下面板，显式区分两类几何观测：峰值时刻 → 横向中心线 `e=0`；半高全宽 FWHM → 垂直距离 / 埋深 `z`；

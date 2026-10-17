@@ -1,0 +1,284 @@
+{
+  "status": "PASS",
+  "scope": "最终school共34页重新渲染后，root已实际逐页view_image检查1–34；记录绑定最终PDF",
+  "pdf": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+  "pdf_sha256": "bfbae2d0d4ee73c14e68c590096a11326121bc27a988b90f62e196e49e9e29cc",
+  "page_count": 34,
+  "renderer": "pdftoppm -r 130 -png",
+  "pages": [
+    {
+      "pdf_page": 1,
+      "image": "docs/middle-defense/render-school-final2/page-01.png",
+      "image_sha256": "89ab65133c101183bcfac72d2f9162c05f2d8392cf812ac3bc15759db4667ee9",
+      "status": "PASS",
+      "observation": "题目/中期身份/姓名学号导师专业领域和日期正确，封面无示例字段",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 2,
+      "image": "docs/middle-defense/render-school-final2/page-02.png",
+      "image_sha256": "fabac7733170685635e4e3365e997781dcb976548a6398133d444a172748d52c",
+      "status": "PASS",
+      "observation": "概述与四行进展表清楚；前置页码I",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 3,
+      "image": "docs/middle-defense/render-school-final2/page-03.png",
+      "image_sha256": "7897b70a54350e71dad47194e2a8e327c5e20d4f22f41009a9649ffe614916f8",
+      "status": "PASS",
+      "observation": "目录首面层级及页码正常",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 4,
+      "image": "docs/middle-defense/render-school-final2/page-04.png",
+      "image_sha256": "d93342a13c61c2143cd5296d3fe715fd8e297c2105c30242801ef3167d34dc01",
+      "status": "PASS",
+      "observation": "目录续页及参考文献入口正常",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 5,
+      "image": "docs/middle-defense/render-school-final2/page-05.png",
+      "image_sha256": "3e5c3db9eb4c7c1b464184b34bcb279b383aeb20852210276872f1b7f064e3ee",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 6,
+      "image": "docs/middle-defense/render-school-final2/page-06.png",
+      "image_sha256": "2543b0d837f189ebe566664576c396cf782d71003e9eaf08ac688c31fb305991",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 7,
+      "image": "docs/middle-defense/render-school-final2/page-07.png",
+      "image_sha256": "5f50033ee4eadaefec8a9c220d68d0c3ab302d3a228d4454bd49b1177dd21c92",
+      "status": "PASS",
+      "observation": "接口TikZ框内文字及箭头完整",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 8,
+      "image": "docs/middle-defense/render-school-final2/page-08.png",
+      "image_sha256": "4ac5d63425856fa0f06be4dd27c8f038461dfc55d8014df37ae6dc78505507de",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 9,
+      "image": "docs/middle-defense/render-school-final2/page-09.png",
+      "image_sha256": "e7de77966cd2ca411bba5f84da5aba11025597387cbf1175258e5d9c79f1c2f4",
+      "status": "PASS",
+      "observation": "分层表三线与换行正常",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 10,
+      "image": "docs/middle-defense/render-school-final2/page-10.png",
+      "image_sha256": "dace0b87b1f6cfac9166f021991e0483e97fe1ad7a59e5e249510f4b48576b32",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 11,
+      "image": "docs/middle-defense/render-school-final2/page-11.png",
+      "image_sha256": "102f5fb43414b0df52eaa0faeccee4a1bd50225164c84bd7065fdb8de52496e9",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 12,
+      "image": "docs/middle-defense/render-school-final2/page-12.png",
+      "image_sha256": "fdcfaa6e067f508b491b40c3fb85aa4df8486da1fcc60c5e1aa699612bbd5e0b",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 13,
+      "image": "docs/middle-defense/render-school-final2/page-13.png",
+      "image_sha256": "456b4b9c8038a453ec6043f6efdb70a08d7f05b6f52869ce02f12d878dbad147",
+      "status": "PASS",
+      "observation": "图3.1四面板、图例及条件完整可读",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 14,
+      "image": "docs/middle-defense/render-school-final2/page-14.png",
+      "image_sha256": "a62db07ea362de6016fe776962470c8ebf29027aa7e44e8b6d75d0baf31d3068",
+      "status": "PASS",
+      "observation": "图3.2重排两面板，双向失配与发布代价清楚",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 15,
+      "image": "docs/middle-defense/render-school-final2/page-15.png",
+      "image_sha256": "4df9e25c86a1920bab2b2d0250b037ecb3fe999616b346a8d31d47b141fbade4",
+      "status": "PASS",
+      "observation": "图3.3地图和估计/载体误差完整，图例无重叠",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 16,
+      "image": "docs/middle-defense/render-school-final2/page-16.png",
+      "image_sha256": "9c555706302de071f496a4cace737d185752eba2171dd7e59cc719e73d3a3df5",
+      "status": "PASS",
+      "observation": "图3.4图例、归一化轴/条件图注完整",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 17,
+      "image": "docs/middle-defense/render-school-final2/page-17.png",
+      "image_sha256": "2e5931e884c6fcb001b3451e70b8be12c8cf053a5d68c58a21233a4322433c54",
+      "status": "PASS",
+      "observation": "章末保留约7行完整边界段，留白较多但非单行或裁切；不压字号/版心",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 18,
+      "image": "docs/middle-defense/render-school-final2/page-18.png",
+      "image_sha256": "63bf76f0a0e87fdadda0107e6440b25d8d6cddae685dad52037df5ef41ff12aa",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 19,
+      "image": "docs/middle-defense/render-school-final2/page-19.png",
+      "image_sha256": "ecc454c364776868b9dde3c4c6acacf7bb88441795fa45587dc6e64e28263722",
+      "status": "PASS",
+      "observation": "滤波表及低噪声设置可读",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 20,
+      "image": "docs/middle-defense/render-school-final2/page-20.png",
+      "image_sha256": "07a76d79322a1f6f9fbc5e1aacc30b602bae6fcd0cd3951e3a7b6da4c30146fa",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 21,
+      "image": "docs/middle-defense/render-school-final2/page-21.png",
+      "image_sha256": "60b59515589c7462168bc6402d3ce5c2000b28b55aac7b43d9650071d53bb51f",
+      "status": "PASS",
+      "observation": "UA表、负收益和混合指标说明清楚",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 22,
+      "image": "docs/middle-defense/render-school-final2/page-22.png",
+      "image_sha256": "04b3a683b64a8067287473647e392728f39b6bb829f54b339f19308d8dd114b6",
+      "status": "PASS",
+      "observation": "ADC图与图注完整",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 23,
+      "image": "docs/middle-defense/render-school-final2/page-23.png",
+      "image_sha256": "7cf2df846151574932882c788ea173ed5fcfdd238815d4a6d2ca03324878d76d",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 24,
+      "image": "docs/middle-defense/render-school-final2/page-24.png",
+      "image_sha256": "4311c40df8d9cf7d0372e2ecd4d338696362608791d4eba12c76a25e7dd94e7b",
+      "status": "PASS",
+      "observation": "I/Q六面板居中浮动页，各轴单位及图例正常",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 25,
+      "image": "docs/middle-defense/render-school-final2/page-25.png",
+      "image_sha256": "0b7c7dfce1c4762e05db52b7116e067dea85923983469ec4cdaac61364cbd9d2",
+      "status": "PASS",
+      "observation": "Jetson时延/成功率两面板可读",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 26,
+      "image": "docs/middle-defense/render-school-final2/page-26.png",
+      "image_sha256": "f739b1d608c676bd1ff7897cc28588398e1126d7e1b6b5a8136e1525e19bd5de",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 27,
+      "image": "docs/middle-defense/render-school-final2/page-27.png",
+      "image_sha256": "15081dc7068181c490f42bfb69f9eb9471749ca4db4e1caf12aa1881c96e6dd8",
+      "status": "PASS",
+      "observation": "PC104四面板各状态和图例清晰；时间基准与图注一致",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 28,
+      "image": "docs/middle-defense/render-school-final2/page-28.png",
+      "image_sha256": "94679edd65631d72c9ea5c832011c962ce68e935342002b3145ca679d4d5899e",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 29,
+      "image": "docs/middle-defense/render-school-final2/page-29.png",
+      "image_sha256": "bf80f15d191a1eb8dc019289ff5f654a64499f8bc86b79351c07549b069ed722",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 30,
+      "image": "docs/middle-defense/render-school-final2/page-30.png",
+      "image_sha256": "9354579ed8b800538013b578bc0d6e5baa84ac1dd7a432a682854b4e9d60b79d",
+      "status": "PASS",
+      "observation": "删除重复过渡后M2.5完整结束于本页，无单行孤页；下一章从印刷27页开始",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 31,
+      "image": "docs/middle-defense/render-school-final2/page-31.png",
+      "image_sha256": "e522c0fa2f2f72592750aea34f223c1b26193b9ec266e72957fc78429be11f7b",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 32,
+      "image": "docs/middle-defense/render-school-final2/page-32.png",
+      "image_sha256": "a4daa4da2a650bd7dc5c8ea8506745b5bae5ad8dc73fc9b7bd19cb8bd2bb5908",
+      "status": "PASS",
+      "observation": "W1–W5长表完整在一页，无跨页断裂",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 33,
+      "image": "docs/middle-defense/render-school-final2/page-33.png",
+      "image_sha256": "ba4abcb51b43fd69636f9c29f311fa99c96a2e4c6e44a9503ac9d756658e09d4",
+      "status": "PASS",
+      "observation": "正文/标题/公式/页眉页脚和分页正常，无可见遮挡、裁切或缺字",
+      "actually_viewed_with": "tools.view_image by root"
+    },
+    {
+      "pdf_page": 34,
+      "image": "docs/middle-defense/render-school-final2/page-34.png",
+      "image_sha256": "ecbf434d4d0171070865ba95de3dbb9e9634dce04cf7f64b4ab7b862fcc65f55",
+      "status": "PASS",
+      "observation": "12条文献无乱码重叠裁切",
+      "actually_viewed_with": "tools.view_image by root"
+    }
+  ],
+  "created": "2026-10-13T13:53:35.915995",
+  "renderer_notes": "pdftoppm返回0；7条字体类型与嵌入声明提示，全部页面查看未见缺字、替换或裁切；未屏蔽提示。"
+}

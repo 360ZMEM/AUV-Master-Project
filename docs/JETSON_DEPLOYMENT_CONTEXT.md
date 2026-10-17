@@ -1,5 +1,8 @@
 # Jetson Orin NX 部署主线上下文
 
+> 2026-09-29 展示迁移：当前 PC 工作区增加 `inspection-v2` 布局与分层许可显示，见 [可视化审阅](experiment/workspace_visualization_review_20260929.md)。ROS 合成显示 smoke 与本机 Qt 检查不替代本文 Jetson 时序验收；旧历史图 61/62 与当前原生 PVS 图 71 分开引用，现场许可仍 false。
+
+
 本文是当前仓库在 **Jetson Orin NX** 上的部署接手入口，目标是让后续开发者或 AI 在不翻完整历史聊天的前提下，快速理解“仿真电缆巡检”和“全链路仿真测试”目前在本机上处在什么状态、从哪里运行、哪些结论可以说、哪些结论不能说。
 
 适用边界：

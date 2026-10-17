@@ -1,0 +1,42 @@
+{
+  "changes": [
+    {
+      "path": "PPT制作/01new_系统变更与当前巡检答辩资产同步_20260929.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/01new_系统变更与当前巡检答辩资产同步_20260929.md",
+      "before_sha256": "08133d3dee9151b13dfb51a97f833ab4e3db642f20c1b869984bc06258dd96ca",
+      "after_sha256": "3051e2d8f700e231df513c9456bb81f8a190331bb856b7a7ef4246c3bf888fdb"
+    },
+    {
+      "path": "PPT制作/02new_论文169与236页差分_答辩资产总账_20260929.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/02new_论文169与236页差分_答辩资产总账_20260929.md",
+      "before_sha256": "4d3dcce18254df5853f090a799a5ff8f76bc522a9b14fe477c4e43e5784f8134",
+      "after_sha256": "bc2850542397fcae12a6d881e2710a96580ce1e33d83a15df9ece986afef0dce"
+    },
+    {
+      "path": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "before_sha256": "017d75a2ca6a496f9d0847ec8b8273f37a4eef3eb7c24b34bc0a61745e41a077",
+      "after_sha256": "b78657bd699cb160af3c901ecfa60bdc56848380aff8068dfd2e40abac42875e"
+    },
+    {
+      "path": "PPT制作/README.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/README.md",
+      "before_sha256": "229c67b3a6628fda4efd25c72c8b2a07f955b770816b0758467a456055498d89",
+      "after_sha256": "6a3d201d8cc1f1c766a41d43d5f1f8004625aff87a43dc569334b94cd660411d"
+    },
+    {
+      "path": "PPT制作/V4.4逐页7分钟讲稿.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/V4.4讲稿修改前.md",
+      "before_sha256": "a4c062c5565408ca168dde6a58ed45fe80cb6925ccc5a684ecccb16c1f603d66",
+      "after_sha256": "7e3e725dd2b07eeef51b9377ed42ca2d6a37ebb5e846baa72fd6fa6921e80c62"
+    },
+    {
+      "path": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "before_backup": "PPT制作/assets/robustness_20260929/records_before_sync/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "before_sha256": "7ff9a666f4875ae0750e222d94081612f0af4603524105a392cacd860f921036",
+      "after_sha256": "fd4d43493349ee81bca0659584849e8c02587987f5eed5d7825ac39601ac9531"
+    }
+  ],
+  "patch": "record_sync_final_20260929.patch",
+  "patch_sha256": "b441dae8f6897be6f760d41eb24bb41fc6200fba5c31dba091bd35de31f1fd09"
+}

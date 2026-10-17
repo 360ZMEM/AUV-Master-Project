@@ -1,0 +1,4 @@
+status	PASS
+run_dir	/home/zmem063/AUV-Master-Project/.auv_data/emergency_surface/20260923_183548
+report	/home/zmem063/AUV-Master-Project/.auv_data/emergency_surface/20260923_183548/emergency_surface_report.json
+console_screenshot	/home/zmem063/AUV-Master-Project/.auv_data/emergency_surface/20260923_183548/console_estop.png

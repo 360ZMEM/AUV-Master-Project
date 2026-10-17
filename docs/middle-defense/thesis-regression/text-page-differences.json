@@ -1,0 +1,50 @@
+[
+  {
+    "pdf_page": 3,
+    "normalized_text_changed": true,
+    "before_chars": 310,
+    "after_chars": 316
+  },
+  {
+    "pdf_page": 152,
+    "normalized_text_changed": true,
+    "before_chars": 2734,
+    "after_chars": 2731
+  },
+  {
+    "pdf_page": 153,
+    "normalized_text_changed": true,
+    "before_chars": 3075,
+    "after_chars": 3051
+  },
+  {
+    "pdf_page": 154,
+    "normalized_text_changed": true,
+    "before_chars": 2859,
+    "after_chars": 2997
+  },
+  {
+    "pdf_page": 155,
+    "normalized_text_changed": true,
+    "before_chars": 3038,
+    "after_chars": 3198
+  },
+  {
+    "pdf_page": 156,
+    "normalized_text_changed": true,
+    "before_chars": 3153,
+    "after_chars": 3198
+  },
+  {
+    "pdf_page": 157,
+    "normalized_text_changed": true,
+    "before_chars": 3128,
+    "after_chars": 2935
+  },
+  {
+    "pdf_page": 158,
+    "normalized_text_changed": true,
+    "before_chars": 2256,
+    "after_chars": 2000
+  }
+]

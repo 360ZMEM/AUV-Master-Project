@@ -14,12 +14,10 @@
      {\printtext[labelnumberwidth]{%
         \printfield{labelprefix}%
         \printfield{labelnumber}}}
-     {\addtolength{\labelnumberwidth}{\biblabelextend}%
-     \setlength{\labelwidth}{0.9cm}%
-      \setlength{\labelsep}{\biblabelsep}%
+     {\setlength{\labelwidth}{1cm}%
       \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
       \addtolength{\leftmargin}{\labelsep}%
-      \setlength{\itemindent}{\bibitemindent}%
       \setlength{\itemsep}{\bibitemsep}%
       \setlength{\parsep}{\bibparsep}}%
       \renewcommand*{\makelabel}[1]{\hss##1}}

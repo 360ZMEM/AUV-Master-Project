@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "pdftotext",
+    "-layout",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/pdf/15-2指导小组评语（示例）.pdf",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/text/15-2指导小组评语（示例）.pdf.txt"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

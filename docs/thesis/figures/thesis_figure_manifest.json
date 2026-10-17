@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "thesis_entrypoint": "thuthesis/auv-thesis.tex",
-  "figure_count": 44,
+  "figure_count": 47,
   "style_module": "tools/thesis_plot_style.py",
   "figures": [
     {
@@ -545,6 +545,42 @@
       "inputs": ["docs/thesis/figures/system/foxglove_cable_tracking_console.png"],
       "command": null,
       "reproducibility": "evidence_only",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_fwhm_v2_stability",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "preview": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_fwhm_v2_publication.py",
+      "inputs": ["AUV-Master-Mag/results/v2/stability_comparison"],
+      "command": "python3 tools/plot_fwhm_v2_publication.py",
+      "reproducibility": "linux_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_fwhm_v2_sensitivity",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf",
+      "preview": "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_fwhm_v2_publication.py",
+      "inputs": ["AUV-Master-Mag/results/v2/stability_comparison"],
+      "command": "python3 tools/plot_fwhm_v2_publication.py",
+      "reproducibility": "linux_full",
+      "layout": "full"
+    },
+    {
+      "id": "ch05_fwhm_v2_shape_guard",
+      "chapter": "thuthesis/data/auv-chap05.tex",
+      "output": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "preview": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.png",
+      "kind": "matplotlib",
+      "generator": "tools/plot_fwhm_v2_publication.py",
+      "inputs": ["AUV-Master-Mag/results/v2/shape_guard_validation"],
+      "command": "python3 tools/plot_fwhm_v2_publication.py",
+      "reproducibility": "linux_full",
       "layout": "full"
     },
     {

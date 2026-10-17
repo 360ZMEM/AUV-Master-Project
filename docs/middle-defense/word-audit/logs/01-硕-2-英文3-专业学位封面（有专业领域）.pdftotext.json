@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "pdftotext",
+    "-layout",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/pdf/01-硕-2-英文3-专业学位封面（有专业领域）.pdf",
+    "/home/zmem063/auv_console_python/AUV-Master-Project/docs/middle-defense/word-audit/text/01-硕-2-英文3-专业学位封面（有专业领域）.pdf.txt"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": ""
+}

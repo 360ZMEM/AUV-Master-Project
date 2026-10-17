@@ -1,0 +1,2 @@
+[INFO] [1790646269.789136804] [zenoh_viz_bridge_node]: zenoh_viz_bridge_node started
+{"completion_received": true, "unqualified_depth_hidden": true, "bridge_revocation_visible": true, "width_received": true, "stale_phase": true, "stale_permission": true, "stale_position": true}

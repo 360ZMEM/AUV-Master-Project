@@ -1,0 +1,28 @@
+\ProvidesFile{thuthesis-bachelor.bbx}[2020/08/01 v1.0 ThuThesis biblatex
+  bibliography style]
+
+\RequireBibliographyStyle{gb7714-2015}
+
+\ExecuteBibliographyOptions{
+  gbpub     = false,
+  gbalign   = left,
+}
+
+\defbibenvironment{bibliography}
+  {\list
+     {\printtext[labelnumberwidth]{%
+        \printfield{labelprefix}%
+        \printfield{labelnumber}}}
+     {\setlength{\labelwidth}{1cm}%
+      \setlength{\leftmargin}{\labelwidth}%
+      \setlength{\labelsep}{\biblabelsep}%
+      \addtolength{\leftmargin}{\labelsep}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}%
+      \renewcommand*{\makelabel}[1]{\hss##1}}
+  {\endlist}
+  {\item}
+
+% 斜线默认使用原字体，不再使用等宽字体
+% <https://github.com/tuna/thuthesis/discussions/1018>
+\def\SlashFont{}

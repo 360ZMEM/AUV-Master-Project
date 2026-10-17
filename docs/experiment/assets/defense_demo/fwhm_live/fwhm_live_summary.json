@@ -1,0 +1,30 @@
+{
+  "schema": "auv.fwhm_live_evidence.v1",
+  "source": "live_ros2_topics",
+  "sample_count": 4331,
+  "truth": {
+    "cable_y_m": 0.0,
+    "vertical_separation_m": 4.0,
+    "altitude_m": 3.0,
+    "burial_depth_m": 1.0,
+    "current_a": 600.0
+  },
+  "estimate": {
+    "fwhm_width_m": 13.859246275700741,
+    "vertical_separation_m": 4.000819784020571,
+    "burial_depth_m": 1.000819784020571,
+    "burial_sigma_m": 0.3209608607967527,
+    "burial_error_m": 0.0008197840205710349,
+    "validity": 0.9972699660289114,
+    "confidence": 0.9916991167019453,
+    "coverage": 1.0,
+    "symmetry": 0.9867015836871077,
+    "reason_codes": []
+  },
+  "artifacts": {
+    "samples_csv": "fwhm_live_samples.csv",
+    "quality_csv": "fwhm_quality_timeline.csv",
+    "figure_png": "fwhm_live_truth_comparison.png",
+    "figure_pdf": "fwhm_live_truth_comparison.pdf"
+  }
+}

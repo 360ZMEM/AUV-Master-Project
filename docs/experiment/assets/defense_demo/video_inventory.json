@@ -1,0 +1,56 @@
+[
+  {
+    "file": "auv_console_full_100s_20260919_162614.mp4",
+    "duration_s": 100.0,
+    "width": 1600,
+    "height": 1000,
+    "codec": "h264",
+    "fps": "4/1",
+    "preview": "video_previews/auv_console_full_100s_20260919_162614_midframe.png"
+  },
+  {
+    "file": "auv_console_short_30s_20260919_162419.mp4",
+    "duration_s": 30.0,
+    "width": 1600,
+    "height": 1000,
+    "codec": "h264",
+    "fps": "6/1",
+    "preview": "video_previews/auv_console_short_30s_20260919_162419_midframe.png"
+  },
+  {
+    "file": "auv_joint_demo_30s.mp4",
+    "duration_s": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "6/1",
+    "preview": "video_previews/auv_joint_demo_30s_midframe.png"
+  },
+  {
+    "file": "auv_joint_demo_full_100s.mp4",
+    "duration_s": 100.0,
+    "width": 1920,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "4/1",
+    "preview": "video_previews/auv_joint_demo_full_100s_midframe.png"
+  },
+  {
+    "file": "mission_tactical_full_100s.mp4",
+    "duration_s": 100.0,
+    "width": 1152,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "4/1",
+    "preview": "video_previews/mission_tactical_full_100s_midframe.png"
+  },
+  {
+    "file": "mission_tactical_short_30s.mp4",
+    "duration_s": 30.0,
+    "width": 1152,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "6/1",
+    "preview": "video_previews/mission_tactical_short_30s_midframe.png"
+  }
+]

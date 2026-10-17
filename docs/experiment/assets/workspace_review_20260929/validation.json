@@ -1,0 +1,30 @@
+{
+  "pytest": "28 passed",
+  "dds_checks": 7,
+  "source_install": {
+    "brain_linux/src/auv_bridge/auv_bridge/bridge_node.py": {
+      "source_sha256": "5fd7e677e9d805a8903d1f83690521dc72d1ce312a7237fd5cb3c50d4f61d77d",
+      "installed_sha256": "5fd7e677e9d805a8903d1f83690521dc72d1ce312a7237fd5cb3c50d4f61d77d"
+    },
+    "brain_linux/src/auv_viz_bridge/auv_viz_bridge/zenoh_viz_bridge_node.py": {
+      "source_sha256": "ed34afacaf9c773cea66686d7d45e906e70c1819da9d5d5db965407aaa3c3d90",
+      "installed_sha256": "ed34afacaf9c773cea66686d7d45e906e70c1819da9d5d5db965407aaa3c3d90"
+    },
+    "brain_linux/src/auv_viz_bridge/auv_viz_bridge/inspection_status.py": {
+      "source_sha256": "a180499e2eea640a615cc39152edd0577288df7edb1a4a2539a59f7da9a2e535",
+      "installed_sha256": "a180499e2eea640a615cc39152edd0577288df7edb1a4a2539a59f7da9a2e535"
+    },
+    "evidence": {
+      "console_route_complete.png": "fc706c5d4574f6a7942b84d2e6d8ff4c71345bb61c0da72b2d6e570aad339437",
+      "console_status_stale.png": "1693862fde7069d152cf299a8a5ad7e25abeeacce5fab406de0ca86791816c20",
+      "console_suspended.png": "7fc4edf1aa169cb0ed72f77f2d0ae71c4b1f62092c68d1d7f4d045da1948b65f",
+      "inspection_console_capture.log": "7d54489c121b61992d4784dc4c6913730d1a662de08fbbe4d35a416bcea7c17c",
+      "inspection_visualization_review_tests.log": "0f207681bbf1825c19f36f798ee601201652b28c8d1bd7d47dfe9d72ff122b6b",
+      "inspection_viz_build.log": "b9b0f469fe28a5bba6399d4fee0227c0c8471fc711e4828261403c7339380a59",
+      "inspection_viz_final_build.log": "8711e20571a68751b0003aa83c5a0de2413024f57ee087fd3b90915c8bfa11be",
+      "inspection_viz_ros_smoke.log": "27028bf6e6a6da8b594e57ece3d40299ab08380497d9b16c78bfcfc73031b0c6"
+    }
+  },
+  "scope": "targeted visualization; synthetic DDS and Qt, no full mission / Foxglove GUI / hardware validation",
+  "local_reference_checks": 48
+}

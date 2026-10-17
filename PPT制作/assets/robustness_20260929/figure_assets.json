@@ -1,0 +1,62 @@
+{
+  "72_defense_robustness_process_maps.pdf": {
+    "sha256": "cc245d761bb8138d7cddb47788b96e97b1f24091aa5910c37d9122f554808458",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/72_defense_robustness_process_maps.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/72_defense_robustness_process_maps.pdf"
+  },
+  "72_defense_robustness_process_maps.png": {
+    "sha256": "19cbbe6cfe21e9350416ee2432bc5917ec711258a513e7127b98a015c3cf827a",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/72_defense_robustness_process_maps.png",
+    "copy": "PPT制作/assets/robustness_20260929/72_defense_robustness_process_maps.png"
+  },
+  "73_defense_navigation_withdrawal_diagnostics.pdf": {
+    "sha256": "5ea47be1379c17cde7f5f784c904fdde179eb30a3d459431b14b801000e61928",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/73_defense_navigation_withdrawal_diagnostics.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/73_defense_navigation_withdrawal_diagnostics.pdf"
+  },
+  "73_defense_navigation_withdrawal_diagnostics.png": {
+    "sha256": "4f454efd99910d97f9aabc7d99d57d60d3470813f6a383f3b778722abdede8af",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/73_defense_navigation_withdrawal_diagnostics.png",
+    "copy": "PPT制作/assets/robustness_20260929/73_defense_navigation_withdrawal_diagnostics.png"
+  },
+  "74_defense_geometry_vs_tracking_insight.pdf": {
+    "sha256": "568e7f7b8413dbc05da3bd65f21293412e1c0fa7ebfb0fccec225e50dd86e586",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/74_defense_geometry_vs_tracking_insight.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/74_defense_geometry_vs_tracking_insight.pdf"
+  },
+  "74_defense_geometry_vs_tracking_insight.png": {
+    "sha256": "8dfd560b841efb8ab77b834c2179d4235ef21810cc3c1d0c3b81b31c0b918e7e",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/74_defense_geometry_vs_tracking_insight.png",
+    "copy": "PPT制作/assets/robustness_20260929/74_defense_geometry_vs_tracking_insight.png"
+  },
+  "75_defense_robustness_outcome_matrix.pdf": {
+    "sha256": "b681e042b183138cbc2b4fc7e0495b66a20c041bbe964546a55e8fccd232f97f",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/75_defense_robustness_outcome_matrix.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/75_defense_robustness_outcome_matrix.pdf"
+  },
+  "75_defense_robustness_outcome_matrix.png": {
+    "sha256": "d84fad6cca850096cc0c726004a2b04dca400feefb7ffb4dc2619bc3017ab4a3",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/75_defense_robustness_outcome_matrix.png",
+    "copy": "PPT制作/assets/robustness_20260929/75_defense_robustness_outcome_matrix.png"
+  },
+  "76_defense_current_process_and_limits.pdf": {
+    "sha256": "3f3113388fbefe2223c9179cf446ac49c1f1d547a597001294320c9510bc4790",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/76_defense_current_process_and_limits.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/76_defense_current_process_and_limits.pdf"
+  },
+  "76_defense_current_process_and_limits.png": {
+    "sha256": "2051e0428513c20e0017ed6d4e6d4656929c76c4126d0774621be7e0a8fdb6fd",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/76_defense_current_process_and_limits.png",
+    "copy": "PPT制作/assets/robustness_20260929/76_defense_current_process_and_limits.png"
+  },
+  "77_defense_robustness_thesis_summary.pdf": {
+    "sha256": "2f59e7131034071a9422f4e685afcd47e7f9f1b4675fe6c91c3b772e95c3d619",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/77_defense_robustness_thesis_summary.pdf",
+    "copy": "PPT制作/assets/robustness_20260929/77_defense_robustness_thesis_summary.pdf"
+  },
+  "77_defense_robustness_thesis_summary.png": {
+    "sha256": "0b890e79818642c24c0d8183a4243c3adfaa2996825534b5f6b01b758d5e457d",
+    "source": "AUV-Master-Mag/results/v2/defense_robustness_20260929/figures/77_defense_robustness_thesis_summary.png",
+    "copy": "PPT制作/assets/robustness_20260929/77_defense_robustness_thesis_summary.png"
+  }
+}

@@ -13,3 +13,28 @@
       \blx@warning{Nested superscript}%
       \mkbibbrackets{##1}}%
     #1\endgroup}\kern\z@}
+
+\renewbibmacro*{citet}{%
+  \iffieldequals{namehash}{\cbx@lasthash}%
+    {\mkbibsuperscript{\usebibmacro{cite:comp}}}%
+    {\usebibmacro{cite:dump}%
+     \ifbool{cbx:parens}%
+       {\mkbibsuperscript{{\hspace{-0.075em}\mkbibrightborder}}%\bibclosebracket
+       \global\boolfalse{cbx:parens}}%\printtext
+       {}%
+     \iffirstcitekey
+       {}
+       {\textcitedelim}%
+     \usebibmacro{cite:init}%
+     \ifnameundef{labelname}
+       {\printfield[citetitle]{labeltitle}}
+       {\printnames{labelname}}%
+     %\setunit*{\printdelim{namelabeldelim}}%
+     \mkbibsuperscript{\printtext{\mkbibleftborder}%\bibopenbracket
+     \global\booltrue{cbx:parens}%
+     \ifnumequal{\value{citecount}}{1}
+       {\usebibmacro{prenote}}%
+       {}%
+     \usebibmacro{cite:comp}%
+     \stepcounter{textcitecount}%
+     \savefield{namehash}{\cbx@lasthash}}}}

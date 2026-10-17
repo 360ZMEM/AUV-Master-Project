@@ -1,0 +1,354 @@
+[
+  {
+    "delivered": "必要图片素材/03_key_design_ablations.png",
+    "bytes": 505394,
+    "sha256": "1d6a9d9181b6d7009bd504b02d59c490e4ef670ab29e01fba362eb1d0df3b1b0",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/07_tmr_quality_gate_audit.png",
+    "bytes": 501868,
+    "sha256": "d2db8cf81a7585fcb38afced04c80291036dfed27c46f5915b6d9e471301e7c9",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/07_tmr_quality_gate_audit.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/09_explicit_fwhm_profile.png",
+    "bytes": 731799,
+    "sha256": "e96c8c1a4a7c67a0afc7e414e0b89289427aa0e6a1091ff2b364b7751d6e1ecf",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/13_shape_guard_held_out_validation.png",
+    "bytes": 545290,
+    "sha256": "7b6ce7a08d85d4f3e8623c62c5b8e95d96e24be38b4f5231f729616fb6c60ffb",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/14_cross_shape_identifiability.png",
+    "bytes": 474202,
+    "sha256": "7c2166640907d152c39733732c21c2c3d0413de100bce40eacdc3fb503b8f9bd",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/figures/14_cross_shape_identifiability.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/62_inspection_task_depth_authority_outcomes.png",
+    "bytes": 451558,
+    "sha256": "cd9028a3d00e1e393fa551971ab24bb3bbfed28ee841846cc42e08753f49e50a",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/71_current_magnetic_simulation_closure.png",
+    "bytes": 541126,
+    "sha256": "b08cb6bd6bcd38dc49e504188a2cba6bcb7cd870caf96bd8aeba858c58a30471",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/active_crossing_zigzag_panel.png",
+    "bytes": 224862,
+    "sha256": "8d438c03f1042798373f12c3d2653567a3a52d975b5d7f9a965080671a47701c",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/auv_console_operator_interface.png",
+    "bytes": 109682,
+    "sha256": "9afbfd1aa6914bdcea437f73a76356ef2c71203ae81fa65d1cf3276bb1ac6fe3",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/auv_ros2_node_topology.png",
+    "bytes": 505441,
+    "sha256": "3ca5d395cbb26ca040fa735e861aad1df4417f9caf7f6bdfb8c15b4fafa6b6ab",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/cable_dlt1278_scorecard_fresh1.png",
+    "bytes": 743494,
+    "sha256": "fef2c38610cc51451bc7e4233fa20dca68da0a25813fea02de68ea818e1dd7f6",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/cable_installation_boem.jpg",
+    "bytes": 332568,
+    "sha256": "6aac904066f9bf23e2879c8c5c41ebe948aa9a6296b488d8234ad58157c0ea34",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/ch4_enob_vs_osr.png",
+    "bytes": 157703,
+    "sha256": "483d9c70dde0d158bbd7f53f61140ca01ca809a8819b80df86162ebf32f01d0a",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/ch4_noise_spectral_density.png",
+    "bytes": 257774,
+    "sha256": "834c6ad65e3e43b0915a8d94cf9b1831596c1a4096cc1007f99d7e8962141aeb",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/complex_iq_fit.png",
+    "bytes": 1047919,
+    "sha256": "0d1d056c2d1590378247488b53910fd233d90b704f910257c41a3df0dd4cd213",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/eskf_param_sensitivity.png",
+    "bytes": 424178,
+    "sha256": "8ab4e592226a4a65f931bfa6b2d48419234e797584a400e103bc9b4b05ef7e78",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/foxglove_defense_assurance_final_clean.png",
+    "bytes": 370806,
+    "sha256": "a32123ae1a9b54b9573654ea1b50f2aaedc31d3159e2162558a2bddb1c94a067",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/hairpin_180deg_xy_v3_speed_flexible.png",
+    "bytes": 283432,
+    "sha256": "95af63b3f973cad0445ba1018e7d9029fa57453510ff0b50adc96b7daa6f6184",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/helical_leakage_panel_b.png",
+    "bytes": 310401,
+    "sha256": "4dd444ab6bbf94802dcc8666b8cb416cdefee59922d2c6d66cc86cc5fa2633e2",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/helical_rms_panel_c.png",
+    "bytes": 375671,
+    "sha256": "bf8175786ca8cf49179818b6c14186a6dbdaf31be9b064ac33ce5b0d6c8dfecf",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/IMG20260823003511_20260929093921.jpg",
+    "bytes": 2759996,
+    "sha256": "e86fe728bf59861eb08ffc575f21eac79cb762c9249df470c7e095ea904667a1",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/IMG20260823003904_20260929093922.jpg",
+    "bytes": 2851717,
+    "sha256": "a0a13c7ff1e95ec0505115023f5830ce29bbd78b6e26c6de3b1081042b991dea",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/IMG20260823004056_20260929093921.jpg",
+    "bytes": 3180512,
+    "sha256": "3a49e7f6ab8aeba01fdda77f90e90d01ca4aae50070b0f24e33a0a71bc294344",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/inspection_concept_v42.png",
+    "bytes": 2400067,
+    "sha256": "47278c59ecc0b3adacf414573a6b03bb95ef9aee67566a73d488c558bdab0135",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/jetson_mpc_latency_and_success.png",
+    "bytes": 379087,
+    "sha256": "4c77cef3eddfa386c7a2b7f337ba27915bd10b7cb26b5740be19eb4ff14157d0",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/pc104_cross_layer_fault_timeline.png",
+    "bytes": 466937,
+    "sha256": "820f4720a302c8dba2992cf16601031985e154f0c3cbf85f64d0513fd9920153",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/pc104_cross_layer_soak_30min.png",
+    "bytes": 605276,
+    "sha256": "99dc09f9d375a99eaa9b67ec33a68dd1ffcdf46cad7c143e20c2b16a68b896b3",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/pvs_closedloop_acceptance_convergence.png",
+    "bytes": 394855,
+    "sha256": "261c7fe7f02bd88cdee5b9c7afadfe673f72e9fca34aa62ad51b02a9b9f2865e",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/r13_v2_authority_modes_ua.png",
+    "bytes": 274183,
+    "sha256": "45024cced3547f1b847751bd1cbf0ffce4aaeb7f3156ffeac223f69be06bc64b",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/r13_v2_control_rate_paired.png",
+    "bytes": 351090,
+    "sha256": "2b2d52f72cd6b0c0783a3f0019f2f0f8b15d7392e08be09462967d905db20528",
+    "originalSource": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.png",
+    "originalHashMatched": true,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/r13_v2_p_track_boxplot_ua.png",
+    "bytes": 266642,
+    "sha256": "57c45c17bff06d15f4d448b0a58a53538a7bf1b18bae7b7f782e8e4c665af8aa",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/r19_gaussian_vs_measured_replay.png",
+    "bytes": 49668,
+    "sha256": "8004afe7dec283667e8fdb4300314398166a33555763468bb52df7743354f4fe",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/r20_filter_strategy_comparison.png",
+    "bytes": 49696,
+    "sha256": "20a1dc32934089da8f7be95c55c5a3ea915b8971e9101d0d3d957c674bd81b5f",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/recovery_acceptance_flag.png",
+    "bytes": 130815,
+    "sha256": "e2bbd51f88f16a1c013a19a27bdd00ef842bcfc617f34d353119a23a0ca6fff6",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/recovery_correction_norm.png",
+    "bytes": 185379,
+    "sha256": "d34bd34a8314047983ba163bd26dcc1e77866701d11e7819faf7f5a59c645aa4",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/recovery_lateral_error.png",
+    "bytes": 218130,
+    "sha256": "b94b268e0b86f2dc114194eb717d6d1f28ef0b305cda3a328b6d2b0d211898c2",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/rov_launch_ifremer.jpg",
+    "bytes": 250100,
+    "sha256": "c9b155a14d2bffcaafd14b2ba129fcefba06f04d10b1a4e0946967dd20b0a575",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/terrain_tz_tracking_pid_mpc.png",
+    "bytes": 808723,
+    "sha256": "4316c9a2641eba8e8bc091f9b47dbcb52b9b5113d9516dae51035220878c6e8c",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "必要图片素材/图源清单.json",
+    "bytes": 13393,
+    "sha256": "2cee2427a153573a5e643bfdc4bc20ceba56f547bc819fa740b22c945141a041",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "可替换原始素材"
+  },
+  {
+    "delivered": "现场答问候选/36_localization_vs_autonomy_authority.png",
+    "bytes": 255688,
+    "sha256": "beb12fc9e6644b1eb793d54f910fe627150fcea5b02d249582df64479d0c7b65",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "仅现场答问，不加入主讲"
+  },
+  {
+    "delivered": "现场答问候选/51_shallow_survey_ros_pvs_chain.png",
+    "bytes": 785211,
+    "sha256": "85e277384ceb597757f57e4392c21f25d37f62b60c57ecb8894360d4e2bb5eee",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "仅现场答问，不加入主讲"
+  },
+  {
+    "delivered": "现场答问候选/61_finite_track_current_envelope_and_clock.png",
+    "bytes": 473113,
+    "sha256": "3857aac4ba3e17077b3daf427beb257f9248388e99190787483bc06e97de9b6c",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "仅现场答问，不加入主讲"
+  },
+  {
+    "delivered": "需求与参照/20260929_实验页逻辑排布参照.png",
+    "bytes": 1957654,
+    "sha256": "bbe603b00afb5c9093a8b02c7007d3550fa6a6f447c5b4e5e8023d54451385df",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "用户原文或排布参考，不作为实验数据"
+  },
+  {
+    "delivered": "需求与参照/20260929_用户实验资产冻结原文.txt",
+    "bytes": 12329,
+    "sha256": "caf8fd37e77195bb5e18a7d5e8d04703f30c18de3ba5012f5877c62714309846",
+    "originalSource": null,
+    "originalHashMatched": null,
+    "role": "用户原文或排布参考，不作为实验数据"
+  }
+]

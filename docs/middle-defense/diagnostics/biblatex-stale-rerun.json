@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "scope": "独立临时目录的主论文书目缓存诊断；未修改原论文或实验；no-pdf仅生成170页XDV",
+  "environment": {
+    "biblatex": "3.17",
+    "biber": "2.17",
+    "class": "ThuThesis v7.7.1"
+  },
+  "root_cause": "生成的aux残留abx@aux@read@bblrerun；biblatex比较bbl内容MD5推断Biber是否已运行。Biber对未变引文生成字节相同的bbl，导致请求标志持续；不是缺引文或v7.7.1正文错误。",
+  "observations": {
+    "old_bbl_md5": "92D8AD8F2EE114A02D483EC48097AAC9",
+    "new_bbl_md5": "92D8AD8F2EE114A02D483EC48097AAC9",
+    "old_new_refsections": "0|1|2|",
+    "only_biber_request": "begin document时的blx@check@bbl@rerun@mdfivesum",
+    "specific_undefined_citations": false
+  },
+  "biblatex_source_locator": "/usr/share/texlive/texmf-dist/tex/latex/biblatex/biblatex.sty:721-727",
+  "verified_fixes": [
+    {
+      "method": "仅清除generated aux的陈旧abx@aux@read@bblrerun行",
+      "result": "随后XeLaTeX完整170页，无undefined或Biber警告",
+      "source_patch": false
+    },
+    {
+      "method": "移动aux/bbl/bcf/blg/run.xml生成缓存后，XeLaTeX→Biber→XeLaTeX→XeLaTeX",
+      "result": "最终170页，无undefined、Biber或LaTeX重跑警告",
+      "recommended": true,
+      "source_patch": false
+    }
+  ],
+  "recommended_repository_action": "备份并移走仅auv-thesis的上述生成缓存，重建完整链；不改biblatex宏、不过滤或屏蔽警告。保留原PDF备份，模板、正文、图和bib均不用改。",
+  "evidence_files": {
+    "diag-run1.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-run1.stdout",
+      "sha256": "51d5c99ae246b54068ffd57b2484d0c550d82139980d9b0521c2c6ecf7cacd81"
+    },
+    "diag-run2.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-run2.stdout",
+      "sha256": "3172dc345e920e1f1cc3a40b22113c9c2f472c80a290bb327d8caf09feea1819"
+    },
+    "diag-clean1.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-clean1.stdout",
+      "sha256": "5fc10312c8af403d727cbdd7c4b7d81c24ed8dd95adcd869dc5cfd9de093e842"
+    },
+    "diag-clean-biber.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-clean-biber.stdout",
+      "sha256": "8370d1358ccdbe237a3ed85793f6a34e8eec9c4433cb2116b732338ab87bcdf7"
+    },
+    "diag-clean2.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-clean2.stdout",
+      "sha256": "b6a28a26d58770975243dc4aebc8c3c2e0e8618f7c264ef051d4b78f67a9c750"
+    },
+    "diag-clean3.stdout": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-clean3.stdout",
+      "sha256": "69d1d3a367b55fc59fbf73998551df76a94170862b905340b8388ee617048754"
+    },
+    "diag-debug.tex": {
+      "path": "/tmp/auv_bibdiag_20261013/thuthesis/diag-debug.tex",
+      "sha256": "8da0f59de455eaee5fc764cfee733cf7de3a7cba637bb2f1a381cef217425a07"
+    }
+  }
+}

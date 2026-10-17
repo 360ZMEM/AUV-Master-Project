@@ -1,0 +1,14 @@
+make -C thuthesis auv-middle-defense-school
+make[1]: Entering directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'
+python3 ../tools/manage_thuthesis.py verify
+Verified v7.7.1 8b4d9443f39275d0492236ae4bfcd4532b799972: vendor + 17 runtime files
+latexmk -recorder -outdir=build/middle-school auv-middle-defense-school
+Rc files read:
+  /etc/LatexMk
+  latexmkrc
+Latexmk: This is Latexmk, John Collins, 20 November 2021, version: 4.76.
+Nothing to do
+Latexmk: All targets (build/middle-school/auv-middle-defense-school.xdv build/middle-school/auv-middle-defense-school.pdf) are up-to-date
+python3 ../tools/check_middle_build.py build/middle-school/auv-middle-defense-school
+{"status": "PASS", "errors": [], "template": "/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis/thuthesis.cls", "recorder": "build/middle-school/xelatex8339.fls", "version": "v7.7.1", "commit": "8b4d9443f39275d0492236ae4bfcd4532b799972"}
+make[1]: Leaving directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'

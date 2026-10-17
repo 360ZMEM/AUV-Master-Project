@@ -1,0 +1,10 @@
+make -C thuthesis auv-thesis
+make[1]: Entering directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'
+latexmk auv-thesis
+Rc files read:
+  /etc/LatexMk
+  latexmkrc
+Latexmk: This is Latexmk, John Collins, 20 November 2021, version: 4.76.
+Nothing to do
+Latexmk: All targets (auv-thesis.xdv auv-thesis.pdf) are up-to-date
+make[1]: Leaving directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'

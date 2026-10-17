@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2005-2025 by Tsinghua University TUNA Association <tuna@tsinghua.edu.cn>
+% Copyright (C) 2005-2026 by Tsinghua University TUNA Association <tuna@tsinghua.edu.cn>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{thuthesis.dtx}[2025/03/28 7.6.0 Tsinghua University Thesis Template]
+\ProvidesFile{thuthesis.dtx}[2026/05/26 7.7.1 Tsinghua University Thesis Template]
 \documentclass{ltxdoc}
 \usepackage{dtx-style}
 
@@ -249,7 +249,6 @@
 %   $ bibtex thuthesis-example.aux              # 生成 bbl 文件
 %   $ bibtex thuthesis-example-appendix-a.aux   # 附录 A 的的参考文献
 %   $ bibtex thuthesis-example-appendix-b.aux   # 附录 B 的的参考文献……
-%   $ bibtex thuthesis-example-index-1.aux      # 本科生的书面翻译对应的原文索引
 %   $ xelatex thuthesis-example.tex             # 解决引用
 %   $ xelatex thuthesis-example.tex             # 生成论文 PDF
 %
@@ -1068,16 +1067,19 @@
 %   \statement[file=scan-statement.pdf]
 % \end{latex}
 %
-% 由于正文篇幅可能有变化，以及电子版和打印版和有空白页的差别，声明的页码可能不同。
-% 所以为了避免重复打印扫描，编译生成声明页时默认\textsf{不含}页眉页脚，
-% 插入扫描页时默认加上页眉页脚。
+% 由于正文篇幅可能有变化，声明的页码可能不同。
+% 而且扫描件的页眉线可能有偏差
+% 所以为了避免重复打印扫描，
+% 在提交终稿 PDF 时，先编译不含页眉页脚的声明页。
+% 在打印、签名、扫描成 PDF 文档后，再插入 \file{scan-statement.pdf} 替换原始页面，
+% 并加上页眉页脚。
 %
-% 用户也可以通过 \option{page-style} 参数手动控制声明页是否含页眉页脚。
-% 例如编译生成声明页时要求包含页眉页脚：
+% 用户可以通过可选参数 \option{page-style} 手动控制声明页是否含页眉页脚。
+% 例如编译生成声明页时不含页眉页脚：
 % \begin{latex}
-%   \statement[page-style=plain]
+%   \statement[page-style=empty]
 % \end{latex}
-% 插入扫描页时不加页眉页脚：
+% 插入扫描页时加上页眉页脚：
 % \begin{latex}
 %   \statement[file=scan-statement.pdf, page-style=plain]
 % \end{latex}
@@ -1101,46 +1103,6 @@
 % \begin{latex}
 %   \appendix
 %   \thusetup{toc-depth=0}  % 目录只出现章标题
-% \end{latex}
-%
-% \DescribeEnv{survey}
-% \DescribeEnv{translation}
-% 本科生《写作规范》要求附录 A 为外文资料的调研阅读报告或书面翻译，二者择一。
-% 调研报告（或书面翻译）的题目和参考文献是独立于论文的，相当一篇独立的小文章，
-% 所以模板相应定义了 \env{survey} 和 \env{translation}。在这两个环境内部可以
-% 像论文正文一样使用标题和参考文献的命令，但不会影响外部。
-% 但是需要使用 \hologo{BibTeX} 对 \file{*-survey.aux} 或者
-% \file{*-translation.aux} 进行编译，才能生成参考文献（见 \ref{sec:xelatex} 节）。
-% 如果使用 \texttt{latexmk}，则无需额外处理。
-%
-% 同时，阅读报告默认切换书写语言为英语，书面翻译默认切换为中文。
-% 如有需要，可以通过 \cs{thusetup} 的 \option{language} 参数再次更改。
-%
-% \begin{latex}
-%   \begin{survey}
-%     \title{...}
-%     \maketitle
-%     \tableofcontents
-%     ... \cite{...} % 报告内容及其引用
-%     \bibliographystyle{...}
-%     \bibliography{...} % 报告的参考文献
-%   \end{survey}
-% \end{latex}
-%
-% “书面翻译对应的原文索引”区别于译文的参考文献，需要使用 \env{translation-index}
-% 环境，另外需要使用 \hologo{BibTeX} 编译 \file{*-index.aux}，\texttt{latexmk} 同样会自动处理。
-%
-% \begin{latex}
-%   \begin{translation}
-%     ... \cite{...} % 书面翻译内容及其引用
-%     \bibliographystyle{...}
-%     \bibliography{...}  % 书面翻译的参考文献
-%     \begin{translation-index}
-%       \nocite{...}
-%       \bibliographystyle{...}
-%       \bibliography{...}  % 书面翻译对应的原文索引
-%     \end{translation-index}
-%   \end{translation}
 % \end{latex}
 %
 % \subsubsection{个人简历、在学期间完成的相关学术成果}
@@ -1239,7 +1201,7 @@
 %    \begin{macrocode}
 %<cls>\NeedsTeXFormat{LaTeX2e}[2017/04/15]
 %<cls>\ProvidesClass{thuthesis}
-%<cls>[2025/03/28 7.6.0 Tsinghua University Thesis Template]
+%<cls>[2026/05/26 7.7.1 Tsinghua University Thesis Template]
 %    \end{macrocode}
 %
 % 报错
@@ -1314,7 +1276,7 @@
 %<*cls>
 \hyphenation{Thu-Thesis}
 \def\thuthesis{ThuThesis}
-\def\version{7.6.0}
+\def\version{7.7.1}
 \RequirePackage{kvdefinekeys}
 \RequirePackage{kvsetkeys}
 \RequirePackage{kvoptions}
@@ -5166,12 +5128,8 @@
     学校可以采用影印、缩印或其他复制手段保存研究生上交的学位论文；\allowbreak
     （2）\nobreak 为教学和科研目的，学校可以将公开的学位论文作为资料在图书馆、资料室等场所供校内师生阅读，%
     或在校园网上供校内师生浏览部分内容；\allowbreak
-    \ifthu@degree@doctor
-      （3）\nobreak 根据《中华人民共和国学位法》及上级教育主管部门具体要求，向国家图书馆报送相应的学位论文。%
-    \else
-      （3）\nobreak 按照上级教育主管部门督导、抽查等要求，报送相应的学位论文。%
-    \fi
-    \par
+    \hbox{}（3）\nobreak 根据《中华人民共和国学位法》及上级教育主管部门要求，
+    报送相应的学位论文。\par
     本人保证遵守上述规定。\par
   \endgroup
   \vskip 33bp%
@@ -5390,11 +5348,10 @@
   statement-page-style = {
     name = statement@page@style,
     choices = {
-      auto,
-      empty,
       plain,
+      empty,
     },
-    default = auto,
+    default = plain,
   }
 }
 \newcommand\statement[1][]{%
@@ -5411,13 +5368,6 @@
     \fi
   }%
   \kvsetkeys{thu@statement}{#1}%
-  \ifthu@statement@page@style@auto
-    \ifx\thu@statement@file\@empty
-      \thusetup{statement-page-style = empty}%
-    \else
-      \thusetup{statement-page-style = plain}%
-    \fi
-  \fi
   \ifx\thu@statement@file\@empty
     \thusetup{language=chinese}%
     \begingroup
@@ -5591,6 +5541,7 @@
     }
   }
 }
+\newcommand\thu@bib@heading[1]{\thu@chapter*{#1}}
 %    \end{macrocode}
 %
 % \subsubsection{BibTeX + \pkg{natbib} 宏包}
@@ -5927,20 +5878,20 @@
 %
 % 复用 \pkg{natbib} 的 \texttt{thebibliography} 环境，调整距离。
 %    \begin{macrocode}
-  \renewcommand\bibsection{\thu@chapter*{\bibname}}
+  \renewcommand\bibsection{\thu@bib@heading{\bibname}}
   \newcommand\thu@set@bibliography@format{%
     \renewcommand\bibfont{\fontsize{10.5bp}{16bp}\selectfont}%
     \setlength{\bibsep}{3bp \@plus 3bp \@minus 3bp}%
     \ifthu@degree@bachelor
       \ifthu@main@language@chinese
-        \setlength{\bibhang}{1cm}%
+        \setlength{\bibhang}{21bp}%  2em
       \else
         \renewcommand\bibfont{\fontsize{10.5bp}{17bp}\selectfont}%
         \setlength{\bibsep}{6bp \@plus 3bp \@minus 3bp}%
         \setlength{\bibhang}{0.5in}%
       \fi
     \else
-      \setlength{\bibhang}{1cm}%
+      \setlength{\bibhang}{21bp}%  2em
     \fi
   }
   \thu@set@bibliography@format
@@ -5974,10 +5925,9 @@
     % \settowidth\labelwidth{\@biblabel{#1}}%
     % \setlength{\leftmargin}{\labelwidth}%
     % \addtolength{\leftmargin}{\labelsep}%
-    \setlength{\leftmargin}{1cm}%
-    \setlength{\itemindent}{\z@}%
-    \setlength{\labelsep}{0.1cm}%
-    \setlength{\labelwidth}{0.9cm}%
+    \setlength{\labelwidth}{1cm}%
+    \setlength{\leftmargin}{\labelwidth}%
+    \setlength{\labelsep}{\z@}%
     \setlength{\itemsep}{\bibsep}%
     \setlength{\parsep}{\z@}%
     \ifNAT@openbib
@@ -6001,21 +5951,22 @@
     \ifthenelse{\equal{\blx@bbxfile}{mla-new}}{\def\bibname{WORKS CITED}}{}
   }
   \DeclareRobustCommand\inlinecite{\parencite}
-  \defbibheading{bibliography}[\bibname]{\thu@chapter*{\bibname}}
+  \defbibheading{bibliography}[\bibname]{\thu@bib@heading{#1}}
   \newcommand\thu@set@bibliography@format{%
     \renewcommand\bibfont{\fontsize{10.5bp}{16bp}\selectfont}%
     \setlength{\bibitemsep}{3bp \@plus 3bp \@minus 3bp}%
+    % 在 .bbx 中设置 \labelwidth 为 1 cm，\labelsep 为 0 pt。
+    \setlength{\biblabelsep}{0pt}%
     \ifthu@degree@bachelor
       \ifthu@main@language@chinese
-        \setlength{\bibhang}{1cm}%
+        \setlength{\bibhang}{21bp}%  2em
       \else
         \renewcommand\bibfont{\fontsize{10.5bp}{17bp}\selectfont}%
         \setlength{\bibitemsep}{6bp \@plus 3bp \@minus 3bp}%
         \setlength{\bibhang}{0.5in}%
       \fi
     \else
-      \setlength{\biblabelsep}{0.1cm}%
-      \setlength{\bibhang}{1cm}%
+      \setlength{\bibhang}{21bp}%  2em
     \fi
   }
   \thu@set@bibliography@format
@@ -6082,7 +6033,7 @@
 %
 % 这里不要使用 \cs{addcontentsline}，
 % 避免写入 \pkg{titletoc} 的 \file{.ptc} 文件中，
-% 造成 \env{survey} 的子目录中 |tocdepth| 为 0。
+% 造成附录的子目录中 |tocdepth| 为 0。
 %    \begin{macrocode}
 \thu@option@hook{toc-depth}{%
   \ifx\@begindocumenthook\@undefined
@@ -6134,10 +6085,23 @@
 %
 % 附录中的参考文献等另行编序号。
 %    \begin{macrocode}
+\newcommand\thu@appendix@bib@heading[1]{%
+  \begingroup
+    \ctexset{section/numbering = false}%
+    \ifthu@degree@bachelor
+      \ctexset{section = {
+        format = \centering\fontsize{12bp}{14.4bp}\selectfont,
+        beforeskip = 66bp,
+        afterskip = 4bp,
+      }}%
+    \fi
+    \section{#1}%
+  \endgroup
+}
+\g@addto@macro\appendix{%
+  \let\thu@bib@heading\thu@appendix@bib@heading
+}
 \newcommand\thu@end@appendix@ref@section{}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
 %    \end{macrocode}
 %
 % \pkg{bibunits} 在载入时会保存 \cs{bibliography} 和 \cs{bibliographystyle}，
@@ -6201,19 +6165,14 @@
   \g@addto@macro\appendix{%
     \renewcommand\@bibunitname{\jobname-appendix-\@alph\c@chapter}%
     \bibliographyunit[\chapter]%
-    \renewcommand\bibsection{%
-      \ctexset{section/numbering = false}%
-      \section{\bibname}%
-      \ctexset{section/numbering = true}%
-    }%
 %    \end{macrocode}
 %
 % 研究生附录的引用编号加前缀，如附录 A 的引用 [1] 为 [A.1]。
 %    \begin{macrocode}
-    \ifthu@degree@graduate
+    \renewcommand\@extra@binfo{@-\@alph\c@chapter}%
+    \renewcommand\@extra@b@citeb{@-\@alph\c@chapter}%
+    \ifthu@degree@bachelor\else
       \renewcommand\citenumfont{\@Alph\c@chapter.}%
-      \renewcommand\@extra@binfo{@-\@alph\c@chapter}%
-      \renewcommand\@extra@b@citeb{@-\@alph\c@chapter}%
       \renewcommand\bibnumfmt[1]{[\@Alph\c@chapter.#1]\hfill}%
     \fi
   }
@@ -6221,21 +6180,6 @@
     \bibliographyunit\relax
   }
   \AtEndDocument{\thu@end@appendix@ref@section}
-  \renewcommand\thu@set@survey@bibheading{%
-    \renewcommand\bibsection{%
-      \begingroup
-        \ctexset{
-          section = {
-            numbering = false,
-            format = \centering\normalsize,
-            beforeskip = 20pt,
-            afterskip = 4pt,
-          },
-        }%
-        \section{\bibname}%
-      \endgroup
-    }
-  }%
 %    \end{macrocode}
 %
 % 如果正文和附录引用了同一文献，\pkg{bibunits} 会给出无意义的警告，这里消除警告。
@@ -6243,50 +6187,30 @@
   % \let\@xtestdef\@gobbletwo  % This doesn't work
   \def\bibunits@rerun@warning{\relax}
 }
-\PassOptionsToPackage{defernumbers = true}{biblatex}
+\PassOptionsToPackage{defernumbers=true}{biblatex}
 \AtEndOfPackageFile*{biblatex}{
-  \DeclareRefcontext{appendix}{}
+  \DeclareRefcontext{appendix}{labelprefix=\@Alph\c@chapter.}
   \g@addto@macro\appendix{%
-    \pretocmd\chapter{%
+    % 参考 biblatex 的 refsection=chapter 选项实现方式，
+    % 在 \@makechapterhead 和 \@makeschapterhead 进行 patch
+    \pretocmd\@makechapterhead{%
       \newrefsection
       \ifthu@degree@bachelor\else
-        \@tempcnta=\c@chapter
-        \advance\@tempcnta\@ne
-        \newrefcontext[labelprefix = {\@Alph\@tempcnta.}]{appendix}%
+        \newrefcontext{appendix}%
       \fi
-    }{}{\thu@patch@error{\chapter}}%
-    \defbibheading{bibliography}[\bibname]{%
-      \ctexset{section/numbering = false}%
-      \section{#1}%
-      \ctexset{section/numbering = true}%
-    }%
+    }{}{\thu@patch@error{\@makechapterhead}}%
+    \pretocmd\@makeschapterhead{%
+      \newrefsection
+      \ifthu@degree@bachelor\else
+        \newrefcontext{appendix}%
+      \fi
+    }{}{\thu@patch@error{\@makeschapterhead}}%
   }
-  \renewcommand\thu@set@survey@bibheading{%
-    \defbibheading{bibliography}[\bibname]{%
-      \vspace{20bp}%
-      \begingroup
-        \ctexset{
-          section = {
-            numbering = false,
-            format = \centering\normalsize,
-            beforeskip = 0pt,
-            afterskip = 0pt,
-          },
-        }%
-        \section{\bibname}%
-      \endgroup
-    }%
-  }%
   \def\bibliographystyle#1{%
     \thu@warning{'bibliographystyle' invalid for 'biblatex'.}%
   }
 }
 %    \end{macrocode}
-%
-% 本科生《写作规范》有独特的要求：附录 A 为外文资料的调研阅读报告或书面翻译，
-% 并且要分别附上独立的参考文献和外文资料的原文索引。
-% 所以这里定义 \env{survey} 和 \env{translation} 专门处理这两种情况，
-% 其中参考文献使用了 \pkg{bibunits} 宏包的功能。
 %
 % 注意 \pkg{titletoc} 在 2019/07/14 v2.11.1702 修改了 \cs{printcontents} 接口，
 % 而且 \cs{@ifpackagelater} 只能用在导言区中，所以需要定义辅助宏。
@@ -6302,41 +6226,30 @@
 }
 %    \end{macrocode}
 %
-% \begin{environment}{survey}
-% 外文资料的调研阅读报告。
+% 外文资料的调研阅读报告（已过时）。
 %    \begin{macrocode}
 \newenvironment{survey}{%
+  \thu@deprecate{"survey" environment}{}%
   \chapter{外文资料的调研阅读报告}%
   \thusetup{language = english}%
-  \let\title\thu@appendix@title
-  \let\maketitle\thu@appendix@maketitle
-  \thu@set@partial@toc@format
-  \renewcommand\tableofcontents{%
-    \section*{Contents}%
-    \thu@pdfbookmark{1}{Contents}%
-    \thu@print@contents{survey}{l}{1}{2}{}%
-    \vskip 20bp%
-  }%
-  \let\appendix\thu@appendix@appendix
-  \thu@set@survey@bibheading
+  \let\title\@gobble
+  \let\maketitle\relax
+  \let\tableofcontents\relax
+  \let\appendix\relax
   \renewcommand\bibname{参考文献}%
-  \startcontents[survey]%
 }{%
-  \stopcontents[survey]%
   \thu@reset@main@language % restore language
 }
-\newcommand\thu@set@appendix@bib@heading{}
 %    \end{macrocode}
-% \end{environment}
 %
-% \begin{environment}{translation}
-% 外文资料的书面翻译。
+% 外文资料的书面翻译（已过时）。
 %    \begin{macrocode}
 \newenvironment{translation}{%
+  \thu@deprecate{"translation" environment}{}%
   \chapter{外文资料的书面翻译}%
   \thusetup{language = chinese}%
-  \let\title\thu@appendix@title
-  \let\maketitle\thu@appendix@maketitle
+  \let\title\@gobble
+  \let\maketitle\relax
   \renewenvironment{abstract}{%
     \ctexset{
       section = {
@@ -6351,94 +6264,18 @@
       \textbf{关键词：}\thu@clist@use{\thu@keywords}{；}\par
     \fi
   }%
-  \thu@set@partial@toc@format
-  \renewcommand\tableofcontents{%
-    \section*{目录}%
-    \thu@pdfbookmark{1}{目录}%
-    \thu@print@contents{translation}{l}{1}{2}{}%
-    \vskip 20bp%
-  }%
-  \let\appendix\thu@appendix@appendix
-  \thu@set@survey@bibheading
-  \startcontents[translation]%
+  \let\tableofcontents\relax
+  \let\appendix\relax
 }{%
-  \stopcontents[translation]%
   \thu@reset@main@language % restore language
 }
 %    \end{macrocode}
-% \end{environment}
 %
-% \begin{environment}{translation-index}
 % 书面翻译对应的原文索引，区别于译文的参考文献。
 %    \begin{macrocode}
-\newenvironment{translation-index}{}{}
-\AtEndOfPackageFile*{bibunits}{
-  \newcounter{thu@translation@index}%
-  \renewenvironment{translation-index}{%
-    \global\advance\c@thu@translation@index\@ne
-    \begin{bibunit}%
-      \renewcommand\@bibunitname{\jobname-index-\arabic{thu@translation@index}}%
-      \renewcommand\bibname{书面翻译对应的原文索引}%
-      \thu@set@survey@bibheading
-  }{%
-    \end{bibunit}%
-  }
-}
-\AtEndOfPackageFile*{biblatex}{
-  \renewenvironment{translation-index}{%
-    \endrefsection
-    \begin{refsection}%
-      \renewcommand\bibname{书面翻译对应的原文索引}%
-      \thu@set@survey@bibheading
-  }{%
-    \end{refsection}%
-  }
-}
-%    \end{macrocode}
-% \end{environment}
-%
-% 调研阅读报告需要独立的标题，这里仿照了标准文档类的用法 \cs{title}, \cs{maketitle}。
-%    \begin{macrocode}
-\DeclareRobustCommand\thu@appendix@title[1]{\gdef\thu@appendix@@title{#1}}
-\newcommand\thu@appendix@maketitle{%
-  \par
-  \begin{center}%
-    \xiaosi[1.667]\thu@appendix@@title
-  \end{center}%
-  \par
-}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\newcommand\thu@set@partial@toc@format{%
-  \titlecontents{section}
-    [\z@]{}
-    {\contentspush{\thecontentslabel\quad}}{}
-    {\thu@leaders\thecontentspage}%
-  \titlecontents{subsection}
-    [1em]{}
-    {\contentspush{\thecontentslabel\quad}}{}
-    {\thu@leaders\thecontentspage}%
-  \titlecontents{subsubsection}
-    [2em]{}
-    {\contentspush{\thecontentslabel\quad}}{}
-    {\thu@leaders\thecontentspage}%
-}
-%    \end{macrocode}
-%
-% 书面翻译的附录。
-%    \begin{macrocode}
-\newcommand\thu@appendix@appendix{%
-  \def\theHsection{\Hy@AlphNoErr{section}}%
-  \setcounter{section}{0}%
-  \setcounter{subsection}{0}%
-  \renewcommand\thesection{\thechapter.\@Alph\c@section}%
-}%
-%    \end{macrocode}
-%
-% 调研阅读报告的参考文献（或书面翻译对应的外文资料的原文索引）标题用宋体小四号字，段前 20pt，段后 6pt，行距 20pt。
-%    \begin{macrocode}
-\newcommand\thu@set@survey@bibheading{}
+\NewEnviron{translation-index}{%
+  \thu@deprecate{"translation-index" environment}{}%
+}{}
 %    \end{macrocode}
 %
 %

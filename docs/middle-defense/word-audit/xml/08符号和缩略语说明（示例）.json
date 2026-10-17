@@ -1,0 +1,1956 @@
+{
+  "source": "相关附件和参照/word模板(202605)/08符号和缩略语说明（示例）.doc",
+  "source_sha256": "443613d0ce75a90a0293ff46ff6f7366f8d672d18c92af4d0441ee1755573cd2",
+  "converted_docx_sha256": "e4cb7f0a23f3ff2c2d66c0a3a8dc430c4761f4d9231dd44f4e1a29f34dbf3dfe",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId6"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId7"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "8",
+        "fmt": "upperRoman"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "default",
+        "linePitch": "326",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "480",
+          "after": "360"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        }
+      }
+    },
+    "WW8Num1z0": {
+      "type": "character",
+      "styleId": "WW8Num1z0",
+      "name": "WW8Num1z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "Style13": {
+      "type": "character",
+      "styleId": "Style13",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style13",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "276",
+          "before": "0",
+          "after": "140"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Contents1": {
+      "type": "paragraph",
+      "styleId": "Contents1",
+      "name": "TOC 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        }
+      },
+      "rPr": {}
+    },
+    "Contents2": {
+      "type": "paragraph",
+      "styleId": "Contents2",
+      "name": "TOC 2",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "left": "420",
+          "hanging": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "Contents3": {
+      "type": "paragraph",
+      "styleId": "Contents3",
+      "name": "TOC 3",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "left": "840",
+          "hanging": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "Contents4": {
+      "type": "paragraph",
+      "styleId": "Contents4",
+      "name": "TOC 4",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "left": "1260",
+          "hanging": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        }
+      },
+      "rPr": {}
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "缩写表",
+      "basedOn": "Contents1",
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "true"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "10"
+        }
+      }
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "FrameContents": {
+      "type": "paragraph",
+      "styleId": "FrameContents",
+      "name": "Frame Contents",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "符号和缩略语说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "符号和缩略语说明",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "a, c1, c2临时替换变量",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "a,",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "c",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "c",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "rFonts": {
+              "eastAsia": "仿宋_GB2312;仿宋"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "临时替换变量",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "Dm 预混通道外径 (mm)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "D",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "m",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "预混通道外径",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(mm)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "Ga空气质量流量 (kg/s)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Ga",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "空气",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "质量",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "流量",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(kg/s)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 5,
+      "text": "Ma 进口空气马赫数，Ma= ",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Ma",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "进口空气马赫数，",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "Ma=",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "γ比热比=1.4",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "γ",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "比热比",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "=",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "1.4",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 7,
+      "text": "δ总压损失系数，δ= (%)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "δ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "总压损失系数，",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "δ=",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": " (%)",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "φLLO 贫燃着火极限 ",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "φ",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "LLO",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "贫燃着火极限",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "CFD计算流体力学 (Computational Fluid Dynamics)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "CFD",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "计算流体力学",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Computational Fluid Dynamics)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "DFT密度泛函理论 (Density Functional Theory)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "DFT",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "密度泛函理论",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Density Functional Theory)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "LBO贫燃熄火极限 (Lean Blowout Value)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "LBO",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "贫燃熄火极限",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Lean Blowout Value)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "ONIOM分层算法 (Our own N-layered Integrated molecular Orbital and molecular Mechanics)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "ONIOM",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "分层算法",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Our own N-layered Integrated molecular Orbital and molecular Mechanics)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 13,
+      "text": "PES势能面 (Potential Energy Surface)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "PES",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "势能面",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Potential Energy Surface)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "PIV颗粒图像速度仪 (Particle Image Velocimetry)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "PIV",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "颗粒图像速度仪",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "Particle Image Velocimetry",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": ")",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 15,
+      "text": "SCF自洽场 (Self-Consistent Field)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "SCF",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "自洽场",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Self-Consistent ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "Field",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": ")",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 16,
+      "text": "SCRF自洽反应场 (Self-Consistent Reaction Field)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "SCRF",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "自洽反应场",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Self-Consistent Reaction ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "Field",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": ")",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 17,
+      "text": "TS过渡态 (Transition State)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "TS",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "过渡态",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Transition State)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 18,
+      "text": "TST过渡态理论 (Transition State Theory)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "TST",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "过渡态理论",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Transition State Theory)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 19,
+      "text": "ZPE零点振动能 (Zero Vibration Energy)",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "before": "0",
+          "after": "0"
+        },
+        "ind": {
+          "left": "1588",
+          "hanging": "1588"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "ZPE",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "零点振动能",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "(Zero ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "Vibration",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": " Energy)",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 20,
+      "text": "说明如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。符号若有单位需标明单位，无量纲参数可给出定义式。常数或系数可给出数值。缩略词需给出中英文全称。仅示例，阅后删除此框及内容说明如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。符号若有单位需标明单位，无量纲参数可给出定义式。常数或系数可给出数值。缩略词需给出中英文全称。仅示例，阅后删除此框及内容",
+      "pPr": {
+        "pStyle": {
+          "val": "Contents1"
+        },
+        "widowControl": {
+          "val": "false"
+        },
+        "tabs": {
+          "value": ""
+        },
+        "autoSpaceDE": {
+          "val": "true"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "说明如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。符号若有单位需标明单位，无量纲参数可给出定义式。常数或系数可给出数值。缩略词需给出中英文全称。仅示例，阅后删除此框及内容说明如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。符号若有单位需标明单位，无量纲参数可给出定义式。常数或系数可给出数值。缩略词需给出中英文全称。仅示例，阅后删除此框及内容",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 21,
+      "text": "说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "说明",
+          "rPr": {
+            "b": {
+              "value": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 22,
+      "text": "如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，",
+          "rPr": {}
+        },
+        {
+          "text": "应编写“符号",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        },
+        {
+          "text": "和",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        },
+        {
+          "text": "缩略语说明”。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 23,
+      "text": "建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 24,
+      "text": "符号若有单位需标明单位，无量纲参数可给出定义式。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "符号若有单位需标明单位，无量纲参数可给出定义式。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 25,
+      "text": "常数或系数可给出数值。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "常数或系数可给出数值。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 26,
+      "text": "缩略词需给出中英文全称。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "缩略词需给出中英文全称。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 28,
+      "text": "仅示例，阅后删除此框及内容",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "仅示例，阅后删除此框及内容",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 29,
+      "text": "说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "说明",
+          "rPr": {
+            "b": {
+              "value": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 30,
+      "text": "如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，应编写“符号和缩略语说明”。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "如果论文中使用了大量的物理量符号、标志、缩略词、专门计量单位、自定义名词和术语等，",
+          "rPr": {}
+        },
+        {
+          "text": "应编写“符号",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        },
+        {
+          "text": "和",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        },
+        {
+          "text": "缩略语说明”。",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 31,
+      "text": "建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "建议按符号、希腊字母、缩略词等部分编制，每一部分按首字母顺序排序。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 32,
+      "text": "符号若有单位需标明单位，无量纲参数可给出定义式。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "符号若有单位需标明单位，无量纲参数可给出定义式。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 33,
+      "text": "常数或系数可给出数值。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "常数或系数可给出数值。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 34,
+      "text": "缩略词需给出中英文全称。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "缩略词需给出中英文全称。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 36,
+      "text": "仅示例，阅后删除此框及内容",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "仅示例，阅后删除此框及内容",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "符号和缩略语说明",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "VIIIVIII",
+      "fields": [
+        " PAGE ",
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

@@ -1,0 +1,9306 @@
+{
+  "source": "相关附件和参照/word模板(202605)/09正文 第3章（示例）.doc",
+  "source_sha256": "e8af1712bc70cab81dd75a289628c2214c6d99b41228925afe4181a56489e609",
+  "converted_docx_sha256": "a64a9b294f0f398f3522fa7a92320ca027ae1c6a62230795bb68ab9a9f22eff7",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId2"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "footnotePr": {
+        "value": ""
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "1",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "linesAndChars",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    },
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId4"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId5"
+      },
+      "footnotePr": {
+        "value": ""
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "linesAndChars",
+        "linePitch": "312",
+        "charSpace": "0"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "522"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        }
+      }
+    },
+    "Heading2": {
+      "type": "paragraph",
+      "styleId": "Heading2",
+      "name": "Heading 2",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "outlineLvl": {
+          "val": "1"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "28"
+        }
+      }
+    },
+    "Heading3": {
+      "type": "paragraph",
+      "styleId": "Heading3",
+      "name": "Heading 3",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "240",
+          "before": "240",
+          "after": "120"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "outlineLvl": {
+          "val": "2"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "spacing": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "26"
+        }
+      }
+    },
+    "Heading4": {
+      "type": "paragraph",
+      "styleId": "Heading4",
+      "name": "Heading 4",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "spacing": {
+          "before": "40",
+          "after": "40"
+        },
+        "ind": {
+          "firstLine": "360"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "outlineLvl": {
+          "val": "3"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "i": {
+          "value": ""
+        },
+        "color": {
+          "val": "auto"
+        },
+        "sz": {
+          "val": "20"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "en-US",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "WW8Num1z0": {
+      "type": "character",
+      "styleId": "WW8Num1z0",
+      "name": "WW8Num1z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num2z0": {
+      "type": "character",
+      "styleId": "WW8Num2z0",
+      "name": "WW8Num2z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4z0": {
+      "type": "character",
+      "styleId": "WW8Num4z0",
+      "name": "WW8Num4z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "i": {
+          "val": "false"
+        },
+        "sz": {
+          "val": "21"
+        },
+        "szCs": {
+          "val": "21"
+        }
+      }
+    },
+    "WW8Num5z0": {
+      "type": "character",
+      "styleId": "WW8Num5z0",
+      "name": "WW8Num5z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6z0": {
+      "type": "character",
+      "styleId": "WW8Num6z0",
+      "name": "WW8Num6z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7z0": {
+      "type": "character",
+      "styleId": "WW8Num7z0",
+      "name": "WW8Num7z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8z0": {
+      "type": "character",
+      "styleId": "WW8Num8z0",
+      "name": "WW8Num8z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num9z0": {
+      "type": "character",
+      "styleId": "WW8Num9z0",
+      "name": "WW8Num9z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style10": {
+      "type": "character",
+      "styleId": "Style10",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style10",
+      "pPr": {},
+      "rPr": {}
+    },
+    "InternetLink": {
+      "type": "character",
+      "styleId": "InternetLink",
+      "name": "Hyperlink",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "0000FF"
+        },
+        "u": {
+          "val": "single"
+        }
+      }
+    },
+    "FootnoteCharacters": {
+      "type": "character",
+      "styleId": "FootnoteCharacters",
+      "name": "Footnote Characters",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "vertAlign": {
+          "val": "superscript"
+        }
+      }
+    },
+    "Style11": {
+      "type": "character",
+      "styleId": "Style11",
+      "name": "页脚 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "10"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style12": {
+      "type": "character",
+      "styleId": "Style12",
+      "name": "中文表题 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "6"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "1": {
+      "type": "character",
+      "styleId": "1",
+      "name": "表序1 字符",
+      "basedOn": "Style12",
+      "pPr": {},
+      "rPr": {}
+    },
+    "FootnoteAnchor": {
+      "type": "character",
+      "styleId": "FootnoteAnchor",
+      "name": "Footnote Anchor",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "vertAlign": {
+          "val": "superscript"
+        }
+      }
+    },
+    "EndnoteAnchor": {
+      "type": "character",
+      "styleId": "EndnoteAnchor",
+      "name": "Endnote Anchor",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "vertAlign": {
+          "val": "superscript"
+        }
+      }
+    },
+    "EndnoteCharacters": {
+      "type": "character",
+      "styleId": "EndnoteCharacters",
+      "name": "Endnote Characters",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "0",
+          "after": "120"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Style13": {
+      "type": "paragraph",
+      "styleId": "Style13",
+      "name": "段落",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420"
+        },
+        "ind": {
+          "firstLine": "520"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "10"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "正文缩进",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240"
+        },
+        "ind": {
+          "firstLine": "420"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "textAlignment": {
+          "val": "auto"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "spacing": {
+          "val": "0"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "21"
+        }
+      }
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "公式",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "160",
+          "after": "40"
+        }
+      },
+      "rPr": {}
+    },
+    "Style16": {
+      "type": "paragraph",
+      "styleId": "Style16",
+      "name": "图题",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "240",
+          "after": "240"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "color": {
+          "val": "000000"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "Style17": {
+      "type": "paragraph",
+      "styleId": "Style17",
+      "name": "中文表题",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "overflowPunct": {
+          "val": "false"
+        },
+        "autoSpaceDE": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "380",
+          "before": "120",
+          "after": "0"
+        },
+        "ind": {
+          "left": "227",
+          "right": "227",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "6"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "Contents1": {
+      "type": "paragraph",
+      "styleId": "Contents1",
+      "name": "TOC 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "60",
+          "after": "0"
+        },
+        "ind": {
+          "hanging": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体;SimHei"
+        }
+      }
+    },
+    "11": {
+      "type": "paragraph",
+      "styleId": "11",
+      "name": "标 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "eastAsia": "黑体;SimHei"
+        },
+        "color": {
+          "val": "000000"
+        },
+        "sz": {
+          "val": "30"
+        }
+      }
+    },
+    "Footnote": {
+      "type": "paragraph",
+      "styleId": "Footnote",
+      "name": "Footnote Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "snapToGrid": {
+          "val": "false"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "12": {
+      "type": "paragraph",
+      "styleId": "12",
+      "name": "表序1",
+      "basedOn": "Style17",
+      "pPr": {
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "240",
+          "after": "120"
+        },
+        "ind": {
+          "left": "0",
+          "right": "0",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "spacing": {
+          "val": "0"
+        }
+      }
+    },
+    "TableContents": {
+      "type": "paragraph",
+      "styleId": "TableContents",
+      "name": "Table Contents",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "TableHeading": {
+      "type": "paragraph",
+      "styleId": "TableHeading",
+      "name": "Table Heading",
+      "basedOn": "TableContents",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num2": {
+      "type": "numbering",
+      "styleId": "WW8Num2",
+      "name": "WW8Num2",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3": {
+      "type": "numbering",
+      "styleId": "WW8Num3",
+      "name": "WW8Num3",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4": {
+      "type": "numbering",
+      "styleId": "WW8Num4",
+      "name": "WW8Num4",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5": {
+      "type": "numbering",
+      "styleId": "WW8Num5",
+      "name": "WW8Num5",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6": {
+      "type": "numbering",
+      "styleId": "WW8Num6",
+      "name": "WW8Num6",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7": {
+      "type": "numbering",
+      "styleId": "WW8Num7",
+      "name": "WW8Num7",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8": {
+      "type": "numbering",
+      "styleId": "WW8Num8",
+      "name": "WW8Num8",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9": {
+      "type": "numbering",
+      "styleId": "WW8Num9",
+      "name": "WW8Num9",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "第3章  对等网络中宽松约束的一般性搜索的理论模型",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "第",
+          "rPr": {}
+        },
+        {
+          "text": "3",
+          "rPr": {}
+        },
+        {
+          "text": "章",
+          "rPr": {}
+        },
+        {
+          "text": "对等网络中宽松约束的一般性搜索的理论模型",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "3.1  本章引论",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading2"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.1 ",
+          "rPr": {}
+        },
+        {
+          "text": "本章引论",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "本章为P2P中宽松约束的一般性搜索建立理论模型，以研究此类搜索的效率和带宽开销。根据本章的理论模型可以很好地测算出各种条件下及不同应用中的P2P搜索效率和带宽开销，为P2P中宽松约束搜索的研究建立了基础。通过模型求解可以得到搜索所需的瓶颈资源（即结点带宽）的理论下限，并可算出不同系统参数下最优的搜索性能以及达到此性能时的最优数据索引分布，从而为P2P系统搜索算法的设计、性能优化、性能比较以及可行性分析提供了一般性方法。后面第四章提出的近似最优的实用搜索算法就是直接应用本章模型和结论而设计的。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本章为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中宽松约束的一般性搜索建立理论模型，以研究此类搜索的效率和带宽开销。根据本章的理论模型可以很好地测算出各种条件下及不同应用中的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "搜索效率和带宽开销，为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中宽松约束搜索的研究建立了基础。通过模型求解可以得到搜索所需的瓶颈资源（即结点带宽）的理论下限，并可算出不同系统参数下最优的搜索性能以及达到此性能时的最优数据索引分布，从而为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统搜索算法的设计、性能优化、性能比较以及可行性分析提供了一般性方法。后面第四章提出的近似最优的实用搜索算法就是直接应用本章模型和结论而设计的。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "从第2章讨论可知，宽松约束搜索的用途非常广泛，是广域网上多服务器系统的基础功能和服务。为了明确起见，这里重述一下定义：所谓“宽松约束”是指搜索不要求返回全部符合条件的结果，而只要返回一个或若干个（根据用户要求而定）即可；所谓“一般性搜索”是指搜索算法必须是普适的，具体来说就是搜索条件任意和数据存放位置任意。目前尚不能很好地解决此类搜索问题，主要面临的问题是算法网络通信量过大，很容易超过结点和网络的承受能力，造成严重的带宽开销和系统不可扩展（non-scalable）的问题。现有算法中，结构化P2P中精确匹配数据标识的数据定位算法无法支持各种非精确匹配的搜索（如子串匹配的搜索）。Gnutella等非结构化P2P系统依靠消息转发的随机搜索方法虽然符合一般性搜索的要求，但是存在严重的性能问题。由于P2P巨大的结点数和数据量，不加优化的随机搜索面临“大海捞针”的困境，搜索消息通常要游历很多无关结点并产生大量冗余消息之后才能找到数据。因此，不论使用消息洪泛[2]或是性能稍好的随机走步[45]，普遍认为Gnutella式的随机搜索算法不具可扩展性[47]，当结点较多时带宽约束将造成非常严重的系统瓶颈。带宽约束正是制约此类P2P搜索的最大问题。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "从第",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "章讨论可知，宽松约束搜索的用途非常广泛，是广域网上多服务器系统的基础功能和服务。为了明确起见，这里重述一下定义：所谓“宽松约束”是指搜索不要求返回全部符合条件的结果，而只要返回一个或若干个（根据用户要求而定）即可；所谓“一般性搜索”是指搜索算法必须是普适的，具体来说就是搜索条件任意和数据存放位置任意。目前尚不能很好地解决此类搜索问题，主要面临的问题是算法网络通信量过大，很容易超过结点和网络的承受能力，造成严重的带宽开销和系统不可扩展（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "non-scalable",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）的问题。现有算法中，结构化",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中精确匹配数据标识的数据定位算法无法支持各种非精确匹配的搜索（如子串匹配的搜索）。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "Gnutella",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "等非结构化",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统依靠消息转发的随机搜索方法虽然符合一般性搜索的要求，但是存在严重的性能问题。由于",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "巨大的结点数和数据量，不加优化的随机搜索面临“大海捞针”的困境，搜索消息通常要游历很多无关结点并产生大量冗余消息之后才能找到数据。因此，不论使用消息洪泛",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[2]",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "或是性能稍好的随机走步",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[45]",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "，普遍认为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "Gnutella",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "式的随机搜索算法不具可扩展性",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[47]",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "，当结点较多时带宽约束将造成非常严重的系统瓶颈。带宽约束正是制约此类",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "搜索的最大问题。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 5,
+      "text": "为了解决通信量过大的问题，人们尝试了很多优化措施来改进基础设施和搜索算法的各个方面，包括使用冗余更少和通信方面更“温和”的消息转发算法、采用混合结构、使用超级结点的偏向性搜索、扩散数据索引和缓存搜索结果等等[42-54,106]。其中最为重要的手段就是主动扩散数据索引，即结点不只存储自身数据，同时缓存其他结点所存数据的索引（参见2.3.1节）。由于数据的分布是任意的，搜索不可避免地带有盲目性，平均搜索跳数总是依赖于“知道”目标数据的结点个数而难于进一步提高（详见3.2节的分析）。因此在一般性搜索问题中，通过扩散索引来增加数据知名度的方法成为本质上的解决途径。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "为了解决通信量过大的问题，人们尝试了很多优化措施来改进基础设施和搜索算法的各个方面，包括使用冗余更少和通信方面更“温和”的消息转发算法、采用混合结构、使用超级结点的偏向性搜索、扩散数据索引和缓存搜索结果等等",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[42-54,106]",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "。其中最为重要的手段就是主动扩散数据索引，即结点不只存储自身数据，同时缓存其他结点所存数据的索引（参见",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "2.3.1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节）。由于数据的分布是任意的，搜索不可避免地带有盲目性，平均搜索跳数总是依赖于“知道”目标数据的结点个数而难于进一步提高（详见",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节的分析）。因此在一般性搜索问题中，通过扩散索引来增加数据知名度的方法成为本质上的解决途径。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "然而索引扩散并不总是有效率的，它也会带来带宽开销。一方面，扩散更多的索引可以使搜索更快地返回，减少了搜索带宽开销；另一方面，由于P2P中结点和数据处于不断动态变化之中，当数据失效或更新时（如结点离线、删除或更新数据），数据的索引也相应失效，必须加以更新维护。因此，扩散更多的索引意味着维护开销的增加。于是在带宽开销方面，搜索开销与索引维护开销之间存在着折衷关系（trade-off）。与以往工作中仅考虑搜索开销不同，本章的模型中我们同时考虑搜索和维护两方面，给出了索引扩散方法对搜索整体性能的影响和数学关系。通过模型我们发现索引数量是决定宽松约束一般性搜索性能的至关重要的因素，采用最优索引分布可以很大程度上提高性能，降低系统开销。与一般认为的P2P无偏向性搜索难于扩展（non-scalable）恰恰相反，模型显示在最优的索引扩散策略下，基于无偏向性搜索具备很好的可扩展性，其结点负载和带宽开销随系统规模N（结点数）增长具有O（）的增长关系。这种平方根关系保证了对大规模P2P系统很好的适应性。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "然而索引扩散并不总是有效率的，它也会带来带宽开销。一方面，扩散更多的索引可以使搜索更快地返回，减少了搜索带宽开销；另一方面，由于",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中结点和数据处于不断动态变化之中，当数据失效或更新时（如结点离线、删除或更新数据），数据的索引也相应失效，必须加以更新维护。因此，扩散更多的索引意味着维护开销的增加。于是在带宽开销方面，搜索开销与索引维护开销之间存在着折衷关系（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "trade-off",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）。与以往工作中仅考虑搜索开销不同，本章的模型中我们同时考虑搜索和维护两方面，给出了索引扩散方法对搜索整体性能的影响和数学关系。通过模型我们发现索引数量是决定宽松约束一般性搜索性能的至关重要的因素，采用最优索引分布可以很大程度上提高性能，降低系统开销。与一般认为的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "无偏向性搜索难于扩展（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "non-scalable",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）恰恰相反，模型显示在最优的索引扩散策略下，基于无偏向性搜索具备很好的可扩展性，其结点负载和带宽开销随系统规模",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "（结点数）增长具有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "O",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "）的增长关系。这种平方根关系保证了对大规模",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "系统很好的适应性。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 7,
+      "text": "本章剩余部分按照如下方式组织：3.2节给出模型假设；3.3节推导出带宽开销和搜索效率的计算公式，给出性能模型；3.4节通过优化索引分布得到了理论最优的宽松约束搜索，证明了对可扩展性具有重要意义的“平方根关系”；3.5节对模型结论和意义进行了总结；3.6节讨论模型适应性并和相关工作进行了比较，最后是本章小结。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本章剩余部分按照如下方式组织：",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节给出模型假设；",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.3",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节推导出带宽开销和搜索效率的计算公式，给出性能模型；",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.4",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节通过优化索引分布得到了理论最优的宽松约束搜索，证明了对可扩展性具有重要意义的“平方根关系”；",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.5",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节对模型结论和意义进行了总结；",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.6",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节讨论模型适应性并和相关工作进行了比较，最后是本章小结。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "3.2  模型基本假设",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading2"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.2  ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            }
+          }
+        },
+        {
+          "text": "模型基本假设",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "一般性搜索要解决任意可能的数据存放方式和任意的查询条件下的搜索问题。任意可能的数据存放意味着数据与存放结点之间可以不存在任何相关性，因而无法利用类似兴趣偏好、结点特性或数据存放的规则来指导消息转发或优化性能，单步搜索效率等同于盲目搜索（blind search）。任意的查询条件，意味着只有获得了完整的元数据（数据中用来被查询的部分）才可以判断出该数据是否符合查询条件，单靠部分元数据不能解决所有可能的查询请求。这样以往针对特定搜索条件的倒排式索引（如关键词倒排表等）无法发挥作用，只能使用正排式的数据索引。这样，一般性搜索限制了可能采取的优化措施，使搜索性能存在理论极限。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "一般性搜索要解决任意可能的数据存放方式和任意的查询条件下的搜索问题。任意可能的数据存放意味着数据与存放结点之间可以不存在任何相关性，因而无法利用类似兴趣偏好、结点特性或数据存放的规则来指导消息转发或优化性能，单步搜索效率等同于盲目搜索（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "blind search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）。任意的查询条件，意味着只有获得了完整的元数据（数据中用来被查询的部分）才可以判断出该数据是否符合查询条件，单靠部分元数据不能解决所有可能的查询请求。这样以往针对特定搜索条件的倒排式索引（如关键词倒排表等）无法发挥作用，只能使用正排式的数据索引。这样，一般性搜索限制了可能采取的优化措施，使搜索性能存在理论极限。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "虽然在特定应用中使用的不一定是严格的“一般性搜索”，其数据与结点之间可能存在一定的相关性，并且可以借助搜索条件的特性来优化性能，但是本章只讨论最一般的情况，目的在于建立基础性的模型，研究和寻找适用于绝大多数应用的宽松约束搜索算法。针对特定搜索条件的高效搜索算法可参见第五章，利用数据和结点的语义相关性来优化性能的研究参见第六章。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "虽然在特定应用中使用的不一定是严格的“一般性搜索”，其数据与结点之间可能存在一定的相关性，并且可以借助搜索条件的特性来优化性能，但是本章只讨论最一般的情况，目的在于建立基础性的模型，研究和寻找适用于绝大多数应用的宽松约束搜索算法。针对特定搜索条件的高效搜索算法可参见第五章，利用数据和结点的语义相关性来优化性能的研究参见第六章。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "本节针对P2P中一般性搜索的特点给出模型的基本假设，具体包括搜索的“无偏向性”、结点特性以及系统的短时稳态假设。我们首先讨论这三方面问题，最后给出模型假设的总体叙述。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本节针对",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中一般性搜索的特点给出模型的基本假设，具体包括搜索的“无偏向性”、结点特性以及系统的短时稳态假设。我们首先讨论这三方面问题，最后给出模型假设的总体叙述。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "3.2.1  无偏向性搜索",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.2.1 ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "无偏向性搜索",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 13,
+      "text": "如果P2P中所有结点都以相同或相近的概率接收到搜索请求，那么称此搜索算法为“无偏向性搜索（unbiased search）”。无偏向搜索可看作是对等网络搜索的基础，也是应用最多的一种。这是由于对等网络中单结点能力较弱，只有让所有结点均摊巨大的总体搜索负载，才可能支撑起高强度的搜索算法。如果搜索消息不能近似均匀地散落在所有结点上，那么负载重的结点很容易发生过载。均衡负载的思想正是对等网络存在和发展的基础，即集合众多微小的力量（大量弱结点）形成巨大的总体服务能力。实际应用中，只要搜索算法在选择邻居结点转发消息时没有特殊的偏向性，那么就可以近似认为是无偏向性搜索，譬如最常用的洪泛和随机走步就是无偏向性算法。模型中我们假设搜索算法是无偏向性的。对于使用了超级结点的偏向性搜索，通常可认为是将结点划分为不同类别。同一类别的结点运行相同的算法和协议，因此各类别内部仍然是无偏向性搜索，符合模型假设。此时可针对每个类别的结点群体分别使用模型，从而得出整体算法的性能（详见3.5节）。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "如果",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中所有结点都以相同或相近的概率接收到搜索请求，那么称此搜索算法为“无偏向性搜索（",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "unbiased search",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）”。无偏向搜索可看作是对等网络搜索的基础，也是应用最多的一种。这是由于对等网络中单结点能力较弱，只有让所有结点均摊巨大的总体搜索负载，才可能支撑起高强度的搜索算法。如果搜索消息不能近似均匀地散落在所有结点上，那么负载重的结点很容易发生过载。均衡负载的思想正是对等网络存在和发展的基础，即集合众多微小的力量（大量弱结点）形成巨大的总体服务能力。实际应用中，只要搜索算法在选择邻居结点转发消息时没有特殊的偏向性，那么就可以近似认为是无偏向性搜索，譬如最常用的洪泛和随机走步就是无偏向性算法。模型中我们假设搜索算法是无偏向性的。对于使用了超级结点的偏向性搜索，通常可认为是将结点划分为不同类别。同一类别的结点运行相同的算法和协议，因此各类别内部仍然是无偏向性搜索，符合模型假设。此时可针对每个类别的结点群体分别使用模型，从而得出整体算法的性能（详见",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.5",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节）。",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "由于数据分布是随机的，且结点收到搜索消息的概率彼此相同，因此无偏向性条件下单步搜索的成功概率不会优于盲目搜索的性能。虽然搜索途中遇到的结点可带来历史信息并指导后续遍历，但由于巨大的结点数和数据量以及数据随机存放的特点，小量历史信息的作用非常有限，且与特定应用的性质相关。因此模型中对此不作考虑，仍然以盲目搜索作为无偏向性搜索单步性能。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "由于数据分布是随机的，且结点收到搜索消息的概率彼此相同，因此无偏向性条件下单步搜索的成功概率不会优于盲目搜索的性能。虽然搜索途中遇到的结点可带来历史信息并指导后续遍历，但由于巨大的结点数和数据量以及数据随机存放的特点，小量历史信息的作用非常有限，且与特定应用的性质相关。因此模型中对此不作考虑，仍然以盲目搜索作为无偏向性搜索单步性能。",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 15,
+      "text": "3.2.2  结点特性",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.2.2",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "结点特性",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 16,
+      "text": "P2P中结点总处于不断地动态变化之中，随时有结点加入和离开系统。动态性显著地影响系统性能和索引的有效性。按照P2P中通常的假设，结点的行为（在线或离线）独立于其他结点，并且所有结点具有统一的动态特性以及在线时间分布，这种分布一般用指数分布来刻画。具体来说，设结点的平均在线服务时间（session time）为Tsession，则单个结点在线时间长度符合参数λ=1/Tsession的指数分布。由于结点动态变化彼此独立，因此一段时间之内发生的动态变化次数符合泊松分布，其参数与指数分布参数一致。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中结点总处于不断地动态变化之中，随时有结点加入和离开系统。动态性显著地影响系统性能和索引的有效性。按照",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中通常的假设，结点的行为（在线或离线）独立于其他结点，并且所有结点具有统一的动态特性以及在线时间分布，这种分布一般用指数分布来刻画。具体来说，设结点的平均在线服务时间（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "session time",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "T",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "session",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "，则单个结点在线时间长度符合参数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "λ",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "=1/",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "T",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "session",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的指数分布。由于结点动态变化彼此独立，因此一段时间之内发生的动态变化次数符合泊松分布，其参数与指数分布参数一致。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 17,
+      "text": "3.2.3  短时稳态性",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.2.3 ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "短时稳态性",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 18,
+      "text": "我们假设P2P系统具有短时稳态特性，即一段不长的时间中系统的性质（如结点平均在线时间Tsession、数据总量、数据访问频度分布）以及系统规模（结点数N）不会发生显著的变化。尽管长时程中系统性质可能会明显变化，但是这种变化总是靠缓慢的积累而产生的。因此，可以用一个稳态模型来描述P2P系统，而P2P系统的长程变化可以用同一个稳态模型的不同参数取值点来刻画。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "我们假设",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统具有短时稳态特性，即一段不长的时间中系统的性质（如结点平均在线时间",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "T",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "session",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "、数据总量、数据访问频度分布）以及系统规模（结点数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）不会发生显著的变化。尽管长时程中系统性质可能会明显变化，但是这种变化总是靠缓慢的积累而产生的。因此，可以用一个稳态模型来描述",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统，而",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统的长程变化可以用同一个稳态模型的不同参数取值点来刻画。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 19,
+      "text": "3.2.4  模型假设的总体叙述",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.2.4  ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "模型假设的总体叙述",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 20,
+      "text": "综合以上三方面就得到本章理论模型的基本假设。具体而言，模型假设P2P系统和一般性搜索算法具有如下特点：一般性搜索算法对结点不具有偏向性，所有结点以相同或相近的概率收到搜索请求；结点在线时间可用独立同分布的指数分布来描述；P2P系统在相对较短的时间段内可看作是稳态，系统主要参数保持不变。以上假设是针对P2P系统及一般性搜索的特点而做出的，具有广泛的适应性，可用来研究目前大多数P2P宽松约束搜索系统的性能。关于模型适应性将在3.6.1节做进一步讨论。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "综合以上三方面就得到本章理论模型的基本假设。具体而言，模型假设",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统和一般性搜索算法具有如下特点：一般性搜索算法对结点不具有偏向性，所有结点以相同或相近的概率收到搜索请求；结点在线时间可用独立同分布的指数分布来描述；",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统在相对较短的时间段内可看作是稳态，系统主要参数保持不变。以上假设是针对",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统及一般性搜索的特点而做出的，具有广泛的适应性，可用来研究目前大多数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "宽松约束搜索系统的性能。关于模型适应性将在",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.6.1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "节做进一步讨论。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 21,
+      "text": "3.3  宽松约束的一般性搜索性能理论模型",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading2"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.3  ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            }
+          }
+        },
+        {
+          "text": "宽松约束的一般性搜索性能理论模型",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 22,
+      "text": "本节建立无偏向性搜索的理论模型，模型统一解决无偏向性搜索的带宽开销计算、带宽开销的理论下限、最优的搜索性能以及最优索引分布。模型中用到的符号及说明参见表3.1。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "本节建立无偏向性搜索的理论模型，模型统一解决无偏向性搜索的带宽开销计算、带宽开销的理论下限、最优的搜索性能以及最优索引分布。模型中用到的符号及说明参见表",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 23,
+      "text": "表3.1  无偏向搜索模型的符号表",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "表",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.1",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "无偏向搜索模型的符号表",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 24,
+      "text": "符号",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "符号",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 26,
+      "text": "意义及说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "意义及说明",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 27,
+      "text": "N",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 29,
+      "text": "结点总数。代表了系统规模",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "结点总数。代表了系统规模",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 30,
+      "text": "M",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 32,
+      "text": "彼此不同的数据的个数。注意数据副本不计入M中",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "彼此不同的数据的个数。注意数据副本不计入",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "中",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 33,
+      "text": "续表3.1  无偏向搜索模型的符号表",
+      "pPr": {
+        "pStyle": {
+          "val": "12"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "续",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "表",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.1",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "无偏向搜索模型的符号表",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 34,
+      "text": "符号",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "符号",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 36,
+      "text": "意义及说明",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "意义及说明",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 37,
+      "text": "f1,f2…fM",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "…",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 39,
+      "text": "系统中M个彼此不同的数据",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "系统中",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "个彼此不同的数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 40,
+      "text": "q1,q2,…qM",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "…",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 42,
+      "text": "数据的访问频度分布向量",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "数据的访问频度分布向量",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 43,
+      "text": "Ci",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 45,
+      "text": "数据fi的索引个数。亦即fi的应答结点的个数",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的索引个数。亦即",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的应答结点的个数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 46,
+      "text": "INVi",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 48,
+      "text": "数据fi的索引失效率。每1秒内失效的fi索引占全部fi索引的比例",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的索引失效率。每",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "秒内失效的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "索引占全部",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "索引的比例",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 49,
+      "text": "INV",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 51,
+      "text": "当数据具有相近的更新频度时，索引失效率用统一的INV表示",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "right": "397",
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "当数据具有相近的更新频度时，索引失效率用统一的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "表示",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 52,
+      "text": "INVmax",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "max",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 54,
+      "text": "，即所有失效率的最大值。如果不考虑数据之间更新频度的差异，则INVmax=INVi=INV",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "，即所有失效率的最大值。如果不考虑数据之间更新频度的差异，则",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "max",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "=",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "=",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "INV",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 55,
+      "text": "Rsearch, LS",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "R",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "L",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "S",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 57,
+      "text": "搜索消息冗余数和搜索消息的比特数。刻画搜索的消息转发开销",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "搜索消息冗余数和搜索消息的比特数。刻画搜索的消息转发开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 58,
+      "text": "Rupdate, LU",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "R",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "update",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "L",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "U",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 60,
+      "text": "维护消息冗余数和维护消息的比特数。刻画维护索引的消息开销",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "维护消息冗余数和维护消息的比特数。刻画维护索引的消息开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 61,
+      "text": "BWsearch,BWmaintain",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "maintain",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 63,
+      "text": "系统中搜索使用的总带宽开销和维护使用的总带宽开销",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "系统中搜索使用的总带宽开销和维护使用的总带宽开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 64,
+      "text": "BWtotal,bwpeer",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "total",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "bw",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "peer",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 66,
+      "text": "系统总带宽开销与单个结点上的带宽开销。是搜索与维护开销之和",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "系统总带宽开销与单个结点上的带宽开销。是搜索与维护开销之",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "szCs": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "和",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 67,
+      "text": "Ci*",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 69,
+      "text": "使带宽开销最小化的索引数量（指数据fi的索引）",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "使带宽开销最小化的索引数量（指数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的索引）",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 70,
+      "text": "bw*peer",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "bw",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "peer",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 72,
+      "text": "结点的理论带宽下限。当所有fi的索引数都等于对应的Ci*时取到",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "结点的理论带宽下限。当所有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的索引数都等于对应的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "时取到",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 73,
+      "text": "BA",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "BA",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 75,
+      "text": "结点的可用带宽约束。BA必须不小于bw*peer",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "结点的可用带宽约束。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "BA",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "必须不小于",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "bw",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "peer",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 76,
+      "text": "Hops",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Hops",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 78,
+      "text": "单次搜索所需遍历的不同结点数的期望。刻画搜索等待时间",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "单次搜索所需遍历的不同结点数的期望。刻画搜索等待时间",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 79,
+      "text": "ξ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "ξ",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 81,
+      "text": "索引的放大系数，即约束下的最优索引数Ci与最小化带宽的索引数Ci*的比值。ξ由带宽约束BA与带宽下限bw*peer的比值决定",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "索引的放大系数，即约束下的最优索引数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "与最小化带宽的索引数",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "的比值。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "ξ",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "由带宽约束",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "BA",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "与带宽下限",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "bw",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "*",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "superscript"
+            }
+          }
+        },
+        {
+          "text": "peer",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的比值决定",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 82,
+      "text": "θ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "θ",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 84,
+      "text": "与N无关的系统常量，刻画了搜索与维护之间的折衷关系。用θ可简化索引比例ki的表示",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "60",
+          "after": "60"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "与",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "无关的系统常量，刻画了搜索与维护之间的折衷关系。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "用",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "θ",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "可简化索引比例",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "k",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的表示",
+          "rPr": {
+            "iCs": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "kern": {
+              "val": "2"
+            },
+            "sz": {
+              "val": "22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 85,
+      "text": "3.3.1  单次搜索的带宽开销以及系统总带宽开销",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.3.1  ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "单次搜索的带宽开销以及系统总带宽开销",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 86,
+      "text": "无偏向性搜索中，单次搜索的带宽开销与索引数量之间存在如下基本关系。考虑对等网络中有N个结点，其中有Cf个结点存放了数据f的索引（存储数据f本身的那些结点也被认为包含f的索引）。称这些结点为f的“应答结点”，只有它们能够应答以f为目标的搜索。考虑某个需要f的结点发起一次搜索请求，显然当且仅当该请求的消息被转发到f的应答结点上，该请求才能够得以回应。因此，每当搜索消息被发送到一个尚未遍历过的新结点，如果该结点上具有f的索引，则搜索过程结束，成功返回；否则搜索继续，寻求尚未遍历的新结点。于是搜索成为一个随机过程，可用贝努利实验来刻画。由于总共有N个结点，其中有Cf个应答结点，所以无偏向性搜索中新遍历的结点可使搜索结束的概率是Cf / N。由贝努利实验可知，搜索到f需要遍历的结点个数的期望满足：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "无偏向性搜索中，单次搜索的带宽开销与索引数量之间存在如下基本关系。考虑对等网络中有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "个结点，其中有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "个结点存放了数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的索引（存储数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "本身的那些结点也被认为包含",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的索引）。称这些结点为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的“应答结点”，只有它们能够应答以",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "为目标的搜索。考虑某个需要",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的结点发起一次搜索请求，显然当且仅当该请求的消息被转发到",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的应答结点上，该请求才能够得以回应。因此，每当搜索消息被发送到一个尚未遍历过的新结点，如果该结点上具有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的索引，则搜索过程结束，成功返回；否则搜索继续，寻求尚未遍历的新结点。于是搜索成为一个随机过程，可用贝努利实验来刻画。由于总共有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "个结点，其中有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "个应答结点，所以无偏向性搜索中新遍历的结点可使搜索结束的概率是",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": " / ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "。由贝努利实验可知，搜索到",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "需要遍历的结点个数的期望满足：",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 89,
+      "text": "（3-1）",
+      "pPr": {
+        "pStyle": {
+          "val": "Style15"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "120",
+          "after": "120"
+        },
+        "ind": {
+          "firstLine": "2"
+        },
+        "jc": {
+          "val": "right"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "3-1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "）",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 90,
+      "text": "为了计算搜索过程占用的网络带宽，定义“搜索消息冗余数”Rsearch，表示平均每个结点在一次搜索请求中收到的重复的搜索消息数。显然在一次搜索中，同一个结点收到多次转发来搜索消息是没有意义的，只会带来带宽的浪费。但是现实搜索算法并非都是无冗余的，譬如洪泛算法使用并发的消息广播，搜索消息会沿着不同路径多次抵达同一结点，因此其Rsearch值就相当大。随机走步算法通过记录遍历结点的办法实现无冗余的消息转发，可以认为Rsearch＝1。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "为了计算搜索过程占用的网络带宽，定义“搜索消息冗余数”",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "R",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "，表示平均每个结点在一次搜索请求中收到的重复的搜索消息数。显然在一次搜索中，同一个结点收到多次转发来搜索消息是没有意义的，只会带来带宽的浪费。但是现实搜索算法并非都是无冗余的，譬如洪泛算法使用并发的消息广播，搜索消息会沿着不同路径多次抵达同一结点，因此其",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "R",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "值就相当大。随机走步算法通过记录遍历结点的办法实现无冗余的消息转发，可以认为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "R",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "＝",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 91,
+      "text": "从上述分析可以看出，索引分布数量对搜索效率和带宽消耗有很大影响。数据索引分布越广（即Cf越大），该数据就越容易被搜索，使用的搜索带宽也就越小。另一方面索引会因为所指向的实际数据的变动而失效，需要持续不断地维护，否则就有效的数据索引个数就会不断减少，直至为零。因此系统总带宽开销BWtotal由搜索带宽开销BWsearch和索引的维护带宽开销BWmaintain两部分组成的，即：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "从上述分析可以看出，索引分布数量对搜索效率和带宽消耗有很大影响。数据索引分布越广（即",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "越大），该数据就越容易被搜索，使用的搜索带宽也就越小。另一方面索引会因为所指向的实际数据的变动而失效，需要持续不断地维护，否则就有效的数据索引个数就会不断减少，直至为零。因此系统总带宽开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "total",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "由搜索带宽开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "和索引的维护带宽开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "maintain",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "两部分组成的，即：",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 94,
+      "text": "（3-2）",
+      "pPr": {
+        "pStyle": {
+          "val": "Style15"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "120",
+          "after": "120"
+        },
+        "ind": {
+          "firstLine": "2"
+        },
+        "jc": {
+          "val": "right"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "3-2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "）",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 95,
+      "text": "下面分别计算BWsearch和BWmaintain，从而得到性能模型。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "下面分别计算",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "和",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "maintain",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "，从而得到性能模型。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 96,
+      "text": "3.3.2  索引分布与搜索开销的关系",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading3"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "3.3.2  ",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        },
+        {
+          "text": "索引分布与搜索开销的关系",
+          "rPr": {
+            "rFonts": {
+              "cs": "Arial"
+            },
+            "szCs": {
+              "val": "26"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 97,
+      "text": "首先计算搜索的带宽开销。考虑P2P系统有N个结点，共享了M个彼此不同的数据f1, f2, ..., fM。注意同一个数据f可以有多个副本（replicas）存储在不同结点上。这种情况在P2P中很常见，譬如P2P文件共享应用中的多个文件副本，以及多服务器联合服务时由不同服务器提供的相同服务。这里副本不计入M中。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "首先计算搜索的带宽开销。考虑",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "系统有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "N",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "个结点，共享了",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "个",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "彼此不同",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "的数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ", ..., ",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "。注意同一个数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "可以有多个副本（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "replicas",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）存储在不同结点上。这种情况在",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中很常见，譬如",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P2P",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "文件共享应用中的多个文件副本，以及多服务器联合服务时由不同服务器提供的相同服务。这里副本不计入",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 98,
+      "text": "考察数据索引分布情况，设数据fi有Ci个索引。为计算搜索带宽消耗，需要考察系统中搜索任务以及在各数据上的分配。假设系统单位时间内总共产生Q次搜索。每一个数据根据自身情况，具有不同的访问频度（popularity）。访问频度高的（即热门的）数据被搜索和使用的更多，因而在Q中占据更多的份额。我们用分布向量q = <q1,q2,…qM>表示各数据的访问频度，其中qi为正数，表示对于一次系统中出现的搜索，数据fi满足搜索条件的概率，而全部qi的总合为1。这样根据3.2.2小节可得到搜索带宽开销BWsearch为：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "考察数据索引分布情况，设数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "有",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "C",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "个索引。为计算搜索带宽消耗，需要考察系统中搜索任务以及在各数据上的分配。假设系统单位时间内总共产生",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "Q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "次搜索。每一个数据根据自身情况，具有不同的",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "访问频度",
+          "rPr": {
+            "b": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "popularity",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "）。访问频度高的（即热门的）数据被搜索和使用的更多，因而在",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "Q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中占据更多的份额。我们用分布向量",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": " = <",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ",…",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "M",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": ">",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "表示各数据的访问频度，其中",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "为正数，表示对于一次系统中出现的搜索，数据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "f",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "满足搜索条件的概率，而全部",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "q",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "i",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "的总合为",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "1",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "。这样根据",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "3.2.2",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "小节可得到搜索带宽开销",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "BW",
+          "rPr": {
+            "i": {
+              "value": ""
+            },
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "search",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "vertAlign": {
+              "val": "subscript"
+            }
+          }
+        },
+        {
+          "text": "为：",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 101,
+      "text": "（3-3）",
+      "pPr": {
+        "pStyle": {
+          "val": "Style15"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "120",
+          "after": "120"
+        },
+        "ind": {
+          "firstLine": "2"
+        },
+        "jc": {
+          "val": "right"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "（",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "3-3",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        },
+        {
+          "text": "）",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 103,
+      "text": "第4章  对等网络中宽松约束的一般性搜索的理论模型",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "ind": {
+          "hanging": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "第",
+          "rPr": {}
+        },
+        {
+          "text": "4",
+          "rPr": {}
+        },
+        {
+          "text": "章",
+          "rPr": {}
+        },
+        {
+          "text": "对等网络中宽松约束的一般性搜索",
+          "rPr": {}
+        },
+        {
+          "text": "的理论模型",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 104,
+      "text": "如果章标题过长需要分行书写的话，则第一行段前空24磅，段后空0磅，回车后，第二行段前空0磅，段后空24磅。见上面的样式例子。",
+      "pPr": {
+        "pStyle": {
+          "val": "Style13"
+        },
+        "widowControl": {
+          "val": "false"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "ind": {
+          "firstLine": "480"
+        },
+        "jc": {
+          "val": "both"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "如果章标题过长需要分行书写的话，则第一行段前空",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "24",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "磅，段后空",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "0",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "磅，回车后，第二行段前空",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "0",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "磅，段后空",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "24",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "磅。见上面的样式例子。",
+          "rPr": {
+            "spacing": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header2.xml": {
+      "text": "第4章  对等网络中宽松约束的一般性搜索的理论模型",
+      "fields": []
+    },
+    "word/header1.xml": {
+      "text": "第3章  对等网络中宽松约束的一般性搜索的理论模型",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "9",
+      "fields": [
+        " PAGE "
+      ]
+    },
+    "word/footer2.xml": {
+      "text": "10",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {
+    "word/footnotes.xml": [
+      {
+        "attributes": {
+          "id": "0",
+          "type": "separator"
+        },
+        "text": "",
+        "xml": "<ns0:footnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:id=\"0\" ns0:type=\"separator\"><ns0:p><ns0:pPr><ns0:rPr><ns0:sz ns0:val=\"12\" /></ns0:rPr></ns0:pPr><ns0:r><ns0:separator /></ns0:r></ns0:p></ns0:footnote>"
+      },
+      {
+        "attributes": {
+          "id": "1",
+          "type": "continuationSeparator"
+        },
+        "text": "",
+        "xml": "<ns0:footnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:id=\"1\" ns0:type=\"continuationSeparator\"><ns0:p><ns0:pPr><ns0:rPr><ns0:sz ns0:val=\"12\" /></ns0:rPr></ns0:pPr><ns0:r><ns0:continuationSeparator /></ns0:r></ns0:p></ns0:footnote>"
+      },
+      {
+        "attributes": {
+          "id": "2"
+        },
+        "text": " 脚注处序号“①，……，⑩”的字体是“正文”，不是“上标”，序号与脚注内容文字之间空半个汉字符，脚注的段落格式为：单倍行距，段前空0磅，段后空0磅，悬挂缩进1.5字符；字号为小五号字，汉字用宋体，外文用Times New Roman体。",
+        "xml": "<ns0:footnote xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" ns0:id=\"2\"><ns0:p><ns0:pPr><ns0:pStyle ns0:val=\"Footnote\" /><ns0:spacing ns0:lineRule=\"auto\" ns0:line=\"240\" /><ns0:ind ns0:left=\"270\" ns0:hanging=\"270\" /><ns0:jc ns0:val=\"both\" /><ns0:rPr /></ns0:pPr><ns0:r><ns0:rPr><ns0:rStyle ns0:val=\"FootnoteCharacters\" /></ns0:rPr><ns0:footnoteRef /></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:tab /><ns0:t xml:space=\"preserve\"> </ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>脚注处序号“</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:rFonts ns0:ascii=\"宋体;SimSun\" ns0:hAnsi=\"宋体;SimSun\" ns0:cs=\"宋体;SimSun\" /><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>①</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>，……，</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:rFonts ns0:ascii=\"宋体;SimSun\" ns0:hAnsi=\"宋体;SimSun\" ns0:cs=\"宋体;SimSun\" /><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>⑩</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>”的字体是“正文”，不是“上标”，序号与脚注内容文字之间空半个汉字符，脚注的段落格式为：单倍行距，段前空</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>0</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>磅，段后空</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>0</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>磅，悬挂缩进</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>1.5</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>字符；字号为小五号字，汉字用宋体，外文用</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>Times New Roman</ns0:t></ns0:r><ns0:r><ns0:rPr><ns0:spacing ns0:val=\"0\" /></ns0:rPr><ns0:t>体。</ns0:t></ns0:r></ns0:p></ns0:footnote>"
+      }
+    ]
+  }
+}

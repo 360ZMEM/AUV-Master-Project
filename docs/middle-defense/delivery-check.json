@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "created_at_utc": "2026-10-13T06:05:34.567956+00:00",
+  "artifact_manifest": [
+    {
+      "name": "school_pdf",
+      "path": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+      "sha256": "bfbae2d0d4ee73c14e68c590096a11326121bc27a988b90f62e196e49e9e29cc",
+      "size_bytes": 856206
+    },
+    {
+      "name": "main_pdf",
+      "path": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+      "sha256": "5f1b951e1a54d26cdaaf93f7f5939a7b347dc16dc5f01fb215053969ac4b68d9",
+      "size_bytes": 856253
+    },
+    {
+      "name": "original_thesis_pdf",
+      "path": "thuthesis/auv-thesis.pdf",
+      "sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977",
+      "size_bytes": 9574308
+    },
+    {
+      "name": "shared_report_entry",
+      "path": "thuthesis/auv-middle-defense.tex",
+      "sha256": "876fce1dab72a341c84bb8bd6bf9fb504219ea19b7ab7c8c5ed0b9033b030af2",
+      "size_bytes": 607
+    },
+    {
+      "name": "main_wrapper",
+      "path": "thuthesis/auv-middle-defense-main.tex",
+      "sha256": "2e720cef8c0e7d1901a8de58dc62ce4eee84358f22c483d0c5d591574f464ee8",
+      "size_bytes": 89
+    },
+    {
+      "name": "school_wrapper",
+      "path": "thuthesis/auv-middle-defense-school.tex",
+      "sha256": "7b6fc906080d5f3f835509cfd289278d26b09804fc822f7fdeb989cd1cb8d773",
+      "size_bytes": 107
+    },
+    {
+      "name": "template_lock",
+      "path": "thuthesis/upstream-lock.json",
+      "sha256": "ac3eb2291b536f314825f1c14bd220f122d2a2f001fb3e5cd0733e4be1517e67",
+      "size_bytes": 1904
+    },
+    {
+      "name": "source_evidence",
+      "path": "docs/middle-defense/evidence.tsv",
+      "sha256": "51a0445f11aec05e882166fd0cda4102b2d1a7d9ef95fc1d314d16ccfdba4b14",
+      "size_bytes": 60715
+    },
+    {
+      "name": "actual_outline",
+      "path": "docs/middle-defense/OUTLINE.md",
+      "sha256": "cac0e61016233e566bce9a7c367d5a6ff039ca2ab49c6fd716d74a13c757b3d7",
+      "size_bytes": 7914
+    },
+    {
+      "name": "context",
+      "path": "docs/middle-defense/CONTEXT.md",
+      "sha256": "d7fd18205ca5481d0d9afd5fa4034ff2b7da4494f602a75fa3915913f4a374c7",
+      "size_bytes": 5908
+    },
+    {
+      "name": "acceptance",
+      "path": "docs/middle-defense/ACCEPTANCE.md",
+      "sha256": "a0be32d2815bcf6ecfbeb046490a572d63ca753df01a82dfc4d0d3396958b219",
+      "size_bytes": 24082
+    },
+    {
+      "name": "word_format_audit",
+      "path": "docs/middle-defense/word-audit/findings.md",
+      "sha256": "4dbae04b00d7edd7905f2dd7ad85b96cfbe730cf562a49bb83daf21fa9f7a511",
+      "size_bytes": 13600
+    },
+    {
+      "name": "original_backup",
+      "path": "docs/middle-defense/baseline/thuthesis-before.tar.gz",
+      "sha256": "01f70683cccabedeccc54b95bb50b9dde28c7e56e3a5efb26624865f431be993",
+      "size_bytes": 12343808
+    },
+    {
+      "name": "integrity_audit",
+      "path": "docs/middle-defense/delivery-integrity.json",
+      "sha256": "a89bede0337ae6bd1cf4f94c0b3d1131cfbb0f9c936c21bd000482f8aba31ef2",
+      "size_bytes": 117663
+    },
+    {
+      "name": "thesis_regression",
+      "path": "docs/middle-defense/thesis-regression.json",
+      "sha256": "c7bb7a2dff7709d85923a1bb33d090e3beea01cce36767e2d4d312b7f8258d05",
+      "size_bytes": 43874
+    },
+    {
+      "name": "figure_audit",
+      "path": "docs/middle-defense/figure-size-check.json",
+      "sha256": "ed59172cc9874a4dbdb384393660b4a439f40be1e925e5a9bd6c99fce2bf4815",
+      "size_bytes": 96259
+    },
+    {
+      "name": "school_visual_audit",
+      "path": "docs/middle-defense/visual-school.json",
+      "sha256": "0a1a3c7e122e42991270d8e5e41cb21eb5e97b2b1faab293ecbf4706dec6eb9e",
+      "size_bytes": 13007
+    },
+    {
+      "name": "main_visual_audit",
+      "path": "docs/middle-defense/visual-main.json",
+      "sha256": "445574ed46443580f424c84416b1d8db8250cf44a8bc9bb4472e83f6838b3092",
+      "size_bytes": 17294
+    },
+    {
+      "name": "chapter_1",
+      "path": "thuthesis/middle/chap01-background.tex",
+      "sha256": "7e71fd9096d327f9120df263e1b5277f184d334f4c70cb462c1e1e554a5e0084",
+      "size_bytes": 5629
+    },
+    {
+      "name": "chapter_2",
+      "path": "thuthesis/middle/chap02-design.tex",
+      "sha256": "8f5aec913d053bdea902b197fc6aab781994c5feeda2035019a0292412113a4f",
+      "size_bytes": 8486
+    },
+    {
+      "name": "chapter_3",
+      "path": "thuthesis/middle/chap03-magnetic.tex",
+      "sha256": "7ab69a759e1b16b2f7e4e35b182fef0a3dc9ae94ebb6920fe02dbc26b3940254",
+      "size_bytes": 17195
+    },
+    {
+      "name": "chapter_4",
+      "path": "thuthesis/middle/chap04-systems.tex",
+      "sha256": "2ccf660038226afa72a1e90cacfaf6b1bcfa1f8f1bbf8844074dc75337cc0940",
+      "size_bytes": 24078
+    },
+    {
+      "name": "chapter_5",
+      "path": "thuthesis/middle/chap05-discussion.tex",
+      "sha256": "5edcf8e1feed8d15c8c12db81ca5f49ebdb2c64b8239954a70ea88e0173283b7",
+      "size_bytes": 5770
+    },
+    {
+      "name": "chapter_6",
+      "path": "thuthesis/middle/chap06-plan.tex",
+      "sha256": "7cd808412eada95d5ff8cb52d805b62f4f08925009c3b9874662dcf67fc92cb2",
+      "size_bytes": 7895
+    }
+  ],
+  "checks": {
+    "five_build_entries_exit_zero": true,
+    "final_pdf_pages_each": 34,
+    "final_pdf_sha_bound_to_68_viewed_page_images": true,
+    "final_figure_placements_at_least_9pt": 18,
+    "v7_7_1_loaded_by_both_builds": true,
+    "evidence_rows": 112,
+    "required_acceptance_rows": 30,
+    "acceptance_all_pass": true,
+    "integrity_report_pass": true,
+    "original_thesis_regression_pass": true
+  },
+  "scope_note": "候选稿和已提供材料的完整性；学院中期专用栏目、原生Word一致性和研究实物验证状态详见ACCEPTANCE.md。"
+}

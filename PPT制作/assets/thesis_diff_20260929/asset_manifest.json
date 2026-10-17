@@ -1,0 +1,4027 @@
+{
+  "date": "2026-09-29",
+  "current_pdf": {
+    "path": "thuthesis/auv-thesis.pdf",
+    "pages": 169,
+    "sha256": "3f4a42a4da0f95b6bd271f8c45af90a7658d359e5f9dee70a7d5fcba17770ee0"
+  },
+  "full_pdf": {
+    "path": "thuthesis/backups/20260928_full_236p/auv-thesis_full_236p.pdf",
+    "pages": 236,
+    "sha256": "576a1634802e18e8d8baa207d9511dc517ddb0380b637632cf8c09f19aabf941"
+  },
+  "source_backup": {
+    "path": "thuthesis/backups/20260928_full_236p/source_and_figures.complete.tar.gz",
+    "sha256": "ab003dce5fd43805a56e2302723d060d1c3d9b318d4acd11248eb01559d7341c",
+    "file_count": 450
+  },
+  "scope": "Markdown defense asset synchronization; no experiment, thesis source, PDF or PPTX edits",
+  "retained_figures": [
+    {
+      "label": "fig:ch05-adc-enob-osr",
+      "audit_label": "fig:ch05-adc-enob-osr",
+      "caption": "SK2301 短接输入噪声表征：（左）噪声 ENOB 与过采样率的关系；（右）不同采样率下的幅度谱密度",
+      "assets": [
+        "hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "hardware/adc_enob/ch4_noise_spectral_density.pdf"
+      ],
+      "old_figure_number": "5.1",
+      "old_printed_page": 86,
+      "old_pdf_page": 108,
+      "retained": true,
+      "new_figure_number": "5.1",
+      "new_printed_page": 85,
+      "new_pdf_page": 106,
+      "resolved_assets": [
+        "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+        "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+        "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390"
+      }
+    },
+    {
+      "label": "fig:ch05-mag-chain-noise-ros",
+      "audit_label": "fig:ch05-mag-chain-noise-ros",
+      "caption": "ADC--TMR 实测背景噪声 ROS2 闭环对照：清洁、同协方差高斯与实测回放三种磁观测输入在同一 Direction A 轻量闭环中的横偏 p95、平均置信度和噪声幅值 p95",
+      "assets": [
+        "experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf"
+      ],
+      "old_figure_number": "5.2",
+      "old_printed_page": 88,
+      "old_pdf_page": 110,
+      "retained": true,
+      "new_figure_number": "5.2",
+      "new_printed_page": 87,
+      "new_pdf_page": 108,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf": "af37bbce92b659d76cb36ee8cc345f32d2877312f2daaef5a6351bc05ff87244"
+      }
+    },
+    {
+      "label": "fig:ch05-mag-residual",
+      "audit_label": "fig:ch05-mag-residual",
+      "caption": "磁外参标定残差收敛曲线（仿真标定框架，n=1；验证状态为通过，非真机转台外场标定）",
+      "assets": [
+        "experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf"
+      ],
+      "old_figure_number": "5.3",
+      "old_printed_page": 89,
+      "old_pdf_page": 111,
+      "retained": true,
+      "new_figure_number": "5.3",
+      "new_printed_page": 88,
+      "new_pdf_page": 109,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf": "3e0532dd065601dfccf0c08dbea73e9300fc58a00e354b1ab1d6da69ba13661d"
+      }
+    },
+    {
+      "label": "fig:ch05-joint-trajectory",
+      "audit_label": "fig:ch05-joint-trajectory",
+      "caption": "TMR 运动轨迹与 45 Hz 磁场模量空间分布",
+      "assets": [
+        "experiments/magnetic_joint/trajectory_colored_by_b.pdf"
+      ],
+      "old_figure_number": "5.4",
+      "old_printed_page": 90,
+      "old_pdf_page": 112,
+      "retained": true,
+      "new_figure_number": "5.4",
+      "new_printed_page": 89,
+      "new_pdf_page": 110,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf": "a97bcac5b4def0be2ac74ed9b7a994683a34ce9fe74b3c1944cb820e2acac983"
+      }
+    },
+    {
+      "label": "fig:ch05-joint-complex-fit",
+      "audit_label": "fig:ch05-joint-complex-fit",
+      "caption": "三轴 45 Hz 复 I/Q 测量与 Biot--Savart 模型联合拟合",
+      "assets": [
+        "experiments/magnetic_joint/complex_iq_fit.pdf"
+      ],
+      "old_figure_number": "5.5",
+      "old_printed_page": 91,
+      "old_pdf_page": 113,
+      "retained": true,
+      "new_figure_number": "5.5",
+      "new_printed_page": 90,
+      "new_pdf_page": 111,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875"
+      }
+    },
+    {
+      "label": "fig:ch05-eskf-param-sensitivity",
+      "audit_label": "fig:ch05-eskf-param-sensitivity",
+      "caption": "ES-EKF 噪声参数敏感性（单包离线扫描，n=1）：（左）各噪声参数与水平 RMSE 的皮尔逊相关系数，仅 _DVL 强相关；（右）单参数扫描下水平 RMSE 相对基线的偏移，全程停留在 9.06 m 量级",
+      "assets": [
+        "experiments/state_estimation/eskf_param_sensitivity.pdf"
+      ],
+      "old_figure_number": "5.6",
+      "old_printed_page": 94,
+      "old_pdf_page": 116,
+      "retained": true,
+      "new_figure_number": "5.6",
+      "new_printed_page": 93,
+      "new_pdf_page": 114,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf": "aa26f00e483bed340e3c9a4d8088beac7d05e5fa6bae11d0eb1d140e49ee4dd1"
+      }
+    },
+    {
+      "label": "fig:ch05-terrain-tracking",
+      "audit_label": "fig:ch05-terrain-tracking",
+      "caption": "PID/MPC 地形跟随的分层深度响应（原生 PVS 执行链，n=1）：两类制导均经同一 PVS 深度--航向内环",
+      "assets": [
+        "terrain_following/terrain_tz_tracking_pid_mpc.pdf"
+      ],
+      "old_figure_number": "5.7",
+      "old_printed_page": 99,
+      "old_pdf_page": 121,
+      "retained": true,
+      "new_figure_number": "5.7",
+      "new_printed_page": 97,
+      "new_pdf_page": 118,
+      "resolved_assets": [
+        "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133"
+      }
+    },
+    {
+      "label": "fig:ch05-terrain-3d",
+      "audit_label": "fig:ch05-terrain-3d",
+      "caption": "三维海底曲面与 PID 地形跟随真值轨迹（确定性地形重建 + 沿程 DVL 验证锚，n=1）：重建海床与 DVL 沿程海床的相关系数约 1.00、均方根偏差约 0.03 m",
+      "assets": [
+        "terrain_following/terrain_3d_pid_terrain_trajectory.pdf"
+      ],
+      "old_figure_number": "5.8",
+      "old_printed_page": 100,
+      "old_pdf_page": 122,
+      "retained": true,
+      "new_figure_number": "5.8",
+      "new_printed_page": 98,
+      "new_pdf_page": 119,
+      "resolved_assets": [
+        "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d"
+      }
+    },
+    {
+      "label": "fig:ch05-r13-v2-evidence",
+      "audit_label": "fig:ch05-r13-v2-control-rate",
+      "caption": "不确定性感知控制的分源置信证据三面板：(a) 保守 UA 对控制变化率的影响；(b) 授权模式分布；(c) p_track 分布",
+      "assets": [
+        "experiments/control/r13_v2_control_rate_paired.pdf",
+        "experiments/control/r13_v2_authority_modes_ua.pdf",
+        "experiments/control/r13_v2_p_track_boxplot_ua.pdf"
+      ],
+      "old_figure_number": "5.9",
+      "old_printed_page": 108,
+      "old_pdf_page": 130,
+      "retained": true,
+      "new_figure_number": "5.9",
+      "new_printed_page": 106,
+      "new_pdf_page": 127,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+        "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+        "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf": "5edce17574204a4da9f8ac7c6ba4d7f69bd9258851b7eb783fbbcd143045738c",
+        "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+        "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf": "e14c39e51df414d6d4763c2840aedbbcd28688ad5f76eef34a4e8dd6fe3edc1d"
+      }
+    },
+    {
+      "label": "fig:ch05-dlt-scorecard-run1",
+      "audit_label": "fig:ch05-dlt-scorecard-run1",
+      "caption": "DL/T 1278 风格评分卡（数字孪生确定性先验；总分 24、最差项 16、注意状态，扣分为埋深不足与埋深精度未达 0.15 m；三次运行评分一致）",
+      "assets": [
+        "cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf"
+      ],
+      "old_figure_number": "5.10",
+      "old_printed_page": 112,
+      "old_pdf_page": 134,
+      "retained": true,
+      "new_figure_number": "5.10",
+      "new_printed_page": 110,
+      "new_pdf_page": 131,
+      "resolved_assets": [
+        "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf": "7234b1aeade1fba540b2901b8af4f2feef8a9ca6513cf5f709978e615a8e7235"
+      }
+    },
+    {
+      "label": "fig:ch05-pvs-closedloop-recovery",
+      "audit_label": "fig:ch05-pvs-closedloop-recovery",
+      "caption": "六自由度闭环先验畸变恢复与在线先验修正接受时序（数字孪生确定性先验、静态位姿扭曲、缆在车下满足磁观测前提、窗口内判定，中/重档各 n=3）",
+      "assets": [
+        "cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf"
+      ],
+      "old_figure_number": "5.59",
+      "old_printed_page": 167,
+      "old_pdf_page": 189,
+      "retained": true,
+      "new_figure_number": "5.11",
+      "new_printed_page": 111,
+      "new_pdf_page": 132,
+      "resolved_assets": [
+        "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf": "859c47a06296721168de9c70748f9d2132e9ffc3a100fd80c9f520a95e6c8237"
+      }
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-stability",
+      "audit_label": "fig:ch05-fwhm-v2-stability",
+      "caption": "FWHM 与对照方法的稳定性比较（每场景每方法 200 个固定种子）",
+      "assets": [
+        "experiments/fwhm_v2/11_fwhm_stability_comparison.pdf"
+      ],
+      "old_figure_number": "5.11",
+      "old_printed_page": 115,
+      "old_pdf_page": 137,
+      "retained": true,
+      "new_figure_number": "5.12",
+      "new_printed_page": 113,
+      "new_pdf_page": 134,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359"
+      }
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-sensitivity",
+      "audit_label": "fig:ch05-fwhm-v2-sensitivity",
+      "caption": "FWHM 与对照方法对增益、噪声和场形模型的敏感度",
+      "assets": [
+        "experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf"
+      ],
+      "old_figure_number": "5.12",
+      "old_printed_page": 116,
+      "old_pdf_page": 138,
+      "retained": true,
+      "new_figure_number": "5.13",
+      "new_printed_page": 113,
+      "new_pdf_page": 134,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf": "1687bf17b5d110e8a24a9f7256b3288be17c2b99d6652dca9f8089416a42a9a2"
+      }
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-shape-guard",
+      "audit_label": "fig:ch05-fwhm-v2-shape-guard",
+      "caption": "跨场形模型失配的识别与拒绝：独立留出种子验证",
+      "assets": [
+        "experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf"
+      ],
+      "old_figure_number": "5.13",
+      "old_printed_page": 117,
+      "old_pdf_page": 139,
+      "retained": true,
+      "new_figure_number": "5.14",
+      "new_printed_page": 114,
+      "new_pdf_page": 135,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca"
+      }
+    },
+    {
+      "label": "fig:ch05-current-magnetic-simulation-closure",
+      "audit_label": "fig:ch05-current-magnetic-simulation-closure",
+      "caption": "当前磁巡检算法的限定条件仿真复核。阴影为 70 m 核验段，两端缓冲不计为核心覆盖；全部核心 Track 样本计入误差，埋深保持独立空值。地图横纵轴比例不同。",
+      "assets": [
+        "experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf"
+      ],
+      "old_figure_number": "5.67",
+      "old_printed_page": 179,
+      "old_pdf_page": 201,
+      "retained": true,
+      "new_figure_number": "5.15",
+      "new_printed_page": 116,
+      "new_pdf_page": 137,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-finite-current-clock",
+      "audit_label": "fig:ch05-inspection-finite-current-clock",
+      "caption": "显式横流预算下的稳态巡检、反向阶跃失败与 Hold 时基",
+      "assets": [
+        "experiments/fwhm_v2/61_finite_track_current_envelope_and_clock.pdf"
+      ],
+      "old_figure_number": "5.37",
+      "old_printed_page": 143,
+      "old_pdf_page": 165,
+      "retained": true,
+      "new_figure_number": "5.16",
+      "new_printed_page": 117,
+      "new_pdf_page": 138,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/61_finite_track_current_envelope_and_clock.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/61_finite_track_current_envelope_and_clock.pdf": "60ca19c6c95624c4f890af7107c54cf5df28ef891adae0d249d6d18ff01a318d"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-ros",
+      "audit_label": "fig:ch05-inspection-shallow-survey-ros",
+      "caption": "连续多横切接入 ROS 巡检链后的轨迹、横偏与分层拒绝（合成身份和横流）",
+      "assets": [
+        "experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf"
+      ],
+      "old_figure_number": "5.56",
+      "old_printed_page": 161,
+      "old_pdf_page": 183,
+      "retained": true,
+      "new_figure_number": "5.17",
+      "new_printed_page": 118,
+      "new_pdf_page": 139,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf": "bd97c5a7491c465269749a3a02047b3d4e51488218602b3f50c79758462a9310"
+      }
+    },
+    {
+      "label": "fig:ch05-pc104-firmware-echo",
+      "audit_label": "fig:ch05-pc104-firmware-echo",
+      "caption": "PC104/VxWorks 固件接收时间戳回显统计（300 s、3000 帧安全零执行器下行、1001 个可配对接收事件）",
+      "assets": [
+        "hardware/pc104_timing/pc104_firmware_echo_timing.pdf"
+      ],
+      "old_figure_number": "5.61",
+      "old_printed_page": 170,
+      "old_pdf_page": 192,
+      "retained": true,
+      "new_figure_number": "5.18",
+      "new_printed_page": 120,
+      "new_pdf_page": 141,
+      "resolved_assets": [
+        "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f"
+      }
+    },
+    {
+      "label": "fig:ch05-pc104-layered-fault",
+      "audit_label": "fig:ch05-pc104-layered-fault",
+      "caption": "真实 PC104 零执行器故障注入、Remote 降级与恢复统一时间线",
+      "assets": [
+        "hardware/pc104_fault_injection/pc104_fault_timeline.pdf"
+      ],
+      "old_figure_number": "5.62",
+      "old_printed_page": 172,
+      "old_pdf_page": 194,
+      "retained": true,
+      "new_figure_number": "5.19",
+      "new_printed_page": 122,
+      "new_pdf_page": 143,
+      "resolved_assets": [
+        "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0"
+      }
+    },
+    {
+      "label": "fig:ch05-pc104-cross-layer-fault",
+      "audit_label": "fig:ch05-pc104-cross-layer-fault",
+      "caption": "真实 PC104--ROS2--行为树同步故障响应时间线（零执行器）",
+      "assets": [
+        "hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf"
+      ],
+      "old_figure_number": "5.63",
+      "old_printed_page": 173,
+      "old_pdf_page": 195,
+      "retained": true,
+      "new_figure_number": "5.20",
+      "new_printed_page": 123,
+      "new_pdf_page": 144,
+      "resolved_assets": [
+        "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4"
+      }
+    },
+    {
+      "label": "fig:ch05-pc104-cross-layer-soak",
+      "audit_label": "fig:ch05-pc104-cross-layer-soak",
+      "caption": "真实 PC104--ROS2 零执行器全栈 30 min 稳态（RSS 为旧启动根进程口径）",
+      "assets": [
+        "hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf"
+      ],
+      "old_figure_number": "5.64",
+      "old_printed_page": 174,
+      "old_pdf_page": 196,
+      "retained": true,
+      "new_figure_number": "5.21",
+      "new_printed_page": 124,
+      "new_pdf_page": 145,
+      "resolved_assets": [
+        "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685"
+      }
+    },
+    {
+      "label": "fig:ch05-jetson-mpc-realtime",
+      "audit_label": "fig:ch05-jetson-mpc-realtime",
+      "caption": "Jetson Orin NX 上 MPC 稳态与约束压力档的求解 wall time 分布及成功率（25 W、8 核；求解器微基准）",
+      "assets": [
+        "../real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf"
+      ],
+      "old_figure_number": "5.65",
+      "old_printed_page": 175,
+      "old_pdf_page": 197,
+      "retained": true,
+      "new_figure_number": "5.22",
+      "new_printed_page": 125,
+      "new_pdf_page": 146,
+      "resolved_assets": [
+        "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf"
+      ],
+      "asset_sha256": {
+        "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27"
+      }
+    }
+  ],
+  "removed_from_body_figures": [
+    {
+      "label": "fig:ch05-inspection-contract-process",
+      "audit_label": "fig:ch05-inspection-contract-process",
+      "caption": "模型失配下的巡检过程与独立输出许可：未标定埋深不发布",
+      "assets": [
+        "experiments/fwhm_v2/15_inspection_contract_process.pdf"
+      ],
+      "old_figure_number": "5.14",
+      "old_printed_page": 119,
+      "old_pdf_page": 141,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/15_inspection_contract_process.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/15_inspection_contract_process.pdf": "571d024bd75be523e714132227b559caf5ab053ac315c2da5bb79a24e9e2b3c1"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-contract-insight",
+      "audit_label": "fig:ch05-inspection-contract-insight",
+      "caption": "位置与埋深分解的原理及有界侧翼移心的流程效果",
+      "assets": [
+        "experiments/fwhm_v2/16_inspection_contract_insight.pdf"
+      ],
+      "old_figure_number": "5.15",
+      "old_printed_page": 120,
+      "old_pdf_page": 142,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/16_inspection_contract_insight.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/16_inspection_contract_insight.pdf": "0ce465092feb0f5d0f5ba121289656196d12fe60d1d7d95f439a6c8a5b3bd008"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-propulsion-envelope",
+      "audit_label": "fig:ch05-inspection-propulsion-envelope",
+      "caption": "巡检控制输出与原生动力学推进、转向包络的错配诊断",
+      "assets": [
+        "experiments/fwhm_v2/17_inspection_propulsion_envelope.pdf"
+      ],
+      "old_figure_number": "5.16",
+      "old_printed_page": 121,
+      "old_pdf_page": 143,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/17_inspection_propulsion_envelope.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/17_inspection_propulsion_envelope.pdf": "0615ee6ec7a4d95b38113510e43e62d6cda6c2f16c8cbec6e328e7a4d4123afb"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-pvs-counterexample",
+      "audit_label": "fig:ch05-inspection-pvs-counterexample",
+      "caption": "原生 PVS 诊断闭环：速度修正不能单独补偿搜索与横切的转弯半径约束；停止缓冲可避免本例越界",
+      "assets": [
+        "experiments/fwhm_v2/18_inspection_pvs_closed_loop_counterexample.pdf"
+      ],
+      "old_figure_number": "5.17",
+      "old_printed_page": 122,
+      "old_pdf_page": 144,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/18_inspection_pvs_closed_loop_counterexample.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/18_inspection_pvs_closed_loop_counterexample.pdf": "2151933950fa19f88532d6711ed3a357aaa91dd6d809dfe4dd0502e64bd82b05"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-pvs",
+      "audit_label": "fig:ch05-inspection-flythrough-pvs",
+      "caption": "原生 PVS 下的浅角度穿越诊断：任务航迹可达，埋深场形证据仍不足",
+      "assets": [
+        "experiments/fwhm_v2/19_inspection_flythrough_pvs.pdf"
+      ],
+      "old_figure_number": "5.18",
+      "old_printed_page": 123,
+      "old_pdf_page": 145,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/19_inspection_flythrough_pvs.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/19_inspection_flythrough_pvs.pdf": "f35f5d69c4caa06b05428c1f464436be30f244a3489e1c4a5e776c476f6e81de"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-ros-pvs",
+      "audit_label": "fig:ch05-inspection-flythrough-ros-pvs",
+      "caption": "ROS2--PID--协议--原生 PVS 巡检闭环的横流与故障诊断",
+      "assets": [
+        "experiments/fwhm_v2/20_flythrough_ros_pvs_current_and_fault.pdf"
+      ],
+      "old_figure_number": "5.19",
+      "old_printed_page": 124,
+      "old_pdf_page": 146,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/20_flythrough_ros_pvs_current_and_fault.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/20_flythrough_ros_pvs_current_and_fault.pdf": "d37ba5210cbbaac72b119654f4ff5cfcc19cce3f25ef9493c351ea54e86dabbd"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-safety",
+      "audit_label": "fig:ch05-inspection-flythrough-safety",
+      "caption": "受限巡检闭环的两层执行许可与持续故障保持",
+      "assets": [
+        "experiments/fwhm_v2/21_flythrough_safety_chain.pdf"
+      ],
+      "old_figure_number": "5.20",
+      "old_printed_page": 125,
+      "old_pdf_page": 147,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/21_flythrough_safety_chain.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/21_flythrough_safety_chain.pdf": "d5b7fd363ea3a588546585c9c84af7ad81077843c8e952417dcfdbbd519c06ff"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-side-hint",
+      "audit_label": "fig:ch05-inspection-side-hint",
+      "caption": "侧向先验驱动的穿越方向选择与错误方向拒止（合成磁源、零流）",
+      "assets": [
+        "experiments/fwhm_v2/22_side_hint_flythrough_paths.pdf"
+      ],
+      "old_figure_number": "5.21",
+      "old_printed_page": 126,
+      "old_pdf_page": 148,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/22_side_hint_flythrough_paths.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/22_side_hint_flythrough_paths.pdf": "b984b60951ea91a2f85f3b3be26cc172df2315842d554276345517ab281bd293"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-side-gate",
+      "audit_label": "fig:ch05-inspection-side-gate",
+      "caption": "侧向输入启动门与条件化巡检包络的逐例复核",
+      "assets": [
+        "experiments/fwhm_v2/23_side_hint_gate_and_envelope.pdf"
+      ],
+      "old_figure_number": "5.22",
+      "old_printed_page": 127,
+      "old_pdf_page": 149,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/23_side_hint_gate_and_envelope.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/23_side_hint_gate_and_envelope.pdf": "dfe466f2a1f6a38682e9c56196109b6c1a2b771fb8f41eb686d87ac1d3f124b5"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-offset-envelope",
+      "audit_label": "fig:ch05-inspection-offset-envelope",
+      "caption": "侧向先验区间的半高交点覆盖预算与双向幅值扫掠",
+      "assets": [
+        "experiments/fwhm_v2/24_side_hint_offset_envelope.pdf"
+      ],
+      "old_figure_number": "5.23",
+      "old_printed_page": 128,
+      "old_pdf_page": 150,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/24_side_hint_offset_envelope.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/24_side_hint_offset_envelope.pdf": "ed8536cace48461abfbe6b9cd846c4f3307869e889444736d02dd7c654b1c531"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-current-offset",
+      "audit_label": "fig:ch05-inspection-current-offset",
+      "caption": "峰顶假双峰修正与侧偏--横流组合角点的任务终态",
+      "assets": [
+        "experiments/fwhm_v2/25_current_offset_peak_gate.pdf"
+      ],
+      "old_figure_number": "5.24",
+      "old_printed_page": 129,
+      "old_pdf_page": 151,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/25_current_offset_peak_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/25_current_offset_peak_gate.pdf": "e62b6e90f4e3b347997a1205b75df4ec567b10dc25092276f8fa2c60ca32761e"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-current-rejoin",
+      "audit_label": "fig:ch05-inspection-current-rejoin",
+      "caption": "横流条件化上游接入段与完整沿缆横偏的离散角点复核",
+      "assets": [
+        "experiments/fwhm_v2/26_current_conditioned_rejoin.pdf"
+      ],
+      "old_figure_number": "5.25",
+      "old_printed_page": 130,
+      "old_pdf_page": 152,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/26_current_conditioned_rejoin.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/26_current_conditioned_rejoin.pdf": "aa4908c8e166248bee1fabbf488c9cf5bfa5e71d25e187b04de13ee242ea303b"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-navigation-quality",
+      "audit_label": "fig:ch05-inspection-navigation-quality",
+      "caption": "导航观测质量与沿缆横偏发布门的闭环验证",
+      "assets": [
+        "experiments/fwhm_v2/27_navigation_quality_gate.pdf"
+      ],
+      "old_figure_number": "5.26",
+      "old_printed_page": 131,
+      "old_pdf_page": 153,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/27_navigation_quality_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/27_navigation_quality_gate.pdf": "d9ca73be19ae0311dbb652f00758d00a36d7dd0bd4fc45363110961264fc40f9"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-static-hint-bias",
+      "audit_label": "fig:ch05-inspection-static-hint-bias",
+      "caption": "窄静态地图整体偏移时的目标身份反例",
+      "assets": [
+        "experiments/fwhm_v2/54_static_hint_bias_admission.pdf"
+      ],
+      "old_figure_number": "5.27",
+      "old_printed_page": 133,
+      "old_pdf_page": 155,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/54_static_hint_bias_admission.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/54_static_hint_bias_admission.pdf": "3a977bc9a70748e553eb55a1c81ba84a1ab89698d17573c8659ff4add3e7a62b"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-identity-gate",
+      "audit_label": "fig:ch05-inspection-identity-gate",
+      "caption": "磁异常几何中心、在线贴峰质量与目标身份佐证的区别",
+      "assets": [
+        "experiments/fwhm_v2/28_multisource_identity_gate.pdf"
+      ],
+      "old_figure_number": "5.28",
+      "old_printed_page": 134,
+      "old_pdf_page": 156,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/28_multisource_identity_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/28_multisource_identity_gate.pdf": "9ab402302bfc748797e73c7b0cb92bf31f8c0d6d52a2f16f970b396d07b1ec99"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-identity",
+      "audit_label": "fig:ch05-inspection-runtime-identity",
+      "caption": "运行时目标身份线索门控的受控合成闭环验证",
+      "assets": [
+        "experiments/fwhm_v2/29_runtime_sonar_identity_gate.pdf"
+      ],
+      "old_figure_number": "5.29",
+      "old_printed_page": 135,
+      "old_pdf_page": 157,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/29_runtime_sonar_identity_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/29_runtime_sonar_identity_gate.pdf": "848c1174d6b7df4635fe05df73cef88369c39f291244eaccaa828e715fcbb973"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-identity-continuity",
+      "audit_label": "fig:ch05-inspection-runtime-identity-continuity",
+      "caption": "跟踪期目标身份线索连续性与故障停止的受控合成闭环",
+      "assets": [
+        "experiments/fwhm_v2/30_runtime_identity_continuity.pdf"
+      ],
+      "old_figure_number": "5.30",
+      "old_printed_page": 136,
+      "old_pdf_page": 158,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/30_runtime_identity_continuity.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/30_runtime_identity_continuity.pdf": "dffa4e12ba652aa9ccd90c5b570b14629749fd0dec74b7b7547f8da7a7d27840"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-sonar-map-bias-recovery",
+      "audit_label": "fig:ch05-inspection-sonar-map-bias-recovery",
+      "caption": "偏移地图下运行时身份授权顺序及任务出口",
+      "assets": [
+        "experiments/fwhm_v2/55_sonar_map_bias_recovery.pdf"
+      ],
+      "old_figure_number": "5.31",
+      "old_printed_page": 137,
+      "old_pdf_page": 159,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/55_sonar_map_bias_recovery.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/55_sonar_map_bias_recovery.pdf": "0ae95fa3ce487a2b81ac245297ddd8c9247ab541984da2e27f977b310f61a9fa"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-magnetic-isolation",
+      "audit_label": "fig:ch05-inspection-magnetic-isolation",
+      "caption": "邻近磁源融合时横向几何许可的目标身份边界",
+      "assets": [
+        "experiments/fwhm_v2/56_magnetic_isolation_envelope.pdf"
+      ],
+      "old_figure_number": "5.32",
+      "old_printed_page": 138,
+      "old_pdf_page": 160,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/56_magnetic_isolation_envelope.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/56_magnetic_isolation_envelope.pdf": "96a4d985ba899e39ad16037838abbef00b073d4b6ac6c4629620f37ff07c729c"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-target-anchor",
+      "audit_label": "fig:ch05-inspection-runtime-target-anchor",
+      "caption": "声磁共同误关联时的独立目标锚点确认门",
+      "assets": [
+        "experiments/fwhm_v2/57_runtime_target_anchor_joint_wrong.pdf"
+      ],
+      "old_figure_number": "5.33",
+      "old_printed_page": 139,
+      "old_pdf_page": 161,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/57_runtime_target_anchor_joint_wrong.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/57_runtime_target_anchor_joint_wrong.pdf": "e3706fe9986ac92bb86d13aae082b277148272ececbce0216cce32ae8ec7ff52"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-target-exclusive-corridor",
+      "audit_label": "fig:ch05-inspection-target-exclusive-corridor",
+      "caption": "局部目标锚点的近邻可分辨性与专属走廊预算",
+      "assets": [
+        "experiments/fwhm_v2/58_target_exclusive_corridor_budget.pdf"
+      ],
+      "old_figure_number": "5.34",
+      "old_printed_page": 140,
+      "old_pdf_page": 162,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/58_target_exclusive_corridor_budget.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/58_target_exclusive_corridor_budget.pdf": "3a3ea09d6ca7233b12ea747f46e20e3c65e85b3c3ab91847a6fc0e9f2c774468"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-track-route-corridor",
+      "audit_label": "fig:ch05-inspection-track-route-corridor",
+      "caption": "有限 Track 中目标关联改指的首周期撤权与正常任务",
+      "assets": [
+        "experiments/fwhm_v2/59_track_identity_route_corridor.pdf"
+      ],
+      "old_figure_number": "5.35",
+      "old_printed_page": 141,
+      "old_pdf_page": 163,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/59_track_identity_route_corridor.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/59_track_identity_route_corridor.pdf": "d913ee70764be233144c7e8dadeac5a2af92bc54aad30f70df5c7957b3324f8d"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-route-online-deviation",
+      "audit_label": "fig:ch05-inspection-route-online-deviation",
+      "caption": "有限巡检段的在线横偏撤权与零命令后超界漂移",
+      "assets": [
+        "experiments/fwhm_v2/60_route_deviation_withdrawal_and_drift.pdf"
+      ],
+      "old_figure_number": "5.36",
+      "old_printed_page": 142,
+      "old_pdf_page": 164,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/60_route_deviation_withdrawal_and_drift.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/60_route_deviation_withdrawal_and_drift.pdf": "2b98612f46b1099a14b61688d579d334e9dba49e435e5c1514e541fe6d9b8907"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-track-transient",
+      "audit_label": "fig:ch05-inspection-track-transient",
+      "caption": "同幅横流的时序差异、提前撤权及撤权后的物理侧移",
+      "assets": [
+        "experiments/fwhm_v2/63_track_transient_early_withdrawal_and_coast.pdf"
+      ],
+      "old_figure_number": "5.38",
+      "old_printed_page": 144,
+      "old_pdf_page": 166,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/63_track_transient_early_withdrawal_and_coast.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/63_track_transient_early_withdrawal_and_coast.pdf": "ada6bbbc5ebea2edd8e3a19de7947e3c8313b0b0fcdb75879ac8541f968d14ad"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-task-outcome",
+      "audit_label": "fig:ch05-inspection-task-outcome",
+      "caption": "巡检任务到端、埋深发布与执行许可的独立输出",
+      "assets": [
+        "experiments/fwhm_v2/62_inspection_task_depth_authority_outcomes.pdf"
+      ],
+      "old_figure_number": "5.39",
+      "old_printed_page": 145,
+      "old_pdf_page": 167,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/62_inspection_task_depth_authority_outcomes.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/62_inspection_task_depth_authority_outcomes.pdf": "4f43fecf45cc496919a9032c08910dbf5abe99deea84b808d524a9f541d073a9"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-identity-hold-drift",
+      "audit_label": "fig:ch05-inspection-identity-hold-drift",
+      "caption": "身份故障撤权后的原生动力学漂移与有限走廊余量",
+      "assets": [
+        "experiments/fwhm_v2/31_identity_hold_drift.pdf"
+      ],
+      "old_figure_number": "5.40",
+      "old_printed_page": 146,
+      "old_pdf_page": 168,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/31_identity_hold_drift.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/31_identity_hold_drift.pdf": "248dfeb6c821955e7ecb2f05651419df234cf0ea57acf6e8e6d0ca19187858db"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-bounded-hold",
+      "audit_label": "fig:ch05-inspection-bounded-hold",
+      "caption": "身份故障后限时 Hold 的空间预算与非执行型处置告警",
+      "assets": [
+        "experiments/fwhm_v2/32_bounded_hold_disposition.pdf"
+      ],
+      "old_figure_number": "5.41",
+      "old_printed_page": 147,
+      "old_pdf_page": 169,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/32_bounded_hold_disposition.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/32_bounded_hold_disposition.pdf": "827fffcb7cddf6e4f651de5b9c40c18ad6e208dbe331b76f1b01b1cee1635e90"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-route-hold-admission",
+      "audit_label": "fig:ch05-inspection-route-hold-admission",
+      "caption": "浅角度巡检任务的走廊预检与限时 Hold 净距预算",
+      "assets": [
+        "experiments/fwhm_v2/35_route_hold_admission.pdf"
+      ],
+      "old_figure_number": "5.42",
+      "old_printed_page": 149,
+      "old_pdf_page": 171,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/35_route_hold_admission.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/35_route_hold_admission.pdf": "c041a92636752a89702ede1a3ad691f1824061033ba0003f9e9f6992046d7adf"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-operational-status",
+      "audit_label": "fig:ch05-inspection-operational-status",
+      "caption": "巡检定位状态与桥自治执行许可的分离",
+      "assets": [
+        "experiments/fwhm_v2/36_localization_vs_autonomy_authority.pdf"
+      ],
+      "old_figure_number": "5.43",
+      "old_printed_page": 149,
+      "old_pdf_page": 171,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/36_localization_vs_autonomy_authority.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/36_localization_vs_autonomy_authority.pdf": "d57d2af258f82c2c16a253199c2fdc4d3b3e02927788871051814bc46303d783"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-process-restarts",
+      "audit_label": "fig:ch05-inspection-process-restarts",
+      "caption": "独立进程合成巡检的任务重复性与故障后输出诊断",
+      "assets": [
+        "experiments/fwhm_v2/37_inspection_process_restart_diagnostics.pdf"
+      ],
+      "old_figure_number": "5.44",
+      "old_printed_page": 150,
+      "old_pdf_page": 172,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/37_inspection_process_restart_diagnostics.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/37_inspection_process_restart_diagnostics.pdf": "5f7ae2e38554f23e7b76b09e324d21ae33da2d3f32ae05dd8a2f494a662879d1"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-nav-disposition",
+      "audit_label": "fig:ch05-inspection-nav-disposition",
+      "caption": "短时导航故障后感知恢复与执行许可锁存的分层诊断",
+      "assets": [
+        "experiments/fwhm_v2/38_inspection_nav_dropout_disposition.pdf"
+      ],
+      "old_figure_number": "5.45",
+      "old_printed_page": 151,
+      "old_pdf_page": 173,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/38_inspection_nav_dropout_disposition.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/38_inspection_nav_dropout_disposition.pdf": "2abc6ce5294e1fad93e746f0a4b50493f4bbddd7f4bea9774008f52c9c982d50"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shadow-scene-gate",
+      "audit_label": "fig:ch05-inspection-shadow-scene-gate",
+      "caption": "影子巡检入口对数字孪生场景回退的显示来源门控",
+      "assets": [
+        "experiments/fwhm_v2/39_shadow_scene_truth_gate.pdf"
+      ],
+      "old_figure_number": "5.46",
+      "old_printed_page": 152,
+      "old_pdf_page": 174,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/39_shadow_scene_truth_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/39_shadow_scene_truth_gate.pdf": "c9b330841f8c8d6baf2c8c006855d7543da0aa4630879ea84a224b43273c0acf"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shadow-raw-sensor-gate",
+      "audit_label": "fig:ch05-inspection-shadow-raw-sensor-gate",
+      "caption": "影子巡检原始传感器链的 IMU 失鲜导航门控对照",
+      "assets": [
+        "experiments/fwhm_v2/40_shadow_raw_sensor_imu_gate.pdf"
+      ],
+      "old_figure_number": "5.47",
+      "old_printed_page": 153,
+      "old_pdf_page": 175,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/40_shadow_raw_sensor_imu_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/40_shadow_raw_sensor_imu_gate.pdf": "f95eb4fb7c3e62d3fd053bfbf82ea63d79f008135ce43c5382c45afd25184a6b"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-wall-stamp-replay",
+      "audit_label": "fig:ch05-inspection-wall-stamp-replay",
+      "caption": "墙钟巡检入口对 IMU 时间戳重放的导航与能力门控",
+      "assets": [
+        "experiments/fwhm_v2/41_wall_clock_imu_stamp_replay.pdf"
+      ],
+      "old_figure_number": "5.48",
+      "old_printed_page": 154,
+      "old_pdf_page": 176,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/41_wall_clock_imu_stamp_replay.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/41_wall_clock_imu_stamp_replay.pdf": "d7d3366b69c205e15e406f8ffff1a8bccec32c50ec90f59b7f1ff173bd0da631"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-protocol-imu-time",
+      "audit_label": "fig:ch05-inspection-protocol-imu-time",
+      "caption": "协议桥 IMU 组包时间门控的本地 UDP--ROS 正反对照",
+      "assets": [
+        "experiments/fwhm_v2/42_protocol_imu_packet_time_gate.pdf"
+      ],
+      "old_figure_number": "5.49",
+      "old_printed_page": 154,
+      "old_pdf_page": 176,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/42_protocol_imu_packet_time_gate.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/42_protocol_imu_packet_time_gate.pdf": "ff431a77b9fa351450d8a8e054ee0e19b9462d97a8f972c0e1edc572f7ad65ec"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-gx3-timer-gap",
+      "audit_label": "fig:ch05-inspection-gx3-timer-gap",
+      "caption": "原始 IMU 帧与 PC104 接收边界的时间来源缺口",
+      "assets": [
+        "experiments/fwhm_v2/43_gx3_timer_provenance_gap.pdf"
+      ],
+      "old_figure_number": "5.50",
+      "old_printed_page": 155,
+      "old_pdf_page": 177,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/43_gx3_timer_provenance_gap.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/43_gx3_timer_provenance_gap.pdf": "4008f4df0e0baab5dae9f62644b51376708f896e8fa49a98e74c89796a752285"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-sidecar-dvl-match",
+      "audit_label": "fig:ch05-inspection-sidecar-dvl-match",
+      "caption": "IMU 来源切换后 DVL 速度的同时间基准配对与错配拒绝（合成接口夹具）",
+      "assets": [
+        "experiments/fwhm_v2/44_sidecar_dvl_source_match.pdf"
+      ],
+      "old_figure_number": "5.51",
+      "old_printed_page": 156,
+      "old_pdf_page": 178,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/44_sidecar_dvl_source_match.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/44_sidecar_dvl_source_match.pdf": "d58423d476a40e01ac9a3ebd271275fe20a514ee8a6d3ffda556e62429012d9e"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-pvs",
+      "audit_label": "fig:ch05-inspection-shallow-zigzag-pvs",
+      "caption": "原生 PVS 连续浅角三横切的走廊可达性、局部测线与近距邻源反例",
+      "assets": [
+        "experiments/fwhm_v2/47_shallow_zigzag_pvs_envelope_3m.pdf"
+      ],
+      "old_figure_number": "5.52",
+      "old_printed_page": 157,
+      "old_pdf_page": 179,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/47_shallow_zigzag_pvs_envelope_3m.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/47_shallow_zigzag_pvs_envelope_3m.pdf": "98bcdce988ce69bd86ba177003b44e00e0d5735431e8ac1164cfe3a879b5098b"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-budget",
+      "audit_label": "fig:ch05-inspection-shallow-zigzag-budget",
+      "caption": "连续浅角三横切的解析几何可行域与原生 PVS 参考航迹余量",
+      "assets": [
+        "experiments/fwhm_v2/48_shallow_zigzag_geometry_budget_insight.pdf"
+      ],
+      "old_figure_number": "5.53",
+      "old_printed_page": 158,
+      "old_pdf_page": 180,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/48_shallow_zigzag_geometry_budget_insight.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/48_shallow_zigzag_geometry_budget_insight.pdf": "589b2107c9e47af1b69ed9f7851b91b1496b1df9c3bb023fb78f52e41d8bfe00"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-exit",
+      "audit_label": "fig:ch05-inspection-shallow-zigzag-exit",
+      "caption": "横流上游起步与浅角横切奇偶段数对后续接入几何的影响",
+      "assets": [
+        "experiments/fwhm_v2/49_shallow_zigzag_exit_parity.pdf"
+      ],
+      "old_figure_number": "5.54",
+      "old_printed_page": 158,
+      "old_pdf_page": 180,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/49_shallow_zigzag_exit_parity.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/49_shallow_zigzag_exit_parity.pdf": "67852782014c94530dd3c3d2b1ea2d2eed5136e2e2422f133f3daa691bcba909"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-track",
+      "audit_label": "fig:ch05-inspection-shallow-zigzag-track",
+      "caption": "连续浅角横切经合成身份门后的原生 PVS 接入、有限跟踪与拒绝路径",
+      "assets": [
+        "experiments/fwhm_v2/50_shallow_zigzag_pvs_rejoin_track.pdf"
+      ],
+      "old_figure_number": "5.55",
+      "old_printed_page": 159,
+      "old_pdf_page": 181,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/50_shallow_zigzag_pvs_rejoin_track.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/50_shallow_zigzag_pvs_rejoin_track.pdf": "b02340e5eb025f77e18e0c42fd5e559d4bbdd754de8833f1655210854e4267da"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-clock",
+      "audit_label": "fig:ch05-inspection-shallow-survey-clock",
+      "caption": "多横切身份失鲜后的仿真 Hold 时基、处置请求与持续流漂",
+      "assets": [
+        "experiments/fwhm_v2/52_shallow_survey_hold_clock_and_drift.pdf"
+      ],
+      "old_figure_number": "5.57",
+      "old_printed_page": 162,
+      "old_pdf_page": 184,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/52_shallow_survey_hold_clock_and_drift.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/52_shallow_survey_hold_clock_and_drift.pdf": "6a34cba82377b2b3c47705dc512f9b992f70fcbe20c823f39a70029fbc44729a"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-current-bias",
+      "audit_label": "fig:ch05-inspection-shallow-survey-current-bias",
+      "caption": "横流消息偏差注入下多横切扫描、接入和保守拒绝（单种子合成证据）",
+      "assets": [
+        "experiments/fwhm_v2/53_shallow_survey_current_report_bias.pdf"
+      ],
+      "old_figure_number": "5.58",
+      "old_printed_page": 163,
+      "old_pdf_page": 185,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/53_shallow_survey_current_report_bias.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/53_shallow_survey_current_report_bias.pdf": "10092fe11d56950764ada1783023328aaec9e787854e03ac3d3678047bc74ab0"
+      }
+    },
+    {
+      "label": "fig:ch05-pvs-closedloop-convergence",
+      "audit_label": "fig:ch05-pvs-closedloop-convergence",
+      "caption": "六自由度闭环先验畸变验收收敛（首轮到末轮失败面收敛与末轮验收裕度；达标源于物理与控制修正而非放宽阈值，中/重档各 n=3）",
+      "assets": [
+        "cable_acceptance/pvs_closedloop_acceptance_convergence.pdf"
+      ],
+      "old_figure_number": "5.60",
+      "old_printed_page": 168,
+      "old_pdf_page": 190,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.pdf": "f9a688e791512abf174b2884a7abdf88c4057a7416c29566caf53510c548afd5"
+      }
+    },
+    {
+      "label": "fig:ch05-inspection-same-session-receipt",
+      "audit_label": "fig:ch05-inspection-same-session-receipt",
+      "caption": "巡检候选的同次监督门与独立 DDS 接收来源时效诊断。图中是本机合成短探针；橙色菱形表示正向消息到达时来源年龄已超过本次声明限值，不代表实艇失效率。",
+      "assets": [
+        "experiments/fwhm_v2/64_same_session_ros_receipt_timeline.pdf"
+      ],
+      "old_figure_number": "5.66",
+      "old_printed_page": 178,
+      "old_pdf_page": 200,
+      "retained": false,
+      "resolved_assets": [
+        "docs/thesis/figures/experiments/fwhm_v2/64_same_session_ros_receipt_timeline.pdf"
+      ],
+      "asset_sha256": {
+        "docs/thesis/figures/experiments/fwhm_v2/64_same_session_ros_receipt_timeline.pdf": "3446c7a3f1048d8d0db7bd2e91b124e61f83a3fb755dc145d2e62642f01deffe"
+      }
+    }
+  ],
+  "source_files": [
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "old_lines": 1737,
+      "new_lines": 1149,
+      "old_sha256": "19030762ce0f1867acbd4163abc5a07e811db8ff2e9cfbbb836c02b974a28af2",
+      "new_sha256": "f378f75f8bedf183cdf253a93a8c4ac11c2a0448f39911bccd2abfaa364fbb06",
+      "removed_label_count": 49,
+      "added_label_count": 3
+    },
+    {
+      "file": "thuthesis/data/auv-chap06.tex",
+      "old_lines": 43,
+      "new_lines": 31,
+      "old_sha256": "68fb250da5eb12f032d02c391125faa0eb27f090077ab688de82e825eeabbeb7",
+      "new_sha256": "a423ed5c2e80fe7fa934baef0d413fd246c49dcace25704fc3b95cf2807527f8",
+      "removed_label_count": 0,
+      "added_label_count": 0
+    },
+    {
+      "file": "thuthesis/data/auv-appendix-a.tex",
+      "old_lines": 621,
+      "new_lines": 475,
+      "old_sha256": "228fc730a615d6c0abfeb2ba96e32dd1a2f1eb7011b7508831de11227992ea99",
+      "new_sha256": "43e6b7245b282c6682a594b403625752051ad28aebe48cde27316e30f155d9da",
+      "removed_label_count": 7,
+      "added_label_count": 0
+    }
+  ],
+  "source_label_changes": [
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "removed": [
+        {
+          "label": "fig:ch05-inspection-bounded-hold",
+          "number": "5.41",
+          "printed_page": 147
+        },
+        {
+          "label": "fig:ch05-inspection-contract-insight",
+          "number": "5.15",
+          "printed_page": 120
+        },
+        {
+          "label": "fig:ch05-inspection-contract-process",
+          "number": "5.14",
+          "printed_page": 119
+        },
+        {
+          "label": "fig:ch05-inspection-current-offset",
+          "number": "5.24",
+          "printed_page": 129
+        },
+        {
+          "label": "fig:ch05-inspection-current-rejoin",
+          "number": "5.25",
+          "printed_page": 130
+        },
+        {
+          "label": "fig:ch05-inspection-flythrough-pvs",
+          "number": "5.18",
+          "printed_page": 123
+        },
+        {
+          "label": "fig:ch05-inspection-flythrough-ros-pvs",
+          "number": "5.19",
+          "printed_page": 124
+        },
+        {
+          "label": "fig:ch05-inspection-flythrough-safety",
+          "number": "5.20",
+          "printed_page": 125
+        },
+        {
+          "label": "fig:ch05-inspection-gx3-timer-gap",
+          "number": "5.50",
+          "printed_page": 155
+        },
+        {
+          "label": "fig:ch05-inspection-identity-gate",
+          "number": "5.28",
+          "printed_page": 134
+        },
+        {
+          "label": "fig:ch05-inspection-identity-hold-drift",
+          "number": "5.40",
+          "printed_page": 146
+        },
+        {
+          "label": "fig:ch05-inspection-magnetic-isolation",
+          "number": "5.32",
+          "printed_page": 138
+        },
+        {
+          "label": "fig:ch05-inspection-nav-disposition",
+          "number": "5.45",
+          "printed_page": 151
+        },
+        {
+          "label": "fig:ch05-inspection-navigation-quality",
+          "number": "5.26",
+          "printed_page": 131
+        },
+        {
+          "label": "fig:ch05-inspection-offset-envelope",
+          "number": "5.23",
+          "printed_page": 128
+        },
+        {
+          "label": "fig:ch05-inspection-operational-status",
+          "number": "5.43",
+          "printed_page": 149
+        },
+        {
+          "label": "fig:ch05-inspection-process-restarts",
+          "number": "5.44",
+          "printed_page": 150
+        },
+        {
+          "label": "fig:ch05-inspection-propulsion-envelope",
+          "number": "5.16",
+          "printed_page": 121
+        },
+        {
+          "label": "fig:ch05-inspection-protocol-imu-time",
+          "number": "5.49",
+          "printed_page": 154
+        },
+        {
+          "label": "fig:ch05-inspection-pvs-counterexample",
+          "number": "5.17",
+          "printed_page": 122
+        },
+        {
+          "label": "fig:ch05-inspection-route-hold-admission",
+          "number": "5.42",
+          "printed_page": 149
+        },
+        {
+          "label": "fig:ch05-inspection-route-online-deviation",
+          "number": "5.36",
+          "printed_page": 142
+        },
+        {
+          "label": "fig:ch05-inspection-runtime-identity",
+          "number": "5.29",
+          "printed_page": 135
+        },
+        {
+          "label": "fig:ch05-inspection-runtime-identity-continuity",
+          "number": "5.30",
+          "printed_page": 136
+        },
+        {
+          "label": "fig:ch05-inspection-runtime-target-anchor",
+          "number": "5.33",
+          "printed_page": 139
+        },
+        {
+          "label": "fig:ch05-inspection-same-session-receipt",
+          "number": "5.66",
+          "printed_page": 178
+        },
+        {
+          "label": "fig:ch05-inspection-shadow-raw-sensor-gate",
+          "number": "5.47",
+          "printed_page": 153
+        },
+        {
+          "label": "fig:ch05-inspection-shadow-scene-gate",
+          "number": "5.46",
+          "printed_page": 152
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-survey-clock",
+          "number": "5.57",
+          "printed_page": 162
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-survey-current-bias",
+          "number": "5.58",
+          "printed_page": 163
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-zigzag-budget",
+          "number": "5.53",
+          "printed_page": 158
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-zigzag-exit",
+          "number": "5.54",
+          "printed_page": 158
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-zigzag-pvs",
+          "number": "5.52",
+          "printed_page": 157
+        },
+        {
+          "label": "fig:ch05-inspection-shallow-zigzag-track",
+          "number": "5.55",
+          "printed_page": 159
+        },
+        {
+          "label": "fig:ch05-inspection-side-gate",
+          "number": "5.22",
+          "printed_page": 127
+        },
+        {
+          "label": "fig:ch05-inspection-side-hint",
+          "number": "5.21",
+          "printed_page": 126
+        },
+        {
+          "label": "fig:ch05-inspection-sidecar-dvl-match",
+          "number": "5.51",
+          "printed_page": 156
+        },
+        {
+          "label": "fig:ch05-inspection-sonar-map-bias-recovery",
+          "number": "5.31",
+          "printed_page": 137
+        },
+        {
+          "label": "fig:ch05-inspection-static-hint-bias",
+          "number": "5.27",
+          "printed_page": 133
+        },
+        {
+          "label": "fig:ch05-inspection-target-exclusive-corridor",
+          "number": "5.34",
+          "printed_page": 140
+        },
+        {
+          "label": "fig:ch05-inspection-task-outcome",
+          "number": "5.39",
+          "printed_page": 145
+        },
+        {
+          "label": "fig:ch05-inspection-track-route-corridor",
+          "number": "5.35",
+          "printed_page": 141
+        },
+        {
+          "label": "fig:ch05-inspection-track-transient",
+          "number": "5.38",
+          "printed_page": 144
+        },
+        {
+          "label": "fig:ch05-inspection-wall-stamp-replay",
+          "number": "5.48",
+          "printed_page": 154
+        },
+        {
+          "label": "fig:ch05-pvs-closedloop-convergence",
+          "number": "5.60",
+          "printed_page": 168
+        },
+        {
+          "label": "tab:ch05-cable-algorithm-boundaries",
+          "number": "5.23",
+          "printed_page": 113
+        },
+        {
+          "label": "tab:ch05-decoupled-loop",
+          "number": "5.25",
+          "printed_page": 165
+        },
+        {
+          "label": "tab:ch05-distorted-prior",
+          "number": "5.24",
+          "printed_page": 164
+        },
+        {
+          "label": "tab:ch05-gui-pc104-staged",
+          "number": "5.27",
+          "printed_page": 169
+        }
+      ],
+      "added": [
+        {
+          "label": "sec:ch05-current-magnetic-closure",
+          "number": "5.5.5",
+          "printed_page": 116
+        },
+        {
+          "label": "sec:ch05-fwhm-stability",
+          "number": "5.5.3",
+          "printed_page": 112
+        },
+        {
+          "label": "sec:ch05-inspection-ros-boundary",
+          "number": "5.5.6",
+          "printed_page": 117
+        }
+      ]
+    },
+    {
+      "file": "thuthesis/data/auv-chap06.tex",
+      "removed": [],
+      "added": []
+    },
+    {
+      "file": "thuthesis/data/auv-appendix-a.tex",
+      "removed": [
+        {
+          "label": "eq:app-control-rate",
+          "number": "A.9",
+          "printed_page": 199
+        },
+        {
+          "label": "eq:app-fallback-rate",
+          "number": "A.10",
+          "printed_page": 199
+        },
+        {
+          "label": "eq:app-horizontal-error",
+          "number": "A.6",
+          "printed_page": 198
+        },
+        {
+          "label": "eq:app-nis",
+          "number": "A.8",
+          "printed_page": 199
+        },
+        {
+          "label": "eq:app-rmse-xy",
+          "number": "A.7",
+          "printed_page": 198
+        },
+        {
+          "label": "eq:app-terrain-rmse",
+          "number": "A.11",
+          "printed_page": 199
+        },
+        {
+          "label": "tab:ch05-evidence-inventory",
+          "number": "A.10",
+          "printed_page": 201
+        }
+      ],
+      "added": []
+    }
+  ],
+  "patches": {
+    "169_to_236": {
+      "path": "PPT制作/assets/thesis_diff_20260929/thesis_169_to_236.patch",
+      "sha256": "7ea3cc84c9609923d7d7f80e89af40ed8de5b4a377d171cf6fda3a67d4d01940",
+      "isolated_dry_run_and_apply": true,
+      "restored_files_equal": 3
+    },
+    "236_to_169": {
+      "path": "PPT制作/assets/thesis_diff_20260929/thesis_236_to_169.patch",
+      "sha256": "e6b1e0388fece2c4adf6951550f16bc53d0fffa5d40ddb34d90f7bfda48dbab0",
+      "isolated_dry_run_and_apply": true,
+      "restored_files_equal": 3
+    }
+  },
+  "publication_figures": [
+    {
+      "publication_number": 1,
+      "title": "A–D 搜索、埋深、噪声、间距参数仿真总览",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/01_cases_a_d_overview.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/01_cases_a_d_overview.pdf",
+      "png_sha256": "c12b41fa93a5d3ee27c893e479a007f6697a4d99d9e830f1595a5212c05bbab1",
+      "pdf_sha256": "6ba9c4d634ff3de8d80035df79c6e940d5f9620e7285bb011e49ba4549eeed91",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 2,
+      "title": "噪声与置信度：有效发布与拒绝代价",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/02_noise_confidence_insight.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/02_noise_confidence_insight.pdf",
+      "png_sha256": "b23c03f6f8910af0f5079af78593eaf68bf7ab9b06c0a4d3c0cdbd43a8297d29",
+      "pdf_sha256": "787db456aae77b44bc553d3037a90a763475c64fe2df4d77e6c458678220bfcc",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 3,
+      "title": "关键设计消融",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/03_key_design_ablations.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/03_key_design_ablations.pdf",
+      "png_sha256": "1d6a9d9181b6d7009bd504b02d59c490e4ef670ab29e01fba362eb1d0df3b1b0",
+      "pdf_sha256": "bbfce6ccf849e72b0953d87d693f9d5e17f9aa91bd4d072a7de5f8a5b10421e4",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 4,
+      "title": "磁检测与完整扫描质量门",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/04_detection_and_scan_gates.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/04_detection_and_scan_gates.pdf",
+      "png_sha256": "23f84cd76829dd8cf55a2a61b80ee202cb1ae7ce4ee7373006fcc06338449822",
+      "pdf_sha256": "49dc16a71f7655acfdac50e8f40e67150e5f6e21c4305528a9e0eb9ec1259a63",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 5,
+      "title": "场形系数一致性与错误换算",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/05_field_model_consistency.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/05_field_model_consistency.pdf",
+      "png_sha256": "c2c1991ac287e921726b3521d95cf202a7504dfd3ee7b09175405b0419c54242",
+      "pdf_sha256": "919834e523ca4c4c9c69e5fe35c8a729462288d4b4ed637df7c409934455ecc0",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 6,
+      "title": "轻量闭环与动力学／实物证据边界",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/06_closed_loop_evidence_boundary.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/06_closed_loop_evidence_boundary.pdf",
+      "png_sha256": "4bfe8ab1d1e15aac4a61ddf0e36ff9028d84ff8ce082024a93145f56c6a77a7a",
+      "pdf_sha256": "6af1450590d6a8bca899075a40cb307fbc2500aa693fad9baa1d905744dcc8fc",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 7,
+      "title": "真实 TMR 数据的质量门拒绝审计",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/07_tmr_quality_gate_audit.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/07_tmr_quality_gate_audit.pdf",
+      "png_sha256": "d2db8cf81a7585fcb38afced04c80291036dfed27c46f5915b6d9e471301e7c9",
+      "pdf_sha256": "e5621912e3f35d44a587d7a88954d1e02fd8dda5a808c3466ffd32cc7a77e9dd",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "方法或证据边界备份"
+    },
+    {
+      "publication_number": 8,
+      "title": "巡检任务地图与状态过程（早期合成演示）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/08_mission_process_plan_view.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/08_mission_process_plan_view.pdf",
+      "png_sha256": "31b4c4b72a6f595f94d8a2e5bb42f71fea652cf979919cd072eb2cc7feec620e",
+      "pdf_sha256": "900e64826725323e8ea908d0ebf86ce489a40d886b31bc9670b95cd94e7ba819",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "机制演示；不替代当前主结果"
+    },
+    {
+      "publication_number": 9,
+      "title": "显式 FWHM、左右交点与逐级扩幅机制",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/09_explicit_fwhm_profile.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/09_explicit_fwhm_profile.pdf",
+      "png_sha256": "e96c8c1a4a7c67a0afc7e414e0b89289427aa0e6a1091ff2b364b7751d6e1ecf",
+      "pdf_sha256": "aac0d2518fc332f416b605c7748307e92ac8ff44381bd0b7361367e65ce80289",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "机制演示；不替代当前主结果"
+    },
+    {
+      "publication_number": 10,
+      "title": "预测埋深与真值沿程比较（早期已知场形演示）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/10_burial_depth_reconstruction_process.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/10_burial_depth_reconstruction_process.pdf",
+      "png_sha256": "42fbe499364f5005ee79e8a572a59e08c8cb55cd2763ad39e877b339438a0366",
+      "pdf_sha256": "838a0a88a1241dae82fe724803705131b43b617f217a30b18265b687af3f70b4",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "机制演示；不替代当前主结果"
+    },
+    {
+      "publication_number": 11,
+      "title": "FWHM 与对照方法的稳定性比较（每场景每方法 200 个固定种子）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/11_fwhm_stability_comparison.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/11_fwhm_stability_comparison.pdf",
+      "png_sha256": "7476458357e756e2e45a68700607aab90547b1a2651b1bfd6ea7188de2062668",
+      "pdf_sha256": "d257a95f0962c56c073383634f3caa729e550995e2442b3adb5972eed5278496",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "冻结稳定性对照"
+    },
+    {
+      "publication_number": 12,
+      "title": "FWHM 与对照方法对增益、噪声和场形模型的敏感度",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/12_fwhm_stability_sensitivity.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/12_fwhm_stability_sensitivity.pdf",
+      "png_sha256": "d59195b3b1cb2ef9888aca1379bd261f9949fdf852224a4fcf33f27d78fc7a6f",
+      "pdf_sha256": "e0e73a55bd06f630415af225dbf53c912217bcddd15cb90c7ecf610527d7fcac",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "冻结稳定性对照"
+    },
+    {
+      "publication_number": 13,
+      "title": "跨场形模型失配的识别与拒绝：独立留出种子验证",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.pdf",
+      "png_sha256": "7b6ce7a08d85d4f3e8623c62c5b8e95d96e24be38b4f5231f729616fb6c60ffb",
+      "pdf_sha256": "218ba86178b939ad043ba299727881edcbfb7816298c92649cd42acde4d8368a",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "双模型解析留出；拒绝证据有条件"
+    },
+    {
+      "publication_number": 15,
+      "title": "模型失配下的巡检过程与独立输出许可：未标定埋深不发布",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/15_inspection_contract_process.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/15_inspection_contract_process.pdf",
+      "png_sha256": "ea60330401f69e5cfc522d47501ad23ee942a7ba306681e3ca222a1354850a37",
+      "pdf_sha256": "571d024bd75be523e714132227b559caf5ab053ac315c2da5bb79a24e9e2b3c1",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 16,
+      "title": "位置与埋深分解的原理及有界侧翼移心的流程效果",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/16_inspection_contract_insight.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/16_inspection_contract_insight.pdf",
+      "png_sha256": "0240121889aee68520451be8ca46f39ae9578c458ce1377084bb5631b59a00ec",
+      "pdf_sha256": "0ce465092feb0f5d0f5ba121289656196d12fe60d1d7d95f439a6c8a5b3bd008",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 19,
+      "title": "原生 PVS 下的浅角度穿越诊断：任务航迹可达，埋深场形证据仍不足",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/19_inspection_flythrough_pvs.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/19_inspection_flythrough_pvs.pdf",
+      "png_sha256": "729aea8e0c25f77aed68b1bf257eaaf62127ec67cea768c92bb2d2ad41b65d76",
+      "pdf_sha256": "f35f5d69c4caa06b05428c1f464436be30f244a3489e1c4a5e776c476f6e81de",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 20,
+      "title": "ROS2--PID--协议--原生 PVS 巡检闭环的横流与故障诊断",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/20_flythrough_ros_pvs_current_and_fault.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/20_flythrough_ros_pvs_current_and_fault.pdf",
+      "png_sha256": "8536456a4502ded6c95dda9e73da3e724c0afcffe38ed97f7efdd750eef69114",
+      "pdf_sha256": "d37ba5210cbbaac72b119654f4ff5cfcc19cce3f25ef9493c351ea54e86dabbd",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 21,
+      "title": "受限巡检闭环的两层执行许可与持续故障保持",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/21_flythrough_safety_chain.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/21_flythrough_safety_chain.pdf",
+      "png_sha256": "503f5aea06b96cbf1fa6b0bdbaaa7a4ae7b89a14030b73de3fff7adf0615c0bd",
+      "pdf_sha256": "d5b7fd363ea3a588546585c9c84af7ad81077843c8e952417dcfdbbd519c06ff",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 22,
+      "title": "侧向先验驱动的穿越方向选择与错误方向拒止（合成磁源、零流）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/22_side_hint_flythrough_paths.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/22_side_hint_flythrough_paths.pdf",
+      "png_sha256": "9af28b933f63b51e7e645b78c2dd86429ec556600b1460121efd2267022a5b8b",
+      "pdf_sha256": "b984b60951ea91a2f85f3b3be26cc172df2315842d554276345517ab281bd293",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 23,
+      "title": "侧向输入启动门与条件化巡检包络的逐例复核",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/23_side_hint_gate_and_envelope.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/23_side_hint_gate_and_envelope.pdf",
+      "png_sha256": "54ce969f57d1e4de59faa62edbe2f0ba839690b9b4954556f42342f4cff0977f",
+      "pdf_sha256": "dfe466f2a1f6a38682e9c56196109b6c1a2b771fb8f41eb686d87ac1d3f124b5",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 24,
+      "title": "侧向先验区间的半高交点覆盖预算与双向幅值扫掠",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/24_side_hint_offset_envelope.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/24_side_hint_offset_envelope.pdf",
+      "png_sha256": "851c00f2baf5a8fb56a66cfd035e4b27c58ed967218908aaa63aab0da9222764",
+      "pdf_sha256": "ed8536cace48461abfbe6b9cd846c4f3307869e889444736d02dd7c654b1c531",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 25,
+      "title": "峰顶假双峰修正与侧偏--横流组合角点的任务终态",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/25_current_offset_peak_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/25_current_offset_peak_gate.pdf",
+      "png_sha256": "f7505761c95862d0ef56f01f8e186a98ef5195fec3297ba74adae09e3335e0fd",
+      "pdf_sha256": "e62b6e90f4e3b347997a1205b75df4ec567b10dc25092276f8fa2c60ca32761e",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 26,
+      "title": "横流条件化上游接入段与完整沿缆横偏的离散角点复核",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/26_current_conditioned_rejoin.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/26_current_conditioned_rejoin.pdf",
+      "png_sha256": "1e86d57c7e862480a9f243247d75a3cf0d48674ba31fa89d7516112e23252265",
+      "pdf_sha256": "aa4908c8e166248bee1fabbf488c9cf5bfa5e71d25e187b04de13ee242ea303b",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 27,
+      "title": "导航观测质量与沿缆横偏发布门的闭环验证",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/27_navigation_quality_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/27_navigation_quality_gate.pdf",
+      "png_sha256": "bdb463664fe073e097d3a655bda42aed21ca91f3f5d2375c797cd0c67fc2d191",
+      "pdf_sha256": "d9ca73be19ae0311dbb652f00758d00a36d7dd0bd4fc45363110961264fc40f9",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 28,
+      "title": "磁异常几何中心、在线贴峰质量与目标身份佐证的区别",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/28_multisource_identity_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/28_multisource_identity_gate.pdf",
+      "png_sha256": "26ae0fb1e35bf4296a4382c66ca183b088c7d2b35478eaaf0a709cfdc849397c",
+      "pdf_sha256": "9ab402302bfc748797e73c7b0cb92bf31f8c0d6d52a2f16f970b396d07b1ec99",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 29,
+      "title": "运行时目标身份线索门控的受控合成闭环验证",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/29_runtime_sonar_identity_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/29_runtime_sonar_identity_gate.pdf",
+      "png_sha256": "dac5283470fd9baa39bc75bf23063c7139e152a3a9c53472e3aec652fcc0e08b",
+      "pdf_sha256": "848c1174d6b7df4635fe05df73cef88369c39f291244eaccaa828e715fcbb973",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 30,
+      "title": "跟踪期目标身份线索连续性与故障停止的受控合成闭环",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/30_runtime_identity_continuity.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/30_runtime_identity_continuity.pdf",
+      "png_sha256": "2303a5ecc63a9f6061e836f8e5d1e3c20cc9aa5c479bec9062225be3a9ae483d",
+      "pdf_sha256": "dffa4e12ba652aa9ccd90c5b570b14629749fd0dec74b7b7547f8da7a7d27840",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 31,
+      "title": "身份故障撤权后的原生动力学漂移与有限走廊余量",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/31_identity_hold_drift.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/31_identity_hold_drift.pdf",
+      "png_sha256": "1b9c6e90eb5f12dd17884f90ee2374544ed6104256bb8fef1ebfdf75994a5282",
+      "pdf_sha256": "248dfeb6c821955e7ecb2f05651419df234cf0ea57acf6e8e6d0ca19187858db",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 32,
+      "title": "身份故障后限时 Hold 的空间预算与非执行型处置告警",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/32_bounded_hold_disposition.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/32_bounded_hold_disposition.pdf",
+      "png_sha256": "3bba00068133aa3007772475457d3d39ae046ace12ecf30f577b282a9cddd2d5",
+      "pdf_sha256": "827fffcb7cddf6e4f651de5b9c40c18ad6e208dbe331b76f1b01b1cee1635e90",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 35,
+      "title": "浅角度巡检任务的走廊预检与限时 Hold 净距预算",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/35_route_hold_admission.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/35_route_hold_admission.pdf",
+      "png_sha256": "9c7021db6bdd160068a2ee7cfe28c19e966ba2d76ea7feff3dc82415b1b2963c",
+      "pdf_sha256": "c041a92636752a89702ede1a3ad691f1824061033ba0003f9e9f6992046d7adf",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 36,
+      "title": "巡检定位状态与桥自治执行许可的分离",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/36_localization_vs_autonomy_authority.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/36_localization_vs_autonomy_authority.pdf",
+      "png_sha256": "beb12fc9e6644b1eb793d54f910fe627150fcea5b02d249582df64479d0c7b65",
+      "pdf_sha256": "d57d2af258f82c2c16a253199c2fdc4d3b3e02927788871051814bc46303d783",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 37,
+      "title": "独立进程合成巡检的任务重复性与故障后输出诊断",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/37_inspection_process_restart_diagnostics.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/37_inspection_process_restart_diagnostics.pdf",
+      "png_sha256": "4f91f14580b6681f1c3fbee63a502884b8ddc87fe58c36138c8311040a440536",
+      "pdf_sha256": "5f7ae2e38554f23e7b76b09e324d21ae33da2d3f32ae05dd8a2f494a662879d1",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 38,
+      "title": "短时导航故障后感知恢复与执行许可锁存的分层诊断",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/38_inspection_nav_dropout_disposition.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/38_inspection_nav_dropout_disposition.pdf",
+      "png_sha256": "45aa069dd0241b0663a9f8db8b6d350b04fbe4e276787555b53c69ef36fc58ad",
+      "pdf_sha256": "2abc6ce5294e1fad93e746f0a4b50493f4bbddd7f4bea9774008f52c9c982d50",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 39,
+      "title": "影子巡检入口对数字孪生场景回退的显示来源门控",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/39_shadow_scene_truth_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/39_shadow_scene_truth_gate.pdf",
+      "png_sha256": "dd7f1106c214b322160c1518260d5673658799a42e7c4160472f358873e0fd81",
+      "pdf_sha256": "c9b330841f8c8d6baf2c8c006855d7543da0aa4630879ea84a224b43273c0acf",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 40,
+      "title": "影子巡检原始传感器链的 IMU 失鲜导航门控对照",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/40_shadow_raw_sensor_imu_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/40_shadow_raw_sensor_imu_gate.pdf",
+      "png_sha256": "2f1cbbe27f02e9a205b770291130740181498ad675ed5792014a13670e0066dd",
+      "pdf_sha256": "f95eb4fb7c3e62d3fd053bfbf82ea63d79f008135ce43c5382c45afd25184a6b",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 41,
+      "title": "墙钟巡检入口对 IMU 时间戳重放的导航与能力门控",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/41_wall_clock_imu_stamp_replay.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/41_wall_clock_imu_stamp_replay.pdf",
+      "png_sha256": "503a76c1fa6d62b775848bf8782ae3621246bf98bb57d485fdf8206f41dc6e01",
+      "pdf_sha256": "d7d3366b69c205e15e406f8ffff1a8bccec32c50ec90f59b7f1ff173bd0da631",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 42,
+      "title": "协议桥 IMU 组包时间门控的本地 UDP--ROS 正反对照",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/42_protocol_imu_packet_time_gate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/42_protocol_imu_packet_time_gate.pdf",
+      "png_sha256": "388e0f7b7f32cdfc7c81d2942e0eec9c54a89956e063724eae86f90f55954b8f",
+      "pdf_sha256": "ff431a77b9fa351450d8a8e054ee0e19b9462d97a8f972c0e1edc572f7ad65ec",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 43,
+      "title": "原始 IMU 帧与 PC104 接收边界的时间来源缺口",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/43_gx3_timer_provenance_gap.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/43_gx3_timer_provenance_gap.pdf",
+      "png_sha256": "62f5ceaed2f4a7b56a3e9da66e6cd6e852a6c15b9323a7567b151e2b03371f10",
+      "pdf_sha256": "4008f4df0e0baab5dae9f62644b51376708f896e8fa49a98e74c89796a752285",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 44,
+      "title": "IMU 来源切换后 DVL 速度的同时间基准配对与错配拒绝（合成接口夹具）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/44_sidecar_dvl_source_match.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/44_sidecar_dvl_source_match.pdf",
+      "png_sha256": "b6ffb98360121d8e799936972e214c3ad3f4ed4976f91c18a99555df501a0f67",
+      "pdf_sha256": "ffd4cc8499e606d798c043c653db90d187d3d29afd9c94b9cd2406104a0935f4",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 45,
+      "title": "宽先验折线走廊候选与几何限制",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/45_corridor_survey_geometry_candidate.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/45_corridor_survey_geometry_candidate.pdf",
+      "png_sha256": "d97e207d781a8695c46fab218ec18d491199fb5e2afa9e9d2c29eb1c37b9e73e",
+      "pdf_sha256": "7b50a232de468a2401f2e20b87524bc3e7220f3ea15bf6b0da89bd6654c4b4ee",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 46,
+      "title": "浅角多横切：横流与起始侧敏感性",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/46_shallow_zigzag_pvs_current_side.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/46_shallow_zigzag_pvs_current_side.pdf",
+      "png_sha256": "64b97dcb77e1a433a6cc072b23627ce797b3868ebdf9910a893830816c9eca1f",
+      "pdf_sha256": "7a4b911630c8575900b5fa1e49b34fb707a3df5110cc33e8326a00ad827a6af8",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 47,
+      "title": "原生 PVS 连续浅角三横切的走廊可达性、局部测线与近距邻源反例",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/47_shallow_zigzag_pvs_envelope_3m.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/47_shallow_zigzag_pvs_envelope_3m.pdf",
+      "png_sha256": "7a5168c01ba17a2551a59959077e356134c7c60ad929ffa08a95f950fd2be754",
+      "pdf_sha256": "90950881f8d1c9faabe21e4d1a958d8674fa9ed118a388162bceb7e4ae1b817d",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 48,
+      "title": "连续浅角三横切的解析几何可行域与原生 PVS 参考航迹余量",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/48_shallow_zigzag_geometry_budget_insight.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/48_shallow_zigzag_geometry_budget_insight.pdf",
+      "png_sha256": "56b4dfe37a3bf7e9d769bb581f56cae1712cb793815b059c8f39775eb31b8502",
+      "pdf_sha256": "6ffb7f638e2453d39d0a21b822f3332b53abe4d024c5259e3034b706154791b7",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 49,
+      "title": "横流上游起步与浅角横切奇偶段数对后续接入几何的影响",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/49_shallow_zigzag_exit_parity.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/49_shallow_zigzag_exit_parity.pdf",
+      "png_sha256": "5edaa1feec8213946976e185a9153aec61eaae8692a0dcda7643039af9140cb6",
+      "pdf_sha256": "14aa0e3acb47a467db1e4e182120ff0fffabae1534317bb0700ec6b891cd4266",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 50,
+      "title": "连续浅角横切经合成身份门后的原生 PVS 接入、有限跟踪与拒绝路径",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/50_shallow_zigzag_pvs_rejoin_track.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/50_shallow_zigzag_pvs_rejoin_track.pdf",
+      "png_sha256": "a27103b74ac19e6acd628c98dfcac5fd3a649b80aef99db175d6be5d5b1f7550",
+      "pdf_sha256": "c00c3742a8404d435ac0cb7e9d94f42adc109a4bee0c7a1c966022e5264c7980",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 51,
+      "title": "连续多横切接入 ROS 巡检链后的轨迹、横偏与分层拒绝（合成身份和横流）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain.pdf",
+      "png_sha256": "85e277384ceb597757f57e4392c21f25d37f62b60c57ecb8894360d4e2bb5eee",
+      "pdf_sha256": "01deb730afe3797861a45e4b74300c7b8493c4f60b670ed163091405f23d9e7c",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "历史多横切扩展；不同案例经过层级不同"
+    },
+    {
+      "publication_number": 52,
+      "title": "多横切身份失鲜后的仿真 Hold 时基、处置请求与持续流漂",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/52_shallow_survey_hold_clock_and_drift.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/52_shallow_survey_hold_clock_and_drift.pdf",
+      "png_sha256": "a9908bb58e678b0f660905e8181f3175d4a9922543c78ffcf8856e8f4090b934",
+      "pdf_sha256": "7f4627f64ac1fbdf078e50479a9601f50de5fe4dab930e40eee6f73c85f9c350",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 53,
+      "title": "横流消息偏差注入下多横切扫描、接入和保守拒绝（单种子合成证据）",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/53_shallow_survey_current_report_bias.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/53_shallow_survey_current_report_bias.pdf",
+      "png_sha256": "cbbd6cf69ca65772b0db745f1e8699df10d0f95b8490890560828fbee0ff592f",
+      "pdf_sha256": "1ca219d39d841485ae3abcda2f9a924fbdac4fe3dc91a3d20404680765542936",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 54,
+      "title": "窄静态地图整体偏移时的目标身份反例",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/54_static_hint_bias_admission.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/54_static_hint_bias_admission.pdf",
+      "png_sha256": "b95a2775638568d335854e74f36e3a5acc4bc549f4bfc29843caa7b748ca2cd2",
+      "pdf_sha256": "3a977bc9a70748e553eb55a1c81ba84a1ab89698d17573c8659ff4add3e7a62b",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 55,
+      "title": "偏移地图下运行时身份授权顺序及任务出口",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/55_sonar_map_bias_recovery.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/55_sonar_map_bias_recovery.pdf",
+      "png_sha256": "7280ef1f4e5f59544b013b7af41dcdd7993d35049fb52cc99a01618a1ddf54be",
+      "pdf_sha256": "0ae95fa3ce487a2b81ac245297ddd8c9247ab541984da2e27f977b310f61a9fa",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 56,
+      "title": "邻近磁源融合时横向几何许可的目标身份边界",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/56_magnetic_isolation_envelope.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/56_magnetic_isolation_envelope.pdf",
+      "png_sha256": "3ab3a8faa18396391ba7be733dfa6ad7d7fe15dac1ae1a9f0576e8a6bbbe647b",
+      "pdf_sha256": "96a4d985ba899e39ad16037838abbef00b073d4b6ac6c4629620f37ff07c729c",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 57,
+      "title": "声磁共同误关联时的独立目标锚点确认门",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/57_runtime_target_anchor_joint_wrong.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/57_runtime_target_anchor_joint_wrong.pdf",
+      "png_sha256": "3c6707a6ec9631527e77835909e783c1e386b102467719cd5e067dd752abfd41",
+      "pdf_sha256": "e3706fe9986ac92bb86d13aae082b277148272ececbce0216cce32ae8ec7ff52",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 58,
+      "title": "局部目标锚点的近邻可分辨性与专属走廊预算",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/58_target_exclusive_corridor_budget.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/58_target_exclusive_corridor_budget.pdf",
+      "png_sha256": "c4271da30cace011b427a2e01a0defb999b3ee58ff21ba99a8549dce3aabd187",
+      "pdf_sha256": "3a3ea09d6ca7233b12ea747f46e20e3c65e85b3c3ab91847a6fc0e9f2c774468",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 59,
+      "title": "有限 Track 中目标关联改指的首周期撤权与正常任务",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/59_track_identity_route_corridor.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/59_track_identity_route_corridor.pdf",
+      "png_sha256": "a2d4b50f1453459d2c4e6ab700c47f06a1fe0a880659ff5e3a922e81edb4286c",
+      "pdf_sha256": "0e46c9d1d45fd507928230a17e4a4e792d5baa03f5c810772705e7cc2a4fcccf",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 60,
+      "title": "有限巡检段的在线横偏撤权与零命令后超界漂移",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/60_route_deviation_withdrawal_and_drift.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/60_route_deviation_withdrawal_and_drift.pdf",
+      "png_sha256": "ba15ba4d6491f35a67667439c6e18affc0e63f29a01328893413158baf074e89",
+      "pdf_sha256": "893636c23805c789d3f6e69166c857a2d690f38be983d46d66aeec915f0162fa",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 61,
+      "title": "显式横流预算下的稳态巡检、反向阶跃失败与 Hold 时基",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/61_finite_track_current_envelope_and_clock.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/61_finite_track_current_envelope_and_clock.pdf",
+      "png_sha256": "3857aac4ba3e17077b3daf427beb257f9248388e99190787483bc06e97de9b6c",
+      "pdf_sha256": "60ca19c6c95624c4f890af7107c54cf5df28ef891adae0d249d6d18ff01a318d",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "历史 ROS 合成全链；非当前实时验收"
+    },
+    {
+      "publication_number": 62,
+      "title": "巡检任务到端、埋深发布与执行许可的独立输出",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/62_inspection_task_depth_authority_outcomes.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/62_inspection_task_depth_authority_outcomes.pdf",
+      "png_sha256": "cd9028a3d00e1e393fa551971ab24bb3bbfed28ee841846cc42e08753f49e50a",
+      "pdf_sha256": "4f43fecf45cc496919a9032c08910dbf5abe99deea84b808d524a9f541d073a9",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 63,
+      "title": "同幅横流的时序差异、提前撤权及撤权后的物理侧移",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/63_track_transient_early_withdrawal_and_coast.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/63_track_transient_early_withdrawal_and_coast.pdf",
+      "png_sha256": "04ab84ecd27d3399f3ab60147756853885bb379248620715ecb82bc288444b8f",
+      "pdf_sha256": "ada6bbbc5ebea2edd8e3a19de7947e3c8313b0b0fcdb75879ac8541f968d14ad",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": false,
+      "usage": "历史阶段／反例／工程机制备份"
+    },
+    {
+      "publication_number": 67,
+      "title": "同次接收与飞越夹具排队空档",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/67_same_session_flythrough_receipt_gap.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/67_same_session_flythrough_receipt_gap.pdf",
+      "png_sha256": "6d4846fa856f3587a52fa6a336ce48c7353cbffd9921dd945d178bc1883c17de",
+      "pdf_sha256": "9f1c68971265fcaa112fc0ee68a17d19bb7cc0490312113f4b172d1c17b91603",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "时序诊断／单点回归；不作为完整任务成功"
+    },
+    {
+      "publication_number": 68,
+      "title": "分进程 PVS 活性短试边界",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/68_paced_pvs_process_liveness.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/68_paced_pvs_process_liveness.pdf",
+      "png_sha256": "c1272c7d41673e3ced7e6953915c96dce3963beffc52770aa50630fab3c66097",
+      "pdf_sha256": "071a27166995674995aa735da1914a743d2ebd701516d78fc2122ff66539f431",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "时序诊断／单点回归；不作为完整任务成功"
+    },
+    {
+      "publication_number": 69,
+      "title": "供数端与算法端的双端时序耗时",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/69_pvs_process_timing_budget.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/69_pvs_process_timing_budget.pdf",
+      "png_sha256": "b156125694697be4e93d3a6bb1205a3cf77dcad699e71f48f85ba66b31454ab4",
+      "pdf_sha256": "dceee6396bf6a7fe9df00572808c27a19c1af91ed6d662db2176d8b905277cdc",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "时序诊断／单点回归；不作为完整任务成功"
+    },
+    {
+      "publication_number": 70,
+      "title": "去在线 PVS 的动态重放时序边界",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/70_dynamic_replay_without_pvs_timing.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/70_dynamic_replay_without_pvs_timing.pdf",
+      "png_sha256": "f6595e6f7a9c57c088b0baa1990bff3211c734d8508213d9a1179d94e2b7f821",
+      "pdf_sha256": "0c8a8cd6ad8de5092bd03c4240a39fba27ac4278be23617dbbf141444f43e228",
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "时序诊断／单点回归；不作为完整任务成功"
+    },
+    {
+      "publication_number": 71,
+      "title": "当前磁巡检算法的限定条件仿真复核。阴影为 70 m 核验段，两端缓冲不计为核心覆盖；全部核心 Track 样本计入误差，埋深保持独立空值。地图横纵轴比例不同。",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.png",
+      "pdf": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.pdf",
+      "png_sha256": "b08cb6bd6bcd38dc49e504188a2cba6bcb7cd870caf96bd8aeba858c58a30471",
+      "pdf_sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+      "in_full_236p_ch5": true,
+      "in_condensed_169p_ch5": true,
+      "usage": "当前限定条件主结果；埋深空值"
+    },
+    {
+      "publication_number": null,
+      "title": "operator_console_same_run_guard_loss",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/operator_console_same_run_guard_loss.png",
+      "pdf": null,
+      "png_sha256": "69d277242a5507dcf53ad7488f56df008fb998611f9f43534a63300dc34276e9",
+      "pdf_sha256": null,
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "上位机截图；只有 PNG，无矢量 PDF；非现场全链验收"
+    },
+    {
+      "publication_number": null,
+      "title": "operator_console_status_loopback",
+      "png": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/operator_console_status_loopback.png",
+      "pdf": null,
+      "png_sha256": "a305d09d6259dd50f6871877ba5179c312258320992a76a1ca3f17a1a9a02d8f",
+      "pdf_sha256": null,
+      "in_full_236p_ch5": false,
+      "in_condensed_169p_ch5": false,
+      "usage": "上位机截图；只有 PNG，无矢量 PDF；非现场全链验收"
+    }
+  ],
+  "original_record_assets": [
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/current_slide_06.png",
+      "sha256": "ab706bae15a3943a12c08e7d3c29e65e904863459aa1cc4760af00081d38cb30",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 48,
+          "title": "当前第 6 页：仍使用旧 FWHM 图和 W=2z"
+        }
+      ]
+    },
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/fwhm_live_profile_panel.png",
+      "sha256": "e9dca8000a29e862b53abc02a7bcbf44fc34a431481f2f854c34458b626fc34e",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 90,
+          "title": "已经裁好的 FWHM 实时剖面，可直接插入 PPT"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/fwhm_live/fwhm_live_truth_comparison.png",
+      "sha256": "65fc968fed75fefdf5630a1547abfe07f250fcf6d482b0789e8d5b90df30b218",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 92,
+          "title": "FWHM 实时样本、真值与质量分解"
+        }
+      ]
+    },
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/fwhm_truth_comparison_panel.png",
+      "sha256": "0d483feaf5f6bf7d7c10f1e833e605af6850be18a4ccb2ebc4f2f9057e185d1b",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 103,
+          "title": "已经裁好的垂向距离和埋深真值对比，可直接插入 PPT"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/05_field_model_consistency.png",
+      "sha256": "c2c1991ac287e921726b3521d95cf202a7504dfd3ee7b09175405b0419c54242",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 122,
+          "title": "不同磁场模型对应不同 FWHM 场形系数"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/09_explicit_fwhm_profile.png",
+      "sha256": "e96c8c1a4a7c67a0afc7e414e0b89289427aa0e6a1091ff2b364b7751d6e1ecf",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 160,
+          "title": "逐级扩幅、背景修正半高和左右交点"
+        },
+        {
+          "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+          "baseline_line": 196,
+          "title": "逐级扩幅和显式 FWHM"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/08_mission_process_plan_view.png",
+      "sha256": "31b4c4b72a6f595f94d8a2e5bb42f71fea652cf979919cd072eb2cc7feec620e",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 186,
+          "title": "Search—Confirm—Track 完整巡检俯视过程"
+        },
+        {
+          "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+          "baseline_line": 188,
+          "title": "Search、逐级横切与跟踪全过程"
+        }
+      ]
+    },
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/current_slide_10.png",
+      "sha256": "692f6e24d0546eeae1de7c505f6df898d60f45b9e30b06f2c03a8fe1383e8434",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 192,
+          "title": "当前第 10 页：已有输入、计算与 PC104 实物子链"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/console_estop_emergency_surface.png",
+      "sha256": "2396ab05ad2506980d2d25e3cbcf2da15308ee2d115901ce439f413efaacbeb9",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 213,
+          "title": "PySide6 ESTOP 锁存界面"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/foxglove_emergency_surface_active.png",
+      "sha256": "dfca62f07ed2ee993768cf1b80c03359e3dc0812a0ff66297453047dfeb3b27e",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 215,
+          "title": "Foxglove 紧急上浮过程"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/foxglove_emergency_surface_complete.png",
+      "sha256": "1d47129a1eedf0f4ee90fa7b33ab051b089bd387625af9af63730761c63abef9",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 217,
+          "title": "Foxglove 到达安全深度"
+        }
+      ]
+    },
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/current_slide_11.png",
+      "sha256": "a881a97af689d9140ba69f90a8a6f394ad65cd2cf7c91dac57901242fdfe4642",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 233,
+          "title": "当前第 11 页：计划仍把急停闭环全部放在 2026.10–11"
+        }
+      ]
+    },
+    {
+      "path": "PPT制作/assets/v44_sync_20260925/current_slide_17.png",
+      "sha256": "b22f4289fc715db18561de5323d843c9c13d18a0cc163b6baa1cb1421e1c7028",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 260,
+          "title": "当前第 17 页仍使用早期 Foxglove 和模拟 UDP 界面"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/foxglove_defense_assurance_final_clean.png",
+      "sha256": "a32123ae1a9b54b9573654ea1b50f2aaedc31d3159e2162558a2bddb1c94a067",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 281,
+          "title": "推荐的干净 Foxglove 答辩布局"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/auv_joint_demo_30s_preview.png",
+      "sha256": "502ce93ee45da7ba7d0a9426a210e51f7bf82b7b5421304074f83df6249ca6c9",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 283,
+          "title": "30 秒联合演示视频封面"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/auv_joint_demo_30s.mp4",
+      "sha256": "8351da481b5a53fa8588a2bf0919519e8876094fc1819c47eed3d5e96babe785",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 287,
+          "title": "30 秒联合演示"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/auv_joint_demo_full_100s.mp4",
+      "sha256": "27628a251b62b7d90f4df4d5c0b7eb1be7659634ef76436aeb0b0cee83bf90cf",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 288,
+          "title": "100 秒联合演示"
+        }
+      ]
+    },
+    {
+      "path": "docs/experiment/assets/defense_demo/mission_tactical_full_100s.mp4",
+      "sha256": "a5bf1a45ccfad932c767a81055fae934e41b1564c443ec7e73ad273afdc17755",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 289,
+          "title": "100 秒独立战术视图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.png",
+      "sha256": "7b6ce7a08d85d4f3e8623c62c5b8e95d96e24be38b4f5231f729616fb6c60ffb",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 432,
+          "title": "场形判别门留出种子验证"
+        },
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 534,
+          "title": "图 13 双向留出"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/19_inspection_flythrough_pvs.png",
+      "sha256": "729aea8e0c25f77aed68b1bf257eaaf62127ec67cea768c92bb2d2ad41b65d76",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 458,
+          "title": "PVS 浅角度穿越与双侧磁剖面"
+        },
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 534,
+          "title": "图 19 动态横切"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/20_flythrough_ros_pvs_current_and_fault.png",
+      "sha256": "8536456a4502ded6c95dda9e73da3e724c0afcffe38ed97f7efdd750eef69114",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 466,
+          "title": "ROS/PID/协议/PVS 横流与故障过程"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/21_flythrough_safety_chain.png",
+      "sha256": "503f5aea06b96cbf1fa6b0bdbaaa7a4ae7b89a14030b73de3fff7adf0615c0bd",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 474,
+          "title": "手动接管双重零推力与持续磁故障减速过程"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/22_side_hint_flythrough_paths.png",
+      "sha256": "9af28b933f63b51e7e645b78c2dd86429ec556600b1460121efd2267022a5b8b",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 482,
+          "title": "侧向提示匹配与错误时的 ROS/UDP/PVS 航迹"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/23_side_hint_gate_and_envelope.png",
+      "sha256": "54ce969f57d1e4de59faa62edbe2f0ba839690b9b4954556f42342f4cff0977f",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 488,
+          "title": "侧向启动门和运行包络复核"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/24_side_hint_offset_envelope.png",
+      "sha256": "851c00f2baf5a8fb56a66cfd035e4b27c58ed967218908aaa63aab0da9222764",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 496,
+          "title": "侧向幅值、半高交点与 PVS 终态"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/25_current_offset_peak_gate.png",
+      "sha256": "f7505761c95862d0ef56f01f8e186a98ef5195fec3297ba74adae09e3335e0fd",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 504,
+          "title": "峰顶假双峰与侧偏横流组合角点"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/26_current_conditioned_rejoin.png",
+      "sha256": "1e86d57c7e862480a9f243247d75a3cf0d48674ba31fa89d7516112e23252265",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 512,
+          "title": "有界上游接入段和沿缆横偏"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/27_navigation_quality_gate.png",
+      "sha256": "bdb463664fe073e097d3a655bda42aed21ca91f3f5d2375c797cd0c67fc2d191",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 524,
+          "title": "导航扰动、过程轨迹与在线路线质量拒绝"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/28_multisource_identity_gate.png",
+      "sha256": "26ae0fb1e35bf4296a4382c66ca183b088c7d2b35478eaaf0a709cfdc849397c",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 540,
+          "title": "磁异常中心与目标身份的分层许可"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/29_runtime_sonar_identity_gate.png",
+      "sha256": "dac5283470fd9baa39bc75bf23063c7139e152a3a9c53472e3aec652fcc0e08b",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 550,
+          "title": "图 29：运行时声呐身份门控"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/30_runtime_identity_continuity.png",
+      "sha256": "2303a5ecc63a9f6061e836f8e5d1e3c20cc9aa5c479bec9062225be3a9ae483d",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 560,
+          "title": "图 30：Track 中线索连续性、故障停止和精度预算"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/31_identity_hold_drift.png",
+      "sha256": "1b9c6e90eb5f12dd17884f90ee2374544ed6104256bb8fef1ebfdf75994a5282",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 578,
+          "title": "图 31：零推力后的惯性/横流位移与走廊余量"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/32_bounded_hold_disposition.png",
+      "sha256": "3bba00068133aa3007772475457d3d39ae046ace12ecf30f577b282a9cddd2d5",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 586,
+          "title": "图 32：实有净距不足时首周期请求上级处置"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/35_route_hold_admission.png",
+      "sha256": "9c7021db6bdd160068a2ee7cfe28c19e966ba2d76ea7feff3dc82415b1b2963c",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 612,
+          "title": "图 35：已知任务线段的走廊准入与净距预算"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/36_localization_vs_autonomy_authority.png",
+      "sha256": "beb12fc9e6644b1eb793d54f910fe627150fcea5b02d249582df64479d0c7b65",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 620,
+          "title": "图 36：定位证据与自治执行许可分离"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/operator_console_status_loopback.png",
+      "sha256": "a305d09d6259dd50f6871877ba5179c312258320992a76a1ca3f17a1a9a02d8f",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 626,
+          "title": "PySide6 诊断页中的定位状态和桥自治许可"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/operator_console_same_run_guard_loss.png",
+      "sha256": "69d277242a5507dcf53ad7488f56df008fb998611f9f43534a63300dc34276e9",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 630,
+          "title": "同次 PVS 故障任务中的上位机撤权显示"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/37_inspection_process_restart_diagnostics.png",
+      "sha256": "4f91f14580b6681f1c3fbee63a502884b8ddc87fe58c36138c8311040a440536",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 642,
+          "title": "图 37"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/38_inspection_nav_dropout_disposition.png",
+      "sha256": "45aa069dd0241b0663a9f8db8b6d350b04fbe4e276787555b53c69ef36fc58ad",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 648,
+          "title": "图 38"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/39_shadow_scene_truth_gate.png",
+      "sha256": "dd7f1106c214b322160c1518260d5673658799a42e7c4160472f358873e0fd81",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 660,
+          "title": "图 39"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/40_shadow_raw_sensor_imu_gate.png",
+      "sha256": "2f1cbbe27f02e9a205b770291130740181498ad675ed5792014a13670e0066dd",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 664,
+          "title": "图 40"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/41_wall_clock_imu_stamp_replay.png",
+      "sha256": "503a76c1fa6d62b775848bf8782ae3621246bf98bb57d485fdf8206f41dc6e01",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 666,
+          "title": "图 41"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/42_protocol_imu_packet_time_gate.png",
+      "sha256": "388e0f7b7f32cdfc7c81d2942e0eec9c54a89956e063724eae86f90f55954b8f",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 668,
+          "title": "图 42"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/43_gx3_timer_provenance_gap.png",
+      "sha256": "62f5ceaed2f4a7b56a3e9da66e6cd6e852a6c15b9323a7567b151e2b03371f10",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 674,
+          "title": "图 43"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/44_sidecar_dvl_source_match.png",
+      "sha256": "b6ffb98360121d8e799936972e214c3ad3f4ed4976f91c18a99555df501a0f67",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 678,
+          "title": "图 44"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/45_corridor_survey_geometry_candidate.png",
+      "sha256": "d97e207d781a8695c46fab218ec18d491199fb5e2afa9e9d2c29eb1c37b9e73e",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 682,
+          "title": "图 45"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/47_shallow_zigzag_pvs_envelope_3m.png",
+      "sha256": "7a5168c01ba17a2551a59959077e356134c7c60ad929ffa08a95f950fd2be754",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 690,
+          "title": "图47：连续三横切在横流下的走廊航迹、实际磁剖面与身份盲区"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/48_shallow_zigzag_geometry_budget_insight.png",
+      "sha256": "56b4dfe37a3bf7e9d769bb581f56cae1712cb793815b059c8f39775eb31b8502",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 694,
+          "title": "图 48 参数预算"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/49_shallow_zigzag_exit_parity.png",
+      "sha256": "5edaa1feec8213946976e185a9153aec61eaae8692a0dcda7643039af9140cb6",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 696,
+          "title": "图 49 出口侧对照"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/50_shallow_zigzag_pvs_rejoin_track.png",
+      "sha256": "a27103b74ac19e6acd628c98dfcac5fd3a649b80aef99db175d6be5d5b1f7550",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 698,
+          "title": "图 50"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain.png",
+      "sha256": "85e277384ceb597757f57e4392c21f25d37f62b60c57ecb8894360d4e2bb5eee",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 702,
+          "title": "图 51"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/52_shallow_survey_hold_clock_and_drift.png",
+      "sha256": "a9908bb58e678b0f660905e8181f3175d4a9922543c78ffcf8856e8f4090b934",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 712,
+          "title": "图 52"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/53_shallow_survey_current_report_bias.png",
+      "sha256": "cbbd6cf69ca65772b0db745f1e8699df10d0f95b8490890560828fbee0ff592f",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 716,
+          "title": "图 53"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/54_static_hint_bias_admission.png",
+      "sha256": "b95a2775638568d335854e74f36e3a5acc4bc549f4bfc29843caa7b748ca2cd2",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 722,
+          "title": "图 54"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/55_sonar_map_bias_recovery.png",
+      "sha256": "7280ef1f4e5f59544b013b7af41dcdd7993d35049fb52cc99a01618a1ddf54be",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 728,
+          "title": "图 55"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/56_magnetic_isolation_envelope.png",
+      "sha256": "3ab3a8faa18396391ba7be733dfa6ad7d7fe15dac1ae1a9f0576e8a6bbbe647b",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 732,
+          "title": "图 56"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/57_runtime_target_anchor_joint_wrong.png",
+      "sha256": "3c6707a6ec9631527e77835909e783c1e386b102467719cd5e067dd752abfd41",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 734,
+          "title": "图 57"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/58_target_exclusive_corridor_budget.png",
+      "sha256": "c4271da30cace011b427a2e01a0defb999b3ee58ff21ba99a8549dce3aabd187",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 738,
+          "title": "图 58"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/59_track_identity_route_corridor.png",
+      "sha256": "a2d4b50f1453459d2c4e6ab700c47f06a1fe0a880659ff5e3a922e81edb4286c",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 744,
+          "title": "图 59"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/60_route_deviation_withdrawal_and_drift.png",
+      "sha256": "ba15ba4d6491f35a67667439c6e18affc0e63f29a01328893413158baf074e89",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 750,
+          "title": "图 60"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/61_finite_track_current_envelope_and_clock.png",
+      "sha256": "3857aac4ba3e17077b3daf427beb257f9248388e99190787483bc06e97de9b6c",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 756,
+          "title": "图 61"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/62_inspection_task_depth_authority_outcomes.png",
+      "sha256": "cd9028a3d00e1e393fa551971ab24bb3bbfed28ee841846cc42e08753f49e50a",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 762,
+          "title": "图 62"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/63_track_transient_early_withdrawal_and_coast.png",
+      "sha256": "04ab84ecd27d3399f3ab60147756853885bb379248620715ecb82bc288444b8f",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 768,
+          "title": "图 63"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_wait_bound_20260927/figures/host_navigation_freshness_diagnostic.png",
+      "sha256": "46e220ba929384e6ea51b4e93f399644689013a2a4dee79fc600a0ca65fe15d0",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 772,
+          "title": "短探针时序图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_process_wallclock_20260927/figures/ros_process_callback_freshness_diagnostic.png",
+      "sha256": "2d44ab2967e67286d70daaa4873d923aa23e14e36d193ec15ab39bd8c8c29e59",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 774,
+          "title": "独立 ROS 进程回调图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_bridge_setpoint_gate_20260927/figures/bridge_setpoint_provenance_gate.png",
+      "sha256": "49987e30fe5d6a5292458fb094651a087547f0281e3b0fecdd6ea61d730c0e90",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 780,
+          "title": "桥 Setpoint 来源门图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_process_cpu_wall_20260927/figures/inspection_callback_cpu_and_output_gap.png",
+      "sha256": "5097204652e4eb2266b62700d7eb28e05030067b9176d51a4af4bb561dc16873",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 786,
+          "title": "回调 CPU 与输出空档图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_fixed_feeder_20260928/figures/inspection_recoverable_hold_timeline.png",
+      "sha256": "d7833a2a96b0c988435c259c56b3899d7a7b0a611aea7594950cd8a9c6d430cb",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 792,
+          "title": "独立供数、算法候选、最终目标速度与 PID 的逐消息时序"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_cadence_envelope_20260928/figures/inspection_cadence_qos_diagnostic.png",
+      "sha256": "fa73dde21f57e4f708fd4195ac043549f1b4b8fb89c0d1cf8b70a338c8dac551",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 798,
+          "title": "五趟节拍／队列诊断图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/results/v2/inspection_telemetry_partition_20260928/figures/monitor_partition_timeline.png",
+      "sha256": "78093f638d140df2632ade79343341eb9fb33ca91a65a81f824f1b58892ebfb1",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 800,
+          "title": "监测分层的逐消息图"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/67_same_session_flythrough_receipt_gap.png",
+      "sha256": "6d4846fa856f3587a52fa6a336ce48c7353cbffd9921dd945d178bc1883c17de",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 808,
+          "title": "图 67"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/68_paced_pvs_process_liveness.png",
+      "sha256": "c1272c7d41673e3ced7e6953915c96dce3963beffc52770aa50630fab3c66097",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 814,
+          "title": "图 68"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/69_pvs_process_timing_budget.png",
+      "sha256": "b156125694697be4e93d3a6bb1205a3cf77dcad699e71f48f85ba66b31454ab4",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 820,
+          "title": "图 69"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/70_dynamic_replay_without_pvs_timing.png",
+      "sha256": "f6595e6f7a9c57c088b0baa1990bff3211c734d8508213d9a1179d94e2b7f821",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 824,
+          "title": "图 70"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.png",
+      "sha256": "b08cb6bd6bcd38dc49e504188a2cba6bcb7cd870caf96bd8aeba858c58a30471",
+      "citations": [
+        {
+          "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+          "baseline_line": 836,
+          "title": "图 71：当前磁算法的完整任务、横向中心与全样本误差"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/10_burial_depth_reconstruction_process.png",
+      "sha256": "42fbe499364f5005ee79e8a572a59e08c8cb55cd2763ad39e877b339438a0366",
+      "citations": [
+        {
+          "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+          "baseline_line": 204,
+          "title": "沿缆埋深真值、估计与不确定度"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/11_fwhm_stability_comparison.png",
+      "sha256": "7476458357e756e2e45a68700607aab90547b1a2651b1bfd6ea7188de2062668",
+      "citations": [
+        {
+          "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+          "baseline_line": 212,
+          "title": "FWHM 与三种对照方法的稳定性"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/12_fwhm_stability_sensitivity.png",
+      "sha256": "d59195b3b1cb2ef9888aca1379bd261f9949fdf852224a4fcf33f27d78fc7a6f",
+      "citations": [
+        {
+          "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+          "baseline_line": 220,
+          "title": "FWHM 对增益、噪声与场模型的敏感度"
+        }
+      ]
+    }
+  ],
+  "original_record_backups": [
+    {
+      "file": "PPT制作/assets/thesis_diff_20260929/original_records/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "sha256": "e4daa55c84169530c7e7d8f3d4426ac252acdabff497ce4a8db028fe3dbf3a66"
+    },
+    {
+      "file": "PPT制作/assets/thesis_diff_20260929/original_records/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "sha256": "f04379618150025d3154778662f1c5b0bfae19407d5507ec156fe2abcf9bd5c5"
+    },
+    {
+      "file": "PPT制作/assets/thesis_diff_20260929/original_records/01new_FWHM模型失配与巡检连续性同步_20260926.md",
+      "sha256": "37c956c9586b83c81add8368e2d4ac41d5d621e8171e4811636637d12f48382e"
+    }
+  ],
+  "pdf_previews": [
+    {
+      "title": "稳定性对照：旧图 5.11 → 新图 5.12",
+      "old_pdf_page": 137,
+      "new_pdf_page": 134,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/stability_full236_pdf137.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/stability_short169_pdf134.png",
+      "old_preview_sha256": "13532b8779b919fe13f8bdc01d8819a88e95a435fe5ad12edd7dddd4e2244d7d",
+      "new_preview_sha256": "28e50e08b7f33f945e6b3d48a8729c3454e9d2494f34ab4a46d37df49b89e8ce"
+    },
+    {
+      "title": "当前磁巡检：旧图 5.67 → 新图 5.15",
+      "old_pdf_page": 201,
+      "new_pdf_page": 137,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/closure_full236_pdf201.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/closure_short169_pdf137.png",
+      "old_preview_sha256": "de7af7da75001ee5c117fa505c70b21023a2ad93b91a0b970c206dfab3f6e7f7",
+      "new_preview_sha256": "6164e5e36d0ef4f35e534a6f431bd51b09a0178898e5810ac23a6b34abef5577"
+    },
+    {
+      "title": "ROS 横流边界：旧图 5.37 → 新图 5.16",
+      "old_pdf_page": 165,
+      "new_pdf_page": 138,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/ros_boundary_full236_pdf165.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/ros_boundary_short169_pdf138.png",
+      "old_preview_sha256": "2baddb4be8104d39f70dd8724037cad2fb9ee3e8ebf310b442572a9fbf3d2819",
+      "new_preview_sha256": "c023cb8364daa5ee7eff8e8be65920d6b92cc0680f333b5e05760adf7bd45f79"
+    },
+    {
+      "title": "多横切扩展：旧图 5.56 → 新图 5.17",
+      "old_pdf_page": 183,
+      "new_pdf_page": 139,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/multiscan_full236_pdf183.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/multiscan_short169_pdf139.png",
+      "old_preview_sha256": "b59dde4bdec6dd3ee89402e1c9d80ed8b483728b6e3d90d8f681b87b3a295109",
+      "new_preview_sha256": "27c974d9a4fdf120a6433d752d75aad2d43e04c385330d5236b0880a841b4a7a"
+    },
+    {
+      "title": "第六章：5 页 → 2 页（首面）",
+      "old_pdf_page": 203,
+      "new_pdf_page": 149,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/conclusion_full236_pdf203.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/conclusion_short169_pdf149.png",
+      "old_preview_sha256": "a208b7208f3f046633dba4f4364d3785ae103f006adf302888863e220a277f1f",
+      "new_preview_sha256": "b6a8ca8eb4e0d860e9b42b840d32e1922bbc7c069039dcf39ca625238c43252a"
+    },
+    {
+      "title": "附录 A：21 页 → 11 页（核心证据段）",
+      "old_pdf_page": 221,
+      "new_pdf_page": 164,
+      "old_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/appendix_full236_pdf221.png",
+      "new_preview": "PPT制作/assets/thesis_diff_20260929/pdf_previews/appendix_short169_pdf164.png",
+      "old_preview_sha256": "7ede4b0d451dabe2e4674ff4477774e415685981e83bd6710b67fefa9f4b3000",
+      "new_preview_sha256": "412a14de41bb843566a9d2bbe4b5359a9834b77130eec5c7adf7277bbaae024c"
+    }
+  ],
+  "audit_corrections": [
+    "ADC figure 5.1: parse both actual graphic paths instead of dimensional 0.49\\linewidth",
+    "UA three-panel figure 5.9: use parent figure label and all three assets rather than first subfigure"
+  ],
+  "validation": {
+    "retained_count": 22,
+    "removed_count": 45,
+    "original_total": 67,
+    "publication_png_pdf_pairs": 63,
+    "publication_png_total": 65,
+    "ui_screenshots_png_only": 2,
+    "original_record_unique_asset_count": 78,
+    "current_and_full_pdf_unchanged": true,
+    "cited_assets_unchanged": true,
+    "thesis_sources_unchanged": true,
+    "both_patches_isolated_apply_verified": true,
+    "local_markdown_links_checked": 732,
+    "missing_local_links": [],
+    "chapter_5_graphic_dependency_count": 70,
+    "all_chapter_5_dependencies_match_full_backup": true,
+    "original_record_bodies_preserved": true,
+    "pdf_pages_rechecked": true,
+    "pptx_hash_stable_during_final_validation": true
+  },
+  "chapter_5_complete_graphic_assets": [
+    {
+      "path": "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf",
+      "sha256": "7234b1aeade1fba540b2901b8af4f2feef8a9ca6513cf5f709978e615a8e7235",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.pdf",
+      "sha256": "f9a688e791512abf174b2884a7abdf88c4057a7416c29566caf53510c548afd5",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf",
+      "sha256": "859c47a06296721168de9c70748f9d2132e9ffc3a100fd80c9f520a95e6c8237",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+      "sha256": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+      "sha256": "5edce17574204a4da9f8ac7c6ba4d7f69bd9258851b7eb783fbbcd143045738c",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf",
+      "sha256": "e14c39e51df414d6d4763c2840aedbbcd28688ad5f76eef34a4e8dd6fe3edc1d",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "sha256": "3f1a383014c6f57598466fc132a8f44e23448ed1c212c02efeb1bb6100603359",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf",
+      "sha256": "1687bf17b5d110e8a24a9f7256b3288be17c2b99d6652dca9f8089416a42a9a2",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "sha256": "2f7f924316827094bc31a4b04131dc304115e3e850161234f732bd70d143a2ca",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/15_inspection_contract_process.pdf",
+      "sha256": "571d024bd75be523e714132227b559caf5ab053ac315c2da5bb79a24e9e2b3c1",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/16_inspection_contract_insight.pdf",
+      "sha256": "0ce465092feb0f5d0f5ba121289656196d12fe60d1d7d95f439a6c8a5b3bd008",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/17_inspection_propulsion_envelope.pdf",
+      "sha256": "0615ee6ec7a4d95b38113510e43e62d6cda6c2f16c8cbec6e328e7a4d4123afb",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/18_inspection_pvs_closed_loop_counterexample.pdf",
+      "sha256": "2151933950fa19f88532d6711ed3a357aaa91dd6d809dfe4dd0502e64bd82b05",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/19_inspection_flythrough_pvs.pdf",
+      "sha256": "f35f5d69c4caa06b05428c1f464436be30f244a3489e1c4a5e776c476f6e81de",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/20_flythrough_ros_pvs_current_and_fault.pdf",
+      "sha256": "d37ba5210cbbaac72b119654f4ff5cfcc19cce3f25ef9493c351ea54e86dabbd",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/21_flythrough_safety_chain.pdf",
+      "sha256": "d5b7fd363ea3a588546585c9c84af7ad81077843c8e952417dcfdbbd519c06ff",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/22_side_hint_flythrough_paths.pdf",
+      "sha256": "b984b60951ea91a2f85f3b3be26cc172df2315842d554276345517ab281bd293",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/23_side_hint_gate_and_envelope.pdf",
+      "sha256": "dfe466f2a1f6a38682e9c56196109b6c1a2b771fb8f41eb686d87ac1d3f124b5",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/24_side_hint_offset_envelope.pdf",
+      "sha256": "ed8536cace48461abfbe6b9cd846c4f3307869e889444736d02dd7c654b1c531",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/25_current_offset_peak_gate.pdf",
+      "sha256": "e62b6e90f4e3b347997a1205b75df4ec567b10dc25092276f8fa2c60ca32761e",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/26_current_conditioned_rejoin.pdf",
+      "sha256": "aa4908c8e166248bee1fabbf488c9cf5bfa5e71d25e187b04de13ee242ea303b",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/27_navigation_quality_gate.pdf",
+      "sha256": "d9ca73be19ae0311dbb652f00758d00a36d7dd0bd4fc45363110961264fc40f9",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/28_multisource_identity_gate.pdf",
+      "sha256": "9ab402302bfc748797e73c7b0cb92bf31f8c0d6d52a2f16f970b396d07b1ec99",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/29_runtime_sonar_identity_gate.pdf",
+      "sha256": "848c1174d6b7df4635fe05df73cef88369c39f291244eaccaa828e715fcbb973",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/30_runtime_identity_continuity.pdf",
+      "sha256": "dffa4e12ba652aa9ccd90c5b570b14629749fd0dec74b7b7547f8da7a7d27840",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/31_identity_hold_drift.pdf",
+      "sha256": "248dfeb6c821955e7ecb2f05651419df234cf0ea57acf6e8e6d0ca19187858db",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/32_bounded_hold_disposition.pdf",
+      "sha256": "827fffcb7cddf6e4f651de5b9c40c18ad6e208dbe331b76f1b01b1cee1635e90",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/35_route_hold_admission.pdf",
+      "sha256": "c041a92636752a89702ede1a3ad691f1824061033ba0003f9e9f6992046d7adf",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/36_localization_vs_autonomy_authority.pdf",
+      "sha256": "d57d2af258f82c2c16a253199c2fdc4d3b3e02927788871051814bc46303d783",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/37_inspection_process_restart_diagnostics.pdf",
+      "sha256": "5f7ae2e38554f23e7b76b09e324d21ae33da2d3f32ae05dd8a2f494a662879d1",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/38_inspection_nav_dropout_disposition.pdf",
+      "sha256": "2abc6ce5294e1fad93e746f0a4b50493f4bbddd7f4bea9774008f52c9c982d50",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/39_shadow_scene_truth_gate.pdf",
+      "sha256": "c9b330841f8c8d6baf2c8c006855d7543da0aa4630879ea84a224b43273c0acf",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/40_shadow_raw_sensor_imu_gate.pdf",
+      "sha256": "f95eb4fb7c3e62d3fd053bfbf82ea63d79f008135ce43c5382c45afd25184a6b",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/41_wall_clock_imu_stamp_replay.pdf",
+      "sha256": "d7d3366b69c205e15e406f8ffff1a8bccec32c50ec90f59b7f1ff173bd0da631",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/42_protocol_imu_packet_time_gate.pdf",
+      "sha256": "ff431a77b9fa351450d8a8e054ee0e19b9462d97a8f972c0e1edc572f7ad65ec",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/43_gx3_timer_provenance_gap.pdf",
+      "sha256": "4008f4df0e0baab5dae9f62644b51376708f896e8fa49a98e74c89796a752285",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/44_sidecar_dvl_source_match.pdf",
+      "sha256": "d58423d476a40e01ac9a3ebd271275fe20a514ee8a6d3ffda556e62429012d9e",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/47_shallow_zigzag_pvs_envelope_3m.pdf",
+      "sha256": "98bcdce988ce69bd86ba177003b44e00e0d5735431e8ac1164cfe3a879b5098b",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/48_shallow_zigzag_geometry_budget_insight.pdf",
+      "sha256": "589b2107c9e47af1b69ed9f7851b91b1496b1df9c3bb023fb78f52e41d8bfe00",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/49_shallow_zigzag_exit_parity.pdf",
+      "sha256": "67852782014c94530dd3c3d2b1ea2d2eed5136e2e2422f133f3daa691bcba909",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/50_shallow_zigzag_pvs_rejoin_track.pdf",
+      "sha256": "b02340e5eb025f77e18e0c42fd5e559d4bbdd754de8833f1655210854e4267da",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf",
+      "sha256": "bd97c5a7491c465269749a3a02047b3d4e51488218602b3f50c79758462a9310",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/52_shallow_survey_hold_clock_and_drift.pdf",
+      "sha256": "6a34cba82377b2b3c47705dc512f9b992f70fcbe20c823f39a70029fbc44729a",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/53_shallow_survey_current_report_bias.pdf",
+      "sha256": "10092fe11d56950764ada1783023328aaec9e787854e03ac3d3678047bc74ab0",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/54_static_hint_bias_admission.pdf",
+      "sha256": "3a977bc9a70748e553eb55a1c81ba84a1ab89698d17573c8659ff4add3e7a62b",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/55_sonar_map_bias_recovery.pdf",
+      "sha256": "0ae95fa3ce487a2b81ac245297ddd8c9247ab541984da2e27f977b310f61a9fa",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/56_magnetic_isolation_envelope.pdf",
+      "sha256": "96a4d985ba899e39ad16037838abbef00b073d4b6ac6c4629620f37ff07c729c",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/57_runtime_target_anchor_joint_wrong.pdf",
+      "sha256": "e3706fe9986ac92bb86d13aae082b277148272ececbce0216cce32ae8ec7ff52",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/58_target_exclusive_corridor_budget.pdf",
+      "sha256": "3a3ea09d6ca7233b12ea747f46e20e3c65e85b3c3ab91847a6fc0e9f2c774468",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/59_track_identity_route_corridor.pdf",
+      "sha256": "d913ee70764be233144c7e8dadeac5a2af92bc54aad30f70df5c7957b3324f8d",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/60_route_deviation_withdrawal_and_drift.pdf",
+      "sha256": "2b98612f46b1099a14b61688d579d334e9dba49e435e5c1514e541fe6d9b8907",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/61_finite_track_current_envelope_and_clock.pdf",
+      "sha256": "60ca19c6c95624c4f890af7107c54cf5df28ef891adae0d249d6d18ff01a318d",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/62_inspection_task_depth_authority_outcomes.pdf",
+      "sha256": "4f43fecf45cc496919a9032c08910dbf5abe99deea84b808d524a9f541d073a9",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/63_track_transient_early_withdrawal_and_coast.pdf",
+      "sha256": "ada6bbbc5ebea2edd8e3a19de7947e3c8313b0b0fcdb75879ac8541f968d14ad",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/64_same_session_ros_receipt_timeline.pdf",
+      "sha256": "3446c7a3f1048d8d0db7bd2e91b124e61f83a3fb755dc145d2e62642f01deffe",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+      "sha256": "047a794bda59afbb184ac31b8df8b0dc7676eb00fef488a4c37dc5e36d111696",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf",
+      "sha256": "af37bbce92b659d76cb36ee8cc345f32d2877312f2daaef5a6351bc05ff87244",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf",
+      "sha256": "3e0532dd065601dfccf0c08dbea73e9300fc58a00e354b1ab1d6da69ba13661d",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+      "sha256": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf",
+      "sha256": "a97bcac5b4def0be2ac74ed9b7a994683a34ce9fe74b3c1944cb820e2acac983",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf",
+      "sha256": "aa26f00e483bed340e3c9a4d8088beac7d05e5fa6bae11d0eb1d140e49ee4dd1",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf",
+      "sha256": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+      "sha256": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+      "sha256": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+      "sha256": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+      "sha256": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d",
+      "matches_full_backup": true
+    },
+    {
+      "path": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+      "sha256": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133",
+      "matches_full_backup": true
+    },
+    {
+      "path": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+      "sha256": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+      "matches_full_backup": true
+    }
+  ],
+  "pptx_reference": {
+    "path": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4背景图片补充版_202609.pptx",
+    "sha256": "7e7410cdf1123720b90310e9e266b34d53469474d703104335005fd702646c43",
+    "modified_by_this_task": false
+  },
+  "original_record_section_index": [
+    {
+      "record": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "baseline_sections": [
+        {
+          "baseline_line": 8,
+          "title": "1. 审核结论"
+        },
+        {
+          "baseline_line": 30,
+          "title": "2. 当前需要修改的页面"
+        },
+        {
+          "baseline_line": 44,
+          "title": "3. 第 6 页：FWHM 必须从固定公式升级为模型化关系"
+        },
+        {
+          "baseline_line": 137,
+          "title": "4. 第 7 页：把“置信度”与“深度准确度”明确分开"
+        },
+        {
+          "baseline_line": 164,
+          "title": "5. 第 4 页：任务状态应与当前实现同步"
+        },
+        {
+          "baseline_line": 188,
+          "title": "6. 第 10 页：新增操作员急停闭环，但不能冒充实艇试验"
+        },
+        {
+          "baseline_line": 231,
+          "title": "7. 第 11 页：计划表只标记“软件层完成”"
+        },
+        {
+          "baseline_line": 256,
+          "title": "8. 第 17 页：可视化已经完成，必须替换占位口径"
+        },
+        {
+          "baseline_line": 293,
+          "title": "9. 建议新增备份页 A6"
+        },
+        {
+          "baseline_line": 315,
+          "title": "10. 可直接替换的备注页讲稿"
+        },
+        {
+          "baseline_line": 355,
+          "title": "11. 答辩前还需要做什么"
+        },
+        {
+          "baseline_line": 380,
+          "title": "12. 推荐答问口径"
+        },
+        {
+          "baseline_line": 410,
+          "title": "13. 图像与数据路径汇总"
+        },
+        {
+          "baseline_line": 428,
+          "title": "14. 2026-09-25 追加：跨场形误发布风险的针对性修复"
+        },
+        {
+          "baseline_line": 444,
+          "title": "15. 追加：宽度—距离系数的标定闭环与剩余实物缺口"
+        },
+        {
+          "baseline_line": 450,
+          "title": "16. 2026-09-26 复核：短动态剖面会使场形残差误判"
+        },
+        {
+          "baseline_line": 462,
+          "title": "17. 2026-09-26 追加：ROS 控制闭环下的横流和故障过程图"
+        },
+        {
+          "baseline_line": 470,
+          "title": "18. 2026-09-26 追加：安全执行许可的修复前后证据"
+        },
+        {
+          "baseline_line": 478,
+          "title": "19. 2026-09-26 追加：可信侧向线索下选择穿越方向"
+        },
+        {
+          "baseline_line": 498,
+          "title": "20. 2026-09-26 追加：横流组合后必须区分任务终点与精度验收"
+        },
+        {
+          "baseline_line": 508,
+          "title": "21. 2026-09-26 追加：由“到终点”到“横偏受控”的接入段修复"
+        },
+        {
+          "baseline_line": 520,
+          "title": "22. 2026-09-27 追加：导航误差下的巡检质量拒绝"
+        },
+        {
+          "baseline_line": 530,
+          "title": "23. 2026-09-27 追加：模型失配采用“1→3”决策路径"
+        },
+        {
+          "baseline_line": 536,
+          "title": "24. 2026-09-27 追加：磁中心合格不等于识别目标缆"
+        },
+        {
+          "baseline_line": 546,
+          "title": "25. 2026-09-27 追加：运行时声呐身份门，作为图 28 的修复页"
+        },
+        {
+          "baseline_line": 556,
+          "title": "26. 2026-09-27 追加：已进入 Track 时的身份线索连续性"
+        },
+        {
+          "baseline_line": 566,
+          "title": "27. 2026-09-27 追加：三种子复核与现场输入审计"
+        },
+        {
+          "baseline_line": 574,
+          "title": "28. 2026-09-27 追加：零推进后的艇体仍会移动"
+        },
+        {
+          "baseline_line": 582,
+          "title": "29. 2026-09-27 追加：限时 Hold 的空间预算告警"
+        },
+        {
+          "baseline_line": 608,
+          "title": "30. 2026-09-27 追加：任务起航前的走廊预算门"
+        },
+        {
+          "baseline_line": 616,
+          "title": "31. 2026-09-27 追加：定位仍有效时桥也可能撤销执行许可"
+        },
+        {
+          "baseline_line": 634,
+          "title": "32. 2026-09-27 追加：现场收口的可核查输入输出"
+        },
+        {
+          "baseline_line": 640,
+          "title": "33. 2026-09-27 追加：独立启动后的任务与故障过程图"
+        },
+        {
+          "baseline_line": 646,
+          "title": "34. 2026-09-27 追加：短时导航故障后的分层处置答问"
+        },
+        {
+          "baseline_line": 652,
+          "title": "35. 2026-09-27 追加：整栈重启不会默认重投巡检任务"
+        },
+        {
+          "baseline_line": 656,
+          "title": "36. 2026-09-27 追加：全栈接线仅作被动影子验证"
+        },
+        {
+          "baseline_line": 680,
+          "title": "37. 2026-09-27 追加：宽先验下的多横切方法候选"
+        },
+        {
+          "baseline_line": 686,
+          "title": "38. 2026-09-27 追加：连续浅角横切的动力学补证"
+        },
+        {
+          "baseline_line": 700,
+          "title": "39. 2026-09-27 追加：多横切从隔离 PVS 接入 ROS 任务链"
+        },
+        {
+          "baseline_line": 708,
+          "title": "40. 2026-09-27 追加：现场首验剖面与持续 Hold 时基"
+        },
+        {
+          "baseline_line": 714,
+          "title": "41. 2026-09-27 追加：横流消息偏差会怎样影响多横切"
+        },
+        {
+          "baseline_line": 720,
+          "title": "42. 2026-09-27 追加：路径 1→3 的目标身份边界"
+        },
+        {
+          "baseline_line": 726,
+          "title": "43. 2026-09-27 追加：偏移地图仍可完成目标巡检的条件化路径"
+        },
+        {
+          "baseline_line": 736,
+          "title": "44. 2026-09-27 追加：近邻目标专属走廊预算"
+        },
+        {
+          "baseline_line": 742,
+          "title": "45. 2026-09-27 追加：Track 中改指近邻的持续撤权"
+        },
+        {
+          "baseline_line": 748,
+          "title": "46. 2026-09-27 追加：沿程横偏首次越界与物理漂移边界"
+        },
+        {
+          "baseline_line": 754,
+          "title": "47. 2026-09-27 追加：显式海流预算仍须考虑突变方向"
+        },
+        {
+          "baseline_line": 760,
+          "title": "48. 2026-09-27 追加：任务到端、埋深与执行许可的三层输出"
+        },
+        {
+          "baseline_line": 766,
+          "title": "49. 2026-09-27 追加：横流突变提前撤权与零命令后的处置窗口"
+        },
+        {
+          "baseline_line": 778,
+          "title": "50. 2026-09-27 追加：执行桥核对上游决策是否仍新鲜"
+        },
+        {
+          "baseline_line": 784,
+          "title": "51. 2026-09-27 追加：运行资源包络的诊断图，仅作答问备份"
+        },
+        {
+          "baseline_line": 790,
+          "title": "52. 2026-09-28 追加：可恢复输入缺口与来源授权的答问备份"
+        },
+        {
+          "baseline_line": 806,
+          "title": "53. 2026-09-28 追加：图 67 的同次接收／夹具排队诊断（仅答问备份）"
+        },
+        {
+          "baseline_line": 812,
+          "title": "54. 2026-09-28 追加：图 68 分进程 PVS 活性边界（仅答问备份）"
+        },
+        {
+          "baseline_line": 818,
+          "title": "55. 2026-09-28 追加：图 69 双端耗时定位（仅答问备份）"
+        },
+        {
+          "baseline_line": 822,
+          "title": "56. 2026-09-28 追加：图 70 动态重放排除在线 PVS 后的边界（仅答问备份）"
+        },
+        {
+          "baseline_line": 826,
+          "title": "57. 2026-09-28 追加：答辩结论与现场冻结判据对齐"
+        },
+        {
+          "baseline_line": 832,
+          "title": "58. 2026-09-28 收口：磁巡检仿真与答辩资产完成"
+        }
+      ]
+    },
+    {
+      "record": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "baseline_sections": [
+        {
+          "baseline_line": 8,
+          "title": "1. 审阅结论"
+        },
+        {
+          "baseline_line": 19,
+          "title": "2. v1 口径与 v2 实现的关键差异"
+        },
+        {
+          "baseline_line": 38,
+          "title": "3. 当前 7 分钟版本的逐页同步方案"
+        },
+        {
+          "baseline_line": 135,
+          "title": "4. 正式答辩建议的 FWHM 页面结构"
+        },
+        {
+          "baseline_line": 182,
+          "title": "5. 可直接引用的图像"
+        },
+        {
+          "baseline_line": 226,
+          "title": "6. PPT 信息同步清单"
+        },
+        {
+          "baseline_line": 243,
+          "title": "7. 答辩高概率追问与建议回答"
+        },
+        {
+          "baseline_line": 269,
+          "title": "8. 为正式答辩建议继续完成的工作"
+        },
+        {
+          "baseline_line": 305,
+          "title": "9. 推荐的版本推进顺序"
+        }
+      ]
+    }
+  ],
+  "record_updates": [
+    {
+      "path": "PPT制作/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "before_backup": "PPT制作/assets/thesis_diff_20260929/original_records/谢冠文_硕士毕设临时中期汇报_V4.4新增内容同步建议_20260925.md",
+      "before_sha256": "e4daa55c84169530c7e7d8f3d4426ac252acdabff497ce4a8db028fe3dbf3a66",
+      "after_sha256": "a5598dc61ed1c34e0fa4086b3696e6900873dc668b522c6512211d26d6929a91",
+      "old_lines": 844,
+      "new_lines": 885,
+      "original_body_preserved": true
+    },
+    {
+      "path": "PPT制作/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "before_backup": "PPT制作/assets/thesis_diff_20260929/original_records/FWHM_v2_PPT同步与答辩建议_20260925.md",
+      "before_sha256": "f04379618150025d3154778662f1c5b0bfae19407d5507ec156fe2abcf9bd5c5",
+      "after_sha256": "706a9e1820d324a3d1d7c6d46bdd155c4c44e97c06bdeae96e648757588d32a9",
+      "old_lines": 312,
+      "new_lines": 353,
+      "original_body_preserved": true
+    },
+    {
+      "path": "PPT制作/01new_FWHM模型失配与巡检连续性同步_20260926.md",
+      "before_backup": "PPT制作/assets/thesis_diff_20260929/original_records/01new_FWHM模型失配与巡检连续性同步_20260926.md",
+      "before_sha256": "37c956c9586b83c81add8368e2d4ac41d5d621e8171e4811636637d12f48382e",
+      "after_sha256": "bf9206b641d11aabca2bb590a83c715ec3398821e5a1f8c6ea209847ff616122",
+      "old_lines": 59,
+      "new_lines": 62,
+      "original_body_preserved": true
+    }
+  ],
+  "record_update_patch": {
+    "path": "PPT制作/assets/thesis_diff_20260929/record_sync_20260929.patch",
+    "sha256": "61f9eb80adac2558caf85a4b354eebf740694a4c3d52d58e67490b3cf628c08b"
+  },
+  "ledger": {
+    "path": "PPT制作/02new_论文169与236页差分_答辩资产总账_20260929.md",
+    "sha256": "4d3dcce18254df5853f090a799a5ff8f76bc522a9b14fe477c4e43e5784f8134"
+  }
+}

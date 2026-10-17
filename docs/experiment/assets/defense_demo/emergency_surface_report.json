@@ -1,0 +1,32 @@
+{
+  "schema": "auv.emergency_surface_assurance.v1",
+  "passed": true,
+  "saw_estop": true,
+  "saw_surfaced": true,
+  "initial_depth_m": 11.606019018070679,
+  "minimum_depth_m": 0.691495086261913,
+  "ascent_m": 10.914523931808766,
+  "maximum_active_horizontal_speed_mps": 0.0,
+  "events": [
+    {
+      "elapsed_s": 14.469,
+      "state": "EMERGENCY_SURFACE",
+      "depth_m": 11.606019018070679
+    },
+    {
+      "elapsed_s": 30.668,
+      "state": "SURFACED",
+      "depth_m": 0.691495086261913
+    }
+  ],
+  "latest": {
+    "active": 1,
+    "state": "SURFACED",
+    "action": "SURFACE",
+    "current_depth_m": 0.691495086261913,
+    "target_depth_m": 0.5,
+    "vertical_progress": 0.9833482533685293,
+    "horizontal_speed_mps": 0.0,
+    "source": "pyside6_console_estop"
+  }
+}

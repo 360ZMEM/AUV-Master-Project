@@ -1,0 +1,2616 @@
+{
+  "source": "相关附件和参照/word模板(202605)/02学位论文指导小组、公开评阅人和答辩委员会名单/02-2-1学位论文公开评阅人和答辩委员会名单（无指导小组，全部或部分公开评阅）.doc",
+  "source_sha256": "50876ab79cc8e0aebfd0168453cb1c41c8e7a462bacf6c08ad48552a3a918517",
+  "converted_docx_sha256": "948481d5a34cb6ed6b067c139e2df7c73290500d829f4f8201178d4311add37a",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "0",
+        "top": "1701",
+        "footer": "0",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "116",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "default",
+        "linePitch": "417",
+        "charSpace": "3685"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "240",
+          "after": "360"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "spacing": {
+          "val": "8"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "30"
+        }
+      }
+    },
+    "Heading2": {
+      "type": "paragraph",
+      "styleId": "Heading2",
+      "name": "Heading 2",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "360",
+          "after": "120"
+        },
+        "outlineLvl": {
+          "val": "1"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "sz": {
+          "val": "28"
+        }
+      }
+    },
+    "WW8Num2z0": {
+      "type": "character",
+      "styleId": "WW8Num2z0",
+      "name": "WW8Num2z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3z0": {
+      "type": "character",
+      "styleId": "WW8Num3z0",
+      "name": "WW8Num3z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4z0": {
+      "type": "character",
+      "styleId": "WW8Num4z0",
+      "name": "WW8Num4z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5z0": {
+      "type": "character",
+      "styleId": "WW8Num5z0",
+      "name": "WW8Num5z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6z1": {
+      "type": "character",
+      "styleId": "WW8Num6z1",
+      "name": "WW8Num6z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num7z0": {
+      "type": "character",
+      "styleId": "WW8Num7z0",
+      "name": "WW8Num7z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7z1": {
+      "type": "character",
+      "styleId": "WW8Num7z1",
+      "name": "WW8Num7z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num9z0": {
+      "type": "character",
+      "styleId": "WW8Num9z0",
+      "name": "WW8Num9z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9z1": {
+      "type": "character",
+      "styleId": "WW8Num9z1",
+      "name": "WW8Num9z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num10z0": {
+      "type": "character",
+      "styleId": "WW8Num10z0",
+      "name": "WW8Num10z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8NumSt1z0": {
+      "type": "character",
+      "styleId": "WW8NumSt1z0",
+      "name": "WW8NumSt1z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Garamond",
+          "hAnsi": "Garamond",
+          "cs": "Garamond"
+        },
+        "sz": {
+          "val": "36"
+        }
+      }
+    },
+    "Style12": {
+      "type": "character",
+      "styleId": "Style12",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style12",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Style13": {
+      "type": "character",
+      "styleId": "Style13",
+      "name": "批注框文本 字符",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "0",
+          "after": "120"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "正文缩进",
+      "basedOn": "Normal",
+      "pPr": {
+        "ind": {
+          "firstLine": "420"
+        }
+      },
+      "rPr": {}
+    },
+    "Achievement": {
+      "type": "paragraph",
+      "styleId": "Achievement",
+      "name": "Achievement",
+      "basedOn": "TextBody",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "220",
+          "before": "0",
+          "after": "0"
+        }
+      },
+      "rPr": {
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "PersonalInfo": {
+      "type": "paragraph",
+      "styleId": "PersonalInfo",
+      "name": "Personal Info",
+      "basedOn": "Achievement",
+      "pPr": {
+        "spacing": {
+          "before": "220",
+          "after": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "段落",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "100",
+          "after": "0"
+        },
+        "ind": {
+          "firstLine": "480"
+        }
+      },
+      "rPr": {}
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style16": {
+      "type": "paragraph",
+      "styleId": "Style16",
+      "name": "批注框文本",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "TableContents": {
+      "type": "paragraph",
+      "styleId": "TableContents",
+      "name": "Table Contents",
+      "basedOn": "Normal",
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "TableHeading": {
+      "type": "paragraph",
+      "styleId": "TableHeading",
+      "name": "Table Heading",
+      "basedOn": "TableContents",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        }
+      }
+    },
+    "FrameContents": {
+      "type": "paragraph",
+      "styleId": "FrameContents",
+      "name": "Frame Contents",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num2": {
+      "type": "numbering",
+      "styleId": "WW8Num2",
+      "name": "WW8Num2",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3": {
+      "type": "numbering",
+      "styleId": "WW8Num3",
+      "name": "WW8Num3",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4": {
+      "type": "numbering",
+      "styleId": "WW8Num4",
+      "name": "WW8Num4",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5": {
+      "type": "numbering",
+      "styleId": "WW8Num5",
+      "name": "WW8Num5",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6": {
+      "type": "numbering",
+      "styleId": "WW8Num6",
+      "name": "WW8Num6",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7": {
+      "type": "numbering",
+      "styleId": "WW8Num7",
+      "name": "WW8Num7",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8": {
+      "type": "numbering",
+      "styleId": "WW8Num8",
+      "name": "WW8Num8",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9": {
+      "type": "numbering",
+      "styleId": "WW8Num9",
+      "name": "WW8Num9",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num10": {
+      "type": "numbering",
+      "styleId": "WW8Num10",
+      "name": "WW8Num10",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num11": {
+      "type": "numbering",
+      "styleId": "WW8Num11",
+      "name": "WW8Num11",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "学位论文公开评阅人和答辩委员会名单",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "auto",
+          "line": "240",
+          "before": "480",
+          "after": "360"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "学位论文公开评阅人和答辩委员会名单",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "cs": "Arial Black",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "32"
+            },
+            "szCs": {
+              "val": "32"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "公开评阅人名单",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "公开评阅人名单",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "刘XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "刘",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 5,
+      "text": "清华大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "清华大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "陈XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "陈",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 7,
+      "text": "副教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "副教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "XXXX大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "XXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "杨XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "杨",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "研究员",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "研究员",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "中国XXXX科学院XXXXXXX研究所",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "中国",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "科学院",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XXXXXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "研究所",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "答辩委员会名单",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "答辩委员会名单",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 13,
+      "text": "主席",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "主席",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "赵XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "赵",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 15,
+      "text": "教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 16,
+      "text": "清华大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "清华大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 17,
+      "text": "委员",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "委员",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 18,
+      "text": "刘XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "刘",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 19,
+      "text": "教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 20,
+      "text": "清华大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "清华大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 22,
+      "text": "杨XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "杨",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 23,
+      "text": "研究员",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "研究员",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 24,
+      "text": "中国XXXX科学院XXXXXXX研究所",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "中国",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "科学院",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XXXXXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "研究所",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 26,
+      "text": "黄XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "黄",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 27,
+      "text": "教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 28,
+      "text": "XXXX大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "XXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 30,
+      "text": "周XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "周",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 31,
+      "text": "副教授",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "副教授",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 32,
+      "text": "XXXX大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "XXXX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 33,
+      "text": "秘书",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "秘书",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 34,
+      "text": "吴XX",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "吴",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "XX",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 35,
+      "text": "助理研究员",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "助理研究员",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 36,
+      "text": "清华大学",
+      "pPr": {
+        "pStyle": {
+          "val": "Title"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "清华大学",
+          "rPr": {
+            "rFonts": {
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun",
+              "cs": "宋体;SimSun"
+            },
+            "sz": {
+              "val": "24"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 39,
+      "text": "填写说明：各类名单按实际人数逐行填写，可增加或删除行，不留空行。“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。填写完毕后请及时删除提示红框。填写说明：各类名单按实际人数逐行填写，可增加或删除行，不留空行。“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。填写完毕后请及时删除提示红框。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "填写说明：各类名单按实际人数逐行填写，可增加或删除行，不留空行。“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。填写完毕后请及时删除提示红框。填写说明：各类名单按实际人数逐行填写，可增加或删除行，不留空行。“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。填写完毕后请及时删除提示红框。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 40,
+      "text": "填写说明：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "填写说明：",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 41,
+      "text": "各类名单按实际人数逐行填写，可增加或删除行，不留空行。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "各类名单按实际人数逐行填写，可增加或删除行，",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "不留空行",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 42,
+      "text": "“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "“",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "公开评阅人名单”仅填写公开评阅人信息，",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "不填写隐名评阅人信息",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 43,
+      "text": "填写完毕后请及时删除提示红框。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "填写完毕后",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "请及时删除提示红框",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 44,
+      "text": "填写说明：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "填写说明：",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 45,
+      "text": "各类名单按实际人数逐行填写，可增加或删除行，不留空行。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "各类名单按实际人数逐行填写，可增加或删除行，",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "不留空行",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 46,
+      "text": "“公开评阅人名单”仅填写公开评阅人信息，不填写隐名评阅人信息。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "“",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun",
+              "ascii": "宋体;SimSun",
+              "hAnsi": "宋体;SimSun"
+            },
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "公开评阅人名单”仅填写公开评阅人信息，",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "不填写隐名评阅人信息",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 47,
+      "text": "填写完毕后请及时删除提示红框。",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "numPr": {
+          "value": ""
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "填写完毕后",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        },
+        {
+          "text": "请及时删除提示红框",
+          "rPr": {
+            "color": {
+              "val": "FF0000"
+            }
+          }
+        },
+        {
+          "text": "。",
+          "rPr": {
+            "color": {
+              "val": "0000FF"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {},
+  "footnotes_endnotes": {}
+}

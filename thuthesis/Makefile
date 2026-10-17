@@ -35,6 +35,22 @@ thesis: $(THESIS).pdf
 
 auv-thesis: $(AUV_THESIS).pdf
 
+# Both report variants share auv-middle-defense.tex and middle/*.tex.
+# Template updates are explicit: python3 ../tools/manage_thuthesis.py fetch/activate.
+.PHONY: auv-middle-defense auv-middle-defense-main auv-middle-defense-school verify-thuthesis
+auv-middle-defense: auv-middle-defense-school
+
+verify-thuthesis:
+	python3 ../tools/manage_thuthesis.py verify
+
+auv-middle-defense-main: verify-thuthesis
+	$(LATEXMK) -recorder -outdir=build/middle-main auv-middle-defense-main
+	python3 ../tools/check_middle_build.py build/middle-main/auv-middle-defense-main
+
+auv-middle-defense-school: verify-thuthesis
+	$(LATEXMK) -recorder -outdir=build/middle-school auv-middle-defense-school
+	python3 ../tools/check_middle_build.py build/middle-school/auv-middle-defense-school
+
 preview-auv-thesis: auv-thesis
 	$(MAKE) clean-auv-thesis
 

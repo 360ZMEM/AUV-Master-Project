@@ -1,0 +1,28 @@
+\ProvidesFile{thuthesis-author-year.cbx}[2020/08/01 v1.0 ThuThesis biblatex
+  citation style]
+
+\RequireCitationStyle{gb7714-2015ay}
+
+\renewrobustcmd{\mkbibleftborder}{%
+  \ifthu@language@chinese
+    （%
+  \else
+    (%
+  \fi
+}
+\renewrobustcmd{\mkbibrightborder}{%
+  \ifthu@language@chinese
+    ）%
+  \else
+    )%
+  \fi
+}
+\def\gbpunctcommacite{\addcomma\space}
+\def\gbpunctmarkcite{\addcomma\space}
+\def\gbpunctsemicoloncite{%
+  \ifthu@language@chinese
+    ；%
+  \else
+    \addsemicolon\space
+  \fi
+}

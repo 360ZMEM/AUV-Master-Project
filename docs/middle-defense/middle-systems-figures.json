@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "generated_by": "tools/plot_middle_systems.py",
+  "generated_by_sha256": "67fb7c1e68968030aab8e6357a73a0fcd69a80da38591fae39115e31c1e9c5fc",
+  "python_executable": "/home/zmem063/.local/share/auv-middle/venv/bin/python",
+  "new_experiments": false,
+  "fonts": "FandolSong（沿用tools/thesis_plot_style.py），数学STIX；不声称STSong或Times New Roman",
+  "width_mm": 150,
+  "minimum_font_pt": 9.5,
+  "reexport": "/home/zmem063/.local/share/auv-middle/venv/bin/python tools/plot_middle_systems.py；锁定依赖见tools/requirements-middle-figures.txt，另需poppler-utils",
+  "old_figures_unchanged": true,
+  "old_figure_sha256": {
+    "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf": "caacea29d3e0500e47b6a5cc854e991556c1397c05b109626cec1522503f3875",
+    "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf": "db2dc570b196f0631381324a8944e6a98462ee482fc87585f9a38874ce644f27",
+    "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4"
+  },
+  "figures": [
+    {
+      "output_pdf": "thuthesis/middle/figures/systems/complex_iq_fit_middle.pdf",
+      "output_png": "thuthesis/middle/figures/systems/complex_iq_fit_middle.png",
+      "pdf_sha256": "f4de3911af5760dca70653634e4ba5fd67c55c4cee27fbd776682f9b99af51db",
+      "png_sha256": "3169146092aaa3faa6267366090a15819b5f3c32fa06d7a4f34f091cba75d4fd",
+      "sources": [
+        {
+          "path": "results/magnetic_analysis/20260809_r07_45hz_reanalysis/joint_geometry_rerun/1783235358_205719/aligned_timeseries.npz",
+          "sha256": "157628a7ef1467e5b371c3e2998b96301802ee297ef194ab404c4c7a687c2bc9"
+        }
+      ],
+      "derivation": {
+        "method": "直接读取已存档777个实测/模型复数序列，仅重新排版；没有重跑锁相或拟合",
+        "arrays": [
+          "timestamp",
+          "complex_phasor_real_ut",
+          "complex_phasor_imag_ut",
+          "complex_model_real_ut",
+          "complex_model_imag_ut"
+        ],
+        "sample_count": 777,
+        "transforms": "时间减去首个时间戳；曲线值不变，单位μT"
+      },
+      "typography": {
+        "pdf_width_pt": 425.19683837890625,
+        "pdf_height_pt": 410.3999938964844,
+        "font_sizes_pt": [
+          9.5,
+          10.0
+        ],
+        "min_final_font_pt_at_150mm": 9.5,
+        "all_final_text_at_least_9pt": true
+      }
+    },
+    {
+      "output_pdf": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.pdf",
+      "output_png": "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.png",
+      "pdf_sha256": "35acd2e68e1c673d125a385f2fdb55c5608b3ae816dfcc5a7abd0647bfff27a3",
+      "png_sha256": "088352833c59f3c66538290af7efe7518e09167b70599344352cd1791b6da6b3",
+      "sources": [
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_cold_raw.csv",
+          "sha256": "7abcbcba43381ab04bfc22171cecd733be4cc21aa8b89ccbcf982096d5e54817"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/steady/mpc_solve_microbench_warm_raw.csv",
+          "sha256": "7382b1f162e7186881b527909e9e3d6e62605fe3fe839049a130cb9c9b8a1e72"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_cold_raw.csv",
+          "sha256": "1a5e2b5a37d426b843274782d9e0c5d0f604344645955458552397c2412d038d"
+        },
+        {
+          "path": "real_experiments/jetson_realtime/data/runs/20260822_165846/stress/mpc_solve_microbench_warm_raw.csv",
+          "sha256": "1c48fd83d2487ea4cad625479ceea3f84f6a217fad78ae53a911fcef173b534f"
+        }
+      ],
+      "derivation": {
+        "method": "既有4个CSV重新绘箱线与成功率，showfliers=False沿用旧图；无新求解或平台测试",
+        "samples_per_group": [
+          200,
+          200,
+          50,
+          50
+        ],
+        "success_percent": [
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ],
+        "transform": "时延值不变；log轴改用普通数字刻度；标签换行；共500次既有样本"
+      },
+      "typography": {
+        "pdf_width_pt": 425.19683837890625,
+        "pdf_height_pt": 399.6000061035156,
+        "font_sizes_pt": [
+          9.5,
+          10.0
+        ],
+        "min_final_font_pt_at_150mm": 9.5,
+        "all_final_text_at_least_9pt": true
+      }
+    },
+    {
+      "output_pdf": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.pdf",
+      "output_png": "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.png",
+      "pdf_sha256": "bb998b51c9773852e73a1899c989af1ec4ee8d20475f99051d86995281692cfa",
+      "png_sha256": "b1b9297749432ce25cf960d262d0ece3e1509f1456c87c57c2315dbf68a4f344",
+      "sources": [
+        {
+          "path": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+          "sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4"
+        }
+      ],
+      "derivation": {
+        "method": "仅从旧PDF的四块绘图区保留矢量曲线/色带/零命令样本，坐标与图例重新排版；不重构raw事件",
+        "evidence_level": "原始运行CSV在当前副本缺失；此图不构成新数据重算或新实验",
+        "source_plot_clips_top_left_pdf_pt": [
+          [
+            60.2456245,
+            38.5301208,
+            486.4795227,
+            95.8031006
+          ],
+          [
+            60.2456245,
+            119.9035797,
+            486.4795227,
+            177.1765747
+          ],
+          [
+            60.2456245,
+            186.6770477,
+            486.4795227,
+            243.9500427
+          ],
+          [
+            60.2456245,
+            253.450531,
+            486.4795227,
+            310.7235107
+          ]
+        ],
+        "destination_rects_top_left_pdf_pt": [
+          [
+            80.78740157480316,
+            65.1239991760254,
+            414.5669291338582,
+            132.8213960890079
+          ],
+          [
+            80.78740157480316,
+            163.9621986689798,
+            414.5669291338582,
+            231.6595955819623
+          ],
+          [
+            80.78740157480316,
+            262.8003981619342,
+            414.5669291338582,
+            330.49779507491667
+          ],
+          [
+            80.78740157480316,
+            361.63859765488866,
+            414.5669291338582,
+            429.3359945678711
+          ]
+        ],
+        "x_tick_positions_source_pdf_pt": [
+          60.24562,
+          131.29193,
+          202.33823,
+          273.38452,
+          344.43085,
+          415.47714
+        ],
+        "retained_domain": "完整原图时间域、原故障/仲裁/任务状态与命令曲线；未裁除任何时间区间",
+        "layout_only_changes": "移出原第四面板内图例，删去图内重复延时说明（图注保留）；绘图区非等比版式变换，各轴刻度映射保持",
+        "command_evidence": "原图三类命令/反馈均为0；移除的图例上部区域不与y=0采样曲线相交"
+      },
+      "typography": {
+        "pdf_width_pt": 425.19683837890625,
+        "pdf_height_pt": 482.3999938964844,
+        "font_sizes_pt": [
+          9.5,
+          10.0
+        ],
+        "min_final_font_pt_at_150mm": 9.5,
+        "all_final_text_at_least_9pt": true
+      }
+    }
+  ],
+  "visual_review": {
+    "status": "PASS",
+    "renderer": "pdftoppm 300 dpi",
+    "inspector": "word_format_audit subagent actual view_image",
+    "reviewed_figures": [
+      "thuthesis/middle/figures/systems/complex_iq_fit_middle.png",
+      "thuthesis/middle/figures/systems/jetson_mpc_latency_and_success_middle.png",
+      "thuthesis/middle/figures/systems/pc104_cross_layer_fault_timeline_middle.png"
+    ],
+    "checks": [
+      "3幅坐标与单位完整，刻度最小9.5pt",
+      "共用图例颜色/线型与实测模型、故障/零命令一致",
+      "无重叠与越界，三幅高144.8/141.0/170.2mm，均预留图注空间",
+      "Jetson条件和样本数与正文一致；复I/Q为原777序列；PC104来源等级明确",
+      "图内移出的重复延时数值继续由正文按phase_start定义"
+    ],
+    "scope": "已实际打开三幅最终独立PNG；最后一次PC104图例与阴影修正亦已重新查看。主文档排印尺度记录在独立figure-size-check.json。",
+    "reexport_validation": "持久虚拟环境重新导出；3个PNG与实际查看版本逐字节SHA256一致，保留视觉验收"
+  }
+}

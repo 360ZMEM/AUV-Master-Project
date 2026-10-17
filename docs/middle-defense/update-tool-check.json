@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-13T05:24:19.558679+00:00",
+  "tool_path": "tools/manage_thuthesis.py",
+  "tool_sha256": "02599f8b506b5b55c0469d2b010062e2e0fadff513375abd3ecee0d757633ec6",
+  "scope": "独立隔离验收；仅使用既有v7.7.1 vendor只读源。v7.7.2为合成升级夹具，未获取/验证真实上游新版。",
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 - [importlib + TemporaryDirectory isolated fixture harness]",
+  "overall_status": "PASS",
+  "upstream": {
+    "url": "https://github.com/tuna/thuthesis.git",
+    "tag": "v7.7.1",
+    "tag_object": "7ebfb7c11bb32477e00b37c18f45028524048cc5",
+    "commit": "8b4d9443f39275d0492236ae4bfcd4532b799972"
+  },
+  "source_count": 267,
+  "generated_count": 2,
+  "runtime_count": 17,
+  "checks": [
+    {
+      "id": "SOURCE-TREE-267",
+      "status": "PASS",
+      "details": {
+        "source_count": 267,
+        "all_source_sha_match": true,
+        "source_is_tagged_tree": "v7.7.1",
+        "commit": "8b4d9443f39275d0492236ae4bfcd4532b799972",
+        "scope": "核验现有完整vendor清单；本次未联网重新取得git树"
+      }
+    },
+    {
+      "id": "GENERATED-2",
+      "status": "PASS",
+      "details": {
+        "thuthesis.cls": "4cbb87b799e24dce8b2e089893eafcd2f94c0ca50caa4f4f36fa9ebbb1872021",
+        "dtx-style.sty": "3526d857dad65688a065a7a8eed81d488066de39ad911fa852494ee33a37bc67"
+      }
+    },
+    {
+      "id": "NO-OMITTED-VENDOR-FILE",
+      "status": "PASS",
+      "details": {
+        "physical_file_count": 271,
+        "manifest_source_or_generated_count": 269,
+        "unlisted": [
+          "docstrip-build.log",
+          "vendor-manifest.json"
+        ]
+      }
+    },
+    {
+      "id": "ACTIVE-RUNTIME-17",
+      "status": "PASS",
+      "details": {
+        "runtime_count": 17,
+        "paths": [
+          "LICENSE",
+          "dtx-style.sty",
+          "thu-fig-logo.pdf",
+          "thu-text-logo.pdf",
+          "thuthesis-author-year.bbx",
+          "thuthesis-author-year.bst",
+          "thuthesis-author-year.cbx",
+          "thuthesis-bachelor.bbx",
+          "thuthesis-bachelor.bst",
+          "thuthesis-bachelor.cbx",
+          "thuthesis-inline.cbx",
+          "thuthesis-numeric.bbx",
+          "thuthesis-numeric.bst",
+          "thuthesis-numeric.cbx",
+          "thuthesis.cls",
+          "thuthesis.dtx",
+          "thuthesis.ins"
+        ]
+      }
+    },
+    {
+      "id": "VERIFY-ACTIVE",
+      "status": "PASS",
+      "details": "Verified v7.7.1 8b4d9443f39275d0492236ae4bfcd4532b799972: vendor + 17 runtime files"
+    },
+    {
+      "id": "SAME-TAG-NO-MUTATION",
+      "status": "PASS",
+      "details": "Already active; runtime and vendor hashes verified."
+    },
+    {
+      "id": "ACTIVATE-ISOLATED-UPGRADE",
+      "status": "PASS",
+      "details": {
+        "message": "Activated v7.7.2; rollback snapshot: thuthesis/backups/template-switch/20261013T132418553983",
+        "fixture_tag_only": true,
+        "added_runtime": "fixture-added.sty",
+        "removed_runtime": "thuthesis-author-year.bst"
+      }
+    },
+    {
+      "id": "VERIFY-UPGRADE",
+      "status": "PASS",
+      "details": "Verified v7.7.2 isolated-fixture-not-an-upstream-commit: vendor + 17 runtime files"
+    },
+    {
+      "id": "ROLLBACK-EXACT-RESTORE",
+      "status": "PASS",
+      "details": {
+        "message": "Restored only managed template files; thesis and report content untouched.",
+        "restored_old_files": 17,
+        "added_file_removed": true,
+        "removed_file_restored": true,
+        "lock_byte_identical": true
+      }
+    },
+    {
+      "id": "REFUSE-INTERVENING-EDIT",
+      "status": "PASS",
+      "details": {
+        "message": "Refusing to overwrite intervening edit: thuthesis.cls",
+        "all_files_unchanged_after_refusal": true
+      }
+    },
+    {
+      "id": "VERIFY-REJECTS-RUNTIME-EDIT",
+      "status": "PASS",
+      "details": "Runtime checksum mismatch: thuthesis.cls"
+    },
+    {
+      "id": "AUTHOR-CONTENT-UNTOUCHED",
+      "status": "PASS",
+      "details": {
+        "sentinel": "thuthesis/data/author-body.tex",
+        "before_after_sha256": "52bc4b139fc8fb61d1b227bb52d1d78d8c1785a6f5c7143c95c2f5ccef264d9e"
+      }
+    },
+    {
+      "id": "REFUSE-CORRUPT-VENDOR",
+      "status": "PASS",
+      "details": {
+        "message": "Vendor changed: README.md",
+        "all_files_unchanged_after_refusal": true
+      }
+    },
+    {
+      "id": "FIRST-ADOPTION-ROLLBACK",
+      "status": "PASS",
+      "details": {
+        "old_unmanaged_cls_restored": true,
+        "new_runtime_removed": 16,
+        "initial_no_lock_restored": true,
+        "author_content_unchanged": true
+      }
+    },
+    {
+      "id": "REAL-TREE-UNTOUCHED",
+      "status": "PASS",
+      "details": {
+        "read_only_guarded_files": 290,
+        "network_operations": 0,
+        "sandbox": "TemporaryDirectory; ROOT/THU/VENDOR/LOCK overridden before every mutation"
+      }
+    }
+  ],
+  "defects": [],
+  "not_run": [
+    "fetch联网获取：本次明确禁止，未调用",
+    "真实仓库升级/回退：为保护现有工作，只在临时树测试",
+    "断电/磁盘写入故障的事务恢复：未验证，不属于本次普通升级回退验收"
+  ]
+}

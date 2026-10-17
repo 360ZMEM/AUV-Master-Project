@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-13T05:43:45.402358+00:00",
+  "review_round": "final_rebuild_round_2",
+  "pdf_path": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+  "pdf_sha256": "2b88ae2cc5863cff00fb3b0a83114c9bd0ff97f42dab22411996d5efe65efea7",
+  "pdf_page_count": 35,
+  "reviewed_page_count": 35,
+  "render_dpi": 130,
+  "method": "35页逐页通过tools.view_image实际查看；仅使用render-main-final新目录；另用pdftohtml -zoom 1核查7图字号。",
+  "status": "FAIL",
+  "pending_fixes": [
+    {
+      "pdf_page": 31,
+      "printed_page": "27",
+      "issue": "第5章末句单行独占整页",
+      "suggestion": "删除重复的下一章过渡句或等量压缩正文后重编；保留研究边界。"
+    }
+  ],
+  "nonblocking_notes": [
+    {
+      "pdf_page": 17,
+      "printed_page": "13",
+      "issue": "约7行章尾边界段，留白较多",
+      "suggestion": "可选微调；并非单行孤页。"
+    }
+  ],
+  "font_measurement_note": "最终PDF图3.1/3.2/3.3/3.4位于PDF页13/14/15/16，提取文字均9pt；图4.2/4.3/4.4位于24/25/27页，文字9–10pt。",
+  "remaining_action": "修复第31页后绑定新PDF SHA及新渲染再次验收，当前不得标记全量视觉通过。",
+  "pages": [
+    {
+      "pdf_page": 1,
+      "printed_page": null,
+      "render_path": "docs/middle-defense/render-main-final/page-01.png",
+      "render_sha256": "89ab65133c101183bcfac72d2f9162c05f2d8392cf812ac3bc15759db4667ee9",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "封面题名两行、报告身份、培养单位、专业、姓名学号导师与日期完整；无遮挡裁切。"
+    },
+    {
+      "pdf_page": 2,
+      "printed_page": "I",
+      "render_path": "docs/middle-defense/render-main-final/page-02.png",
+      "render_sha256": "8f4571c666e41f6daacc08843407a202851ac8aecffdaa88500d4bab39b95335",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "中期概述与入口表完整，表头、四行状态和罗马页码可辨；无重叠。"
+    },
+    {
+      "pdf_page": 3,
+      "printed_page": "II",
+      "render_path": "docs/middle-defense/render-main-final/page-03.png",
+      "render_sha256": "0b0bd0ced72cd0676bce3a576476a930646fc1b636a6b776ff880583d70c7d85",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "目录第一页层级缩进、点线与页码完整，长章名未覆盖页码。"
+    },
+    {
+      "pdf_page": 4,
+      "printed_page": "III",
+      "render_path": "docs/middle-defense/render-main-final/page-04.png",
+      "render_sha256": "f64aa0a648fcddec05178a0b08a0967dbcc054b942a7fccc294bd23fc45fb921",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "目录第二页承接第5、6章与参考文献；留白为目录结束的正常分页。"
+    },
+    {
+      "pdf_page": 5,
+      "printed_page": "1",
+      "render_path": "docs/middle-defense/render-main-final/page-05.png",
+      "render_sha256": "153263d3c90da556dba339d7ab1c092d46f5ad9b787bcafea53d7aed3cda6fea",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第1章开篇和1.1/1.2标题与正文间距正常，脚注式引用清晰，续页自然。"
+    },
+    {
+      "pdf_page": 6,
+      "printed_page": "2",
+      "render_path": "docs/middle-defense/render-main-final/page-06.png",
+      "render_sha256": "6b1dcdf6972d59a53acfa8ef508a23d6cce0562b3f6d931c0ee41ad59d93d8fc",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第1章完整结束于本页；原仅三行章尾孤页已消除，页脚与正文分离。"
+    },
+    {
+      "pdf_page": 7,
+      "printed_page": "3",
+      "render_path": "docs/middle-defense/render-main-final/page-07.png",
+      "render_sha256": "9a6ba9682369dc96ea079d0649bd1f03be6421b0b1a0acf24038cdb63db5fe52",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第2章开篇及图2.1关系图完整，框内文字与箭头无重叠；原第1章孤页位置已承载正常正文。"
+    },
+    {
+      "pdf_page": 8,
+      "printed_page": "4",
+      "render_path": "docs/middle-defense/render-main-final/page-08.png",
+      "render_sha256": "85e2be61833a4e332a015fade1dbe24307eb1f08d14faf1bc4378a86716f7159",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "2.2/2.3正文与式2.1清晰，杆臂符号上下标无裁切。"
+    },
+    {
+      "pdf_page": 9,
+      "printed_page": "5",
+      "render_path": "docs/middle-defense/render-main-final/page-09.png",
+      "render_sha256": "e439956e9e68964932075f3309f79d0982f5bab95daee9da70ad56fec91808e4",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "2.4及表2.1完整，表内换行与底线正常，第2章收尾自然；原三行孤页已消除。"
+    },
+    {
+      "pdf_page": 10,
+      "printed_page": "6",
+      "render_path": "docs/middle-defense/render-main-final/page-10.png",
+      "render_sha256": "06af0873a2d934a5db085cbabfaa25d91dcf52f00eb4dd1a7af04a3c88c88186",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第3章开篇、3.1和式3.1/3.2清晰，公式编号与正文未碰撞。"
+    },
+    {
+      "pdf_page": 11,
+      "printed_page": "7",
+      "render_path": "docs/middle-defense/render-main-final/page-11.png",
+      "render_sha256": "102f5fb43414b0df52eaa0faeccee4a1bd50225164c84bd7065fdb8de52496e9",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "式3.3的四项横排完整，3.2方法正文正常，根号/上下标完整。"
+    },
+    {
+      "pdf_page": 12,
+      "printed_page": "8",
+      "render_path": "docs/middle-defense/render-main-final/page-12.png",
+      "render_sha256": "fdcfaa6e067f508b491b40c3fb85aa4df8486da1fcc60c5e1aa699612bbd5e0b",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "3.3稳定性输入条件、样本口径及数值清晰，无异常空白；浮动图在随后页出现。"
+    },
+    {
+      "pdf_page": 13,
+      "printed_page": "9",
+      "render_path": "docs/middle-defense/render-main-final/page-13.png",
+      "render_sha256": "456b4b9c8038a453ec6043f6efdb70a08d7f05b6f52869ce02f12d878dbad147",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "图3.1四面板及两行图例清晰，字号实测9pt；图注和场形方法正文无重叠。"
+    },
+    {
+      "pdf_page": 14,
+      "printed_page": "10",
+      "render_path": "docs/middle-defense/render-main-final/page-14.png",
+      "render_sha256": "a62db07ea362de6016fe776962470c8ebf29027aa7e44e8b6d75d0baf31d3068",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "图3.2两面板所有类别可辨，零发布标注可见，字号实测9pt；图注与3.4标题间距正常。"
+    },
+    {
+      "pdf_page": 15,
+      "printed_page": "11",
+      "render_path": "docs/middle-defense/render-main-final/page-15.png",
+      "render_sha256": "4df9e25c86a1920bab2b2d0250b037ecb3fe999616b346a8d31d47b141fbade4",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "图3.3地图、中心和真实横偏三面板完整，移出的图例无遮挡，字号实测9pt；图注明确种子与空埋深。"
+    },
+    {
+      "pdf_page": 16,
+      "printed_page": "12",
+      "render_path": "docs/middle-defense/render-main-final/page-16.png",
+      "render_sha256": "9c555706302de071f496a4cace737d185752eba2171dd7e59cc719e73d3a3df5",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "式3.4和图3.4完整，数值柱标、灰区说明及图例无覆盖，字号实测9pt；图注完整。"
+    },
+    {
+      "pdf_page": 17,
+      "printed_page": "13",
+      "render_path": "docs/middle-defense/render-main-final/page-17.png",
+      "render_sha256": "2e5931e884c6fcb001b3451e70b8be12c8cf053a5d68c58a21233a4322433c54",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS_WITH_NOTE",
+      "observation": "章尾约7行保留完整研究边界，页面约四分之三留白；不是截断或单行孤页，建议可选压缩。"
+    },
+    {
+      "pdf_page": 18,
+      "printed_page": "14",
+      "render_path": "docs/middle-defense/render-main-final/page-18.png",
+      "render_sha256": "d8594f697bf39a024278d9536a90c7f57c608c343e286474f87ca0cabbcd73d3",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第4章开篇、三级标题和式4.1/4.2均完整，无重叠。"
+    },
+    {
+      "pdf_page": 19,
+      "printed_page": "15",
+      "render_path": "docs/middle-defense/render-main-final/page-19.png",
+      "render_sha256": "07ffd8e1162c2725f0fdb19b4300633532d3393e416d08c3978d39ceae8bd5fa",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.1.2与表4.1完整，数值列对齐，表下边线未进入页脚。"
+    },
+    {
+      "pdf_page": 20,
+      "printed_page": "16",
+      "render_path": "docs/middle-defense/render-main-final/page-20.png",
+      "render_sha256": "b086c367fc98d380dadec9aa7bf755d60f1454d20919bcfb2f6f990d61720d16",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.2/4.2.1和式4.3双行公式完整，方程号、分式和正文间距正常。"
+    },
+    {
+      "pdf_page": 21,
+      "printed_page": "17",
+      "render_path": "docs/middle-defense/render-main-final/page-21.png",
+      "render_sha256": "60b59515589c7462168bc6402d3ce5c2000b28b55aac7b43d9650071d53bb51f",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.2.2与表4.2完整，长表头仍有明确列间隔，保留负结果正文，无异常留白。"
+    },
+    {
+      "pdf_page": 22,
+      "printed_page": "18",
+      "render_path": "docs/middle-defense/render-main-final/page-22.png",
+      "render_sha256": "04b3a683b64a8067287473647e392728f39b6bb829f54b339f19308d8dd114b6",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.3与图4.1完整，ADC图原字号已足够，图例、轴标、图注与前后公式无重叠。"
+    },
+    {
+      "pdf_page": 23,
+      "printed_page": "19",
+      "render_path": "docs/middle-defense/render-main-final/page-23.png",
+      "render_sha256": "7cf2df846151574932882c788ea173ed5fcfdd238815d4a6d2ca03324878d76d",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.3.2真实磁实验条件及式4.5完整，长公式和单位可辨，无裁切。"
+    },
+    {
+      "pdf_page": 24,
+      "printed_page": "20",
+      "render_path": "docs/middle-defense/render-main-final/page-24.png",
+      "render_sha256": "4311c40df8d9cf7d0372e2ecd4d338696362608791d4eba12c76a25e7dd94e7b",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "图4.2独立浮动页六面板完整，三通道同相/正交曲线、实测模型图例可辨，关键字号9–10pt；页上留白为图页垂直居中。"
+    },
+    {
+      "pdf_page": 25,
+      "printed_page": "21",
+      "render_path": "docs/middle-defense/render-main-final/page-25.png",
+      "render_sha256": "0b7c7dfce1c4762e05db52b7116e067dea85923983469ec4cdaac61364cbd9d2",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "4.4/4.4.1与图4.3两面板完整，图例不遮箱线，轴标百分比及图注清晰，关键字号9–10pt。"
+    },
+    {
+      "pdf_page": 26,
+      "printed_page": "22",
+      "render_path": "docs/middle-defense/render-main-final/page-26.png",
+      "render_sha256": "f739b1d608c676bd1ff7897cc28588398e1126d7e1b6b5a8136e1525e19bd5de",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "真实PC104通信条件与时延正文完整，分节标题间距正常，无越界。"
+    },
+    {
+      "pdf_page": 27,
+      "printed_page": "23",
+      "render_path": "docs/middle-defense/render-main-final/page-27.png",
+      "render_sha256": "15081dc7068181c490f42bfb69f9eb9471749ca4db4e1caf12aa1881c96e6dd8",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "图4.4独立浮动页四层时间线完整，重绘图例和文字清晰，图例不遮曲线；关键字号9–10pt。"
+    },
+    {
+      "pdf_page": 28,
+      "printed_page": "24",
+      "render_path": "docs/middle-defense/render-main-final/page-28.png",
+      "render_sha256": "94679edd65631d72c9ea5c832011c962ce68e935342002b3145ca679d4d5899e",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "PC104结果续文及4.5整艇状态完整，章尾留白适度，无截断。"
+    },
+    {
+      "pdf_page": 29,
+      "printed_page": "25",
+      "render_path": "docs/middle-defense/render-main-final/page-29.png",
+      "render_sha256": "5f4b5ac76a00775c73c6d5209a8f0670fcb583e7e31547e48902c0fd6880335f",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第5章5.1及5.2开篇完整，研究限制与公式内嵌文字清晰。"
+    },
+    {
+      "pdf_page": 30,
+      "printed_page": "26",
+      "render_path": "docs/middle-defense/render-main-final/page-30.png",
+      "render_sha256": "8e8e56161527980bf26a4cc5c4fcbd87a1b58ab93b7011cc2d14cfb6c12a6f98",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS_WITH_NOTE",
+      "observation": "5.2/5.3正文完整，但最后的重复过渡句被分到下一页，需消除续页单行。"
+    },
+    {
+      "pdf_page": 31,
+      "printed_page": "27",
+      "render_path": "docs/middle-defense/render-main-final/page-31.png",
+      "render_sha256": "cdebdbf6d4021f35b19792e4b82520dee5a0c5f462741532dd296796dcb1758d",
+      "actually_viewed_with": "tools.view_image",
+      "status": "FAIL",
+      "observation": "FAIL：印刷页27仅有“赖与验收证据。”单行，形成几乎整页留白的章尾孤页，必须修复。"
+    },
+    {
+      "pdf_page": 32,
+      "printed_page": "28",
+      "render_path": "docs/middle-defense/render-main-final/page-32.png",
+      "render_sha256": "6d0d4038c82c18b9706849b0a6dcce33b756de89f14b9625addd9da126e50bd6",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "第6章6.1/6.2完整，标题与正文间距正常，表前文字续页自然。"
+    },
+    {
+      "pdf_page": 33,
+      "printed_page": "29",
+      "render_path": "docs/middle-defense/render-main-final/page-33.png",
+      "render_sha256": "4f676f88c16e4134bf464e3c0203f1e102bf71edde5c2047b6bc80a5a3a13b8b",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "表6.1全部W1–W5工作包置于单页，行内粗体提示完整，表底线和页码之间仍有间隔，无裁切。"
+    },
+    {
+      "pdf_page": 34,
+      "printed_page": "30",
+      "render_path": "docs/middle-defense/render-main-final/page-34.png",
+      "render_sha256": "f8efd71babffa907911cbf730571844de0301e31327848bf6f23a1d5c157ca26",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "6.4阶段更新与预期成果完整，章尾正常留白，无空标题或残句。"
+    },
+    {
+      "pdf_page": 35,
+      "printed_page": "31",
+      "render_path": "docs/middle-defense/render-main-final/page-35.png",
+      "render_sha256": "90fece8064d8c875a4a9abb109e53a2cd265b25450f69d608a3a63f1a078c03c",
+      "actually_viewed_with": "tools.view_image",
+      "status": "PASS",
+      "observation": "12条参考文献及DOI/URL均完整，悬挂缩进与换行正常，无出界或遮挡。"
+    }
+  ]
+}

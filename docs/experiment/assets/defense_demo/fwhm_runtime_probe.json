@@ -1,0 +1,40 @@
+{
+  "run_directory": ".auv_data/bags/20260919_210509",
+  "layout_id": "lay_0ecaUEHkq4LdDkdb",
+  "viewport_px": [1366, 900],
+  "setpoint_publisher_count": 1,
+  "observations": [
+    {
+      "stage": "expanded_cross_scan",
+      "mission_phase": "confirm",
+      "cross_scan_attempt": 3,
+      "cross_scan_id": 4,
+      "active_plan_kind": "fwhm_cross_scan",
+      "active_plan_waypoints_xy_m": [
+        [2.2242672123352505, 18.595520877293687],
+        [2.2242672123352505, -21.404479122706313],
+        [2.2242672123352505, -1.4044791227063134]
+      ],
+      "magnetic_envelope_nt": 3800.3278742999846,
+      "fwhm_peak_x_m": 2.046791391245805,
+      "fwhm_peak_value_nt": 8196.465517024546,
+      "fwhm_baseline_nt": 337.847424403706,
+      "fwhm_half_level_nt": 4267.156470714126,
+      "fwhm_left_x_m": -8.379801481407243,
+      "fwhm_right_x_m": null,
+      "fwhm_valid": false,
+      "fwhm_reason_codes": ["right_half_crossing_missing"]
+    },
+    {
+      "stage": "end_of_210_second_live_run",
+      "foxglove_time": "2026-09-19 21:08:39.898 CST",
+      "mission_phase": "CONFIRM",
+      "cross_track_m": 20.677942276000977,
+      "fwhm_width_m": 23.710092544555664,
+      "fwhm_confidence": 0.0,
+      "magnetic_strength_nt": 1576.977294921875,
+      "burial_depth_m": null
+    }
+  ],
+  "result": "The command-contention fix allowed the scan to bracket both sides and produce a width, but the estimator rejected the result, so burial depth remained unpublished."
+}

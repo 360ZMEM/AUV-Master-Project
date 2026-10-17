@@ -8,6 +8,21 @@
 
 ## 子仓库
 
+克隆之前，首先尽量确保git LFS 已安装（不安装不影响程序运行，但是部分附件不可读取）
+
+```bash
+git lfs install 
+# 或者ubuntu 22.04下安装
+sudo apt install git-lfs
+```
+
+克隆这个仓库：
+
+```bash
+git clone https://github.com/360ZMEM/AUV-Master-Project
+```
+
+
 下面的命令可以把磁场探测专属模块加入到仓库：
 
 ```bash

@@ -1,0 +1,36 @@
+% Report metadata confirmed by the author on 2026-10-13.
+% Student ID and professional category are cross-checked against the old proposal.
+\thusetup{
+  output=electronic, thesis-type=proposal,
+  title={面向海上风电电缆运维的 AUV\\多源异构感知与安全自主巡检研究},
+  degree-category={电子信息硕士},
+  department={深圳国际研究生院},
+  professional-field={海洋技术与工程},
+  author={谢冠文}, student-id={2024214397},
+  supervisor={陈道毅, 教授}, date={2026-10-13}, include-spine=false,
+  math-style=GB, math-font=xits, cite-style=super,
+}
+\usepackage{etoolbox}
+% The upstream proposal layout is retained; only the document identity changes.
+% Both main and school load this patch. Fail visibly if the upstream API changes.
+\makeatletter
+\patchcmd{\thu@title@page@degree@category}{学位论文选题报告}{学位论文中期报告}{}%
+  {\PackageError{auv-middle}{Upstream report-title hook changed}{Review middle/setup.tex}}
+\makeatother
+\usepackage{threeparttable,multirow,tabularx,longtable,placeins,siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+\usepackage[backend=biber,style=gb7714-2015,sorting=none]{biblatex}
+\addbibresource{ref/auv-references.bib}
+\DeclareFieldFormat{gbtypeflag}{%
+  \nobreak\printtext{[}\nobreak#1\nobreak
+  \iftoggle{bbx:gbmedium}{\ifentrytype{online}
+    {\printtext{\texttt{/}OL}}
+    {\iffieldundef{medium}{}{\printtext{\texttt{/}\thefield{medium}}}}}{}%
+  \printtext{]}}
+\graphicspath{{../docs/thesis/figures/}{middle/figures/}}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!50!black,
+  pdftitle={面向海上风电电缆运维的AUV多源异构感知与安全自主巡检研究——中期报告},
+  pdfauthor={谢冠文}}
+\newcommand{\ReportCutoff}{2026年10月13日}

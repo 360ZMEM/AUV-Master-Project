@@ -1,0 +1,5 @@
+make -C thuthesis verify-thuthesis
+make[1]: Entering directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'
+python3 ../tools/manage_thuthesis.py verify
+Verified v7.7.1 8b4d9443f39275d0492236ae4bfcd4532b799972: vendor + 17 runtime files
+make[1]: Leaving directory '/home/zmem063/auv_console_python/AUV-Master-Project/thuthesis'

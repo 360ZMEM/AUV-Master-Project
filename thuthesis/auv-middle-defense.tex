@@ -1,0 +1,24 @@
+% !TEX program = xelatex
+\documentclass[degree=master,degree-type=professional,fontset=fandol]{thuthesis}
+\input{middle/setup}
+\ifdefined\MiddleSchool\input{middle/school-format}\fi
+\begin{document}
+\maketitle
+\frontmatter
+\ifdefined\MiddleSmoke
+  \tableofcontents
+  \mainmatter
+  \input{middle/format-smoke}
+\else
+  \input{middle/overview}
+  \tableofcontents
+  \mainmatter
+  \input{middle/chap01-background}
+  \input{middle/chap02-design}
+  \input{middle/chap03-magnetic}
+  \input{middle/chap04-systems}
+  \input{middle/chap05-discussion}
+  \input{middle/chap06-plan}
+\fi
+\printbibliography
+\end{document}

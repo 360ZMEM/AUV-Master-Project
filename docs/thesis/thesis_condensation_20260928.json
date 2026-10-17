@@ -1,0 +1,390 @@
+{
+  "date": "2026-09-28",
+  "original_pdf_pages": 236,
+  "condensed_pdf_pages": 169,
+  "removed_pdf_pages": 67,
+  "original_pdf_sha256": "576a1634802e18e8d8baa207d9511dc517ddb0380b637632cf8c09f19aabf941",
+  "condensed_pdf_sha256": "3f4a42a4da0f95b6bd271f8c45af90a7658d359e5f9dee70a7d5fcba17770ee0",
+  "backup": "thuthesis/backups/20260928_full_236p",
+  "backup_archive_verified": true,
+  "edited_sources": {
+    "thuthesis/data/auv-chap05.tex": "f378f75f8bedf183cdf253a93a8c4ac11c2a0448f39911bccd2abfaa364fbb06",
+    "thuthesis/data/auv-chap06.tex": "a423ed5c2e80fe7fa934baef0d413fd246c49dcace25704fc3b95cf2807527f8",
+    "thuthesis/data/auv-appendix-a.tex": "43e6b7245b282c6682a594b403625752051ad28aebe48cde27316e30f155d9da"
+  },
+  "chapters_1_to_4_template_setup_bibliography_unchanged": true,
+  "backed_up_image_assets_verified_unchanged": 96,
+  "chapter_5_original_figure_count": 67,
+  "chapter_5_condensed_figure_count": 22,
+  "removed_from_body_figures": [
+    {
+      "label": "fig:ch05-inspection-contract-process",
+      "asset": "experiments/fwhm_v2/15_inspection_contract_process.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-contract-insight",
+      "asset": "experiments/fwhm_v2/16_inspection_contract_insight.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-propulsion-envelope",
+      "asset": "experiments/fwhm_v2/17_inspection_propulsion_envelope.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-pvs-counterexample",
+      "asset": "experiments/fwhm_v2/18_inspection_pvs_closed_loop_counterexample.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-pvs",
+      "asset": "experiments/fwhm_v2/19_inspection_flythrough_pvs.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-ros-pvs",
+      "asset": "experiments/fwhm_v2/20_flythrough_ros_pvs_current_and_fault.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-flythrough-safety",
+      "asset": "experiments/fwhm_v2/21_flythrough_safety_chain.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-side-hint",
+      "asset": "experiments/fwhm_v2/22_side_hint_flythrough_paths.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-side-gate",
+      "asset": "experiments/fwhm_v2/23_side_hint_gate_and_envelope.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-offset-envelope",
+      "asset": "experiments/fwhm_v2/24_side_hint_offset_envelope.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-current-offset",
+      "asset": "experiments/fwhm_v2/25_current_offset_peak_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-current-rejoin",
+      "asset": "experiments/fwhm_v2/26_current_conditioned_rejoin.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-navigation-quality",
+      "asset": "experiments/fwhm_v2/27_navigation_quality_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-static-hint-bias",
+      "asset": "experiments/fwhm_v2/54_static_hint_bias_admission.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-identity-gate",
+      "asset": "experiments/fwhm_v2/28_multisource_identity_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-identity",
+      "asset": "experiments/fwhm_v2/29_runtime_sonar_identity_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-identity-continuity",
+      "asset": "experiments/fwhm_v2/30_runtime_identity_continuity.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-sonar-map-bias-recovery",
+      "asset": "experiments/fwhm_v2/55_sonar_map_bias_recovery.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-magnetic-isolation",
+      "asset": "experiments/fwhm_v2/56_magnetic_isolation_envelope.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-runtime-target-anchor",
+      "asset": "experiments/fwhm_v2/57_runtime_target_anchor_joint_wrong.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-target-exclusive-corridor",
+      "asset": "experiments/fwhm_v2/58_target_exclusive_corridor_budget.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-track-route-corridor",
+      "asset": "experiments/fwhm_v2/59_track_identity_route_corridor.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-route-online-deviation",
+      "asset": "experiments/fwhm_v2/60_route_deviation_withdrawal_and_drift.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-track-transient",
+      "asset": "experiments/fwhm_v2/63_track_transient_early_withdrawal_and_coast.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-task-outcome",
+      "asset": "experiments/fwhm_v2/62_inspection_task_depth_authority_outcomes.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-identity-hold-drift",
+      "asset": "experiments/fwhm_v2/31_identity_hold_drift.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-bounded-hold",
+      "asset": "experiments/fwhm_v2/32_bounded_hold_disposition.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-route-hold-admission",
+      "asset": "experiments/fwhm_v2/35_route_hold_admission.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-operational-status",
+      "asset": "experiments/fwhm_v2/36_localization_vs_autonomy_authority.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-process-restarts",
+      "asset": "experiments/fwhm_v2/37_inspection_process_restart_diagnostics.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-nav-disposition",
+      "asset": "experiments/fwhm_v2/38_inspection_nav_dropout_disposition.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shadow-scene-gate",
+      "asset": "experiments/fwhm_v2/39_shadow_scene_truth_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shadow-raw-sensor-gate",
+      "asset": "experiments/fwhm_v2/40_shadow_raw_sensor_imu_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-wall-stamp-replay",
+      "asset": "experiments/fwhm_v2/41_wall_clock_imu_stamp_replay.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-protocol-imu-time",
+      "asset": "experiments/fwhm_v2/42_protocol_imu_packet_time_gate.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-gx3-timer-gap",
+      "asset": "experiments/fwhm_v2/43_gx3_timer_provenance_gap.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-sidecar-dvl-match",
+      "asset": "experiments/fwhm_v2/44_sidecar_dvl_source_match.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-pvs",
+      "asset": "experiments/fwhm_v2/47_shallow_zigzag_pvs_envelope_3m.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-budget",
+      "asset": "experiments/fwhm_v2/48_shallow_zigzag_geometry_budget_insight.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-exit",
+      "asset": "experiments/fwhm_v2/49_shallow_zigzag_exit_parity.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-zigzag-track",
+      "asset": "experiments/fwhm_v2/50_shallow_zigzag_pvs_rejoin_track.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-clock",
+      "asset": "experiments/fwhm_v2/52_shallow_survey_hold_clock_and_drift.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-current-bias",
+      "asset": "experiments/fwhm_v2/53_shallow_survey_current_report_bias.pdf"
+    },
+    {
+      "label": "fig:ch05-pvs-closedloop-convergence",
+      "asset": "cable_acceptance/pvs_closedloop_acceptance_convergence.pdf"
+    },
+    {
+      "label": "fig:ch05-inspection-same-session-receipt",
+      "asset": "experiments/fwhm_v2/64_same_session_ros_receipt_timeline.pdf"
+    }
+  ],
+  "retained_body_figures": [
+    {
+      "label": "fig:ch05-adc-enob-osr",
+      "asset": "0.49\\linewidth",
+      "figure_number": "5.1",
+      "printed_page": 85,
+      "pdf_page": 106
+    },
+    {
+      "label": "fig:ch05-mag-chain-noise-ros",
+      "asset": "experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf",
+      "figure_number": "5.2",
+      "printed_page": 87,
+      "pdf_page": 108
+    },
+    {
+      "label": "fig:ch05-mag-residual",
+      "asset": "experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf",
+      "figure_number": "5.3",
+      "printed_page": 88,
+      "pdf_page": 109
+    },
+    {
+      "label": "fig:ch05-joint-trajectory",
+      "asset": "experiments/magnetic_joint/trajectory_colored_by_b.pdf",
+      "figure_number": "5.4",
+      "printed_page": 89,
+      "pdf_page": 110
+    },
+    {
+      "label": "fig:ch05-joint-complex-fit",
+      "asset": "experiments/magnetic_joint/complex_iq_fit.pdf",
+      "figure_number": "5.5",
+      "printed_page": 90,
+      "pdf_page": 111
+    },
+    {
+      "label": "fig:ch05-eskf-param-sensitivity",
+      "asset": "experiments/state_estimation/eskf_param_sensitivity.pdf",
+      "figure_number": "5.6",
+      "printed_page": 93,
+      "pdf_page": 114
+    },
+    {
+      "label": "fig:ch05-terrain-tracking",
+      "asset": "terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+      "figure_number": "5.7",
+      "printed_page": 97,
+      "pdf_page": 118
+    },
+    {
+      "label": "fig:ch05-terrain-3d",
+      "asset": "terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+      "figure_number": "5.8",
+      "printed_page": 98,
+      "pdf_page": 119
+    },
+    {
+      "label": "fig:ch05-r13-v2-control-rate",
+      "asset": "experiments/control/r13_v2_control_rate_paired.pdf",
+      "figure_number": "5.9(a)",
+      "printed_page": 106,
+      "pdf_page": 127
+    },
+    {
+      "label": "fig:ch05-dlt-scorecard-run1",
+      "asset": "cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf",
+      "figure_number": "5.10",
+      "printed_page": 110,
+      "pdf_page": 131
+    },
+    {
+      "label": "fig:ch05-pvs-closedloop-recovery",
+      "asset": "cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf",
+      "figure_number": "5.11",
+      "printed_page": 111,
+      "pdf_page": 132
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-stability",
+      "asset": "experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "figure_number": "5.12",
+      "printed_page": 113,
+      "pdf_page": 134
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-sensitivity",
+      "asset": "experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf",
+      "figure_number": "5.13",
+      "printed_page": 113,
+      "pdf_page": 134
+    },
+    {
+      "label": "fig:ch05-fwhm-v2-shape-guard",
+      "asset": "experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "figure_number": "5.14",
+      "printed_page": 114,
+      "pdf_page": 135
+    },
+    {
+      "label": "fig:ch05-current-magnetic-simulation-closure",
+      "asset": "experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+      "figure_number": "5.15",
+      "printed_page": 116,
+      "pdf_page": 137
+    },
+    {
+      "label": "fig:ch05-inspection-finite-current-clock",
+      "asset": "experiments/fwhm_v2/61_finite_track_current_envelope_and_clock.pdf",
+      "figure_number": "5.16",
+      "printed_page": 117,
+      "pdf_page": 138
+    },
+    {
+      "label": "fig:ch05-inspection-shallow-survey-ros",
+      "asset": "experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf",
+      "figure_number": "5.17",
+      "printed_page": 118,
+      "pdf_page": 139
+    },
+    {
+      "label": "fig:ch05-pc104-firmware-echo",
+      "asset": "hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+      "figure_number": "5.18",
+      "printed_page": 120,
+      "pdf_page": 141
+    },
+    {
+      "label": "fig:ch05-pc104-layered-fault",
+      "asset": "hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+      "figure_number": "5.19",
+      "printed_page": 122,
+      "pdf_page": 143
+    },
+    {
+      "label": "fig:ch05-pc104-cross-layer-fault",
+      "asset": "hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "figure_number": "5.20",
+      "printed_page": 123,
+      "pdf_page": 144
+    },
+    {
+      "label": "fig:ch05-pc104-cross-layer-soak",
+      "asset": "hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+      "figure_number": "5.21",
+      "printed_page": 124,
+      "pdf_page": 145
+    },
+    {
+      "label": "fig:ch05-jetson-mpc-realtime",
+      "asset": "../real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+      "figure_number": "5.22",
+      "printed_page": 125,
+      "pdf_page": 146
+    }
+  ],
+  "compile_log_errors": [],
+  "static_references_verified": true,
+  "duplicate_labels": [],
+  "visual_review_pdf_pages": [
+    101,
+    131,
+    134,
+    135,
+    137,
+    139,
+    149,
+    164,
+    168
+  ],
+  "validation_log": "tmp/thesis_reduction_build_20260928_final.log",
+  "archive_note": "Historical simulation completion manifests retain the pre-condensation thesis source hashes; experiment archives were not updated.",
+  "original_graphic_dependency_closure_verified": {
+    "source": "original backed-up AUV TeX includegraphics entries plus fls",
+    "referenced_files": 96,
+    "missing_files": []
+  },
+  "complete_backup_archive": "thuthesis/backups/20260928_full_236p/source_and_figures.complete.tar.gz",
+  "complete_backup_archive_sha256": "ab003dce5fd43805a56e2302723d060d1c3d9b318d4acd11248eb01559d7341c",
+  "full_backup_independent_rebuild": {
+    "passed": true,
+    "pages": 236,
+    "log": "tmp/thesis_full_backup_rebuild_20260928_clean.log",
+    "restore_commands": [
+      "make -C thuthesis clean-auv-thesis",
+      "make -C thuthesis auv-thesis"
+    ],
+    "copied_historical_aux_files_cleaned": true
+  }
+}

@@ -1,0 +1,487 @@
+{
+  "reviewed_at_utc": "2026-10-13T05:23:17.438347+00:00",
+  "reviewer_scope": "8个新稿TeX全读，主张/结构/身份/M2.5与计划审查；不修改正文、不重跑科研实验、不替代最终PDF视觉验收",
+  "input_sha256": {
+    "thuthesis/middle/chap01-background.tex": "c9be7ddc8f7ab1d42aeb396581d869c55f7d9fc4618119a19d6ab77f2310f06f",
+    "thuthesis/middle/chap02-design.tex": "debb7bdf88c11276f1127a68d8d95c7db09f868392cc64e6d6e03ea5c6f80b28",
+    "thuthesis/middle/chap03-magnetic.tex": "4720fc46fa96b5287dbd1345316bfce37fb5a58782cc787e8b626b5c0c75c319",
+    "thuthesis/middle/chap04-systems.tex": "78fa7954422a4a755b451b44c72c3ef30a0fda1254d5ec93475128a01d2a4436",
+    "thuthesis/middle/chap05-discussion.tex": "00048a8991505a83cca883f61ccbd2324250cb41dea400f180dbeb65d51f3423",
+    "thuthesis/middle/chap06-plan.tex": "7cd808412eada95d5ff8cb52d805b62f4f08925009c3b9874662dcf67fc92cb2",
+    "thuthesis/middle/overview.tex": "c10d335ca249f9ca2b1c7e1097925c166309a83cbff372758ca9db4a2428f95a",
+    "thuthesis/middle/setup.tex": "ea4296350a7f77bb932ff30a6b0c974a5672efb1f91f6bfa648ed3139d11b07f"
+  },
+  "confirmed_metadata": {
+    "title": "现auv-thesis题目；主代理转达用户已确认",
+    "report_type": "硕士学位论文中期报告",
+    "cutoff": "2026-10-13",
+    "author": "谢冠文",
+    "student_id": "2024214397",
+    "department": "深圳国际研究生院",
+    "discipline": "电子信息",
+    "professional_field": "海洋技术与工程，沿当前主论文；不据旧开题伪称再次核实"
+  },
+  "overall": "有定点修订项；未发现将整艇或任务级实物写成完成的主张",
+  "evidence_indices": [
+    {
+      "index": "docs/middle-defense/magnetic-evidence.tsv",
+      "sha256": "3d7fd10008501403fd5de518fb3210dc5d78365879ce3e78a7099d261b8df4ac",
+      "rows": 29,
+      "unique_sources": 29,
+      "errors": [],
+      "scope": "只读逐项存在性/SHA；不冒充独立重算全部科学数值"
+    },
+    {
+      "index": "docs/middle-defense/systems-evidence.tsv",
+      "sha256": "f181b3ab97185615bd762f4b90ca9147b6729720fdaafb625a1262d64235cec5",
+      "rows": 77,
+      "unique_sources": 32,
+      "errors": [],
+      "scope": "只读逐项存在性/SHA；不冒充独立重算全部科学数值"
+    }
+  ],
+  "positive_checks": [
+    {
+      "id": "IDENTITY",
+      "status": "PASS",
+      "details": "封面中期身份patch与确认日期一致；无终稿授权、签名、成果页。"
+    },
+    {
+      "id": "SCOPE",
+      "status": "PASS",
+      "details": "原厂设计、作者工作、协作声呐分工及示意图与实物完成度有区分。"
+    },
+    {
+      "id": "EVIDENCE_BOUNDARIES",
+      "status": "PASS",
+      "details": "三类磁结果独立版本、额外外部参考、导航误差界、拒绝代价、零命令后仍运动均明示。控制负收益/安全违规、滤波NIS不一致、Jetson压力超预算及PC104旧序列失败均保留。"
+    },
+    {
+      "id": "M2_5",
+      "status": "PASS",
+      "details": "工作性定义包括能源、通信、反馈、执行、固定、水密、受控运动和退出；状态未完成，不以子链通过替代。"
+    },
+    {
+      "id": "PLAN",
+      "status": "PASS",
+      "details": "5个工作包均列基础、待做、依赖、相对建议窗口、验收及阻塞处理，无承诺日历日期/擅自降低目标。"
+    },
+    {
+      "id": "WORD_SCOPE",
+      "status": "PASS",
+      "details": "未见误植终稿栏目；未找到中期专用资料的未知已在word-audit登记，不能声明学院正式审批通过。"
+    },
+    {
+      "id": "FIGURES_FINAL_VISUAL",
+      "status": "NOT_RUN",
+      "details": "本子任务只审正文，不对最终两个PDF页数/逐页排版作通过声明。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "CONTENT-01",
+      "level": "MAJOR",
+      "status": "RESOLVED",
+      "blocks_candidate_if_unresolved": true,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap02-design.tex",
+          "line": 41,
+          "anchor": "控制侧据此调节跟踪与控制代价"
+        },
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 69,
+          "anchor": "低置信度时提高对既有参考的约束"
+        }
+      ],
+      "issue": "初稿第2章称降低高精度路径贴合依赖，与第4章低置信度提高跟踪权重的方法相矛盾。",
+      "evidence": "主论文auv-chap04.tex的w_e(c)、s_u(c)定义与新第4章一致。复读第2章已改为调节跟踪与控制代价，通过速率/带宽约束限制变化。",
+      "recommendation": "当前修订可保留；不改既有公式或试验结论。"
+    },
+    {
+      "id": "CONTENT-02",
+      "level": "MAJOR",
+      "status": "RESOLVED",
+      "blocks_candidate_if_unresolved": true,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 119,
+          "anchor": "已有汇总记录还报告了包含传感器"
+        }
+      ],
+      "issue": "“仓库同时保存…真实三轴背景记录”与当前检出原始NPZ缺失的状态不一致；已有历史回放汇总仍可支持历史工作。",
+      "evidence": {
+        "missing_raw": [
+          "hardware_wrappers/fangkong_adc/raw_data/1780675809_291477.npz",
+          "hardware_wrappers/fangkong_adc/raw_data/1780676130_241387.npz"
+        ],
+        "existing_reports": [
+          "real_experiments/mag_chain_noise/report.md",
+          "real_experiments/mag_chain_noise_ros/report.md"
+        ],
+        "source_check": "两个原始NPZ Path.exists()均False；两份报告及其summary/metrics存在，且说明回放为宿舍环境噪声、短记录循环，不是完整真实巡检。",
+        "followup": "已复读：正文改为已有汇总记录，不再宣称本检出保存原始背景NPZ；systems-evidence已增加SYS-NOISE-REPLAY。建议最终备注保留未重算原始段。"
+      },
+      "recommendation": "改为已有实测背景回放汇总/历史记录；内部索引登记报告和本次未重算缺失原始段。无需删除有汇总支撑的历史回放成果或新跑实验。"
+    },
+    {
+      "id": "CONTENT-03",
+      "level": "MEDIUM",
+      "status": "RESOLVED",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap03-magnetic.tex",
+          "line": 35,
+          "anchor": "本文二维线偶极近似"
+        }
+      ],
+      "issue": "初稿“远场偶极p=2”省略二维模型限定，易与三维点偶极混淆。",
+      "evidence": "复读已改为本文二维线偶极近似所用p=2标量包络，并说明不同于三维点偶极。",
+      "recommendation": "保持当前限定；不扩写无必要理论。"
+    },
+    {
+      "id": "CONTENT-04",
+      "level": "MEDIUM",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap05-discussion.tex",
+          "line": 18,
+          "anchor": "本机以历史位姿开环重放"
+        }
+      ],
+      "issue": "讨论章引入既有DDS连续性负结果，但正文未展开、两份本次证据索引没有该来源。",
+      "evidence": {
+        "possible_source": "AUV-Master-Mag/docs/v2/INSPECTION_SAME_SESSION_ROS_RECEIPT_DIAG_20260928.md",
+        "check": "该来源路径存在；本次未重算其试验数字，也未启动ROS。",
+        "followup": "已复读正文补充开环历史位姿、合成磁/声学输入与独立DDS记录的环境限定；准确来源仍需最终索引确认。"
+      },
+      "recommendation": "在证据索引补入已读取的准确短试包，正文加简短环境限定；或将句子收束为待开展完整时序核验的一般需求。不要无来源加入新数字。"
+    },
+    {
+      "id": "CONTENT-05",
+      "level": "MEDIUM",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 56,
+          "anchor": "原因在于降权没有把旧观测对应到正确的历史状态"
+        }
+      ],
+      "issue": "对照证明时间戳噪声膨胀使本组误差增大，但“原因在于”将实现局限写成已经隔离的唯一因果归因；未比较历史状态回溯。",
+      "evidence": "r20冻结runner确为对迟到速度执行噪声调整后更新当前状态；没有延迟补偿算法对照，因此可说明机制限制，不能证明换成历史更新就必定修复。",
+      "recommendation": "改为“说明仅按年龄降权未能弥补时序错位；其更新仍作用于当前状态”，保留历史状态更新作为待验方法。"
+    },
+    {
+      "id": "CONTENT-06",
+      "level": "MEDIUM",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 94,
+          "anchor": "控制变化率 RMS 分别为 0.247 和 0.085"
+        }
+      ],
+      "issue": "控制向量包含角度与推力百分比，绝对RMS数值缺统一物理量纲的说明；内部SYS-R13-global行已明确混合单位，正文仅称同一指令契约。",
+      "evidence": "systems-evidence.tsv备注：控制向量角度/推力百分比混合单位，仅作同契约平滑指标。",
+      "recommendation": "补一句这是固定指令编码尺度下的相对指标，不能跨通道/平台解释；或保留百分比变化而省略无统一单位的绝对RMS。不得擅自写成已归一化或能耗。"
+    },
+    {
+      "id": "CONTENT-07",
+      "level": "MINOR",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 181,
+          "anchor": "\\section{整艇恢复现状与下一验证入口}"
+        },
+        {
+          "file": "thuthesis/middle/chap05-discussion.tex",
+          "line": 22,
+          "anchor": "\\section{实施顺序调整与阶段判断}"
+        },
+        {
+          "file": "thuthesis/middle/chap06-plan.tex",
+          "line": 2,
+          "anchor": "\\section{以基础平台恢复建立实物验证入口}"
+        }
+      ],
+      "issue": "整艇未完成、M2.5定义、能源通信反馈执行顺序在4.5、5.3和6.1连续重复，约可压缩1页。",
+      "evidence": "三处均完整重述条件；此为阅读效率问题，未发现事实冲突。",
+      "recommendation": "4.5保留现状与下一入口，去掉第二/第三段中的顺序细节并引用第6章；5.3聚焦为什么调整顺序；6.1及工作包保留完整准入和验收。不要为减页删去必要反馈/水密安全条件。"
+    },
+    {
+      "id": "CONTENT-08",
+      "level": "MINOR",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 35,
+          "anchor": "针对异常抑制，采用同一运动轨迹"
+        }
+      ],
+      "issue": "24包公平矩阵与90次受控滤波表的标称误差量级相差很大，虽已分开描述，但第二组低噪声输入条件未在正文交代，可能令读者误以为差异来自滤波器本身。",
+      "evidence": "r20冻结runner注入世界系DVL速度噪声0.005m/s、深度0.01m、加速度0.008及陀螺0.001；DVL5Hz、深度10Hz，初始化与轨迹另固定。仅DVL/深度，无绝对位置观测。",
+      "recommendation": "在第二组设置补一句采用独立受控低噪声轨迹、DVL5Hz/深度10Hz；两组绝对误差不横向比较。无需扩写完整全部参数。"
+    },
+    {
+      "id": "CONTENT-09",
+      "level": "MINOR",
+      "status": "OPEN",
+      "blocks_candidate_if_unresolved": false,
+      "locations": [
+        {
+          "file": "thuthesis/middle/chap03-magnetic.tex",
+          "line": 22,
+          "anchor": "扣除局部背景后的响应可表示为"
+        }
+      ],
+      "issue": "公式前称已扣背景，公式却包含+b；后续半高定义正确，仅导语不一致。",
+      "recommendation": "改为含局部背景的响应可表示为，不改公式或统计。"
+    }
+  ],
+  "open_blocking_ids": [],
+  "root_final_resolution": {
+    "reviewed_at_utc": "2026-10-13T05:37:49.927656+00:00",
+    "status": "PASS",
+    "scope": "复读六章正文、概述、设置；逐项闭合初审9项，核对新增DDS与R20条件来源，检查事实、术语、核心量化条件与证据分层。未更改任何TeX；不重跑科研实验；不代替最终PDF视觉验收。",
+    "initial_review_preserved": true,
+    "initial_record_canonical_sha256": "9e4a7b0a6f7c0eeca87b7092ed8806ae8a70fa39a1b5c36b2dc894987d6c4f8d",
+    "input_sha256": {
+      "thuthesis/middle/chap01-background.tex": "7e71fd9096d327f9120df263e1b5277f184d334f4c70cb462c1e1e554a5e0084",
+      "thuthesis/middle/chap02-design.tex": "8f5aec913d053bdea902b197fc6aab781994c5feeda2035019a0292412113a4f",
+      "thuthesis/middle/chap03-magnetic.tex": "7ab69a759e1b16b2f7e4e35b182fef0a3dc9ae94ebb6920fe02dbc26b3940254",
+      "thuthesis/middle/chap04-systems.tex": "7888436d29771998b1685ce4deecfe73dc2528979c494a93b1e0a288f0160a7b",
+      "thuthesis/middle/chap05-discussion.tex": "f0730b2d5bdfbc1814a52dead4c25f4196925a69be974d8223d5102e0ac58f9f",
+      "thuthesis/middle/chap06-plan.tex": "7cd808412eada95d5ff8cb52d805b62f4f08925009c3b9874662dcf67fc92cb2",
+      "thuthesis/middle/overview.tex": "c10d335ca249f9ca2b1c7e1097925c166309a83cbff372758ca9db4a2428f95a",
+      "thuthesis/middle/setup.tex": "ea4296350a7f77bb932ff30a6b0c974a5672efb1f91f6bfa648ed3139d11b07f"
+    },
+    "resolutions": [
+      {
+        "id": "CONTENT-01",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "控制代价表述",
+        "observation": "第2章现为调节跟踪与控制代价，由速率/带宽约束限制变化；与第4章置信调度公式不再矛盾。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap02-design.tex",
+          "line": 41,
+          "anchor": "控制侧据此调节"
+        }
+      },
+      {
+        "id": "CONTENT-02",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "实测噪声来源",
+        "observation": "正文现为已有汇总记录报告真实背景记录，不再宣称当前检出保存缺失 NPZ；仍区分非屏蔽环境频谱与模组本征噪声。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 119,
+          "anchor": "已有汇总记录"
+        }
+      },
+      {
+        "id": "CONTENT-03",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "二维场形限定",
+        "observation": "明确 p=2 为二维线偶极标量包络，区别于三维点偶极；p=1 直导线系数与公式一致。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap03-magnetic.tex",
+          "line": 35,
+          "anchor": "本文二维线偶极"
+        }
+      },
+      {
+        "id": "CONTENT-04",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "DDS来源可追溯",
+        "observation": "总索引 LIMIT-DDS 指向 INSPECTION_DYNAMIC_REPLAY_TIMING_LIMIT_20260928.md；已完整阅读两次短试条件。正文仅保留历史位姿开环、磁/声合成输入及独立DDS记录的连续性负结果，不将等待时间归因为DDS单一根因，也未增写无来源数字。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap05-discussion.tex",
+          "line": 18,
+          "anchor": "历史位姿开环重放"
+        }
+      },
+      {
+        "id": "CONTENT-05",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "时间戳因果归因",
+        "observation": "删除唯一因果式表述，改为仅按年龄降权未能弥补该组时序错位；历史状态更新留作后续同输入检验，不声称其已证明能修复。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 56,
+          "anchor": "说明仅按年龄降权"
+        }
+      },
+      {
+        "id": "CONTENT-06",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "控制变化率量纲",
+        "observation": "已说明向量含角度/推力分量且依赖固定指令编码尺度，只用于同契约成对比较；未冒称归一化、物理能耗或跨平台指标。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 94,
+          "anchor": "固定的指令编码尺度"
+        }
+      },
+      {
+        "id": "CONTENT-07",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "阶段叙述去重",
+        "observation": "第1/2章结尾不再重复完整未完成清单；4.5保留实际平台现状与下一入口，5.3解释顺序调整并给简要M2.5界定，第6章集中保存前置条件、受控运行与工作包验收。必要反馈、机械固定、水密与退出条件未删。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 181,
+          "anchor": "整艇恢复现状与下一验证入口"
+        }
+      },
+      {
+        "id": "CONTENT-08",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "独立受控低噪声条件",
+        "observation": "90次滤波组已说明独立低噪声轨迹，DVL 5Hz/0.005m/s与深度10Hz/0.01m，并明确不与24包矩阵绝对误差横向比较。SYS-R20-INPUTS准确指向冻结runner；已核对噪声注入L118–119、更新stride L135–136。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 35,
+          "anchor": "受控低噪声轨迹"
+        }
+      },
+      {
+        "id": "CONTENT-09",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "title": "背景公式导语",
+        "observation": "公式前已改为含局部背景的响应，与 +b 和背景校正后的半高定义一致。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap03-magnetic.tex",
+          "line": 22,
+          "anchor": "含局部背景的响应"
+        }
+      }
+    ],
+    "additional_findings": [
+      {
+        "id": "FINAL-01",
+        "level": "MINOR",
+        "status": "PASS",
+        "resolution": "RESOLVED",
+        "issue": "概念状态中的 n 原称北东地，R20 冻结实现内部 z 轴向上，可能使读者混淆接口与内部表示。",
+        "source": [
+          {
+            "path": "results/state_estimation/r20_filter_strategies/20260809_r20/config_snapshot/algorithm/es_ekf.py",
+            "sha256": "650d5fa417cbea79dcae943d4b3187df4e39331114cb1aa34ab1ce7cdc95bb94",
+            "lines": [
+              119,
+              603
+            ],
+            "observation": "重力向量 z=-g，深度观测 h=-p[2]。"
+          }
+        ],
+        "resolution_observation": "主代理已将新报告对应句改为“统一导航坐标系”；本轮复读确认，不修改原主论文、实现、公式或试验。",
+        "verified_location": {
+          "file": "thuthesis/middle/chap04-systems.tex",
+          "line": 20
+        }
+      }
+    ],
+    "open_blocking_ids": [],
+    "open_nonblocking_ids": [],
+    "evidence_indices": [
+      {
+        "path": "docs/middle-defense/magnetic-evidence.tsv",
+        "sha256": "3d7fd10008501403fd5de518fb3210dc5d78365879ce3e78a7099d261b8df4ac",
+        "rows": 29,
+        "unique_sources": 29,
+        "errors": [],
+        "status": "PASS"
+      },
+      {
+        "path": "docs/middle-defense/systems-evidence.tsv",
+        "sha256": "f181b3ab97185615bd762f4b90ca9147b6729720fdaafb625a1262d64235cec5",
+        "rows": 77,
+        "unique_sources": 32,
+        "errors": [],
+        "status": "PASS"
+      },
+      {
+        "path": "docs/middle-defense/evidence.tsv",
+        "sha256": "49e2916f60925c9fb6d77248d9559ef80fd86a3002efe3b741307182140e328a",
+        "rows": 112,
+        "unique_sources": 66,
+        "errors": [],
+        "status": "PASS"
+      }
+    ],
+    "structural_reference_check": {
+      "status": "PASS",
+      "existing_bibkeys_used": 12,
+      "missing_bibkeys": [],
+      "internal_references": 14,
+      "missing_labels": []
+    },
+    "core_content_checks": [
+      {
+        "chapter": 1,
+        "status": "PASS",
+        "observation": "存量平台改造、作者/原厂/协作声呐分工与阶段范围明确；不把参考文献中设备能力归为本课题实物成果。"
+      },
+      {
+        "chapter": 2,
+        "status": "PASS",
+        "observation": "空间杆臂、来源质量、磁异常/横向/深度/目标身份/执行许可各自条件明确；设计连线与整艇联调状态分开，PVS/ROS/硬件验证层级未合并。"
+      },
+      {
+        "chapter": 3,
+        "status": "PASS",
+        "observation": "5600次旧四方法基线、200–399种子场形留出、9次限定路线与120次监督留出分别叙述；统计分母、拒绝代价、额外外部参考、0.10m导航界、横偏MAE与最大值、深度为空与撤权后仍运动均保留。已与冻结索引核对主要条件；本轮不冒称重新运行科学实验。"
+      },
+      {
+        "chapter": 4,
+        "status": "PASS",
+        "observation": "24包三估计器与90次低噪声矩阵不混比；36次控制运行完成≠任务通过，混合编码平滑指标与安全负结果均明示；ADC 10s/10窗口与777重叠配对点、I_RMS/峰值、Jetson N20 dt0.2/25W/8核及50ms预算、PC104零执行器与分开两次运行条件均保留。"
+      },
+      {
+        "chapter": 5,
+        "status": "PASS",
+        "observation": "模型集合/多源关联/高度基准的缺口与已达成结果相区分；未把DDS时序负例当作稳定实时部署，未以子链叠加推断整艇完成；M2.5尚未完成。"
+      },
+      {
+        "chapter": 6,
+        "status": "PASS",
+        "observation": "W1–W5各有基础、依赖、相对建议窗口、验收与阻塞处理；保留能源/必要反馈/机械固定/水密/受控运动/退出，不编造日期或现场完成状态，不降低原任务目标。"
+      }
+    ],
+    "remaining_other_acceptance": [
+      {
+        "item": "两个格式口径最终PDF逐页视觉/排版验收",
+        "status": "NOT_RUN",
+        "note": "由主代理与独立视觉审查承担；本次内容复核通过不表示最终PDF已通过。"
+      },
+      {
+        "item": "研究级新增实验或整艇验收",
+        "status": "NOT_RUN",
+        "note": "本次授权为文档派生；完整平台、标定与任务仍按报告所述待完成。"
+      }
+    ]
+  }
+}

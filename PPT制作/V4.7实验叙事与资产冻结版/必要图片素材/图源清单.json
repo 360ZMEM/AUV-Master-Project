@@ -1,0 +1,298 @@
+[
+  {
+    "page": 6,
+    "description": "三相芯线分离后的外部漏磁",
+    "level": "论文物理模型",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/helical_leakage_panel_b.png",
+    "crop": null,
+    "sha256": "4dd444ab6bbf94802dcc8666b8cb416cdefee59922d2c6d66cc86cc5fa2633e2"
+  },
+  {
+    "page": 6,
+    "description": "螺旋场分量变化与RMS模量",
+    "level": "论文物理模型",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/helical_rms_panel_c.png",
+    "crop": null,
+    "sha256": "bf8175786ca8cf49179818b6c14186a6dbdaf31be9b064ac33ce5b0d6c8dfecf"
+  },
+  {
+    "page": 6,
+    "description": "Zig-zag横切构造局部几何观测",
+    "level": "论文方法示意",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/active_crossing_zigzag_panel.png",
+    "crop": null,
+    "sha256": "8d438c03f1042798373f12c3d2653567a3a52d975b5d7f9a965080671a47701c"
+  },
+  {
+    "page": 6,
+    "description": "逐级扩幅与显式双侧半高交点",
+    "level": "仿真／离线实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/09_explicit_fwhm_profile.png",
+    "crop": null,
+    "sha256": "e96c8c1a4a7c67a0afc7e414e0b89289427aa0e6a1091ff2b364b7751d6e1ecf"
+  },
+  {
+    "page": 7,
+    "description": "R20四种策略中文可编辑对照图；值由论文表提取，完整六策略原图另存素材",
+    "level": "独立策略仿真，原生图表",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/state_estimation/r20_filter_strategy_comparison.png",
+    "sha256": "20a1dc32934089da8f7be95c55c5a3ea915b8971e9101d0d3d957c674bd81b5f"
+  },
+  {
+    "page": 8,
+    "description": "固定权重与分源置信控制变化率配对",
+    "level": "UA-MPC代理仿真",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.png",
+    "crop": null,
+    "sha256": "2b2d52f72cd6b0c0783a3f0019f2f0f8b15d7392e08be09462967d905db20528"
+  },
+  {
+    "page": 8,
+    "description": "SEARCH HOLD TRACK授权分布",
+    "level": "UA-MPC代理仿真",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.png",
+    "crop": null,
+    "sha256": "45024cced3547f1b847751bd1cbf0ffce4aaeb7f3156ffeac223f69be06bc64b"
+  },
+  {
+    "page": 9,
+    "description": "当前磁巡检全过程、中心估计与核心路段真实横偏",
+    "level": "当前原生PVS动力学仿真",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.png",
+    "crop": null,
+    "sha256": "b08cb6bd6bcd38dc49e504188a2cba6bcb7cd870caf96bd8aeba858c58a30471"
+  },
+  {
+    "page": 10,
+    "description": "受控直导线实验三轴复IQ联合拟合",
+    "level": "真实TMR与ADC实验室采集",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.png",
+    "crop": null,
+    "sha256": "0d1d056c2d1590378247488b53910fd233d90b704f910257c41a3df0dd4cd213"
+  },
+  {
+    "page": 10,
+    "description": "Jetson真实求解器稳态与压力档时延",
+    "level": "真实Jetson求解器微基准",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.png",
+    "crop": null,
+    "sha256": "4c77cef3eddfa386c7a2b7f337ba27915bd10b7cb26b5740be19eb4ff14157d0"
+  },
+  {
+    "page": 10,
+    "description": "PC104 ROS2仲裁与行为树故障时序",
+    "level": "真实PC104零执行器台架",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.png",
+    "crop": null,
+    "sha256": "820f4720a302c8dba2992cf16601031985e154f0c3cbf85f64d0513fd9920153"
+  },
+  {
+    "page": 17,
+    "description": "复杂路径 MPC",
+    "level": "历史独立仿真／数字孪生",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control_mpc_xy_yaw_extreme/hairpin_180deg_xy_v3_speed_flexible.png",
+    "crop": null,
+    "sha256": "95af63b3f973cad0445ba1018e7d9029fa57453510ff0b50adc96b7daa6f6184"
+  },
+  {
+    "page": 17,
+    "description": "PID/PVS 地形跟随",
+    "level": "历史独立仿真／数字孪生",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.png",
+    "crop": null,
+    "sha256": "4316c9a2641eba8e8bc091f9b47dbcb52b9b5113d9516dae51035220878c6e8c"
+  },
+  {
+    "page": 17,
+    "description": "DL/T 1278 风格评分",
+    "level": "历史独立仿真／数字孪生",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.png",
+    "crop": null,
+    "sha256": "fef2c38610cc51451bc7e4233fa20dca68da0a25813fea02de68ea818e1dd7f6"
+  },
+  {
+    "page": 19,
+    "description": "沿用9月25日资产包中的Foxglove运行观察截图",
+    "level": "历史模拟／回放界面",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/experiment/assets/defense_demo/foxglove_defense_assurance_final_clean.png",
+    "crop": null,
+    "sha256": "a32123ae1a9b54b9573654ea1b50f2aaedc31d3159e2162558a2bddb1c94a067"
+  },
+  {
+    "page": 19,
+    "description": "沿用9月25日资产包中的PySide6上位机截图",
+    "level": "历史操作员界面演示",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/system/auv_console_operator_interface.png",
+    "crop": null,
+    "sha256": "9afbfd1aa6914bdcea437f73a76356ef2c71203ae81fa65d1cf3276bb1ac6fe3"
+  },
+  {
+    "page": 20,
+    "description": "背景修正空间采样未知增益与重复中值四项设计消融",
+    "level": "仿真／离线实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/03_key_design_ablations.png",
+    "crop": null,
+    "sha256": "1d6a9d9181b6d7009bd504b02d59c490e4ef670ab29e01fba362eb1d0df3b1b0"
+  },
+  {
+    "page": 21,
+    "description": "独立留出场形检查及深度发布对照",
+    "level": "仿真／离线实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.png",
+    "crop": null,
+    "sha256": "7b6ce7a08d85d4f3e8623c62c5b8e95d96e24be38b4f5231f729616fb6c60ffb"
+  },
+  {
+    "page": 22,
+    "description": "历史同版任务结果深度许可及执行输出",
+    "level": "历史独立ROS/PID/桥/PVS实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/62_inspection_task_depth_authority_outcomes.png",
+    "crop": null,
+    "sha256": "cd9028a3d00e1e393fa551971ab24bb3bbfed28ee841846cc42e08753f49e50a"
+  },
+  {
+    "page": 23,
+    "description": "同协方差高斯与实测背景回放对照",
+    "level": "实测背景驱动的模型回放",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/state_estimation/r19_gaussian_vs_measured_replay.png",
+    "crop": null,
+    "sha256": "8004afe7dec283667e8fdb4300314398166a33555763468bb52df7743354f4fe"
+  },
+  {
+    "page": 2,
+    "description": "行业海缆施工与ROV照片",
+    "level": "行业背景照片",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/cable_installation_boem.jpg",
+    "sha256": "6aac904066f9bf23e2879c8c5c41ebe948aa9a6296b488d8234ad58157c0ea34"
+  },
+  {
+    "page": 2,
+    "description": "行业ROV吊放照片",
+    "level": "行业背景照片",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/rov_launch_ifremer.jpg",
+    "sha256": "c9b155a14d2bffcaafd14b2ba129fcefba06f04d10b1a4e0946967dd20b0a575"
+  },
+  {
+    "page": 3,
+    "description": "海缆巡检任务概念图",
+    "level": "AI辅助概念示意",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/inspection_concept_v42.png",
+    "sha256": "47278c59ecc0b3adacf414573a6b03bb95ef9aee67566a73d488c558bdab0135"
+  },
+  {
+    "page": 13,
+    "description": "PC104 Console Foxglove拓扑",
+    "level": "原有系统设计图",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/internals/figures/architecture/auv_ros2_node_topology.png",
+    "sha256": "3ca5d395cbb26ca040fa735e861aad1df4417f9caf7f6bdfb8c15b4fafa6b6ab"
+  },
+  {
+    "page": 14,
+    "description": "ES-EKF参数敏感性",
+    "level": "单包离线分析",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.png",
+    "sha256": "8ab4e592226a4a65f931bfa6b2d48419234e797584a400e103bc9b4b05ef7e78"
+  },
+  {
+    "page": 15,
+    "description": "授权概率分布",
+    "level": "UA-MPC代理仿真",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.png",
+    "sha256": "57c45c17bff06d15f4d448b0a58a53538a7bf1b18bae7b7f782e8e4c665af8aa"
+  },
+  {
+    "page": 15,
+    "description": "Jetson求解时延",
+    "level": "真实平台微基准",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.png",
+    "sha256": "4c77cef3eddfa386c7a2b7f337ba27915bd10b7cb26b5740be19eb4ff14157d0"
+  },
+  {
+    "page": 16,
+    "description": "ADC ENOB",
+    "level": "ADC短接输入实测",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.png",
+    "sha256": "483d9c70dde0d158bbd7f53f61140ca01ca809a8819b80df86162ebf32f01d0a"
+  },
+  {
+    "page": 16,
+    "description": "ADC噪声谱",
+    "level": "ADC短接输入实测",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.png",
+    "sha256": "834c6ad65e3e43b0915a8d94cf9b1831596c1a4096cc1007f99d7e8962141aeb"
+  },
+  {
+    "page": 16,
+    "description": "PC10430分钟稳态",
+    "level": "真实PC104零执行器独立运行",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.png",
+    "sha256": "99dc09f9d375a99eaa9b67ec33a68dd1ffcdf46cad7c143e20c2b16a68b896b3"
+  },
+  {
+    "page": 18,
+    "description": "先验偏差恢复",
+    "level": "历史数字孪生",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/recovery_lateral_error.png",
+    "sha256": "b94b268e0b86f2dc114194eb717d6d1f28ef0b305cda3a328b6d2b0d211898c2"
+  },
+  {
+    "page": 18,
+    "description": "累计修正量",
+    "level": "历史数字孪生",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/recovery_correction_norm.png",
+    "sha256": "d34bd34a8314047983ba163bd26dcc1e77866701d11e7819faf7f5a59c645aa4"
+  },
+  {
+    "page": 18,
+    "description": "修正接受标志",
+    "level": "历史数字孪生",
+    "path": "C:/Users/360MEMZ/Documents/Codex/2026-09-17/referenced-chatgpt-conversation-this-is-an/work/v4_build/assets/recovery_acceptance_flag.png",
+    "sha256": "e2bbd51f88f16a1c013a19a27bdd00ef842bcfc617f34d353119a23a0ca6fff6"
+  },
+  {
+    "page": 18,
+    "description": "恢复验收收敛",
+    "level": "历史数字孪生",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/cable_acceptance/pvs_closedloop_acceptance_convergence.png",
+    "sha256": "261c7fe7f02bd88cdee5b9c7afadfe673f72e9fca34aa62ad51b02a9b9f2865e"
+  },
+  {
+    "page": 5,
+    "description": "本项目实物：URA2415LD-30WR3A2S隔离电源",
+    "level": "用户实拍，只证明器件具备",
+    "path": "E:/毕设照片资产/IMG20260823003511_20260929093921.jpg",
+    "crop": [
+      0.27,
+      0.37,
+      0.2,
+      0.3
+    ],
+    "sha256": "e86fe728bf59861eb08ffc575f21eac79cb762c9249df470c7e095ea904667a1"
+  },
+  {
+    "page": 5,
+    "description": "本项目实物：方控采集模块",
+    "level": "用户实拍，只证明器件具备",
+    "path": "E:/毕设照片资产/IMG20260823003904_20260929093922.jpg",
+    "crop": [
+      0.13,
+      0.28,
+      0.13,
+      0.33
+    ],
+    "sha256": "a0a13c7ff1e95ec0505115023f5830ce29bbd78b6e26c6de3b1081042b991dea"
+  },
+  {
+    "page": 5,
+    "description": "本项目实物：MDT TMR8637三轴磁模组",
+    "level": "用户实拍，只证明器件具备",
+    "path": "E:/毕设照片资产/IMG20260823004056_20260929093921.jpg",
+    "crop": [
+      0.32,
+      0.42,
+      0.24,
+      0.27
+    ],
+    "sha256": "3a49e7f6ab8aeba01fdda77f90e90d01ca4aae50070b0f24e33a0a71bc294344"
+  }
+]

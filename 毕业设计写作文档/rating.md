@@ -4,7 +4,7 @@
 > 1. **奥卡姆剃刀**：最小必要改动，不引入多余假设/实现。
 > 2. **正交性**：与已有实验/结论正交，不回溯性推翻已落盘的正结果。
 > 本册登记三类内容：**A. 已知负结果/边界** | **B. 未解决/WIP 项** | **C. 第一性原理更改提案与授权状态**。
-> 最后更新：2026-08-07（回填 P-2/H4 归因）。相关约束交叉引用 [plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/毕业设计写作文档/plan.md) §2/§3、[dashboard.md](file:///home/auv_user/auv_ws/AUV-Master-Project/毕业设计写作文档/dashboard.md)。
+> 最后更新：2026-09-28（补巡检低速／来源接收时效边界）。相关约束交叉引用 [plan.md](file:///home/auv_user/auv_ws/AUV-Master-Project/毕业设计写作文档/plan.md) §2/§3、[dashboard.md](file:///home/auv_user/auv_ws/AUV-Master-Project/毕业设计写作文档/dashboard.md)。
 
 ---
 
@@ -26,6 +26,9 @@
 | A10 | **MPC solve time 恒 0 ms 是陈旧代码 artifact**，非计时语义未知：旧 sweep（6-13）用无 wall-clock 回退的优化器；6-30 修复后台架 cold≈11.5/warm≈6.8 ms、M1 v2 闭环 21–30 ms 全非零 | 已闭合归因 | 可写入求解性能；旧"0 ms 计时待确认"表述已更正 | 继续把 0 ms 当"未解之谜" → 无谓保留硬伤 |
 | A11 | **fallback 绝对水平偏高仍是真问题，但 max_iter 偏紧仅是次因**：P-2 同批对照 max_iter 100→200→400，fallback 0.699→0.685→0.594；200 几乎无改善，400 失败 wall≈372 ms 且 debug/control 帧少约 26%，远超 50 ms 预算。根因仍是 IPOPT `Maximum_Iterations_Exceeded`，但不能靠放宽迭代工程化解决 | 已闭合负结果归因 | 保留默认 max_iter=100；后续优先查初值/热启动连续性、约束可行性/容差结构 | 隐藏高 fallback 或把 400 档写成“优化” → 以阻塞控制周期换表面成功率 |
 | A12 | **`FALLBACK_LAST_OUTPUT` 的 solve-time 字段为陈旧值**：当前回退路径复用上一成功 `ControlOutput`，只改 status/reason，未更新 `solve_time_ms`；普通全帧 solve mean 会低估失败求解耗时 | 观测性边界 | 成功帧时间与 `FALLBACK_SETPOINT` 当前失败 wall 可用；失败耗时全分布须修 debug 字段后重跑 | 将陈旧时间当当前失败耗时 → 实时性结论失真 |
+| A13 | **巡检低速和放宽候选门未解决连续输出**：四条合成短诊断均未过严格总门；健康供数合格的仿真墙钟例仅 24/42 条正向，接收端 9/63 条正向来源年龄超过 1.3 s；完整合成任务尝试到 300 s 墙钟上限仍无摘要 | 来源时效与运行资源边界；[原始报告](../AUV-Master-Mag/docs/v2/INSPECTION_LOW_SPEED_CLOCK_ENVELOPE_20260928.md) | 第五章只写合成负结果、接收端年龄检查及现场包 schema 2；不声称 10 Hz 巡检或低速任务到端 | 只看门内年龄或首次正向后的局部段 → 把晚到旧正向指令和不连续输出误报为有效巡检 |
+| A14 | **巡检 PID 旧来源拒止是局部修复**：默认关闭的接收端来源门在同一 DDS 控制器试验中对旧正向指令零推、对新鲜指令恢复正推；全包目录测试 98/98，但未接算法、桥、板端或载体 | 分层执行许可证据；[独立报告](../AUV-Master-Mag/docs/v2/INSPECTION_PID_RECEIVED_SOURCE_GATE_20260928.md) | 可作为“来源时效延伸到控制律入口”的设计与回归，不写成整机连续巡检通过 | 用单点零推代替全任务、全链及物理停车验收 |
+| A15 | **完整监测发布不是唯一连续性瓶颈**：隔离诊断进程省去 59/59 次完整监测、健康供数仍满足 0.206 s 最大缺口时，最终仅 35/39 条正向且最大空档 0.616 s；监测归零方案本身缺失上位机状态 | 可证伪上界；[独立报告](../AUV-Master-Mag/docs/v2/INSPECTION_ZERO_MONITOR_UPPER_BOUND_20260928.md) | 保持产品监测路径；目标平台同次剖析前不宣称异步监测能修复 10 Hz | 把诊断上界或非配对 CPU 条件当作可部署改善 |
 
 ---
 
@@ -41,6 +44,7 @@
 | B6 | cleanup 脚本 `BRIDGE_PID: unbound variable` 修复 | 工程健壮性 | 待修（不阻塞 bag） | 代码支线 |
 | B7 | 第四/五章 matplotlib 图风格全面统一 + 关键消融补充 | 写作+实验 | 本对话重点 | dashboard.md pass1 行 |
 | B8 | **H6 能力门控 bug 污染面复核（已完成）**：2026-07-17 门控使 PVS 下 terrain-follow 时 MPC 被 zero-effort hold 跳过（首轮 M1 27 run 全 `CAPABILITY_GATE` 作废）。`--enable-mock-forward-sonar-wrapper` 已修复。**复核结论**：扫描门控窗口 [07-17 19:07, 08-05] 全部产物——`thesis_sweep`/`results/control`/`cable_ops_report` 窗口内无被论文引用的 sweep（均 ≤07-07，早于门控）；`/auv_data/bags` 窗口内 07-17/07-30 目录全为 `record_bag=false` 交互运行、无 MCAP。**净结论：历史结论零污染，实际污染仅今日 M1 v1（已作废重跑）**。**残留风险**：门控是当前代码活跃行为，默认值未改，今后 terrain/altitude-follow 实验不带 forward-sonar 使能仍会静默跳过 MPC | 工程健壮性 + 结论保真 | 复核已闭合；收尾建议：修默认值或 CI 加"MPC 帧占比>0"断言 | `chap4_5_experiment_completion_plan.md` §5.4.1 |
+| B9 | 目标平台已知目标 F 剖面完整任务的同次导航／磁测／候选来源、ROS/PID/UDP/PC104 接收、运动与故障零尾时序包 | 实物工程验收 | 空清单；schema 2 接收端时效门已具备，真实包与目标来源仍缺 | [同次时序合同](../AUV-Master-Mag/docs/v2/INSPECTION_SAME_SESSION_TIMING_ENVELOPE_20260928.md)；未取得前 `field_release_authorized=false` |
 | B9 | **UA-MPC 消融补全（P-1/P-2/H4 已完成）**：A0/A2/A3 证明 sigmoid 控制代价降权是可解性关键机制，低置信段权重放大进一步降 fallback；H4 证明在 S 长波横向机动中 sigmoid 控制代价降权也是精度主贡献；P-2 max_iter 100/200/400 证明单纯放宽迭代只产生有限 fallback 改善并显著阻塞控制更新 | 关键消融（本对话） | 已完成并落盘；默认 max_iter 保持 100 | `chap4_5_experiment_completion_plan.md` §5.6/§5.7/§5.8 |
 | B10 | **默认 `confidence_alpha=1.5` 不是 fallback 最优，但暂不改默认值**：P-1 显示 alpha=1.0（A3）fallback 0.335 < 默认 1.5（A1）0.690；H4 显示 A3 在 S 长波/hairpin 有效段只比 A1 边际改善（约 1.9%/3%），且 terminal overshoot 略恶化。当前证据不足以支持把 alpha=1.0 设为新默认 | 参数选择边界 | 已决：不改 `params.yaml`；后续若要重议，需 PVS 六自由度横向机动多 seed 或真机 emulated 实时性证据 | `chap4_5_experiment_completion_plan.md` §5.6/§5.8 |
 

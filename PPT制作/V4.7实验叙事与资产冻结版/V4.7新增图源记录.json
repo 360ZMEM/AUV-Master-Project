@@ -1,0 +1,114 @@
+[
+  {
+    "page": 8,
+    "evidence": "UA-MPC独立代理仿真，控制变化率",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.png",
+    "crop": null,
+    "sha256": "2b2d52f72cd6b0c0783a3f0019f2f0f8b15d7392e08be09462967d905db20528"
+  },
+  {
+    "page": 8,
+    "evidence": "UA-MPC独立代理仿真，授权分布",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.png",
+    "crop": null,
+    "sha256": "45024cced3547f1b847751bd1cbf0ffce4aaeb7f3156ffeac223f69be06bc64b"
+  },
+  {
+    "page": 9,
+    "evidence": "当前算法、原PID、72B协议与原生PVS动力学仿真，当前论文图5.15",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure.png",
+    "crop": null,
+    "sha256": "b08cb6bd6bcd38dc49e504188a2cba6bcb7cd870caf96bd8aeba858c58a30471"
+  },
+  {
+    "page": 10,
+    "evidence": "真实 TMR / ADC 复 I/Q 拟合，独立子链实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.png",
+    "crop": null,
+    "sha256": "0d1d056c2d1590378247488b53910fd233d90b704f910257c41a3df0dd4cd213"
+  },
+  {
+    "page": 10,
+    "evidence": "真实 Jetson 求解时延，独立子链实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.png",
+    "crop": null,
+    "sha256": "4c77cef3eddfa386c7a2b7f337ba27915bd10b7cb26b5740be19eb4ff14157d0"
+  },
+  {
+    "page": 10,
+    "evidence": "真实 PC104 故障响应，独立子链实验",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.png",
+    "crop": null,
+    "sha256": "820f4720a302c8dba2992cf16601031985e154f0c3cbf85f64d0513fd9920153"
+  },
+  {
+    "page": 21,
+    "evidence": "备份证据：跨场形：保守拒绝错误深度",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation.png",
+    "crop": {
+      "left": 0,
+      "top": 0.14,
+      "right": 0.5,
+      "bottom": 0.49
+    },
+    "sha256": "7b6ce7a08d85d4f3e8623c62c5b8e95d96e24be38b4f5231f729616fb6c60ffb"
+  },
+  {
+    "page": 21,
+    "evidence": "备份证据：相似形状：系数仍需标定",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/figures/14_cross_shape_identifiability.png",
+    "crop": {
+      "left": 0.5,
+      "top": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "sha256": "7c2166640907d152c39733732c21c2c3d0413de100bce40eacdc3fb503b8f9bd"
+  },
+  {
+    "page": 21,
+    "evidence": "备份证据：真实 TMR：不完整剖面拒绝",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/07_tmr_quality_gate_audit.png",
+    "crop": {
+      "left": 0.5,
+      "top": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "sha256": "d2db8cf81a7585fcb38afced04c80291036dfed27c46f5915b6d9e471301e7c9"
+  },
+  {
+    "page": 7,
+    "evidence": "四策略原生可编辑统计图，数值来自论文表tab:ch05-r20-filter-strategy",
+    "path": "C:/Users/360MEMZ/Downloads/code/AUV-Master-Project/thuthesis/data/auv-chap05.tex",
+    "sha256": "7ee940015b6ad53bd4eb2cfc330024298830fda57b84ec8e5acc6a017fef95c0",
+    "literalData": {
+      "categories": [
+        "名义工况",
+        "脉冲异常",
+        "100ms延迟"
+      ],
+      "fixedR": [
+        0.0251,
+        1.1722,
+        1.1763
+      ],
+      "globalAdaptiveR": [
+        0.0251,
+        1.6344,
+        1.6398
+      ],
+      "perSourceR": [
+        0.0251,
+        1.2384,
+        1.2304
+      ],
+      "perSourceHuber": [
+        0.0251,
+        0.244,
+        0.2463
+      ]
+    },
+    "workbook": "完整静态源数据快照，不伪造外部公式或原始链路"
+  }
+]

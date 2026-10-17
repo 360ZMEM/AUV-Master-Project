@@ -1,0 +1,81 @@
+{
+  "latexmk": {
+    "command": [
+      "latexmk",
+      "-v"
+    ],
+    "exit_code": 0,
+    "version": "Latexmk, John Collins, 20 November 2021. Version 4.76"
+  },
+  "xelatex": {
+    "command": [
+      "xelatex",
+      "--version"
+    ],
+    "exit_code": 0,
+    "version": "XeTeX 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian)\nkpathsea version 6.3.4/dev\nCopyright 2021 SIL International, Jonathan Kew and Khaled Hosny.\nThere is NO warranty.  Redistribution of this software is\ncovered by the terms of both the XeTeX copyright and\nthe Lesser GNU General Public License.\nFor more information about these matters, see the file\nnamed COPYING and the XeTeX source.\nPrimary author of XeTeX: Jonathan Kew.\nCompiled with ICU version 70.1; using 70.1\nCompiled with zlib version 1.2.11; using 1.2.11\nCompiled with FreeType2 version 2.11.1; using 2.11.1\nCompiled with Graphite2 version 1.3.14; using 1.3.14\nCompiled with HarfBuzz version 2.7.4; using 2.7.4\nCompiled with libpng version 1.6.37; using 1.6.37\nCompiled with pplib version v2.05 less toxic i hope\nCompiled with fontconfig version 2.13.1; using 2.13.1"
+  },
+  "biber": {
+    "command": [
+      "biber",
+      "--version"
+    ],
+    "exit_code": 0,
+    "version": "biber version: 2.17"
+  },
+  "poppler": {
+    "command": [
+      "pdftoppm",
+      "-v"
+    ],
+    "exit_code": 0,
+    "version": "pdftoppm version 22.02.0\nCopyright 2005-2022 The Poppler Developers - http://poppler.freedesktop.org\nCopyright 1996-2011 Glyph & Cog, LLC"
+  },
+  "libreoffice": {
+    "command": [
+      "soffice",
+      "--version"
+    ],
+    "exit_code": 0,
+    "version": "LibreOffice 7.3.7.2 30(Build:2)"
+  },
+  "python": {
+    "command": [
+      "python3",
+      "--version"
+    ],
+    "exit_code": 0,
+    "version": "Python 3.10.12"
+  },
+  "figure_environment": {
+    "python": "/home/zmem063/.local/share/auv-middle/venv/bin/python",
+    "venv": "/home/zmem063/.local/share/auv-middle/venv",
+    "system_site_packages": true,
+    "packages": {
+      "numpy": {
+        "version": "1.24.4",
+        "path": "/home/zmem063/.local/lib/python3.10/site-packages/numpy/__init__.py"
+      },
+      "matplotlib": {
+        "version": "3.5.1",
+        "path": "/usr/lib/python3/dist-packages/matplotlib/__init__.py"
+      },
+      "pymupdf": {
+        "version": "1.28.2",
+        "path": "/home/zmem063/.local/share/auv-middle/venv/lib/python3.10/site-packages/pymupdf/__init__.py"
+      }
+    },
+    "requirements": "tools/requirements-middle-figures.txt",
+    "setup_notes": [
+      "项目共享挂载不支持venv的lib64符号链接，首次失败的空目录已清理；持久环境设在用户本地目录。",
+      "Debian未安装ensurepip，使用--without-pip并复用现有pip安装到venv，未安装TeX Live或修改系统Python包。"
+    ],
+    "global_pip_check": {
+      "status": "FAIL",
+      "detail": "继承系统包中的holoocean2.2.2要求posix_ipc>=1.0.0，现有0.9.8；与本次绘图/构建无关，不修改。"
+    },
+    "required_imports": "PASS",
+    "magnetic_reexport_exit_code": 0,
+    "systems_reexport_exit_code": 0
+  }
+}

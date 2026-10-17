@@ -1,0 +1,325 @@
+{
+  "schema": "auv.defense_assurance.v1",
+  "captured_at": "2026-09-19T15:17:56.824549+00:00",
+  "passed": true,
+  "acceptance": {
+    "saw_track": true,
+    "fwhm_valid": true,
+    "expected_burial_m": 1.0,
+    "burial_tolerance_m": 0.5,
+    "burial_within_tolerance": true
+  },
+  "phase_transitions": [
+    {
+      "elapsed_s": 0.119,
+      "phase": "SEARCH",
+      "reason_codes": [],
+      "scan_attempt": 0
+    },
+    {
+      "elapsed_s": 18.119,
+      "phase": "CONFIRM",
+      "reason_codes": [],
+      "scan_attempt": 0
+    },
+    {
+      "elapsed_s": 104.821,
+      "phase": "TRACK",
+      "reason_codes": [],
+      "scan_attempt": 0
+    }
+  ],
+  "best_fwhm": {
+    "mission_phase": "track",
+    "fwhm_valid": true,
+    "fwhm_width_m": 13.860364714657022,
+    "fwhm_vertical_separation_m": 4.001142649536812,
+    "fwhm_burial_depth_m": 1.0011426495368116,
+    "fwhm_burial_depth_sigma_m": 0.3209706820262247,
+    "fwhm_validity_score": 0.9975939613366257,
+    "fwhm_confidence": 0.9920226127833943,
+    "fwhm_model_residual": 9.004067413033513e-05,
+    "fwhm_reason_codes": [],
+    "fwhm_prominence_nt": 29996.757580196263,
+    "fwhm_snr_db": 64.55880124328527,
+    "fwhm_symmetry_score": 0.9882270657520725,
+    "fwhm_coverage_score": 1.0,
+    "fwhm_peak_value_nt": 29995.762341418165,
+    "fwhm_baseline_nt": -0.9952387780970787,
+    "fwhm_half_level_nt": 14997.383551320034,
+    "fwhm_left_x_m": -16.086149701120398,
+    "fwhm_right_x_m": -2.225784986463376,
+    "cross_scan_attempt": 0,
+    "cross_scan_center_strategy": "detection_position",
+    "cross_scan_along_track_range_m": 1.8152425401054213,
+    "cross_scan_completion_reason": "fwhm_evidence_complete+center_returned",
+    "signed_cross_track_m": 12.448748877370775,
+    "cross_scan_return_distance_m": null
+  },
+  "latest_diagnostics": {
+    "algorithm_version": "v2",
+    "mission_phase": "track",
+    "source": "fwhm_observation",
+    "map_frame": "local_ned",
+    "map_segment_index": 0,
+    "signed_cross_track_m": 12.448748877370775,
+    "prior_signed_cross_track_m": 12.486551078130969,
+    "observation_only_available": true,
+    "observation_heading_deg": 0.0,
+    "observation_prior_offset_m": 0.03780220076019347,
+    "tracking_target_xy_m": [
+      22.090028612016415,
+      0.03780220076019347
+    ],
+    "tracking_stage": "rejoin_estimated_cable",
+    "endpoint_complete": false,
+    "observation_line_sigma_m": 0.05,
+    "fwhm_altitude_source": "sonar",
+    "fwhm_altitude_m": 3.0,
+    "magnetic_envelope_nt": 9144.453353535786,
+    "detection_score": 0.6222011776466703,
+    "detected": false,
+    "detection_baseline_nt": 9128.54570625681,
+    "detection_noise_nt": 25.56672640695333,
+    "detection_peak_evidence": false,
+    "detection_reason_codes": [],
+    "search_plan_valid": true,
+    "search_waypoint_index": 5,
+    "search_waypoint_count": 35,
+    "cross_scan_id": 1,
+    "cross_scan_attempt": 0,
+    "cross_scan_waypoint_index": 3,
+    "cross_scan_sample_count": 350,
+    "cross_scan_aligned": true,
+    "cross_scan_along_track_range_m": 1.8152425401054213,
+    "confirmation_exhausted": false,
+    "cross_scan_retry_pending": false,
+    "cross_scan_center_strategy": "detection_position",
+    "cross_scan_center_xy_m": [
+      19.378617110567458,
+      9.19376954455208
+    ],
+    "cross_scan_completion_reason": "fwhm_evidence_complete+center_returned",
+    "cross_scan_return_distance_m": null,
+    "search_waypoints_xy_m": [
+      [
+        0.0,
+        10.0
+      ],
+      [
+        5.0,
+        10.0
+      ],
+      [
+        10.0,
+        10.0
+      ],
+      [
+        15.0,
+        10.0
+      ],
+      [
+        20.0,
+        10.0
+      ],
+      [
+        25.0,
+        10.0
+      ],
+      [
+        30.0,
+        10.0
+      ],
+      [
+        30.0,
+        5.0
+      ],
+      [
+        25.0,
+        5.0
+      ],
+      [
+        20.0,
+        5.0
+      ],
+      [
+        15.0,
+        5.0
+      ],
+      [
+        10.0,
+        5.0
+      ],
+      [
+        5.0,
+        5.0
+      ],
+      [
+        0.0,
+        5.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        5.0,
+        0.0
+      ],
+      [
+        10.0,
+        0.0
+      ],
+      [
+        15.0,
+        0.0
+      ],
+      [
+        20.0,
+        0.0
+      ],
+      [
+        25.0,
+        0.0
+      ],
+      [
+        30.0,
+        0.0
+      ],
+      [
+        30.0,
+        -5.0
+      ],
+      [
+        25.0,
+        -5.0
+      ],
+      [
+        20.0,
+        -5.0
+      ],
+      [
+        15.0,
+        -5.0
+      ],
+      [
+        10.0,
+        -5.0
+      ],
+      [
+        5.0,
+        -5.0
+      ],
+      [
+        0.0,
+        -5.0
+      ],
+      [
+        0.0,
+        -10.0
+      ],
+      [
+        5.0,
+        -10.0
+      ],
+      [
+        10.0,
+        -10.0
+      ],
+      [
+        15.0,
+        -10.0
+      ],
+      [
+        20.0,
+        -10.0
+      ],
+      [
+        25.0,
+        -10.0
+      ],
+      [
+        30.0,
+        -10.0
+      ]
+    ],
+    "cross_scan_waypoints_xy_m": [
+      [
+        19.378617110567458,
+        -10.80623045544792
+      ],
+      [
+        19.378617110567458,
+        29.19376954455208
+      ],
+      [
+        19.378617110567458,
+        9.19376954455208
+      ]
+    ],
+    "active_plan_kind": "observation_track_target",
+    "active_plan_waypoints_xy_m": [
+      [
+        22.090028612016415,
+        12.486551078130969
+      ],
+      [
+        22.090028612016415,
+        0.03780220076019347
+      ]
+    ],
+    "fwhm_valid": true,
+    "fwhm_peak_x_m": -9.197003190564304,
+    "fwhm_peak_value_nt": 29995.762341418165,
+    "fwhm_baseline_nt": -0.9952387780970787,
+    "fwhm_half_level_nt": 14997.383551320034,
+    "fwhm_left_x_m": -16.086149701120398,
+    "fwhm_right_x_m": -2.225784986463376,
+    "fwhm_width_m": 13.860364714657022,
+    "fwhm_vertical_separation_m": 4.001142649536812,
+    "fwhm_vertical_separation_sigma_m": 0.201301213906871,
+    "fwhm_burial_depth_m": 1.0011426495368116,
+    "fwhm_burial_depth_sigma_m": 0.3209706820262247,
+    "fwhm_validity_score": 0.9975939613366257,
+    "fwhm_confidence": 0.9920226127833943,
+    "fwhm_model_residual": 9.004067413033513e-05,
+    "fwhm_prominence_nt": 29996.757580196263,
+    "fwhm_snr_db": 64.55880124328527,
+    "fwhm_symmetry_score": 0.9882270657520725,
+    "fwhm_coverage_score": 1.0,
+    "fwhm_shape_model": "physical_single_wire",
+    "fwhm_shape_factor": 0.2886751345948129,
+    "fwhm_reason_codes": [],
+    "guidance_source": "v2_observation_corrected_route",
+    "active_waypoint_xy_m": [
+      22.090028612016415,
+      0.03780220076019347
+    ],
+    "heading_correction_deg": 0.0,
+    "recovery_guidance_enabled": false,
+    "recovery_guidance_active": false,
+    "recovery_guidance_streak": 0,
+    "zigzag_probe_active": false,
+    "zigzag_probe_suppressed_by_recovery": false,
+    "zigzag_probe_suppressed_by_inspection_hold": false,
+    "zigzag_probe_lateral_amplitude_m": 1.2,
+    "zigzag_probe_wavelength_m": 24.0,
+    "zigzag_probe_phase_rad": 0.0,
+    "zigzag_probe_heading_bias_deg": 0.0,
+    "zigzag_probe_required_peak_heading_deg": 17.440594490511867,
+    "zigzag_probe_required_min_turn_radius_m": 14.002250465704435,
+    "zigzag_probe_required_peak_lateral_speed_mps": 0.2397734428713567,
+    "zigzag_probe_dynamics_feasible": true,
+    "zigzag_probe_feasibility_reasons": [],
+    "zigzag_limited": false,
+    "limit_reason": "",
+    "acceptance_flags": [
+      "route_offset_over_limit",
+      "burial_uncertainty_over_limit"
+    ],
+    "industrial_ready": false,
+    "industrial_acceptance_pass": false,
+    "dlt1278_state": "注意状态",
+    "dlt1278_total_score": 32
+  }
+}

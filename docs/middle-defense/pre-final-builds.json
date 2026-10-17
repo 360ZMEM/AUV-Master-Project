@@ -1,0 +1,59 @@
+[
+  {
+    "name": "school",
+    "command": [
+      "make",
+      "auv-middle-defense",
+      "LATEXMK=latexmk -g"
+    ],
+    "start": "2026-10-13T13:39:37.405379",
+    "end": "2026-10-13T13:39:55.028636",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-school.log"
+  },
+  {
+    "name": "main",
+    "command": [
+      "make",
+      "auv-middle-defense-main",
+      "LATEXMK=latexmk -g"
+    ],
+    "start": "2026-10-13T13:39:55.029881",
+    "end": "2026-10-13T13:40:12.762499",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-main.log"
+  },
+  {
+    "name": "school-alias",
+    "command": [
+      "make",
+      "auv-middle-defense-school"
+    ],
+    "start": "2026-10-13T13:40:12.763724",
+    "end": "2026-10-13T13:40:13.278682",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-school-alias.log"
+  },
+  {
+    "name": "thesis",
+    "command": [
+      "make",
+      "auv-thesis"
+    ],
+    "start": "2026-10-13T13:40:13.279991",
+    "end": "2026-10-13T13:40:13.440075",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-thesis.log"
+  },
+  {
+    "name": "template",
+    "command": [
+      "make",
+      "verify-thuthesis"
+    ],
+    "start": "2026-10-13T13:40:13.441302",
+    "end": "2026-10-13T13:40:13.719237",
+    "exit_code": 0,
+    "log": "docs/middle-defense/final-build-template.log"
+  }
+]

@@ -1,0 +1,2281 @@
+{
+  "source": "相关附件和参照/word模板(202605)/14-1个人简历、在学期间完成的相关学术成果.doc",
+  "source_sha256": "87184b9195b6753c7865501c36d3521d79658424baa974a41dec162c2336cc5e",
+  "converted_docx_sha256": "3ae14b7c56a7cd2a883a1ed8033499ee21805ddf79c455e82d952303685472aa",
+  "docDefaults": "<ns0:docDefaults xmlns:ns0=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><ns0:rPrDefault><ns0:rPr><ns0:rFonts ns0:ascii=\"Liberation Serif\" ns0:hAnsi=\"Liberation Serif\" ns0:eastAsia=\"Noto Serif CJK SC\" ns0:cs=\"Lohit Devanagari\" /><ns0:sz ns0:val=\"24\" /><ns0:szCs ns0:val=\"24\" /><ns0:lang ns0:val=\"en-US\" ns0:eastAsia=\"zh-CN\" ns0:bidi=\"hi-IN\" /></ns0:rPr></ns0:rPrDefault><ns0:pPrDefault><ns0:pPr><ns0:suppressAutoHyphens ns0:val=\"true\" /></ns0:pPr></ns0:pPrDefault></ns0:docDefaults>",
+  "sections": [
+    {
+      "headerReference": {
+        "type": "default",
+        "id": "rId2"
+      },
+      "footerReference": {
+        "type": "default",
+        "id": "rId3"
+      },
+      "type": {
+        "val": "nextPage"
+      },
+      "pgSz": {
+        "w": "11906",
+        "h": "16838"
+      },
+      "pgMar": {
+        "left": "1701",
+        "right": "1701",
+        "gutter": "0",
+        "header": "1247",
+        "top": "1701",
+        "footer": "1247",
+        "bottom": "1701"
+      },
+      "pgNumType": {
+        "start": "116",
+        "fmt": "decimal"
+      },
+      "formProt": {
+        "val": "false"
+      },
+      "textDirection": {
+        "val": "lrTb"
+      },
+      "docGrid": {
+        "type": "default",
+        "linePitch": "417",
+        "charSpace": "3685"
+      }
+    }
+  ],
+  "styles": {
+    "Normal": {
+      "type": "paragraph",
+      "styleId": "Normal",
+      "name": "Normal",
+      "basedOn": null,
+      "pPr": {
+        "widowControl": {
+          "val": "false"
+        },
+        "bidi": {
+          "val": "0"
+        },
+        "jc": {
+          "val": "both"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Times New Roman",
+          "hAnsi": "Times New Roman",
+          "eastAsia": "宋体;SimSun",
+          "cs": "Times New Roman"
+        },
+        "color": {
+          "val": "auto"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "20"
+        },
+        "lang": {
+          "val": "en-US",
+          "eastAsia": "zh-CN",
+          "bidi": "ar-SA"
+        }
+      }
+    },
+    "Heading1": {
+      "type": "paragraph",
+      "styleId": "Heading1",
+      "name": "Heading 1",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "bCs": {
+          "value": ""
+        },
+        "spacing": {
+          "val": "8"
+        },
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "32"
+        }
+      }
+    },
+    "Heading2": {
+      "type": "paragraph",
+      "styleId": "Heading2",
+      "name": "Heading 2",
+      "basedOn": "Normal",
+      "pPr": {
+        "keepNext": {
+          "val": "true"
+        },
+        "keepLines": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "360",
+          "after": "120"
+        },
+        "outlineLvl": {
+          "val": "1"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "eastAsia": "黑体;SimHei",
+          "cs": "Arial"
+        },
+        "sz": {
+          "val": "28"
+        }
+      }
+    },
+    "WW8Num2z0": {
+      "type": "character",
+      "styleId": "WW8Num2z0",
+      "name": "WW8Num2z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3z0": {
+      "type": "character",
+      "styleId": "WW8Num3z0",
+      "name": "WW8Num3z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4z1": {
+      "type": "character",
+      "styleId": "WW8Num4z1",
+      "name": "WW8Num4z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num5z0": {
+      "type": "character",
+      "styleId": "WW8Num5z0",
+      "name": "WW8Num5z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5z1": {
+      "type": "character",
+      "styleId": "WW8Num5z1",
+      "name": "WW8Num5z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num7z0": {
+      "type": "character",
+      "styleId": "WW8Num7z0",
+      "name": "WW8Num7z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7z1": {
+      "type": "character",
+      "styleId": "WW8Num7z1",
+      "name": "WW8Num7z1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8Num8z0": {
+      "type": "character",
+      "styleId": "WW8Num8z0",
+      "name": "WW8Num8z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Wingdings",
+          "hAnsi": "Wingdings",
+          "cs": "Wingdings"
+        }
+      }
+    },
+    "WW8NumSt1z0": {
+      "type": "character",
+      "styleId": "WW8NumSt1z0",
+      "name": "WW8NumSt1z0",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "ascii": "Garamond",
+          "hAnsi": "Garamond",
+          "cs": "Garamond"
+        },
+        "sz": {
+          "val": "36"
+        }
+      }
+    },
+    "Style12": {
+      "type": "character",
+      "styleId": "Style12",
+      "name": "默认段落字体",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "PageNumber": {
+      "type": "character",
+      "styleId": "PageNumber",
+      "name": "Page Number",
+      "basedOn": "Style12",
+      "pPr": {},
+      "rPr": {}
+    },
+    "Char": {
+      "type": "character",
+      "styleId": "Char",
+      "name": "批注框文本 Char",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {
+        "kern": {
+          "val": "2"
+        },
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "Heading": {
+      "type": "paragraph",
+      "styleId": "Heading",
+      "name": "Heading",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "240",
+          "after": "60"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "outlineLvl": {
+          "val": "0"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "ascii": "Arial",
+          "hAnsi": "Arial",
+          "cs": "Arial"
+        },
+        "b": {
+          "value": ""
+        },
+        "bCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "32"
+        },
+        "szCs": {
+          "val": "32"
+        }
+      }
+    },
+    "TextBody": {
+      "type": "paragraph",
+      "styleId": "TextBody",
+      "name": "Body Text",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "before": "0",
+          "after": "120"
+        }
+      },
+      "rPr": {}
+    },
+    "List": {
+      "type": "paragraph",
+      "styleId": "List",
+      "name": "List",
+      "basedOn": "TextBody",
+      "pPr": {},
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "Caption": {
+      "type": "paragraph",
+      "styleId": "Caption",
+      "name": "Caption",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "spacing": {
+          "before": "120",
+          "after": "120"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        },
+        "i": {
+          "value": ""
+        },
+        "iCs": {
+          "value": ""
+        },
+        "sz": {
+          "val": "24"
+        },
+        "szCs": {
+          "val": "24"
+        }
+      }
+    },
+    "Index": {
+      "type": "paragraph",
+      "styleId": "Index",
+      "name": "Index",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Lohit Devanagari"
+        }
+      }
+    },
+    "HeaderandFooter": {
+      "type": "paragraph",
+      "styleId": "HeaderandFooter",
+      "name": "Header and Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "suppressLineNumbers": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        }
+      },
+      "rPr": {}
+    },
+    "Header": {
+      "type": "paragraph",
+      "styleId": "Header",
+      "name": "Header",
+      "basedOn": "Normal",
+      "pPr": {
+        "pBdr": {
+          "value": ""
+        },
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "center"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Footer": {
+      "type": "paragraph",
+      "styleId": "Footer",
+      "name": "Footer",
+      "basedOn": "Normal",
+      "pPr": {
+        "tabs": {
+          "value": ""
+        },
+        "snapToGrid": {
+          "val": "false"
+        },
+        "jc": {
+          "val": "left"
+        }
+      },
+      "rPr": {
+        "sz": {
+          "val": "18"
+        }
+      }
+    },
+    "Style13": {
+      "type": "paragraph",
+      "styleId": "Style13",
+      "name": "正文缩进",
+      "basedOn": "Normal",
+      "pPr": {
+        "ind": {
+          "firstLine": "420"
+        }
+      },
+      "rPr": {}
+    },
+    "Achievement": {
+      "type": "paragraph",
+      "styleId": "Achievement",
+      "name": "Achievement",
+      "basedOn": "TextBody",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "atLeast",
+          "line": "220",
+          "before": "0",
+          "after": "0"
+        }
+      },
+      "rPr": {
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "22"
+        }
+      }
+    },
+    "PersonalInfo": {
+      "type": "paragraph",
+      "styleId": "PersonalInfo",
+      "name": "Personal Info",
+      "basedOn": "Achievement",
+      "pPr": {
+        "spacing": {
+          "before": "220",
+          "after": "0"
+        }
+      },
+      "rPr": {}
+    },
+    "Style14": {
+      "type": "paragraph",
+      "styleId": "Style14",
+      "name": "段落",
+      "basedOn": "Normal",
+      "pPr": {
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "100",
+          "after": "0"
+        },
+        "ind": {
+          "firstLine": "480"
+        }
+      },
+      "rPr": {}
+    },
+    "Title": {
+      "type": "paragraph",
+      "styleId": "Title",
+      "name": "Title",
+      "basedOn": "Heading",
+      "pPr": {
+        "widowControl": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "420",
+          "before": "240",
+          "after": "360"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "outlineLvl": {
+          "val": "9"
+        }
+      },
+      "rPr": {
+        "rFonts": {
+          "cs": "Times New Roman"
+        },
+        "b": {
+          "val": "false"
+        },
+        "bCs": {
+          "val": "false"
+        },
+        "kern": {
+          "val": "0"
+        },
+        "sz": {
+          "val": "30"
+        },
+        "szCs": {
+          "val": "20"
+        }
+      }
+    },
+    "Style15": {
+      "type": "paragraph",
+      "styleId": "Style15",
+      "name": "批注框文本",
+      "basedOn": "Normal",
+      "pPr": {},
+      "rPr": {
+        "sz": {
+          "val": "18"
+        },
+        "szCs": {
+          "val": "18"
+        }
+      }
+    },
+    "WW8Num1": {
+      "type": "numbering",
+      "styleId": "WW8Num1",
+      "name": "WW8Num1",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num2": {
+      "type": "numbering",
+      "styleId": "WW8Num2",
+      "name": "WW8Num2",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num3": {
+      "type": "numbering",
+      "styleId": "WW8Num3",
+      "name": "WW8Num3",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num4": {
+      "type": "numbering",
+      "styleId": "WW8Num4",
+      "name": "WW8Num4",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num5": {
+      "type": "numbering",
+      "styleId": "WW8Num5",
+      "name": "WW8Num5",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num6": {
+      "type": "numbering",
+      "styleId": "WW8Num6",
+      "name": "WW8Num6",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num7": {
+      "type": "numbering",
+      "styleId": "WW8Num7",
+      "name": "WW8Num7",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num8": {
+      "type": "numbering",
+      "styleId": "WW8Num8",
+      "name": "WW8Num8",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    },
+    "WW8Num9": {
+      "type": "numbering",
+      "styleId": "WW8Num9",
+      "name": "WW8Num9",
+      "basedOn": null,
+      "pPr": {},
+      "rPr": {}
+    }
+  },
+  "paragraphs": [
+    {
+      "paragraph_index": 1,
+      "text": "个人简历、在学期间完成的相关学术成果",
+      "pPr": {
+        "pStyle": {
+          "val": "Heading1"
+        },
+        "spacing": {
+          "before": "480",
+          "after": "360"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "个人简历、在学期间完成的相关学术成果",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 2,
+      "text": "个人简历",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "个人简历",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 3,
+      "text": "197×年××月××日出生于四川××县。",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "197×",
+          "rPr": {}
+        },
+        {
+          "text": "年",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "月",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "日出生于四川",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "县。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 4,
+      "text": "1992年9月考入××大学化学系××化学专业，1996年7月本科毕业并获得理学学士学位。",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "1992",
+          "rPr": {}
+        },
+        {
+          "text": "年",
+          "rPr": {}
+        },
+        {
+          "text": "9",
+          "rPr": {}
+        },
+        {
+          "text": "月考入",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "大学化学系",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "化学专业，",
+          "rPr": {}
+        },
+        {
+          "text": "1996",
+          "rPr": {}
+        },
+        {
+          "text": "年",
+          "rPr": {}
+        },
+        {
+          "text": "7",
+          "rPr": {}
+        },
+        {
+          "text": "月本科毕业并获得理学学士学位。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 5,
+      "text": "1996年9月免试进入清华大学化学系攻读××化学博士至今。",
+      "pPr": {
+        "pStyle": {
+          "val": "Style14"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "0",
+          "after": "0"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "1996",
+          "rPr": {}
+        },
+        {
+          "text": "年",
+          "rPr": {}
+        },
+        {
+          "text": "9",
+          "rPr": {}
+        },
+        {
+          "text": "月免试进入清华大学化学系攻读",
+          "rPr": {}
+        },
+        {
+          "text": "××",
+          "rPr": {}
+        },
+        {
+          "text": "化学博士至今。",
+          "rPr": {}
+        }
+      ]
+    },
+    {
+      "paragraph_index": 6,
+      "text": "在学期间完成的相关学术成果",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "jc": {
+          "val": "center"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "在学期间完成的",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        },
+        {
+          "text": "相关学术成果",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 7,
+      "text": "学术论文：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "学术论文：",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 8,
+      "text": "Yang Y, Ren T L, Zhang L T, et al. Miniature microphone with silicon- based ferroelectric thin films[J]. Integrated Ferroelectrics, 2003, 52:229-235.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Yang Y, Ren T L, Zhang L T, et al. ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            },
+            "lang": {
+              "val": "de-DE"
+            }
+          }
+        },
+        {
+          "text": "Miniature microphone with silicon- based ferroelectric thin films[J]. Integrated Ferroelectrics, 2003, 52:229-235.",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 9,
+      "text": "杨轶, 张宁欣, 任天令, 等. 硅基铁电微声学器件中薄膜残余应力的研究[J]. 中国机械工程, 2005, 16(14):1289-1291. ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "杨轶",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "张宁欣",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "任天令",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "等",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "硅基铁电微声学器件中薄膜残余应力的研究",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中国机械工程",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", 2005, 16(14):1289-1291. ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 10,
+      "text": "杨轶, 张宁欣, 任天令, 等. 集成铁电器件中的关键工艺研究[J]. 仪器仪表学报, 2003, 24(S4):192-193. ",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "杨轶",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "张宁欣",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "任天令",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "等",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "集成铁电器件中的关键工艺研究",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "[",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "J]",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "仪器仪表学报",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", 2003, 24(S4):192-193. ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 11,
+      "text": "Yang Y, Ren T L, Zhu Y P, et al. PMUTs for handwriting recognition. In press[J]. (已被Integrated Ferroelectrics录用)",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Yang Y, Ren T L, Zhu Y P, et al. PMUTs for handwriting recognition. In press[J]. (",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "已被",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "Integrated Ferroelectrics",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "录用",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ")",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 12,
+      "text": "专利：",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "400",
+          "before": "480",
+          "after": "120"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "专利：",
+          "rPr": {
+            "rFonts": {
+              "ascii": "黑体;SimHei",
+              "hAnsi": "黑体;SimHei",
+              "eastAsia": "黑体;SimHei"
+            },
+            "b": {
+              "value": ""
+            },
+            "sz": {
+              "val": "28"
+            },
+            "szCs": {
+              "val": "28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 13,
+      "text": "尉昊赟, 卢敏健, 张雨佳, 李岩, 等. 差分复用的干涉增强双光梳相干拉曼光谱探测系统和方法: 中国, ZL202010578599.2 [P]. 2021-04-23.",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "尉昊赟",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "卢敏健",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "张雨佳",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "李岩",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ",",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "等",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ". ",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "差分复用的干涉增强双光梳相干拉曼光谱探测系统和方法",
+          "rPr": {
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ": ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "中国",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ", ",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "ZL",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "202010578599.2 [P]. 2021-04-23",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ".",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "paragraph_index": 14,
+      "text": "Ren T L, Yang Y, Zhu Y P, et al. Piezoelectric micro acoustic sensor based on ferroelectric materials: USA, No.11/215, 102[P]. (美国发明专利申请号.)",
+      "pPr": {
+        "pStyle": {
+          "val": "Normal"
+        },
+        "widowControl": {
+          "value": ""
+        },
+        "numPr": {
+          "value": ""
+        },
+        "spacing": {
+          "lineRule": "exact",
+          "line": "320",
+          "before": "120",
+          "after": "0"
+        },
+        "textAlignment": {
+          "val": "baseline"
+        },
+        "rPr": {
+          "value": ""
+        }
+      },
+      "runs": [
+        {
+          "text": "Ren T L, ",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            },
+            "lang": {
+              "val": "de-DE"
+            }
+          }
+        },
+        {
+          "text": "Yang",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "color": {
+              "val": "000000"
+            },
+            "spacing": {
+              "val": "8"
+            },
+            "kern": {
+              "val": "0"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": " Y, Zhu Y P, et al. ",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            },
+            "lang": {
+              "val": "de-DE"
+            }
+          }
+        },
+        {
+          "text": "Piezoelectric micro acoustic sensor based on ferroelectric materials: USA, No.11/215, 102[",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "P",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "]. (",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": "美国发明专利申请号",
+          "rPr": {
+            "rFonts": {
+              "cs": "宋体;SimSun"
+            },
+            "szCs": {
+              "val": "24"
+            }
+          }
+        },
+        {
+          "text": ".)",
+          "rPr": {
+            "szCs": {
+              "val": "24"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "headers_footers": {
+    "word/header1.xml": {
+      "text": "个人简历、在学期间完成的相关学术成果",
+      "fields": []
+    },
+    "word/footer1.xml": {
+      "text": "116",
+      "fields": [
+        " PAGE "
+      ]
+    }
+  },
+  "footnotes_endnotes": {}
+}

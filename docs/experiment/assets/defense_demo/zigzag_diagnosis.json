@@ -1,0 +1,35 @@
+{
+  "sample_count": 412,
+  "requested": {
+    "lateral_amplitude_m": 1.5,
+    "wavelength_m": 24.0,
+    "median_speed_mps": 0.8
+  },
+  "kinematic_requirement": {
+    "peak_heading_deg": 21.43989050175506,
+    "exact_minimum_turn_radius_m": 9.726833629664428,
+    "implemented_feasibility_radius_m": 12.061468487393505,
+    "peak_yaw_rate_deg_s": 4.71238898038469,
+    "peak_lateral_speed_mps": 0.2924199328704668
+  },
+  "executed_fit": {
+    "fixed_wavelength_amplitude_m": 0.18422239917720973,
+    "amplitude_ratio": 0.12281493278480649,
+    "correlation_with_zero_phase_reference": 0.13354913060714976,
+    "r_squared_with_linear_trend": 0.12703813335936132,
+    "rmse_m": 0.6253023827364449,
+    "signed_cross_track_min_m": -1.5126052229566824,
+    "signed_cross_track_max_m": 1.5820980718178377
+  },
+  "limiting": {
+    "limited_sample_count": 248,
+    "limited_ratio": 0.6019417475728155,
+    "reason_counts": {
+      "max_yaw_rate_deg_s,min_turn_radius_m": 188,
+      "min_turn_radius_m": 56,
+      "none": 164,
+      "max_heading_delta_deg,max_yaw_rate_deg_s,min_turn_radius_m": 4
+    }
+  },
+  "interpretation": "The requested sinusoid is kinematically feasible under the configured radius and lateral-speed bounds, but the legacy limiter clips instantaneous heading error using yaw-rate/turn-radius values. The dominant mismatch is therefore guidance/limiter semantics, with the old visualization reference also exaggerating the apparent discrepancy; it is not evidence of insufficient vehicle authority alone."
+}
