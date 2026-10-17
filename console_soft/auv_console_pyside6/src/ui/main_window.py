@@ -27,6 +27,7 @@ from ..utils.mode_manager import ModeConfigManager
 from ..utils.offline_replay import OfflineReplayManager
 from ..utils.xml_handler import XMLHandler
 from .map_widget import MapWidget
+from .inspection_operational_view import InspectionOperationalView
 
 
 class MainWindow(QMainWindow):
@@ -55,6 +56,7 @@ class MainWindow(QMainWindow):
         self.autofixed_points = []
         self._last_arbiter_signature = None
         self._last_side_channel_status = ""
+        self._inspection_operational_view = InspectionOperationalView()
 
         # Position data
         self.auv_longitude = 0.0
@@ -125,7 +127,7 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         """Initialize all UI components"""
-        self.setWindowTitle("AUV Console (Python/PySide6)")
+        self.setWindowTitle("AUV 海底电缆自主巡检任务控制台")
         self.setGeometry(20, 40, 1280, 820)
         self.setMinimumSize(1120, 720)
 
@@ -164,8 +166,8 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(self.create_mission_tab(), "任务配置")
         self.tab_widget.addTab(self.create_message_tab(), "消息")
         self.tab_widget.addTab(self.create_diagnostics_tab(), "诊断监控")
-        self.tab_widget.setMinimumHeight(135)
-        self.tab_widget.setMaximumHeight(190)
+        self.tab_widget.setMinimumHeight(190)
+        self.tab_widget.setMaximumHeight(240)
         main_layout.addWidget(self.tab_widget, stretch=0)
 
         # 新增：底部控制台 - 最高优先级操作区
@@ -236,6 +238,22 @@ class MainWindow(QMainWindow):
         row3.addWidget(self.labels['deny_reason'])
         row3.addWidget(self.labels['freshness'])
         layout.addLayout(row3)
+
+        # Defense-facing mission strip: read-only and fed by the same runtime
+        # evidence as the diagnostics page, so it does not alter control logic.
+        row4 = QHBoxLayout()
+        row4.setSpacing(24)
+        self.labels['mission_phase'] = QLabel("任务阶段: WAITING")
+        self.labels['mission_phase'].setMinimumWidth(220)
+        self.labels['mission_phase'].setStyleSheet(self.semantic_label_style("info", 14, True))
+        self.labels['mission_progress'] = QLabel("巡检进度: -- m")
+        self.labels['mission_progress'].setMinimumWidth(180)
+        self.labels['mission_cable'] = QLabel("海缆感知: --")
+        self.labels['mission_cable'].setMinimumWidth(300)
+        row4.addWidget(self.labels['mission_phase'])
+        row4.addWidget(self.labels['mission_progress'])
+        row4.addWidget(self.labels['mission_cable'])
+        layout.addLayout(row4)
 
         group.setLayout(layout)
         return group
@@ -565,6 +583,8 @@ class MainWindow(QMainWindow):
         self.lbl_cable_flags = QLabel("验收标志: --")
         self.lbl_cable_products = QLabel("产物链: --")
         self.lbl_cable_products.setWordWrap(True)
+        self.lbl_inspection_authority = QLabel("定位: -- | 自治许可: 未接入")
+        self.lbl_inspection_authority.setWordWrap(True)
 
         cable_layout.addWidget(self.lbl_cable_ready, 0, 0, 1, 2)
         cable_layout.addWidget(self.lbl_cable_metrics, 1, 0)
@@ -573,6 +593,7 @@ class MainWindow(QMainWindow):
         cable_layout.addWidget(self.lbl_cable_flags, 2, 1)
         cable_layout.addWidget(self.lbl_cable_score_items, 3, 0, 1, 2)
         cable_layout.addWidget(self.lbl_cable_products, 4, 0, 1, 2)
+        cable_layout.addWidget(self.lbl_inspection_authority, 5, 0, 1, 2)
 
         layout.addLayout(left_col, stretch=0)
         layout.addWidget(cable_group, stretch=1)
@@ -857,6 +878,10 @@ class MainWindow(QMainWindow):
         self.map_refresh_timer.timeout.connect(self.map_widget.update)
         self.map_refresh_timer.start(100)
 
+        self.inspection_status_timer = QTimer()
+        self.inspection_status_timer.timeout.connect(self.refresh_inspection_authority_display)
+        self.inspection_status_timer.start(250)
+
     def connect_signals(self):
         """Connect all signals and slots"""
         # Task control buttons
@@ -894,6 +919,8 @@ class MainWindow(QMainWindow):
         self.comm_manager.bridge_telemetry_received.connect(self.update_bridge_sidechannel_display)
         self.comm_manager.arbiter_state_received.connect(self.update_arbiter_state_display)
         self.comm_manager.side_channel_status_changed.connect(self.on_side_channel_status_changed)
+        if self.comm_manager.side_channel.is_active:
+            self.on_side_channel_status_changed('Zenoh side channel started')
 
         # 新增：底部控制台信号
         self.btn_estop.clicked.connect(self.trigger_estop)
@@ -1018,8 +1045,9 @@ class MainWindow(QMainWindow):
         # ─── 紧急切断：强制发送 ESTOP 包 ───
         if self.estop_active:
             self._send_estop_packet()
-            # 同时通过 Zenoh 发送自主心跳（保持 Jetson 连接感知）
-            self.send_autonomy_heartbeat()
+            # 保持同一个锁存式 ESTOP/SURFACE 语义，不能再发送普通自主
+            # 心跳，否则接收端会看到相互矛盾的安全状态。
+            self._publish_estop_semantic()
             return True
 
         # ─── 自主模式：发送语义 JSON 心跳 + 传统 0xEE 包 ───
@@ -1289,6 +1317,13 @@ class MainWindow(QMainWindow):
         """Show bridge telemetry metadata from optional Zenoh side channel."""
         if not isinstance(payload, dict):
             return
+        if payload.get('message_type') == 'inspection_operational_status':
+            monitor = payload.get('cable_monitor')
+            if isinstance(monitor, dict) and self._inspection_operational_view.accept(
+                monitor.get('operational_status')
+            ):
+                self.refresh_inspection_authority_display()
+            return
         if 'active_arbiter' in payload:
             self.labels['arbiter'].setText(f"控制归属: {payload.get('active_arbiter', '--')}")
             # 同步更新底部仲裁状态标签
@@ -1329,6 +1364,9 @@ class MainWindow(QMainWindow):
         """Update cable inspection summary from bridge side-channel telemetry."""
         if not isinstance(monitor, dict):
             return
+        self._inspection_monitor_active = monitor.get('inspection_enabled') is True
+        if self._inspection_operational_view.accept(monitor.get('operational_status')):
+            self.refresh_inspection_authority_display()
 
         def fmt(value, digits=2):
             if value is None:
@@ -1342,13 +1380,19 @@ class MainWindow(QMainWindow):
         acceptance_pass = bool(monitor.get('industrial_acceptance_pass', ready))
         mode = str(monitor.get('mode', '--'))
         flags = str(monitor.get('acceptance_flags_text', '--'))
-        if ready:
+        verdict_label = '感知验收' if isinstance(monitor.get('operational_status'), dict) else '结论'
+        if monitor.get('inspection_enabled') is True:
+            lateral = '有效' if monitor.get('lateral_valid') is True else '未确认'
+            depth = '已许可' if monitor.get('depth_valid') is True else '未许可'
+            self.lbl_cable_ready.setText(f"横向定位: {lateral} | 埋深: {depth} | {mode}")
+            self.lbl_cable_ready.setStyleSheet(self.semantic_label_style("info", 16, True))
+        elif ready:
             pass_text = "PASS" if acceptance_pass else "FAIL"
-            self.lbl_cable_ready.setText(f"结论: READY/{pass_text} | {mode}")
+            self.lbl_cable_ready.setText(f"{verdict_label}: READY/{pass_text} | {mode}")
             self.lbl_cable_ready.setStyleSheet(self.semantic_label_style("success", 18, True))
         else:
             pass_text = "PASS" if acceptance_pass else "FAIL"
-            self.lbl_cable_ready.setText(f"结论: NOT READY/{pass_text} | {mode}")
+            self.lbl_cable_ready.setText(f"{verdict_label}: NOT READY/{pass_text} | {mode}")
             self.lbl_cable_ready.setStyleSheet(self.semantic_label_style("danger", 18, True))
 
         self.lbl_cable_metrics.setText(
@@ -1363,6 +1407,14 @@ class MainWindow(QMainWindow):
             f"{fmt(monitor.get('magnetic_snr_db'), 1)} dB / "
             f"mag {fmt(monitor.get('magnetic_confidence'), 3)}"
         )
+        if monitor.get('inspection_enabled') is True:
+            burial = monitor.get('burial_depth_m') if monitor.get('depth_valid') is True else None
+            self.lbl_cable_metrics.setText(
+                f"横偏/埋深/进度: {fmt(monitor.get('cross_track_m'))} m / "
+                f"{fmt(burial)} m / {fmt(monitor.get('route_progress_m'), 1)} m")
+            self.lbl_cable_quality.setText(
+                f"FWHM测宽: {fmt(monitor.get('fwhm_width_m'))} m | "
+                f"剖面有效: {monitor.get('fwhm_valid', '--')}")
         dlt_state = str(monitor.get('dlt1278_state', '--'))
         dlt_score = fmt(monitor.get('dlt1278_total_score'), 0)
         self.lbl_cable_dlt.setText(f"DL/T状态/扣分合计: {dlt_state} / {dlt_score}")
@@ -1382,6 +1434,42 @@ class MainWindow(QMainWindow):
         else:
             self.lbl_cable_flags.setStyleSheet(self.semantic_label_style("success", 12, True))
         self.lbl_cable_products.setText(f"产物链: {monitor.get('dlt1278_products_text', '--')}")
+        self.labels['mission_phase'].setText(f"任务阶段: {mode}")
+        phase_role = "danger" if mode in ('RECOVERY', 'SENSOR_DEGRADED') else "success" if ready else "info"
+        task_phase = self._inspection_operational_view.mission_phase_display()
+        if task_phase is not None:
+            self.labels['mission_phase'].setText(task_phase[0])
+            phase_role = task_phase[1]
+        self.labels['mission_phase'].setStyleSheet(self.semantic_label_style(phase_role, 14, True))
+        self.labels['mission_progress'].setText(
+            f"巡检进度: {fmt(monitor.get('route_progress_m'), 1)} m"
+        )
+        self.labels['mission_cable'].setText(
+            f"海缆感知: 横偏 {fmt(monitor.get('cross_track_m'))} m | "
+            f"置信度 {fmt(monitor.get('confidence'), 3)} | SNR {fmt(monitor.get('magnetic_snr_db'), 1)} dB"
+        )
+        if monitor.get('inspection_enabled') is True:
+            self.labels['mission_cable'].setText(
+                f"海缆观测: FWHM {fmt(monitor.get('fwhm_width_m'))} m | 埋深许可独立")
+            self.refresh_inspection_authority_display()
+
+    def refresh_inspection_authority_display(self):
+        text, role = self._inspection_operational_view.display()
+        self.lbl_inspection_authority.setText(text)
+        self.lbl_inspection_authority.setStyleSheet(self.semantic_label_style(role, 13, role != 'normal'))
+        if (getattr(self, '_inspection_monitor_active', False)
+                and not self._inspection_operational_view.is_fresh()):
+            self.lbl_cable_ready.setText('横向定位: 未知 | 埋深: 未许可（状态未接入或失鲜）')
+            self.lbl_cable_ready.setStyleSheet(self.semantic_label_style('warning', 16, True))
+            self.lbl_cable_metrics.setText('横偏/埋深/进度: -- / -- / --')
+            self.lbl_cable_quality.setText('FWHM测宽: -- | 剖面有效: 未知')
+            self.labels['mission_progress'].setText('巡检进度: --（状态失鲜）')
+            self.labels['mission_cable'].setText('海缆观测: 未知（状态失鲜）')
+        task_phase = self._inspection_operational_view.mission_phase_display()
+        if task_phase is not None:
+            self.labels['mission_phase'].setText(task_phase[0])
+            self.labels['mission_phase'].setStyleSheet(
+                self.semantic_label_style(task_phase[1], 14, True))
 
     def update_arbiter_state_display(self, payload: dict):
         """Update arbiter labels and status bar from side-channel state view."""
@@ -1404,6 +1492,12 @@ class MainWindow(QMainWindow):
         """Surface Zenoh side-channel runtime status without coupling UI to transport."""
         if not message:
             return
+        if self.comm_manager.side_channel.is_active:
+            self.lbl_zenoh_status.setText('状态: 会话已启用')
+            self.lbl_zenoh_status.setStyleSheet(self.semantic_label_style('success', 12, True))
+        else:
+            self.lbl_zenoh_status.setText('状态: 未连接')
+            self.lbl_zenoh_status.setStyleSheet(self.semantic_label_style('danger', 12, True))
         if message != self._last_side_channel_status:
             self._last_side_channel_status = message
             self.append_message("链路", message)
@@ -1518,11 +1612,12 @@ class MainWindow(QMainWindow):
         self.lbl_arbiter_status.setText("仲裁状态: ESTOP LOCKED")
         self.lbl_arbiter_status.setStyleSheet(self.semantic_label_style("danger", 14, True))
 
-        self.append_message("安全", "🛑 紧急切断已触发！所有推力归零，状态锁死")
-        self.status_bar.showMessage("🛑 紧急切断生效 - 必须显式复位", 5000)
+        self.append_message("安全", "紧急急停已触发：水平推进归零，紧急上浮状态锁存")
+        self.status_bar.showMessage("紧急上浮生效 - 必须显式复位", 5000)
 
         # 立即发送 ESTOP 包 (mode=0x01, work=0x02, thrust=0)
         self._send_estop_packet()
+        self._publish_estop_semantic()
 
     def _send_estop_packet(self):
         """发送 ESTOP 包: mode=0x01, work=0x02, 推力归零"""
@@ -1538,6 +1633,27 @@ class MainWindow(QMainWindow):
         self.comm_manager.send_packet(packet, self.preferences, CMD_TASK_CANCEL)
         self.packet_builder.increment_frame()
 
+    def _estop_semantic_payload(self) -> dict:
+        """Build the latched emergency-surface command shared with ROS/Foxglove."""
+        return {
+            "event": "ESTOP",
+            "emergency_action": "SURFACE",
+            "emergency_latched": True,
+            "control_mode_byte": 0x01,
+            "work_instruction": CMD_TASK_CANCEL,
+            "target_depth": 0.5,
+            "surface_depth_m": 0.5,
+            "thrust": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "ts": time.time(),
+            "source": "pyside6_console_estop",
+        }
+
+    def _publish_estop_semantic(self) -> bool:
+        """Publish the safety command on the optional Zenoh side channel."""
+        return self._publish_json_to_zenoh(self._estop_semantic_payload())
+
     def reset_estop(self):
         """解除急停 - 仅在推力归零时允许"""
         # 检查推力是否归零
@@ -1549,6 +1665,19 @@ class MainWindow(QMainWindow):
 
         self.estop_active = False
         self.estop_locked = False
+
+        self._publish_json_to_zenoh({
+            "event": "ESTOP_RESET",
+            "emergency_action": "CLEAR",
+            "emergency_latched": False,
+            "control_mode_byte": 0x01,
+            "work_instruction": CMD_CLEAR_FAULT,
+            "thrust": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "ts": time.time(),
+            "source": "pyside6_console_estop_reset",
+        })
 
         # UI 恢复
         self.btn_estop.setEnabled(True)

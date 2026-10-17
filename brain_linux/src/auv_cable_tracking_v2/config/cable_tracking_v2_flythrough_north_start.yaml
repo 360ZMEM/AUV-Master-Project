@@ -1,0 +1,189 @@
+# Opt-in north-to-south PVS flythrough for a known negative-side cable hint.
+# Requires a prealigned start and a clear 390 x 60 m straight corridor;
+# vehicle stop/turn limits must be validated before any physical mission.
+# No depth publication.
+# The side interval below is a synthetic fixture, not a validated field map.
+cable_tracking:
+  enabled: true
+  mission_types:
+  - CABLE_TRACKING
+  - CABLE_INSPECTION
+  auv_master_mag_root: AUV-Master-Mag
+  scenario_name: case1
+  prior:
+    format: yaml
+    frame: local_ned
+    yaml_points_ned:
+    - - 0.0
+      - 0.0
+      - -1.5
+    - - 80.0
+      - 0.0
+      - -1.5
+    burial_depth_m: null
+  control:
+    publish_setpoint: true
+    default_depth_m: 10.0
+    default_speed_mps: 0.3
+    min_speed_mps: 0.0
+    max_speed_mps: 0.3
+    bridge_backend: protocol_udp
+    control_mode_byte: 238
+    sine_period_s: 0.0
+    high_priority: false
+  recovery_guidance:
+    enabled: false
+  zigzag_limits:
+    auto_limit: false
+    max_heading_delta_deg: 25.0
+    max_yaw_rate_deg_s: 12.0
+    min_turn_radius_m: 6.0
+    max_lateral_speed_mps: 0.6
+  zigzag_probe:
+    enabled: false
+  magnetic:
+    sample_rate_hz: 50.0
+    block_size: 1
+    sensor_frame: mag_link
+  sensor_policy:
+    runtime_status_topic: /auv/sensors/runtime_status
+    required_capability: cable_inspection
+    navigation_timeout_s: 0.5
+    magnetic_timeout_s: 0.5
+    altitude_topic: /auv/sensors/altitude
+    altitude_timeout_s: 1.5
+    publish_degraded_hold_setpoint: true
+    degraded_hold_speed_mps: 0.0
+  quality:
+    enable_magnetic_quality: true
+    enable_burial_inversion: false
+    magnetic_noise_floor_nt: 0.05
+    confidence_min_ready: 0.65
+    route_offset_ready_m: 2.0
+  acceptance:
+    max_route_offset_m: 2.0
+    mean_route_offset_m: 1.0
+    min_confidence: 0.65
+    max_burial_sigma_m: 0.15
+    max_burial_sigma_over_limit_ratio: 0.05
+    min_valid_burial_ratio: 0.8
+    min_tracking_samples: 300
+  v2:
+    mission_geometry: flythrough
+    navigation_ground_velocity_frame: world_ned
+    navigation_world_frame_id: world
+    flythrough:
+      start_along_m: -250.0
+      end_along_m: -80.0
+      start_lateral_m: 15.0
+      end_lateral_m: -15.0
+      side_hint_min_m: -8.0
+      side_hint_max_m: -2.0
+      side_hint_source: synthetic_test_fixture
+      minimum_halfmax_tail_m: 7.0
+      side_hint_observation_tolerance_m: 0.5
+      rejoin_runin_m: 20.0
+      rejoin_opposed_runin_m: 5.0
+      rejoin_current_direction_threshold_mps: 0.02
+      maximum_heading_sigma_deg: 2.0
+      maximum_ground_velocity_sigma_mps: 0.03
+      route_quality_mean_limit_m: 1.0
+      route_quality_max_limit_m: 2.0
+      route_quality_min_samples: 200
+      staging_tolerance_m: 2.0
+      heading_tolerance_deg: 15.0
+      maximum_prior_bend_deg: 2.0
+      path_lookahead_m: 40.0
+      current_filter_alpha: 0.05
+      maximum_estimated_current_mps: 0.08
+    search:
+      search_width_m: 30
+      lane_spacing_m: 12
+      velocity_mps: 0.3
+      waypoint_spacing_m: 5.0
+      arrival_tolerance_m: 1.5
+      guidance_lookahead_m: 12.0
+      pattern: transverse
+    detection:
+      window_samples: 80
+      min_ready_samples: 20
+      threshold_on: 6.0
+      threshold_off: 3.0
+      consecutive_on: 3
+      consecutive_off: 6
+      minimum_noise_nt: 0.08
+      peak_prominence_score: 2.0
+    cross_scan:
+      half_span_levels_m:
+      - 5.0
+      - 9.0
+      - 14.0
+      velocity_mps: 0.3
+      arrival_tolerance_m: 0.6
+      boundary_margin_m: 0.2
+      max_attempts: 3
+      alignment_tolerance_deg: 8.0
+      alignment_speed_mps: 0.3
+      maximum_along_track_range_m: 180.0
+      recenter_on_partial_peak: true
+      early_complete_when_valid: true
+      early_completion_coverage_score: 0.8
+      return_tolerance_m: 0.8
+    fwhm:
+      minimum_samples: 21
+      smoothing_window: 5
+      edge_fraction: 0.15
+      minimum_prominence_nt: 0.25
+      minimum_snr_db: 6.0
+      minimum_side_samples: 3
+      minimum_coverage_factor: 0.15
+      maximum_model_residual: 0.35
+      minimum_shape_support_widths: 0.65
+      minimum_competing_shape_advantage: 0.02
+      maximum_competing_shape_residual_ratio: 0.75
+      minimum_validity_score: 0.55
+      shape_model: thesis_dipole
+      shape_factor: 0.5
+      altitude_m: 3.0
+      shape_factor_relative_sigma: 0.05
+      altitude_sigma_m: 0.25
+    tracking:
+      heading_gain_deg_per_m: 3.0
+      lateral_gain: 0.8
+      max_heading_correction_deg: 20.0
+      max_lateral_correction_m: 3.0
+      nominal_speed_mps: 0.3
+      minimum_speed_mps: 0.3
+      offset_deadband_m: 0.1
+      route_lookahead_m: 6.0
+      rejoin_tolerance_m: 1.0
+      endpoint_tolerance_m: 2.0
+      stop_at_endpoint: true
+    inspection:
+      enabled: true
+      allow_uncalibrated_depth: false
+      minimum_center_symmetry: 0.7
+      minimum_center_coverage: 0.8
+      maximum_observation_age_s: 1000.0
+      maximum_observation_distance_m: 250.0
+      maximum_scan_duration_s: 600.0
+      maximum_input_age_s: 1.5
+      maximum_navigation_sigma_m: 2.0
+      maximum_guidance_speed_mps: 0.3
+      maximum_scan_gap_m: 1.0
+      maximum_scan_samples: 5000
+      # PVS diagnostic coast was 4--5 m after zero thrust. Lab-only buffer;
+      # remeasure for any physical vehicle and work area.
+      boundary_stop_margin_m: 10.0
+      minimum_depth_shape_support_widths: 2.0
+      minimum_declared_shape_advantage: 0.02
+    search_boundary_xy_m:
+    - - -270.0
+      - -30.0
+    - - 120.0
+      - -30.0
+    - - 120.0
+      - 30.0
+    - - -270.0
+      - 30.0
+    initial_position_uncertainty_m: 0.0

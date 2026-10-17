@@ -139,6 +139,12 @@ class CableTrackingNode(Node):
         self.pub_cable_confidence = self.create_publisher(Float32, "/auv/cable/confidence", 10)
         self.pub_cable_magnetic_snr = self.create_publisher(Float32, "/auv/cable/magnetic_snr_db", 10)
         self.pub_cable_magnetic_confidence = self.create_publisher(Float32, "/auv/cable/magnetic_confidence", 10)
+        self.pub_cable_magnetic_strength = self.create_publisher(Float32, "/auv/cable/magnetic_strength_nt", 10)
+        self.pub_cable_estimated_x = self.create_publisher(Float32, "/auv/cable/estimated_x_m", 10)
+        self.pub_cable_estimated_y = self.create_publisher(Float32, "/auv/cable/estimated_y_m", 10)
+        self.pub_cable_fwhm_width = self.create_publisher(Float32, "/auv/cable/fwhm_width_m", 10)
+        self.pub_cable_fwhm_confidence = self.create_publisher(Float32, "/auv/cable/fwhm_confidence", 10)
+        self.pub_cable_fwhm_validity = self.create_publisher(Float32, "/auv/cable/fwhm_validity", 10)
         self.pub_cable_dlt1278_summary = self.create_publisher(String, "/auv/cable/dlt1278_summary", 10)
         self.pub_cable_dlt1278_state = self.create_publisher(String, "/auv/cable/dlt1278_state", 10)
         self.pub_cable_dlt1278_score = self.create_publisher(Float32, "/auv/cable/dlt1278_total_score", 10)
@@ -486,7 +492,9 @@ class CableTrackingNode(Node):
             "burial_sigma_m": tracking.burial_sigma_m,
             "confidence": tracking.confidence,
             "mode": tracking.mode,
-            "magnetic_strength_nt": tracking.diagnostics.get("magnetic_strength_nt"),
+            "magnetic_strength_nt": tracking.diagnostics.get(
+                "magnetic_strength_nt", tracking.diagnostics.get("magnetic_envelope_nt")
+            ),
             "magnetic_snr_db": tracking.diagnostics.get("magnetic_snr_db"),
             "magnetic_confidence": tracking.diagnostics.get("magnetic_confidence"),
             "fit_residual_m": tracking.diagnostics.get("fit_residual_m"),
@@ -535,9 +543,21 @@ class CableTrackingNode(Node):
         self.pub_cable_industrial_acceptance_pass.publish(
             Bool(data=bool(payload.get("industrial_acceptance_pass", False)))
         )
-        self.pub_cable_mode.publish(String(data=str(payload.get("mode", "--"))))
+        # A stable uppercase enum keeps Foxglove indicators and the operator
+        # console independent of v1/v2 internal naming conventions.
+        self.pub_cable_mode.publish(String(data=str(payload.get("mode", "--")).strip().upper()))
         self.pub_cable_acceptance_flags.publish(String(data="none" if not acceptance_flags else ",".join(acceptance_flags)))
 
+        diagnostics = payload.get("diagnostics")
+        diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
+        estimated_xy = payload.get("estimated_cable_xy_m")
+        derived_values: dict[str, Any] = {
+            "estimated_x_m": estimated_xy[0] if isinstance(estimated_xy, list) and len(estimated_xy) >= 2 else None,
+            "estimated_y_m": estimated_xy[1] if isinstance(estimated_xy, list) and len(estimated_xy) >= 2 else None,
+            "fwhm_width_m": diagnostics.get("fwhm_width_m"),
+            "fwhm_confidence": diagnostics.get("fwhm_confidence"),
+            "fwhm_validity": diagnostics.get("fwhm_validity_score"),
+        }
         numeric_publishers = {
             "cross_track_m": self.pub_cable_cross_track,
             "route_progress_m": self.pub_cable_route_progress,
@@ -546,9 +566,15 @@ class CableTrackingNode(Node):
             "confidence": self.pub_cable_confidence,
             "magnetic_snr_db": self.pub_cable_magnetic_snr,
             "magnetic_confidence": self.pub_cable_magnetic_confidence,
+            "magnetic_strength_nt": self.pub_cable_magnetic_strength,
+            "estimated_x_m": self.pub_cable_estimated_x,
+            "estimated_y_m": self.pub_cable_estimated_y,
+            "fwhm_width_m": self.pub_cable_fwhm_width,
+            "fwhm_confidence": self.pub_cable_fwhm_confidence,
+            "fwhm_validity": self.pub_cable_fwhm_validity,
         }
         for key, publisher in numeric_publishers.items():
-            value = payload.get(key)
+            value = derived_values.get(key, payload.get(key))
             if value is None:
                 continue
             try:

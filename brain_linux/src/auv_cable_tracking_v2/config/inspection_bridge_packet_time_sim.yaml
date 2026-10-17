@@ -1,0 +1,14 @@
+# Synthetic localhost-only packet-time gate smoke. Never use as vehicle config.
+bridge:
+  backend: protocol_udp
+  arbiter:
+    enabled: false
+  protocol_udp:
+    local_host: 127.0.0.1
+    local_port: 53665
+    remote_host: 127.0.0.1
+    remote_port: 53664
+    socket_timeout_s: 0.1
+    zenoh_side_channel_enabled: false
+    require_packet_time_for_imu: true
+    max_packet_time_age_s: 0.75

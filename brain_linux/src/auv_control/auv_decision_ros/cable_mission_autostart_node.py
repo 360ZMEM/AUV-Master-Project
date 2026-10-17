@@ -22,6 +22,8 @@ class CableMissionAutostartNode(Node):
     def __init__(self) -> None:
         super().__init__("auv_cable_mission_autostart_node")
         self.declare_parameter("mission_type", "CABLE_TRACKING")
+        self.declare_parameter("mission_id", "")
+        self.declare_parameter("target_id", "")
         self.declare_parameter("target_depth", 12.0)
         self.declare_parameter("target_speed_mps", 0.8)
         self.declare_parameter("start_delay_s", 8.0)
@@ -31,6 +33,8 @@ class CableMissionAutostartNode(Node):
         self.declare_parameter("publish_cable_mission", True)
 
         self.mission_type = str(self.get_parameter("mission_type").value).upper()
+        self.mission_id = str(self.get_parameter("mission_id").value).strip()
+        self.target_id = str(self.get_parameter("target_id").value).strip()
         self.target_depth = float(self.get_parameter("target_depth").value)
         self.target_speed_mps = float(self.get_parameter("target_speed_mps").value)
         self.start_delay_s = max(0.0, float(self.get_parameter("start_delay_s").value))
@@ -70,6 +74,10 @@ class CableMissionAutostartNode(Node):
             "target_speed_mps": self.target_speed_mps,
             "source": "cable_mission_autostart_node",
         }
+        if self.mission_id:
+            payload["mission_id"] = self.mission_id
+        if self.target_id:
+            payload["target_id"] = self.target_id
         msg = String(data=json.dumps(payload, ensure_ascii=False))
         if self.publish_general_mission:
             self.publisher.publish(msg)

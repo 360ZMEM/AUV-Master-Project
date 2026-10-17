@@ -1,0 +1,28 @@
+# Local defense-demonstration profile.  The real-vehicle profile remains
+# separate so a presentation run cannot overwrite PC104 network settings.
+zenoh:
+  enabled: true
+  router_ip: ""
+  mode: "peer"
+  pc_cmd_raw_key: "rt/pc/cmd_raw"
+  publish_cmd_raw: true
+  subscribe_bridge_telemetry: true
+  subscribe_viz_internal: false
+
+udp:
+  local_ip: "127.0.0.1"
+  local_port: 55365
+  amd_ip: "127.0.0.1"
+  amd_port: 55364
+
+communication:
+  heartbeat_hz: 5.0
+  pc_timeout_s: 1.5
+  soft_warning_s: 1.0
+
+defaults:
+  work_mode: 1
+  target_depth_m: 12.0
+  track_distance_m: 30.0
+  task_timeout_s: 260
+  mission_type: "CABLE_TRACKING"

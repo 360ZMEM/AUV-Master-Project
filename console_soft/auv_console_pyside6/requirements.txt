@@ -11,9 +11,10 @@ scapy==2.7.0
 
 # Configuration File Parsing
 configobj==5.0.9
+PyYAML==6.0.3
 
 # Optional Zenoh side channel for arbiter integration
-zenoh
+eclipse-zenoh==1.10.1
 
 # Testing
 pytest==7.4.3

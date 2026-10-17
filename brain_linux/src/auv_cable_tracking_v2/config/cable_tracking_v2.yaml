@@ -1,0 +1,136 @@
+cable_tracking:
+  enabled: true
+  mission_types: [CABLE_TRACKING, CABLE_INSPECTION]
+  auv_master_mag_root: AUV-Master-Mag
+  scenario_name: case1
+
+  prior:
+    format: yaml
+    frame: local_ned
+    yaml_points_ned:
+      - [0.0, 0.0, -1.5]
+      - [50.0, 0.0, -1.5]
+      - [100.0, 10.0, -1.6]
+    burial_depth_m: null
+
+  control:
+    publish_setpoint: true
+    default_depth_m: 12.0
+    default_speed_mps: 0.8
+    min_speed_mps: 0.3
+    max_speed_mps: 1.1
+    bridge_backend: protocol_udp
+    control_mode_byte: 238
+    sine_period_s: 0.0
+    high_priority: false
+
+  recovery_guidance:
+    enabled: false
+
+  zigzag_limits:
+    # v2 sends waypoint headings; yaw dynamics remain the controller's job.
+    # The legacy limiter treats heading error (deg) as yaw rate (deg/s), which
+    # clips feasible Search/Confirm turns and was the main v1 path mismatch.
+    auto_limit: false
+    max_heading_delta_deg: 25.0
+    max_yaw_rate_deg_s: 12.0
+    min_turn_radius_m: 6.0
+    max_lateral_speed_mps: 0.45
+
+  # Disabled because v2 Confirm produces explicit cross-scan waypoints.
+  zigzag_probe:
+    enabled: false
+
+  magnetic:
+    sample_rate_hz: 50.0
+    block_size: 8
+    sensor_frame: mag_link
+
+  sensor_policy:
+    runtime_status_topic: /auv/sensors/runtime_status
+    required_capability: cable_inspection
+    navigation_timeout_s: 0.5
+    magnetic_timeout_s: 0.5
+    altitude_topic: /auv/sensors/altitude
+    altitude_timeout_s: 1.5
+    publish_degraded_hold_setpoint: true
+    degraded_hold_speed_mps: 0.0
+
+  quality:
+    enable_magnetic_quality: true
+    enable_burial_inversion: false
+    magnetic_noise_floor_nt: 0.05
+    confidence_min_ready: 0.65
+    route_offset_ready_m: 2.0
+
+  acceptance:
+    max_route_offset_m: 2.0
+    mean_route_offset_m: 1.0
+    min_confidence: 0.65
+    max_burial_sigma_m: 0.15
+    max_burial_sigma_over_limit_ratio: 0.05
+    min_valid_burial_ratio: 0.8
+    min_tracking_samples: 300
+
+  v2:
+    initial_position_uncertainty_m: 15.0
+    # Omit to use the complete prior corridor.  When present, all requested
+    # Search and Confirm waypoints must lie inside this polygon.
+    search_boundary_xy_m: null
+    search:
+      search_width_m: 30.0
+      lane_spacing_m: 6.0
+      velocity_mps: 0.7
+      waypoint_spacing_m: 5.0
+      arrival_tolerance_m: 1.5
+      guidance_lookahead_m: 12.0
+    detection:
+      window_samples: 80
+      min_ready_samples: 20
+      threshold_on: 6.0
+      threshold_off: 3.0
+      consecutive_on: 3
+      consecutive_off: 6
+      minimum_noise_nt: 0.05
+      peak_prominence_score: 2.0
+    cross_scan:
+      half_span_levels_m: [4.0, 8.0, 14.0, 20.0]
+      velocity_mps: 0.45
+      arrival_tolerance_m: 0.6
+      boundary_margin_m: 0.2
+      max_attempts: 4
+      alignment_tolerance_deg: 8.0
+      alignment_speed_mps: 0.3
+      maximum_along_track_range_m: 5.0
+    fwhm:
+      minimum_samples: 21
+      smoothing_window: 5
+      edge_fraction: 0.15
+      minimum_prominence_nt: 0.25
+      minimum_snr_db: 6.0
+      minimum_side_samples: 3
+      minimum_coverage_factor: 0.15
+      maximum_model_residual: 0.35
+      minimum_shape_support_widths: 0.65
+      minimum_competing_shape_advantage: 0.02
+      maximum_competing_shape_residual_ratio: 0.75
+      minimum_validity_score: 0.55
+      # The current PVS perception engine uses midpoint current elements.  Its
+      # calibrated half-width factor is documented in MODEL_CONSISTENCY.md.
+      # A true single-wire source must override this with 0.2886751345948129.
+      shape_model: legacy_segment
+      shape_factor: 0.47203575
+      altitude_m: 6.0
+      shape_factor_relative_sigma: 0.12
+      altitude_sigma_m: 0.25
+    tracking:
+      heading_gain_deg_per_m: 3.0
+      lateral_gain: 0.8
+      max_heading_correction_deg: 20.0
+      max_lateral_correction_m: 3.0
+      nominal_speed_mps: 0.8
+      minimum_speed_mps: 0.3
+      offset_deadband_m: 0.1
+      route_lookahead_m: 8.0
+      endpoint_tolerance_m: 2.0
+      stop_at_endpoint: true

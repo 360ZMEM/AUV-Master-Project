@@ -1,0 +1,13 @@
+# Synthetic localhost-only control for the packet-time gate smoke.
+bridge:
+  backend: protocol_udp
+  arbiter:
+    enabled: false
+  protocol_udp:
+    local_host: 127.0.0.1
+    local_port: 53665
+    remote_host: 127.0.0.1
+    remote_port: 53664
+    socket_timeout_s: 0.1
+    zenoh_side_channel_enabled: false
+    require_packet_time_for_imu: false

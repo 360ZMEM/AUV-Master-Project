@@ -10,7 +10,8 @@ import os
 from pathlib import Path
 from typing import Sequence
 
-ZH_FONT_PATH = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+FANDOL_SONG_REGULAR = "/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf"
+FANDOL_SONG_BOLD = "/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Bold.otf"
 
 THESIS_DPI = 600
 SINGLE_COLUMN_WIDTH = 3.3
@@ -54,21 +55,25 @@ def _resolve_font_name() -> str | None:
     except Exception:
         return None
 
-    if os.path.exists(ZH_FONT_PATH):
+    if os.path.exists(FANDOL_SONG_REGULAR):
         try:
-            fm.fontManager.addfont(ZH_FONT_PATH)
-            return fm.FontProperties(fname=ZH_FONT_PATH).get_name()
+            fm.fontManager.addfont(FANDOL_SONG_REGULAR)
+            if os.path.exists(FANDOL_SONG_BOLD):
+                fm.fontManager.addfont(FANDOL_SONG_BOLD)
+            return fm.FontProperties(fname=FANDOL_SONG_REGULAR).get_name()
         except Exception:
             pass
 
     for family in (
+        "FandolSong",
         "Songti SC",
         "STSong",
         "Noto Serif CJK SC",
+        "AR PL SungtiL GB",
         "Source Han Serif SC",
         "SimSun",
-        "WenQuanYi Zen Hei",
         "PingFang SC",
+        "WenQuanYi Zen Hei",
     ):
         try:
             fm.findfont(family, fallback_to_default=False)
@@ -117,13 +122,18 @@ def apply_thesis_style(
 
     zh_name = _resolve_font_name()
     if zh_name:
-        plt.rcParams["font.family"] = zh_name
+        # FandolSong matches the thesis body but lacks a small number of
+        # Unicode mathematical glyphs (notably U+2212).  DejaVu Sans is a
+        # glyph-only fallback; Chinese text remains in FandolSong.
+        plt.rcParams["font.family"] = [zh_name, "DejaVu Sans"]
     else:
         plt.rcParams["font.sans-serif"] = (
             [
                 "Songti SC",
                 "STSong",
+                "FandolSong",
                 "Noto Serif CJK SC",
+                "AR PL SungtiL GB",
                 "SimSun",
                 "WenQuanYi Zen Hei",
                 "PingFang SC",
@@ -135,7 +145,9 @@ def apply_thesis_style(
         {
             "axes.unicode_minus": False,
             "mathtext.fontset": "stix",
-            "font.serif": ["STIXGeneral", "Times New Roman", "Times"],
+            "font.serif": ["FandolSong", "STIXGeneral", "Times New Roman", "Times"],
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
             "figure.dpi": 150,
             "savefig.dpi": THESIS_DPI,
             "savefig.bbox": "tight",

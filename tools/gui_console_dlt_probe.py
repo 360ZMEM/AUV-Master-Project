@@ -36,6 +36,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--wait-seconds", type=float, default=0.4)
     parser.add_argument("--width", type=int, default=1400)
     parser.add_argument("--height", type=int, default=900)
+    parser.add_argument("--theme", choices=("light", "dark"), default="dark")
     return parser.parse_args()
 
 
@@ -70,9 +71,11 @@ def main() -> int:
     from PySide6.QtCore import Qt
     from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication
+    from main import apply_console_theme
     from src.ui.main_window import MainWindow
 
     app = QApplication.instance() or QApplication([])
+    apply_console_theme(app, args.theme)
     window = MainWindow()
     window.resize(int(args.width), int(args.height))
     window.show()

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>auv_cable_tracking_v2</name>
+  <version>0.1.0</version>
+  <description>Independent v2 Search, FWHM and cable-tracking ROS2 adapter.</description>
+  <maintainer email="zmem063@todo.todo">zmem063</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>auv_common</depend>
+  <depend>auv_decision_ros</depend>
+  <depend>auv_interfaces</depend>
+  <exec_depend>auv_controller</exec_depend>
+  <exec_depend>auv_bridge</exec_depend>
+  <exec_depend>auv_localization</exec_depend>
+  <exec_depend>auv_viz_bridge</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>rosgraph_msgs</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

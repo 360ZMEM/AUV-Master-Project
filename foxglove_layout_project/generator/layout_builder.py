@@ -10,7 +10,10 @@ from typing import Any, Literal
 
 from foxglove_layout_project.config.topics import COLORS, DISPLAY_FIELDS, PLOT_FIELDS, TOPICS, TopicConfig
 
-LayoutProfile = Literal["classic", "mentor-demo", "probe", "pilot-1366", "acceptance-1366"]
+LayoutProfile = Literal[
+    "classic", "mentor-demo", "probe", "pilot-1366", "acceptance-1366",
+    "defense-1080", "defense-perception-1366", "inspection-v2",
+]
 
 
 def _compact_dict(data: dict[str, Any]) -> dict[str, Any]:
@@ -44,11 +47,13 @@ def _build_plot_config(
     following_view_width: float = 60.0,
     is_synced: bool = True,
     show_legend: bool = True,
+    legend_display: str = "floating",
+    show_plot_values_in_legend: bool = True,
     sidebar_dimension: int = 220,
 ) -> dict[str, Any]:
     return _compact_dict({
         "title": title,
-        "legendDisplay": "floating",
+        "legendDisplay": legend_display,
         "showLegend": show_legend,
         "xAxisLabel": "时间",
         "yAxisLabel": y_axis_label,
@@ -62,7 +67,7 @@ def _build_plot_config(
         "maxYValue": max_y_value,
         "showXAxisLabels": True,
         "showYAxisLabels": True,
-        "showPlotValuesInLegend": True,
+        "showPlotValuesInLegend": show_plot_values_in_legend,
     })
 
 
@@ -170,6 +175,21 @@ def _build_3d_config(*, topics: TopicConfig, include_map_layer: bool, mentor_mod
         topics.history_trail: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.trail_3d},
         topics.view_range: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.range_3d},
         topics.scale_bar: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ffffff"},
+        topics.search_corridor: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#26c6da"},
+        topics.search_pattern: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ff9f43"},
+        topics.detection_link: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#2ecc71"},
+        topics.cable_target: {"visible": True, "type": "sphere", "axisScale": 1.0, "color": "#2ecc71"},
+        topics.mission_label: {"visible": True, "type": "text", "axisScale": 1.0, "color": "#e6f7ff"},
+        topics.cable_estimate: {"visible": True, "type": "sphere", "axisScale": 1.0, "color": "#e640ff"},
+        topics.burial_estimate: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": "#f05cd8"},
+        topics.position_uncertainty: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#d57cff"},
+        topics.magnetic_vector: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": "#ff731c"},
+        topics.fwhm_span: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ff3399"},
+        topics.perception_label: {"visible": True, "type": "text", "axisScale": 1.0, "color": "#ffe8fa"},
+        topics.decoupled_vehicle: {"visible": False, "type": "arrow", "axisScale": 1.0, "color": "#3b82f6"},
+        topics.decoupled_vehicle_trail: {"visible": False, "type": "lineStrip", "axisScale": 1.0, "color": "#60a5fa"},
+        topics.decoupled_true_cable: {"visible": False, "type": "lineStrip", "axisScale": 1.0, "color": "#22c55e"},
+        topics.emergency_surface: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": "#ef4444"},
     }
 
     layers: dict[str, Any] = {}
@@ -256,6 +276,17 @@ def _build_top_view_config(*, topics: TopicConfig) -> dict[str, Any]:
             topics.history_trail: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.trail_3d},
             topics.view_range: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": COLORS.range_3d},
             topics.scale_bar: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ffffff"},
+            topics.search_corridor: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#26c6da"},
+            topics.search_pattern: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ff9f43"},
+            topics.detection_link: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#2ecc71"},
+            topics.cable_target: {"visible": True, "type": "sphere", "axisScale": 1.0, "color": "#2ecc71"},
+            topics.mission_label: {"visible": True, "type": "text", "axisScale": 1.0, "color": "#e6f7ff"},
+            topics.cable_estimate: {"visible": True, "type": "sphere", "axisScale": 1.0, "color": "#e640ff"},
+            topics.burial_estimate: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": "#f05cd8"},
+            topics.position_uncertainty: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#d57cff"},
+            topics.magnetic_vector: {"visible": True, "type": "arrow", "axisScale": 1.0, "color": "#ff731c"},
+            topics.fwhm_span: {"visible": True, "type": "lineStrip", "axisScale": 1.0, "color": "#ff3399"},
+            topics.perception_label: {"visible": True, "type": "text", "axisScale": 1.0, "color": "#ffe8fa"},
         },
         "layers": {},
     }
@@ -830,6 +861,271 @@ def _build_acceptance_1366_layout(*, topics: TopicConfig, include_map_layer: boo
     }
 
 
+def _build_defense_1080_layout(*, topics: TopicConfig, include_map_layer: bool) -> dict[str, Any]:
+    """Presentation layout for a 1920x1080 thesis-defense recording."""
+    three_d_key = "3D!defense_main"
+    top_view_key = "3D!mission_topview"
+    phase_key = "Indicator!mission_phase"
+    ready_key = "Indicator!inspection_ready"
+    confidence_key = "Gauge!cable_confidence"
+    cable_status_key = "Markdown!cable_status"
+    bt_key = "Markdown!bt_status"
+    tracking_plot_key = "Plot!tracking_evidence"
+    quality_plot_key = "Plot!sensor_quality"
+
+    config_by_id: dict[str, dict[str, Any]] = {
+        three_d_key: _build_3d_config(topics=topics, include_map_layer=include_map_layer, mentor_mode=True),
+        top_view_key: _build_top_view_config(topics=topics),
+        phase_key: _build_indicator_config(
+            title="任务阶段",
+            path=_build_message_path(topic=topics.cable_mode, field=DISPLAY_FIELDS.string_data),
+            style="background",
+            rules=[
+                _build_indicator_rule(raw_value="SEARCH", label="SEARCH · 搜索海缆", color=COLORS.mode_searching),
+                _build_indicator_rule(raw_value="DETECT", label="DETECT · 目标确认", color=COLORS.status_warn),
+                _build_indicator_rule(raw_value="TRACK", label="TRACK · 自主跟踪", color=COLORS.mode_tracking),
+                _build_indicator_rule(raw_value="RECOVERY", label="RECOVERY · 偏航恢复", color=COLORS.mode_emergency),
+                _build_indicator_rule(raw_value="SENSOR_DEGRADED", label="HOLD · 传感器降级", color=COLORS.status_error),
+            ],
+            fallback_color=COLORS.status_idle,
+            fallback_label="WAITING · 等待任务数据",
+            font_size=24,
+        ),
+        ready_key: _build_indicator_config(
+            title="巡检状态",
+            path=_build_message_path(topic=topics.cable_industrial_ready, field=DISPLAY_FIELDS.string_data),
+            style="background",
+            rules=[
+                _build_indicator_rule(raw_value=True, label="READY · 稳定巡检", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="ALIGNING · 进入廊道", color=COLORS.status_warn),
+            ],
+            fallback_color=COLORS.status_idle,
+            fallback_label="等待状态",
+            font_size=21,
+        ),
+        confidence_key: _build_gauge_config(
+            title="海缆感知置信度",
+            path=_build_message_path(topic=topics.cable_confidence, field=DISPLAY_FIELDS.string_data),
+            min_value=0.0,
+            max_value=1.0,
+        ),
+        cable_status_key: _build_markdown_config(
+            message_path=_build_message_path(topic=topics.cable_status_text, field=DISPLAY_FIELDS.string_data),
+            font_size=18,
+        ),
+        bt_key: _build_markdown_config(
+            message_path=_build_message_path(topic=topics.bt_status, field=DISPLAY_FIELDS.string_data),
+            font_size=14,
+        ),
+        tracking_plot_key: _build_plot_config(
+            title="巡检跟踪 · 横偏 / 埋深 / 不确定度",
+            y_axis_label="m",
+            series=[
+                _build_plot_series(topic=topics.cable_cross_track, value=PLOT_FIELDS.scalar_data, color="#ffd166", label="横向偏移"),
+                _build_plot_series(topic=topics.cable_burial_depth, value=PLOT_FIELDS.scalar_data, color="#4dabf7", label="埋深"),
+                _build_plot_series(topic=topics.cable_burial_sigma, value=PLOT_FIELDS.scalar_data, color="#ff6b6b", label="埋深σ"),
+            ],
+            following_view_width=90.0,
+            sidebar_dimension=155,
+        ),
+        quality_plot_key: _build_plot_config(
+            title="感知质量 · SNR / 置信度",
+            y_axis_label="dB / confidence",
+            series=[
+                _build_plot_series(topic=topics.cable_magnetic_snr, value=PLOT_FIELDS.scalar_data, color="#ff922b", label="磁信噪比"),
+                _build_plot_series(topic=topics.cable_magnetic_confidence, value=PLOT_FIELDS.scalar_data, color="#9775fa", label="磁置信度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#51cf66", label="综合置信度"),
+            ],
+            following_view_width=90.0,
+            sidebar_dimension=155,
+        ),
+    }
+
+    status_row = _split("row", phase_key, _split("row", ready_key, confidence_key, 52), 48)
+    plot_row = _split("row", tracking_plot_key, quality_plot_key, 55)
+    right_column = _split(
+        "column",
+        status_row,
+        _split("column", _split("row", top_view_key, cable_status_key, 64), _split("column", plot_row, bt_key, 78), 48),
+        15,
+    )
+    return {
+        "configById": config_by_id,
+        "globalVariables": {},
+        "userNodes": {},
+        "playbackConfig": {"speed": 1},
+        "layout": _split("row", three_d_key, right_column, 61),
+    }
+
+
+def _build_defense_perception_1366_layout(*, topics: TopicConfig, include_map_layer: bool) -> dict[str, Any]:
+    """Dense presentation layout for the 1366x768/1024 defense workstation."""
+    three_d_key = "3D!defense_perception_main"
+    top_view_key = "3D!defense_perception_top"
+    phase_key = "Indicator!perception_phase"
+    ready_key = "Indicator!perception_ready"
+    fwhm_state_key = "Indicator!perception_fwhm_state"
+    geometry_plot_key = "Plot!perception_geometry"
+    magnetic_plot_key = "Plot!perception_magnetic"
+    quality_plot_key = "Plot!perception_quality"
+
+    defense_3d = _build_3d_config(topics=topics, include_map_layer=include_map_layer, mentor_mode=True)
+    defense_3d["topics"][topics.auv_body]["visible"] = False
+    defense_3d["topics"][topics.decoupled_vehicle]["visible"] = True
+    defense_3d["topics"][topics.decoupled_vehicle_trail]["visible"] = True
+    defense_3d["topics"][topics.decoupled_true_cable]["visible"] = True
+
+    config_by_id: dict[str, dict[str, Any]] = {
+        three_d_key: defense_3d,
+        top_view_key: _build_top_view_config(topics=topics),
+        phase_key: _build_indicator_config(
+            title="任务阶段 / FWHM",
+            path=_build_message_path(topic=topics.mission_display_state, field=DISPLAY_FIELDS.string_data),
+            style="background",
+            rules=[
+                _build_indicator_rule(raw_value="SEARCH", label="SEARCH · 搜索", color=COLORS.mode_searching),
+                _build_indicator_rule(raw_value="search", label="SEARCH · 搜索", color=COLORS.mode_searching),
+                _build_indicator_rule(raw_value="CONFIRM", label="CONFIRM · 横扫", color=COLORS.status_warn),
+                _build_indicator_rule(raw_value="confirm", label="CONFIRM · 横扫", color=COLORS.status_warn),
+                _build_indicator_rule(raw_value="TRACK", label="TRACK · 自主跟踪", color=COLORS.mode_tracking),
+                _build_indicator_rule(raw_value="track", label="TRACK · 自主跟踪", color=COLORS.mode_tracking),
+                _build_indicator_rule(raw_value="REACQUIRE", label="RE-SCAN · 重扫", color=COLORS.mode_emergency),
+                _build_indicator_rule(raw_value="reacquire", label="RE-SCAN · 重扫", color=COLORS.mode_emergency),
+                _build_indicator_rule(raw_value="COMPLETE", label="COMPLETE · 巡检完成", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value="SENSOR_DEGRADED", label="HOLD · 传感器降级", color=COLORS.status_error),
+                _build_indicator_rule(raw_value="EMERGENCY_SURFACE", label="ESTOP · 紧急上浮", color=COLORS.status_error),
+                _build_indicator_rule(raw_value="SURFACED", label="SAFE · 已上浮", color=COLORS.status_ok),
+            ],
+            fallback_color=COLORS.status_idle,
+            fallback_label="WAITING · 等待任务数据",
+            font_size=16,
+        ),
+        ready_key: _build_indicator_config(
+            title="巡检状态",
+            path=_build_message_path(topic=topics.cable_industrial_ready, field=DISPLAY_FIELDS.string_data),
+            style="background",
+            rules=[
+                _build_indicator_rule(raw_value=True, label="ON-LINE · 沿线", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=False, label="REJOIN · 回线", color=COLORS.status_warn),
+            ],
+            fallback_color=COLORS.status_idle,
+            fallback_label="等待状态",
+            font_size=14,
+        ),
+        fwhm_state_key: _build_indicator_config(
+            title="FWHM 质量门控",
+            path=_build_message_path(topic=topics.cable_fwhm_validity, field=DISPLAY_FIELDS.string_data),
+            style="background",
+            rules=[
+                _build_indicator_rule(raw_value=0.55, operator=">=", label="VALID · 埋深有效", color=COLORS.status_ok),
+                _build_indicator_rule(raw_value=0.01, operator=">=", label="CHECK · 评估中", color=COLORS.status_warn),
+            ],
+            fallback_color=COLORS.status_error,
+            fallback_label="RE-SCAN · 未通过",
+            font_size=14,
+        ),
+        geometry_plot_key: _build_plot_config(
+            title="位置反演 · 横偏 / 埋深 / FWHM",
+            y_axis_label="m",
+            series=[
+                _build_plot_series(topic=topics.cable_cross_track, value=PLOT_FIELDS.scalar_data, color="#ffd166", label="横向偏移"),
+                _build_plot_series(topic=topics.cable_burial_depth, value=PLOT_FIELDS.scalar_data, color="#4dabf7", label="埋深估计"),
+                _build_plot_series(topic=topics.cable_burial_sigma, value=PLOT_FIELDS.scalar_data, color="#ff6b6b", label="埋深 σ"),
+                _build_plot_series(topic=topics.cable_fwhm_width, value=PLOT_FIELDS.scalar_data, color="#f06595", label="FWHM 宽度"),
+                _build_plot_series(topic=topics.emergency_depth, value=PLOT_FIELDS.scalar_data, color="#ef4444", label="AUV 深度"),
+            ],
+            following_view_width=75.0,
+            show_legend=False,
+            legend_display="top",
+            show_plot_values_in_legend=False,
+            sidebar_dimension=132,
+        ),
+        magnetic_plot_key: _build_plot_config(
+            title="磁场剖面 · 包络强度",
+            y_axis_label="nT",
+            series=[
+                _build_plot_series(topic=topics.cable_magnetic_strength, value=PLOT_FIELDS.scalar_data, color="#ff922b", label="磁场强度 nT"),
+            ],
+            following_view_width=75.0,
+            show_legend=False,
+            legend_display="top",
+            show_plot_values_in_legend=False,
+            sidebar_dimension=132,
+        ),
+        quality_plot_key: _build_plot_config(
+            title="算法质量 · 有效性 / 置信度",
+            y_axis_label="0–1",
+            series=[
+                _build_plot_series(topic=topics.cable_fwhm_validity, value=PLOT_FIELDS.scalar_data, color="#20c997", label="FWHM 有效性"),
+                _build_plot_series(topic=topics.cable_fwhm_confidence, value=PLOT_FIELDS.scalar_data, color="#51cf66", label="FWHM 置信度"),
+                _build_plot_series(topic=topics.cable_confidence, value=PLOT_FIELDS.scalar_data, color="#4dabf7", label="跟踪置信度"),
+            ],
+            min_y_value=0.0,
+            max_y_value=1.0,
+            following_view_width=75.0,
+            show_legend=False,
+            legend_display="top",
+            show_plot_values_in_legend=False,
+            sidebar_dimension=132,
+        ),
+    }
+
+    status_row = _split("row", phase_key, _split("row", ready_key, fwhm_state_key, 50), 42)
+    evidence_column = _split(
+        "column",
+        top_view_key,
+        _split("column", geometry_plot_key, _split("column", magnetic_plot_key, quality_plot_key, 50), 48),
+        29,
+    )
+    right_column = _split(
+        "column",
+        status_row,
+        evidence_column,
+        12,
+    )
+    return {
+        "configById": config_by_id,
+        "globalVariables": {},
+        "userNodes": {},
+        "playbackConfig": {"speed": 1},
+        "layout": _split("row", three_d_key, right_column, 58),
+    }
+
+def _build_inspection_v2_layout(*, topics: TopicConfig, include_map_layer: bool) -> dict[str, Any]:
+    """Current task evidence, without industrial-ready or confidence gauges."""
+    scene = _build_3d_config(topics=topics, include_map_layer=include_map_layer, mentor_mode=True)
+    top = _build_top_view_config(topics=topics)
+    for panel in (scene, top):
+        panel['cameraState'].update(distance=400, target=[-70, 0, -12])
+        panel['grid'].update(size=400, divisions=20)
+    panels = {
+        '3D!inspection_scene': scene,
+        '3D!inspection_route': top,
+        'Markdown!inspection_permissions': _build_markdown_config(
+            message_path=_build_message_path(topic=topics.perception_text, field='data'), font_size=16),
+        'Plot!inspection_motion': _build_plot_config(
+            title='运动证据 · 实测速度与目标速度', y_axis_label='m/s', series=[
+                _build_plot_series(topic=topics.dvl, value=PLOT_FIELDS.dvl_speed_x,
+                                   color='#4dabf7', label='DVL 前向速度'),
+                _build_plot_series(topic=topics.setpoint, value=PLOT_FIELDS.setpoint_speed,
+                                   color='#ffd166', label='目标速度')], sidebar_dimension=135),
+        'Plot!inspection_width': _build_plot_config(
+            title='主动观测 · FWHM 测宽（不是置信度或埋深）', y_axis_label='m', series=[
+                _build_plot_series(topic=topics.cable_fwhm_width, value='data',
+                                   color='#d57cff', label='FWHM 宽度')], sidebar_dimension=135),
+        'RawMessages!inspection_bridge': _build_raw_config(
+            topic_path=topics.cable_operational_status, title='桥原始任务与执行许可'),
+    }
+    right = _split('column', 'Markdown!inspection_permissions',
+                   _split('column', '3D!inspection_route',
+                          _split('column', 'Plot!inspection_motion',
+                                 _split('column', 'Plot!inspection_width',
+                                        'RawMessages!inspection_bridge', 65), 50), 40), 35)
+    return {'configById': panels, 'globalVariables': {}, 'userNodes': {},
+            'playbackConfig': {'speed': 1},
+            'layout': _split('row', '3D!inspection_scene', right, 64)}
+
+
 def build_auv_layout(
     *,
     include_map_layer: bool = False,
@@ -854,4 +1150,10 @@ def build_auv_layout(
         return _build_pilot_1366_layout(topics=topics, include_map_layer=include_map_layer)
     if profile == "acceptance-1366":
         return _build_acceptance_1366_layout(topics=topics, include_map_layer=include_map_layer)
+    if profile == "defense-1080":
+        return _build_defense_1080_layout(topics=topics, include_map_layer=include_map_layer)
+    if profile == "defense-perception-1366":
+        return _build_defense_perception_1366_layout(topics=topics, include_map_layer=include_map_layer)
+    if profile == "inspection-v2":
+        return _build_inspection_v2_layout(topics=topics, include_map_layer=include_map_layer)
     raise ValueError(f"Unsupported layout profile: {profile}")

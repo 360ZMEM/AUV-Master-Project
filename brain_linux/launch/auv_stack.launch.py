@@ -3,6 +3,7 @@ from launch.actions import DeclareLaunchArgument, TimerAction, OpaqueFunction
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from pathlib import Path
 
 def generate_nodes(context, *args, **kwargs):
@@ -84,6 +85,9 @@ def generate_nodes(context, *args, **kwargs):
             {'publish_sonar_tf': LaunchConfiguration('publish_sonar_tf')},
             {'publish_sensor_status': LaunchConfiguration('publish_sensor_status')},
             {'publish_raw_state': LaunchConfiguration('publish_raw_state')},
+            {'use_sim_time': ParameterValue(LaunchConfiguration('use_sim_time'), value_type=bool)},
+            {'navigation_imu_max_age_s': ParameterValue(
+                LaunchConfiguration('navigation_imu_max_age_s'), value_type=float)},
             {'seabed_depth_m': LaunchConfiguration('seabed_depth_m')},
             {'seabed_proximity_margin_m': LaunchConfiguration('seabed_proximity_margin_m')},
         ],
@@ -117,7 +121,10 @@ def generate_nodes(context, *args, **kwargs):
             {
                 'params_file': params,
                 'mock_mode': LaunchConfiguration('viz_mock_mode'),
+                'allow_synthetic_scene_fallback': LaunchConfiguration('viz_allow_synthetic_scene_fallback'),
+                'publish_sim_ground_truth': LaunchConfiguration('viz_publish_sim_ground_truth'),
                 'mock_fallback_timeout_s': LaunchConfiguration('viz_mock_fallback_timeout_s'),
+                'use_sim_time': ParameterValue(LaunchConfiguration('use_sim_time'), value_type=bool),
             }
         ],
     )
@@ -146,6 +153,7 @@ def generate_nodes(context, *args, **kwargs):
             {
                 'config_file': LaunchConfiguration('sensor_supervisor_config'),
                 'enabled': LaunchConfiguration('enable_sensor_supervisor'),
+                'use_sim_time': ParameterValue(LaunchConfiguration('use_sim_time'), value_type=bool),
             }
         ],
     )
@@ -220,6 +228,8 @@ def generate_nodes(context, *args, **kwargs):
         parameters=[
             {
                 'mission_type': LaunchConfiguration('cable_mission_type'),
+                'mission_id': LaunchConfiguration('cable_mission_id'),
+                'target_id': LaunchConfiguration('cable_mission_target_id'),
                 'target_depth': LaunchConfiguration('cable_mission_target_depth'),
                 'target_speed_mps': LaunchConfiguration('cable_mission_target_speed_mps'),
                 'start_delay_s': LaunchConfiguration('cable_mission_start_delay_s'),
@@ -467,6 +477,15 @@ def generate_launch_description() -> LaunchDescription:
         description='Mission type published by cable_mission_autostart_node',
     )
 
+    cable_mission_id_arg = DeclareLaunchArgument(
+        'cable_mission_id', default_value='',
+        description='Optional reviewed mission ID for static target prior admission',
+    )
+    cable_mission_target_id_arg = DeclareLaunchArgument(
+        'cable_mission_target_id', default_value='',
+        description='Optional reviewed cable target ID for static prior admission',
+    )
+
     cable_mission_target_depth_arg = DeclareLaunchArgument(
         'cable_mission_target_depth',
         default_value='12.0',
@@ -537,6 +556,30 @@ def generate_launch_description() -> LaunchDescription:
         'viz_mock_fallback_timeout_s',
         default_value='3.0',
         description='Fallback timeout before the visualization bridge switches to mock mode',
+    )
+
+    viz_allow_synthetic_scene_fallback_arg = DeclareLaunchArgument(
+        'viz_allow_synthetic_scene_fallback',
+        default_value='true',
+        description='Allow virtual scene fallback; disable for inspection shadow or field review',
+    )
+
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='false',
+        description='Use ROS simulation clock for localization, sensor supervisor and visualization',
+    )
+
+    navigation_imu_max_age_arg = DeclareLaunchArgument(
+        'navigation_imu_max_age_s',
+        default_value='0.0',
+        description='Opt-in maximum IMU receipt and stamp age for filtered navigation',
+    )
+
+    viz_publish_sim_ground_truth_arg = DeclareLaunchArgument(
+        'viz_publish_sim_ground_truth',
+        default_value='true',
+        description='Bridge simulator ground truth to ROS; disable for inspection shadow review',
     )
 
     world_frame_arg = DeclareLaunchArgument(
@@ -733,6 +776,8 @@ def generate_launch_description() -> LaunchDescription:
             cable_tracking_config_arg,
             enable_cable_mission_autostart_arg,
             cable_mission_type_arg,
+            cable_mission_id_arg,
+            cable_mission_target_id_arg,
             cable_mission_target_depth_arg,
             cable_mission_target_speed_arg,
             cable_mission_start_delay_arg,
@@ -745,6 +790,10 @@ def generate_launch_description() -> LaunchDescription:
             enable_viz_bridge_arg,
             viz_mock_mode_arg,
             viz_mock_fallback_timeout_arg,
+            viz_allow_synthetic_scene_fallback_arg,
+            viz_publish_sim_ground_truth_arg,
+            use_sim_time_arg,
+            navigation_imu_max_age_arg,
             world_frame_arg,
             base_frame_arg,
             imu_frame_id_arg,

@@ -104,6 +104,26 @@ def _parse_xyz(value: object) -> tuple[float, float, float]:
     return 0.0, 0.0, 0.0
 
 
+def imu_anchor_fresh(*, now_wall_s: float, last_rx_wall_s: float | None,
+                     now_ros_s: float, last_stamp_s: float,
+                     maximum_age_s: float, future_tolerance_s: float = 0.2) -> bool:
+    """Require both a recent receipt and a recent acquisition stamp.
+
+    A timer that republishes the last EKF state must not refresh navigation
+    health after its IMU time anchor stops. Disabled when maximum_age_s is 0
+    to preserve legacy launch behavior; inspection explicitly opts in.
+    """
+    if maximum_age_s <= 0.:
+        return True
+    if (last_rx_wall_s is None or not np.isfinite(last_rx_wall_s)
+            or not np.isfinite(now_ros_s) or not np.isfinite(last_stamp_s)):
+        return False
+    wall_age = now_wall_s - last_rx_wall_s
+    stamp_age = now_ros_s - last_stamp_s
+    return (0. <= wall_age <= maximum_age_s
+            and -future_tolerance_s <= stamp_age <= maximum_age_s)
+
+
 class AUVLocalizationNode(Node):
     """AUV 本地化节点。
 
@@ -118,6 +138,7 @@ class AUVLocalizationNode(Node):
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
         self.declare_parameter('params_file', default_params)
         self.declare_parameter('filter_rate_hz', 20.0)
+        self.declare_parameter('navigation_imu_max_age_s', 0.0)
         self.declare_parameter('world_frame_id', 'world')
         self.declare_parameter('base_frame_id', 'auv/base_link')
         self.declare_parameter('imu_frame_id', 'auv/imu_link')
@@ -147,6 +168,9 @@ class AUVLocalizationNode(Node):
 
         self.params_file = str(self.get_parameter('params_file').value)
         self.filter_rate_hz = float(self.get_parameter('filter_rate_hz').value)
+        self.navigation_imu_max_age_s = float(self.get_parameter('navigation_imu_max_age_s').value)
+        if not np.isfinite(self.navigation_imu_max_age_s) or self.navigation_imu_max_age_s < 0.:
+            raise ValueError('navigation_imu_max_age_s must be finite and nonnegative')
         self.world_frame_id = str(self.get_parameter('world_frame_id').value)
         self.base_frame_id = str(self.get_parameter('base_frame_id').value)
         self.imu_frame_id = str(self.get_parameter('imu_frame_id').value)
@@ -189,6 +213,8 @@ class AUVLocalizationNode(Node):
         self._last_dvl = None
         self._last_depth = None
         self._last_imu_ts = 0.0
+        self._last_imu_rx_wall_s = None
+        self._imu_anchor_was_fresh = None
         self._last_dvl_ts = 0.0
         self._last_depth_ts = 0.0
         self._last_imu_header_stamp = None  # 新增：保存IMU消息的Header Stamp
@@ -268,6 +294,7 @@ class AUVLocalizationNode(Node):
 
     def _on_imu(self, msg: Imu) -> None:
         """缓存最新 IMU 加速度和角速度。"""
+        self._last_imu_rx_wall_s = time.monotonic()
         self._last_imu = np.array([
             msg.linear_acceleration.x,
             msg.linear_acceleration.y,
@@ -469,6 +496,22 @@ class AUVLocalizationNode(Node):
 
         if self._last_imu_ts <= 0.0:
             return
+
+        anchor_fresh = imu_anchor_fresh(
+            now_wall_s=time.monotonic(),
+            last_rx_wall_s=self._last_imu_rx_wall_s,
+            now_ros_s=self.get_clock().now().nanoseconds * 1e-9,
+            last_stamp_s=self._last_imu_ts,
+            maximum_age_s=self.navigation_imu_max_age_s,
+        )
+        if not anchor_fresh:
+            if self._imu_anchor_was_fresh is not False:
+                self.get_logger().warning('IMU time anchor stale; suppressing filtered navigation')
+            self._imu_anchor_was_fresh = False
+            return
+        if self._imu_anchor_was_fresh is False:
+            self.get_logger().info('IMU time anchor restored; filtered navigation resumed')
+        self._imu_anchor_was_fresh = True
 
         if self._last_predict_imu_ts <= 0.0:
             self._last_predict_imu_ts = self._last_imu_ts

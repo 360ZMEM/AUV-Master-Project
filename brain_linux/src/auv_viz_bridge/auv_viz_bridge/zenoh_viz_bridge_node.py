@@ -34,6 +34,9 @@ from pathlib import Path
 import sys
 from typing import Any
 
+from .inspection_geometry import inspection_geometry
+from .inspection_status import InspectionStatus
+
 import rclpy
 from rclpy.executors import ExternalShutdownException
 
@@ -58,7 +61,7 @@ for folder in [PROJECT_ROOT, PROJECT_ROOT / 'common', PROJECT_ROOT / 'sim_holooc
 
 from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion, TransformStamped, Vector3
 from rclpy.node import Node
-from sensor_msgs.msg import PointCloud2, PointField
+from sensor_msgs.msg import MagneticField, PointCloud2, PointField
 from std_msgs.msg import ColorRGBA
 from std_msgs.msg import String
 from tf2_ros import TransformBroadcaster
@@ -76,6 +79,7 @@ from common.protocol import (
     Z_PATH_CABLE_MARKER,
     Z_PATH_GROUND_TRUTH,
     Z_PATH_HISTORY_TRAIL,
+    Z_PATH_PC_CMD_RAW,
     Z_PATH_SEABED_CLOUD,
     Z_PATH_TRUTH_POSE,
     Z_PATH_VIEW_RANGE,
@@ -278,6 +282,130 @@ def _make_line_strip(points: list[list[float]], *, frame_id: str, stamp, ns: str
     return marker
 
 
+def _mission_geometry(
+    cable_points: list[list[float]],
+    corridor_half_width_m: float = 5.0,
+    *,
+    pattern_mode: str = "sine",
+    lateral_amplitude_m: float = 1.5,
+    wavelength_m: float = 24.0,
+    lane_spacing_m: float = 6.0,
+) -> tuple[list[list[float]], list[list[float]]]:
+    """Return a corridor outline and an algorithm-aligned reference path.
+
+    ``sine`` mirrors the stable v1 probe parameters. ``lawnmower`` mirrors the
+    v2 prior-guided SEARCH geometry. The layer is a reference generated from
+    published/configured parameters, never mislabeled as executed waypoints.
+    """
+    valid = [point for point in cable_points if isinstance(point, list) and len(point) >= 3]
+    if len(valid) < 2:
+        return [], []
+    start, end = valid[0], valid[-1]
+    dx = float(end[0]) - float(start[0])
+    dy = float(end[1]) - float(start[1])
+    length = math.hypot(dx, dy)
+    if length < 1.0e-6:
+        return [], []
+    nx, ny = -dy / length, dx / length
+    z = sum(float(point[2]) for point in valid) / len(valid) - 0.08
+
+    def offset(point: list[float], distance: float) -> list[float]:
+        return [float(point[0]) + nx * distance, float(point[1]) + ny * distance, z]
+
+    corridor = [
+        offset(start, corridor_half_width_m),
+        offset(end, corridor_half_width_m),
+        offset(end, -corridor_half_width_m),
+        offset(start, -corridor_half_width_m),
+        offset(start, corridor_half_width_m),
+    ]
+
+    pattern: list[list[float]] = []
+    if pattern_mode == "lawnmower":
+        lane_count = max(2, int(math.floor(2.0 * corridor_half_width_m / max(lane_spacing_m, 0.1))) + 1)
+        offsets = [
+            -corridor_half_width_m + 2.0 * corridor_half_width_m * index / max(1, lane_count - 1)
+            for index in range(lane_count)
+        ]
+        for index, lateral in enumerate(offsets):
+            first, second = (start, end) if index % 2 == 0 else (end, start)
+            pattern.extend([offset(first, lateral), offset(second, lateral)])
+    else:
+        samples = max(40, min(240, int(length / 0.5) + 1))
+        tangent_x, tangent_y = dx / length, dy / length
+        for index in range(samples):
+            progress = length * index / max(1, samples - 1)
+            lateral = lateral_amplitude_m * math.sin(2.0 * math.pi * progress / max(wavelength_m, 0.1))
+            pattern.append([
+                float(start[0]) + tangent_x * progress + nx * lateral,
+                float(start[1]) + tangent_y * progress + ny * lateral,
+                z - 0.04,
+            ])
+    return corridor, pattern
+
+
+def _nearest_cable_point(position: list[float], cable_points: list[list[float]]) -> list[float] | None:
+    """Find the nearest sampled cable point in the horizontal plane."""
+    valid = [point for point in cable_points if isinstance(point, list) and len(point) >= 3]
+    if not valid or len(position) < 2:
+        return None
+    return min(
+        valid,
+        key=lambda point: (float(point[0]) - float(position[0])) ** 2 + (float(point[1]) - float(position[1])) ** 2,
+    )
+
+
+def _make_sphere_marker(position_ned: list[float], *, frame_id: str, stamp, ns: str, marker_id: int,
+                        color: tuple[float, float, float, float], diameter: float) -> Marker:
+    marker = _make_marker_base(marker_id, ns, Marker.SPHERE, frame_id, stamp)
+    marker.pose.position = _as_point(position_ned)
+    marker.scale = Vector3(x=diameter, y=diameter, z=diameter)
+    marker.color = ColorRGBA(r=color[0], g=color[1], b=color[2], a=color[3])
+    return marker
+
+
+def _make_text_marker(position_ned: list[float], text: str, *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
+    marker = _make_marker_base(marker_id, ns, Marker.TEXT_VIEW_FACING, frame_id, stamp)
+    label_position = list(position_ned)
+    label_position[2] = float(label_position[2]) - 1.6  # NED up before display conversion.
+    marker.pose.position = _as_point(label_position)
+    marker.scale.z = 0.9
+    marker.color = ColorRGBA(r=0.9, g=0.97, b=1.0, a=1.0)
+    marker.text = text
+    return marker
+
+
+def _make_arrow_between(start_ned: list[float], end_ned: list[float], *, frame_id: str, stamp,
+                        ns: str, marker_id: int, color: tuple[float, float, float, float]) -> Marker:
+    marker = _make_marker_base(marker_id, ns, Marker.ARROW, frame_id, stamp)
+    marker.points = [_as_point(start_ned), _as_point(end_ned)]
+    marker.scale = Vector3(x=0.08, y=0.18, z=0.28)
+    marker.color = ColorRGBA(r=color[0], g=color[1], b=color[2], a=color[3])
+    return marker
+
+
+def _make_uncertainty_ring(position_ned: list[float], sigma_m: float, *, frame_id: str, stamp,
+                           ns: str, marker_id: int, samples: int = 64) -> Marker:
+    radius = max(0.08, 2.0 * float(sigma_m))
+    points = []
+    for index in range(samples + 1):
+        angle = 2.0 * math.pi * index / samples
+        points.append([
+            float(position_ned[0]) + radius * math.cos(angle),
+            float(position_ned[1]) + radius * math.sin(angle),
+            float(position_ned[2]),
+        ])
+    return _make_line_strip(
+        points,
+        frame_id=frame_id,
+        stamp=stamp,
+        ns=ns,
+        marker_id=marker_id,
+        color=(0.85, 0.35, 1.0, 0.85),
+        width=0.055,
+    )
+
+
 def _make_terrain_mesh(points: list[list[float]], *, frame_id: str, stamp, ns: str, marker_id: int) -> Marker:
     """创建海底地形网格标记。
     
@@ -459,8 +587,10 @@ class ZenohVizBridgeNode(Node):
         default_params = str(PROJECT_ROOT / 'brain_linux' / 'config' / 'params.yaml')
         self.declare_parameter('params_file', default_params)
         self.declare_parameter('mock_mode', False)
+        self.declare_parameter('allow_synthetic_scene_fallback', True)
+        self.declare_parameter('publish_sim_ground_truth', True)
         self.declare_parameter('mock_fallback_timeout_s', 3.0)
-        self.declare_parameter('frame_id', 'map')
+        self.declare_parameter('frame_id', 'world')
         self.declare_parameter('truth_frame_id', 'truth_link')
         self.declare_parameter('terrain_key', Z_PATH_SEABED_CLOUD)
         self.declare_parameter('cable_key', Z_PATH_CABLE_MARKER)
@@ -468,9 +598,13 @@ class ZenohVizBridgeNode(Node):
         self.declare_parameter('trail_key', Z_PATH_HISTORY_TRAIL)
         self.declare_parameter('range_key', Z_PATH_VIEW_RANGE)
         self.declare_parameter('ground_truth_key', Z_PATH_GROUND_TRUTH)
+        self.declare_parameter('pc_cmd_raw_key', Z_PATH_PC_CMD_RAW)
 
         self.params_file = str(self.get_parameter('params_file').value)
         self.mock_mode = bool(self.get_parameter('mock_mode').value)
+        self.allow_synthetic_scene_fallback = bool(
+            self.get_parameter('allow_synthetic_scene_fallback').value)
+        self.publish_sim_ground_truth = bool(self.get_parameter('publish_sim_ground_truth').value)
         self.mock_fallback_timeout_s = float(self.get_parameter('mock_fallback_timeout_s').value)
         self.frame_id = str(self.get_parameter('frame_id').value)
         self.truth_frame_id = str(self.get_parameter('truth_frame_id').value)
@@ -482,6 +616,7 @@ class ZenohVizBridgeNode(Node):
         self.trail_key = str(cfg.get('history_topic_key', self.get_parameter('trail_key').value))
         self.range_key = str(cfg.get('view_topic_key', self.get_parameter('range_key').value))
         self.gt_key = str(cfg.get('ground_truth_topic_key', self.get_parameter('ground_truth_key').value))
+        self.pc_cmd_raw_key = str(self.get_parameter('pc_cmd_raw_key').value)
 
         self.virtual_env = VirtualEnvironment(cfg)
         self._session = None
@@ -492,6 +627,13 @@ class ZenohVizBridgeNode(Node):
         self._live_truth: dict[str, Any] | None = None
         self._live_trail: dict[str, Any] | None = None
         self._live_range: dict[str, Any] | None = None
+        self._live_layer_monotonic_s: dict[str, float] = {}
+        self._scene_live_signature: tuple[str, ...] | None = None
+        self._tracking: dict[str, Any] = {}
+        self._inspection_status = InspectionStatus()
+        self._magnetic_ned_t: list[float] | None = None
+        self._emergency_active = False
+        self._emergency_status: dict[str, Any] = {}
         self._mock_tick = 0
 
         self.cloud_pub = self.create_publisher(PointCloud2, '/auv/visual/seabed_cloud', 10)
@@ -501,8 +643,26 @@ class ZenohVizBridgeNode(Node):
         self.truth_pub = self.create_publisher(Marker, '/auv/visual/truth_marker', 10)
         self.trail_pub = self.create_publisher(Marker, '/auv/visual/history_trail', 10)
         self.range_pub = self.create_publisher(Marker, '/auv/visual/view_range', 10)
+        self.search_corridor_pub = self.create_publisher(Marker, '/auv/visual/search_corridor', 10)
+        self.search_pattern_pub = self.create_publisher(Marker, '/auv/visual/search_pattern', 10)
+        self.detection_link_pub = self.create_publisher(Marker, '/auv/visual/detection_link', 10)
+        self.cable_target_pub = self.create_publisher(Marker, '/auv/visual/cable_target', 10)
+        self.mission_label_pub = self.create_publisher(Marker, '/auv/visual/mission_label', 10)
+        self.cable_estimate_pub = self.create_publisher(Marker, '/auv/visual/cable_estimate', 10)
+        self.burial_estimate_pub = self.create_publisher(Marker, '/auv/visual/burial_estimate', 10)
+        self.position_uncertainty_pub = self.create_publisher(Marker, '/auv/visual/position_uncertainty', 10)
+        self.magnetic_vector_pub = self.create_publisher(Marker, '/auv/visual/magnetic_vector', 10)
+        self.fwhm_span_pub = self.create_publisher(Marker, '/auv/visual/fwhm_span', 10)
+        self.perception_label_pub = self.create_publisher(Marker, '/auv/visual/perception_label', 10)
+        self.perception_text_pub = self.create_publisher(String, '/auv/visual/perception_text', 10)
+        self.mission_display_state_pub = self.create_publisher(String, '/auv/visual/mission_state', 10)
+        self.emergency_command_pub = self.create_publisher(String, '/auv/emergency/command', 10)
         self.mock_scene_pub = self.create_publisher(String, '/auv/mock/scene', 10)
         self.gt_pub = self.create_publisher(PoseStamped, '/auv/sensors/ground_truth', 50)
+        self.create_subscription(String, '/auv/cable/tracking', self._on_tracking, 10)
+        self.create_subscription(String, '/auv/cable/operational_status', self._on_inspection_status, 10)
+        self.create_subscription(MagneticField, '/auv/sensors/magnetic', self._on_magnetic, 20)
+        self.create_subscription(String, '/auv/emergency/status', self._on_emergency_status, 10)
         self.tf_broadcaster = TransformBroadcaster(self)
 
         self._open_zenoh()
@@ -554,8 +714,71 @@ class ZenohVizBridgeNode(Node):
         _sub(self.trail_key, self._on_trail)
         _sub(self.range_key, self._on_range)
         _sub(self.gt_key, self._on_ground_truth)
+        # Console commands are control-plane traffic.  They must not refresh
+        # the scene-data watchdog, otherwise the periodic ESTOP heartbeat can
+        # suppress the terrain/cable fallback for the whole emergency ascent.
+        self._subscribers.append(
+            self._session.declare_subscriber(
+                self.pc_cmd_raw_key,
+                self._make_cb(self._on_pc_command, mark_live=False),
+            )
+        )
 
-    def _make_cb(self, handler):
+    def _on_pc_command(self, data: dict[str, Any]) -> None:
+        """Forward only explicit console emergency semantics into ROS 2."""
+        event = str(data.get('event', '')).strip().upper()
+        action = str(data.get('emergency_action', '')).strip().upper()
+        if event not in {'ESTOP', 'ESTOP_RESET'} and action not in {'SURFACE', 'CLEAR'}:
+            return
+        active = bool(data.get('emergency_latched', action == 'SURFACE')) and action != 'CLEAR'
+        payload = {
+            'state': 'EMERGENCY_SURFACE' if active else 'CLEAR',
+            'active': active,
+            'surface_depth_m': float(data.get('surface_depth_m', 0.5)),
+            'source': str(data.get('source', 'console_zenoh')),
+            'event': event,
+            'ts': float(data.get('ts', time.time())),
+        }
+        self._emergency_active = active
+        self.emergency_command_pub.publish(
+            String(data=json.dumps(payload, ensure_ascii=False, allow_nan=False))
+        )
+
+    def _on_emergency_status(self, message: String) -> None:
+        try:
+            payload = json.loads(message.data)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return
+        if not isinstance(payload, dict):
+            return
+        self._emergency_status = payload
+        self._emergency_active = bool(payload.get('active', False))
+
+    def _publish_mission_display_state(self) -> None:
+        if self._emergency_active:
+            state = str(self._emergency_status.get('state', 'EMERGENCY_SURFACE')).upper()
+        elif (getattr(self, '_inspection_geometry_enabled', False)
+              and self._inspection_status.status is not None):
+            state = self._inspection_status.phase(time.monotonic())
+        elif (not self.allow_synthetic_scene_fallback and self._tracking
+              and time.monotonic() - getattr(
+                  self, '_tracking_received_monotonic_s', float('-inf'))
+              >= self.mock_fallback_timeout_s):
+            state = 'STATUS_STALE'
+        else:
+            diagnostics = self._tracking.get('diagnostics')
+            diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
+            state = str(diagnostics.get('mission_phase', self._tracking.get('mode', 'WAITING'))).upper()
+        self.mission_display_state_pub.publish(String(data=state))
+
+    def _on_inspection_status(self, message: String) -> None:
+        try:
+            payload = json.loads(message.data)
+        except (TypeError, ValueError):
+            return
+        self._inspection_status.accept(payload, time.monotonic())
+
+    def _make_cb(self, handler, *, mark_live: bool = True):
         """创建Zenoh订阅回调（JSON解析包装）。
         
         Args:
@@ -573,7 +796,8 @@ class ZenohVizBridgeNode(Node):
                 data = json.loads(payload.decode('utf-8'))
             except Exception:
                 return
-            self._last_live_rx_ns = self.get_clock().now().nanoseconds
+            if mark_live:
+                self._last_live_rx_ns = self.get_clock().now().nanoseconds
             handler(data)
 
         return _cb
@@ -581,22 +805,48 @@ class ZenohVizBridgeNode(Node):
     def _on_terrain(self, data: dict[str, Any]) -> None:
         """接收海底地形点云数据。"""
         self._live_terrain = data
+        self._live_layer_monotonic_s['terrain'] = time.monotonic()
 
     def _on_cable(self, data: dict[str, Any]) -> None:
         """接收电缆路径点列数据。"""
         self._live_cable = data
+        self._live_layer_monotonic_s['cable'] = time.monotonic()
 
     def _on_truth(self, data: dict[str, Any]) -> None:
         """接收真值位姿数据（位置+RPY）。"""
         self._live_truth = data
+        self._live_layer_monotonic_s['truth'] = time.monotonic()
 
     def _on_trail(self, data: dict[str, Any]) -> None:
         """接收历史轨迹点列数据。"""
         self._live_trail = data
+        self._live_layer_monotonic_s['trail'] = time.monotonic()
 
     def _on_range(self, data: dict[str, Any]) -> None:
         """接收搜索范围配置（中心+半径）。"""
         self._live_range = data
+        self._live_layer_monotonic_s['range'] = time.monotonic()
+
+    def _on_tracking(self, message: String) -> None:
+        """Cache cable-tracking evidence used by presentation markers."""
+        try:
+            payload = json.loads(message.data)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            return
+        if isinstance(payload, dict):
+            self._tracking = payload
+            self._tracking_received_monotonic_s = time.monotonic()
+            diagnostics = payload.get('diagnostics')
+            if isinstance(diagnostics, dict) and 'inspection_enabled' in diagnostics:
+                self._inspection_geometry_enabled = bool(diagnostics['inspection_enabled'])
+
+    def _on_magnetic(self, message: MagneticField) -> None:
+        """Cache the NED magnetic vector (ROS SI units) for the 3D field glyph."""
+        self._magnetic_ned_t = [
+            float(message.magnetic_field.x),
+            float(message.magnetic_field.y),
+            float(message.magnetic_field.z),
+        ]
 
     def _on_ground_truth(self, data: dict[str, Any]) -> None:
         """转发 sim 端 ground_truth payload 到 ROS /auv/sensors/ground_truth。
@@ -604,7 +854,7 @@ class ZenohVizBridgeNode(Node):
         与 _on_truth (Z_PATH_TRUTH_POSE) 不同：此回调消费 Z_PATH_GROUND_TRUTH，
         不依赖 mock fallback，直接桥接 sim → ROS PoseStamped 供 benchmark 消费。
         """
-        if not rclpy.ok():
+        if not self.publish_sim_ground_truth or not rclpy.ok():
             return
 
         position = data.get(KEY_POSITION_NED)
@@ -630,6 +880,7 @@ class ZenohVizBridgeNode(Node):
         # Backfill _live_truth so the visualization marker tracks the real pose
         # if Z_PATH_TRUTH_POSE delivery is broken (avoids silent mock fallback).
         self._live_truth = {KEY_POSITION_NED: list(position), KEY_RPY_NED: list(rpy)}
+        self._live_layer_monotonic_s['truth'] = time.monotonic()
 
     def _publish_scene(self, terrain: dict[str, Any], cable: dict[str, Any], truth: dict[str, Any], trail: dict[str, Any], view_range: dict[str, Any]) -> None:
         """将场景数据转换为ROS2 Marker/PointCloud2并发布。
@@ -662,6 +913,7 @@ class ZenohVizBridgeNode(Node):
             if isinstance(points, list) and points:
                 marker = _make_line_strip(points, frame_id=frame_id, stamp=now, ns='cable', marker_id=1, color=(1.0, 0.95, 0.1, 1.0), width=0.12)
                 self.cable_pub.publish(marker)
+                self._publish_mission_geometry(points, truth, frame_id=frame_id, stamp=now)
 
         position = truth.get(KEY_POSITION_NED, [0.0, 0.0, 0.0])
         rpy = truth.get(KEY_RPY_NED, [0.0, 0.0, 0.0])
@@ -692,10 +944,417 @@ class ZenohVizBridgeNode(Node):
             marker.colors = [ColorRGBA(r=c[0], g=c[1], b=c[2], a=c[3]) for c in colors]
             self.trail_pub.publish(marker)
 
-        center = view_range.get(KEY_CENTER_NED, [0.0, 0.0, 0.0])
+        center = view_range.get(KEY_CENTER_NED)
         radius = float(view_range.get(KEY_RADIUS_M, 3.0))
         if isinstance(center, list):
             self.range_pub.publish(_make_range_ring(center, radius, frame_id=frame_id, stamp=now, ns='view_range', marker_id=4))
+
+    def _clear_untrusted_scene_markers(self) -> None:
+        """Remove previously published scene markers when live evidence expires."""
+        marker = Marker()
+        marker.header.frame_id = self.frame_id
+        marker.header.stamp = self.get_clock().now().to_msg()
+        self.cloud_pub.publish(_pointcloud2_from_points(
+            [], self.frame_id, marker.header.stamp))
+        marker.action = Marker.DELETEALL
+        for publisher in (
+            self.mesh_pub, self.cable_pub, self.body_pub, self.truth_pub,
+            self.trail_pub, self.range_pub, self.search_corridor_pub,
+            self.search_pattern_pub, self.detection_link_pub,
+            self.cable_target_pub, self.mission_label_pub,
+        ):
+            publisher.publish(marker)
+
+    def _publish_mission_geometry(self, cable_points: list[list[float]], truth: dict[str, Any], *, frame_id: str, stamp) -> None:
+        """Publish presentation layers that explain the cable-inspection task."""
+        diagnostics = self._tracking.get('diagnostics')
+        diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
+        algorithm_version = str(diagnostics.get('algorithm_version', 'v1')).lower()
+        mission_phase = str(diagnostics.get('mission_phase', self._tracking.get('mode', ''))).lower()
+        pattern_mode = 'lawnmower' if algorithm_version == 'v2' and mission_phase in ('search', 'reacquire') else 'sine'
+        try:
+            amplitude = float(diagnostics.get('zigzag_probe_lateral_amplitude_m', 1.5))
+            wavelength = float(diagnostics.get('zigzag_probe_wavelength_m', 24.0))
+        except (TypeError, ValueError):
+            amplitude, wavelength = 1.5, 24.0
+        corridor_half_width = 15.0 if pattern_mode == 'lawnmower' else 5.0
+        corridor, pattern = _mission_geometry(
+            cable_points,
+            corridor_half_width,
+            pattern_mode=pattern_mode,
+            lateral_amplitude_m=amplitude,
+            wavelength_m=wavelength,
+            lane_spacing_m=6.0,
+        )
+        active_plan = diagnostics.get('active_plan_waypoints_xy_m')
+        if isinstance(active_plan, list) and len(active_plan) >= 2:
+            actual_plan: list[list[float]] = []
+            plan_z = float(self.virtual_env.config.seabed_z_m) - 0.35
+            for point in active_plan:
+                if not isinstance(point, (list, tuple)) or len(point) < 2:
+                    continue
+                try:
+                    x_m, y_m = float(point[0]), float(point[1])
+                except (TypeError, ValueError):
+                    continue
+                if math.isfinite(x_m) and math.isfinite(y_m):
+                    actual_plan.append([x_m, y_m, plan_z])
+            if len(actual_plan) >= 2:
+                pattern = actual_plan
+        if corridor:
+            self.search_corridor_pub.publish(
+                _make_line_strip(
+                    corridor,
+                    frame_id=frame_id,
+                    stamp=stamp,
+                    ns='search_corridor',
+                    marker_id=30,
+                    color=(0.15, 0.8, 0.95, 0.72),
+                    width=0.08,
+                )
+            )
+        if pattern:
+            self.search_pattern_pub.publish(
+                _make_line_strip(
+                    pattern,
+                    frame_id=frame_id,
+                    stamp=stamp,
+                    ns='algorithm_reference_path',
+                    marker_id=31,
+                    color=(0.95, 0.55, 0.12, 0.85),
+                    width=0.07,
+                )
+            )
+
+        position = truth.get(KEY_POSITION_NED, [0.0, 0.0, 0.0])
+        if not isinstance(position, list) or len(position) < 3:
+            return
+        if getattr(self, '_inspection_geometry_enabled', False):
+            self._publish_inspection_mission_target(position, frame_id=frame_id, stamp=stamp)
+            return
+        target = _nearest_cable_point(position, cable_points)
+        if target is None:
+            return
+
+        mode = str(self._tracking.get('mode', '')).strip().upper()
+        confidence = self._tracking.get('confidence')
+        try:
+            confidence_value = float(confidence)
+        except (TypeError, ValueError):
+            confidence_value = min(0.96, 0.28 + self._mock_tick / 260.0)
+
+        if not mode:
+            cycle_tick = self._mock_tick % 540
+            if cycle_tick < 35:
+                mode = 'LAUNCH'
+            elif cycle_tick < 150:
+                mode = 'SEARCH'
+            elif cycle_tick < 205:
+                mode = 'DETECT'
+            elif cycle_tick < 480:
+                mode = 'TRACK'
+            else:
+                mode = 'COMPLETE'
+
+        cross_track = self._tracking.get('cross_track_m')
+        if cross_track is None:
+            cross_track = math.hypot(float(position[0]) - float(target[0]), float(position[1]) - float(target[1]))
+        try:
+            cross_track_text = f'{float(cross_track):.2f} m'
+        except (TypeError, ValueError):
+            cross_track_text = '--'
+
+        target_color = (0.2, 1.0, 0.45, 0.95) if confidence_value >= 0.65 else (1.0, 0.65, 0.1, 0.95)
+        self.cable_target_pub.publish(
+            _make_sphere_marker(
+                target,
+                frame_id=frame_id,
+                stamp=stamp,
+                ns='cable_target',
+                marker_id=32,
+                color=target_color,
+                diameter=0.55,
+            )
+        )
+        self.detection_link_pub.publish(
+            _make_line_strip(
+                [position, target],
+                frame_id=frame_id,
+                stamp=stamp,
+                ns='detection_link',
+                marker_id=33,
+                color=target_color,
+                width=0.045,
+            )
+        )
+        if self._emergency_active:
+            emergency_state = str(
+                self._emergency_status.get('state', 'EMERGENCY_SURFACE')
+            ).upper()
+            depth = self._finite_number(self._emergency_status.get('current_depth_m'))
+            depth_text = '--' if depth is None else f'{depth:.2f} m'
+            label = f'ESTOP  |  {emergency_state}  |  depth {depth_text}'
+        else:
+            label = f'{mode}  |  cable {cross_track_text}  |  confidence {confidence_value:.2f}'
+        self.mission_label_pub.publish(
+            _make_text_marker(position, label, frame_id=frame_id, stamp=stamp, ns='mission_label', marker_id=34)
+        )
+        self._publish_perception_geometry(
+            cable_points,
+            position,
+            target,
+            diagnostics,
+            frame_id=frame_id,
+            stamp=stamp,
+        )
+
+    def _publish_inspection_mission_target(self, position, *, frame_id, stamp):
+        """Draw the estimated target only; scene cable truth is a reference layer."""
+        geometry = inspection_geometry(
+            self._tracking, float(self.virtual_env.config.seabed_z_m),
+            time.monotonic() - getattr(self, '_tracking_received_monotonic_s', float('-inf')))
+        target = geometry.position_ned
+        if target is None:
+            for publisher, namespace, marker_id in (
+                    (self.cable_target_pub, 'cable_target', 32),
+                    (self.detection_link_pub, 'detection_link', 33)):
+                marker = Marker()
+                marker.header.frame_id, marker.header.stamp = frame_id, stamp
+                marker.ns, marker.id, marker.action = namespace, marker_id, Marker.DELETE
+                publisher.publish(marker)
+        else:
+            marker = _make_sphere_marker(list(target), frame_id=frame_id, stamp=stamp,
+                                        ns='cable_target', marker_id=32,
+                                        color=(.9,.25,1.,.95), diameter=.55)
+            if geometry.burial_m is None:
+                marker.scale.z = .06
+            marker.lifetime.sec = 2
+            self.cable_target_pub.publish(marker)
+            marker = _make_line_strip([position, list(target)], frame_id=frame_id, stamp=stamp,
+                                     ns='detection_link', marker_id=33,
+                                     color=(.9,.25,1.,.95), width=.045)
+            marker.lifetime.sec = 2
+            self.detection_link_pub.publish(marker)
+        phase = self._inspection_status.phase(time.monotonic())
+        if self._emergency_active:
+            phase = str(self._emergency_status.get('state', 'EMERGENCY_SURFACE'))
+        marker = _make_text_marker(position, phase + ' | ESTIMATED TARGET / REFERENCE PLANE',
+                                  frame_id=frame_id, stamp=stamp, ns='mission_label', marker_id=34)
+        marker.lifetime.sec = 2
+        self.mission_label_pub.publish(marker)
+
+    @staticmethod
+    def _finite_number(value: Any) -> float | None:
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return None
+        return numeric if math.isfinite(numeric) else None
+
+    def _publish_perception_geometry(
+        self,
+        cable_points: list[list[float]],
+        auv_position: list[float],
+        nearest_truth: list[float],
+        diagnostics: dict[str, Any],
+        *,
+        frame_id: str,
+        stamp,
+    ) -> None:
+        """Render estimator, burial, magnetic and FWHM evidence without hiding truth."""
+        if (getattr(self, '_inspection_geometry_enabled', False) or not self._tracking
+                or self._tracking.get('mode') == 'SENSOR_DEGRADED'):
+            self._publish_inspection_geometry(frame_id=frame_id, stamp=stamp)
+            return
+        estimate_xy = self._tracking.get('estimated_cable_xy_m')
+        if not isinstance(estimate_xy, list) or len(estimate_xy) < 2:
+            estimate_xy = [float(nearest_truth[0]), float(nearest_truth[1])]
+
+        burial = self._finite_number(self._tracking.get('burial_depth_m'))
+        burial_sigma = self._finite_number(self._tracking.get('burial_sigma_m'))
+        seabed_z = float(self.virtual_env.config.seabed_z_m)
+        estimate_z = seabed_z + burial if burial is not None and burial >= 0.0 else float(nearest_truth[2])
+        estimate_position = [float(estimate_xy[0]), float(estimate_xy[1]), estimate_z]
+
+        self.cable_estimate_pub.publish(
+            _make_sphere_marker(
+                estimate_position,
+                frame_id=frame_id,
+                stamp=stamp,
+                ns='estimated_cable_position',
+                marker_id=40,
+                color=(0.9, 0.25, 1.0, 0.95),
+                diameter=0.48,
+            )
+        )
+        if burial is not None and burial >= 0.0:
+            self.burial_estimate_pub.publish(
+                _make_arrow_between(
+                    [estimate_position[0], estimate_position[1], seabed_z],
+                    estimate_position,
+                    frame_id=frame_id,
+                    stamp=stamp,
+                    ns='estimated_burial_depth',
+                    marker_id=41,
+                    color=(0.95, 0.35, 0.9, 0.95),
+                )
+            )
+
+        position_sigma = self._finite_number(diagnostics.get('observation_line_sigma_m'))
+        if position_sigma is None:
+            width_sigma = self._finite_number(diagnostics.get('fwhm_width_sigma_m'))
+            position_sigma = None if width_sigma is None else 0.5 * width_sigma
+        if position_sigma is None:
+            # A burial-depth uncertainty is not a lateral covariance, but while
+            # confirming a cable it gives a conservative visible uncertainty
+            # radius instead of implying an exact position.
+            position_sigma = self._finite_number(diagnostics.get('fwhm_burial_depth_sigma_m'))
+        if position_sigma is not None:
+            self.position_uncertainty_pub.publish(
+                _make_uncertainty_ring(
+                    estimate_position,
+                    position_sigma,
+                    frame_id=frame_id,
+                    stamp=stamp,
+                    ns='estimated_position_2sigma',
+                    marker_id=42,
+                )
+            )
+
+        magnetic_strength = self._finite_number(self._tracking.get('magnetic_strength_nt'))
+        magnetic_snr = self._finite_number(self._tracking.get('magnetic_snr_db'))
+        magnetic_confidence = self._finite_number(self._tracking.get('magnetic_confidence'))
+        if self._magnetic_ned_t is not None:
+            bx, by, bz = (component * 1.0e9 for component in self._magnetic_ned_t)
+            magnitude = math.sqrt(bx * bx + by * by + bz * bz)
+            if magnitude > 1.0e-9:
+                scale = 3.0 / magnitude
+                endpoint = [
+                    float(auv_position[0]) + bx * scale,
+                    float(auv_position[1]) + by * scale,
+                    float(auv_position[2]) + bz * scale,
+                ]
+                self.magnetic_vector_pub.publish(
+                    _make_arrow_between(
+                        auv_position,
+                        endpoint,
+                        frame_id=frame_id,
+                        stamp=stamp,
+                        ns='magnetic_vector_ned',
+                        marker_id=43,
+                        color=(1.0, 0.45, 0.12, 0.95),
+                    )
+                )
+                if magnetic_strength is None:
+                    magnetic_strength = magnitude
+
+        fwhm_left = self._finite_number(diagnostics.get('fwhm_left_x_m'))
+        fwhm_right = self._finite_number(diagnostics.get('fwhm_right_x_m'))
+        fwhm_peak = self._finite_number(diagnostics.get('fwhm_peak_x_m'))
+        fwhm_width = self._finite_number(diagnostics.get('fwhm_width_m'))
+        heading_deg = self._finite_number(self._tracking.get('cable_heading_deg')) or 0.0
+        heading_rad = math.radians(heading_deg)
+        normal = [-math.sin(heading_rad), math.cos(heading_rad)]
+        if fwhm_left is not None and fwhm_right is not None:
+            # FWHM crossings are expressed in scan-centred coordinates while
+            # the rendered estimate sits at the fitted peak.
+            peak_x = 0.0 if fwhm_peak is None else fwhm_peak
+            left_offset = fwhm_left - peak_x
+            right_offset = fwhm_right - peak_x
+            span_z = seabed_z - 0.12
+            span = [
+                [estimate_position[0] + normal[0] * left_offset, estimate_position[1] + normal[1] * left_offset, span_z],
+                [estimate_position[0] + normal[0] * right_offset, estimate_position[1] + normal[1] * right_offset, span_z],
+            ]
+            self.fwhm_span_pub.publish(
+                _make_line_strip(
+                    span,
+                    frame_id=frame_id,
+                    stamp=stamp,
+                    ns='fwhm_half_max_span',
+                    marker_id=44,
+                    color=(1.0, 0.2, 0.65, 0.95),
+                    width=0.12,
+                )
+            )
+
+        fwhm_valid = diagnostics.get('fwhm_valid')
+        source = str(diagnostics.get('source', 'legacy_amplitude_inversion'))
+        burial_text = '--' if burial is None else f'{burial:.2f} m'
+        sigma_text = '--' if burial_sigma is None else f'{burial_sigma:.2f} m'
+        mag_text = '--' if magnetic_strength is None else f'{magnetic_strength:.0f} nT'
+        snr_text = '--' if magnetic_snr is None else f'{magnetic_snr:.1f} dB'
+        fwhm_text = '--' if fwhm_width is None else f'{fwhm_width:.2f} m'
+        perception_label = (
+            f'EST cable=({estimate_position[0]:.1f}, {estimate_position[1]:.1f}) m\n'
+            f'burial={burial_text}  sigma={sigma_text}\n'
+            f'|B|={mag_text}  SNR={snr_text}  FWHM={fwhm_text}'
+        )
+        label_anchor = [estimate_position[0], estimate_position[1], seabed_z - 1.0]
+        self.perception_label_pub.publish(
+            _make_text_marker(label_anchor, perception_label, frame_id=frame_id, stamp=stamp, ns='perception_label', marker_id=45)
+        )
+        self.perception_text_pub.publish(String(data=(
+            f'ESTIMATOR: {source}\n'
+            f'cable position: x={estimate_position[0]:.2f} m, y={estimate_position[1]:.2f} m\n'
+            f'burial: {burial_text}, sigma: {sigma_text}\n'
+            f'magnetic: {mag_text}, SNR: {snr_text}, confidence: '
+            f'{"--" if magnetic_confidence is None else f"{magnetic_confidence:.3f}"}\n'
+            f'FWHM: {fwhm_text}, valid: {fwhm_valid if fwhm_valid is not None else "not active"}'
+        )))
+
+    def _publish_inspection_geometry(self, *, frame_id: str, stamp) -> None:
+        reference_z = float(self.virtual_env.config.seabed_z_m)
+        state = inspection_geometry(
+            self._tracking, reference_z,
+            time.monotonic() - getattr(self, '_tracking_received_monotonic_s', float('-inf')),
+        )
+        def remove(publisher, namespace, marker_id):
+            marker = Marker()
+            marker.header.frame_id, marker.header.stamp = frame_id, stamp
+            marker.ns, marker.id, marker.action = namespace, marker_id, Marker.DELETE
+            publisher.publish(marker)
+
+        remove(self.magnetic_vector_pub, 'magnetic_vector_ned', 43)
+
+        def emit(publisher, marker):
+            marker.lifetime.sec = 2
+            publisher.publish(marker)
+
+        position = state.position_ned
+        if position is None:
+            remove(self.cable_estimate_pub, 'estimated_cable_position', 40)
+            remove(self.perception_label_pub, 'perception_label', 45)
+        else:
+            marker = _make_sphere_marker(list(position), frame_id=frame_id, stamp=stamp,
+                ns='estimated_cable_position', marker_id=40, color=(0.9,0.25,1.0,0.95), diameter=0.48)
+            if state.burial_m is None:
+                marker.scale.z = 0.06  # A flat projection, not a resolved 3D point.
+            emit(self.cable_estimate_pub, marker)
+            emit(self.perception_label_pub, _make_text_marker(
+                [position[0],position[1],reference_z-1.0], state.label,
+                frame_id=frame_id, stamp=stamp, ns='perception_label', marker_id=45))
+        if position is not None and state.burial_m is not None:
+            emit(self.burial_estimate_pub, _make_arrow_between(
+                [position[0],position[1],reference_z], list(position), frame_id=frame_id,
+                stamp=stamp, ns='estimated_burial_depth', marker_id=41, color=(.95,.35,.9,.95)))
+        else:
+            remove(self.burial_estimate_pub, 'estimated_burial_depth', 41)
+        if position is not None and state.lateral_sigma_m is not None:
+            emit(self.position_uncertainty_pub, _make_uncertainty_ring(
+                list(position), state.lateral_sigma_m, frame_id=frame_id, stamp=stamp,
+                ns='estimated_position_2sigma', marker_id=42))
+        else:
+            remove(self.position_uncertainty_pub, 'estimated_position_2sigma', 42)
+        if position is not None and state.width_m is not None and state.heading_deg is not None:
+            angle = math.radians(state.heading_deg)
+            points = [[position[0]-math.sin(angle)*side*state.width_m/2,
+                       position[1]+math.cos(angle)*side*state.width_m/2, reference_z-.12] for side in (-1,1)]
+            emit(self.fwhm_span_pub, _make_line_strip(points, frame_id=frame_id, stamp=stamp,
+                ns='fwhm_half_max_span', marker_id=44, color=(1.,.2,.65,.95), width=.12))
+        else:
+            remove(self.fwhm_span_pub, 'fwhm_half_max_span', 44)
+        self.perception_text_pub.publish(String(data=self._inspection_status.text(state, time.monotonic())))
 
     def _publish_mock_scene_summary(self, *, sample_index: int, position_ned: list[float], rpy_ned: list[float], mode: str) -> None:
         """发布场景元数据摘要（用于Foxglove仪表板）。
@@ -734,6 +1393,33 @@ class ZenohVizBridgeNode(Node):
           3. 若Zenoh无真值数据，不发布任何内容
         """
         if not rclpy.ok():
+            return
+
+        self._publish_mission_display_state()
+        # Status must keep expiring even if the live scene/pose stops arriving.
+        if getattr(self, '_inspection_geometry_enabled', False):
+            self._publish_inspection_geometry(
+                frame_id=self.frame_id, stamp=self.get_clock().now().to_msg())
+
+        if not self.allow_synthetic_scene_fallback:
+            now_mono = time.monotonic()
+            def fresh(name: str) -> bool:
+                stamp = self._live_layer_monotonic_s.get(name)
+                return (stamp is not None and 0. <= now_mono - stamp
+                        < self.mock_fallback_timeout_s)
+
+            live = tuple(name for name in ('truth', 'terrain', 'cable', 'trail', 'range')
+                         if fresh(name) and getattr(self, f'_live_{name}') is not None)
+            if live != self._scene_live_signature:
+                self._clear_untrusted_scene_markers()
+                self._scene_live_signature = live
+            if 'truth' not in live:
+                return
+            terrain = self._live_terrain if 'terrain' in live else {}
+            cable = self._live_cable if 'cable' in live else {}
+            trail = self._live_trail if 'trail' in live else {}
+            view_range = self._live_range if 'range' in live else {}
+            self._publish_scene(terrain, cable, self._live_truth, trail, view_range)
             return
 
         now_ns = self.get_clock().now().nanoseconds

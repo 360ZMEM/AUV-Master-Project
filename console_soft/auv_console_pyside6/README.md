@@ -86,11 +86,21 @@
 
 ### 3.1 环境要求
 
-- **Python 版本**: >= 3.10
+- **Python 版本**: 3.10（当前跨平台验证基线）
+- **支持平台**: Windows 10/11 x86-64；macOS 11+（Intel 或 Apple Silicon）
 - **依赖库**:
   ```bash
-  pip install PySide6 pyzenoh3 numpy pyyaml
+  python3 -m pip install -r requirements.txt
   ```
+
+  Windows PowerShell 使用：
+
+  ```powershell
+  py -3.10 -m pip install -r requirements.txt
+  ```
+
+  `eclipse-zenoh` 的导入名是 `zenoh`。首次克隆完整仓库后还需执行
+  `git lfs install` 和 `git lfs pull`，以取得论文与界面文档中的真实图片。
 
 ### 3.2 配置文件
 
@@ -130,8 +140,11 @@ defaults:
 2. **启动上位机**：
    ```bash
    cd console_soft/auv_console_pyside6
-   python3 src/main.py
+   python3 main.py
    ```
+
+   Windows PowerShell 使用 `py -3.10 main.py`。macOS 串口通常命名为
+   `/dev/cu.*`，Windows 串口通常命名为 `COM3`、`COM4`，可在设置界面中选择。
 
 3. **连接 AUV**：
    - 点击菜单栏 `连接` → `启动 UDP 通信`

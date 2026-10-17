@@ -298,7 +298,7 @@ while [[ $# -gt 0 ]]; do
       LAUNCH_OUTPUT_MODE="${2:?missing value for --launcher-output}"
       shift 2
       ;;
-    --topic-prefix|--viz-mock-fallback-timeout|--sim-cfg|--protocol-control-mode-byte)
+    --topic-prefix|--viz-mock-fallback-timeout|--sim-cfg|--protocol-control-mode-byte|--layout-profile)
       LAUNCH_ARGS+=("$1" "${2:?missing value for $1}")
       shift 2
       ;;

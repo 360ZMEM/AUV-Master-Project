@@ -91,9 +91,37 @@ from common.protocol import (
     map_pc104_uptime_to_ros_seconds,
 )
 
+
 from .arbiter import ArbiterDecision, CommandArbiter
 from .autonomy_guard import AutonomyGuard, GuardDecision
 from .bridge_backends import BaseBridgeBackend, ProtocolBridgeBackend, TopicBridgeBackend
+
+
+def protocol_imu_packet_time_check(*, pc104_time_valid: bool,
+                                   pc104_uptime_ms: int,
+                                   last_accepted_uptime_ms: int | None) -> tuple[bool, str]:
+    """Reject packet-time fallback/replay before it can refresh ROS IMU health.
+
+    This checks PC104 packet generation time, not sensor-native IMU acquisition
+    time. The latter remains a separate physical deployment requirement.
+    """
+    if not pc104_time_valid or pc104_uptime_ms < 0:
+        return False, 'pc104_packet_time_unavailable'
+    if last_accepted_uptime_ms is not None:
+        if pc104_uptime_ms == last_accepted_uptime_ms:
+            return False, 'pc104_packet_time_repeated'
+        if pc104_uptime_ms < last_accepted_uptime_ms:
+            return False, 'pc104_packet_time_regressed'
+    return True, 'pc104_packet_time_advanced'
+
+
+def protocol_imu_stamp_fresh(*, now_ros_s: float, stamp_s: float,
+                             maximum_age_s: float, future_tolerance_s: float = .2) -> bool:
+    if (not math.isfinite(now_ros_s) or not math.isfinite(stamp_s)
+            or not math.isfinite(maximum_age_s) or maximum_age_s <= 0.):
+        return False
+    age_s = now_ros_s - stamp_s
+    return -future_tolerance_s <= age_s <= maximum_age_s
 
 
 def _rpy_deg_to_quaternion(roll_deg: float, pitch_deg: float, yaw_deg: float) -> tuple[float, float, float, float]:
@@ -209,6 +237,22 @@ class AUVBridgeNode(Node):
         self.shadow_cmd_topic = str(self.get_parameter('shadow_cmd_topic').value)
         self.shadow_telemetry_topic = str(self.get_parameter('shadow_telemetry_topic').value)
         protocol_udp_cfg = self.bridge_cfg.get('protocol_udp', {})
+        require_packet_time = protocol_udp_cfg.get('require_packet_time_for_imu', False)
+        if not isinstance(require_packet_time, bool):
+            raise ValueError('bridge.protocol_udp.require_packet_time_for_imu must be boolean')
+        self.require_packet_time_for_imu = require_packet_time
+        age_setting = protocol_udp_cfg.get('max_packet_time_age_s')
+        if require_packet_time:
+            if isinstance(age_setting, bool) or age_setting is None:
+                raise ValueError('strict ROS IMU packet time requires max_packet_time_age_s')
+            self.max_packet_time_age_s = float(age_setting)
+            if not math.isfinite(self.max_packet_time_age_s) or self.max_packet_time_age_s <= 0.:
+                raise ValueError('max_packet_time_age_s must be finite and positive')
+        else:
+            self.max_packet_time_age_s = 0.
+        self._last_protocol_imu_packet_uptime_ms: int | None = None
+        self._protocol_imu_time_rejection_reason = ''
+        self._protocol_imu_stamp_was_fresh = None
         self.protocol_obj_address = int(protocol_udp_cfg.get('obj_address', 1))
         default_remote_cfg = dict(self.arbiter_cfg.get('default_remote_payload', {}) or {})
         # /**
@@ -963,12 +1007,74 @@ class AUVBridgeNode(Node):
     def _make_protocol_header_stamp(self, telemetry: ProtocolUplinkTelemetry):
         """Create one shared stamp for all messages derived from one protocol frame."""
         receive_stamp = self.get_clock().now().to_msg()
+        if (self.require_packet_time_for_imu
+                and self._last_protocol_imu_packet_uptime_ms is not None
+                and telemetry.pc104_time_valid
+                and telemetry.pc104_uptime_ms < self._last_protocol_imu_packet_uptime_ms):
+            # A rejected out-of-order/reboot packet must not rebase the
+            # PC104->ROS clock. Other telemetry may use receipt time, but the
+            # IMU packet-time gate will suppress this frame.
+            return receive_stamp
         return self._make_pc104_header_stamp(
             pc104_uptime_ms=int(telemetry.pc104_uptime_ms),
             pc104_time_valid=bool(telemetry.pc104_time_valid),
             fallback_stamp=receive_stamp,
             allow_before_base=False,
         )
+
+    def _protocol_imu_packet_time_ok(self, telemetry: ProtocolUplinkTelemetry) -> bool:
+        if not self.require_packet_time_for_imu:
+            return True
+        ok, reason = protocol_imu_packet_time_check(
+            pc104_time_valid=bool(telemetry.pc104_time_valid),
+            pc104_uptime_ms=int(telemetry.pc104_uptime_ms),
+            last_accepted_uptime_ms=self._last_protocol_imu_packet_uptime_ms,
+        )
+        if ok:
+            self._last_protocol_imu_packet_uptime_ms = int(telemetry.pc104_uptime_ms)
+            if self._protocol_imu_time_rejection_reason:
+                self.get_logger().info('PC104 packet time advanced; ROS IMU publication resumed')
+            self._protocol_imu_time_rejection_reason = ''
+            return True
+        if reason != self._protocol_imu_time_rejection_reason:
+            self.get_logger().warning('ROS IMU publication suppressed: ' + reason)
+        self._protocol_imu_time_rejection_reason = reason
+        return False
+
+    def _publish_protocol_imu(self, telemetry: ProtocolUplinkTelemetry,
+                              protocol_stamp, quaternion_xyzw: tuple[float, float, float, float]) -> bool:
+        if not self._protocol_imu_packet_time_ok(telemetry):
+            return False
+        if self.require_packet_time_for_imu:
+            stamp_fresh = protocol_imu_stamp_fresh(
+                now_ros_s=self._header_stamp_to_seconds(self.get_clock().now().to_msg()),
+                stamp_s=self._header_stamp_to_seconds(protocol_stamp),
+                maximum_age_s=self.max_packet_time_age_s,
+            )
+            if not stamp_fresh:
+                if self._protocol_imu_stamp_was_fresh is not False:
+                    self.get_logger().warning('ROS IMU publication suppressed: pc104_packet_time_stale')
+                self._protocol_imu_stamp_was_fresh = False
+                return False
+            if self._protocol_imu_stamp_was_fresh is False:
+                self.get_logger().info('PC104 packet time fresh; ROS IMU publication resumed')
+            self._protocol_imu_stamp_was_fresh = True
+        imu_msg = Imu()
+        imu_msg.header.stamp = protocol_stamp
+        imu_msg.header.frame_id = 'auv/base_link'
+        qx, qy, qz, qw = quaternion_xyzw
+        imu_msg.orientation.x = qx
+        imu_msg.orientation.y = qy
+        imu_msg.orientation.z = qz
+        imu_msg.orientation.w = qw
+        imu_msg.angular_velocity.x = float(telemetry.gyro_x_rps)
+        imu_msg.angular_velocity.y = float(telemetry.gyro_y_rps)
+        imu_msg.angular_velocity.z = float(telemetry.gyro_z_rps)
+        imu_msg.linear_acceleration.x = 0.0
+        imu_msg.linear_acceleration.y = 0.0
+        imu_msg.linear_acceleration.z = 0.0
+        self._safe_publish_ros(self.imu_pub, imu_msg)
+        return True
 
     def _make_pc104_header_stamp(
         self,
@@ -1193,21 +1299,8 @@ class AUVBridgeNode(Node):
             allow_before_base=True,
         )
 
-        imu_msg = Imu()
-        imu_msg.header.stamp = protocol_stamp
-        imu_msg.header.frame_id = 'auv/base_link'
         qx, qy, qz, qw = _rpy_deg_to_quaternion(telemetry.roll_deg, telemetry.pitch_deg, telemetry.heading_deg)
-        imu_msg.orientation.x = qx
-        imu_msg.orientation.y = qy
-        imu_msg.orientation.z = qz
-        imu_msg.orientation.w = qw
-        imu_msg.angular_velocity.x = float(telemetry.gyro_x_rps)
-        imu_msg.angular_velocity.y = float(telemetry.gyro_y_rps)
-        imu_msg.angular_velocity.z = float(telemetry.gyro_z_rps)
-        imu_msg.linear_acceleration.x = 0.0
-        imu_msg.linear_acceleration.y = 0.0
-        imu_msg.linear_acceleration.z = 0.0
-        self._safe_publish_ros(self.imu_pub, imu_msg)
+        self._publish_protocol_imu(telemetry, protocol_stamp, (qx, qy, qz, qw))
 
         dvl_msg = TwistStamped()
         dvl_msg.header.stamp = dvl_stamp
@@ -1325,7 +1418,16 @@ class AUVBridgeNode(Node):
             flags = [str(flags)]
         monitor['acceptance_flags'] = [str(item) for item in flags]
         monitor['acceptance_flags_text'] = 'none' if not flags else ','.join(monitor['acceptance_flags'])
-        monitor['status_text'] = str(payload.get('diagnostics', {}).get('burial_status', 'unknown'))
+        diagnostics = payload.get('diagnostics')
+        diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
+        monitor['status_text'] = str(diagnostics.get('burial_status', 'unknown'))
+        if diagnostics.get('inspection_enabled') is True:
+            monitor['inspection_enabled'] = True
+            for key in ('lateral_valid', 'depth_valid', 'fwhm_width_m', 'fwhm_valid'):
+                monitor[key] = diagnostics.get(key)
+            if diagnostics.get('depth_valid') is not True:
+                monitor['burial_depth_m'] = None
+                monitor['burial_sigma_m'] = None
         dlt1278 = payload.get('dlt1278') if isinstance(payload.get('dlt1278'), dict) else {}
         monitor['dlt1278_state'] = str(dlt1278.get('state', '--'))
         monitor['dlt1278_total_score'] = dlt1278.get('total_score')

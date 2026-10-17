@@ -1,0 +1,10 @@
+# Synthetic-only initial pose for the passive raw-sensor shadow smoke.
+# Not a vehicle initialization or a field covariance calibration.
+ekf:
+  imu_acc_is_linear: true
+  init_pos: [-250.0, -15.0, -10.0]
+  init_vel: [0.0, 0.0, 0.0]
+  init_quat_wxyz: [0.996194698, 0.0, 0.0, 0.087155743]
+  init_P_diag: [0.01, 0.01, 0.01, 0.0001, 0.0001, 0.0001, 0.0004, 0.0004, 0.0004, 0.0025, 0.0025, 0.0025, 0.0025, 0.0025, 0.0025]
+localization:
+  use_imu_orientation_measurement: true

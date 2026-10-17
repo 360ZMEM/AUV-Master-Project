@@ -62,7 +62,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--profile",
         default="mentor-demo",
-        choices=("mentor-demo", "probe", "classic", "pilot-1366", "acceptance-1366"),
+        choices=(
+            "mentor-demo", "probe", "classic", "pilot-1366", "acceptance-1366",
+            "defense-1080", "defense-perception-1366", "inspection-v2",
+        ),
         help="Layout profile to export",
     )
     parser.add_argument(

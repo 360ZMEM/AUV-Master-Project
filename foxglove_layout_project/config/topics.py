@@ -37,6 +37,7 @@ class TopicConfig:
     sonar: str = "/auv/sensors/sonar"
     cable_tracking: str = "/auv/cable/tracking"
     cable_diagnostics: str = "/auv/cable/diagnostics"
+    cable_operational_status: str = "/auv/cable/operational_status"
     dlt1278_summary: str = "/auv/cable/dlt1278_summary"
     dlt1278_summary_rewritten: str = "/auv/cable/dlt1278_summary_rewritten"
     dlt1278_state: str = "/auv/cable/dlt1278_state"
@@ -53,6 +54,14 @@ class TopicConfig:
     cable_confidence: str = "/auv/cable/confidence"
     cable_magnetic_snr: str = "/auv/cable/magnetic_snr_db"
     cable_magnetic_confidence: str = "/auv/cable/magnetic_confidence"
+    cable_magnetic_strength: str = "/auv/cable/magnetic_strength_nt"
+    cable_estimated_x: str = "/auv/cable/estimated_x_m"
+    cable_estimated_y: str = "/auv/cable/estimated_y_m"
+    cable_fwhm_width: str = "/auv/cable/fwhm_width_m"
+    cable_fwhm_confidence: str = "/auv/cable/fwhm_confidence"
+    cable_fwhm_validity: str = "/auv/cable/fwhm_validity"
+    mission_display_state: str = "/auv/visual/mission_state"
+    emergency_depth: str = "/auv/emergency/depth_m"
 
     seabed_cloud: str = "/auv/visual/seabed_cloud"
     seabed_mesh: str = "/auv/visual/seabed_mesh"
@@ -62,6 +71,22 @@ class TopicConfig:
     history_trail: str = "/auv/visual/history_trail"
     view_range: str = "/auv/visual/view_range"
     scale_bar: str = "/auv/visual/scale_bar"
+    search_corridor: str = "/auv/visual/search_corridor"
+    search_pattern: str = "/auv/visual/search_pattern"
+    detection_link: str = "/auv/visual/detection_link"
+    cable_target: str = "/auv/visual/cable_target"
+    mission_label: str = "/auv/visual/mission_label"
+    cable_estimate: str = "/auv/visual/cable_estimate"
+    burial_estimate: str = "/auv/visual/burial_estimate"
+    position_uncertainty: str = "/auv/visual/position_uncertainty"
+    magnetic_vector: str = "/auv/visual/magnetic_vector"
+    fwhm_span: str = "/auv/visual/fwhm_span"
+    perception_label: str = "/auv/visual/perception_label"
+    perception_text: str = "/auv/visual/perception_text"
+    decoupled_vehicle: str = "/auv/visual/decoupled_vehicle"
+    decoupled_vehicle_trail: str = "/auv/visual/decoupled_vehicle_trail"
+    decoupled_true_cable: str = "/auv/visual/decoupled_true_cable"
+    emergency_surface: str = "/auv/visual/emergency_surface"
     mock_scene: str = "/auv/mock/scene"
 
 
@@ -183,6 +208,7 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         sonar=_join(config.sonar),
         cable_tracking=_join(config.cable_tracking),
         cable_diagnostics=_join(config.cable_diagnostics),
+        cable_operational_status=_join(config.cable_operational_status),
         dlt1278_summary=_join(config.dlt1278_summary),
         dlt1278_summary_rewritten=_join(config.dlt1278_summary_rewritten),
         dlt1278_state=_join(config.dlt1278_state),
@@ -199,6 +225,14 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         cable_confidence=_join(config.cable_confidence),
         cable_magnetic_snr=_join(config.cable_magnetic_snr),
         cable_magnetic_confidence=_join(config.cable_magnetic_confidence),
+        cable_magnetic_strength=_join(config.cable_magnetic_strength),
+        cable_estimated_x=_join(config.cable_estimated_x),
+        cable_estimated_y=_join(config.cable_estimated_y),
+        cable_fwhm_width=_join(config.cable_fwhm_width),
+        cable_fwhm_confidence=_join(config.cable_fwhm_confidence),
+        cable_fwhm_validity=_join(config.cable_fwhm_validity),
+        mission_display_state=_join(config.mission_display_state),
+        emergency_depth=_join(config.emergency_depth),
         seabed_cloud=_join(config.seabed_cloud),
         seabed_mesh=_join(config.seabed_mesh),
         cable_marker=_join(config.cable_marker),
@@ -207,6 +241,22 @@ def with_topic_prefix(config: TopicConfig, prefix: str) -> TopicConfig:
         history_trail=_join(config.history_trail),
         view_range=_join(config.view_range),
         scale_bar=_join(config.scale_bar),
+        search_corridor=_join(config.search_corridor),
+        search_pattern=_join(config.search_pattern),
+        detection_link=_join(config.detection_link),
+        cable_target=_join(config.cable_target),
+        mission_label=_join(config.mission_label),
+        cable_estimate=_join(config.cable_estimate),
+        burial_estimate=_join(config.burial_estimate),
+        position_uncertainty=_join(config.position_uncertainty),
+        magnetic_vector=_join(config.magnetic_vector),
+        fwhm_span=_join(config.fwhm_span),
+        perception_label=_join(config.perception_label),
+        perception_text=_join(config.perception_text),
+        decoupled_vehicle=_join(config.decoupled_vehicle),
+        decoupled_vehicle_trail=_join(config.decoupled_vehicle_trail),
+        decoupled_true_cable=_join(config.decoupled_true_cable),
+        emergency_surface=_join(config.emergency_surface),
         mock_scene=_join(config.mock_scene),
     )
 

@@ -129,6 +129,10 @@ while [[ $# -gt 0 ]]; do
       LAYOUT_ARGS+=("--description" "${2:?missing value for --layout-description}")
       shift 2
       ;;
+    --layout-profile)
+      LAYOUT_ARGS+=("--profile" "${2:?missing value for --layout-profile}")
+      shift 2
+      ;;
     --layout-output)
       LAYOUT_ARGS+=("--output" "${2:?missing value for --layout-output}")
       shift 2
@@ -183,6 +187,7 @@ Options:
   --with-map                 include the Foxglove 3D map layer
   --layout-name NAME         layout name written into the meta file
   --layout-description TEXT  layout description written into the meta file
+  --layout-profile PROFILE   Foxglove profile, including defense-1080
   --layout-output PATH       output path passed to the layout generator
   --layout-meta-output PATH  meta output path passed to the layout generator
   --layout-pretty            pretty-print the generated layout JSON
@@ -287,7 +292,7 @@ else
 fi
 SIM_PID=$!
 
-if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
+if [[ -f "$BRAIN_DIR/install/setup.bash" ]]; then
   echo "[AUV] starting foxglove_bridge on ws://0.0.0.0:8765..."
   if [[ -n "$CHILD_LOG_DIR" ]]; then
     FOXGLOVE_LOG="$CHILD_LOG_DIR/foxglove_bridge.log"
@@ -296,7 +301,9 @@ if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/lo
       set +u
       source /opt/ros/humble/setup.bash
       source "$BRAIN_DIR/install/setup.bash"
-      source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      if [[ -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
+        source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      fi
       set -u
       exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
     ) >"$FOXGLOVE_LOG" 2>&1 &
@@ -305,14 +312,16 @@ if [[ -f "$BRAIN_DIR/install/setup.bash" && -f "$FOXGLOVE_SDK_ROS_DIR/install/lo
       set +u
       source /opt/ros/humble/setup.bash
       source "$BRAIN_DIR/install/setup.bash"
-      source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      if [[ -f "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash" ]]; then
+        source "$FOXGLOVE_SDK_ROS_DIR/install/local_setup.bash"
+      fi
       set -u
       exec ros2 launch foxglove_bridge foxglove_bridge_launch.xml
     ) &
   fi
   BRIDGE_PID=$!
 else
-  echo "[AUV][WARN] foxglove_bridge not started because install/local_setup.bash was not found"
+  echo "[AUV][WARN] foxglove_bridge not started because brain_linux/install/setup.bash was not found"
 fi
 
 echo "[AUV] waiting ${SIM_DELAY_S}s before starting ROS2 brain..."
@@ -342,7 +351,7 @@ EXIT_CODE=$?
 which_child="unknown"
 case "$EXIT_PID" in
   "$SIM_PID")    which_child="sim (start_lin_sim.sh)" ;;
-  "$BRIDGE_PID") which_child="bridge (foxglove_bridge)" ;;
+  "${BRIDGE_PID:-}") which_child="bridge (foxglove_bridge)" ;;
   "$BRAIN_PID")  which_child="brain (start_lin_brain.sh)" ;;
 esac
 echo "[AUV] one of (sim/bridge/brain) exited: pid=${EXIT_PID:-?} code=${EXIT_CODE} child=${which_child}"

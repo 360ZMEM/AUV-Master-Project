@@ -1,0 +1,18 @@
+# Isolated, passive local test profile. No physical PC104 endpoint is assigned.
+auv_data_root: /tmp/auv_inspection_data
+bridge:
+  backend: protocol_udp
+  passive_mode: true
+  inspection_sensor_source: imu_sidecar_candidate
+  protocol_send_zero_on_idle: true
+  arbiter:
+    enabled: true
+    mpc_timeout_s: 0.5
+    pc_timeout_s: 1.5
+    pc_soft_warning_s: 1.0
+  protocol_udp:
+    local_host: 127.0.0.1
+    local_port: 0
+    remote_host: 127.0.0.1
+    remote_port: 1
+    zenoh_side_channel_enabled: false

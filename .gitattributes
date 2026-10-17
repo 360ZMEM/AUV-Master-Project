@@ -32,6 +32,26 @@ docs/internals/figures/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 docs/internals/figures/**/*.pdf filter=lfs diff=lfs merge=lfs -text
 docs/internals/figures/**/*.png filter=lfs diff=lfs merge=lfs -text
 
+# Reviewed thesis and middle-defense PDFs are release artifacts. Build caches
+# stay ignored; these explicit outputs and their cited figures use LFS.
+/thuthesis/auv-thesis.pdf filter=lfs diff=lfs merge=lfs -text
+/thuthesis/build/middle-main/auv-middle-defense-main.pdf filter=lfs diff=lfs merge=lfs -text
+/thuthesis/build/middle-school/auv-middle-defense-school.pdf filter=lfs diff=lfs merge=lfs -text
+/thuthesis/backups/*/*.pdf filter=lfs diff=lfs merge=lfs -text
+/thuthesis/middle/figures/**/*.pdf filter=lfs diff=lfs merge=lfs -text
+/thuthesis/middle/figures/**/*.png filter=lfs diff=lfs merge=lfs -text
+/thuthesis/backups/20260928_full_236p/source_and_figures.complete.tar.gz filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/*.pdf filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/*.pptx filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/必要图片素材/*.png filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/必要图片素材/*.jpg filter=lfs diff=lfs merge=lfs -text
+/PPT制作/V4.7实验叙事与资产冻结版/现场答问候选/*.png filter=lfs diff=lfs merge=lfs -text
+/PPT制作/assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+/docs/experiment/assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+/docs/experiment/assets/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+/docs/middle-defense/render-main-final2/*.png filter=lfs diff=lfs merge=lfs -text
+/docs/middle-defense/render-school-final2/*.png filter=lfs diff=lfs merge=lfs -text
+
 *.bmp binary
 *.doc binary
 *.docx binary

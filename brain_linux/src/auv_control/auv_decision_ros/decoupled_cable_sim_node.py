@@ -21,9 +21,10 @@ import numpy as np
 from geometry_msgs.msg import Point, Quaternion
 from nav_msgs.msg import Odometry
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
-from std_msgs.msg import String
+from std_msgs.msg import Float32, String
 from visualization_msgs.msg import Marker
 import yaml
 
@@ -67,6 +68,27 @@ def _yaw_quaternion(yaw_rad: float) -> Quaternion:
     q.w = math.cos(0.5 * yaw_rad)
     q.z = math.sin(0.5 * yaw_rad)
     return q
+
+
+def _infinite_straight_wire_field_t(
+    position_ned_m: np.ndarray,
+    *,
+    cable_y_m: float,
+    cable_depth_m: float,
+    current_amp_a: float,
+) -> np.ndarray:
+    """Analytic field for a conductor along the positive N axis."""
+    position = np.asarray(position_ned_m, dtype=float).reshape(3)
+    radial = np.array(
+        [0.0, position[1] - float(cable_y_m), position[2] - float(cable_depth_m)],
+        dtype=float,
+    )
+    radius_sq = max(float(np.dot(radial, radial)), 1.0e-9)
+    mu0 = 4.0e-7 * math.pi
+    tangent = np.array([1.0, 0.0, 0.0], dtype=float)
+    return (mu0 * float(current_amp_a) / (2.0 * math.pi * radius_sq)) * np.cross(
+        tangent, radial
+    )
 
 
 def _load_tracking_config(path: Path) -> dict[str, Any]:
@@ -142,7 +164,9 @@ class DecoupledCableSimNode(Node):
         self.declare_parameter("true_cable_end_x_m", 180.0)
         self.declare_parameter("true_cable_segment_m", 5.0)
         self.declare_parameter("vertical_separation_m", 7.5)
+        self.declare_parameter("altitude_m", 6.5)
         self.declare_parameter("current_amp_a", 600.0)
+        self.declare_parameter("magnetic_model", "segmented_biot_savart")
         self.declare_parameter("trail_max_points", 1200)
         self.declare_parameter("mag_noise_mode", "none")
         self.declare_parameter(
@@ -163,6 +187,7 @@ class DecoupledCableSimNode(Node):
         self.declare_parameter("mag_noise_axis_signs", [1.0, 1.0, 1.0])
         self.declare_parameter("mag_noise_publish_metadata", True)
         self.declare_parameter("mag_noise_metadata_topic", "/auv/sensors/magnetic_noise_metadata")
+        self.declare_parameter("emergency_surface_depth_m", 0.5)
 
         tracking_config_file = Path(str(self.get_parameter("tracking_config_file").value))
         if not tracking_config_file.is_absolute():
@@ -182,6 +207,11 @@ class DecoupledCableSimNode(Node):
         self.max_yaw_rate_rad_s = math.radians(float(self.get_parameter("max_yaw_rate_deg_s").value))
         self.depth_time_constant_s = max(0.05, float(self.get_parameter("depth_time_constant_s").value))
         self.current_amp_a = float(self.get_parameter("current_amp_a").value)
+        self.magnetic_model = str(self.get_parameter("magnetic_model").value).strip().lower()
+        if self.magnetic_model not in {"segmented_biot_savart", "infinite_straight_wire"}:
+            raise ValueError(
+                "magnetic_model must be segmented_biot_savart or infinite_straight_wire"
+            )
         self.trail: deque[np.ndarray] = deque(maxlen=max(2, int(self.get_parameter("trail_max_points").value)))
         mag_noise_seed_value = int(self.get_parameter("mag_noise_seed").value)
         self.mag_noise_source = make_magnetic_noise_source(
@@ -210,6 +240,13 @@ class DecoupledCableSimNode(Node):
         self.heading_rad = math.radians(float(self.get_parameter("initial_heading_deg").value))
         self.speed_mps = float(self.get_parameter("default_speed_mps").value)
         self.latest_setpoint: Setpoint | None = None
+        self.emergency_active = False
+        self.emergency_state = "NORMAL"
+        self.emergency_source = ""
+        self.emergency_trigger_depth_m: float | None = None
+        self.emergency_surface_depth_m = float(
+            self.get_parameter("emergency_surface_depth_m").value
+        )
         self.last_step_time_s = self._now_s()
 
         self.true_cable = self._build_true_cable()
@@ -217,6 +254,7 @@ class DecoupledCableSimNode(Node):
 
         self.pub_odom = self.create_publisher(Odometry, "/auv/state/filtered", 10)
         self.pub_magnetic = self.create_publisher(MagneticField, "/auv/sensors/magnetic", 50)
+        self.pub_altitude = self.create_publisher(Float32, "/auv/sensors/altitude", 20)
         self.pub_mission = self.create_publisher(String, "/auv/mission_command", 10)
         self.pub_cable_mission = self.create_publisher(String, "/auv/cable/mission_command", 10)
         self.pub_mag_noise_metadata = None
@@ -230,7 +268,15 @@ class DecoupledCableSimNode(Node):
         self.pub_prior_cable = self.create_publisher(Marker, "/auv/visual/decoupled_prior_cable", 10)
         self.pub_trail = self.create_publisher(Marker, "/auv/visual/decoupled_vehicle_trail", 10)
         self.pub_auv = self.create_publisher(Marker, "/auv/visual/decoupled_vehicle", 10)
+        self.pub_emergency_status = self.create_publisher(String, "/auv/emergency/status", 10)
+        self.pub_emergency_depth = self.create_publisher(Float32, "/auv/emergency/depth_m", 10)
+        self.pub_emergency_surface = self.create_publisher(
+            Marker, "/auv/visual/emergency_surface", 10
+        )
         self.sub_setpoint = self.create_subscription(Setpoint, "/auv/control/setpoint", self._on_setpoint, 10)
+        self.sub_emergency = self.create_subscription(
+            String, "/auv/emergency/command", self._on_emergency_command, 10
+        )
 
         state_rate_hz = max(1.0, float(self.get_parameter("state_rate_hz").value))
         mag_rate_hz = max(1.0, float(self.get_parameter("mag_rate_hz").value))
@@ -240,6 +286,7 @@ class DecoupledCableSimNode(Node):
         self.mag_timer = self.create_timer(1.0 / mag_rate_hz, self._publish_magnetic)
         self.marker_timer = self.create_timer(1.0 / marker_rate_hz, self._publish_markers)
         self.mission_timer = self.create_timer(1.0 / mission_rate_hz, self._publish_mission)
+        self.emergency_timer = self.create_timer(0.2, self._publish_emergency_status)
 
         self.get_logger().info(
             "decoupled cable sim ready "
@@ -247,7 +294,7 @@ class DecoupledCableSimNode(Node):
             f"{self.position_ned[1]:.1f},{self.position_ned[2]:.1f}) "
             f"true_cable_y={float(self.get_parameter('true_cable_y_m').value):.1f} "
             f"vertical_sep={float(self.get_parameter('vertical_separation_m').value):.1f} "
-            f"current={self.current_amp_a:.1f}A"
+            f"current={self.current_amp_a:.1f}A magnetic_model={self.magnetic_model}"
         )
         self.get_logger().info(
             "magnetic noise source ready "
@@ -281,6 +328,32 @@ class DecoupledCableSimNode(Node):
     def _on_setpoint(self, msg: Setpoint) -> None:
         self.latest_setpoint = msg
 
+    def _on_emergency_command(self, msg: String) -> None:
+        try:
+            payload = json.loads(msg.data)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            self.get_logger().warning("ignored malformed emergency command")
+            return
+        active = bool(payload.get("active", False))
+        state = str(payload.get("state", "")).upper()
+        if active or state == "EMERGENCY_SURFACE":
+            requested_depth = float(payload.get("surface_depth_m", self.emergency_surface_depth_m))
+            self.emergency_surface_depth_m = max(0.0, requested_depth)
+            if not self.emergency_active:
+                self.emergency_trigger_depth_m = float(self.position_ned[2])
+                self.get_logger().warning(
+                    "ESTOP latched: horizontal speed=0, emergency surface "
+                    f"target={self.emergency_surface_depth_m:.2f}m"
+                )
+            self.emergency_active = True
+            self.emergency_state = "EMERGENCY_SURFACE"
+            self.emergency_source = str(payload.get("source", "unknown"))
+        elif state == "CLEAR":
+            self.emergency_active = False
+            self.emergency_state = "NORMAL"
+            self.emergency_source = str(payload.get("source", "unknown"))
+            self.get_logger().info("ESTOP reset received; normal setpoint following restored")
+
     def _on_state_timer(self) -> None:
         now_s = self._now_s()
         dt_s = max(0.0, min(now_s - self.last_step_time_s, 0.2))
@@ -300,6 +373,10 @@ class DecoupledCableSimNode(Node):
             if float(self.latest_setpoint.target_depth_m) > 0.0:
                 target_depth = float(self.latest_setpoint.target_depth_m)
 
+        if self.emergency_active:
+            target_speed = 0.0
+            target_depth = self.emergency_surface_depth_m
+
         heading_error = _wrap_angle_rad(target_heading - self.heading_rad)
         yaw_step = float(np.clip(heading_error, -self.max_yaw_rate_rad_s * dt_s, self.max_yaw_rate_rad_s * dt_s))
         self.heading_rad = _wrap_angle_rad(self.heading_rad + yaw_step)
@@ -309,6 +386,8 @@ class DecoupledCableSimNode(Node):
         alpha = min(1.0, dt_s / self.depth_time_constant_s)
         self.position_ned[2] += (target_depth - self.position_ned[2]) * alpha
         self.trail.append(self.position_ned.copy())
+        if self.emergency_active and self.position_ned[2] <= self.emergency_surface_depth_m + 0.2:
+            self.emergency_state = "SURFACED"
 
     def _publish_odom(self) -> None:
         msg = Odometry()
@@ -327,11 +406,7 @@ class DecoupledCableSimNode(Node):
     def _publish_magnetic(self) -> None:
         now = self.get_clock().now()
         stamp = now.to_msg()
-        clean_b_ned_t = compute_biot_savart_hvdc(
-            auv_pos_ned=self.position_ned,
-            cable=self.true_cable,
-            current_amp=self.current_amp_a,
-        )
+        clean_b_ned_t = self._clean_magnetic_field_t()
         noise_sample = self.mag_noise_source.sample(
             float(now.nanoseconds) * 1.0e-9 - self.mag_noise_start_time_s
         )
@@ -344,6 +419,7 @@ class DecoupledCableSimNode(Node):
         msg.magnetic_field.y = float(b_ned_t[1])
         msg.magnetic_field.z = float(b_ned_t[2])
         self.pub_magnetic.publish(msg)
+        self.pub_altitude.publish(Float32(data=float(self.get_parameter("altitude_m").value)))
         if self.pub_mag_noise_metadata is not None:
             payload = {
                 **noise_sample.metadata,
@@ -359,6 +435,28 @@ class DecoupledCableSimNode(Node):
                 String(data=json.dumps(_json_safe(payload), ensure_ascii=False, allow_nan=False))
             )
 
+    def _clean_magnetic_field_t(self) -> np.ndarray:
+        if self.magnetic_model == "segmented_biot_savart":
+            return compute_biot_savart_hvdc(
+                auv_pos_ned=self.position_ned,
+                cable=self.true_cable,
+                current_amp=self.current_amp_a,
+            )
+
+        # Analytic infinite conductor along +N.  This is the explicit model
+        # paired with v2's physical_single_wire FWHM profile.  Truth geometry
+        # remains private to the simulator; the estimator receives only B.
+        cable_y_m = float(self.get_parameter("true_cable_y_m").value)
+        cable_depth_m = self.target_depth_m + float(
+            self.get_parameter("vertical_separation_m").value
+        )
+        return _infinite_straight_wire_field_t(
+            self.position_ned,
+            cable_y_m=cable_y_m,
+            cable_depth_m=cable_depth_m,
+            current_amp_a=self.current_amp_a,
+        )
+
     def _publish_mission(self) -> None:
         payload = {
             "mission_type": str(self.get_parameter("mission_type").value).upper(),
@@ -373,6 +471,31 @@ class DecoupledCableSimNode(Node):
             self.pub_mission.publish(msg)
         if bool(self.get_parameter("publish_cable_mission").value):
             self.pub_cable_mission.publish(msg)
+
+    def _publish_emergency_status(self) -> None:
+        depth_m = float(self.position_ned[2])
+        trigger_depth = self.emergency_trigger_depth_m
+        surfaced_fraction = 0.0
+        if trigger_depth is not None and trigger_depth > self.emergency_surface_depth_m:
+            surfaced_fraction = float(np.clip(
+                (trigger_depth - depth_m) / (trigger_depth - self.emergency_surface_depth_m),
+                0.0,
+                1.0,
+            ))
+        payload = {
+            "active": self.emergency_active,
+            "state": self.emergency_state,
+            "action": "SURFACE" if self.emergency_active else "NONE",
+            "current_depth_m": depth_m,
+            "target_depth_m": self.emergency_surface_depth_m if self.emergency_active else None,
+            "vertical_progress": surfaced_fraction,
+            "horizontal_speed_mps": float(self.speed_mps),
+            "source": self.emergency_source,
+        }
+        self.pub_emergency_status.publish(
+            String(data=json.dumps(_json_safe(payload), ensure_ascii=False, allow_nan=False))
+        )
+        self.pub_emergency_depth.publish(Float32(data=depth_m))
 
     def _publish_markers(self) -> None:
         stamp = self.get_clock().now().to_msg()
@@ -408,6 +531,34 @@ class DecoupledCableSimNode(Node):
                 )
             )
         self.pub_auv.publish(self._vehicle_marker(stamp))
+        if self.emergency_active:
+            marker = Marker()
+            marker.header.stamp = stamp
+            marker.header.frame_id = self.frame_id
+            marker.ns = "emergency_surface"
+            marker.id = 5
+            marker.type = Marker.ARROW
+            marker.action = Marker.ADD
+            marker.points = [
+                Point(
+                    x=float(self.position_ned[0]),
+                    y=float(self.position_ned[1]),
+                    z=-float(self.position_ned[2]),
+                ),
+                Point(
+                    x=float(self.position_ned[0]),
+                    y=float(self.position_ned[1]),
+                    z=-float(self.emergency_surface_depth_m),
+                ),
+            ]
+            marker.scale.x = 0.18
+            marker.scale.y = 0.42
+            marker.scale.z = 0.62
+            marker.color.r = 1.0
+            marker.color.g = 0.1
+            marker.color.b = 0.05
+            marker.color.a = 1.0
+            self.pub_emergency_surface.publish(marker)
 
     def _line_marker(
         self,
@@ -428,7 +579,11 @@ class DecoupledCableSimNode(Node):
         marker.action = Marker.ADD
         marker.scale.x = float(width)
         marker.color.r, marker.color.g, marker.color.b, marker.color.a = color
-        marker.points = [Point(x=float(p[0]), y=float(p[1]), z=float(p[2])) for p in np.asarray(points_ned)]
+        # ROS state uses NED (positive depth); Foxglove's 3D world uses Z-up.
+        marker.points = [
+            Point(x=float(p[0]), y=float(p[1]), z=-float(p[2]))
+            for p in np.asarray(points_ned)
+        ]
         return marker
 
     def _vehicle_marker(self, stamp) -> Marker:
@@ -441,7 +596,7 @@ class DecoupledCableSimNode(Node):
         marker.action = Marker.ADD
         marker.pose.position.x = float(self.position_ned[0])
         marker.pose.position.y = float(self.position_ned[1])
-        marker.pose.position.z = float(self.position_ned[2])
+        marker.pose.position.z = -float(self.position_ned[2])
         marker.pose.orientation = _yaw_quaternion(self.heading_rad)
         marker.scale.x = 2.0
         marker.scale.y = 0.35
@@ -458,9 +613,19 @@ def main() -> None:
     node = DecoupledCableSimNode()
     try:
         rclpy.spin(node)
+    except (ExternalShutdownException, KeyboardInterrupt):
+        pass
+    except Exception:
+        # ROS 2 Humble may surface an RCLError when SIGTERM invalidates the
+        # shared context while the executor is rebuilding its wait set.  That
+        # is an orderly demo shutdown; preserve exceptions raised while the
+        # context is still live so actual runtime failures remain visible.
+        if rclpy.ok():
+            raise
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == "__main__":

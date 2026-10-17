@@ -1,5 +1,16 @@
 # AUV Foxglove 布局生成项目
 
+## 当前巡检展示（2026-09-29）
+
+当前磁巡检使用 `inspection-v2`，导入 [布局 JSON](output/inspection_v2_defense_20260929.json)。它分开显示任务终态、横向估计、埋深许可和桥执行许可，保留海缆、zig-zag、目标与轨迹；不启用旧解耦车辆或工业 ready／置信度彩条。旧 profile 保留对应历史数据。
+
+```bash
+python3 -m foxglove_layout_project.generator.build_layout --profile inspection-v2 \
+  --output foxglove_layout_project/output/inspection_v2_defense_20260929.json --pretty
+```
+
+`/auv/cable/operational_status` 来自专用巡检桥，1.5 s 失鲜后显示未知。当前图 71 为原生 PVS 离线验证，不会直接发布 ROS；布局缺数据时不得开启 mock 成功状态补齐。[当前运行与验证](../docs/experiment/workspace_visualization_review_20260929.md)和 [PPT 同步](../PPT制作/01new_系统变更与当前巡检答辩资产同步_20260929.md)说明证据版本。
+
 本目录提供一个与 Console 上位机软件中的 Foxglove 方案同风格的参数化布局生成器，目标是让 `AUV_Master_Project` 也能采用单一 topic 真值源、稳定的 layout JSON、以及后续可扩展的 Foxglove 工作流。
 
 ## 结构

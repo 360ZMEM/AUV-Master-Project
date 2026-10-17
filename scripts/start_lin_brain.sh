@@ -7,6 +7,7 @@ set -euo pipefail
 #   ./start_lin_brain.sh example
 #   ./start_lin_brain.sh foxglove
 #   ./start_lin_brain.sh stack [--backend protocol_udp] [--protocol-control-mode-byte 238] [launch args...]
+#   ./start_lin_brain.sh stack-v2 [--backend protocol_udp] [launch args...]
 #   ./start_lin_brain.sh stack --arbiter-profile [launch args...]
 #
 # Note:
@@ -22,13 +23,17 @@ fi
 usage() {
   cat <<'EOF'
 Usage:
-  ./start_lin_brain.sh [bootstrap|decision|example|foxglove|stack] [options] [launch args...]
+  ./start_lin_brain.sh [bootstrap|decision|example|foxglove|stack|stack-v2] [options] [launch args...]
 
 Options:
   --backend BACKEND                 bridge backend: zenoh_json or protocol_udp
   --protocol-control-mode-byte N    control mode byte forwarded to decision/bridge launch args
   --arbiter-profile                 use params.protocol_udp_arbiter.yaml and force protocol_udp defaults
   -h, --help                        show this help
+
+stack-v2 uses the general controller and bridge. Flythrough inspection YAML
+is rejected by that launch; use the dedicated inspection launch and review its
+bridge mode before connecting hardware. Mission autostart defaults to off.
 EOF
 }
 
@@ -196,8 +201,12 @@ case "$MODE" in
     echo "[AUV] launching foxglove bridge..."
     ros2 launch foxglove_bridge foxglove_bridge_launch.xml
     ;;
-  stack)
-    echo "[AUV] launching integrated stack (bridge -> localization -> controller -> decision)..."
+  stack|stack-v2)
+    if [[ "$MODE" == "stack-v2" ]]; then
+      echo "[AUV] launching integrated stack with FWHM cable tracking v2..."
+    else
+      echo "[AUV] launching integrated stack (bridge -> localization -> controller -> decision)..."
+    fi
     STACK_ARGS=()
     if [[ "$CLI_ARBITER_PROFILE" == "true" ]]; then
       ARBITER_PARAMS_FILE="$BRAIN_DIR/config/params.protocol_udp_arbiter.yaml"
@@ -233,11 +242,15 @@ case "$MODE" in
       STACK_ARGS+=("enable_decision:=false")
     fi
     echo "[AUV] stack launch args: ${STACK_ARGS[*]} $*"
-    ros2 launch "$BRAIN_DIR/launch/auv_stack.launch.py" "${STACK_ARGS[@]}" "$@"
+    if [[ "$MODE" == "stack-v2" ]]; then
+      ros2 launch auv_cable_tracking_v2 auv_stack_v2.launch.py "${STACK_ARGS[@]}" "$@"
+    else
+      ros2 launch "$BRAIN_DIR/launch/auv_stack.launch.py" "${STACK_ARGS[@]}" "$@"
+    fi
     ;;
   *)
     echo "[AUV][ERROR] invalid mode: $MODE"
-    echo "[AUV] valid modes: bootstrap | decision | example | foxglove | stack"
+    echo "[AUV] valid modes: bootstrap | decision | example | foxglove | stack | stack-v2"
     exit 1
     ;;
 esac

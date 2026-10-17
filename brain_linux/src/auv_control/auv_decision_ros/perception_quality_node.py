@@ -316,8 +316,15 @@ def main(args: list[str] | None = None) -> None:
     node = PerceptionQualityNode()
     try:
         rclpy.spin(node)
-    except ExternalShutdownException:
+    except (ExternalShutdownException, KeyboardInterrupt):
         pass
+    except Exception:
+        # Humble can raise RCLError instead of ExternalShutdownException when
+        # launch invalidates the shared context during an orderly SIGINT.
+        # Preserve real runtime failures while keeping normal demo shutdown
+        # free of a misleading process-died traceback.
+        if rclpy.ok():
+            raise
     finally:
         node.destroy_node()
         if rclpy.ok():

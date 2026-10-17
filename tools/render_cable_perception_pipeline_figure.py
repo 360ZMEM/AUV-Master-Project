@@ -72,97 +72,54 @@ def _arrow(ax, p0, p1, dashed=False, color="#5F7690"):
 
 def render() -> None:
     _setup_font()
-    fig, ax = plt.subplots(figsize=tps.figure_size("full", height=4.7))
+    fig, ax = plt.subplots(figsize=tps.figure_size("full", height=6.1))
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    # ---- online magnetic chain (left column, top-down) ----
-    b1 = _box(ax, (2, 82), 38, 13, "TMR8637 / SK2301 三轴采样\n（按采集配置：示例 2000 Hz 原始，\n10 Hz 特征步进）", "sample", 8.5)
-    b2 = _box(ax, (2, 70), 38, 8, "标定 · 去趋势 · 窗函数", "sample", 9.5)
-    b3 = _box(ax, (2, 55), 38, 10, "45/50 Hz 数字锁相放大（DLIA）\n连续 I/Q · 旋转不变模量 · SNR", "dlia", 8.8)
-    b4 = _box(ax, (2, 40), 38, 10, "峰值定位 · FWHM · 过线周期", "geom", 9.5)
-    b5 = _box(ax, (2, 25), 38, 10, "横偏 · 垂直距离 · 埋深及质量分", "geom", 9)
-
-    _arrow(ax, (21, 82), (21, 78))
-    _arrow(ax, (21, 70), (21, 65))
-    _arrow(ax, (21, 55), (21, 50))
-    _arrow(ax, (21, 40), (21, 35))
-
-    # ---- sonar branch (right, feeds geometry anchor) ----
-    s1 = _box(ax, (46, 55), 30, 12, "声呐观测\n稀疏几何锚点 · 方向消歧\n（质量分驱动，非无条件可信）", "sonar", 9)
-
-    # ---- fuse: cable geometry level online correction ----
-    f1 = _box(
-        ax,
-        (46, 29),
-        30,
-        13,
-        "电缆几何级在线修正\n先验地图配准\n横偏 / 走向 / 埋深",
-        "fuse",
-        8.8,
-    )
-
-    # magnetic observables + sonar anchors -> geometry correction
-    _arrow(ax, (40, 30), (46, 34))          # mag observables -> fuse
-    _arrow(ax, (61, 55), (61, 42))          # sonar -> fuse
-
-    # ---- deployment facade output ----
-    o1 = _box(
-        ax,
-        (39, 12),
-        44,
-        12,
-        "CableTrackingOutput\n横偏 · 路由进度 · 埋深及不确定度\n置信度 · 就绪标志",
-        "out",
-        8.5,
-    )
-    _arrow(ax, (61, 29), (61, 24))
-    _arrow(ax, (21, 25), (21, 8))
-    _arrow(ax, (21, 8), (39, 16))           # mag observables also into output aggregation path
-
-    # ---- consumers ----
-    c1 = _box(
-        ax,
-        (39, 1.0),
-        44,
-        7.5,
-        "行为树 / FSM · UA-MPC\n内层执行链",
-        "consumer",
-        8.8,
-    )
-    _arrow(ax, (61, 12), (61, 8.5))
-
-    # ---- two-level estimation callout box (upper right) ----
-    lvl = FancyBboxPatch(
-        (44, 74), 52, 20,
-        boxstyle="round,pad=0.02,rounding_size=0.06",
-        linewidth=1.4, edgecolor="#A996C0", facecolor="#F7F4FB", zorder=2,
-    )
-    ax.add_patch(lvl)
-    ax.text(70, 91, "两级估计分层", ha="center", va="center", fontsize=10.5,
-            fontweight="bold", color="#4A3B63", zorder=3)
-    ax.text(70, 85, "载体级 ES-EKF：AUV 位姿 + 协方差", ha="center", va="center",
-            fontsize=9, color="#26323D", zorder=3)
-    _arrow(ax, (70, 83), (70, 80), color="#A996C0")
+    # (a) Magnetic acquisition and geometric observations.
+    ax.text(2, 96.5, "(a) 磁采集到几何观测", ha="left", va="center",
+            fontsize=10.5, fontweight="bold", color="#26323D")
+    _box(ax, (2, 72), 21, 17, "TMR8637 / SK2301\n三轴采样与标定\n去趋势 · 窗函数", "sample", 8.5)
+    _box(ax, (27, 72), 21, 17, "45/50 Hz DLIA\n连续 I/Q\n幅相 · SNR", "dlia", 8.5)
+    _box(ax, (52, 72), 21, 17, "旋转不变模量\n峰值 · FWHM\n过线周期", "geom", 8.5)
+    _box(ax, (77, 72), 21, 17, "几何观测与质量\n横偏 · 垂直距离\n埋深 · 质量分", "geom", 8.5)
+    for x0, x1 in [(23, 27), (48, 52), (73, 77)]:
+        _arrow(ax, (x0, 80.5), (x1, 80.5))
     ax.text(
-        70,
-        77.5,
-        "电缆几何级在线修正\n先验地图 + 声磁观测 → 横偏 / 走向 / 埋深",
-        ha="center",
+        2,
+        66.5,
+        "采样率与特征步进由采集配置给出；正文实验示例为 2000 Hz 原始采样、10 Hz 特征步进。",
+        ha="left",
         va="center",
-        fontsize=8.0,
-        color="#26323D",
-        zorder=3,
+        fontsize=8.2,
+        color="#52616B",
     )
 
-    # link ES-EKF pose into cable geometry correction (route on the right edge to
-    # avoid crossing the sonar box)
-    _arrow(ax, (90, 74), (76, 36), dashed=True, color="#A996C0")
+    ax.plot([1, 99], [61, 61], color="#CDD5DC", linewidth=1.0)
 
-    # truth note (offline-only)
-    ax.text(3, 6, "真值仅进入离线评价，不进入在线管线", ha="left", va="center",
-            fontsize=8.4, color="#8A5A5A", style="italic", zorder=3)
+    # (b) Vehicle state, acoustic/magnetic observations and cable output.
+    ax.text(2, 57.5, "(b) 两级估计与巡缆输出", ha="left", va="center",
+            fontsize=10.5, fontweight="bold", color="#26323D")
+    _box(ax, (2, 42), 23, 11, "导航观测\nIMU · DVL · 深度", "sample", 8.6)
+    _box(ax, (2, 26), 23, 11, "磁几何观测\n横偏 · 垂向距离 · 质量", "geom", 8.5)
+    _box(ax, (2, 10), 23, 11, "声学锚点\n稀疏几何 · 方向消歧 · 质量", "sonar", 8.3)
+    _box(ax, (32, 39), 27, 14, "载体级 ES-EKF\nAUV 位姿与协方差", "dlia", 9.2, bold=True)
+    _box(ax, (32, 15), 27, 15, "电缆几何级在线修正\n先验地图 + 声磁观测\n横偏 / 走向 / 埋深", "fuse", 8.5, bold=True)
+    _box(ax, (67, 24), 31, 16, "CableTrackingOutput\n横偏 · 路由进度 · 埋深及不确定度\n置信度 · 就绪标志", "out", 8.2, bold=True)
+    _box(ax, (67, 7), 31, 9, "行为树 / FSM · UA-MPC · 内层执行链", "consumer", 8.3)
+
+    _arrow(ax, (25, 47.5), (32, 46))
+    _arrow(ax, (45.5, 39), (45.5, 30), dashed=True, color="#7E6AA2")
+    _arrow(ax, (25, 31.5), (32, 25))
+    _arrow(ax, (25, 15.5), (32, 20))
+    _arrow(ax, (59, 22.5), (67, 32))
+    _arrow(ax, (82.5, 24), (82.5, 16))
+
+    ax.text(47.5, 34.5, "位姿 / 协方差", ha="left", va="center",
+            fontsize=8.0, color="#6B578D")
+    ax.text(2, 3.5, "真值仅进入离线评价，不进入在线管线", ha="left", va="center",
+            fontsize=8.2, color="#8A5A5A", style="italic")
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     tps.save_figure(

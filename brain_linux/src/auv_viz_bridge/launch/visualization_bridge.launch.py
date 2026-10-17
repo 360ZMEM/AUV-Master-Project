@@ -20,6 +20,12 @@ def generate_launch_description() -> LaunchDescription:
         description='Run with synthetic fallback even if Zenoh or HoloOcean is unavailable',
     )
 
+    frame_id_arg = DeclareLaunchArgument(
+        'frame_id',
+        default_value='world',
+        description='Fixed frame shared with the Foxglove 3D panels',
+    )
+
     node = Node(
         package='auv_viz_bridge',
         executable='zenoh_viz_bridge_node',
@@ -29,8 +35,9 @@ def generate_launch_description() -> LaunchDescription:
             {
                 'params_file': LaunchConfiguration('params_file'),
                 'mock_mode': LaunchConfiguration('mock_mode'),
+                'frame_id': LaunchConfiguration('frame_id'),
             }
         ],
     )
 
-    return LaunchDescription([params_arg, mock_mode_arg, node])
+    return LaunchDescription([params_arg, mock_mode_arg, frame_id_arg, node])
