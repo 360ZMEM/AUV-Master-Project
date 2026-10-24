@@ -16,3 +16,7 @@
 清理执行原则：不对专利和其他会话证据执行不可逆删除；实际清理由窄范围 `.gitignore` 与本地 Git `core.filemode=false` 消除非交付项，CRLF-only 文件以一次规范化提交解决。新增交付按用途分别暂存，提交前逐项检查文件清单、`git diff --cached --check` 与 LFS 指针。后续每个任务按根 `AGENTS.md` 进行相同分流，结束时仅容许上述根目录临时文档未跟踪。
 
 历史审计报告中提到的 `evidence/`、`before/` 等目录现为本机缓存；另一台机器可由审计工具和摘要重放，但不能把未发布缓存当作 Git 交付物。详情以各版本 README、审计摘要和发布清单为准。
+
+## 本机已执行的物理清理
+
+在确认仓库文档、TeX 和脚本均未引用后，删除 `docs/middle-defense/` 下的 `render-main-initial/`、`render-school-initial/`、`render-main/`、`render-school/`、`render-main-final/`、`render-school-final/`、`render-smoke/` 七组旧逐页渲染，共约 72 MiB。正式 `render-main-final2/`、`render-school-final2/` 与 38 页 PDF 保持不变。另删除根目录误生成的 `-.png`（约 90 KiB）。以上都属于可再生成输出；专利、待审 PPT、旧 PPT、历史文献响应及源备份未物理删除。
