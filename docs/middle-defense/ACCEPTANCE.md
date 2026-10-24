@@ -21,11 +21,13 @@ make verify-thuthesis            # 离线核验完整vendor与运行文件
 | 共用报告源 | [auv-middle-defense.tex](../../thuthesis/auv-middle-defense.tex)、[middle](../../thuthesis/middle/) | 六章、概述、设置只有一套 |
 | 默认学院版 | [school PDF](../../thuthesis/build/middle-school/auv-middle-defense-school.pdf) | Word资料有限差分 |
 | 上游版 | [main PDF](../../thuthesis/build/middle-main/auv-middle-defense-main.pdf) | 不加载学院差分；保留真实中期报告身份 |
-| 原主论文 | [auv-thesis.pdf](../../thuthesis/auv-thesis.pdf) | 研究正文未改写 |
+| 原主论文 | [auv-thesis.pdf](../../thuthesis/build/auv-thesis/auv-thesis.pdf) | 研究正文未改写；2026-10-17 起编译输出位于独立 build 目录 |
 | 实际大纲/映射 | [OUTLINE](OUTLINE.md) | 候选到最终结构、图表取舍和页码 |
 | 证据索引 | [evidence.tsv](evidence.tsv) | 原始/汇总来源级别、条件、统计口径、哈希及核对方法 |
 
 主论文与中期报告的 `.aux`/`.bbl`/PDF 隔离。中期构建自动执行 `tools/check_middle_build.py`，遇缺字、缺引用、待重跑Biber、重复标签、越界盒或错误模板来源时返回失败；不屏蔽告警。发行源码锁见 [upstream-lock.json](../../thuthesis/upstream-lock.json)。
+
+2026-10-17 的主论文输出目录迁移见 [迁移记录](../thesis/AUV_THESIS_BUILD_RELOCATION_20261017.md)。下文 2026-10-13 的日志、PDF 哈希与完整性审计均为当日冻结验收记录；其对应的旧 PDF 和最终日志现保存在 [迁移前备份](../../thuthesis/backups/20261017_before_build_relocation/manifest.json)，不把新路径的重编译哈希回填到历史清单。
 
 ## 模板与学院格式差分
 

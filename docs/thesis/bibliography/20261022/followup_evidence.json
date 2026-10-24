@@ -1,0 +1,170 @@
+[
+  {
+    "id": "0c512032b68bc4ccdf15104423a2b2d0e273c4e574b172c2c7aca5a40061050e",
+    "url": "https://www.gwec.net/reports/globaloffshorewindreport",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "http_status": 200,
+    "retrieved_at": "2026-10-22T02:16:38.962122+00:00",
+    "final_url": "https://www.gwec.net/reports/globaloffshorewindreport",
+    "content_type": "text/html; charset=UTF-8",
+    "status": "RETRIEVED",
+    "body_file": "a73471f91c22069d6fa3aca6254e17af7197a14dd21b70f9b1fd7b2eb0395230.body",
+    "sha256": "a73471f91c22069d6fa3aca6254e17af7197a14dd21b70f9b1fd7b2eb0395230",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:38.962122+00:00",
+        "http_status": 200
+      }
+    ]
+  },
+  {
+    "id": "366a7259b60efac45b6f843b096b20af50fb717bdd2d9929a9c511f308c534b1",
+    "url": "https://www.nea.gov.cn/20250826/81a62ca2aedb4f18ac107efd85c4b650/c.html",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "http_status": 200,
+    "retrieved_at": "2026-10-22T02:16:40.370901+00:00",
+    "final_url": "https://www.nea.gov.cn/20250826/81a62ca2aedb4f18ac107efd85c4b650/c.html",
+    "content_type": "text/html",
+    "status": "RETRIEVED",
+    "body_file": "390855d43571a187c59711f91306ef37141fe72c24ca7bc8c11732c86fa17953.body",
+    "sha256": "390855d43571a187c59711f91306ef37141fe72c24ca7bc8c11732c86fa17953",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:40.370901+00:00",
+        "http_status": 200
+      }
+    ]
+  },
+  {
+    "id": "47e89867ae77b9a0e50e83fd1f96f5dd0e823702bdc24408bb3484403b505721",
+    "url": "https://skoge.folk.ntnu.no/prost/proceedings/cdc-ecc05/pdffiles/papers/2657.pdf",
+    "source": "NTNU institutional copy of the IEEE CDC/ECC 2005 proceedings paper",
+    "status": "RETRIEVED",
+    "retrieved_at": "2026-10-22 02:17:50 UTC",
+    "body_file": "65666624728f1a57174fe339fc3996d7a1accff217db6d652867ec29a008f478.body",
+    "sha256": "65666624728f1a57174fe339fc3996d7a1accff217db6d652867ec29a008f478",
+    "access_method": "web.open; direct requests TLS validation failed (preserved separately)",
+    "snapshot_path": "/home/zmem063/auv_console_python/AUV-Master-Project/docs/thesis/bibliography/web_snapshots/breivik2005guidance_20261022.json",
+    "content_type": "text/plain; extracted by web tool"
+  },
+  {
+    "id": "4d154f199cb1732dc33f584ac1991787e224da9bd93a05a83ad6fd534521956c",
+    "url": "https://cms.ore.catapult.org.uk/wp-content/uploads/2025/07/Catapult-Foresighting-RAS-Report-Feb-25-v8-SPREADS.pdf",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "http_status": 200,
+    "retrieved_at": "2026-10-22T02:16:41.473637+00:00",
+    "final_url": "https://cms.ore.catapult.org.uk/wp-content/uploads/2025/07/Catapult-Foresighting-RAS-Report-Feb-25-v8-SPREADS.pdf",
+    "content_type": "application/pdf",
+    "status": "RETRIEVED",
+    "body_file": "8c45700e7d902de9cafbc8038e0f2766b6ff9124ca13b6aef8c91e71fe20039d.body",
+    "sha256": "8c45700e7d902de9cafbc8038e0f2766b6ff9124ca13b6aef8c91e71fe20039d",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:41.473637+00:00",
+        "http_status": 200
+      }
+    ]
+  },
+  {
+    "id": "57d09d89c0fc21c1f9e55eed1a5a001df9a39a2385e6f77af020a9d706372b18",
+    "url": "https://www.whoi.edu/cms/files/vitas/2006/4/currvit_9586.pdf",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "http_status": 200,
+    "retrieved_at": "2026-10-22T02:16:36.022908+00:00",
+    "final_url": "https://www.whoi.edu/cms/files/vitas/2006/4/currvit_9586.pdf",
+    "content_type": "application/pdf",
+    "status": "RETRIEVED",
+    "body_file": "d034c84a5625094435f1a7372e65b6eb1d7afce74dd8f43b1f28a3b895947078.body",
+    "sha256": "d034c84a5625094435f1a7372e65b6eb1d7afce74dd8f43b1f28a3b895947078",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:36.022908+00:00",
+        "http_status": 200
+      }
+    ]
+  },
+  {
+    "id": "604f51296f0ce0f0af5f77dc6d1907321dbc36d4751ed16597ddcd2343202831",
+    "url": "https://www.scio.gov.cn/live/2025/37113/index.html",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "status": "UNVERIFIABLE",
+    "retrieved_at": "2026-10-22T02:16:39.820445+00:00",
+    "error": "SSLError",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:36.574010+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:16:37.706030+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:16:39.820445+00:00",
+        "error": "SSLError"
+      }
+    ]
+  },
+  {
+    "id": "b40b2b408932ff89a98fee2404d8e3b098b0fbc5cd781f7817f5dbf478f14859",
+    "url": "https://www.scio.gov.cn/live/2025/37113/index_m.html",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "status": "UNVERIFIABLE",
+    "retrieved_at": "2026-10-22T02:16:40.923541+00:00",
+    "error": "SSLError",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:37.125026+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:16:38.258635+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:16:40.923541+00:00",
+        "error": "SSLError"
+      }
+    ]
+  },
+  {
+    "id": "b6338d02bc56e817e6e98a11fe809efac0b98053a73c5e0aee299f6a71d4cc14",
+    "url": "https://skoge.folk.ntnu.no/prost/proceedings/cdc-ecc05/pdffiles/papers/2657.pdf",
+    "source": "2026-10-22 targeted primary-source follow-up",
+    "status": "UNVERIFIABLE",
+    "retrieved_at": "2026-10-22T02:17:00.092507+00:00",
+    "error": "SSLError",
+    "attempts": [
+      {
+        "at": "2026-10-22T02:16:35.471764+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:16:47.887295+00:00",
+        "error": "SSLError"
+      },
+      {
+        "at": "2026-10-22T02:17:00.092507+00:00",
+        "error": "SSLError"
+      }
+    ]
+  },
+  {
+    "id": "f9c876f3a4ee9f798a01783f98f5a12c8686e2cae8ec0b7c88b6da1e8b3f1a66",
+    "url": "https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/",
+    "source": "recorded publisher/official URL (body alone is not verification)",
+    "http_status": 200,
+    "retrieved_at": "2026-10-18T07:34:55.147088+00:00",
+    "final_url": "https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/",
+    "content_type": "text/html; charset=UTF-8",
+    "status": "RETRIEVED",
+    "body_file": "8cba6a0bc387aadb6aa9d9e079b016514e0cc33c1a4e84e064fbc55dac30fa42.body",
+    "sha256": "8cba6a0bc387aadb6aa9d9e079b016514e0cc33c1a4e84e064fbc55dac30fa42",
+    "attempts": [
+      {
+        "at": "2026-10-18T07:34:55.147088+00:00",
+        "http_status": 200
+      }
+    ]
+  }
+]

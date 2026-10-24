@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-23",
+  "status": "COMPLETE_WITH_RETAINED_ASSETS",
+  "strict_all_figures_pass": false,
+  "readonly_protected_files": 327,
+  "readonly_changed": [],
+  "raw_inputs_unchanged": true,
+  "retained_original_pdf_png_files": 22,
+  "retained_originals_all_unchanged": true,
+  "native_tests": 17,
+  "matplotlib_tests": 10,
+  "actual_pdf_boundary_tests": 3,
+  "native_pages": 34,
+  "paper_figure_pages": 47,
+  "paper_caption_footer_errors": [],
+  "regenerated_files": 33,
+  "regeneration_changes": [],
+  "targeted_git_diff_check": "PASS (empty log); repository-wide check contains unrelated legacy whitespace/CRLF issues and is not treated as pass",
+  "whole_paper_current_pages": 180,
+  "scope": "图像排版和正文表达；11幅遗失输入原图保留，不冒充已修复或原输入重绘通过。"
+}

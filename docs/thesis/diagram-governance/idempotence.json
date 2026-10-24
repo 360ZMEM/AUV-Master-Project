@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "checked_drawio_sources": 32,
+  "checked_formal_outputs": 28,
+  "byte_identical_total": 53,
+  "byte_changed_pdf_outputs": 7,
+  "pdf_content_check": "six PDFs had equal extracted text and 72-dpi raster pages across two exports; capability PDF was then fixed with --crop and its one-page rerender matched at 72 dpi",
+  "capability_pdf_pages_after_crop": 1,
+  "limits": "PDF byte hashes vary across draw.io exports; compare extracted text, page count and raster output. Fresh source-level checks remain read-only and fail on 20 unresolved pages."
+}

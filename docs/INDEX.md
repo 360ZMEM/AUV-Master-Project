@@ -1,5 +1,7 @@
 # AUV 硕士毕设项目 — 文档总入口
 
+> 20261022 参考文献真实性续核：[共享Bib、重跑工具与当前报告](thesis/bibliography/README.md)。333条逐字段列账，研究必要字段78/99通过、21条待复核；覆盖和编译通过不代替真实性放行。10月18日完整历史保留，新证据与版本疑义差异另档。
+
 > 20261013 中期报告与模板治理：[报告入口、构建/同步/回退及逐项验收](middle-defense/ACCEPTANCE.md)、[实际大纲与原论文映射](middle-defense/OUTLINE.md)、[事实与证据范围](middle-defense/CONTEXT.md)。新增 `make auv-middle-defense` 及 main/school 两种格式，共享六章正文；ThuThesis 锁定 v7.7.1。原论文研究内容与实验保留，文档完成度和整艇研究完成度分开记录。
 
 > 20260929 硕士巡检条件性稳健性收口：[独立报告和六对图](../AUV-Master-Mag/results/v2/defense_robustness_20260929/README.md)、[170页论文／PPT同步](../PPT制作/03new_扰流导航多源稳健性与答辩资产同步_20260929.md)。132次最终运行、105项测试；独立候选未接入默认ROS工厂，不修改现场准入主线。

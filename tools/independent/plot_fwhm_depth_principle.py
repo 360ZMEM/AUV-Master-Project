@@ -43,12 +43,12 @@ def envelope(x: np.ndarray, vertical_distance: float, scale: float = 1.0) -> np.
 
 def make_figure() -> plt.Figure:
     configure_plot_style()
-    fig, axes = plt.subplots(
-        1,
-        2,
-        figsize=tps.figure_size("full", height=3.15),
-        layout="constrained",
-    )
+    fig = plt.figure(figsize=tps.figure_size("full", height=4.2), layout="constrained")
+    grid = fig.add_gridspec(2, 2, height_ratios=(1.0, 0.5))
+    axes = [fig.add_subplot(grid[0, i]) for i in range(2)]
+    notes = [fig.add_subplot(grid[1, i]) for i in range(2)]
+    for note in notes:
+        note.set_axis_off()
 
     # Panel (a): the normalized profile broadens linearly with vertical distance.
     x = np.linspace(-3.3, 3.3, 1001)
@@ -75,14 +75,14 @@ def make_figure() -> plt.Figure:
             markeredgewidth=0.6,
         )
     axes[0].axhline(0.5, color="#333333", lw=0.9, ls=":")
-    axes[0].text(3.18, 0.52, r"半峰值 $|B|_{\max}/2$", ha="right", va="bottom")
     axes[0].set_xlim(-3.3, 3.3)
     axes[0].set_ylim(0.0, 1.06)
     axes[0].set_xlabel(r"横向偏移 $x$ (m)")
     axes[0].set_ylabel(r"归一化磁场强度 $|B(x)|/|B|_{\max}$")
     axes[0].set_title("(a) 距离越大，横切峰越宽", loc="left")
     axes[0].grid(True, alpha=0.25)
-    axes[0].legend(loc="upper right")
+    notes[0].legend(*axes[0].get_legend_handles_labels(), loc="upper left", frameon=False, fontsize=8)
+    notes[0].text(0.03, 0.06, r"圆点：左右半峰交点；虚线：峰值的一半", fontsize=8, transform=notes[0].transAxes)
 
     # Panel (b): changing current or attenuation scale changes height, not width.
     fixed_distance = 1.0
@@ -125,30 +125,14 @@ def make_figure() -> plt.Figure:
         xytext=(fixed_distance, 0.08),
         arrowprops={"arrowstyle": "<->", "lw": 1.2, "color": "#111111"},
     )
-    axes[1].text(
-        0.0,
-        0.02,
-        r"$W_x=2z$",
-        ha="center",
-        va="bottom",
-        bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.9, "pad": 1.2},
-    )
-    axes[1].text(
-        0.5,
-        0.48,
-        r"测得 $W_x$，即可由 $z=W_x/2$ 估计垂直距离",
-        ha="center",
-        va="center",
-        transform=axes[1].transAxes,
-        bbox={"facecolor": "white", "edgecolor": "#777777", "alpha": 0.92, "pad": 2.2},
-    )
+    notes[1].text(0.03, 0.06, "本模型内，半高全宽给出垂直距离：\n" + r"$W_x=2z$，因此 $z=W_x/2$。", fontsize=8, transform=notes[1].transAxes)
     axes[1].set_xlim(-3.3, 3.3)
     axes[1].set_ylim(0.0, 1.82)
     axes[1].set_xlabel(r"横向偏移 $x$ (m)")
     axes[1].set_ylabel(r"磁场强度 $|B(x)|$ (相对量)")
-    axes[1].set_title("(b) 电流或屏蔽只改变峰高，不改变半高全宽", loc="left")
+    axes[1].set_title("(b) 幅值尺度改变，半高全宽不变", loc="left")
     axes[1].grid(True, alpha=0.25)
-    axes[1].legend(loc="upper right", title=r"固定距离 $z=1$ m")
+    notes[1].legend(*axes[1].get_legend_handles_labels(), loc="upper left", frameon=False, fontsize=8, title=r"固定垂直距离 $z=1$ m")
 
     return fig
 

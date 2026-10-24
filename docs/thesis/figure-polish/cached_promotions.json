@@ -1,0 +1,170 @@
+[
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/noise/mag_chain_noise_ros_comparison",
+    "targets": [
+      "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison"
+    ],
+    "reviewed_png_sha256": "4a672f99b49598577169cd34f791dc65e3b94949e01e8b8a07630abb83329ed5",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "noise"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/extrinsics/01_mag_extrinsics_residual",
+    "targets": [
+      "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual"
+    ],
+    "reviewed_png_sha256": "4e60780e85427baeca3fb233f3d6a9457b0eef2e946571cdd6b8bd0bb1473261",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "extrinsics"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/sensitivity/eskf_param_sensitivity",
+    "targets": [
+      "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity"
+    ],
+    "reviewed_png_sha256": "6be7079afe6427ffed04f94e5823b1d97fa638e2003466878e2083783b978270",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "sensitivity"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/iq/complex_iq_fit",
+    "targets": [
+      "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit"
+    ],
+    "reviewed_png_sha256": "2b83bcef4c63a076764586d1c16eb363c3210fd2721be0ac32364e795a10f0bb",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "iq"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/pvs/pvs_closedloop_recovery_prior_alignment",
+    "targets": [
+      "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment"
+    ],
+    "reviewed_png_sha256": "0a092354add3a3e3178ae3939a0e824d28f5e40b525cf7d5f10c01166503e49b",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "pvs"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/scorecard/cable_dlt1278_scorecard_fresh1",
+    "targets": [
+      "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1"
+    ],
+    "reviewed_png_sha256": "18becf426e97ee440c9bb15f4b2570d25e770a92755aa0623ca277b093e82f4c",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "scorecard"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/closure/71_current_magnetic_simulation_closure",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure",
+      "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/71_current_magnetic_simulation_closure"
+    ],
+    "reviewed_png_sha256": "864f35445aff259bac330c753deb89d0e762117fcf2022d2559c6fb3f12377c0",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "closure"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/robustness/77_defense_robustness_thesis_summary",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary"
+    ],
+    "reviewed_png_sha256": "924bf408298158421e804b65884d8b501b8ace11c7ce6913d3a80f47db9eab61",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "robustness"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/historical/thesis/51_shallow_survey_ros_pvs_chain",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain",
+      "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain"
+    ],
+    "reviewed_png_sha256": "476db099a9f855e84a6408bab611de07d497b92162e9a16af8fb12465f14906b",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "historical"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/round2/r2_reference_lifecycle",
+    "targets": [
+      "docs/thesis/figures/magnetics/round2_20261020/r2_reference_lifecycle"
+    ],
+    "reviewed_png_sha256": "27eaf190a3d7694ac2a5976b94c1f32464ca0e828fde771944c82e5c8766784d",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "round2"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/round2/r2_trajectory_pressure",
+    "targets": [
+      "docs/thesis/figures/magnetics/round2_20261020/r2_trajectory_pressure"
+    ],
+    "reviewed_png_sha256": "18e10fb85e2da157f058481e9a992f44f6046e16e84020de5dc05e365acbdc9c",
+    "review": "FULL_IMAGE_OPENED; curves, labels, legends and paper-boundary statements checked",
+    "input_group": "round2"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/coverage/figures/normalized_coverage_time_tradeoff",
+    "targets": [
+      "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff"
+    ],
+    "reviewed_png_sha256": "9a1c327d09c67535e792c7a26e0744c32d7884b90d3ada62e59ed85f59c7615c",
+    "review": "FULL_IMAGE_OPENED; labels, data and reference lines checked",
+    "input_group": "coverage"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/jetson/jetson_mpc_latency_and_success",
+    "targets": [
+      "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success"
+    ],
+    "reviewed_png_sha256": "ea55cba7894c5eef8f50449b56b07b90123adc4deda721e2bda7f4049b46ad30",
+    "review": "FULL_IMAGE_OPENED; labels, data and reference lines checked",
+    "input_group": "jetson"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/fwhm/thesis/11_fwhm_stability_comparison",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison",
+      "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/11_fwhm_stability_comparison"
+    ],
+    "reviewed_png_sha256": "5f4ccc6fc71aee93103c39b9f729da27df99415c502f840aa3ca69bd334f9cc9",
+    "review": "FULL_IMAGE_OPENED previously; candidate PNG byte-identical to reviewed formal PNG",
+    "input_group": "fwhm"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/fwhm/thesis/12_fwhm_stability_sensitivity",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity",
+      "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/12_fwhm_stability_sensitivity"
+    ],
+    "reviewed_png_sha256": "a0dcfb97dd0893502be5df6a2ce14649207b56248d37a8da2e259bbb5e7201ff",
+    "review": "FULL_IMAGE_OPENED previously; candidate PNG byte-identical to reviewed formal PNG",
+    "input_group": "fwhm"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/fwhm/thesis/13_shape_guard_held_out_validation",
+    "targets": [
+      "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation",
+      "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/13_shape_guard_held_out_validation"
+    ],
+    "reviewed_png_sha256": "f30ff306d6f5627b45e15ea1880c261f537a81092c3b7b14cefb936d39da2c83",
+    "review": "FULL_IMAGE_OPENED previously; candidate PNG byte-identical to reviewed formal PNG",
+    "input_group": "fwhm"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/decision/figures/04_expansion_cost",
+    "targets": [
+      "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost",
+      "docs/thesis/figures/experiments/decision_bt_vs_fsm/figures/04_expansion_cost"
+    ],
+    "reviewed_png_sha256": "31579251b1329d51c9c416449103cd2f2a1485357b7dcc5409808a610b0b67d7",
+    "review": "FULL_IMAGE_OPENED previously; candidate PNG byte-identical to reviewed formal PNG",
+    "input_group": "decision"
+  },
+  {
+    "candidate": ".diagram-governance/runs/20261021_presentation_polish/plot-candidates/details/trajectory/trajectory_colored_by_b",
+    "targets": [
+      "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b"
+    ],
+    "reviewed_png_sha256": "a19b0cf4f15721693f1229a25f9c61254d2e98e494db15505f3dbd20c406b59d",
+    "review": "FULL_IMAGE_OPENED; 777 archived coordinates/amplitudes, original spatial domain and colorbar retained",
+    "input_group": "trajectory"
+  }
+]

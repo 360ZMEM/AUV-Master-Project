@@ -1,0 +1,590 @@
+[
+  {
+    "number": "1.1",
+    "tex": "thuthesis/data/auv-chap01.tex",
+    "line": 89,
+    "label": [
+      "fig:ch01-hydropact350",
+      "fig:ch01-t180",
+      "fig:ch01-p200",
+      "fig:ch01-prior-equipment"
+    ],
+    "assets": [
+      "docs/thesis/figures/literature/prior_work_equipment/hydropact350_coils.png",
+      "docs/thesis/figures/literature/prior_work_equipment/haiying_t180.jpg",
+      "docs/thesis/figures/literature/prior_work_equipment/fsea_p200.png"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "1.2",
+    "tex": "thuthesis/data/auv-chap01.tex",
+    "line": 180,
+    "label": [
+      "fig:ch01-technical-route"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_thesis_technical_route.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.1",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 52,
+    "label": [
+      "fig:ch02-autonomy-loop"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.2",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 104,
+    "label": [
+      "fig:ch02-dual-brain-async"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.3",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 138,
+    "label": [
+      "fig:ch02-five-layer-architecture"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+      "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.4",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 179,
+    "label": [
+      "fig:ch02-verification-ladder"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.5",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 205,
+    "label": [
+      "fig:ch02-foxglove-cable-console"
+    ],
+    "assets": [
+      "docs/thesis/figures/system/foxglove_cable_tracking_console.png"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.6",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 244,
+    "label": [
+      "fig:ch02-single-phase-field"
+    ],
+    "assets": [
+      "docs/thesis/figures/magnetics/single_phase_field_direction.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.7",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 294,
+    "label": [
+      "fig:ch02-three-phase-helical-field"
+    ],
+    "assets": [
+      "docs/thesis/figures/magnetics/three_phase_helical_field.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.8",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 392,
+    "label": [
+      "fig:ch02-fwhm-depth-principle"
+    ],
+    "assets": [
+      "docs/thesis/figures/magnetics/fwhm_depth_principle.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.9",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 403,
+    "label": [
+      "fig:ch02-active-crossing"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/cable_active_crossing_observability.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.10",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 592,
+    "label": [
+      "fig:ch02-tmr8637-axis-report"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.11",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 599,
+    "label": [
+      "fig:ch02-tmr8637-noise-psd"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.12",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 675,
+    "label": [
+      "fig:ch02-operator-console"
+    ],
+    "assets": [
+      "docs/thesis/figures/system/auv_console_operator_interface.png"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.13",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 685,
+    "label": [
+      "fig:ch02-emergency-arbitration"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_emergency_transition.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "2.14",
+    "tex": "thuthesis/data/auv-chap02.tex",
+    "line": 691,
+    "label": [
+      "fig:ch02-mission-lifecycle"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "3.1",
+    "tex": "thuthesis/data/auv-chap03.tex",
+    "line": 27,
+    "label": [
+      "fig:ch03-uncertainty-highway"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "3.2",
+    "tex": "thuthesis/data/auv-chap03.tex",
+    "line": 311,
+    "label": [
+      "fig:ch03-cable-perception-pipeline"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.1",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 50,
+    "label": [
+      "fig:ch04-mission-state-machine"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_mission_state_machine.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.2",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 60,
+    "label": [
+      "fig:ch04-behavior-tree-core"
+    ],
+    "assets": [
+      "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.3",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 138,
+    "label": [
+      "fig:ch04-bt-fsm-complexity"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.4",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 145,
+    "label": [
+      "fig:ch04-bt-fsm-expansion"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.5",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 204,
+    "label": [
+      "fig:ch04-normalized-coverage-tradeoff"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "4.6",
+    "tex": "thuthesis/data/auv-chap04.tex",
+    "line": 343,
+    "label": [
+      "fig:ch04-mpc-summary"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.1",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 176,
+    "label": [
+      "fig:ch05-adc-enob-osr"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.2",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 230,
+    "label": [
+      "fig:ch05-mag-chain-noise-ros"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.3",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 265,
+    "label": [
+      "fig:ch05-mag-residual"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.4",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 282,
+    "label": [
+      "fig:ch05-joint-trajectory"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.5",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 306,
+    "label": [
+      "fig:ch05-joint-complex-fit"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.6",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 384,
+    "label": [
+      "fig:ch05-eskf-param-sensitivity"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.7",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 511,
+    "label": [
+      "fig:ch05-terrain-tracking"
+    ],
+    "assets": [
+      "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.8",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 520,
+    "label": [
+      "fig:ch05-terrain-3d"
+    ],
+    "assets": [
+      "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.9",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 788,
+    "label": [
+      "fig:ch05-r13-v2-control-rate",
+      "fig:ch05-r13-v2-authority",
+      "fig:ch05-r13-v2-ptrack",
+      "fig:ch05-r13-v2-evidence"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+      "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+      "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.10",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 876,
+    "label": [
+      "fig:ch05-dlt-scorecard-run1"
+    ],
+    "assets": [
+      "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.11",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 895,
+    "label": [
+      "fig:ch05-pvs-closedloop-recovery"
+    ],
+    "assets": [
+      "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.12",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 925,
+    "label": [
+      "fig:ch05-fwhm-v2-stability"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.13",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 933,
+    "label": [
+      "fig:ch05-fwhm-v2-sensitivity"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.14",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 944,
+    "label": [
+      "fig:ch05-fwhm-v2-shape-guard"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.15",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 970,
+    "label": [
+      "fig:ch05-current-magnetic-simulation-closure"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.16",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 983,
+    "label": [
+      "fig:ch05-inspection-robustness-summary"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.17",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 995,
+    "label": [
+      "fig:ch05-inspection-shallow-survey-ros"
+    ],
+    "assets": [
+      "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.18",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1016,
+    "label": [
+      "fig:ch05-round2-reference-lifecycle"
+    ],
+    "assets": [
+      "docs/thesis/figures/magnetics/round2_20261020/r2_reference_lifecycle.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.19",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1025,
+    "label": [
+      "fig:ch05-round2-trajectory-pressure"
+    ],
+    "assets": [
+      "docs/thesis/figures/magnetics/round2_20261020/r2_trajectory_pressure.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.20",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1049,
+    "label": [
+      "fig:ch05-pc104-firmware-echo"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.21",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1081,
+    "label": [
+      "fig:ch05-pc104-layered-fault"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.22",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1110,
+    "label": [
+      "fig:ch05-pc104-cross-layer-fault"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.23",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1119,
+    "label": [
+      "fig:ch05-pc104-cross-layer-soak"
+    ],
+    "assets": [
+      "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf"
+    ],
+    "status": "PENDING"
+  },
+  {
+    "number": "5.24",
+    "tex": "thuthesis/data/auv-chap05.tex",
+    "line": 1156,
+    "label": [
+      "fig:ch05-jetson-mpc-realtime"
+    ],
+    "assets": [
+      "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf"
+    ],
+    "status": "PENDING"
+  }
+]

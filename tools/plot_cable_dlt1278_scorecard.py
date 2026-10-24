@@ -134,6 +134,7 @@ def main() -> None:
         score_values,
         color=tps.WARNING if score_items else "#D9D9D9",
     )
+    ax_scores.set_xlim(0, max(score_values + [1.]) * 1.2)
     ax_scores.set_title("扣分项")
     ax_scores.set_xlabel("扣分")
     ax_scores.grid(True, axis="x", alpha=0.3)

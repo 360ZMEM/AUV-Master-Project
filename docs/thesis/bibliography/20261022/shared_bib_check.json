@@ -1,0 +1,17 @@
+{
+  "data_sources": {
+    "auv-thesis": [
+      "ref/auv-references.bib",
+      "ref/auv-references.bib",
+      "ref/auv-references.bib"
+    ],
+    "auv-middle-defense-main": [
+      "ref/auv-references.bib"
+    ],
+    "auv-middle-defense-school": [
+      "ref/auv-references.bib"
+    ]
+  },
+  "source_sha256": "c0a8d99027cd596da5ccc4974f7d85c80addc8717a3cc0c1734e174b226c1271",
+  "unchanged_from_before": true
+}

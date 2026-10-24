@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "font_fallback_for_Songti_SC": "Noto Serif CJK SC",
+  "render_theme": "light",
+  "viewport": { "width": 2200, "height": 1500, "device_scale_factor": 1 },
+  "text_safety_margin_u": 2,
+  "diamond_safety_fraction": 0.90,
+  "parallelogram_side_fraction": 0.11,
+  "cylinder_top_bottom_inset_u": 12,
+  "minimum_pdf_font_pt": 9,
+  "minimum_pdf_stroke_pt": 0.4,
+  "maximum_repair_rounds": 6,
+  "required_label_mapping_fraction": 1.0
+}

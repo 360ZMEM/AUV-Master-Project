@@ -1,0 +1,40 @@
+[
+  {
+    "id": "thuthesis/ref/auv-references.bib#barshalom2001estimation",
+    "field": "year",
+    "original": "2001",
+    "suggested": "2002",
+    "evidence": [
+      {
+        "url": "https://api.crossref.org/works/10.1002%2F0471221279",
+        "source": "Crossref publisher-deposited metadata",
+        "retrieved_at": "2026-10-18T07:33:37.113127+00:00",
+        "evidence_id": "7aa80d5e79383722fe23d0be5aed271cbd38b495ae6d571c094e9316e9ad3a1d",
+        "body_sha256": "1aa4222f8693a38aff277125937e96b8d347ad83ba1ed5ad1fe587ad7146886a",
+        "lineage": "publisher_deposit:crossref:10.1002/0471221279",
+        "provider": "crossref",
+        "value": "2002",
+        "excerpts": [],
+        "basis": null
+      },
+      {
+        "url": "https://www.wiley-vch.de/en/areas-interest/engineering/estimation-with-applications-to-tracking-and-navigation-978-0-471-41655-5",
+        "source": "Wiley-VCH official print edition",
+        "retrieved_at": "2026-10-18T07:35:30.602189+00:00",
+        "evidence_id": "c61dc08a1f06cb4e47810991614db67e3ed12c92a0c159af721d6f81c9e19ee3",
+        "body_sha256": "04b49b7bf5bdc68ae280e014329e1c6424e45499a7c58c659eac74f8f9631c7f",
+        "lineage": "publisher:wiley:print",
+        "provider": "official_curated",
+        "value": "2001",
+        "excerpts": [
+          "Estimation with Applications to Tracking and Navigation",
+          "John Wiley & Sons",
+          "1. Edition July 2001"
+        ],
+        "basis": "Print edition year is 2001; electronic DOI record says 2002. Keep year conflict visible, do not silently change edition."
+      }
+    ],
+    "required": true,
+    "status": "SOURCE_CONFLICT"
+  }
+]

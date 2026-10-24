@@ -282,7 +282,7 @@ def write_plots(output_dir: Path, rows: list[dict[str, object]]) -> list[Path]:
     reference_rows = select_reference_rows(rows)
     tps.apply_thesis_style(layout="single")
     fig, ax1 = plt.subplots(
-        figsize=tps.figure_size("single", height=2.45),
+        figsize=(4.2, 3.0),
         constrained_layout=True,
     )
     x = [float(row["spacing_ratio"]) for row in reference_rows]
@@ -302,7 +302,7 @@ def write_plots(output_dir: Path, rows: list[dict[str, object]]) -> list[Path]:
         linewidth=1.4,
         label="任务时间指数",
     )
-    ax2.set_ylabel("任务时间 / 间距比 0.8", color=tps.BASELINE_1)
+    ax2.set_ylabel("相对任务时间\n（间距比 0.8 为基准）", color=tps.BASELINE_1)
     tradeoff_png = figures_dir / "normalized_coverage_time_tradeoff.png"
     tradeoff_pdf = figures_dir / "normalized_coverage_time_tradeoff.pdf"
     tps.save_figure(fig, figures_dir / "normalized_coverage_time_tradeoff")

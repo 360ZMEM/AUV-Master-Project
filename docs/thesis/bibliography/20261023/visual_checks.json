@@ -1,0 +1,83 @@
+[
+  {
+    "image": "rendered/thesis-context-026.png",
+    "sha256": "a2406f25e3057b3cb44e7d9475318f21333c43d576e7cd1318745fef1657022a",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 26,
+    "inspection": "SBP paragraph",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/thesis-context-027.png",
+    "sha256": "c024fa0ba6009d75fd8dc719ff71be96e8d67e8fcff668f1f5bf3d1b4ad68858",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 27,
+    "inspection": "Standard attribution paragraph",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/thesis-requirements-037.png",
+    "sha256": "c324d016285cc95f570fa1adb12255b7fc8eef41fdbd5b6eccf21c1ccb1f41bc",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 37,
+    "inspection": "Requirements attribution and TMR unit/module distinction",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/thesis-final-bibliography-163.png",
+    "sha256": "8c6cc25831061e0264f664394bb52f6540962b59807b799d03e432b9f248829d",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 163,
+    "inspection": "Both SBP references",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/thesis-final-bibliography-164.png",
+    "sha256": "da8fb2fe0d871bd1d2490e78b9ac2a9860ab6a77cc1e6fcd06dfa4d8500de7b3",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 164,
+    "inspection": "Formal standard and Teledyne records",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/thesis-final-bibliography-165.png",
+    "sha256": "c225613286e013bdd2672b5c2198ae92d08b9251919d04e8f71382aef3bea544",
+    "document": "auv-thesis",
+    "pdf_sha256": "bffc6c9b71ef1519ca2c300e69c45e2c752fe2fc61661d17507dccceffc28f25",
+    "physical_page": 165,
+    "inspection": "Project 129 and TMR manual",
+    "visual_result": "PASS; retained existing TMR duplicate edition is separately disclosed"
+  },
+  {
+    "image": "rendered/middle-main-context-06.png",
+    "sha256": "fe1bc59983263e2a502b7e81282362de5e4dfff1f80fe5cecc5cba3017fc99db",
+    "document": "auv-middle-defense-main",
+    "pdf_sha256": "66b5b45508696cd065bcba60d69c8b495759421c6425e7f09ac64f59921db68f",
+    "physical_page": 6,
+    "inspection": "Measurement standard and research target",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/middle-school-bibliography-35.png",
+    "sha256": "42acbd91ad60ee72a10c3e5770dd998c0fe7e56a70e647ae77c061d0a1cf3281",
+    "document": "auv-middle-defense-school",
+    "pdf_sha256": "13d8e690d44defa4eb5ac71ca6864437c46ca68a4aacf163b53523e2e13a0b3c",
+    "physical_page": 35,
+    "inspection": "SBP references and formal standard",
+    "visual_result": "PASS"
+  },
+  {
+    "image": "rendered/middle-school-bibliography-36.png",
+    "sha256": "782960d5212b057fa5f00da07d0971d5839cac114a279e8dd5ca8b48f0b888fb",
+    "document": "auv-middle-defense-school",
+    "pdf_sha256": "13d8e690d44defa4eb5ac71ca6864437c46ca68a4aacf163b53523e2e13a0b3c",
+    "physical_page": 36,
+    "inspection": "Updated Bar-Shalom book year 2002",
+    "visual_result": "PASS"
+  }
+]

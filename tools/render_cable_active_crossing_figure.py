@@ -48,10 +48,12 @@ def _triangle(x, amp, period, phase=0.0):
 
 def render() -> None:
     _setup_font()
-    fig = plt.figure(figsize=tps.figure_size("full", height=4.8))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1.45, 1.0], hspace=0.42)
+    fig = plt.figure(figsize=tps.figure_size("full", height=5.7))
+    gs = fig.add_gridspec(3, 1, height_ratios=[1.45, 1.0, 0.35], hspace=0.48)
     ax = fig.add_subplot(gs[0])
     axb = fig.add_subplot(gs[1])
+    note_ax = fig.add_subplot(gs[2])
+    note_ax.set_axis_off()
 
     # ================= top: geometry (top-down view) =================
     amp, period = 0.85, 2.6
@@ -60,11 +62,11 @@ def render() -> None:
 
     # true cable
     ax.plot([0.2, 9.8], [0, 0], color=C_CABLE, lw=2.6, zorder=3)
-    ax.text(9.75, 0.16, "真值电缆", color=C_CABLE, fontsize=9.5, ha="right", va="bottom")
+    ax.text(9.75, 1.45, "真值电缆（灰线）", color=C_CABLE, fontsize=8.5, ha="right", va="bottom")
 
     # AUV crossing trajectory
     ax.plot(x, y, color=C_TRAJ, lw=2.0, zorder=4)
-    ax.text(1.0, amp + 0.16, "AUV 之字形横切航迹", color=C_TRAJ, fontsize=9.5,
+    ax.text(0.4, 1.45, "AUV 之字形横切航迹", color=C_TRAJ, fontsize=8.5,
             ha="left", va="bottom")
 
     # over-cable peak observation points: the trajectory crosses the true cable
@@ -73,20 +75,20 @@ def render() -> None:
     zx = np.array([xx for xx in zx if 0.5 < xx < 9.5])
     ax.scatter(zx, np.zeros_like(zx), s=42, color=C_PEAK, edgecolor="#8A5A1E",
                linewidth=0.8, zorder=6)
-    ax.text(zx[0] - 0.15, -0.5, "穿缆峰值观测点", color="#8A5A1E", fontsize=9,
+    ax.text(0.4, -1.15, "穿缆峰值观测点（橙点）", color="#8A5A1E", fontsize=8,
             ha="left", va="top")
 
     # estimated centerline (weighted PCA fit through peaks) -- offset slightly to
     # distinguish it visually from the true cable
     ax.plot([0.4, 9.6], [0.07, 0.02], color=C_CENTER, lw=1.8, ls=(0, (6, 3)), zorder=5)
-    ax.text(6.6, 0.55, "估计中心线（加权 PCA 拟合）", color=C_CENTER, fontsize=9,
-            ha="left", va="bottom")
+    ax.text(6.2, -1.15, "估计中心线（绿虚线）\n峰值点加权直线拟合", color=C_CENTER, fontsize=8,
+            ha="left", va="top")
 
     # crossing angle theta at a rising edge (rising zero-crossings are at even k)
     x0 = zx[1]
     ax.add_patch(Arc((x0, 0), 1.4, 1.4, angle=0, theta1=0, theta2=48,
                      color="#7A5AA0", lw=1.6, zorder=7))
-    ax.text(x0 + 0.85, 0.30, r"横切角 $\theta$", color="#7A5AA0", fontsize=9.5,
+    ax.text(x0 + 0.4, 0.27, r"$\theta$", color="#7A5AA0", fontsize=8.5,
             ha="left", va="center")
 
     # scan pitch d between adjacent peaks
@@ -98,14 +100,14 @@ def render() -> None:
         ax.plot([xx, xx], [0, -0.95], color="#9AA0A6", lw=0.7, ls=":", zorder=2)
 
     ax.set_xlim(0, 10)
-    ax.set_ylim(-1.45, 1.55)
+    ax.set_ylim(-1.75, 1.95)
     ax.axis("off")
     ax.set_title("(a) 主动横切构造局部几何可观测性", loc="left")
 
     # ================= bottom: |B| profile of one crossing =================
     e = np.linspace(-2.2, 2.2, 500)
     z_depth = 1.0
-    # rotation-invariant magnitude of a buried line current ~ 1/(e^2+z^2)
+    # Qualitative dipole modulus envelope; the width factor is model-specific.
     B = 1.0 / (e ** 2 + z_depth ** 2)
     B = B / B.max()
     axb.plot(e, B, color=C_TRAJ, lw=2.2, zorder=4)
@@ -124,8 +126,6 @@ def render() -> None:
                  arrowprops=dict(arrowstyle="<->", color="#5C9A6B", lw=1.6))
     axb.plot([-e_half, -e_half], [0, half], color="#9AA0A6", lw=0.7, ls=":")
     axb.plot([e_half, e_half], [0, half], color="#9AA0A6", lw=0.7, ls=":")
-    axb.text(0, half - 0.14, "半高全宽 FWHM → 垂直距离 / 埋深 $z$", color="#3F6B4C",
-             fontsize=9, ha="center", va="top")
 
     axb.set_xlim(-2.4, 2.4)
     axb.set_ylim(0, 1.35)
@@ -137,6 +137,10 @@ def render() -> None:
         "(b) 单次横切同时给出横向中心与垂直距离",
         loc="left",
     )
+    note_ax.text(0.5, 0.5,
+                 "读图：峰值确定横向中心；半高全宽决定相对垂距（偶极包络下 $W_x=2z$）。\n"
+                 r"$\theta$ 为横切夹角；埋深还需载体高度、参考与标定条件。",
+                 ha="center", va="center", fontsize=8, transform=note_ax.transAxes)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     tps.save_figure(

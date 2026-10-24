@@ -1,0 +1,27 @@
+[
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "label": "fig:ch02-emergency-arbitration",
+    "action": "H，移至 VxWorks 保护说明前，与解释段落共同排版"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "label": "fig:ch02-mission-lifecycle",
+    "action": "H，移至本章小结开头，与综合说明共同排版"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "label": "fig:ch04-behavior-tree-core",
+    "action": "H，移至行为树首段解释后；保留图号及路由说明"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "label": "fig:ch05-round2-reference-lifecycle",
+    "action": "H，保留参考生命周期图与随后隐藏误差分析的邻接关系"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "label": "fig:ch02-operator-console",
+    "action": "清空先前浮动队列并固定截图位置，避免先前浮动截图迟到，与后续 H 图叠加；不改截图尺寸或内容"
+  }
+]

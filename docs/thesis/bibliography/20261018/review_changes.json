@@ -1,0 +1,255 @@
+[
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "choset1998boustrophedon",
+    "field": "publisher",
+    "old": "Springer",
+    "new": "Springer London",
+    "evidence": [
+      {
+        "url": "https://api.crossref.org/works/10.1007%2F978-1-4471-1273-0_32",
+        "source": "Crossref publisher-deposited metadata",
+        "retrieved_at": "2026-10-18T07:33:29.953988+00:00",
+        "evidence_id": "4404ec52702f83279ded8d639cd200d0edb9692933bbad0b657cdd0f10855a11",
+        "body_sha256": "f0857345f15036a5b70953e1fd5e8aa89af126f8691aaa64b303597af71e2a79",
+        "lineage": "publisher_deposit:crossref:10.1007/978-1-4471-1273-0_32",
+        "provider": "crossref",
+        "value": "Springer London",
+        "excerpts": [],
+        "basis": null
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "yan2026digitaltwin",
+    "field": "publisher",
+    "old": "Springer Nature",
+    "new": "Springer Science and Business Media LLC",
+    "evidence": [
+      {
+        "url": "https://api.crossref.org/works/10.1038%2Fs44172-025-00571-7",
+        "source": "Crossref publisher-deposited metadata",
+        "retrieved_at": "2026-10-18T07:34:09.839181+00:00",
+        "evidence_id": "de4988f9fa1f7e4e57cf4fa905a7005edb9d2cd475be68b19a0fb36bf53b96a1",
+        "body_sha256": "0e1ded18c667ec85dde624e5c581902046e200be8456bcd9bdbe064280aa49fc",
+        "lineage": "publisher_deposit:crossref:10.1038/s44172-025-00571-7",
+        "provider": "crossref",
+        "value": "Springer Science and Business Media LLC",
+        "excerpts": [],
+        "basis": null
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "li2025cooplocalization",
+    "field": "publisher",
+    "old": "IEEE",
+    "new": "Institute of Electrical and Electronics Engineers (IEEE)",
+    "evidence": [
+      {
+        "url": "https://api.crossref.org/works/10.1109%2Ftase.2025.3546674",
+        "source": "Crossref publisher-deposited metadata",
+        "retrieved_at": "2026-10-18T07:34:13.709534+00:00",
+        "evidence_id": "3220d308b5f16227de0f9b12797fe9f14363c24885175e5454c89514326c6df1",
+        "body_sha256": "a044794d7776bbd32e05c1d8100fb3854b1bc73d8e58aaab8887bb1f809c5025",
+        "lineage": "publisher_deposit:crossref:10.1109/tase.2025.3546674",
+        "provider": "crossref",
+        "value": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "excerpts": [],
+        "basis": null
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "nea2026shenlan",
+    "field": "author",
+    "old": [
+      {
+        "family": "{国家能源局}",
+        "given": ""
+      }
+    ],
+    "new": [
+      {
+        "family": "王轶辰",
+        "given": ""
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://www.nea.gov.cn/20260710/2706be51a7f1446a90658328d1c245d4/c.html",
+        "source": "国家能源局转载经济日报原文",
+        "retrieved_at": "2026-10-18T07:37:47.841854+00:00",
+        "evidence_id": "63491455372ea766226d6f54ac3983c073737d52b96920beee6b1b0b7a6968fc",
+        "body_sha256": "0f7f36f917593b7895f014049a9c01a0820a0e89e8e2dfcbfcc56a40a5766ee6",
+        "lineage": "reprint:经济日报:20260710",
+        "provider": "official_curated",
+        "value": [
+          {
+            "family": "王轶辰",
+            "given": ""
+          }
+        ],
+        "excerpts": [
+          "海上风电转向“深蓝”",
+          "2026-07-10",
+          "记者 王轶辰"
+        ],
+        "basis": "Byline is reporter 王轶辰, not hosting ministry; disputed authorship retained for review."
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "multidimension2024tmr8607",
+    "field": "title",
+    "old": "TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组）",
+    "new": "TMR8607/TMR8637 高精度、低噪声线性磁传感器",
+    "evidence": [
+      {
+        "url": "https://www.dowaytech.com/TMR8607-TMR8637-TMR-Low-Noise-Linear-Sensor.html",
+        "source": "多维科技官方TMR8607/TMR8637产品页面",
+        "retrieved_at": "2026-10-18T07:39:39.555822+00:00",
+        "evidence_id": "d58c9817e751529acf77f5d91cddc8e228aaa26523248060cad86417ce12a90b",
+        "body_sha256": "a0a46429353e95c03ec4d2b987b6a28e85cb3dd80edfc7907f5bab095c85dc7a",
+        "lineage": "manufacturer:dowaytech:tmr8607",
+        "provider": "official_curated",
+        "value": "TMR8607/TMR8637 高精度、低噪声线性磁传感器",
+        "excerpts": [
+          "TMR8607/TMR8637 高精度、低噪声线性磁传感器"
+        ],
+        "basis": "Product family confirmed; not sufficient evidence for claimed 2024 datasheet edition or combined manuscript title."
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "tcsgpc_cable",
+    "field": "title",
+    "old": "海底管道及海底电缆检测技术规范: T/CSGPC",
+    "new": "海底管道及海底电缆检测技术规范（征求意见稿）",
+    "evidence": [
+      {
+        "url": "https://www.csgpc.org/detail/26559.html",
+        "source": "中国测绘学会征求意见官方公告",
+        "retrieved_at": "2026-10-18T07:37:49.504672+00:00",
+        "evidence_id": "bb85e529f3a69d69f96a3d469ea3fd788056238e71781f88e992ae90d9acc766",
+        "body_sha256": "90db3c468ff383700f930a4f85618048fb13b0416c4ad221ad5f854cce573b0c",
+        "lineage": "society:csgpc:26559",
+        "provider": "official_curated",
+        "value": "海底管道及海底电缆检测技术规范（征求意见稿）",
+        "excerpts": [
+          "海底管道及海底电缆检测技术规范（征求意见稿）",
+          "中国测绘学会",
+          "2025-12-31"
+        ],
+        "basis": "Only consultation draft established. No standard number or final publication is inferred; original association attribution is wrong."
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "tcsgpc_cable",
+    "field": "author",
+    "old": [
+      {
+        "family": "{中国海洋工程咨询协会}",
+        "given": ""
+      }
+    ],
+    "new": [
+      {
+        "family": "中国测绘学会",
+        "given": ""
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://www.csgpc.org/detail/26559.html",
+        "source": "中国测绘学会征求意见官方公告",
+        "retrieved_at": "2026-10-18T07:37:49.504672+00:00",
+        "evidence_id": "bb85e529f3a69d69f96a3d469ea3fd788056238e71781f88e992ae90d9acc766",
+        "body_sha256": "90db3c468ff383700f930a4f85618048fb13b0416c4ad221ad5f854cce573b0c",
+        "lineage": "society:csgpc:26559",
+        "provider": "official_curated",
+        "value": [
+          {
+            "family": "中国测绘学会",
+            "given": ""
+          }
+        ],
+        "excerpts": [
+          "海底管道及海底电缆检测技术规范（征求意见稿）",
+          "中国测绘学会",
+          "2025-12-31"
+        ],
+        "basis": "Only consultation draft established. No standard number or final publication is inferred; original association attribution is wrong."
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "teledyne2026hydropactline",
+    "field": "title",
+    "old": "Subsea Pipe and Cable Detection Systems",
+    "new": "Pipe & Cable Detection Systems",
+    "evidence": [
+      {
+        "url": "https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/",
+        "source": "recorded publisher/official URL (body alone is not verification)",
+        "retrieved_at": "2026-10-18T07:34:46.030266+00:00",
+        "evidence_id": "884341eebe7ef6fc956a8229962f0b16fb44c953607b6e3c62e5361e7497e650",
+        "body_sha256": "8fe83ed27a51302c20225a5a6cd56acca24c50466f91954fd02b1e42aff7d840",
+        "lineage": "manufacturer:teledyne:pipecable",
+        "provider": "official_curated",
+        "value": "Pipe & Cable Detection Systems",
+        "excerpts": [
+          "Pipe & Cable Detection Systems"
+        ],
+        "basis": "Page title only; current page does not by itself support 2026 publication year."
+      }
+    ]
+  },
+  {
+    "file": "thuthesis/ref/auv-references.bib",
+    "key": "haiying_t180",
+    "field": "author",
+    "old": [
+      {
+        "family": "{无锡海鹰电子医疗系统有限公司}",
+        "given": ""
+      }
+    ],
+    "new": [
+      {
+        "family": "无锡市海鹰加科海洋技术有限责任公司",
+        "given": ""
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304",
+        "source": "recorded publisher/official URL (body alone is not verification)",
+        "retrieved_at": "2026-10-18T07:34:52.379301+00:00",
+        "evidence_id": "403d758649837ed316ff120ad08fc8e3c20c4d84a5f1f2dfc72c4d454301999d",
+        "body_sha256": "8021361d1b301693ebb19f5c4ee3a83dd68ed0a14ac8e5aaab721c597c063751",
+        "lineage": "manufacturer:haiying:t180",
+        "provider": "official_curated",
+        "value": [
+          {
+            "family": "无锡市海鹰加科海洋技术有限责任公司",
+            "given": ""
+          }
+        ],
+        "excerpts": [
+          "海鹰T180 海缆探测系统",
+          "无锡市海鹰加科海洋技术有限责任公司"
+        ],
+        "basis": "Product title and responsible company from official page; original medical-company attribution conflicts."
+      }
+    ]
+  }
+]

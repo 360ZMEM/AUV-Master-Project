@@ -139,13 +139,18 @@ def make_figure() -> tuple[plt.Figure, float]:
     segments = build_helical_segments(core_radius, pitch, total_length, points_per_pitch=320)
 
     fig = plt.figure(
-        figsize=tps.figure_size("full", height=4.8),
+        figsize=tps.figure_size("full", height=5.9),
         layout="constrained",
     )
-    grid = fig.add_gridspec(2, 2, height_ratios=(1.12, 0.78), width_ratios=(1.22, 0.78))
+    grid = fig.add_gridspec(4, 2, height_ratios=(1.3, 0.08, 0.42, 0.95), width_ratios=(1.1, 0.9))
     geometry_ax = fig.add_subplot(grid[0, 0], projection="3d")
     section_ax = fig.add_subplot(grid[0, 1])
-    axial_ax = fig.add_subplot(grid[1, :])
+    colorbar_ax = fig.add_subplot(grid[1, 1])
+    geometry_note = fig.add_subplot(grid[2, 0])
+    section_note = fig.add_subplot(grid[2, 1])
+    for note in (geometry_note, section_note):
+        note.set_axis_off()
+    axial_ax = fig.add_subplot(grid[3, :])
 
     # Panel (a): conductor geometry and normalized instantaneous field direction.
     s_plot = np.linspace(-1.5 * pitch, 1.5 * pitch, 700)
@@ -197,26 +202,26 @@ def make_figure() -> tuple[plt.Figure, float]:
         arrow_length_ratio=0.28,
         normalize=False,
     )
-    geometry_ax.set_xlabel(r"沿缆位置 $s/p$", labelpad=-2)
-    geometry_ax.set_ylabel(r"$x/a$", labelpad=-1)
-    geometry_ax.set_zlabel(r"$y/a$", labelpad=-1)
+    geometry_ax.set_xlabel(r"沿缆位置 $s/p$", labelpad=9)
+    geometry_ax.set_ylabel(r"$x/a$", labelpad=7)
+    geometry_ax.set_zlabel(r"$y/a$", labelpad=5)
     geometry_ax.set_title("(a) 三相芯线沿电缆方向螺旋绞合", loc="left", pad=0)
     geometry_ax.set_xlim(-1.5, 1.5)
     geometry_ax.set_ylim(-1.5, 1.5)
     geometry_ax.set_zlim(-1.5, 6.3)
-    geometry_ax.set_yticks((-1.0, 0.0, 1.0))
+    geometry_ax.set_yticks((-1.0, 1.0))
     geometry_ax.set_zticks((0.0, 2.0, 4.0, 6.0))
-    geometry_ax.set_box_aspect((3.0, 1.4, 2.0), zoom=1.28)
+    geometry_ax.set_box_aspect((3.0, 1.4, 2.0), zoom=1.20)
     geometry_ax.view_init(elev=18.0, azim=-66.0)
-    geometry_ax.text2D(
-        0.02,
-        0.96,
-        "蓝/橙/绿：A/B/C 相芯线\n灰虚线：AUV 观测线    红箭头：瞬时磁场方向",
-        transform=geometry_ax.transAxes,
+    geometry_note.text(
+        0.0,
+        0.5,
+        "蓝 / 橙 / 绿：A / B / C 相芯线\n灰虚线：AUV 观测线\n红箭头：瞬时磁场方向",
+        transform=geometry_note.transAxes,
         color="#333333",
-        fontsize=7.0,
+        fontsize=9.0,
         ha="left",
-        va="top",
+        va="center",
     )
 
     # Panel (b): a Biot-Savart cross-section at the balanced-current snapshot.
@@ -285,17 +290,16 @@ def make_figure() -> tuple[plt.Figure, float]:
             f"{'ABC'[index]} 相",
             label_offset,
         )
-    section_ax.text(
-        0.03,
-        0.97,
+    section_note.text(
+        0.0,
+        0.5,
         "此时：A 相 = +1.0 $I_m$（· 流出）\n"
         "B、C 相 = -0.5 $I_m$（× 流入）\n"
         r"电流之和 $i_A+i_B+i_C=0$",
         ha="left",
-        va="top",
-        transform=section_ax.transAxes,
-        fontsize=7.0,
-        bbox={"facecolor": "white", "edgecolor": "#777777", "alpha": 0.88, "pad": 2.5},
+        va="center",
+        transform=section_note.transAxes,
+        fontsize=9.0,
     )
     section_ax.add_patch(
         Circle((0.0, 0.0), 1.45, facecolor="none", edgecolor="#666666", ls="--", lw=0.9)
@@ -305,13 +309,13 @@ def make_figure() -> tuple[plt.Figure, float]:
     section_ax.set_ylim(-5.0, 5.0)
     section_ax.set_xlabel(r"横向 $x/a$")
     section_ax.set_ylabel(r"竖向 $y/a$")
-    section_ax.set_title("(b) 三相电流和为零，外部仍有漏磁", loc="left")
-    colorbar = fig.colorbar(contour, ax=section_ax, orientation="horizontal", pad=0.03, shrink=0.88)
+    section_ax.set_title("(b) 电流和为零，外部仍有漏磁", loc="left", fontsize=9)
+    colorbar = fig.colorbar(contour, cax=colorbar_ax, orientation="horizontal")
     candidate_ticks = np.array((0.2, 0.5, 1.0, 2.0, 5.0))
     colorbar_ticks = candidate_ticks[(candidate_ticks >= lower) & (candidate_ticks <= upper)]
     colorbar.set_ticks(colorbar_ticks)
     colorbar.set_ticklabels(tuple(f"{tick:g}" for tick in colorbar_ticks))
-    colorbar.set_label(r"颜色：磁场强度 $|\mathbf{B}|$（$\mu$T）；黑箭头：方向")
+    colorbar.set_label(r"颜色：磁场强度（$\mu$T）；黑箭头：方向", fontsize=9)
 
     # Panel (c): vector components rotate while the three-axis RMS norm is stable.
     axial_s = np.linspace(-1.5 * pitch, 1.5 * pitch, 301)
@@ -359,7 +363,7 @@ def make_figure() -> tuple[plt.Figure, float]:
         loc="left",
     )
     axial_ax.grid(True, alpha=0.25)
-    axial_ax.legend(loc="lower left", ncol=4)
+    axial_ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.42), ncol=2, frameon=False)
 
     return fig, max_deviation_percent
 

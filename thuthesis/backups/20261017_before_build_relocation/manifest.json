@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-10-17T21:17:36.825146",
+  "purpose": "Preserve reviewed 170-page main thesis and compile log before moving build output to build/auv-thesis/; preserve the prior 2026-09 release PDF/log from the existing 2026-10-13 baseline archive",
+  "files": {
+    "auv-thesis.pdf": {
+      "sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977",
+      "bytes": 9574308,
+      "original_path": "thuthesis/auv-thesis.pdf"
+    },
+    "auv-thesis.log": {
+      "sha256": "9b0a59ce6ac0fe27985d2cf8c9ae5724049820b614e6f1462f57403b853fd154",
+      "bytes": 87910,
+      "original_path": "thuthesis/auv-thesis.log"
+    },
+    "auv-thesis_20260929_release.pdf": {
+      "sha256": "100e96e3eb9fcc29a6ce49de44f8d3908e56591f4410d6abb1181898c4ab0a77",
+      "bytes": 9574698,
+      "original_archive": "docs/middle-defense/baseline/thuthesis-before.tar.gz",
+      "archive_member": "thuthesis/auv-thesis.pdf"
+    },
+    "auv-thesis_20260929_release.log": {
+      "sha256": "c85cafc4aaa63232b4bfadcba91c342965715701f598d88b0d0faf92312942c1",
+      "bytes": 88090,
+      "original_archive": "docs/middle-defense/baseline/thuthesis-before.tar.gz",
+      "archive_member": "thuthesis/auv-thesis.log"
+    }
+  }
+}

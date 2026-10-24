@@ -16,6 +16,11 @@ auv-thesis.pdf
 
 ## test files:
 build/
+!build/
+build/*
+!build/auv-thesis/
+build/auv-thesis/*
+!build/auv-thesis/auv-thesis.pdf
 testfiles/**/*.pdf
 
 ## Core latex/pdflatex auxiliary files:
@@ -301,3 +306,7 @@ yarn.lock
 
 # 参考文件pdf
 thuthesis-example_reference.pdf
+
+# Frozen pre-migration PDF used by historical thesis audits; logs remain local.
+!backups/20261017_before_build_relocation/auv-thesis.pdf
+!backups/20261017_before_build_relocation/auv-thesis_20260929_release.pdf

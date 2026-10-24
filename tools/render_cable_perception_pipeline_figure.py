@@ -51,12 +51,13 @@ def _box(ax, xy, w, h, text, key, fontsize=10, bold=False):
         linewidth=1.6, edgecolor=edge, facecolor=fill, zorder=2,
     )
     ax.add_patch(patch)
-    ax.text(
+    text_artist = ax.text(
         xy[0] + w / 2, xy[1] + h / 2, text,
         ha="center", va="center", fontsize=fontsize,
         color="#26323D", zorder=3,
         fontweight="bold" if bold else "normal",
     )
+    text_artist._figure_node_patch = patch
     return (xy[0] + w / 2, xy[1] + h / 2, w, h)
 
 
@@ -81,7 +82,7 @@ def render() -> None:
     ax.text(2, 96.5, "(a) 磁采集到几何观测", ha="left", va="center",
             fontsize=10.5, fontweight="bold", color="#26323D")
     _box(ax, (2, 72), 21, 17, "TMR8637 / SK2301\n三轴采样与标定\n去趋势 · 窗函数", "sample", 8.5)
-    _box(ax, (27, 72), 21, 17, "45/50 Hz DLIA\n连续 I/Q\n幅相 · SNR", "dlia", 8.5)
+    _box(ax, (27, 72), 21, 17, "数字锁相（DLIA）\n45/50 Hz I/Q\n幅相 · 信噪比", "dlia", 8.5)
     _box(ax, (52, 72), 21, 17, "旋转不变模量\n峰值 · FWHM\n过线周期", "geom", 8.5)
     _box(ax, (77, 72), 21, 17, "几何观测与质量\n横偏 · 垂直距离\n埋深 · 质量分", "geom", 8.5)
     for x0, x1 in [(23, 27), (48, 52), (73, 77)]:
@@ -102,12 +103,12 @@ def render() -> None:
     ax.text(2, 57.5, "(b) 两级估计与巡缆输出", ha="left", va="center",
             fontsize=10.5, fontweight="bold", color="#26323D")
     _box(ax, (2, 42), 23, 11, "导航观测\nIMU · DVL · 深度", "sample", 8.6)
-    _box(ax, (2, 26), 23, 11, "磁几何观测\n横偏 · 垂向距离 · 质量", "geom", 8.5)
-    _box(ax, (2, 10), 23, 11, "声学锚点\n稀疏几何 · 方向消歧 · 质量", "sonar", 8.3)
-    _box(ax, (32, 39), 27, 14, "载体级 ES-EKF\nAUV 位姿与协方差", "dlia", 9.2, bold=True)
+    _box(ax, (2, 26), 23, 11, "磁几何观测\n横偏 · 垂向距离\n质量分", "geom", 8.5)
+    _box(ax, (2, 10), 23, 11, "声学锚点\n稀疏几何 · 方向消歧\n质量分", "sonar", 8.3)
+    _box(ax, (32, 39), 27, 14, "融合定位（ES-EKF）\nAUV 位姿与协方差", "dlia", 9.2, bold=True)
     _box(ax, (32, 15), 27, 15, "电缆几何级在线修正\n先验地图 + 声磁观测\n横偏 / 走向 / 埋深", "fuse", 8.5, bold=True)
-    _box(ax, (67, 24), 31, 16, "CableTrackingOutput\n横偏 · 路由进度 · 埋深及不确定度\n置信度 · 就绪标志", "out", 8.2, bold=True)
-    _box(ax, (67, 7), 31, 9, "行为树 / FSM · UA-MPC · 内层执行链", "consumer", 8.3)
+    _box(ax, (67, 24), 31, 16, "CableTrackingOutput\n横偏 · 路由进度\n垂距 / 埋深及不确定度\n置信度 · 就绪标志", "out", 8.2, bold=True)
+    _box(ax, (67, 5), 31, 11, "行为树 / 状态机\n约束控制（UA-MPC）\n内层执行链", "consumer", 8.0)
 
     _arrow(ax, (25, 47.5), (32, 46))
     _arrow(ax, (45.5, 39), (45.5, 30), dashed=True, color="#7E6AA2")
@@ -120,6 +121,8 @@ def render() -> None:
             fontsize=8.0, color="#6B578D")
     ax.text(2, 3.5, "真值仅进入离线评价，不进入在线管线", ha="left", va="center",
             fontsize=8.2, color="#8A5A5A", style="italic")
+    ax.text(2, 0.2, "埋深输出另受模型、高度参考与标定许可约束", ha="left", va="center",
+            fontsize=8.0, color="#8A5A5A")
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     tps.save_figure(

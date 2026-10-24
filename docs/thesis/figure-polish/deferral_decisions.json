@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-22",
+  "decisions": [
+    {
+      "assets": [
+        "terrain_tz_tracking_pid_mpc",
+        "terrain_3d_pid_terrain_trajectory",
+        "r13_v2_authority_modes_ua"
+      ],
+      "user_reply": "不首先修复，留待后续确认"
+    },
+    {
+      "assets": [
+        "pc104_firmware_echo_timing",
+        "pc104_fault_timeline",
+        "pc104_cross_layer_fault_timeline",
+        "pc104_cross_layer_soak_30min"
+      ],
+      "user_reply": "暂缓这四组，保留待复核"
+    },
+    {
+      "assets": [
+        "ch4_enob_vs_osr",
+        "ch4_noise_spectral_density",
+        "03_complexity_comparison",
+        "05_mpc_combined_summary"
+      ],
+      "user_reply": "这些输入稍后从旧电脑迁移"
+    }
+  ],
+  "scope": "保留原图和已完成静态查看；原数据重绘/缺陷修复未验证，不计为PASS；研究结论不改"
+}

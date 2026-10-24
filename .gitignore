@@ -91,6 +91,14 @@ docs/real_experiment/
 /thuthesis/.tmr8637_pdf_review/
 /thuthesis/.tmr8637_review/
 /thuthesis/新建文件夹.png
+
+# Publish only the reviewed main thesis PDF from its isolated build directory.
+# All neighbouring TeX caches remain ignored.
+!/thuthesis/build/
+/thuthesis/build/*
+!/thuthesis/build/auv-thesis/
+/thuthesis/build/auv-thesis/*
+!/thuthesis/build/auv-thesis/auv-thesis.pdf
 /thubeamer-1.2/*.aux
 /thubeamer-1.2/*.bbl
 /thubeamer-1.2/*.bcf
@@ -112,3 +120,53 @@ docs/real_experiment/
 *.bak
 
 thuthesis/.audit_backup_20260811/
+# Local draw.io governance tool downloads, Python wheels, and per-run evidence.
+/.diagram-governance/
+/STM32*/
+
+# Private patent work and unreviewed patent-derived presentation drafts.
+/patent/
+/PPT制作/V4.8几何分项输出修订版_20261020/
+
+# Older presentation exports are kept locally; V4.7 is the frozen published deck.
+/PPT制作/*.pdf
+/PPT制作/*.pptx
+/PPT制作/V3审阅重构/
+/PPT制作/V4正式交付/
+/PPT制作/V4.2叙事强化配套/
+/PPT制作/V4.5证据与方法强化版/
+/PPT制作/V4.6结构与视觉优化版/
+
+# Bibliography web-response caches and old pre-build binary snapshots.
+/docs/thesis/bibliography/20261018/evidence/
+/docs/thesis/bibliography/20261018/before/
+/docs/thesis/bibliography/20261022/evidence/
+/docs/thesis/bibliography/20261022/before/
+/docs/thesis/bibliography/20261023/before/
+/docs/thesis/bibliography/**/build*.log
+/docs/thesis/bibliography/**/compile*.log
+/docs/thesis/bibliography/**/replay.log
+/docs/thesis/bibliography/**/*.log
+/docs/thesis/figure-governance/mechanism_20261021/
+
+# Rebuildable middle-report rasterizations and template migration scratch data.
+/docs/middle-defense/render-main-initial/
+/docs/middle-defense/render-school-initial/
+/docs/middle-defense/render-main/
+/docs/middle-defense/render-school/
+/docs/middle-defense/render-main-final/
+/docs/middle-defense/render-school-final/
+/docs/middle-defense/render-smoke/
+/docs/middle-defense/main-text.txt
+/docs/middle-defense/school-text.txt
+/docs/middle-defense/baseline/
+/docs/middle-defense/thesis-regression/
+/docs/middle-defense/word-audit/
+/docs/thesis/auv_thesis_build_migration_20261017.log
+/thuthesis/backups/20260928_full_236p/source_and_figures.tar.gz
+/thuthesis/backups/20260929_before_robustness_169p/
+/thuthesis/backups/template-switch/
+/thuthesis/backups/20261017_before_build_relocation/*.log
+
+# Stray image created by a command-line plot export.
+/-*.png

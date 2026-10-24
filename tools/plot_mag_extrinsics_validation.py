@@ -65,7 +65,7 @@ def main() -> None:
     axis.plot(times, residuals, color=tps.PROPOSED, label="平移残差")
     axis.set_xlabel("时间 (s)")
     axis.set_ylabel("残差 (m)")
-    axis.legend()
+    axis.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02))
     tps.save_figure(fig, output_dir / "01_mag_extrinsics_residual")
     plt.close(fig)
 

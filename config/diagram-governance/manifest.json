@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "pages": [
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_mission_fsm.drawio",
+      "page_index": 0,
+      "type": "simple-flow",
+      "assumed_unreferenced_display_width_pdf_pt": 720,
+      "alignment_groups": [
+        {"ids": ["search", "lock", "track"], "kind": "center", "axis": "y", "tolerance_u": 1},
+        {"ids": ["search", "lock", "track"], "kind": "equal-center-gap", "axis": "x", "tolerance_u": 2}
+      ]
+    },
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.drawio",
+      "page_index": 0,
+      "type": "layered-relations",
+      "assumed_unreferenced_display_width_pdf_pt": 720,
+      "fixed_layer_order": ["bt", "fsm", "mechanisms"]
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 0,
+      "type": "layered-architecture",
+      "fixed_layer_order": ["l1", "l2"]
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 1,
+      "type": "layered-architecture",
+      "fixed_layer_order": ["l3", "l4", "l5"]
+    }
+  ]
+}

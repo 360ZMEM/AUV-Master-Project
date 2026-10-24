@@ -660,7 +660,7 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     fig, (ax0, ax1) = plt.subplots(
         1,
         2,
-        figsize=tps.figure_size("full", height=3.05),
+        figsize=tps.figure_size("full", height=3.3),
         constrained_layout=True,
     )
 
@@ -690,8 +690,8 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     ax0.set_title('状态扩展成本对比')
     ax0.set_xticks(x)
     ax0.set_xticklabels(cat)
-    ax0.legend()
     ax0.grid(axis='y', alpha=0.3)
+    ax0.set_ylim(0, max(bt_vals + fsm_vals) * 1.18)
 
     for bar, val in zip(ax0.patches, bt_vals + fsm_vals):
         ax0.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1,
@@ -726,7 +726,8 @@ def plot_expansion_cost(results: dict[str, Any], output_dir: Path) -> Path:
     ax1.set_xlabel('新增状态数')
     ax1.set_ylabel('累计新增代码行数')
     ax1.set_title('状态扩展成本增长（1–20 个状态）')
-    ax1.legend()
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.02), fontsize=8)
     ax1.grid(alpha=0.3)
     ax1.set_xticks(states)
 

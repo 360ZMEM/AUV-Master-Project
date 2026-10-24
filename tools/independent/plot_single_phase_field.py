@@ -70,12 +70,14 @@ def make_figure() -> plt.Figure:
     configure_plot_style()
 
     fig = plt.figure(
-        figsize=tps.figure_size("full", height=4.55),
+        figsize=tps.figure_size("full", height=4.9),
         layout="constrained",
     )
-    grid = fig.add_gridspec(2, 2, height_ratios=(1.0, 0.72))
+    grid = fig.add_gridspec(3, 2, height_ratios=(1.0, 0.72, 0.15))
     field_axes = [fig.add_subplot(grid[0, 0]), fig.add_subplot(grid[0, 1])]
     decay_ax = fig.add_subplot(grid[1, :])
+    note_ax = fig.add_subplot(grid[2, :])
+    note_ax.set_axis_off()
 
     contour = None
     for ax, sign, title in zip(
@@ -140,16 +142,9 @@ def make_figure() -> plt.Figure:
         linewidth=0.7,
         zorder=4,
     )
-    decay_ax.text(0.1, sample_field[0] * 1.16, r"$r=0.1$ m，$|B|=2$ $\mu$T", ha="left")
-    decay_ax.text(1.0, sample_field[1] * 0.78, r"$r=1$ m，$|B|=0.2$ $\mu$T", ha="right", va="top")
-    decay_ax.annotate(
-        "距离增大 10 倍\n场强降至 1/10",
-        xy=(1.0, sample_field[1]),
-        xytext=(0.31, 0.46),
-        ha="center",
-        arrowprops={"arrowstyle": "->", "lw": 1.0, "color": "#333333"},
-        bbox={"facecolor": "white", "edgecolor": "#777777", "alpha": 0.92, "pad": 2.0},
-    )
+    note_ax.text(0.5, 0.5,
+                 r"橙点对照：$r=0.1$ m 时为 2 $\mu$T；$r=1$ m 时为 0.2 $\mu$T。距离增大 10 倍，场强降至 1/10。",
+                 transform=note_ax.transAxes, ha="center", va="center", fontsize=8.5)
     decay_ax.set_xlabel(r"距导线中心的距离 $r$ (m)")
     decay_ax.set_ylabel(r"磁场强度 $|\mathbf{B}|$ ($\mu$T)")
     decay_ax.set_title(r"(c) 距离越远，磁场按 $1/r$ 规律减弱", loc="left")

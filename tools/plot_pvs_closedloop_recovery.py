@@ -100,7 +100,7 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     fig, axes = plt.subplots(
         2,
         2,
-        figsize=tps.figure_size("full", height=4.65),
+        figsize=tps.figure_size("full", height=5.6),
         constrained_layout=True,
     )
 
@@ -116,10 +116,10 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     )
     ax.axhline(0.0, color="k", linewidth=0.6, alpha=0.4)
     ax.set_xlabel("经过时间 (s)")
-    ax.set_ylabel("相对真电缆的带符号横向偏差 (m)")
+    ax.set_ylabel("相对真电缆的带符号\n横向偏差 (m)")
     ax.set_title("横向偏差恢复：约 10 m 畸变先验 → 进入走廊")
     ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=8, loc="lower right")
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=1)
 
     ax = axes[0, 1]
     ax.plot(t_on, tnorm_on, color=tps.PROPOSED, linewidth=1.8, label="累计平移校正量")
@@ -142,7 +142,7 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     ax.set_ylabel("拟合质量（0 至 1）")
     ax.set_title("磁观测现已满足直线电缆前置条件")
     ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=8, loc="lower right")
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=1)
 
     ax = axes[1, 1]
     accept_num = [1 if a else 0 for a in accepted_on]
@@ -158,7 +158,7 @@ def plot_recovery(root: Path, out: Path, corridor_m: float) -> None:
     ax.set_ylabel("接受标志")
     ax.set_title(f"接受标志为 1 的帧占 {accept_ratio_on*100:.0f}%")
     ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=8, loc="lower right")
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(.5, -.3), ncol=1)
 
     out.parent.mkdir(parents=True, exist_ok=True)
     tps.save_figure(fig, out.with_suffix(""))

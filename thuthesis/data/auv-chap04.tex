@@ -57,17 +57,19 @@
 
 确定分层架构之后，第一个需要具体落实的是任务调度层。工程实践中可选的实现方式主要有两类，传统的有限状态机与现代的行为树。有限状态机直接、易写、易理解，但对``应急优先级抢占''和``任务可组合''的支持极为薄弱：每新增一种故障类型，都要在所有相关状态之间补画新的转移边，状态数很快膨胀到平方量级。行为树则把``组合''作为第一等公民，应急行为可以以高优先级子树的形式插入到任意位置而不破坏主任务逻辑\cite{colledanchise2018behavior,colledanchise2017how,sprague2018improving}。本文据此选择行为树作为任务调度层的实现，其``安全优先、任务后置''的结构如图~\ref{fig:ch04-behavior-tree-core}所示。
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=\linewidth,height=0.52\textheight,keepaspectratio,alt={根选择器依次检查紧急上浮、待命授权和调试级联，主任务完成下潜后由海底安全限制器约束置信度路由}]{architecture/auv_v2_behavior_tree_illustration.pdf}
-\caption{行为树决策核心：根选择器按紧急、待命、任务三级优先级逐 tick 检查；主任务经下潜和海底安全限制后，在精准巡检与低置信度搜索之间路由}\label{fig:ch04-behavior-tree-core}
-\end{figure}
+
 
 \subsection{行为树节点设计}\label{sec:ch04-4-2-1}
 
-行为树由控制节点、条件节点、行动节点和装饰器组成。实际实现中的根节点是 \texttt{memory=False} 的选择器，每个 tick 均从左到右重新检查三个分支。第一分支为紧急顺序节点：漏水、低电或穿底任一条件成立时，\texttt{EmergencyCondition} 返回成功并进入 \texttt{EmergencySurface}。第二分支 \texttt{StandbyCheck} 处理未获自主授权或执行脑链路不可用的情形，写入 IDLE 安全目标并返回成功，从而阻止后续任务分支运行。只有前两级均不接管时，第三分支才按调试等级选择保持、解析轨迹或主任务。
+行为树由控制节点、条件节点、行动节点和装饰器组成。根节点采用无记忆选择器，每个决策周期均按优先级从左到右重新检查三个分支。第一分支为紧急顺序节点：漏水、低电或穿底任一条件成立时，紧急条件判定返回成功并进入紧急上浮行动。第二分支待命检查处理未获自主授权或执行脑链路不可用的情形，写入 IDLE 安全目标并返回成功，从而阻止后续任务分支运行。只有前两级均不接管时，第三分支才按调试等级选择保持、解析轨迹或主任务。
 
-主任务不是``搜索--锁定--跟踪''三个顺序动作的硬编码展开，而是先执行 \texttt{DiveToDepth}，再由 \texttt{SeabedSafetyLimiter} 包裹路线选择器。定位辅助可用且置信度越过迟滞门限时，\texttt{PreciseInspectionSequence} 进入并行跟踪；异常状态由 \texttt{AnomalySpeedLimiter} 把速度缩放为 0.4。条件失败时路线选择器回落到 \texttt{ZigZagSearch}。因此，图~\ref{fig:ch04-behavior-tree-core}表达的是代码中可核对的优先级与路由关系，任务阶段的长期演化仍由上一节生命周期状态机描述。关键节点如下：
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.70\textheight,keepaspectratio,alt={根选择器依次检查紧急上浮、待命授权和调试级联，主任务完成下潜后由海底安全限制器约束置信度路由}]{architecture/auv_v2_behavior_tree_illustration.pdf}
+\caption{行为树决策核心：根选择器按紧急、待命、任务三级优先级逐周期检查；主任务经下潜和海底安全限制后，在精准巡检与低置信度搜索之间路由}\label{fig:ch04-behavior-tree-core}
+\end{figure}
+
+主任务不是``搜索--锁定--跟踪''三个顺序动作的硬编码展开，而是先执行定深下潜行动，再由海底安全约束包裹路线选择器。定位辅助可用且置信度越过迟滞门限时，精准巡检分支进入并行跟踪；异常状态由异常限速机制把速度缩放为 0.4。条件失败时路线选择器回落到之字形搜索。因此，图~\ref{fig:ch04-behavior-tree-core}表达的是代码中可核对的优先级与路由关系，任务阶段的长期演化仍由上一节生命周期状态机描述。关键节点如下：
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
@@ -84,22 +86,22 @@
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-条件 & \texttt{EmergencyCondition} & 漏水、低电或穿底任一成立时触发紧急分支 \\
-行动 & \texttt{EmergencySurface} & 写入高优先级紧急上浮目标 \\
-行动 & \texttt{StandbyCheck} & 未授权或执行脑链路不可用时写入 IDLE 目标 \\
-条件 & \texttt{DebugLevel}\newline\texttt{Condition} & 将调试等级 1、2 与主任务等级 0/3 分流 \\
-行动 & \texttt{DiveToDepth} & 在路线任务前建立 4 m 目标深度 \\
-条件 & \texttt{ConfidenceAbove}\newline\texttt{Threshold} & 检查定位辅助可用性并通过迟滞置信度门 \\
-装饰器 & \texttt{SeabedSafety}\newline\texttt{Limiter} & 对路线输出施加穿底保护和 0.5 降速 \\
-装饰器 & \texttt{AnomalySpeed}\newline\texttt{Limiter} & 对异常状态下的并行跟踪输出施加 0.4 降速 \\
-行动 & \texttt{ZigZagSearch} & 精准巡检条件失败时执行回落搜索 \\
+条件 & 紧急条件判定 & 漏水、低电或穿底任一成立时触发紧急分支 \\
+行动 & 紧急上浮行动 & 写入高优先级紧急上浮目标 \\
+行动 & 待命检查 & 未授权或执行脑链路不可用时写入 IDLE 目标 \\
+条件 & 调试等级判定 & 将调试等级 1、2 与主任务等级 0/3 分流 \\
+行动 & 定深下潜行动 & 在路线任务前建立 4 m 目标深度 \\
+条件 & 置信度迟滞判定 & 检查定位辅助可用性并通过迟滞置信度门 \\
+装饰器 & 海底安全约束 & 对路线输出施加穿底保护和 0.5 降速 \\
+装饰器 & 异常限速 & 对异常状态下的并行跟踪输出施加 0.4 降速 \\
+行动 & 之字形搜索 & 精准巡检条件失败时执行回落搜索 \\
 \end{longtable}
 
 \subsection{巡检任务逻辑流}\label{sec:ch04-4-2-2}
 
-上一节给出了生产行为树的节点和优先级。本节进一步说明运行中的任务逻辑，但不把概念上的搜索、建立观测和稳定跟踪阶段误写成代码中不存在的四状态行为树。AUV 入水后可能偏离电缆先验，需要先以之字形扫描扩大覆盖；观测刚出现时噪声和不确定度仍高，也不能立即把检测结果当作连续跟踪许可。生产实现因此把这类阶段演化压缩为每个 tick 都重新判定的置信度路由：定位辅助可用且置信度通过迟滞门时进入精准巡检，否则执行之字形搜索。
+上一节给出了生产行为树的节点和优先级。本节进一步说明运行中的任务逻辑，但不把概念上的搜索、建立观测和稳定跟踪阶段误写成代码中不存在的四状态行为树。AUV 入水后可能偏离电缆先验，需要先以之字形扫描扩大覆盖；观测刚出现时噪声和不确定度仍高，也不能立即把检测结果当作连续跟踪许可。生产实现因此把这类阶段演化压缩为每个决策周期都重新判定的置信度路由：定位辅助可用且置信度通过迟滞门时进入精准巡检，否则执行之字形搜索。
 
-精准巡检分支并行更新电缆路由、速度与离底目标；异常状态由速度装饰器将目标速度缩放为 0.4，穿底风险则由海底安全装饰器进一步限速。漏水、低电或穿底条件触发根节点的紧急上浮分支，授权撤销或执行脑链路不可用则触发待命分支。由此，搜索与跟踪的切换由观测质量驱动，应急与待命能够在下一次 tick 抢占路线任务；图~\ref{fig:ch04-mission-state-machine}中的 PREFLIGHT、SHADOW、SINGLE LOOP 和 FULL AUTONOMY 用于表达系统能力的分级释放，不等同于行为树内部节点。
+精准巡检分支并行更新电缆路由、速度与离底目标；异常状态由速度装饰器将目标速度缩放为 0.4，穿底风险则由海底安全装饰器进一步限速。漏水、低电或穿底条件触发根节点的紧急上浮分支，授权撤销或执行脑链路不可用则触发待命分支。由此，搜索与跟踪的切换由观测质量驱动，应急与待命能够在下一决策周期抢占路线任务；图~\ref{fig:ch04-mission-state-machine}中的 PREFLIGHT、SHADOW、SINGLE LOOP 和 FULL AUTONOMY 用于表达系统能力的分级释放，不等同于行为树内部节点。
 
 这里没有单独硬编码``锁定''状态。观测从首次出现到稳定可用的过渡由第 3 章的滤波、分源质量评价和迟滞置信度门共同实现；任务层只消费其输出。这样的职责划分使行为树保持短小，并避免同一置信度状态在估计器、状态机和行为树中重复维护。
 
@@ -203,7 +205,7 @@ n=\left\lceil\frac{B-W_{\mathrm{eff}}}{d}\right\rceil+1 ,
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.88\linewidth,height=\textheight,keepaspectratio,alt={横向误差比为百分之十时扫描间距、保证覆盖率与任务时间的归一化权衡}]{experiments/coverage/normalized_coverage_time_tradeoff.pdf}
+\includegraphics[width=0.72\linewidth,height=\textheight,keepaspectratio,alt={横向误差比为百分之十时扫描间距、保证覆盖率与任务时间的归一化权衡}]{experiments/coverage/normalized_coverage_time_tradeoff.pdf}
 \caption{扫描间距对保证覆盖率与归一化任务时间的影响}\label{fig:ch04-normalized-coverage-tradeoff}
 \end{figure}
 \FloatBarrier

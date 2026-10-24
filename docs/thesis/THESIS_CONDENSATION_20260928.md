@@ -2,7 +2,7 @@
 
 论文由 **236 页缩减至 169 页**，减少 67 页（28.4%），已落入要求的 160–170 页范围。页数为 PDF 总页数，包含封面、目录、参考文献和附录；正文页码至致谢为 148。
 
-- [精简稿 PDF](../../thuthesis/auv-thesis.pdf)
+- [当时精简稿 169 页冻结 PDF](../../thuthesis/backups/20260929_before_robustness_169p/auv-thesis.pdf)；[当前 170 页论文](../../thuthesis/build/auv-thesis/auv-thesis.pdf)
 - [未删减的 236 页 PDF](../../thuthesis/backups/20260928_full_236p/auv-thesis_full_236p.pdf)
 - [完整版源码与图像归档](../../thuthesis/backups/20260928_full_236p/source_and_figures.complete.tar.gz)
 - [备份说明](../../thuthesis/backups/20260928_full_236p/README.md)与[校验清单](../../thuthesis/backups/20260928_full_236p/manifest.json)

@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-23",
+  "purpose": "仅记录字号/图例/图窗调整后的演示资产；不替代历史实验清单。",
+  "generator": "tools/plot_v2_shallow_survey_ros_pvs.py",
+  "generator_sha256": "177f9c868a9e6c059c6e3ae38689c66ac7c0137c406681e02ef3825e05d74f70",
+  "plot_data_invariance": true,
+  "raw_input_sha256": {
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/bridge/wire_positive_seed101.csv": "867e48d692e591f09e6f90f414d36bbb52d304efce9989b39e5aa6d1ab626c5a",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/bridge/wire_positive_seed101_summary.json": "c4f4be3317a1eee1617128f953c96f2d649dcf87d9fb2b1ac262acfc19c0ff12",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/wire_negative_seed101.csv": "06f7b522c9cd7704329906524be1a00050c92b326bdd915a31e0a91948ec4acf",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/wire_negative_seed101_summary.json": "75f52e2579e2d4931992bdab931a08bfbc837ed93d7b2e47616bb9f7ea76e173",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/fused_neighbor_positive_seed101.csv": "ee0cfd53ffe71ba8876d8e4bd8509f4eae86ac72c2e185d180d9380a0e3a895d",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/fused_neighbor_positive_seed101_summary.json": "0faae41046847d3b2e25fac27daceb2a9655bdd18469fb7d5a543631e4a50b7b",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/bridge/identity_dropout_positive_seed101.csv": "c7478709180e65b9ac8a4a2efea391bb07dde4110448e99d4fc15aa0dae43cb4",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/bridge/identity_dropout_positive_seed101_summary.json": "7c49ec20c6d670342ab0e398e23800d94714f13bfbb1e75b6a4dfbf926b6d129",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/no_source_positive_seed101.csv": "9166dcd2a065c8091026864e8f309c5af2e395f1124d4959bfca573ca7c04428",
+    "AUV-Master-Mag/results/v2/shallow_survey_ros_pvs_final_20260927/no_source_positive_seed101_summary.json": "eab6a426b2cfe8c3307c0c3083b953917361be0283eba2ee9ddc194157599f3b"
+  },
+  "assets": [
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf",
+      "sha256": "3c54f528ce10af694376d1d1089b7a99f2eaa1814ef17e95d21cb57c6294c6b7"
+    },
+    {
+      "path": "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.png",
+      "sha256": "ecf2cca366dacb4a5fb999c12d737c45b41786ac2cf506389bd54a6929147e6a"
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain.pdf",
+      "sha256": "3c54f528ce10af694376d1d1089b7a99f2eaa1814ef17e95d21cb57c6294c6b7"
+    },
+    {
+      "path": "AUV-Master-Mag/docs/v2/publication/fwhm_v2_experiment_results/figures/51_shallow_survey_ros_pvs_chain.png",
+      "sha256": "ecf2cca366dacb4a5fb999c12d737c45b41786ac2cf506389bd54a6929147e6a"
+    }
+  ]
+}

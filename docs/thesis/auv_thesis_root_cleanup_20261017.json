@@ -1,0 +1,1147 @@
+{
+  "generated_at": "2026-10-17",
+  "purpose": "root build artifact cleanup after migration to build/auv-thesis",
+  "backup_before_cleanup": "thuthesis/backups/20261017_before_build_relocation",
+  "files": [
+    {
+      "path": "thuthesis/auv-thesis.aux",
+      "bytes": 117932,
+      "sha256": "755e5c78069c64c49693bc0ee4860880103a6269d9408e0a0358a2f107fa7486"
+    },
+    {
+      "path": "thuthesis/auv-thesis.bbl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "thuthesis/auv-thesis.bbl-SAVE-ERROR",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "thuthesis/auv-thesis.bcf",
+      "bytes": 147169,
+      "sha256": "9da40fd4b932b3276c1dafa27154f426e8b8ebb326457c5b0549f143d0e6df07"
+    },
+    {
+      "path": "thuthesis/auv-thesis.blg",
+      "bytes": 1029,
+      "sha256": "aa8cf7ba47529b7cf2ab80d1386eee398dee367dfb7c52fd48b748d72202e344"
+    },
+    {
+      "path": "thuthesis/auv-thesis.fdb_latexmk",
+      "bytes": 25167,
+      "sha256": "e5f375edb1d92ea09b70ee6c4e878fad8373003597ccea6d00d98890a5ac85d6"
+    },
+    {
+      "path": "thuthesis/auv-thesis.fls",
+      "bytes": 107493,
+      "sha256": "c14fb39497d64cd3d3f6ec7cf6ad68af2c14d4096774c661e223e8a3fcb58eae"
+    },
+    {
+      "path": "thuthesis/auv-thesis.lof",
+      "bytes": 11035,
+      "sha256": "9cd5b67e268d67d2ea50655e2d1e615656d06e6551b1b4d7abe3a6d17040cac9"
+    },
+    {
+      "path": "thuthesis/auv-thesis.log",
+      "bytes": 87910,
+      "sha256": "9b0a59ce6ac0fe27985d2cf8c9ae5724049820b614e6f1462f57403b853fd154"
+    },
+    {
+      "path": "thuthesis/auv-thesis.lot",
+      "bytes": 7698,
+      "sha256": "9eb00ca5fe6b0aa3690338fdb26b253a97205c13ebc62f4ff291b68edcc1ca57"
+    },
+    {
+      "path": "thuthesis/auv-thesis.out",
+      "bytes": 28420,
+      "sha256": "a9ec245d0d2e919543277147693f706dca3de09ccb9d6cad92e27d50c2e3511b"
+    },
+    {
+      "path": "thuthesis/auv-thesis.pdf",
+      "bytes": 9574308,
+      "sha256": "c622cee72099184f7f60bee99b2d512a25f1b25876bc9e44ce3924416e143977"
+    },
+    {
+      "path": "thuthesis/auv-thesis.run.xml",
+      "bytes": 2501,
+      "sha256": "de80ff39204cf0276fe0cbea4c17158a3dcd2d2755ba55662787b2176279fc03"
+    },
+    {
+      "path": "thuthesis/auv-thesis.synctex.gz",
+      "bytes": 1162167,
+      "sha256": "ef661aee0c210fd8a0bdbf1d63fd75e6e219c4bc1d6db2ab230bd71c7f527982"
+    },
+    {
+      "path": "thuthesis/auv-thesis.toc",
+      "bytes": 15606,
+      "sha256": "6d8cd71c952548ab87fc225d6c116f93a2e6a99dd593626b9d64c9b2b07c5cc4"
+    },
+    {
+      "path": "thuthesis/auv-thesis.xdv",
+      "bytes": 3396424,
+      "sha256": "1d7ecf1a2cd6fdee2c978c45145a8356825ea7cffb6b224f540a9eaf738cdd21"
+    },
+    {
+      "path": "thuthesis/missfont.log",
+      "bytes": 32,
+      "sha256": "edc2341f5b23476dfbd812f3a6a6621c4199d0b8e2af2d2d42275990af8ca9b1"
+    },
+    {
+      "path": "thuthesis/thuthesis-example.aux",
+      "bytes": 32,
+      "sha256": "fbabe80c887f95a1ede6847f22dd91b380bda9d17ae8bfaa72e1741b16aa41e9"
+    },
+    {
+      "path": "thuthesis/thuthesis-example.fdb_latexmk",
+      "bytes": 8745,
+      "sha256": "3abdff8338acc94458cea2e2fd2712e2775eefc7a8417731622cca7df70e1f22"
+    },
+    {
+      "path": "thuthesis/thuthesis-example.log",
+      "bytes": 18799,
+      "sha256": "b11dd9b72e1837c757ee932569fcbcb6a59d8234ea1ac4a5ebed5fd44bcb2c01"
+    },
+    {
+      "path": "thuthesis/xelatex101976.fls",
+      "bytes": 114181,
+      "sha256": "355da0d227a5728dd2ec7974f0eebcf7ba9282f5fc00a3cfb3eed872d8b2aa8f"
+    },
+    {
+      "path": "thuthesis/xelatex101986.fls",
+      "bytes": 114181,
+      "sha256": "355da0d227a5728dd2ec7974f0eebcf7ba9282f5fc00a3cfb3eed872d8b2aa8f"
+    },
+    {
+      "path": "thuthesis/xelatex10432.fls",
+      "bytes": 109099,
+      "sha256": "f288b2862d1444e8e164c4d1acbbdc22dbd538d98c5389393c26146a27e79bad"
+    },
+    {
+      "path": "thuthesis/xelatex104357.fls",
+      "bytes": 114442,
+      "sha256": "b1f33cbcb212a39610e7aba2b14199e74351bf55c81b32ec85a395ab01962617"
+    },
+    {
+      "path": "thuthesis/xelatex104392.fls",
+      "bytes": 114442,
+      "sha256": "b1f33cbcb212a39610e7aba2b14199e74351bf55c81b32ec85a395ab01962617"
+    },
+    {
+      "path": "thuthesis/xelatex10451.fls",
+      "bytes": 109099,
+      "sha256": "f288b2862d1444e8e164c4d1acbbdc22dbd538d98c5389393c26146a27e79bad"
+    },
+    {
+      "path": "thuthesis/xelatex104541.fls",
+      "bytes": 114442,
+      "sha256": "b1f33cbcb212a39610e7aba2b14199e74351bf55c81b32ec85a395ab01962617"
+    },
+    {
+      "path": "thuthesis/xelatex10455.fls",
+      "bytes": 109099,
+      "sha256": "f288b2862d1444e8e164c4d1acbbdc22dbd538d98c5389393c26146a27e79bad"
+    },
+    {
+      "path": "thuthesis/xelatex104950.fls",
+      "bytes": 114442,
+      "sha256": "b1f33cbcb212a39610e7aba2b14199e74351bf55c81b32ec85a395ab01962617"
+    },
+    {
+      "path": "thuthesis/xelatex105538.fls",
+      "bytes": 114688,
+      "sha256": "2a4498fb3a31a12028127d823ef68877933a7ce368d03e00d3b27d919f3d6f88"
+    },
+    {
+      "path": "thuthesis/xelatex105561.fls",
+      "bytes": 114688,
+      "sha256": "2a4498fb3a31a12028127d823ef68877933a7ce368d03e00d3b27d919f3d6f88"
+    },
+    {
+      "path": "thuthesis/xelatex105701.fls",
+      "bytes": 114688,
+      "sha256": "2a4498fb3a31a12028127d823ef68877933a7ce368d03e00d3b27d919f3d6f88"
+    },
+    {
+      "path": "thuthesis/xelatex106244.fls",
+      "bytes": 114688,
+      "sha256": "2a4498fb3a31a12028127d823ef68877933a7ce368d03e00d3b27d919f3d6f88"
+    },
+    {
+      "path": "thuthesis/xelatex106299.fls",
+      "bytes": 114688,
+      "sha256": "2a4498fb3a31a12028127d823ef68877933a7ce368d03e00d3b27d919f3d6f88"
+    },
+    {
+      "path": "thuthesis/xelatex109067.fls",
+      "bytes": 114934,
+      "sha256": "e7b9e65434cf127763e6ef5db4d824ed336356305fd5a8221a81fa4b7a0eb172"
+    },
+    {
+      "path": "thuthesis/xelatex109074.fls",
+      "bytes": 114934,
+      "sha256": "e7b9e65434cf127763e6ef5db4d824ed336356305fd5a8221a81fa4b7a0eb172"
+    },
+    {
+      "path": "thuthesis/xelatex12482.fls",
+      "bytes": 116263,
+      "sha256": "eb777460b3d2719d1886c26beeb88ba7b4c8d9b20fba440d985c9452fbf8a6f2"
+    },
+    {
+      "path": "thuthesis/xelatex12608.fls",
+      "bytes": 116263,
+      "sha256": "eb777460b3d2719d1886c26beeb88ba7b4c8d9b20fba440d985c9452fbf8a6f2"
+    },
+    {
+      "path": "thuthesis/xelatex13789.fls",
+      "bytes": 116263,
+      "sha256": "eb777460b3d2719d1886c26beeb88ba7b4c8d9b20fba440d985c9452fbf8a6f2"
+    },
+    {
+      "path": "thuthesis/xelatex14381.fls",
+      "bytes": 47342,
+      "sha256": "c1679b0d7745f9d6f493d65cdebbeb4bd940b447527f1bf4c321b38c6ea52861"
+    },
+    {
+      "path": "thuthesis/xelatex14937.fls",
+      "bytes": 109381,
+      "sha256": "afc878e1863060a88b97cf75edb3eab998ed929f97423b1c57a5c3e0a76b71fb"
+    },
+    {
+      "path": "thuthesis/xelatex14942.fls",
+      "bytes": 109381,
+      "sha256": "afc878e1863060a88b97cf75edb3eab998ed929f97423b1c57a5c3e0a76b71fb"
+    },
+    {
+      "path": "thuthesis/xelatex15221.fls",
+      "bytes": 109381,
+      "sha256": "afc878e1863060a88b97cf75edb3eab998ed929f97423b1c57a5c3e0a76b71fb"
+    },
+    {
+      "path": "thuthesis/xelatex15384.fls",
+      "bytes": 116542,
+      "sha256": "2c26523b6e58742275017a867785365ac2f5d49cec2803736584a705f73eff03"
+    },
+    {
+      "path": "thuthesis/xelatex15414.fls",
+      "bytes": 116542,
+      "sha256": "2c26523b6e58742275017a867785365ac2f5d49cec2803736584a705f73eff03"
+    },
+    {
+      "path": "thuthesis/xelatex15498.fls",
+      "bytes": 116542,
+      "sha256": "2c26523b6e58742275017a867785365ac2f5d49cec2803736584a705f73eff03"
+    },
+    {
+      "path": "thuthesis/xelatex15709.fls",
+      "bytes": 116542,
+      "sha256": "2c26523b6e58742275017a867785365ac2f5d49cec2803736584a705f73eff03"
+    },
+    {
+      "path": "thuthesis/xelatex15744.fls",
+      "bytes": 116542,
+      "sha256": "2c26523b6e58742275017a867785365ac2f5d49cec2803736584a705f73eff03"
+    },
+    {
+      "path": "thuthesis/xelatex16070.fls",
+      "bytes": 109381,
+      "sha256": "afc878e1863060a88b97cf75edb3eab998ed929f97423b1c57a5c3e0a76b71fb"
+    },
+    {
+      "path": "thuthesis/xelatex17012.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17020.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17121.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17137.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17247.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17261.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17353.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17366.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex17606.fls",
+      "bytes": 109624,
+      "sha256": "42bc20c7cc750bcac1f755095f8666693c3b976691d1955e7eb856ed60c894a7"
+    },
+    {
+      "path": "thuthesis/xelatex17700.fls",
+      "bytes": 109624,
+      "sha256": "42bc20c7cc750bcac1f755095f8666693c3b976691d1955e7eb856ed60c894a7"
+    },
+    {
+      "path": "thuthesis/xelatex18806.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex19060.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex19591.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex19813.fls",
+      "bytes": 109876,
+      "sha256": "deb4f7518a1962afc3b4cd64118b332bdad1335890d12b1c7e1e16643180c880"
+    },
+    {
+      "path": "thuthesis/xelatex19836.fls",
+      "bytes": 109876,
+      "sha256": "deb4f7518a1962afc3b4cd64118b332bdad1335890d12b1c7e1e16643180c880"
+    },
+    {
+      "path": "thuthesis/xelatex20313.fls",
+      "bytes": 116818,
+      "sha256": "0c82b7f7f3a9f9e3812fa5d211415efe90cb422c6795e635e9d007710bbd8fd3"
+    },
+    {
+      "path": "thuthesis/xelatex21188.fls",
+      "bytes": 117070,
+      "sha256": "72693792ce93faafebf28b5b8af2248d54e686b4e819f3ad9e9efdb2d9bf846c"
+    },
+    {
+      "path": "thuthesis/xelatex21200.fls",
+      "bytes": 117070,
+      "sha256": "72693792ce93faafebf28b5b8af2248d54e686b4e819f3ad9e9efdb2d9bf846c"
+    },
+    {
+      "path": "thuthesis/xelatex21226.fls",
+      "bytes": 117070,
+      "sha256": "72693792ce93faafebf28b5b8af2248d54e686b4e819f3ad9e9efdb2d9bf846c"
+    },
+    {
+      "path": "thuthesis/xelatex22705.fls",
+      "bytes": 110131,
+      "sha256": "d92f4541e1ee418f491b734ffd56002a9467ed7712ef8b85b3b2a2db6a804bcd"
+    },
+    {
+      "path": "thuthesis/xelatex22799.fls",
+      "bytes": 110131,
+      "sha256": "d92f4541e1ee418f491b734ffd56002a9467ed7712ef8b85b3b2a2db6a804bcd"
+    },
+    {
+      "path": "thuthesis/xelatex23133.fls",
+      "bytes": 117313,
+      "sha256": "1225afccbf6fea037b87131d15eea445665642c8156ce1f6d9289b54907624e1"
+    },
+    {
+      "path": "thuthesis/xelatex23140.fls",
+      "bytes": 117313,
+      "sha256": "1225afccbf6fea037b87131d15eea445665642c8156ce1f6d9289b54907624e1"
+    },
+    {
+      "path": "thuthesis/xelatex23387.fls",
+      "bytes": 117313,
+      "sha256": "1225afccbf6fea037b87131d15eea445665642c8156ce1f6d9289b54907624e1"
+    },
+    {
+      "path": "thuthesis/xelatex23431.fls",
+      "bytes": 110131,
+      "sha256": "d92f4541e1ee418f491b734ffd56002a9467ed7712ef8b85b3b2a2db6a804bcd"
+    },
+    {
+      "path": "thuthesis/xelatex23660.fls",
+      "bytes": 110131,
+      "sha256": "d92f4541e1ee418f491b734ffd56002a9467ed7712ef8b85b3b2a2db6a804bcd"
+    },
+    {
+      "path": "thuthesis/xelatex24009.fls",
+      "bytes": 117568,
+      "sha256": "8ba7ef9f94d9bd8b16a9f79163e945c7afb735a21c7a0f34f90fd8447c7b02e7"
+    },
+    {
+      "path": "thuthesis/xelatex24052.fls",
+      "bytes": 117568,
+      "sha256": "8ba7ef9f94d9bd8b16a9f79163e945c7afb735a21c7a0f34f90fd8447c7b02e7"
+    },
+    {
+      "path": "thuthesis/xelatex25366.fls",
+      "bytes": 110380,
+      "sha256": "76241374eed6e27032fe9fb54f44e2d4a6e0b269f5142d2ec0f975012a082fd2"
+    },
+    {
+      "path": "thuthesis/xelatex25474.fls",
+      "bytes": 110380,
+      "sha256": "76241374eed6e27032fe9fb54f44e2d4a6e0b269f5142d2ec0f975012a082fd2"
+    },
+    {
+      "path": "thuthesis/xelatex25569.fls",
+      "bytes": 110380,
+      "sha256": "76241374eed6e27032fe9fb54f44e2d4a6e0b269f5142d2ec0f975012a082fd2"
+    },
+    {
+      "path": "thuthesis/xelatex25576.fls",
+      "bytes": 110380,
+      "sha256": "76241374eed6e27032fe9fb54f44e2d4a6e0b269f5142d2ec0f975012a082fd2"
+    },
+    {
+      "path": "thuthesis/xelatex25878.fls",
+      "bytes": 110380,
+      "sha256": "76241374eed6e27032fe9fb54f44e2d4a6e0b269f5142d2ec0f975012a082fd2"
+    },
+    {
+      "path": "thuthesis/xelatex26007.fls",
+      "bytes": 117841,
+      "sha256": "e46dadd94ddc4c0efc1d5cedc7a36a8a59fc46d3352085e54e1dd4c083401f6a"
+    },
+    {
+      "path": "thuthesis/xelatex26185.fls",
+      "bytes": 117841,
+      "sha256": "e46dadd94ddc4c0efc1d5cedc7a36a8a59fc46d3352085e54e1dd4c083401f6a"
+    },
+    {
+      "path": "thuthesis/xelatex26690.fls",
+      "bytes": 117841,
+      "sha256": "e46dadd94ddc4c0efc1d5cedc7a36a8a59fc46d3352085e54e1dd4c083401f6a"
+    },
+    {
+      "path": "thuthesis/xelatex28704.fls",
+      "bytes": 118111,
+      "sha256": "1015239fdda0b1254968bf6c3c4580f2173684cfde46eba425f2131a15d43b53"
+    },
+    {
+      "path": "thuthesis/xelatex28713.fls",
+      "bytes": 118111,
+      "sha256": "1015239fdda0b1254968bf6c3c4580f2173684cfde46eba425f2131a15d43b53"
+    },
+    {
+      "path": "thuthesis/xelatex30866.fls",
+      "bytes": 118372,
+      "sha256": "3f0e3b8370abe383a295b3242b332ba5d7b49d6944a29c2e9df4e4d068ce96c7"
+    },
+    {
+      "path": "thuthesis/xelatex30873.fls",
+      "bytes": 118372,
+      "sha256": "3f0e3b8370abe383a295b3242b332ba5d7b49d6944a29c2e9df4e4d068ce96c7"
+    },
+    {
+      "path": "thuthesis/xelatex31520.fls",
+      "bytes": 110626,
+      "sha256": "443f405e8844ef05f2f7d3711f8a7758691138e74ecec88212ee90b249fe3616"
+    },
+    {
+      "path": "thuthesis/xelatex31534.fls",
+      "bytes": 110626,
+      "sha256": "443f405e8844ef05f2f7d3711f8a7758691138e74ecec88212ee90b249fe3616"
+    },
+    {
+      "path": "thuthesis/xelatex32063.fls",
+      "bytes": 110626,
+      "sha256": "443f405e8844ef05f2f7d3711f8a7758691138e74ecec88212ee90b249fe3616"
+    },
+    {
+      "path": "thuthesis/xelatex32200.fls",
+      "bytes": 110626,
+      "sha256": "443f405e8844ef05f2f7d3711f8a7758691138e74ecec88212ee90b249fe3616"
+    },
+    {
+      "path": "thuthesis/xelatex32819.fls",
+      "bytes": 118654,
+      "sha256": "14aba32d3fc0fb916ec9f87e74d50f359d2fef4f4d97fbb899b9ae061e31240d"
+    },
+    {
+      "path": "thuthesis/xelatex32826.fls",
+      "bytes": 118654,
+      "sha256": "14aba32d3fc0fb916ec9f87e74d50f359d2fef4f4d97fbb899b9ae061e31240d"
+    },
+    {
+      "path": "thuthesis/xelatex32991.fls",
+      "bytes": 118654,
+      "sha256": "14aba32d3fc0fb916ec9f87e74d50f359d2fef4f4d97fbb899b9ae061e31240d"
+    },
+    {
+      "path": "thuthesis/xelatex33057.fls",
+      "bytes": 118654,
+      "sha256": "14aba32d3fc0fb916ec9f87e74d50f359d2fef4f4d97fbb899b9ae061e31240d"
+    },
+    {
+      "path": "thuthesis/xelatex33129.fls",
+      "bytes": 118654,
+      "sha256": "14aba32d3fc0fb916ec9f87e74d50f359d2fef4f4d97fbb899b9ae061e31240d"
+    },
+    {
+      "path": "thuthesis/xelatex36197.fls",
+      "bytes": 118945,
+      "sha256": "d54c619db3a76b1efc240a80ae568f93c54cff0ec4f67cd9554bdf4f4f2b1bc8"
+    },
+    {
+      "path": "thuthesis/xelatex36205.fls",
+      "bytes": 118945,
+      "sha256": "d54c619db3a76b1efc240a80ae568f93c54cff0ec4f67cd9554bdf4f4f2b1bc8"
+    },
+    {
+      "path": "thuthesis/xelatex3759.fls",
+      "bytes": 107779,
+      "sha256": "454176314216725300e63d173e0f727f1aaeb029df636288ee0478644b916cc2"
+    },
+    {
+      "path": "thuthesis/xelatex3782.fls",
+      "bytes": 107779,
+      "sha256": "454176314216725300e63d173e0f727f1aaeb029df636288ee0478644b916cc2"
+    },
+    {
+      "path": "thuthesis/xelatex38133.fls",
+      "bytes": 110878,
+      "sha256": "4d9b3eaccddbcc554df2c15e44e9241b3836c8648298c75d103d0950a4c0d267"
+    },
+    {
+      "path": "thuthesis/xelatex38158.fls",
+      "bytes": 110878,
+      "sha256": "4d9b3eaccddbcc554df2c15e44e9241b3836c8648298c75d103d0950a4c0d267"
+    },
+    {
+      "path": "thuthesis/xelatex38706.fls",
+      "bytes": 110878,
+      "sha256": "4d9b3eaccddbcc554df2c15e44e9241b3836c8648298c75d103d0950a4c0d267"
+    },
+    {
+      "path": "thuthesis/xelatex38963.fls",
+      "bytes": 119239,
+      "sha256": "0989ca318dd098ab743a2058f2cf96e8271a49f1e9af541159d30b59737bce0a"
+    },
+    {
+      "path": "thuthesis/xelatex38970.fls",
+      "bytes": 119239,
+      "sha256": "0989ca318dd098ab743a2058f2cf96e8271a49f1e9af541159d30b59737bce0a"
+    },
+    {
+      "path": "thuthesis/xelatex39139.fls",
+      "bytes": 119239,
+      "sha256": "0989ca318dd098ab743a2058f2cf96e8271a49f1e9af541159d30b59737bce0a"
+    },
+    {
+      "path": "thuthesis/xelatex4149.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex41837.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex42013.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex4324.fls",
+      "bytes": 114934,
+      "sha256": "e7b9e65434cf127763e6ef5db4d824ed336356305fd5a8221a81fa4b7a0eb172"
+    },
+    {
+      "path": "thuthesis/xelatex4328.fls",
+      "bytes": 114934,
+      "sha256": "e7b9e65434cf127763e6ef5db4d824ed336356305fd5a8221a81fa4b7a0eb172"
+    },
+    {
+      "path": "thuthesis/xelatex43551.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex4404.fls",
+      "bytes": 107779,
+      "sha256": "454176314216725300e63d173e0f727f1aaeb029df636288ee0478644b916cc2"
+    },
+    {
+      "path": "thuthesis/xelatex4427.fls",
+      "bytes": 107779,
+      "sha256": "454176314216725300e63d173e0f727f1aaeb029df636288ee0478644b916cc2"
+    },
+    {
+      "path": "thuthesis/xelatex45297.fls",
+      "bytes": 111121,
+      "sha256": "98248c6d298e2876334221ae6bd2a93221a3d4ef2a7297cdf53172c936492d9e"
+    },
+    {
+      "path": "thuthesis/xelatex45323.fls",
+      "bytes": 111121,
+      "sha256": "98248c6d298e2876334221ae6bd2a93221a3d4ef2a7297cdf53172c936492d9e"
+    },
+    {
+      "path": "thuthesis/xelatex46103.fls",
+      "bytes": 111121,
+      "sha256": "98248c6d298e2876334221ae6bd2a93221a3d4ef2a7297cdf53172c936492d9e"
+    },
+    {
+      "path": "thuthesis/xelatex46315.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex4737.fls",
+      "bytes": 108289,
+      "sha256": "415cb29e618ac0c31f40273198e6b57b9c4bfa3e139f1b534709617070d3ae86"
+    },
+    {
+      "path": "thuthesis/xelatex4748.fls",
+      "bytes": 108289,
+      "sha256": "415cb29e618ac0c31f40273198e6b57b9c4bfa3e139f1b534709617070d3ae86"
+    },
+    {
+      "path": "thuthesis/xelatex47575.fls",
+      "bytes": 111370,
+      "sha256": "0e80a908f0aae26b8b41d783195975a1a9960539ca68bcae76c796baeb2260ac"
+    },
+    {
+      "path": "thuthesis/xelatex47668.fls",
+      "bytes": 111370,
+      "sha256": "0e80a908f0aae26b8b41d783195975a1a9960539ca68bcae76c796baeb2260ac"
+    },
+    {
+      "path": "thuthesis/xelatex48274.fls",
+      "bytes": 111370,
+      "sha256": "0e80a908f0aae26b8b41d783195975a1a9960539ca68bcae76c796baeb2260ac"
+    },
+    {
+      "path": "thuthesis/xelatex5000.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex5083.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex50836.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex50911.fls",
+      "bytes": 111625,
+      "sha256": "0fecd41ac596cae5145d9be041bf0687fc991c57c0aa091e2c572e7fc4ccda4a"
+    },
+    {
+      "path": "thuthesis/xelatex50927.fls",
+      "bytes": 111625,
+      "sha256": "0fecd41ac596cae5145d9be041bf0687fc991c57c0aa091e2c572e7fc4ccda4a"
+    },
+    {
+      "path": "thuthesis/xelatex51215.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex52132.fls",
+      "bytes": 111625,
+      "sha256": "0fecd41ac596cae5145d9be041bf0687fc991c57c0aa091e2c572e7fc4ccda4a"
+    },
+    {
+      "path": "thuthesis/xelatex52149.fls",
+      "bytes": 111625,
+      "sha256": "0fecd41ac596cae5145d9be041bf0687fc991c57c0aa091e2c572e7fc4ccda4a"
+    },
+    {
+      "path": "thuthesis/xelatex54175.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex54352.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex54538.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex5523.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex56181.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex56198.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex56372.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex56385.fls",
+      "bytes": 111880,
+      "sha256": "67881a3d3a63bf20f602a1e59ed1172b51c0220b4aa51428140bd70d6ea4dab4"
+    },
+    {
+      "path": "thuthesis/xelatex5703.fls",
+      "bytes": 107779,
+      "sha256": "454176314216725300e63d173e0f727f1aaeb029df636288ee0478644b916cc2"
+    },
+    {
+      "path": "thuthesis/xelatex57402.fls",
+      "bytes": 112111,
+      "sha256": "86eec472f821e2ce706dc5f598d81304b022942825f9447b5e46b9075303f028"
+    },
+    {
+      "path": "thuthesis/xelatex57418.fls",
+      "bytes": 112111,
+      "sha256": "86eec472f821e2ce706dc5f598d81304b022942825f9447b5e46b9075303f028"
+    },
+    {
+      "path": "thuthesis/xelatex57622.fls",
+      "bytes": 112111,
+      "sha256": "86eec472f821e2ce706dc5f598d81304b022942825f9447b5e46b9075303f028"
+    },
+    {
+      "path": "thuthesis/xelatex59019.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex59025.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex59827.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex6179.fls",
+      "bytes": 108102,
+      "sha256": "0694d6d8a73b6f2315211caf3b0336784e2dc44a8c50b0643315496897f79ea9"
+    },
+    {
+      "path": "thuthesis/xelatex61795.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex61933.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex62098.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex62110.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex6212.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex6249.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex62599.fls",
+      "bytes": 112357,
+      "sha256": "41e0337c9b87ad69d585ccce57eeafb5fe3ccdcdc9802ac512a80f199f6c4b22"
+    },
+    {
+      "path": "thuthesis/xelatex62886.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex62966.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex64409.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex6519.fls",
+      "bytes": 115198,
+      "sha256": "2ec2f248b709bd6f9c7d78bbd0125fc5fd2d07edb088399d2eef2a9250974e04"
+    },
+    {
+      "path": "thuthesis/xelatex6526.fls",
+      "bytes": 115198,
+      "sha256": "2ec2f248b709bd6f9c7d78bbd0125fc5fd2d07edb088399d2eef2a9250974e04"
+    },
+    {
+      "path": "thuthesis/xelatex66073.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex66296.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex66316.fls",
+      "bytes": 112591,
+      "sha256": "5a845a192e305951d67c6896b32132ec3a9dcf7b046b0e5c7aa0067e7fa53e74"
+    },
+    {
+      "path": "thuthesis/xelatex66513.fls",
+      "bytes": 112591,
+      "sha256": "5a845a192e305951d67c6896b32132ec3a9dcf7b046b0e5c7aa0067e7fa53e74"
+    },
+    {
+      "path": "thuthesis/xelatex67333.fls",
+      "bytes": 112591,
+      "sha256": "5a845a192e305951d67c6896b32132ec3a9dcf7b046b0e5c7aa0067e7fa53e74"
+    },
+    {
+      "path": "thuthesis/xelatex68621.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex68744.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex6897.fls",
+      "bytes": 115486,
+      "sha256": "93a8f4ad161fa50f037b428f22177e8bb430d4b9d2c6adb3fba4e341d054b41c"
+    },
+    {
+      "path": "thuthesis/xelatex6904.fls",
+      "bytes": 115486,
+      "sha256": "93a8f4ad161fa50f037b428f22177e8bb430d4b9d2c6adb3fba4e341d054b41c"
+    },
+    {
+      "path": "thuthesis/xelatex69055.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex69111.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex70535.fls",
+      "bytes": 119539,
+      "sha256": "04f6d68e95327f018d88b205a4babac779d54494b03accb8182499efb24b23d1"
+    },
+    {
+      "path": "thuthesis/xelatex71311.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex7340.fls",
+      "bytes": 108553,
+      "sha256": "f28758b76adedf5e2027d3912e32f71b50c72f4f6bc088b21ccfca3817fc6bcf"
+    },
+    {
+      "path": "thuthesis/xelatex7344.fls",
+      "bytes": 108553,
+      "sha256": "f28758b76adedf5e2027d3912e32f71b50c72f4f6bc088b21ccfca3817fc6bcf"
+    },
+    {
+      "path": "thuthesis/xelatex7450.fls",
+      "bytes": 115738,
+      "sha256": "afbfec2f7781d4c05ad9538ca36522275ae3373605f39d998347ebb60c44f211"
+    },
+    {
+      "path": "thuthesis/xelatex7460.fls",
+      "bytes": 115738,
+      "sha256": "afbfec2f7781d4c05ad9538ca36522275ae3373605f39d998347ebb60c44f211"
+    },
+    {
+      "path": "thuthesis/xelatex75229.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex75316.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex75387.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex75831.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex76062.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex7771.fls",
+      "bytes": 108850,
+      "sha256": "72d1b6e551fe79a88d9dbf0bec0e9d1db7d0576671bea10a039e777cbfd5debe"
+    },
+    {
+      "path": "thuthesis/xelatex7777.fls",
+      "bytes": 108850,
+      "sha256": "72d1b6e551fe79a88d9dbf0bec0e9d1db7d0576671bea10a039e777cbfd5debe"
+    },
+    {
+      "path": "thuthesis/xelatex79113.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex8015.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex8023.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex8027.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex80541.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex80548.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex8097.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex8107.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex8200.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex8203.fls",
+      "bytes": 116005,
+      "sha256": "491d6d6e1e86ec532df0ea4a029a27d37e75965b177fe816f21340d0e920dfb4"
+    },
+    {
+      "path": "thuthesis/xelatex8210.fls",
+      "bytes": 116005,
+      "sha256": "491d6d6e1e86ec532df0ea4a029a27d37e75965b177fe816f21340d0e920dfb4"
+    },
+    {
+      "path": "thuthesis/xelatex8213.fls",
+      "bytes": 108322,
+      "sha256": "f4efe804f437b9fa850982da28e4d936427e16714c3868aae2aada7db133c4ed"
+    },
+    {
+      "path": "thuthesis/xelatex82220.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex82417.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex82422.fls",
+      "bytes": 119812,
+      "sha256": "74efac143b7eb15dbacd2c0a8423192d5f7b96119e48d26db4ee742ba9607e95"
+    },
+    {
+      "path": "thuthesis/xelatex82424.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex83948.fls",
+      "bytes": 112867,
+      "sha256": "d9580238754850af02976e41a720daa00c83d8f46c0ab8a293368b41e36bad88"
+    },
+    {
+      "path": "thuthesis/xelatex8491.fls",
+      "bytes": 108850,
+      "sha256": "72d1b6e551fe79a88d9dbf0bec0e9d1db7d0576671bea10a039e777cbfd5debe"
+    },
+    {
+      "path": "thuthesis/xelatex8501.fls",
+      "bytes": 108850,
+      "sha256": "72d1b6e551fe79a88d9dbf0bec0e9d1db7d0576671bea10a039e777cbfd5debe"
+    },
+    {
+      "path": "thuthesis/xelatex85309.fls",
+      "bytes": 113155,
+      "sha256": "4c1b594ff061942698bf9210e270669b0f581d0189f7f305a97b929e96103157"
+    },
+    {
+      "path": "thuthesis/xelatex85316.fls",
+      "bytes": 113155,
+      "sha256": "4c1b594ff061942698bf9210e270669b0f581d0189f7f305a97b929e96103157"
+    },
+    {
+      "path": "thuthesis/xelatex86451.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex86462.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex86501.fls",
+      "bytes": 120091,
+      "sha256": "4aa319f779eda38ddd9b4e6398e9e2937b85b8f78ab38f41e5cff936f97eaff8"
+    },
+    {
+      "path": "thuthesis/xelatex86516.fls",
+      "bytes": 120091,
+      "sha256": "4aa319f779eda38ddd9b4e6398e9e2937b85b8f78ab38f41e5cff936f97eaff8"
+    },
+    {
+      "path": "thuthesis/xelatex86881.fls",
+      "bytes": 108340,
+      "sha256": "fb7537f6af20e5d8be32e22341e9b34e7e527f0cb91c29dac1d6e7564b8f1cde"
+    },
+    {
+      "path": "thuthesis/xelatex86900.fls",
+      "bytes": 108340,
+      "sha256": "fb7537f6af20e5d8be32e22341e9b34e7e527f0cb91c29dac1d6e7564b8f1cde"
+    },
+    {
+      "path": "thuthesis/xelatex86912.fls",
+      "bytes": 108340,
+      "sha256": "fb7537f6af20e5d8be32e22341e9b34e7e527f0cb91c29dac1d6e7564b8f1cde"
+    },
+    {
+      "path": "thuthesis/xelatex86980.fls",
+      "bytes": 108340,
+      "sha256": "d227f58f18ff35c6b0e823dbac10548f96178cdb3ec93323f2660b1b7f09a130"
+    },
+    {
+      "path": "thuthesis/xelatex86987.fls",
+      "bytes": 108340,
+      "sha256": "d227f58f18ff35c6b0e823dbac10548f96178cdb3ec93323f2660b1b7f09a130"
+    },
+    {
+      "path": "thuthesis/xelatex87675.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex87828.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex90773.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex90782.fls",
+      "bytes": 113431,
+      "sha256": "a9e4633290f6200fa5936185148f02c0172118e5911f57e93975cb95637121c3"
+    },
+    {
+      "path": "thuthesis/xelatex94068.fls",
+      "bytes": 113674,
+      "sha256": "3f7e296a5517279c6ff6818ea78a3cc8d4f055c0b7c37d2512e4e7a4394786c2"
+    },
+    {
+      "path": "thuthesis/xelatex94076.fls",
+      "bytes": 113674,
+      "sha256": "3f7e296a5517279c6ff6818ea78a3cc8d4f055c0b7c37d2512e4e7a4394786c2"
+    },
+    {
+      "path": "thuthesis/xelatex95362.fls",
+      "bytes": 113674,
+      "sha256": "3f7e296a5517279c6ff6818ea78a3cc8d4f055c0b7c37d2512e4e7a4394786c2"
+    },
+    {
+      "path": "thuthesis/xelatex96280.fls",
+      "bytes": 113674,
+      "sha256": "3f7e296a5517279c6ff6818ea78a3cc8d4f055c0b7c37d2512e4e7a4394786c2"
+    },
+    {
+      "path": "thuthesis/xelatex96290.fls",
+      "bytes": 113674,
+      "sha256": "3f7e296a5517279c6ff6818ea78a3cc8d4f055c0b7c37d2512e4e7a4394786c2"
+    },
+    {
+      "path": "thuthesis/xelatex98721.fls",
+      "bytes": 47342,
+      "sha256": "c1679b0d7745f9d6f493d65cdebbeb4bd940b447527f1bf4c321b38c6ea52861"
+    },
+    {
+      "path": "thuthesis/xelatex98883.fls",
+      "bytes": 113926,
+      "sha256": "2a19a16ad6e638339a004b02c5e58229ec48fb8447c1a6730413b09ecbb87d78"
+    },
+    {
+      "path": "thuthesis/xelatex98888.fls",
+      "bytes": 113926,
+      "sha256": "2a19a16ad6e638339a004b02c5e58229ec48fb8447c1a6730413b09ecbb87d78"
+    }
+  ],
+  "cleanup_completed": true,
+  "remaining_inventoried_files": [],
+  "new_pdf": "thuthesis/build/auv-thesis/auv-thesis.pdf",
+  "new_pdf_sha256": "4d68c8ff006d278a1f140c4b479c67138252d44c480198cfdccbfd9e4c86f69b",
+  "new_pdf_pages": 170
+}

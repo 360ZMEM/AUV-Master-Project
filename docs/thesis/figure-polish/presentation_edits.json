@@ -1,0 +1,2074 @@
+{
+  "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio": [
+    {
+      "page": 0,
+      "cell_id": "env",
+      "before": {
+        "id": "env",
+        "value": "<b>环境与艇体</b><br>水流 / 地形 / 动力学",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "env",
+        "value": "<b>环境与艇体</b><br>水流 / 地形<br>艇体动力学",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      }
+    },
+    {
+      "page": 0,
+      "cell_id": "state",
+      "before": {
+        "id": "state",
+        "value": "<b>状态理解</b><br>位置 / 速度 / 置信度 / 风险",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "state",
+        "value": "<b>状态理解</b><br>位置 / 速度<br>置信度 / 风险",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      }
+    },
+    {
+      "page": 0,
+      "cell_id": "safety",
+      "before": {
+        "id": "safety",
+        "value": "<b>安全治理</b><br>权限 / 限幅 / 回退 / 急停",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "safety",
+        "value": "<b>安全治理</b><br>权限与限幅<br>回退与急停",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      }
+    }
+  ],
+  "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio": [
+    {
+      "page": 0,
+      "cell_id": "jetson",
+      "before": {
+        "id": "jetson",
+        "value": "Jetson Orin：非实时感知与决策",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "jetson",
+        "value": "Jetson Orin：非实时感知与决策",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#31566F",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "硬件容器使用深色标题，与内部功能节点区分"
+    },
+    {
+      "page": 0,
+      "cell_id": "pc104",
+      "before": {
+        "id": "pc104",
+        "value": "PC104 / VxWorks：硬实时执行与保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "pc104",
+        "value": "PC104 / VxWorks：硬实时执行与保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#31566F",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "硬件容器使用深色标题，与内部功能节点区分"
+    },
+    {
+      "page": 0,
+      "cell_id": "bus",
+      "before": {
+        "id": "bus",
+        "value": "<b>双脑协议接口</b><br>$CKTH 72 B / $AUV 145 B",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "dashPattern": "8 5",
+          "dashed": "1",
+          "fillColor": "#F6F7F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#7F8E9A",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "bus",
+        "value": "<b>双脑协议接口</b><br>命令下行 $CKTH 72 B<br>状态上行 $AUV 145 B",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "dashPattern": "8 5",
+          "dashed": "1",
+          "fillColor": "#F6F7F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#7F8E9A",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留协议名和字节数，补充上下行含义"
+    },
+    {
+      "page": 0,
+      "cell_id": "sensors",
+      "before": {
+        "id": "sensors",
+        "value": "<b>航行与健康传感</b><br>IMU / DVL / 深度 / 故障字",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "sensors",
+        "value": "<b>航行与健康传感</b><br>IMU、DVL<br>深度、故障字",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同义分行，完整保留四类传感输入"
+    },
+    {
+      "page": 0,
+      "cell_id": "j1",
+      "before": {
+        "id": "j1",
+        "value": "<b>感知与估计</b><br>ES-EKF",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j1",
+        "value": "<b>感知与估计</b><br>融合定位（ES-EKF）",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "为缩写补充融合定位解释"
+    },
+    {
+      "page": 0,
+      "cell_id": "j2",
+      "before": {
+        "id": "j2",
+        "value": "<b>任务决策</b><br>Behavior Tree",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j2",
+        "value": "<b>任务决策</b><br>行为树选择任务",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "用中文说明行为树的任务选择职责"
+    },
+    {
+      "page": 0,
+      "cell_id": "j3",
+      "before": {
+        "id": "j3",
+        "value": "<b>路径与控制意图</b><br>UA-MPC",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j3",
+        "value": "<b>路径与控制意图</b><br>约束优化控制（UA-MPC）",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "为缩写补充约束优化控制解释"
+    }
+  ],
+  "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio": [
+    {
+      "page": 0,
+      "cell_id": "state",
+      "before": {
+        "id": "state",
+        "value": "<b>形成可信状态</b><br>ES-EKF / R<sub>s</sub> / P / c<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "state",
+        "value": "<b>形成可信状态</b><br>融合定位 / 不确定性 / 可信度",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "概览图将裸变量换为其中文含义，后文公式保留"
+    },
+    {
+      "page": 0,
+      "cell_id": "action",
+      "before": {
+        "id": "action",
+        "value": "<b>采取安全行动</b><br>行为路由 / UA-MPC / 分层保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "action",
+        "value": "<b>采取安全行动</b><br>行为选择 / 约束控制 / 分层保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "概览图用行为选择、约束控制解释缩写"
+    },
+    {
+      "page": 0,
+      "cell_id": "s1",
+      "before": {
+        "id": "s1",
+        "value": "<b>双脑异步架构</b><br>Jetson + PC104",
+        "role": "vertex",
+        "parent": "support",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "s1",
+        "value": "<b>双脑异步架构</b><br>Jetson 决策 / PC104 执行",
+        "role": "vertex",
+        "parent": "support",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "补充双脑职责；硬件支撑用蓝色区分信息支撑"
+    }
+  ],
+  "docs/thesis/figures/architecture/auv_v2_emergency_transition.drawio": [
+    {
+      "page": 0,
+      "cell_id": "eg1a",
+      "before": {
+        "id": "eg1a",
+        "value": "新鲜度 / 授权",
+        "role": "edge",
+        "parent": "1",
+        "source": "g1",
+        "target": "arb",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "after": {
+        "id": "eg1a",
+        "value": "新鲜度 /<br>授权",
+        "role": "edge",
+        "parent": "1",
+        "source": "g1",
+        "target": "arb",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "reason": "长边标签等义换行，边方向与全部条件保留"
+    },
+    {
+      "page": 0,
+      "cell_id": "eg3a",
+      "before": {
+        "id": "eg3a",
+        "value": "安全字 / 本地检测",
+        "role": "edge",
+        "parent": "1",
+        "source": "g3",
+        "target": "emergency",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#A34F55"
+        }
+      },
+      "after": {
+        "id": "eg3a",
+        "value": "安全字 /<br>本地检测",
+        "role": "edge",
+        "parent": "1",
+        "source": "g3",
+        "target": "emergency",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#A34F55"
+        }
+      },
+      "reason": "长边标签等义换行，边方向与全部条件保留"
+    }
+  ],
+  "docs/internals/figures/architecture/auv_code_layer_architecture.drawio": [
+    {
+      "page": 0,
+      "cell_id": "a3",
+      "before": {
+        "id": "a3",
+        "value": "<b>桥接运行入口</b><br>run_zenoh_bridge.py",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "a3",
+        "value": "<b>桥接运行入口</b><br>run_zenoh_<br>bridge.py",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留完整文件名，仅在下划线后显式分行，以避免窄节点溢出"
+    },
+    {
+      "page": 0,
+      "cell_id": "a4",
+      "before": {
+        "id": "a4",
+        "value": "<b>实验编排入口</b><br>start_experiment.sh",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "a4",
+        "value": "<b>实验编排入口</b><br>start_<br>experiment.sh",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留完整文件名，仅在下划线后显式分行，以避免窄节点溢出"
+    },
+    {
+      "page": 0,
+      "cell_id": "g2",
+      "before": {
+        "id": "g2",
+        "value": "<b>级联 PID</b><br>auv_pid_controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g2",
+        "value": "<b>级联 PID</b><br>auv_pid_<br>controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留完整文件名，仅在下划线后显式分行，以避免窄节点溢出"
+    },
+    {
+      "page": 0,
+      "cell_id": "g3",
+      "before": {
+        "id": "g3",
+        "value": "<b>MPC / UA-MPC</b><br>auv_mpc_controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g3",
+        "value": "<b>MPC / UA-MPC</b><br>auv_mpc_<br>controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留完整文件名，仅在下划线后显式分行，以避免窄节点溢出"
+    },
+    {
+      "page": 0,
+      "cell_id": "g5",
+      "before": {
+        "id": "g5",
+        "value": "<b>轨迹生成</b><br>trajectory_generator.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g5",
+        "value": "<b>轨迹生成</b><br>trajectory_<br>generator.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留完整文件名，仅在下划线后显式分行，以避免窄节点溢出"
+    }
+  ],
+  "docs/thesis/figures/architecture/auv_runtime_dataflow.drawio": [
+    {
+      "page": 0,
+      "cell_id": "b1",
+      "before": {
+        "id": "b1",
+        "value": "<b>数字孪生或硬件替身</b><br>PVS / HoloOcean / Mock AMD",
+        "role": "vertex",
+        "parent": "bridge",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "b1",
+        "value": "<b>数字孪生或硬件替身</b><br>PVS / HoloOcean<br>Mock AMD",
+        "role": "vertex",
+        "parent": "bridge",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同一仿真/替身列表分行以适应输入形状安全区；不改变节点/边关系"
+    }
+  ],
+  "docs/internals/figures/architecture/auv_safety_arbiter_deployment.drawio": [
+    {
+      "page": 0,
+      "cell_id": "j2",
+      "before": {
+        "id": "j2",
+        "value": "<b>AutonomyGuard</b><br>漏水 / 电压 / 置信度 / 时延",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j2",
+        "value": "<b>AutonomyGuard</b><br>漏水 / 电压<br>置信度 / 时延",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "保留四项监测内容，仅分行为两行以适应菱形安全区"
+    }
+  ],
+  "AUV-Master-Mag/docs/figure/fig_zigzag_probe.drawio": [
+    {
+      "page": 0,
+      "cell_id": "t_est",
+      "before": {
+        "id": "t_est",
+        "value": "估计中心线（加权 PCA）",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "none",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "none",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "t_est",
+        "value": "估计中心线<br>峰值点加权拟合（PCA）",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "none",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "none",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "将加权PCA写明为峰值点加权直线拟合，保留方法与原始信息"
+    }
+  ],
+  "AUV-Master-Mag/docs/figure/fig_perception_pipeline.drawio": [
+    {
+      "page": 0,
+      "cell_id": "fit",
+      "before": {
+        "id": "fit",
+        "value": "<b>中心线拟合</b><br>加权 PCA",
+        "role": "vertex",
+        "parent": "geometry_lane",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "fit",
+        "value": "<b>中心线拟合</b><br>峰值点加权直线拟合（PCA）",
+        "role": "vertex",
+        "parent": "geometry_lane",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "将加权PCA写明为峰值点加权直线拟合，保留方法与原始信息"
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_code_layer_architecture.drawio": [
+    {
+      "page": 0,
+      "cell_id": "a3",
+      "before": {
+        "id": "a3",
+        "value": "<b>桥接运行入口</b><br>run_zenoh_bridge.py",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "a3",
+        "value": "<b>桥接运行入口</b><br>run_zenoh_<br>bridge.py",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "a4",
+      "before": {
+        "id": "a4",
+        "value": "<b>实验编排入口</b><br>start_experiment.sh",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "a4",
+        "value": "<b>实验编排入口</b><br>start_<br>experiment.sh",
+        "role": "vertex",
+        "parent": "app",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "g2",
+      "before": {
+        "id": "g2",
+        "value": "<b>级联 PID</b><br>auv_pid_controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g2",
+        "value": "<b>级联 PID</b><br>auv_pid_<br>controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "g3",
+      "before": {
+        "id": "g3",
+        "value": "<b>MPC / UA-MPC</b><br>auv_mpc_controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g3",
+        "value": "<b>MPC / UA-MPC</b><br>auv_mpc_<br>controller.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "g5",
+      "before": {
+        "id": "g5",
+        "value": "<b>轨迹生成</b><br>trajectory_generator.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "g5",
+        "value": "<b>轨迹生成</b><br>trajectory_<br>generator.py",
+        "role": "vertex",
+        "parent": "algorithm",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_runtime_dataflow.drawio": [
+    {
+      "page": 0,
+      "cell_id": "b1",
+      "before": {
+        "id": "b1",
+        "value": "<b>数字孪生或硬件替身</b><br>PVS / HoloOcean / Mock AMD",
+        "role": "vertex",
+        "parent": "bridge",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "b1",
+        "value": "<b>数字孪生或硬件替身</b><br>PVS / HoloOcean<br>Mock AMD",
+        "role": "vertex",
+        "parent": "bridge",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_safety_arbiter_deployment.drawio": [
+    {
+      "page": 0,
+      "cell_id": "j2",
+      "before": {
+        "id": "j2",
+        "value": "<b>AutonomyGuard</b><br>漏水 / 电压 / 置信度 / 时延",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j2",
+        "value": "<b>AutonomyGuard</b><br>漏水 / 电压<br>置信度 / 时延",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio": [
+    {
+      "page": 0,
+      "cell_id": "env",
+      "before": {
+        "id": "env",
+        "value": "<b>环境与艇体</b><br>水流 / 地形 / 动力学",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "env",
+        "value": "<b>环境与艇体</b><br>水流 / 地形<br>艇体动力学",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      }
+    },
+    {
+      "page": 0,
+      "cell_id": "state",
+      "before": {
+        "id": "state",
+        "value": "<b>状态理解</b><br>位置 / 速度 / 置信度 / 风险",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "state",
+        "value": "<b>状态理解</b><br>位置 / 速度<br>置信度 / 风险",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      }
+    },
+    {
+      "page": 0,
+      "cell_id": "safety",
+      "before": {
+        "id": "safety",
+        "value": "<b>安全治理</b><br>权限 / 限幅 / 回退 / 急停",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "safety",
+        "value": "<b>安全治理</b><br>权限与限幅<br>回退与急停",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F8EEEE",
+          "html": "1",
+          "strokeColor": "#B86F73",
+          "whiteSpace": "wrap"
+        }
+      }
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio": [
+    {
+      "page": 0,
+      "cell_id": "jetson",
+      "before": {
+        "id": "jetson",
+        "value": "Jetson Orin：非实时感知与决策",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "jetson",
+        "value": "Jetson Orin：非实时感知与决策",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#31566F",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "pc104",
+      "before": {
+        "id": "pc104",
+        "value": "PC104 / VxWorks：硬实时执行与保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF6F5",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "pc104",
+        "value": "PC104 / VxWorks：硬实时执行与保护",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#31566F",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#5D9E99",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "bus",
+      "before": {
+        "id": "bus",
+        "value": "<b>双脑协议接口</b><br>$CKTH 72 B / $AUV 145 B",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "dashPattern": "8 5",
+          "dashed": "1",
+          "fillColor": "#F6F7F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#7F8E9A",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "bus",
+        "value": "<b>双脑协议接口</b><br>命令下行 $CKTH 72 B<br>状态上行 $AUV 145 B",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "dashPattern": "8 5",
+          "dashed": "1",
+          "fillColor": "#F6F7F8",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#7F8E9A",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "sensors",
+      "before": {
+        "id": "sensors",
+        "value": "<b>航行与健康传感</b><br>IMU / DVL / 深度 / 故障字",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "sensors",
+        "value": "<b>航行与健康传感</b><br>IMU、DVL<br>深度、故障字",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "j1",
+      "before": {
+        "id": "j1",
+        "value": "<b>感知与估计</b><br>ES-EKF",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j1",
+        "value": "<b>感知与估计</b><br>融合定位（ES-EKF）",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "j2",
+      "before": {
+        "id": "j2",
+        "value": "<b>任务决策</b><br>Behavior Tree",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j2",
+        "value": "<b>任务决策</b><br>行为树选择任务",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "j3",
+      "before": {
+        "id": "j3",
+        "value": "<b>路径与控制意图</b><br>UA-MPC",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "j3",
+        "value": "<b>路径与控制意图</b><br>约束优化控制（UA-MPC）",
+        "role": "vertex",
+        "parent": "jetson",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    }
+  ],
+  "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio": [
+    {
+      "page": 0,
+      "cell_id": "m",
+      "before": {
+        "id": "m",
+        "value": "<b>观测质量</b><br>时延 / SNR / 缺测",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "m",
+        "value": "<b>观测质量</b><br>时延 / 信噪比 SNR / 缺测",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "r",
+      "before": {
+        "id": "r",
+        "value": "<b>分源量测噪声</b><br>质量分 → R<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "r",
+        "value": "<b>分源量测噪声</b><br>质量分 → 量测噪声<br>协方差 R<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "e",
+      "before": {
+        "id": "e",
+        "value": "<b>状态与协方差</b><br>ES-EKF：x 与 P",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "e",
+        "value": "<b>状态与协方差</b><br>ES-EKF：状态估计 x<br>与估计协方差 P",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "u",
+      "before": {
+        "id": "u",
+        "value": "<b>分源置信度</b><br>P + 源健康 → c<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "u",
+        "value": "<b>分源置信度</b><br>协方差 P + 源健康<br>→ 分源置信度 c<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "ctrl",
+      "before": {
+        "id": "ctrl",
+        "value": "<b>控制调制</b><br>跟踪权重 / 控制代价 / 速度",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "ctrl",
+        "value": "<b>控制调制</b><br>跟踪权重 / 控制代价<br>速度",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "u2",
+      "before": {
+        "id": "u2",
+        "value": "R_s",
+        "role": "edge",
+        "parent": "1",
+        "source": "r",
+        "target": "e",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "after": {
+        "id": "u2",
+        "value": "量测噪声协方差 R_s",
+        "role": "edge",
+        "parent": "1",
+        "source": "r",
+        "target": "e",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    },
+    {
+      "page": 0,
+      "cell_id": "u3",
+      "before": {
+        "id": "u3",
+        "value": "P / 源状态",
+        "role": "edge",
+        "parent": "1",
+        "source": "e",
+        "target": "u",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "after": {
+        "id": "u3",
+        "value": "协方差 P / 源状态",
+        "role": "edge",
+        "parent": "1",
+        "source": "e",
+        "target": "u",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    }
+  ],
+  "AUV-Master-Mag/docs/figure/fig_arch_onion.drawio": [
+    {
+      "page": 0,
+      "cell_id": "p3",
+      "before": {
+        "id": "p3",
+        "value": "<b>中心线与路径</b><br>PCA / 局部几何",
+        "role": "vertex",
+        "parent": "perception",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "shape": "cylinder3",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "p3",
+        "value": "<b>中心线与路径</b><br>加权拟合（PCA）<br>局部几何",
+        "role": "vertex",
+        "parent": "perception",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FFF7E8",
+          "html": "1",
+          "shape": "cylinder3",
+          "strokeColor": "#C69B42",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "显式解释SNR、R_s、x、P、c_s及PCA的既有含义；增加分行，不改变估计/调度关系"
+    }
+  ],
+  "AUV-Master-Mag/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio": [
+    {
+      "page": 0,
+      "cell_id": "m",
+      "before": {
+        "id": "m",
+        "value": "<b>观测质量</b><br>时延 / SNR / 缺测",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "m",
+        "value": "<b>观测质量</b><br>时延 / 信噪比 SNR / 缺测",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#FBEFE5",
+          "html": "1",
+          "perimeter": "parallelogramPerimeter",
+          "shape": "parallelogram",
+          "strokeColor": "#C9824D",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "r",
+      "before": {
+        "id": "r",
+        "value": "<b>分源量测噪声</b><br>质量分 → R<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "r",
+        "value": "<b>分源量测噪声</b><br>质量分 → 量测噪声<br>协方差 R<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "e",
+      "before": {
+        "id": "e",
+        "value": "<b>状态与协方差</b><br>ES-EKF：x 与 P",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "e",
+        "value": "<b>状态与协方差</b><br>ES-EKF：状态估计 x<br>与估计协方差 P",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EEF6EF",
+          "html": "1",
+          "strokeColor": "#6E9F78",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "u",
+      "before": {
+        "id": "u",
+        "value": "<b>分源置信度</b><br>P + 源健康 → c<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "u",
+        "value": "<b>分源置信度</b><br>协方差 P + 源健康<br>→ 分源置信度 c<sub>s</sub>",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#F2EDF7",
+          "html": "1",
+          "strokeColor": "#8F78AF",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "ctrl",
+      "before": {
+        "id": "ctrl",
+        "value": "<b>控制调制</b><br>跟踪权重 / 控制代价 / 速度",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "after": {
+        "id": "ctrl",
+        "value": "<b>控制调制</b><br>跟踪权重 / 控制代价<br>速度",
+        "role": "vertex",
+        "parent": "1",
+        "source": null,
+        "target": null,
+        "visible": "1",
+        "semantic_style": {
+          "fillColor": "#EAF2F8",
+          "html": "1",
+          "strokeColor": "#5F8FB8",
+          "whiteSpace": "wrap"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "u2",
+      "before": {
+        "id": "u2",
+        "value": "R_s",
+        "role": "edge",
+        "parent": "1",
+        "source": "r",
+        "target": "e",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "after": {
+        "id": "u2",
+        "value": "量测噪声协方差 R_s",
+        "role": "edge",
+        "parent": "1",
+        "source": "r",
+        "target": "e",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    },
+    {
+      "page": 0,
+      "cell_id": "u3",
+      "before": {
+        "id": "u3",
+        "value": "P / 源状态",
+        "role": "edge",
+        "parent": "1",
+        "source": "e",
+        "target": "u",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "after": {
+        "id": "u3",
+        "value": "协方差 P / 源状态",
+        "role": "edge",
+        "parent": "1",
+        "source": "e",
+        "target": "u",
+        "visible": "1",
+        "semantic_style": {
+          "endArrow": "block",
+          "endFill": "1",
+          "fontStyle": "1",
+          "html": "1",
+          "strokeColor": "#536F87"
+        }
+      },
+      "reason": "同步 canonical 图源的解释性文字与呈现样式，逐项理由见该 canonical 同名节点"
+    }
+  ]
+}

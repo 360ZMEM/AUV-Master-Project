@@ -405,23 +405,23 @@ def plot_stability_comparison() -> None:
     methods = ["explicit_fwhm", "free_profile_fit", "calibrated_amplitude", "absolute_half"]
     method_labels = ["显式空间 FWHM", "自由幅值剖面拟合", "标定幅值反演", "未扣背景半高"]
     scenarios = ["nominal", "gain", "background", "noise", "scan_offset", "combined"]
-    scenario_labels = ["标称", "增益变化", "背景变化", "噪声", "扫描偏心", "组合扰动"]
+    scenario_labels = ["标称", "增益\n变化", "背景\n变化", "噪声", "扫描\n偏心", "组合\n扰动"]
     colors = [tps.PROPOSED, tps.BASELINE_2, tps.BASELINE_1, tps.WARNING]
-    fig, axes = plt.subplots(2, 2, figsize=tps.figure_size("full", height=5.55))
+    fig, axes = plt.subplots(2, 2, figsize=tps.figure_size("full", height=6.4))
 
     x = np.arange(len(scenarios)); width = 0.19
     for idx, (method, label, color) in enumerate(zip(methods, method_labels, colors)):
         values = [summary[s][method]["mae_m_published"] for s in scenarios]
         axes[0, 0].bar(x + (idx - 1.5) * width, values, width, color=color, edgecolor=tps.REFERENCE, linewidth=0.5, label=label)
-    axes[0, 0].set_yscale("log"); use_plain_log_labels(axes[0, 0]); axes[0, 0].set_xticks(x); axes[0, 0].set_xticklabels(scenario_labels, rotation=18)
+    axes[0, 0].set_yscale("log"); use_plain_log_labels(axes[0, 0]); axes[0, 0].set_xticks(x); axes[0, 0].set_xticklabels(scenario_labels, rotation=0)
     axes[0, 0].set_ylabel("发布结果 MAE (m，对数坐标)"); axes[0, 0].set_title("不同扰动下的条件精度")
 
     for idx, (method, label, color) in enumerate(zip(methods, method_labels, colors)):
         values = [summary[s][method]["valid_rate"] for s in scenarios]
         axes[0, 1].plot(x, values, color=color, label=label, **{k:v for k,v in tps.line_style(idx).items() if k != "color"})
-    axes[0, 1].set_xticks(x); axes[0, 1].set_xticklabels(scenario_labels, rotation=18)
+    axes[0, 1].set_xticks(x); axes[0, 1].set_xticklabels(scenario_labels, rotation=0)
     axes[0, 1].set_ylim(0.6, 1.03); axes[0, 1].set_ylabel("有效发布率")
-    axes[0, 1].set_title("扫描偏心时 FWHM 选择拒绝不完整剖面")
+    axes[0, 1].set_title("扫描偏心时 FWHM\n选择拒绝不完整剖面")
 
     risk_scenarios = ["combined", "model_mismatch"]
     risk_labels = ["组合扰动", "场模型失配"]
@@ -437,14 +437,14 @@ def plot_stability_comparison() -> None:
     for method in methods:
         values = [f(r, "error_m") for r in data if r["scenario"] == "combined" and r["method"] == method and int(f(r, "valid")) == 1]
         combined.append(values)
-    box = axes[1, 1].boxplot(combined, tick_labels=method_labels, showfliers=False, patch_artist=True, widths=0.62)
+    box = axes[1, 1].boxplot(combined, tick_labels=["显式空间\nFWHM", "自由幅值\n剖面拟合", "标定幅值\n反演", "未扣背景\n半高"], showfliers=False, patch_artist=True, widths=0.62)
     for patch, color in zip(box["boxes"], colors): patch.set_facecolor(color); patch.set_alpha(0.75)
     axes[1, 1].axhline(0, color=tps.REFERENCE, lw=0.8)
     axes[1, 1].set_ylabel("组合扰动下估计误差 (m)"); axes[1, 1].set_title("误差分布与离散程度")
-    axes[1, 1].tick_params(axis="x", rotation=18)
+    axes[1, 1].tick_params(axis="x", rotation=0)
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, ncol=4, loc="upper center", bbox_to_anchor=(0.5, 0.985), fontsize=8)
-    fig.subplots_adjust(left=0.10, right=0.98, bottom=0.13, top=0.82, hspace=0.56, wspace=0.30)
+    fig.legend(handles, labels, ncol=2, loc="upper center", bbox_to_anchor=(0.5, 0.99), fontsize=9)
+    fig.subplots_adjust(left=0.10, right=0.98, bottom=0.13, top=0.80, hspace=0.68, wspace=0.30)
     integrate_panel_labels(axes)
     save_publication_and_thesis(fig, "11_fwhm_stability_comparison")
 
@@ -453,7 +453,7 @@ def plot_stability_sensitivity() -> None:
     data = rows(RESULTS / "stability_comparison/per_run.csv")
     methods = ["explicit_fwhm", "free_profile_fit", "calibrated_amplitude"]
     labels = ["显式空间 FWHM", "自由幅值剖面拟合", "标定幅值反演"]
-    fig, axes = plt.subplots(1, 3, figsize=tps.figure_size("full", height=3.55))
+    fig, axes = plt.subplots(1, 3, figsize=tps.figure_size("full", height=3.9))
 
     for idx, (method, label) in enumerate(zip(methods, labels)):
         selected = [r for r in data if r["scenario"] == "gain" and r["method"] == method and int(f(r, "valid")) == 1]
@@ -486,7 +486,8 @@ def plot_stability_sensitivity() -> None:
     axes[2].set_xlabel("真实垂直距离 (m)"); axes[2].set_ylabel("估计垂直距离 (m)")
     axes[2].set_title("错误场形模型造成系统偏差")
     handles, legend_labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, legend_labels, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 0.985), fontsize=8)
+    ideal_handles, ideal_labels = axes[2].get_legend_handles_labels()
+    fig.legend(handles + [ideal_handles[-1]], legend_labels + [ideal_labels[-1]], ncol=2, loc="upper center", bbox_to_anchor=(0.5, 0.985), fontsize=8)
     fig.subplots_adjust(left=0.09, right=0.98, bottom=0.17, top=0.75, wspace=0.36)
     integrate_panel_labels(axes)
     save_publication_and_thesis(fig, "12_fwhm_stability_sensitivity")
@@ -496,7 +497,7 @@ def plot_shape_guard_validation() -> None:
     result_dir = RESULTS / "shape_guard_validation"
     summary = json.loads((result_dir / "summary.json").read_text(encoding="utf-8"))["scenarios"]
     data = rows(result_dir / "per_run.csv")
-    fig, axes = plt.subplots(2, 2, figsize=tps.figure_size("full", height=4.9))
+    fig, axes = plt.subplots(2, 2, figsize=tps.figure_size("full", height=5.6))
     before, after = "before_guard", "with_guard"
     pair = [("model_mismatch", "直导线→偶极"), ("dipole_as_wire", "偶极→直导线")]
     x = np.arange(len(pair))
@@ -536,9 +537,11 @@ def plot_shape_guard_validation() -> None:
     ax.set_xlim(0, 0.11); ax.set_ylim(0, 0.11)
     ax.set_xlabel("声明模型残差"); ax.set_ylabel("备选模型残差")
     ax.set_title("相同峰值、中心和宽度下的形状证据")
+    scatter_handles, scatter_labels = ax.get_legend_handles_labels()
+    fig.legend(scatter_handles, scatter_labels, title="(d) 散点对应场形", ncol=2, loc="lower center", bbox_to_anchor=(0.5, 0.005), fontsize=8, title_fontsize=8)
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, ncol=2, loc="upper center", bbox_to_anchor=(0.5, 0.99), fontsize=8)
-    fig.subplots_adjust(left=0.10, right=0.98, bottom=0.11, top=0.84, hspace=0.54, wspace=0.32)
+    fig.subplots_adjust(left=0.10, right=0.98, bottom=0.24, top=0.84, hspace=0.65, wspace=0.32)
     integrate_panel_labels(axes)
     save_publication_and_thesis(fig, "13_shape_guard_held_out_validation")
 

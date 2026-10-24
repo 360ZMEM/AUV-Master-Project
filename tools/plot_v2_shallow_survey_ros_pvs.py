@@ -62,7 +62,8 @@ def route(ax, rows: list[dict], title: str, *, color: str, xlim: tuple[int, int]
     ax.plot(x, 5.5 + .02 * x, color=REFERENCE, ls=":", lw=.9,
             label="合成目标线真值")
     ax.set(xlim=xlim, xlabel="沿先验位置 / m", ylabel="横向位置 / m", title=title)
-    ax.legend(loc="lower right", fontsize=5.8)
+    ax.legend(loc="upper center", bbox_to_anchor=(.5, -.30), ncol=2,
+              fontsize=8.2, frameon=False, columnspacing=.8, handlelength=1.7)
 
 
 def hold_coast(rows: list[dict]) -> tuple[np.ndarray, np.ndarray, int]:
@@ -108,12 +109,12 @@ def main(*, allow_historical_source: bool = False,
         print("figure 51 archived data verified; current source matches:", current_source_matches)
         return
 
-    apply_thesis_style(base_font_size=8)
-    fig, axes = plt.subplots(2, 2, figsize=figure_size(height=5.5), constrained_layout=True)
+    apply_thesis_style(base_font_size=10)
+    fig, axes = plt.subplots(2, 2, figsize=figure_size(height=5.8), constrained_layout=True)
     route(axes[0, 0], data["positive"][1],
-          "(a) 正向横流：三段，含 ROS 守卫与 UDP", color=PROPOSED, xlim=(-5, 550))
+          "(a) 正向横流：三段\n含 ROS 守卫与 UDP", color=PROPOSED, xlim=(-5, 550))
     route(axes[0, 1], data["negative"][1],
-          "(b) 反向横流：四段，ROS/PID/协议", color=BASELINE_2, xlim=(-5, 690))
+          "(b) 反向横流：四段\nROS/PID/协议", color=BASELINE_2, xlim=(-5, 690))
     for name, label, color in (("positive", "正向三段＋守卫", PROPOSED),
                                ("negative", "反向四段", BASELINE_2)):
         part = [row for row in data[name][1] if row["phase"] == "track"]
@@ -124,7 +125,7 @@ def main(*, allow_historical_source: bool = False,
     axes[1, 0].set(xlim=(0, 80), ylim=(0, 1.6),
                    xlabel="进入 Track 后沿线距离 / m", ylabel="对目标真值横偏 / m",
                    title="(c) 完整 Track 横偏")
-    axes[1, 0].legend(loc="upper right", fontsize=6.)
+    axes[1, 0].legend(loc="upper right", fontsize=8.2)
 
     ax = axes[1, 1]
     for name, label, color in (("fused", "融合邻源：身份冲突", WARNING),
@@ -134,7 +135,7 @@ def main(*, allow_historical_source: bool = False,
         ax.plot(t[-1], distance[-1], "o", ms=2.5, color=color)
     ax.set(xlim=(0, 15), ylim=(0, 3.5), xlabel="首次 Hold 后时间 / s",
            ylabel="原生 PVS 滑行距离 / m", title="(d) 三层零命令后的滑行")
-    ax.legend(loc="upper left", fontsize=6.)
+    ax.legend(loc="upper left", fontsize=8.2)
 
     pub = save_figure(fig, PUB / "figures" / STEM)
     thesis = save_figure(fig, THESIS / STEM)

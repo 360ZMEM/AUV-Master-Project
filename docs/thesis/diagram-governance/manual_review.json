@@ -1,0 +1,96 @@
+{
+  "AUV-Master-Mag/docs/figure/fig_mission_fsm.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS",
+    "png_sha256": "7a068a78ef1c2fa98484b8accf164380e7c8ddc1a67107decc42be8e8444f541",
+    "reviewed_files": [
+      "AUV-Master-Mag/docs/figure/fig_mission_fsm.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/edge_labels.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/reacquire_and_safety.png"
+    ],
+    "assessment": "No unresolved visible overflow in formal image; unreferenced 720 pt preview only, not paper integration. PDF min 12 pt at source width 821.04 pt, scaled minimum 10.52 pt at assumed 720 pt.",
+    "hash_path": "docs/thesis/diagram-governance/evidence/fresh/AUV-Master-Mag/docs/figure/fig_mission_fsm_p0.png"
+  },
+  "docs/thesis/figures/architecture/auv_v2_mission_state_machine.drawio": {
+    "visual_review": "REVIEWED_FULL_ONLY",
+    "png_sha256": "3b32a85b8589c0876ca513c42f12d0aa3541a00ae01cc05619c0bc61e1467ee9",
+    "assessment": "Full image opened; high-risk crops and actual paper reading-size gate remain pending. Existing paper audit reports about 5-6 pt.",
+    "hash_path": "docs/thesis/diagram-governance/evidence/fresh/docs/thesis/figures/architecture/auv_v2_mission_state_machine_p0.png"
+  },
+  "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS_BOTH_PAGES",
+    "png_sha256": "da5745883ee789a53b62c699e0cdbb845bb267845b4fa53994b79199d9a2c95b",
+    "reviewed_files": [
+      "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.png",
+      ".diagram-governance/runs/20261018_governance/checks/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p0.png",
+      ".diagram-governance/runs/20261018_governance/checks/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p1.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/five_layer_diamonds.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/five_layer_f4_port.png",
+      ".diagram-governance/runs/20261018_governance/candidates/thesis_five_layer_final_page41.png",
+      "docs/thesis/diagram-governance/evidence/review/five_layer_composite_svg_final.png"
+    ],
+    "assessment": "Two-page draw.io, 0 rendered-geometry errors on both pages; exact semantic-union proof with repeated b2 and f4->e2 boundary port; actual thesis physical page 41 min approximately 9.33 pt at PDF extraction 3x scale. Native source, formal exports, snapshot and thesis reference updated.",
+    "hash_path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.png"
+  },
+  "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS",
+    "png_sha256": "52c9464cf5bdce17a6c48bc70968301f3352bfd31ce04e5793de0dadfe9fef6a",
+    "reviewed_files": [
+      "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/hierarchy_edge_right.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/hierarchy_cylinder.png"
+    ],
+    "assessment": "No unresolved visible overflow in formal image. Unreferenced 720 pt preview: PDF source min 13 pt at 1008 pt width, yielding 9.29 pt; not an actual thesis insertion.",
+    "hash_path": "docs/thesis/diagram-governance/evidence/fresh/AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy_p0.png"
+  },
+  "AUV-Master-Mag/docs/figure/fig_arch_onion.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS",
+    "png_sha256": "2f0142da39d04ba03912424d3dcdff0706b9cd2d055acd7586c2b7a7ca9ef435",
+    "reviewed_files": [
+      "AUV-Master-Mag/docs/figure/fig_arch_onion.png"
+    ],
+    "assessment": "Full formal PNG and cylinder/trapezoid crop opened; zero rendered-geometry errors; unreferenced in auv-thesis.",
+    "hash_path": "AUV-Master-Mag/docs/figure/fig_arch_onion.png"
+  },
+  "docs/thesis/figures/architecture/auv_system_capability_map.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS",
+    "png_sha256": "475d64f3577b7caf7224d52b767f4bfd98eff30a0e6aa4bb871e7c836d730085",
+    "reviewed_files": [
+      "docs/thesis/figures/architecture/auv_system_capability_map.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/capability_feedback_gate.png",
+      ".diagram-governance/runs/20261018_governance/candidates/capability_pdf_cropped.png"
+    ],
+    "assessment": "Full formal PNG and lower feedback/left gate crop opened; zero rendered-geometry errors; used by Markdown, not auv-thesis directly. Formal PDF was cropped to one page after default export split a feedback label into a blank second page; cropped PDF was opened and contains all labels.",
+    "hash_path": "docs/thesis/figures/architecture/auv_system_capability_map.png"
+  },
+  "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS_AND_PAPER",
+    "png_sha256": "ce9ae0418a89e428b7f71de8557992560e448bc1caf0149cc687ccc782f11e16",
+    "reviewed_files": [
+      "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.png"
+    ],
+    "assessment": "Full formal PNG, continuation/gate crop, and actual thesis physical page 43 opened; zero rendered-geometry errors; minimum figure font about 10.67 pt via pdftohtml 3x extraction.",
+    "hash_path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.png"
+  },
+  "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS_AND_PAPER",
+    "png_sha256": "3cf42acdd8bf520e11b44b54d153702888066d79f59242ef7a3a5d47bd4016cb",
+    "reviewed_files": [
+      "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.png",
+      ".diagram-governance/runs/20261018_governance/fresh-review/uncertainty_labels_diamond.png",
+      ".diagram-governance/runs/20261018_governance/candidates/thesis_uncertainty_page67.png"
+    ],
+    "assessment": "Full formal image, high-risk edge/diamond crop, and actual thesis physical page 67 opened; rendered geometry 0 errors. Minimum figure CJK font about 9.67 pt from zoom-4 PDF extraction at 3x page scale.",
+    "hash_path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.png"
+  },
+  "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio": {
+    "visual_review": "REVIEWED_FULL_AND_RISK_CROPS_AND_PAPER",
+    "png_sha256": "62e59af3b255cbcf90c227fd28bad80c27415b9ac4bb20437a0ef212ed319b45",
+    "reviewed_files": [
+      "docs/thesis/figures/architecture/auv_thesis_technical_route.png",
+      "docs/thesis/diagram-governance/evidence/review/technical_route_links_crop.png",
+      "docs/thesis/diagram-governance/evidence/review/technical_route_thesis_page33.png"
+    ],
+    "assessment": "Rebuilt with locked FONTCONFIG_FILE: formal PNG, support links crop, and actual thesis physical page 33 opened. Rendered geometry 0 errors. Minimum figure text 9.33 pt from pdftohtml zoom 4 at 3x page scale; original semantic values preserved.",
+    "hash_path": "docs/thesis/figures/architecture/auv_thesis_technical_route.png"
+  }
+}

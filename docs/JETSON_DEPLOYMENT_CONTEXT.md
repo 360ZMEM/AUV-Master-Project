@@ -59,7 +59,7 @@ PVS/HoloOcean 仿真
 | Jetson mainline 必需 | ROS2 Humble、`rosbag2_storage_mcap`、`numpy`、`scipy`、`pandas`、`matplotlib`、`yaml`、`py_trees`、`PySide6`、`zenoh`、`python_vehicle_simulator` | PVS/protocol_udp 电缆巡检、bag、DL/T 1278 产物 |
 | 实物部署调试 | `telnet`、`expect`、`tcpdump`、`screen`、`minicom`、`jq`、`ss`、`sudo -n` | PC104/VxWorks shell、fan-out、UDP 抓包、串口/JSON 辅助 |
 | MPC / 磁探测 / 视频回放支线 | `casadi`、`tqdm`、`imageio`、`moviepy`、`rosbags`、`openpyxl` | MPC microbench、AUV-Master-Mag 扫参、视频/离线回放和表格导出 |
-| 文档构建 | `pandoc`、`wkhtmltopdf`、`xelatex`、`latexmk`、`biber`、`git-lfs` | Markdown/PDF 与 `thuthesis/auv-thesis.pdf`；构建前需确认 LFS 图像不是指针 |
+| 文档构建 | `pandoc`、`wkhtmltopdf`、`xelatex`、`latexmk`、`biber`、`git-lfs` | Markdown/PDF 与 `thuthesis/build/auv-thesis/auv-thesis.pdf`；构建前需确认 LFS 图像不是指针 |
 | 暂不纳入 Jetson 主线 | `holoocean` | 3D 仿真后端，需按官方流程单独安装 |
 
 Jetson 上实物 fan-out 的特殊注意事项：

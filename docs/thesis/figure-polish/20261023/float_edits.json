@@ -1,0 +1,30 @@
+[
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "label": "fig:ch02-emergency-arbitration",
+    "before": "tbp",
+    "after": "!htbp",
+    "reason": "允许与相邻解释正文共同排版，避免在具备可读尺寸时被浮动比例限制送入独立浮动页"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "label": "fig:ch02-mission-lifecycle",
+    "before": "tbp",
+    "after": "!htbp",
+    "reason": "允许与相邻解释正文共同排版，避免在具备可读尺寸时被浮动比例限制送入独立浮动页"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "label": "fig:ch04-behavior-tree-core",
+    "before": "tbp",
+    "after": "!htbp",
+    "reason": "允许与相邻解释正文共同排版，避免在具备可读尺寸时被浮动比例限制送入独立浮动页"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "label": "fig:ch05-round2-reference-lifecycle",
+    "before": "htbp",
+    "after": "!htbp",
+    "reason": "允许与相邻解释正文共同排版，避免在具备可读尺寸时被浮动比例限制送入独立浮动页"
+  }
+]

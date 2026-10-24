@@ -35,8 +35,8 @@ def main():
     none = read(args.results, 'no_source', 101)
     apply_thesis_style(base_font_size=9)
     fig, axes = plt.subplot_mosaic([['map','center'],['map','error']],
-        figsize=figure_size(height=3.8), gridspec_kw={'width_ratios':[1.18,1.]})
-    fig.subplots_adjust(left=.09,right=.98,bottom=.23,top=.90,wspace=.38,hspace=.62)
+        figsize=figure_size(height=4.8), gridspec_kw={'width_ratios':[1.18,1.]})
+    fig.subplots_adjust(left=.09,right=.98,bottom=.31,top=.90,wspace=.38,hspace=.62)
     ax = axes['map']
     x, y = values(wire,'x_m'), values(wire,'y_m')
     modes = np.array([r['mode'] for r in wire]); stages=np.array([r['stage'] for r in wire])
@@ -83,7 +83,7 @@ def main():
     ax.axhline(2.,color=WARNING,ls=':',lw=.9,label='2 m 上限')
     ax.set(xlabel='沿缆方向位置 / m',ylabel='真实横向误差 / m',
            title='(c) 两场形、三种子的沿程误差',xlim=(0.,80.),ylim=(0.,2.3))
-    ax.legend(loc='upper right',fontsize=6.7,ncol=2)
+    ax.legend(loc='upper center',bbox_to_anchor=(.5,-.45),fontsize=6.7,ncol=3)
     save_figure(fig,args.output_base)
     plt.close(fig)
 

@@ -1,0 +1,301 @@
+                                       参考文献
+
+
+
+                                    参考文献
+
+ [1]国家发展改革委, 国家能源局, 财政部, 等. 关于印发《
+                                “十四五”可再生能源发展规划》
+   的通知[EB/OL]. 2022 [2026-08-09]. https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/t2
+   0220601_1326719.html.
+ [2]国务院新闻办公室. 高质量完成“十四五”规划系列主题新闻发布会 | 介绍“十四五”
+   时期能源高质量发展成就[EB/OL]. 2025 [2026-08-09]. https://www.nea.gov.cn/2025082
+   6/81a62ca2aedb4f18ac107efd85c4b650/c.html.
+ [3]Global Wind Energy Council. Global Offshore Wind Report 2025[R/OL]. Global Wind En-
+   ergy Council. 2025 [2026-08-09]. https://www.gwec.net/reports/globaloffshorewindreport/2
+   025.
+ [4]DINMOHAMMADI F, FLYNN D, BAILEY C, et al. Predicting damage and life expectancy
+   of subsea power cables in offshore renewable energy applications[J]. IEEE Access, 2019, 7:
+   54658-54669. DOI: 10.1109/ACCESS.2019.2911260.
+ [5]DNV. 80% of insurance claims in offshore wind are related to subsea cable failures —How
+   can the industry manage these risks?[EB/OL]. [2026-07-28]. https://www.dnv.com/article
+   /80-percent-of-insurance-claims-in-offshore-wind-are-related-to-subsea-cable-failures-ho
+   w-can-the-industry-manage-these-risks/.
+ [6]上海海事局. 上海海事局关于印发《上海海事局海上风电场海上交通安全管理规定》的
+   通知[EB/OL]. 2022 [2026-08-09]. https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=F39F
+   265BDF560E50E0533A0820C6FB7D.
+ [7]岑贞锦, 蒋道宇, 张维佳, 等. 海底电缆检测技术方法选择分析[J]. 南方能源建设, 2017,
+   4(3): 85-91, 96. DOI: 10.16516/j.gedi.issn2095-8676.2017.03.016.
+ [8]ZHANG Q, TIAN Y, JI D. Submarine cable inspection and marine robot applications: A
+   literature review[J]. InUS Transactions, 2025, 1(1): 1-19. DOI: 10.23380/inustrans.2025.1.1
+   .1.
+ [9]宁欣欣, 刘潇, 李雷, 等. 海上风电用海底电缆运维技术发展现状及趋势[J]. 电线电缆,
+   2026, 69(2): 1-11 [2026-08-09]. https://jwc.cwc.net.cn/article/doi/10.16105/j.dxdl.1672-690
+   1.20250182. DOI: 10.16105/j.dxdl.1672-6901.20250182.
+[10]HATCHETT P, ESSON A, HOLT C. Robotic & Autonomous Systems for Operations and
+   Maintenance in UK Offshore Wind[R/OL]. Offshore Renewable Energy Catapult. 2025
+   [2026-08-09]. https://cms.ore.catapult.org.uk/wp- content/uploads/2025/07/Catapult- F
+   oresighting-RAS-Report-Feb-25-v8-SPREADS.pdf.
+[11]BAGNITSKY A, INZARTSEV A, PAVIN A, et al. Side scan sonar using for underwater
+   cables & pipelines tracking by means of AUV[C]//2011 IEEE Symposium on Underwater
+   Technology and Workshop on Scientific Use of Submarine Cables and Related Technologies.
+   IEEE, 2011: 1-10. DOI: 10.1109/UT.2011.5774119.
+
+
+
+                                          140
+                                        参考文献
+
+[12]FENG H, YU J, HUANG Y, et al. Automatic tracking method for submarine cables and
+    pipelines of AUV based on side scan sonar[J]. Ocean Engineering, 2023, 280, 114689. DOI:
+    10.1016/j.oceaneng.2023.114689.
+[13]JUNG J, LEE Y, PARK J, et al. Multi-modal sonar mapping of offshore cable lines with
+    an autonomous surface vehicle[J]. Journal of Marine Science and Engineering, 2022, 10(3).
+    DOI: 10.3390/jmse10030361.
+[14]WUNDERLICH J, INGULFSEN J A, MÜLLER S. Burial depth determination of cables
+    using acoustics – Requirements, issues and strategies[J]. Hydrographische Nachrichten,
+    2016(105): 50-54. DOI: 10.23784/HN105-11.
+[15]ZHENG G, ZHAO J, LI S, et al. Zero-shot pipeline detection for sub-bottom profiler data
+    based on imaging principles[J]. Remote Sensing, 2021, 13(21). DOI: 10.3390/rs13214401.
+[16]HA J, SHIN J. A case study of completely buried wind-power cable detection using 3D acous-
+    tic imaging[J]. Journal of Environmental and Engineering Geophysics, 2022, 27(3): 123-134.
+    DOI: 10.32389/JEEG22-003.
+[17]BI R, CHEN R, WU S, et al. A high-sensitivity, low-noise, and low-hysteresis tunneling
+    magnetoresistance sensor based on structural optimization of magnetic tunnel junctions[J].
+    Sensors, 2025, 25(6). DOI: 10.3390/s25061730.
+[18]XIANG X, YU C, NIU Z, et al. Subsea cable tracking by autonomous underwater vehicle
+    with magnetic sensing guidance[J]. Sensors, 2016, 16(8). DOI: 10.3390/s16081335.
+[19]ZHANG J, XIANG X, LI W, et al. Adaptive neural control of flight-style AUV for subsea
+    cable tracking under electromagnetic localization guidance[J]. IEEE/ASME Transactions on
+    Mechatronics, 2023, 28(5): 2976-2987. DOI: 10.1109/TMECH.2023.3256707.
+[20]LI G, GENG X, LIANG S, et al. Attitude-independent route tracking for subsea power cables
+    using a scalar magnetometer under high sea conditions[J]. Remote Sensing, 2024, 16(2). DOI:
+    10.3390/rs16020226.
+[21]SEIDEL M, FREY T, GREINERT J. Underwater UXO detection using magnetometry on
+    hovering AUVs[J]. Journal of Field Robotics, 2023, 40(4): 848-861. DOI: 10.1002/rob.2215
+    9.
+[22]OEHLER J F, SCHIFANO V, MARQUIS G, et al. Processing of unmanned underwater ve-
+    hicle vector magnetometer data[J]. Geophysical Prospecting, 2024, 72(8): 2902-2918. DOI:
+    10.1111/1365-2478.13556.
+[23]SUN X, LEE W K, HOU Y, et al. Underground power cable detection and inspection tech-
+    nology based on magnetic field sensing at ground surface level[J]. IEEE Transactions on
+    Magnetics, 2014, 50(7): 1-5. DOI: 10.1109/TMAG.2013.2297195.
+[24]SU Q, ZHANG Y, ZHAO J, et al. Precise identification method of submarine cable routes
+    based on weak magnetic detection and AC modeling[C]//2025 International Conference on
+    Sensing, Measurement & Data Analytics in the era of Artificial Intelligence (ICSMD). IEEE,
+    2025: 1-4. DOI: 10.1109/ICSMD67131.2025.11365331.
+[25]孙运坤, 李尤, 曹向东, 等. 基于工频磁特征的近岸海底电缆 UAV 航磁定位方法[J]. 水下
+    无人系统学报, 2026, 34(1): 37-46. DOI: 10.11993/j.issn.2096-3920.2025-0083.
+
+                                           141
+                                        参考文献
+
+[26]国家能源局. 海底电力电缆运行规程: DL/T 1278—2025[S/OL]. 中国电力出版社, 2025
+   [2026-08-06]. https://www.nea.gov.cn/20251022/965401f0cf034cb7a070e3698edafc49/c.ht
+   ml.
+[27]中国航海学会. 海上风电场通航安全技术参数测量要求: T/CIN 100—2026[S/OL]. 2026
+   [2026-10-23]. https://www.cinnet.cn/zh-hans/notes/10383-guan-yu-fa-bu-wen-shi-qi-ti-ch
+   an-pin-tan-zu-ji-liang-hua-fang-fa-yu-yao-qiu-gang-kou-qi-chong-ji-jie-deng-ba-xiang-tu
+   an-ti-biao-zhun-de-gong-gao.htm.
+[28]HATLO M, OLSEN E, STØLAN R, et al. Accurate analytic formula for calculation of losses
+   in three-core submarine cables[C]//9th International Conference on Insulated Power Cables.
+   Versailles, France, 2015.
+[29]ALLOTTA B, CHISCI L, COSTANZI R, et al. A comparison between EKF-based and UKF-
+   based navigation algorithms for AUVs localization[C]//OCEANS 2015 - Genova. IEEE,
+   2015: 1-5. DOI: 10.1109/OCEANS-Genova.2015.7271681.
+[30]ZHANG X, HE B, LI G, et al. NavNet: AUV navigation through deep sequential learning[J].
+   IEEE Access, 2020, 8: 59845-59861. DOI: 10.1109/ACCESS.2020.2982272.
+[31]Teledyne   Marine.    HydroPACT         350    Subsea   Cable   Tracking   System:   Product
+   Datasheet[A/OL]. [2026-10-23]. https : / / www . teledynemarine . com / en - us / products
+   /SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf.
+[32]Teledyne Marine. Pipe & Cable Detection Systems[EB/OL]. [2026-10-23]. https://www.tel
+   edynemarine.com/products/product-line/pipe-and-cable-detection-systems/.
+[33]Innovatum International Ltd. SMARTRAK: The Cable and Pipeline Survey Tool[A/OL].
+   Innovatum International Ltd. [2026-08-09]. https://www.innovatum.co.uk/media/1051/smar
+   trak-datasheet.pdf.
+[34]无锡市海鹰加科海洋技术有限责任公司. 海鹰 T180 海缆探测系统[EB/OL]. [2026-08-
+   09]. https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304.
+[35]Teledyne TSS. Submarine Root Survey of Powered Cables Supplying Former‘Power Isolated
+   Island’[R/OL]. Teledyne Marine. 2017 [2026-10-23]. https://www.teledynemarine.com/e
+   n-us/news/Documents/China%20ORE-350%20powered%20cable%20root%20survey%202
+   017.pdf.
+[36]深圳华中科技大学研究院. 成果推介：海缆智能探测巡检水下机器人[EB/OL]. 2023
+   [2026-08-09]. https://shenzhen.hust.edu.cn/info/1026/1834.htm.
+[37]湖北海派瑞恩科技有限公司. 精灵 P200 自主水下机器人（AUV）[EB/OL]. [2026-08-
+   09]. https://www.f-sea.com/productinfo/105514.html.
+[38]PURCELL M, von ALT C, ALLEN B, et al. New capabilities of the REMUS autonomous
+   underwater vehicle[C]//OCEANS 2000 MTS/IEEE Conference and Exhibition. Conference
+   Proceedings (Cat. No.00CH37158): vol. 1. Providence, RI: IEEE, 2000: 147-151. DOI: 10.1
+   109/OCEANS.2000.881250.
+[39]Kongsberg Discovery. HUGIN: Safeguarding Our Critical Undersea Infrastructure[EB/OL].
+   2025 [2026-08-09]. https://www.kongsberg.com/news/stories/2025/10/hugin-safeguarding-
+   our-critical-undersea-infrastructure/.
+
+                                             142
+                                        参考文献
+
+[40]Anduril Industries, Inc. Project 129: Fully Autonomous Subsea Asset Inspection by a Shore-
+    Launched AUV: Final Report[R/OL]. National Offshore Wind Research and Development
+    Consortium. 2024 [2026-10-23]. https://nationaloffshorewind.org/wp-content/uploads/D5.2
+    -Final-Report.pdf.
+[41]CHOSET H. Coverage for robotics – A survey of recent results[J]. Annals of Mathematics
+    and Artificial Intelligence, 2001, 31(1-4): 113-126. DOI: 10.1023/A:1016639210559.
+[42]FOSSEN T I, PETTERSEN K Y. On uniform semiglobal exponential stability (USGES) of
+    proportional line-of-sight guidance laws[J]. Automatica, 2014, 50(11): 2912-2917. DOI: 10
+    .1016/j.automatica.2014.10.018.
+[43]OH S R, SUN J. Path following of underactuated marine surface vessels using line-of-sight
+    based model predictive control[J]. Ocean Engineering, 2010, 37(2-3): 289-295. DOI: 10.101
+    6/j.oceaneng.2009.10.004.
+[44]SHEN C, SHI Y, BUCKHAM B. Integrated path planning and tracking control of an AUV:
+    A unified receding horizon optimization approach[J]. IEEE/ASME Transactions on Mecha-
+    tronics, 2017, 22(3): 1163-1173. DOI: 10.1109/TMECH.2016.2612689.
+[45]ZHOU G, XIANG X, LIU C. Parameter identification and model prediction path following
+    control of underactuated AUV: Methodology and experimental verification[J]. Control Engi-
+    neering Practice, 2023, 141, 105729. DOI: 10.1016/j.conengprac.2023.105729.
+[46]DENG S Y, HAO L Y, SHEN C. Autonomous underwater vehicle (AUV) motion design:
+    Integrated path planning and trajectory tracking based on model predictive control (MPC)[J].
+    Journal of Marine Science and Engineering, 2024, 12(9). DOI: 10.3390/jmse12091655.
+[47]MESBAH A. Stochastic model predictive control: An overview and perspectives for future
+    research[J]. IEEE Control Systems Magazine, 2016, 36(6): 30-44. DOI: 10.1109/MCS.2016
+    .2602087.
+[48]ÖZKAHRAMAN Ö, ÖGREN P. Combining control barrier functions and behavior trees for
+    multi-agent underwater coverage missions[C]//2020 59th IEEE Conference on Decision and
+    Control (CDC). IEEE, 2020: 5275-5282. DOI: 10.1109/CDC42340.2020.9304151.
+[49]BHAT S, STENIUS I. Controlling an underactuated AUV as an inverted pendulum using
+    nonlinear model predictive control and behavior trees[C]//2023 IEEE International Confer-
+    ence on Robotics and Automation (ICRA). IEEE, 2023: 12261-12267. DOI: 10.1109/ICRA
+    48891.2023.10160926.
+[50]CHOI S, JUNG J. Dynamic mission planning framework for collaborative underwater opera-
+    tions using behavior trees[J]. Journal of Marine Science and Engineering, 2025, 13(8). DOI:
+    10.3390/jmse13081458.
+[51]AHMAD F, ISMAIL H, STYRUD J, et al. A unified framework for real-time failure handling
+    in robotics using vision-language models, reactive planner and behavior trees[EB/OL]. 2025
+    [2026-08-06]. https://arxiv.org/abs/2503.15202. arXiv: 2503.15202 [cs.RO].
+[52]江苏多维科技有限公司. TMR8607 高精度、低噪声线性磁传感器[A/OL]. Version 1.0.
+    Version 1.0. 2024 [2026-10-23]. https://www.dowaytech.com/TMR8607-TMR8637-TMR-
+    Low-Noise-Linear-Sensor.html.
+
+                                           143
+                                         参考文献
+
+[53]FOSSEN T I. Handbook of Marine Craft Hydrodynamics and Motion Control[M]. Chichester,
+    UK: John Wiley & Sons, 2011. DOI: 10.1002/9781119994138.
+[54]GRIFFITHS D J. Introduction to Electrodynamics[M]. 4th ed. Cambridge: Cambridge Uni-
+    versity Press, 2017. DOI: 10.1017/9781108333511.
+[55]CUI X, LI Y, WANG Q, et al. Three-axis magnetometer calibration based on optimal ellip-
+    soidal fitting under constraint condition for pedestrian positioning system using foot-mounted
+    inertial sensor/magnetometer[C]//2018 IEEE/ION Position, Location and Navigation Sym-
+    posium (PLANS). IEEE, 2018: 166-174. DOI: 10.1109/PLANS.2018.8373378.
+[56]VASCONCELOS J F, ELKAIM G, SILVESTRE C, et al. Geometric approach to strapdown
+    magnetometer calibration in sensor frame[J]. IEEE Transactions on Aerospace and Electronic
+    Systems, 2011, 47(2): 1293-1306. DOI: 10.1109/TAES.2011.5751259.
+[57]HEGRENÆS Ø, BERGLUND E. Doppler water-track aided inertial navigation for au-
+    tonomous underwater vehicle[C]//OCEANS 2009-EUROPE. Bremen: IEEE, 2009: 1-10.
+    DOI: 10.1109/OCEANSE.2009.5278307.
+[58]章彩霞, 刘锡祥, 黄永江, 等. 基于紧组合的 SINS/DVL/USBL 导航算法[J]. 水下无人系
+    统学报, 2023, 31(6): 847-855. DOI: 10.11993/j.issn.2096-3920.2022-0076.
+[59]SOLÀ J. Quaternion kinematics for the error-state Kalman filter[EB/OL]. 2017 [2026-08-
+    06]. https://arxiv.org/abs/1711.02508. arXiv: 1711.02508 [cs.RO].
+[60]MADYASTHA V, RAVINDRA V, MALLIKARJUNAN S, et al. Extended Kalman filter vs.
+    error state Kalman filter for aircraft attitude estimation[C]//AIAA Guidance, Navigation,
+    and Control Conference. American Institute of Aeronautics, 2011. DOI: 10.2514/6.2011-66
+    15.
+[61]SONG J, SONG H, YANG X, et al. Application of digital lock-in amplifier in complex elec-
+    tromagnetic interference of substation[J]. Progress In Electromagnetics Research C, 2020,
+    106: 105-120. DOI: 10.2528/PIERC20071001.
+[62]LIU Y, WU Y, LI G, et al. Submarine cable detection using an end-to-end neural network-
+    based magnetic data inversion[J]. Journal of Geophysics and Engineering, 2024, 21(3): 884-
+    896. DOI: 10.1093/jge/gxae045.
+[63]SHAUKAT N, ALI A, JAVED IQBAL M, et al. Multi-sensor fusion for underwater vehicle
+    localization by augmentation of RBF neural network and error-state Kalman filter[J]. Sensors,
+    2021, 21(4). DOI: 10.3390/s21041149.
+[64]BAR-SHALOM Y, LI X R, KIRUBARAJAN T. Estimation with Applications to Tracking
+    and Navigation: Theory, Algorithms and Software[M]. New York: John Wiley & Sons, 2002.
+    DOI: 10.1002/0471221279.
+[65]PICHÉ R. Online tests of Kalman filter consistency[J]. International Journal of Adaptive Con-
+    trol and Signal Processing, 2016, 30(1): 115-124. DOI: 10.1002/acs.2571.
+[66]CHEN Z, BIGGIE H, AHMED N, et al. Kalman filter auto-tuning through enforcing chi-
+    squared normalized error distributions with Bayesian optimization[EB/OL]. 2023 [2026-08-
+    06]. https://arxiv.org/abs/2306.07225. arXiv: 2306.07225 [cs.RO].
+
+
+                                            144
+                                         参考文献
+
+[67]SUN C, ZHANG Y, WANG G, et al. A new variational Bayesian adaptive extended Kalman
+    filter for cooperative navigation[J]. Sensors, 2018, 18(8). DOI: 10.3390/s18082538.
+[68]BREIVIK M, FOSSEN T I. Principles of guidance-based path following in 2D and 3D[C]
+    //Proceedings of the 44th IEEE Conference on Decision and Control. Seville, Spain: IEEE,
+    2005: 627-634. DOI: 10.1109/CDC.2005.1582226.
+[69]FOSSEN T I, PETTERSEN K Y, GALEAZZI R. Line-of-sight path following for Dubins
+    paths with adaptive sideslip compensation of drift forces[J]. IEEE Transactions on Control
+    Systems Technology, 2015, 23(2): 820-827. DOI: 10.1109/TCST.2014.2338354.
+[70]COLLEDANCHISE M, ÖGREN P. Behavior Trees in Robotics and AI: An Introduction[M].
+    Boca Raton, FL: CRC Press, 2018. DOI: 10.1201/9780429489105.
+[71]COLLEDANCHISE M, ÖGREN P. How behavior trees modularize hybrid control systems
+    and generalize sequential behavior compositions, the subsumption architecture, and decision
+    trees[J]. IEEE Transactions on Robotics, 2017, 33(2): 372-389. DOI: 10.1109/TRO.2016.26
+    33567.
+[72]SPRAGUE C I, ÖZKAHRAMAN Ö, MUNAFO A, et al. Improving the modularity of AUV
+    control systems using behaviour trees[C]//2018 IEEE/OES Autonomous Underwater Vehi-
+    cle Workshop (AUV). IEEE, 2018: 1-6. DOI: 10.1109/AUV.2018.8729810.
+[73]CHOSET H, PIGNON P. Coverage path planning: The boustrophedon cellular decomposi-
+    tion[C]//Field and Service Robotics. London: Springer, 1998: 203-209. DOI: 10.1007/978
+    -1-4471-1273-0_32.
+[74]YORDANOVA V, GIPS B. Coverage path planning with track spacing adaptation for au-
+    tonomous underwater vehicles[J]. IEEE Robotics and Automation Letters, 2020, 5(3): 4774-
+    4780. DOI: 10.1109/LRA.2020.3003886.
+[75]MAYNE D Q, RAWLINGS J B, RAO C V, et al. Constrained model predictive control: Sta-
+    bility and optimality[J]. Automatica, 2000, 36(6): 789-814. DOI: 10.1016/S0005-1098(99)0
+    0214-9.
+[76]LI D, DU L. AUV trajectory tracking models and control strategies: A review[J]. Journal of
+    Marine Science and Engineering, 2021, 9(9). DOI: 10.3390/jmse9091020.
+[77]MAYNE D Q, SERON M M, RAKOVIĆ S V. Robust model predictive control of constrained
+    linear systems with bounded disturbances[J]. Automatica, 2005, 41(2): 219-224. DOI: 10.10
+    16/j.automatica.2004.08.019.
+[78]JIMOH I A, YUE H, GRIMBLE M J. Tube-based model predictive control of an autonomous
+    underwater vehicle using line-of-sight re-planning[J]. Ocean Engineering, 2024, 314, 119688.
+    DOI: 10.1016/j.oceaneng.2024.119688.
+[79]BELVEDERE T, COGNETTI M, ORIOLO G, et al. Sensitivity-aware model predictive con-
+    trol for robots with parametric uncertainty[J]. IEEE Transactions on Robotics, 2025, 41: 3039-
+    3058. DOI: 10.1109/TRO.2025.3554415.
+[80]ANDERSSON J A E, GILLIS J, HORN G, et al. CasADi – A software framework for non-
+    linear optimization and optimal control[J]. Mathematical Programming Computation, 2019,
+    11(1): 1-36. DOI: 10.1007/s12532-018-0139-4.
+
+                                            145
+                                       参考文献
+
+[81]WÄCHTER A, BIEGLER L T. On the implementation of an interior-point filter line-search
+   algorithm for large-scale nonlinear programming[J]. Mathematical Programming, 2006,
+   106(1): 25-57. DOI: 10.1007/s10107-004-0559-y.
+[82]TOBIN J, FONG R, RAY A, et al. Domain randomization for transferring deep neural net-
+   works from simulation to the real world[C]//2017 IEEE/RSJ International Conference on
+   Intelligent Robots and Systems (IROS). IEEE, 2017: 23-30. DOI: 10.1109/IROS.2017.8202
+   133.
+[83]YAN J, ZHANG T, GUAN X, et al. Digital twin-driven swarm of autonomous underwater
+   vehicles for marine exploration[J]. Communications Engineering, 2026, 5(1), 18. DOI: 10.1
+   038/s44172-025-00571-7.
+[84]HEWING L, WABERSICH K P, MENNER M, et al. Learning-based model predictive
+   control: Toward safe learning in control[J]. Annual Review of Control, Robotics, and Au-
+   tonomous Systems, 2020, 3(1): 269-296. DOI: 10.1146/annurev-control-090419-075625.
+[85]ZARROUKI B, WANG C, BETZ J. A stochastic nonlinear model predictive control with an
+   uncertainty propagation horizon for autonomous vehicle motion control[C]//2024 American
+   Control Conference (ACC). IEEE, 2024: 5466-5473. DOI: 10.23919/ACC60939.2024.1064
+   5032.
+[86]BODENMANN A, DJAUHARI I F, DEVGON J, et al. Real-time subsea communication
+   cable detection for AUV-based inspection[C]//2024 IEEE/OES Autonomous Underwater
+   Vehicles Symposium (AUV). IEEE, 2024: 1-6. DOI: 10.1109/AUV61864.2024.11030782.
+[87]YAN T, XU Z, YANG S X, et al. Formation control of multiple autonomous underwater
+   vehicles: A review[J]. Intelligence & Robotics, 2023, 3(1): 1-22. DOI: 10.20517/ir.2023.01.
+[88]LI Y, YU W, XU H, et al. Robust multiple autonomous underwater vehicle cooperative lo-
+   calization based on the principle of maximum entropy[J]. IEEE Transactions on Automation
+   Science and Engineering, 2025, 22: 12960-12974. DOI: 10.1109/TASE.2025.3546674.
+[89]CURTIN T, MANALANG D. Resident autonomous underwater vehicles: Docking revis-
+   ited[C]//2018 IEEE/OES Autonomous Underwater Vehicle Workshop (AUV). IEEE, 2018:
+   1-6. DOI: 10.1109/AUV.2018.8729824.
+
+
+
+
+                                          146

@@ -1,0 +1,44 @@
+                                       参考文献
+
+
+
+                                    参考文献
+
+ [1]DINMOHAMMADI F, FLYNN D, BAILEY C, et al. Predicting damage and life expectancy
+   of subsea power cables in offshore renewable energy applications[J]. IEEE Access, 2019, 7:
+   54658-54669. DOI: 10.1109/ACCESS.2019.2911260.
+ [2]BAGNITSKY A, INZARTSEV A, PAVIN A, et al. Side scan sonar using for underwater
+   cables & pipelines tracking by means of AUV[C]//2011 IEEE Symposium on Underwater
+   Technology and Workshop on Scientific Use of Submarine Cables and Related Technologies.
+   IEEE, 2011: 1-10. DOI: 10.1109/UT.2011.5774119.
+ [3]FENG H, YU J, HUANG Y, et al. Automatic tracking method for submarine cables and
+   pipelines of AUV based on side scan sonar[J]. Ocean Engineering, 2023, 280, 114689. DOI:
+   10.1016/j.oceaneng.2023.114689.
+ [4]XIANG X, YU C, NIU Z, et al. Subsea cable tracking by autonomous underwater vehicle
+   with magnetic sensing guidance[J]. Sensors, 2016, 16(8). DOI: 10.3390/s16081335.
+ [5]LI G, GENG X, LIANG S, et al. Attitude-independent route tracking for subsea power cables
+   using a scalar magnetometer under high sea conditions[J]. Remote Sensing, 2024, 16(2). DOI:
+   10.3390/rs16020226.
+ [6]SOLÀ J. Quaternion kinematics for the error-state Kalman filter[EB/OL]. 2017 [2026-08-
+   06]. https://arxiv.org/abs/1711.02508. arXiv: 1711.02508 [cs.RO].
+ [7]MAYNE D Q, RAWLINGS J B, RAO C V, et al. Constrained model predictive control: Sta-
+   bility and optimality[J]. Automatica, 2000, 36(6): 789-814. DOI: 10.1016/S0005-1098(99)0
+   0214-9.
+ [8]COLLEDANCHISE M, ÖGREN P. Behavior Trees in Robotics and AI: An Introduction[M].
+   Boca Raton, FL: CRC Press, 2018. DOI: 10.1201/9780429489105.
+ [9]FOSSEN T I. Handbook of Marine Craft Hydrodynamics and Motion Control[M]. Chichester,
+   UK: John Wiley & Sons, 2011. DOI: 10.1002/9781119994138.
+[10]GRIFFITHS D J. Introduction to Electrodynamics[M]. 4th ed. Cambridge: Cambridge Uni-
+   versity Press, 2017. DOI: 10.1017/9781108333511.
+[11]MADYASTHA V, RAVINDRA V, MALLIKARJUNAN S, et al. Extended Kalman filter vs.
+   error state Kalman filter for aircraft attitude estimation[C]//AIAA Guidance, Navigation,
+   and Control Conference. American Institute of Aeronautics, 2011. DOI: 10.2514/6.2011-66
+   15.
+[12]BAR-SHALOM Y, LI X R, KIRUBARAJAN T. Estimation with Applications to Tracking
+   and Navigation: Theory, Algorithms and Software[M]. New York: John Wiley & Sons, 2001.
+   DOI: 10.1002/0471221279.
+
+
+
+
+                                          30

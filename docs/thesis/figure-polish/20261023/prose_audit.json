@@ -1,0 +1,212 @@
+{
+  "status": "PASS",
+  "findings": [],
+  "intentional_protocol_hardware_identifiers": [
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 96,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 96,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 501,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 501,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 519,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 520,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 523,
+      "text": "0x01"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 523,
+      "text": "0x02"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 523,
+      "text": "0x03"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": "192.9.0.X"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": ".50"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": ".100"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": ".60"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": ".101"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 527,
+      "text": ".200"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 541,
+      "text": "+Vdc"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 542,
+      "text": "0Vdc"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 550,
+      "text": "Trig1"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 550,
+      "text": "tickGet()"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 651,
+      "text": "21/udp"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 668,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 670,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 682,
+      "text": "0x01"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 682,
+      "text": "0x02"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 682,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "line": 682,
+      "text": "0x02"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 75,
+      "text": "tickGet()"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 75,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 75,
+      "text": "Para3"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 75,
+      "text": "Para4"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 75,
+      "text": "0x5453"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "line": 83,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 482,
+      "text": "0xEE"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1043,
+      "text": "0x11"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1043,
+      "text": "0x02"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1045,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1045,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1045,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1058,
+      "text": "\\$CKTH"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1058,
+      "text": "\\$AUV"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "line": 1088,
+      "text": "\\$AUV"
+    }
+  ],
+  "limit": "检查可见文件名及等宽实现标识；数学变量、物理符号、协议帧及硬件字段保留，不自动改写研究内容。"
+}

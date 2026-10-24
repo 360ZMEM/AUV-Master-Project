@@ -1,0 +1,4849 @@
+[
+  {
+    "id": "thuthesis/ref/auv-references.bib#choset1998boustrophedon",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#madyastha2011eskf",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#barshalom2001estimation",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "year"
+    ],
+    "unverified_fields": [
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#jung2022multimodal",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#zheng2021zeroshot",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#bi2025tmr",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#xiang2016subsea",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#li2024attitude",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#sun2018variational",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#shaukat2021multisensor",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#li2021trajectory",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#deng2024motion",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#liang2018threedim",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#yao2018experimental",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#he2024threedim",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#choi2025dynamic",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#yan2026digitaltwin",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#li2025cooplocalization",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#hatlo2015accurate",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#scio2025energyachievement",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "title",
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#gwec2025offshore",
+    "scope": "research",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#orecatapult2025ras",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#nea2026shenlan",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#nea2025shenlan",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#scio2026offshore",
+    "scope": "research",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#dlt1278_2025",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#multidimension2024tmr8607",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#tcsgpc_cable",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "title",
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#geomatching2022sbp",
+    "scope": "research",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#dnv2024cablefailure",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#teledyne2021hydropact350",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "year"
+    ],
+    "unverified_fields": [
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#teledyne2026hydropactline",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#teledyne2017hainan350",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#innovatum_smartrak",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#haiying_t180",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#hust2023cableauv",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author"
+    ],
+    "unverified_fields": [
+      "author"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#fsea_p200",
+    "scope": "research",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#kongsberg2025hugin",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/auv-references.bib#nowrdc2024diveld",
+    "scope": "research",
+    "identity_verified": true,
+    "required_unresolved": [
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#zhangkun1994",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#zhukezhen1973",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#dupont1974bone",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#zhengkaiqing1987",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#jiangxizhou1980",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#jianduju1994",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#merkt1995rotational",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#mellinger1996laser",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#bixon1996dynamics",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#mahui1995",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#carlson1981two",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#taylor1983scanning",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#taylor1981study",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#shimizu1983laser",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#atkinson1982experimental",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#kusch1975perturbations",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#guangxi1993",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#huosini1989guwu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#wangfuzhi1865songlun",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#zhaoyaodong1998xinshidai",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#biaozhunhua2002tushu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#chubanzhuanye2004",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#who1970factors",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#peebles2001probability",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#baishunong1998zhiwu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#weinstein1974pathogenic",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#hanjiren1985lun",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#dizhi1936dizhi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#tushuguan1957tushuguanxue",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#aaas1883science",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#fugang2000fengsha",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#xiaoyu2001chubanye",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#oclc2000about",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/ref/refs.bib#scitor2000project",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#borthen2010we",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#chen2011less",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#harwood2005nowhere",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#housley2010we",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#kuo1999use",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#liu2005dangdai",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-apa.bib#wang2010hanyu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#wangbing1997dianzi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#yangzongying1996dianzi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#baker1995future",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#crane1972invisible",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#jha2004effect",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#kennedy1975chalks",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-author-year.bib#stieg1981information",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#chendengyuan2000guoshi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#woerdelun2012jingji",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#crawford1995future",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#chenggenwei1999hongshui",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#weinstein1974pathogenic",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#zhonghua1984linchuang",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#aaas1883science",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#yuanxunlai2012lantian",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#kanamori1998shaking",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#wulili2008beidou",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#myburg2014genome",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "type",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "author",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#dengyigang2006quanzhineng",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#tachibana2005electronic",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#leiguangchun2012zonghe",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#chenzhiyong2011zhongguo",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#quanguo2010wenxian",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#guojia1996turang",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#zhangzhixiang1998jianduan",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#wuyunfang2003mianxiang",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#calms1965infrared",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#tangwanjin2013renti",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#who1970factors",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#dingwenxiang2000shuzi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#liuyuguo2013wumai",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#liqiang2012huajie",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-bachelor.bib#oclc2012about",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#boethius1918theological",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#chaucer1999canterbury",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#damrosch1999longman",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#greenblatt1997norton",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#hieatt1978function",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#lovejoy1964great",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#ptolemy2005tetrabiblos",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#Abrams2004mirror",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-mla.bib#hu2001lishi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#zhangkun1994",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#zhukezhen1973",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#dupont1974bone",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#zhengkaiqing1987",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#jiangxizhou1980",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#jianduju1994",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#merkt1995rotational",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#mellinger1996laser",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#bixon1996dynamics",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#mahui1995",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#carlson1981two",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#taylor1983scanning",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#taylor1981study",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#shimizu1983laser",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#atkinson1982experimental",
+    "scope": "template_fixture",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#kusch1975perturbations",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#guangxi1993",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#huosini1989guwu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#wangfuzhi1865songlun",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#zhaoyaodong1998xinshidai",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#biaozhunhua2002tushu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#chubanzhuanye2004",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#who1970factors",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#peebles2001probability",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#baishunong1998zhiwu",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#weinstein1974pathogenic",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#hanjiren1985lun",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#dizhi1936dizhi",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#tushuguan1957tushuguanxue",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#aaas1883science",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#fugang2000fengsha",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#xiaoyu2001chubanye",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#oclc2000about",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/testfiles/support/refs-numeric.bib#scitor2000project",
+    "scope": "template_fixture",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#zhangkun1994",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#zhukezhen1973",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#dupont1974bone",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#zhengkaiqing1987",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#jiangxizhou1980",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#jianduju1994",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#merkt1995rotational",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#mellinger1996laser",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#bixon1996dynamics",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#mahui1995",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#carlson1981two",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#taylor1983scanning",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#taylor1981study",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#shimizu1983laser",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#atkinson1982experimental",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#kusch1975perturbations",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#guangxi1993",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#huosini1989guwu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#wangfuzhi1865songlun",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#zhaoyaodong1998xinshidai",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#biaozhunhua2002tushu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#chubanzhuanye2004",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#who1970factors",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#peebles2001probability",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#baishunong1998zhiwu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#weinstein1974pathogenic",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#hanjiren1985lun",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#dizhi1936dizhi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#tushuguan1957tushuguanxue",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#aaas1883science",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#fugang2000fengsha",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#xiaoyu2001chubanye",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#oclc2000about",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/ref/refs.bib#scitor2000project",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#borthen2010we",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#chen2011less",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#harwood2005nowhere",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#housley2010we",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#kuo1999use",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#liu2005dangdai",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-apa.bib#wang2010hanyu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#wangbing1997dianzi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#yangzongying1996dianzi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#baker1995future",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#crane1972invisible",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#jha2004effect",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#kennedy1975chalks",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-author-year.bib#stieg1981information",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#chendengyuan2000guoshi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#woerdelun2012jingji",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#crawford1995future",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#chenggenwei1999hongshui",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#weinstein1974pathogenic",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#zhonghua1984linchuang",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#aaas1883science",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#yuanxunlai2012lantian",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#kanamori1998shaking",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [],
+    "unverified_fields": [
+      "doi",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#wulili2008beidou",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#myburg2014genome",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "type",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "author",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#dengyigang2006quanzhineng",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#tachibana2005electronic",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#leiguangchun2012zonghe",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#chenzhiyong2011zhongguo",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#quanguo2010wenxian",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#guojia1996turang",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#zhangzhixiang1998jianduan",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#wuyunfang2003mianxiang",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#calms1965infrared",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#tangwanjin2013renti",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#who1970factors",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#dingwenxiang2000shuzi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#liuyuguo2013wumai",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#liqiang2012huajie",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-bachelor.bib#oclc2012about",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#boethius1918theological",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#chaucer1999canterbury",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#damrosch1999longman",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#greenblatt1997norton",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#hieatt1978function",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#lovejoy1964great",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#ptolemy2005tetrabiblos",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#Abrams2004mirror",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-mla.bib#hu2001lishi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#zhangkun1994",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#zhukezhen1973",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#dupont1974bone",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#zhengkaiqing1987",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#jiangxizhou1980",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#jianduju1994",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#merkt1995rotational",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#mellinger1996laser",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#bixon1996dynamics",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#mahui1995",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#carlson1981two",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#taylor1983scanning",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#taylor1981study",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#shimizu1983laser",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#atkinson1982experimental",
+    "scope": "upstream_vendor",
+    "identity_verified": true,
+    "required_unresolved": [
+      "publication"
+    ],
+    "unverified_fields": [
+      "doi",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#kusch1975perturbations",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "volume",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#guangxi1993",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#huosini1989guwu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#wangfuzhi1865songlun",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#zhaoyaodong1998xinshidai",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#biaozhunhua2002tushu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#chubanzhuanye2004",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#who1970factors",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#peebles2001probability",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publisher"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#baishunong1998zhiwu",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#weinstein1974pathogenic",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#hanjiren1985lun",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication"
+    ],
+    "unverified_fields": [
+      "type",
+      "doi",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "pages"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#dizhi1936dizhi",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#tushuguan1957tushuguanxue",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#aaas1883science",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher",
+      "volume",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#fugang2000fengsha",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "number"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#xiaoyu2001chubanye",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#oclc2000about",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ]
+  },
+  {
+    "id": "thuthesis/vendor/v7.7.1/testfiles/support/refs-numeric.bib#scitor2000project",
+    "scope": "upstream_vendor",
+    "identity_verified": false,
+    "required_unresolved": [
+      "type",
+      "title",
+      "author",
+      "year"
+    ],
+    "unverified_fields": [
+      "type",
+      "title",
+      "author",
+      "year",
+      "publication",
+      "publisher"
+    ]
+  }
+]

@@ -1,0 +1,63 @@
+[
+  {
+    "source": ".diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio",
+    "source_sha256": "c62f140bae0391beffd377956ec10ac69eb2519498f6d35c3ffec2b36c23fddf",
+    "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/.diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_system_verification_deployment_ladder_p0.png",
+    "png_sha256": "ad98af629244b5e0a132441284513b8e4df5e889cc754f9cb1fd2bc1d9f4e5c8",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "整图及相关形状/连线局部实际打开；布局测量错误为零。"
+  },
+  {
+    "source": ".diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio",
+    "source_sha256": "1f65c3a0b2e3bddfed4c4ee6245d15e305f426c9a5afc8b5e725cb1a0bf96b93",
+    "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/.diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_uncertainty_highway_p0.png",
+    "png_sha256": "13132fca1e9e2ea6d7a0332f97df67480c9c905968203f292c524481bcfc4bb6",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "整图及相关形状/连线局部实际打开；布局测量错误为零。"
+  },
+  {
+    "source": ".diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.drawio",
+    "source_sha256": "163a683d6ab0e03bef8d47b3f6f59003ce3be7405c2d21c539d1aee5b01da59a",
+    "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/.diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration_p0.png",
+    "png_sha256": "fcaab4de56ead31aa8cf58301ef2d64b1b6b0d346f9bd9222877cbb13b5b976b",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "整图及相关形状/连线局部实际打开；布局测量错误为零。"
+  },
+  {
+    "png": ".diagram-governance/runs/20261023_compact_thesis/plots/three_phase_helical_field.png",
+    "png_sha256": "1b1e30ea48118563a72e5f854b4f789541fdcf1fbca7e02411dd90ba5df4b895",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "整图已实际打开；3D 投影、图例和子图间距复核完成；Agg 零碰撞/零裁切/零缺字。"
+  },
+  {
+    "png": ".diagram-governance/runs/20261023_compact_thesis/plots/after/thesis/51_shallow_survey_ros_pvs_chain.png",
+    "png_sha256": "ecf2cca366dacb4a5fb999c12d737c45b41786ac2cf506389bd54a6929147e6a",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "整图已实际打开；3D 投影、图例和子图间距复核完成；Agg 零碰撞/零裁切/零缺字。"
+  },
+  {
+    "source": ".diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+    "page": 0,
+    "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+    "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/.diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p0.png",
+    "png_sha256": "22bdefb98d42b7adc5192f1e61d23b2101caa0ea65a7c1319c8387fd9932a5b5",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "两页均实际打开，原生文字/关系不变；线宽补偿后无新遮挡。"
+  },
+  {
+    "source": ".diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+    "page": 1,
+    "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+    "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/.diagram-governance/runs/20261023_compact_thesis/candidates/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p1.png",
+    "png_sha256": "18677b92163ce0dd17b5bc4c1559305a4c3072d07464712402466894d5ad9487",
+    "status": "VIEWED",
+    "date": "2026-10-23",
+    "finding": "两页均实际打开，原生文字/关系不变；线宽补偿后无新遮挡。"
+  }
+]

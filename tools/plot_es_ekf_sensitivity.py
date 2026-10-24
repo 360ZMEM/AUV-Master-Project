@@ -132,7 +132,7 @@ def build_figure(sweeps, corr, baseline_xy):
     fig, (ax_corr, ax_sweep) = plt.subplots(
         1,
         2,
-        figsize=figure_size("full", height=3.15),
+        figsize=figure_size("full", height=4.1),
         constrained_layout=True,
     )
 
@@ -154,16 +154,15 @@ def build_figure(sweeps, corr, baseline_xy):
     ax_corr.set_xlabel("与水平 RMSE 的 |Pearson 相关系数|")
     ax_corr.set_title("(a) 噪声参数敏感性排序（仅 DVL 强相关）")
     ax_corr.axvline(0.5, color="0.4", linestyle="--", linewidth=1.0)
-    ax_corr.text(
-        0.5, len(ordered) - 0.55, "强/弱阈值", color="0.4", fontsize=8,
-        ha="center", va="top", rotation=90,
-    )
+    fig.get_layout_engine().set(rect=(0, .19, 1, .81))
+    fig.text(.5, .125, "强/弱阈值：|Pearson 相关系数| = 0.5", ha="center", va="center", fontsize=8)
+
 
     # --- 支撑面板（右）：单参数扫描下水平 RMSE 相对基线偏移（mm） --------------
     for i, p in enumerate(_PARAMS):
         mult, rmse = sweeps[p]
         delta_mm = [(y - baseline_xy) * 1000.0 for y in rmse]
-        ax_sweep.plot(mult, delta_mm, label=_PARAM_ZH[p], **line_style(i))
+        ax_sweep.plot(mult, delta_mm, label={"sigma_dvl": "测速噪声：", "sigma_acc": "加速度噪声：", "sigma_depth": "深度噪声：", "sigma_gyro": "角速度噪声："}[p] + _PARAM_ZH[p], **line_style(i))
     ax_sweep.axhline(0.0, color="0.4", linestyle="--", linewidth=1.0)
     ax_sweep.set_xscale("log")
     # 显式 plain 刻度，避免 mathtext 10^{-1} 触发 U+2212 缺字。
@@ -172,7 +171,7 @@ def build_figure(sweeps, corr, baseline_xy):
     ax_sweep.set_xlabel("参数相对基线倍数（对数轴）")
     ax_sweep.set_ylabel("水平 RMSE 相对基线偏移（mm）")
     ax_sweep.set_title(f"(b) 单参数扫描：始终停留在 {baseline_xy:.2f} m 量级")
-    ax_sweep.legend(loc="upper left", ncol=2)
+    fig.legend(*ax_sweep.get_legend_handles_labels(), loc="lower center", bbox_to_anchor=(.5, -.005), ncol=2, fontsize=8)
 
     return fig
 

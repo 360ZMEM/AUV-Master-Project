@@ -1,0 +1,482 @@
+[
+  {
+    "physical_page": 29,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_029.png",
+    "sha256": "624bf2d4d9aef190de568f056c81e12461dfde3ceb440ebef3ad7e59faba2757",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "624bf2d4d9aef190de568f056c81e12461dfde3ceb440ebef3ad7e59faba2757",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 33,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_033.png",
+    "sha256": "3a0e54c65e03655e2b9ec62b67fa23d91600cbc13f3bd9f677e1957e29843b4d",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "3a0e54c65e03655e2b9ec62b67fa23d91600cbc13f3bd9f677e1957e29843b4d",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 38,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_038.png",
+    "sha256": "f16f4c3ca2d61063fc9e98ee2382b1045d5c1d6c62670ac988f754ace507089a",
+    "review": "ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "667acc3c7fff7296363c76be2685570a6d75ebe1d540aaade8b05cfd79cde6a2",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 41,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_041.png",
+    "sha256": "c2614922887e2409883aa8ff95c4319f320d15eeeb10678d64b1980f0686bbe4",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "c2614922887e2409883aa8ff95c4319f320d15eeeb10678d64b1980f0686bbe4",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 42,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_042.png",
+    "sha256": "5e159d6656533c7f6adfaf24ec3d8cc6f6e3debef81453efec4c5cd8a6cb5f27",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "5e159d6656533c7f6adfaf24ec3d8cc6f6e3debef81453efec4c5cd8a6cb5f27",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 44,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_044.png",
+    "sha256": "db4f2f7810d64f8286da4c7b61301c885ef1f0002a82cfa8b1f9af080e1b12cd",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "db4f2f7810d64f8286da4c7b61301c885ef1f0002a82cfa8b1f9af080e1b12cd",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 45,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_045.png",
+    "sha256": "66ff0640389e3a7e738f4d1c56cea32b2baea64a9253b3fff59a252d40d0e1f8",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "66ff0640389e3a7e738f4d1c56cea32b2baea64a9253b3fff59a252d40d0e1f8",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 48,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_048.png",
+    "sha256": "cf8a075662ff655f0d9616fde4d395ac5c236303f669de96204330bb4c8d4f31",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "cf8a075662ff655f0d9616fde4d395ac5c236303f669de96204330bb4c8d4f31",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 50,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_050.png",
+    "sha256": "c3cf0f7f594afbd29a13a9c961c26c689ac75a68ee5c58f9c58655172cbf75a2",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "c3cf0f7f594afbd29a13a9c961c26c689ac75a68ee5c58f9c58655172cbf75a2",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 53,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_053.png",
+    "sha256": "fecac65f44889d6b9994a69b32390256ec29134b68b14b60f6284b316e5ceb53",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "fecac65f44889d6b9994a69b32390256ec29134b68b14b60f6284b316e5ceb53",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 54,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_054.png",
+    "sha256": "5b0a5eab0caf2d52bdc23107f2f3e767ae9414286be83196dfabe6aa2a7df66b",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "5b0a5eab0caf2d52bdc23107f2f3e767ae9414286be83196dfabe6aa2a7df66b",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 61,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_061.png",
+    "sha256": "2a8a4f7732ee3ba5fb98fb300a8e4699151ca5bcf251a2f2d2c015d4c27cfed2",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "2a8a4f7732ee3ba5fb98fb300a8e4699151ca5bcf251a2f2d2c015d4c27cfed2",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 62,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_062.png",
+    "sha256": "3366ad37f6dd3eb12b56c90e2bf420f4333ea040060f5323e44954a1b55be6e8",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "3366ad37f6dd3eb12b56c90e2bf420f4333ea040060f5323e44954a1b55be6e8",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 64,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_064.png",
+    "sha256": "449435e004cb8903dc4c93da0974c5d07c880a8c843f690726aa4379b4438e6d",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "449435e004cb8903dc4c93da0974c5d07c880a8c843f690726aa4379b4438e6d",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 66,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_066.png",
+    "sha256": "1ef24466e6fa248e5b6efc54e529c9db927730d65f9c36e370a77d56b7489bff",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "1ef24466e6fa248e5b6efc54e529c9db927730d65f9c36e370a77d56b7489bff",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 67,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_067.png",
+    "sha256": "5476d8df3e07284ce655b7506b774dfdc66cc78cdd5579d0aa4e24b4b06e705f",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "5476d8df3e07284ce655b7506b774dfdc66cc78cdd5579d0aa4e24b4b06e705f",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 71,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_071.png",
+    "sha256": "b62368280c2e9ef3fc8a0d1eceb35ee2656b02cb8b4927c058f51eb2d77d9e93",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "b62368280c2e9ef3fc8a0d1eceb35ee2656b02cb8b4927c058f51eb2d77d9e93",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 82,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_082.png",
+    "sha256": "eb482982aa5e5d0b82a62005d291f0c2a50a42aab5608403b5226c5026e31b01",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "eb482982aa5e5d0b82a62005d291f0c2a50a42aab5608403b5226c5026e31b01",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 90,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_090.png",
+    "sha256": "0679414d5e27c347244ea57cc98c66f011600990bc506d49c3a877830eeaeb51",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "0679414d5e27c347244ea57cc98c66f011600990bc506d49c3a877830eeaeb51",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 91,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_091.png",
+    "sha256": "1cad03eb08aab1ae338726bcd9539fe8d5ee46d21adf59934fb6edfb2d5bbd20",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "1cad03eb08aab1ae338726bcd9539fe8d5ee46d21adf59934fb6edfb2d5bbd20",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 94,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_094.png",
+    "sha256": "b34711ee83e74f37eacdeab0579ccb9da6266159b358621e696407785f8581fd",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "b34711ee83e74f37eacdeab0579ccb9da6266159b358621e696407785f8581fd",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 95,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_095.png",
+    "sha256": "33a177a654a067d63f1bfc908024efb76c9ee6b319b20aea69e1189d9c5107ca",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "33a177a654a067d63f1bfc908024efb76c9ee6b319b20aea69e1189d9c5107ca",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 97,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_097.png",
+    "sha256": "1792dc23e067d3c3ced9aed7931d2c1a15271377c2eb8b43a5aa0db379afac66",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "1792dc23e067d3c3ced9aed7931d2c1a15271377c2eb8b43a5aa0db379afac66",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 103,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_103.png",
+    "sha256": "000002ea915c26a6d87c658ea8d4474979718f9978f3413f3d083bf73e6157e4",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "000002ea915c26a6d87c658ea8d4474979718f9978f3413f3d083bf73e6157e4",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 114,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_114.png",
+    "sha256": "9ba135c36a186816204a0b48212235cc65af60aae4dc4284b6b357e290abc9da",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "9ba135c36a186816204a0b48212235cc65af60aae4dc4284b6b357e290abc9da",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 116,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_116.png",
+    "sha256": "1b604276282f631e7eb84f82956caae7dcc3497762522cc86730a2ada3d315f6",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "1b604276282f631e7eb84f82956caae7dcc3497762522cc86730a2ada3d315f6",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 117,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_117.png",
+    "sha256": "cc07143025f5614245a53643f80c6cc67812f934ec773028f77e13b698ce51dc",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "cc07143025f5614245a53643f80c6cc67812f934ec773028f77e13b698ce51dc",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 118,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_118.png",
+    "sha256": "9bcba5003f1cb98db952f0ab3ef7fde986e1dfbfd8dc5ca903a97d382e401803",
+    "review": "ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "8ed84daa6f8015f0cfb45090c3afd7f7f9284ed8ca4265617ffc1b215a0cf814",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 119,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_119.png",
+    "sha256": "9576047d97b974db3471183c092a2186f31f8eae36fb8e8b8e9f9ad923e61d42",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "9576047d97b974db3471183c092a2186f31f8eae36fb8e8b8e9f9ad923e61d42",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 122,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_122.png",
+    "sha256": "a86f515e11451c0f76ca88a78f813a93e9a93e76e26cb26a182fec6361950017",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "a86f515e11451c0f76ca88a78f813a93e9a93e76e26cb26a182fec6361950017",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 126,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_126.png",
+    "sha256": "3da4fd6b179badda7c1078006ae2ba1460fa0f5299a0580b3724399ec450b8d9",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "3da4fd6b179badda7c1078006ae2ba1460fa0f5299a0580b3724399ec450b8d9",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 127,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_127.png",
+    "sha256": "31ccddfae4af3808fa217f22ce22db4e52e1cf61463933c8b1cb0f14f8b63dea",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "31ccddfae4af3808fa217f22ce22db4e52e1cf61463933c8b1cb0f14f8b63dea",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 135,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_135.png",
+    "sha256": "04318220cdd9c4883e3c6b9317b22ed43e2a9e43b58badd55264b31f0bea2661",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "04318220cdd9c4883e3c6b9317b22ed43e2a9e43b58badd55264b31f0bea2661",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 139,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_139.png",
+    "sha256": "c0a20a70d9072631e5029d7c7fbd8c3032ac0b64b73891cd9f66a8e545a25984",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "c0a20a70d9072631e5029d7c7fbd8c3032ac0b64b73891cd9f66a8e545a25984",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 141,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_141.png",
+    "sha256": "3c4d05aa026175bbe4b350eae34a1cfb3abfc8e20680caff7235a5ece119d272",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "3c4d05aa026175bbe4b350eae34a1cfb3abfc8e20680caff7235a5ece119d272",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 142,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_142.png",
+    "sha256": "fdaabb0c972e1b4e1dad9d100c07275bfb857e51642152f63fe42d80e77194ba",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "fdaabb0c972e1b4e1dad9d100c07275bfb857e51642152f63fe42d80e77194ba",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 143,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_143.png",
+    "sha256": "ede553fbf34ed57894a3847d2b8b6001884bce9619b2f4fb564632192f4bb785",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "ede553fbf34ed57894a3847d2b8b6001884bce9619b2f4fb564632192f4bb785",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 144,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_144.png",
+    "sha256": "b2316af36f843461bb2ae981236e396193eea97cafd2a08359f96e616a4578fc",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "b2316af36f843461bb2ae981236e396193eea97cafd2a08359f96e616a4578fc",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 146,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_146.png",
+    "sha256": "e9ab0f6586963dd4b5f7d0a2a9b85286a88d8976153cb0e74c4858b34ff78bb6",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "e9ab0f6586963dd4b5f7d0a2a9b85286a88d8976153cb0e74c4858b34ff78bb6",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 147,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_147.png",
+    "sha256": "6d332135186270641a902712cb514286d5c502cce612215343fa835f319e9d09",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "6d332135186270641a902712cb514286d5c502cce612215343fa835f319e9d09",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 148,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_148.png",
+    "sha256": "14fb95ffe3857a994e8bc64f00c30d0d4d7f561d1bf04db23b3d697e7fd889bc",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "14fb95ffe3857a994e8bc64f00c30d0d4d7f561d1bf04db23b3d697e7fd889bc",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 150,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_150.png",
+    "sha256": "7f7f7cd1aa4f5cd96bbeb8ee355c4d9d428d98d0025d25d8196403a932cddbcf",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "7f7f7cd1aa4f5cd96bbeb8ee355c4d9d428d98d0025d25d8196403a932cddbcf",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 151,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_151.png",
+    "sha256": "fb56db44d926afa947bc823e41f602d42368222df66f52724385416623ddebdb",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "fb56db44d926afa947bc823e41f602d42368222df66f52724385416623ddebdb",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 152,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_152.png",
+    "sha256": "5688dac422302df2c91ae05a614756d0887f38bcae3fef9c476f0e8578ca449a",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "5688dac422302df2c91ae05a614756d0887f38bcae3fef9c476f0e8578ca449a",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 154,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_154.png",
+    "sha256": "47968c352b9c44a9ebcde90c3f1032a03068ae4e01d16ae1f866cc1fbd5748ce",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "47968c352b9c44a9ebcde90c3f1032a03068ae4e01d16ae1f866cc1fbd5748ce",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 155,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_155.png",
+    "sha256": "d250603aa673a1a7e74a5c12afe1694457b19f3f75ac3c391d6613ff54a021bb",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "d250603aa673a1a7e74a5c12afe1694457b19f3f75ac3c391d6613ff54a021bb",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 156,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_156.png",
+    "sha256": "f7dfd87ec50a91c539a32ed78f73fce1504aa9d9f8339dd4c5987d489c5d6ad4",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "f7dfd87ec50a91c539a32ed78f73fce1504aa9d9f8339dd4c5987d489c5d6ad4",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  },
+  {
+    "physical_page": 157,
+    "preview": ".diagram-governance/runs/20261021_presentation_polish/paper-images/page_157.png",
+    "sha256": "642390aca5466113e12ac714955bf35beff5af1175a4bdc019e380b6b5e9a5ea",
+    "review": "BYTE_IDENTICAL_TO_ACTUALLY_OPENED_FULL_PAGE",
+    "reviewed_pdf_sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "prior_pdf_sha256": "76813354de5ccd54355580fa962f84671009e70993d5cf76045ee2b5ee82c8be",
+    "prior_preview_sha256": "642390aca5466113e12ac714955bf35beff5af1175a4bdc019e380b6b5e9a5ea",
+    "note": "38与118末轮实际重新打开；其余46页PNG逐字节相同，继承已打开的记录；11个用户暂缓项不提升PASS"
+  }
+]

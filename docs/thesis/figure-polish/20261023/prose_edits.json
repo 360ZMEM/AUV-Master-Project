@@ -1,0 +1,415 @@
+[
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "其顶部状态块来自 \\texttt{/auv/cable/industrial\\_ready}、\\texttt{/auv/cable/industrial\\_acceptance\\_pass} 与 \\texttt{/auv/cable/dlt1278\\_state} 等布尔/字符串话题",
+    "after": "其顶部状态块分别显示工业就绪、验收通过标志与规程评分状态，由对应的运行状态消息驱动",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "\\texttt{Xvfb + xdotool + ImageMagick}",
+    "after": "虚拟显示与自动截屏工具",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "\\texttt{rt/pc/cmd\\_raw}",
+    "after": "原始遥控指令通道",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "\\texttt{work\\_cmd}",
+    "after": "工作指令字段",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "\\texttt{EmergencySurface}",
+    "after": "紧急上浮行动",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "实际实现中的根节点是 \\texttt{memory=False} 的选择器，每个 tick 均从左到右重新检查三个分支",
+    "after": "根节点采用无记忆选择器，每个决策周期均按优先级从左到右重新检查三个分支",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{DebugLevel}\\newline\\texttt{Condition}",
+    "after": "调试等级判定",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{ConfidenceAbove}\\newline\\texttt{Threshold}",
+    "after": "置信度迟滞判定",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{SeabedSafety}\\newline\\texttt{Limiter}",
+    "after": "海底安全约束",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{AnomalySpeed}\\newline\\texttt{Limiter}",
+    "after": "异常限速",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{EmergencyCondition}",
+    "after": "紧急条件判定",
+    "count": 2,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{EmergencySurface}",
+    "after": "紧急上浮行动",
+    "count": 2,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{StandbyCheck}",
+    "after": "待命检查",
+    "count": 2,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{DiveToDepth}",
+    "after": "定深下潜行动",
+    "count": 2,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{SeabedSafetyLimiter}",
+    "after": "海底安全约束",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{PreciseInspectionSequence}",
+    "after": "精准巡检分支",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{AnomalySpeedLimiter}",
+    "after": "异常限速机制",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "\\texttt{ZigZagSearch}",
+    "after": "之字形搜索",
+    "count": 2,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "逐 tick 检查",
+    "after": "逐周期检查",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "每个 tick 都重新判定",
+    "after": "每个决策周期都重新判定",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "下一次 tick 抢占路线任务",
+    "after": "下一决策周期抢占路线任务",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "先由 Biot--Savart 模型生成清洁 \\texttt{/auv/sensors/magnetic}",
+    "after": "先由 Biot--Savart 模型生成无噪磁观测",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "通过 \\texttt{/auv/sensors/magnetic\\_noise\\_metadata} 记录",
+    "after": "通过独立的噪声元数据消息记录",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "车辆深度取 \\texttt{/auv/sensors/ground\\_truth}，下发命令取 \\texttt{/auv/control/mpc\\_cmd}",
+    "after": "车辆深度取仿真真值流，下发命令取控制输出记录",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "由于本次 rosbag 中 \\texttt{/auv/diagnostics} 无有效消息",
+    "after": "由于本次录包中诊断通道无有效消息",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "\\texttt{kinematic\\_setpoint}",
+    "after": "运动学设定点",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "Telnet 读回 \\texttt{work\\_cmd=0x11/0x02}",
+    "after": "板端工作指令分别读回为 \\texttt{0x11} 与 \\texttt{0x02}",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "与 \\texttt{Net\\_Recv\\_Task\\_Period=3} 和 0.1 s 基准周期一致",
+    "after": "与固件接收任务每 3 个基础周期调度一次、基础周期为 0.1 s 的设置一致",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "零输出 \\texttt{SAFETY\\_FALLBACK}",
+    "after": "零输出的安全回退",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "PC104 \\texttt{Sys\\_Abnorm\\_Inf} 接入生产 bridge、CommandArbiter 与行为树：bridge 将原始故障字及 Bit5/Bit13/Bit14 写入 ArbiterStatus，decision node 再",
+    "after": "PC104 系统故障字接入部署桥接节点、命令仲裁器与行为树：桥接节点将原始故障字及 Bit5/Bit13/Bit14 写入仲裁状态消息，决策节点再",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "ControlGoal/Setpoint、行为树状态、shadow command",
+    "after": "控制目标与设定点、行为树状态、影子执行命令",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "\\texttt{ZIGZAG\\_SEARCH}",
+    "after": "之字形搜索",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "1800 s \\texttt{active\\_soak} 子区间",
+    "after": "1800 s 稳态保持子区间",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "仍保留 \\texttt{failed\\_acceptance}",
+    "after": "仍判为整包验收未通过",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "旧 runner 对启动根进程的采样，bridge/decision",
+    "after": "旧版记录程序对启动根进程的采样，桥接与决策节点",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "后续 runner 已改为递归聚合进程树",
+    "after": "后续记录程序已改为递归聚合进程树",
+    "count": 1,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "\\texttt{Solve\\_Succeeded}",
+    "after": "求解成功",
+    "count": 4,
+    "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "未记录 Jetson \\texttt{tegrastats} 温度、频率和功耗",
+    "after": "未记录 Jetson 的温度、频率和功耗遥测",
+    "count": 1,
+    "purpose": "用实际缺失的物理量替代工具程序名，保持未验证边界"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "到 原始遥控指令通道",
+    "after": "到原始遥控指令通道",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "的 工作指令字段",
+    "after": "的工作指令字段",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "工作指令字段 变",
+    "after": "工作指令字段变",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "的 紧急上浮行动",
+    "after": "的紧急上浮行动",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "紧急上浮行动 只",
+    "after": "紧急上浮行动只",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "由 虚拟显示与自动截屏工具",
+    "after": "由虚拟显示与自动截屏工具",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap02.tex",
+    "before": "虚拟显示与自动截屏工具 在",
+    "after": "虚拟显示与自动截屏工具在",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "到 之字形搜索",
+    "after": "到之字形搜索",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "行 定深下潜行动",
+    "after": "行定深下潜行动",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "由 异常限速",
+    "after": "由异常限速",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "异常限速机制 把",
+    "after": "异常限速机制把",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "支 待命检查",
+    "after": "支待命检查",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "待命检查 处",
+    "after": "待命检查处",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "由 海底安全约束",
+    "after": "由海底安全约束",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "海底安全约束 包",
+    "after": "海底安全约束包",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "精准巡检分支 进",
+    "after": "精准巡检分支进",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "入 紧急上浮行动",
+    "after": "入紧急上浮行动",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap04.tex",
+    "before": "紧急条件判定 返",
+    "after": "紧急条件判定返",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "为 之字形搜索",
+    "after": "为之字形搜索",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "用 运动学设定点",
+    "after": "用运动学设定点",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  },
+  {
+    "file": "thuthesis/data/auv-chap05.tex",
+    "before": "运动学设定点 后",
+    "after": "运动学设定点后",
+    "count": 1,
+    "purpose": "去除实现标识改中文后遗留的中文间空格"
+  }
+]

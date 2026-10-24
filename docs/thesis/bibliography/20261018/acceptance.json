@@ -1,0 +1,94 @@
+{
+  "coverage": 333,
+  "verified_fields_checked": 882,
+  "errors": [],
+  "research_required_review": [
+    "purcell2000remus",
+    "breivik2005guidance",
+    "barshalom2001estimation",
+    "scio2025energyachievement",
+    "gwec2025offshore",
+    "orecatapult2025ras",
+    "nea2026shenlan",
+    "nea2025shenlan",
+    "scio2026offshore",
+    "dlt1278_2025",
+    "multidimension2024tmr8607",
+    "tcsgpc_cable",
+    "geomatching2022sbp",
+    "dnv2024cablefailure",
+    "teledyne2021hydropact350",
+    "teledyne2026hydropactline",
+    "teledyne2017hainan350",
+    "innovatum_smartrak",
+    "haiying_t180",
+    "hust2023cableauv",
+    "fsea_p200",
+    "kongsberg2025hugin",
+    "nowrdc2024diveld"
+  ],
+  "undefined": {},
+  "release_ready": false,
+  "compiled": {
+    "auv-thesis": {
+      "passed": true,
+      "errors": [],
+      "pages": 170,
+      "cited_keys": 90,
+      "static_conditional_only_keys": [],
+      "bbl_entries": 90,
+      "bibliography_pages_extracted": 7,
+      "pdf": "thuthesis/build/auv-thesis/auv-thesis.pdf",
+      "pdf_sha256": "7bf118ec636711f09156ee0a086484162ad541fcbb2c92e95b911346c266058a",
+      "gb_style": "gb7714-2015",
+      "type_flags": [
+        "[C]",
+        "[EB/OL]",
+        "[J]",
+        "[M]",
+        "[S/OL]"
+      ]
+    },
+    "auv-middle-defense-main": {
+      "passed": true,
+      "errors": [],
+      "pages": 34,
+      "cited_keys": 12,
+      "static_conditional_only_keys": [
+        "hewing2020learning"
+      ],
+      "bbl_entries": 12,
+      "bibliography_pages_extracted": 1,
+      "pdf": "thuthesis/build/middle-main/auv-middle-defense-main.pdf",
+      "pdf_sha256": "8956be71077b52b80524de90014b53dc253d0009c3e1a48d7ca88cce9144c0ee",
+      "gb_style": "gb7714-2015",
+      "type_flags": [
+        "[C]",
+        "[EB/OL]",
+        "[J]",
+        "[M]"
+      ]
+    },
+    "auv-middle-defense-school": {
+      "passed": true,
+      "errors": [],
+      "pages": 34,
+      "cited_keys": 12,
+      "static_conditional_only_keys": [
+        "hewing2020learning"
+      ],
+      "bbl_entries": 12,
+      "bibliography_pages_extracted": 1,
+      "pdf": "thuthesis/build/middle-school/auv-middle-defense-school.pdf",
+      "pdf_sha256": "a09e6f39430a08c8b72fbcf507dc1fb53e6f46c52ce3e13670f858e64ece1f10",
+      "gb_style": "gb7714-2015",
+      "type_flags": [
+        "[C]",
+        "[EB/OL]",
+        "[J]",
+        "[M]"
+      ]
+    }
+  },
+  "audit_acceptance_passed": true
+}

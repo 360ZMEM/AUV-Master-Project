@@ -2,6 +2,11 @@
 %  references.bib — AUV 海缆巡检硕士论文统一参考文献库
 % ---------------------------------------------------------------------------
 %  编码       ：UTF-8（务必以 UTF-8 保存/打开，勿转 GBK）
+%  真实性审计 ：2026-10-18 字段级证据与残余例外见 docs/thesis/bibliography/README.md（仓库根目录相对路径）
+% 2026-10-23 收口：删除 tcsgpc_cable、geomatching2022sbp；增加 tcin100_2026。
+%              全部正文及中期报告旧键需按随附 Codex 指令替换，再重编译。
+%              下列历史“已验证”注释不作为现行放行依据；以可重跑审计结果为准。
+%              不明数字定位符已省略，有明确 article-number / paper ID 证据者使用 eid；不推测页码。
 %  目标引擎   ：xelatex + biblatex + biblatex-gb7714-2015 + biber
 %  引用键约定 ：作者姓 + 年份 + 主题词（全小写），如 mayne2000constrained
 %  分区       ：A. Crossref/DataCite 已验证（DOI 可经官方内容协商接口解析）
@@ -10,7 +15,7 @@
 %  索引对照   ：见同目录 00_引用点总索引.md（C*/D*/E*/G* 编号）及各主题 .md
 %  provenance ：每条上方注释给出 [索引号] 引用点 章节 + 来源核验状态
 %  中文条目   ：已加 langid={chinese}，使 gb7714 正确切换中英文著录格式
-%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 7 条（官网核实，DOI 非 Crossref 体系）｜C 区 22 条（政策/报告/标准/网页/产品资料），合计 99 条
+%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 7 条（官网核实，DOI 非 Crossref 体系）｜C 区 21 条（政策/报告/标准/网页/产品资料），合计 98 条
 %              └ A 区含"展望/未来趋势"子区 F1–F8（8 条，第 6 章结论与展望引用）
 %              └ A.5：01 章现状综述正文编号 [1]–[36]（[4] 归 C 区）+ A6 教材 + A10 DLIA
 %  维护       ：谢冠文 xgw24@mails.tsinghua.edu.cn  2026-08
@@ -93,7 +98,7 @@
 @inproceedings{purcell2000remus,
   title     = {New capabilities of the {REMUS} autonomous underwater vehicle},
   author    = {Purcell, M. and von Alt, C. and Allen, B. and Austin, T. and Forrester, N. and Goldsborough, R. and Stokey, R.},
-  booktitle = {OCEANS 2000 MTS/IEEE Conference and Exhibition},
+  booktitle = {OCEANS 2000 MTS/IEEE Conference and Exhibition. Conference Proceedings (Cat. No.00CH37158)},
   year      = {2000},
   volume    = {1},
   pages     = {147--151},
@@ -106,7 +111,7 @@
 @inproceedings{breivik2005guidance,
   title     = {Principles of guidance-based path following in 2D and 3D},
   author    = {Breivik, Morten and Fossen, Thor I.},
-  booktitle = {Proceedings of the 44th IEEE Conference on Decision and Control (CDC)},
+  booktitle = {Proceedings of the 44th IEEE Conference on Decision and Control},
   year      = {2005},
   pages     = {627--634},
   address   = {Seville, Spain},
@@ -302,7 +307,7 @@
 @book{barshalom2001estimation,
   title     = {Estimation with Applications to Tracking and Navigation: Theory, Algorithms and Software},
   author    = {Bar-Shalom, Yaakov and Li, X. Rong and Kirubarajan, Thiagalingam},
-  year      = {2001},
+  year      = {2002},
   publisher = {John Wiley \& Sons},
   address   = {New York},
   doi       = {10.1002/0471221279},
@@ -380,7 +385,7 @@
   journal = {Ocean Engineering},
   year    = {2023},
   volume  = {280},
-  pages   = {114689},
+  eid   = {114689},
   doi     = {10.1016/j.oceaneng.2023.114689},
   issn    = {0029-8018},
 }
@@ -393,7 +398,6 @@
   year    = {2022},
   volume  = {10},
   number  = {3},
-  pages   = {361},
   doi     = {10.3390/jmse10030361},
   issn    = {2077-1312},
 }
@@ -406,7 +410,6 @@
   year    = {2021},
   volume  = {13},
   number  = {21},
-  pages   = {4401},
   doi     = {10.3390/rs13214401},
   issn    = {2072-4292},
 }
@@ -433,7 +436,6 @@
   year    = {2025},
   volume  = {25},
   number  = {6},
-  pages   = {1730},
   doi     = {10.3390/s25061730},
   issn    = {1424-8220},
 }
@@ -446,7 +448,6 @@
   year    = {2016},
   volume  = {16},
   number  = {8},
-  pages   = {1335},
   doi     = {10.3390/s16081335},
   issn    = {1424-8220},
 }
@@ -472,7 +473,6 @@
   year    = {2024},
   volume  = {16},
   number  = {2},
-  pages   = {226},
   doi     = {10.3390/rs16020226},
   issn    = {2072-4292},
 }
@@ -524,7 +524,6 @@
   year    = {2018},
   volume  = {18},
   number  = {8},
-  pages   = {2538},
   doi     = {10.3390/s18082538},
   issn    = {1424-8220},
 }
@@ -560,7 +559,6 @@
   year    = {2021},
   volume  = {21},
   number  = {4},
-  pages   = {1149},
   doi     = {10.3390/s21041149},
   issn    = {1424-8220},
 }
@@ -573,7 +571,6 @@
   year    = {2021},
   volume  = {9},
   number  = {9},
-  pages   = {1020},
   doi     = {10.3390/jmse9091020},
   issn    = {2077-1312},
 }
@@ -625,7 +622,7 @@
   journal = {Ocean Engineering},
   year    = {2024},
   volume  = {307},
-  pages   = {118217},
+  eid   = {118217},
   doi     = {10.1016/j.oceaneng.2024.118217},
   issn    = {0029-8018},
 }
@@ -637,7 +634,7 @@
   journal = {Control Engineering Practice},
   year    = {2023},
   volume  = {141},
-  pages   = {105729},
+  eid   = {105729},
   doi     = {10.1016/j.conengprac.2023.105729},
   issn    = {0967-0661},
 }
@@ -650,7 +647,6 @@
   year    = {2024},
   volume  = {12},
   number  = {9},
-  pages   = {1655},
   doi     = {10.3390/jmse12091655},
   issn    = {2077-1312},
 }
@@ -663,7 +659,6 @@
   year    = {2018},
   volume  = {15},
   number  = {5},
-  pages   = {1729881418806811},
   doi     = {10.1177/1729881418806811},
   issn    = {1729-8814},
 }
@@ -675,7 +670,7 @@
   journal = {Ocean Engineering},
   year    = {2022},
   volume  = {266},
-  pages   = {112731},
+  eid   = {112731},
   doi     = {10.1016/j.oceaneng.2022.112731},
   issn    = {0029-8018},
 }
@@ -687,7 +682,7 @@
   journal = {Ocean Engineering},
   year    = {2024},
   volume  = {314},
-  pages   = {119688},
+  eid   = {119688},
   doi     = {10.1016/j.oceaneng.2024.119688},
   issn    = {0029-8018},
 }
@@ -700,7 +695,6 @@
   year    = {2018},
   volume  = {18},
   number  = {7},
-  pages   = {2321},
   doi     = {10.3390/s18072321},
   issn    = {1424-8220},
 }
@@ -713,7 +707,6 @@
   year    = {2024},
   volume  = {8},
   number  = {11},
-  pages   = {672},
   doi     = {10.3390/drones8110672},
   issn    = {2504-446X},
 }
@@ -762,7 +755,6 @@
   year    = {2025},
   volume  = {13},
   number  = {8},
-  pages   = {1458},
   doi     = {10.3390/jmse13081458},
   issn    = {2077-1312},
 }
@@ -855,6 +847,7 @@
   issn      = {2731-3395},
   publisher = {Springer Nature},
   doi       = {10.1038/s44172-025-00571-7},
+  eid       = {18},
 }
 
 % [F3] §6.3 展望·学习型 MPC — 面向安全学习的学习型模型预测控制权威综述｜ Crossref 已验证
@@ -951,7 +944,7 @@
   number  = {1},
   pages   = {1--19},
   doi     = {10.23380/inustrans.2025.1.1.1},
-  note    = {题录经期刊官网核实；DOI 属期刊自有体系，Crossref 不可解析},
+  % audit-note: 题录经期刊官网核实；DOI 属期刊自有体系，Crossref 不可解析
 }
 
 % [D1-补1] A8 §2.4.1 — 声学法海缆埋深测量要求与策略
@@ -965,8 +958,8 @@
   year     = {2016},
   number   = {105},
   pages    = {50--54},
-  doi      = {10.23784/HN105_11},
-  note     = {题录经期刊官网核实；DOI 属 DHyG 自有体系，Crossref 不可解析},
+  doi      = {10.23784/HN105-11},
+  % audit-note: 题录经期刊官网核实；DOI 属 DHyG 自有体系，Crossref 不可解析
 }
 
 % [D1-补2] A3 §1.2.1 — 海底电缆检测技术方法选择分析（中文）
@@ -981,7 +974,7 @@
   pages    = {85--91, 96},
   doi      = {10.16516/j.gedi.issn2095-8676.2017.03.016},
   langid   = {chinese},
-  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+  % audit-note: 题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析
 }
 
 % [D3] A4/A6 §1.2.2/§2.3.1 — 基于工频磁特征的近岸海缆航磁定位（Biot-Savart 三芯正演，中文，最贴合 A6）
@@ -996,7 +989,7 @@
   pages    = {37--46},
   doi      = {10.11993/j.issn.2096-3920.2025-0083},
   langid   = {chinese},
-  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+  % audit-note: 题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析
 }
 
 % [E2-补1] B9/A13 §3.2.1 — 紧组合 SINS/DVL/USBL（含卡方检验隔断野值，中文）
@@ -1011,7 +1004,7 @@
   pages    = {847--855},
   doi      = {10.11993/j.issn.2096-3920.2022-0076},
   langid   = {chinese},
-  note     = {题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析},
+  % audit-note: 题录经期刊官网核实；DOI 属 CSTR 体系，Crossref 不可解析
 }
 
 % [40] A7 §1.2.2/§2.3.2 — 三芯海缆损耗解析公式（铠装涡流+磁滞+绞合，铠装屏蔽 grounding）
@@ -1020,11 +1013,11 @@
 @inproceedings{hatlo2015accurate,
   title     = {Accurate analytic formula for calculation of losses in three-core submarine cables},
   author    = {Hatlo, Marius and Olsen, Espen and Stølan, Ronny and Karlstrand, Johan},
-  booktitle = {Proceedings of the 9th International Conference on Insulated Power Cables (Jicable'15)},
+  booktitle = {9th International Conference on Insulated Power Cables},
   year      = {2015},
-  pages     = {Paper E2.5},
+  eid     = {E2.5},
   address   = {Versailles, France},
-  note      = {题录经 Jicable'15 官网论文集核实；无 DOI，Crossref 不可解析},
+  % audit-note: 题录经 Jicable'15 官网论文集核实；无 DOI，Crossref 不可解析
 }
 
 % [G3] §1.1.3 — 海上风电海缆运维技术、状态监测与全生命周期风险综述（中文）｜期刊官网核实
@@ -1040,7 +1033,7 @@
   url     = {https://jwc.cwc.net.cn/article/doi/10.16105/j.dxdl.1672-6901.20250182},
   urldate = {2026-08-09},
   langid  = {chinese},
-  note    = {题录经《电线电缆》官网核实；DOI 属期刊自有/CSTR 体系，Crossref 不可解析},
+  % audit-note: 题录经《电线电缆》官网核实；DOI 属期刊自有/CSTR 体系，Crossref 不可解析
 }
 
 
@@ -1057,38 +1050,40 @@
   url      = {https://www.ndrc.gov.cn/xxgk/zcfb/ghwb/202206/t20220601_1326719.html},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {发改能源〔2021〕1445号；附件为《“十四五”可再生能源发展规划》[EB/OL]},
+  % audit-note: 发改能源〔2021〕1445号；附件为《“十四五”可再生能源发展规划》[EB/OL]
 }
 
 % [G1-4] §1.1.1 — “十四五”能源高质量发展官方发布会（海上风电新增装机）｜国新办一手实录
 @online{scio2025energyachievement,
-  title    = {介绍“十四五”时期能源高质量发展成就},
+  title    = {高质量完成“十四五”规划系列主题新闻发布会|介绍“十四五”时期能源高质量发展成就},
   author   = {{国务院新闻办公室}},
   year     = {2025},
-  url      = {http://www.scio.gov.cn/live/2025/37113/},
+  url      = {https://www.nea.gov.cn/20250826/81a62ca2aedb4f18ac107efd85c4b650/c.html},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {“高质量完成‘十四五’规划”系列主题新闻发布会实录；2025-08-26 [EB/OL]},
+  % audit-note: “高质量完成‘十四五’规划”系列主题新闻发布会实录；2025-08-26 [EB/OL]
 }
 
 % [G1-5] §1.1.1 — 全球海上风电装机与市场展望（行业报告）｜GWEC 官方
-@online{gwec2025offshore,
+@report{gwec2025offshore,
   title    = {Global Offshore Wind Report 2025},
   author   = {{Global Wind Energy Council}},
+  institution = {Global Wind Energy Council},
   year     = {2025},
-  url      = {https://www.gwec.net/news/offshore-wind-installed-capacity-reaches-83-gw-as-new-report-finds-2024-a-record-year-for-construction-and-auctions},
+  url      = {https://www.gwec.net/reports/globaloffshorewindreport/2025},
   urldate  = {2026-08-09},
-  note     = {GWEC 官方报告发布说明；报告统计 2024 年全球海上风电累计装机 83 GW [R/OL]},
+  % audit-note: GWEC 2025 版报告专属页面；2024 年全球海上风电累计装机约 83 GW [R/OL]
 }
 
 % [G3-1] §1.1.3 — 海上风电运维中的机器人与自主系统（行业报告）｜ORE Catapult/RenewableUK 官方
-@online{orecatapult2025ras,
-  title    = {Robotics \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind},
-  author   = {{Offshore Renewable Energy Catapult and RenewableUK}},
+@report{orecatapult2025ras,
+  title    = {Robotic \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind},
+  author   = {Hatchett, Paul and Esson, Andrew and Holt, Charlotte},
+  institution = {Offshore Renewable Energy Catapult},
   year     = {2025},
-  url      = {https://ore.catapult.org.uk/resource-hub/analysis-reports/robotics-autonomous-systems-for-operations-and-maintenance-in-uk-offshore-wind},
+  url      = {https://cms.ore.catapult.org.uk/wp-content/uploads/2025/07/Catapult-Foresighting-RAS-Report-Feb-25-v8-SPREADS.pdf},
   urldate  = {2026-08-09},
-  note     = {行业分析报告；2025-07-01 发布，讨论 RAS 对海上风电运维成本与安全性的作用 [R/OL]},
+  % audit-note: 行业分析报告；2025-07-01 发布，讨论 RAS 对海上风电运维成本与安全性的作用 [R/OL]
 }
 
 % [G3-2] §1.1.2/§1.1.3 — 海上风电场海缆路由与运维期定期监测（海事监管文件）｜上海海事局
@@ -1099,86 +1094,83 @@
   url      = {https://www.sh.msa.gov.cn/hsfg/content.jspx?cid=F39F265BDF560E50E0533A0820C6FB7D},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {沪海通航〔2022〕191号；要求定期监测海缆路由及附近海域水下地形 [EB/OL]},
+  % audit-note: 沪海通航〔2022〕191号；要求定期监测海缆路由及附近海域水下地形 [EB/OL]
 }
 
 % [G1-1] A1 §1.1.1 — 深远海风电国家战略（一手，中文）
 @online{nea2026shenlan,
-  title    = {海上风电转向"深蓝"},
-  author   = {{国家能源局}},
+  title    = {海上风电转向“深蓝”},
+  author   = {王轶辰},
   year     = {2026},
-  url      = {http://www.nea.gov.cn/},
+  url      = {https://www.nea.gov.cn/20260710/2706be51a7f1446a90658328d1c245d4/c.html},
   urldate  = {2026-08-06},
   langid   = {chinese},
-  note     = {2026-07-10 发布；待核对正式规划文件名（如"十五五"可再生能源发展规划）与发布号},
+  % audit-note: 经济日报记者王轶辰文章，2026-07-10 国家能源局转载；非正式规划文件 [EB/OL]
 }
 
 % [G1-2] A1 §1.1.1 — 深远海风电装机进展（一手，中文）
 @online{nea2025shenlan,
-  title    = {海上风电加速挺进深蓝},
-  author   = {{国家能源局}},
-  year     = {2025},
-  url      = {http://www.nea.gov.cn/},
-  urldate  = {2026-08-06},
-  langid   = {chinese},
-  note     = {2025-11-21 发布；截至 2025-09 累计装机 4461 万千瓦},
+  title   = {“链”上聚力 融合创新 海上风电加速挺进深蓝},
+  author  = {王璐},
+  date    = {2025-11-17},
+  url     = {https://www.news.cn/fortune/20251117/4109cddb61694778a08d633b48fed45b/c.html},
+  urldate = {2026-10-23},
+  langid  = {chinese},
+  % audit-note: 《经济参考报》记者王璐原稿，经新华网发布；2025-09 海上风电累计装机 4461 万千瓦。
 }
 
 % [G1-3] A1 §1.1.1 — 中国海上风电扩容（英文一手，对外可核对副本）
 @online{scio2026offshore,
-  title    = {China scales up offshore wind capacity},
-  author   = {{State Council Information Office}},
+  title    = {China scales up offshore wind capacity to accelerate low-carbon transition},
+  author   = {{Xinhua}},
   year     = {2026},
-  url      = {http://english.scio.gov.cn/},
+  url      = {https://english.scio.gov.cn/in-depth/2026-04/23/content_118458638.html},
   urldate  = {2026-08-06},
-  note     = {2026-04-23 发布；15th Five-Year Plan (2026–2030) 目标 2030 年海上风电累计容量超 1 亿 kW},
+  % audit-note: 2026-04-23 发布；15th Five-Year Plan (2026–2030) 目标 2030 年海上风电累计容量超 1 亿 kW
 }
 
 % [37] A5 §1.2.2 — 海底电力电缆运行规程（0.05 nT/0.2 m 指标直接依据，标准，中文）
 %      ⚠ 待核对：发布机构（能源行业标准，归口单位）与出版信息以正式颁布文本为准
-@online{dlt1278_2025,
+@standard{dlt1278_2025,
   title    = {海底电力电缆运行规程: DL/T 1278—2025},
   author   = {{国家能源局}},
   year     = {2025},
-  url      = {http://www.nea.gov.cn/},
+  publisher = {中国电力出版社},
+  url      = {https://www.nea.gov.cn/20251022/965401f0cf034cb7a070e3698edafc49/c.html},
   urldate  = {2026-08-06},
   langid   = {chinese},
-  note     = {电力行业标准 [S]；待核对正式发布日期与出版社（中国电力出版社）},
+  % audit-note: 国家能源局公告2025年第5号目录第130项；2025-09-28批准，2026-03-28实施，中国电力出版社 [S]
 }
 
-% [41] §2.2/§2.5/§3.2 — TMR8637 三轴模组及其 TMR8607 单轴敏感单元规格
-%      型号边界：TMR8637 为三轴模组；详细电气参数表对应 TMR8607 单轴敏感单元
+% [41] §2.2/§2.5/§3.2 — 多维科技官方 TMR8607/TMR8637 规格书 Version 1.0，©2024
+%      型号边界：TMR8637 三轴模组；第4页详细性能表对应 TMR8607 单轴敏感单元
 @manual{multidimension2024tmr8607,
-  title        = {TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组）},
+  title        = {TMR8607 高精度、低噪声线性磁传感器},
   author       = {{江苏多维科技有限公司}},
-  organization = {江苏多维科技有限公司},
   year         = {2024},
   edition      = {Version 1.0},
-  url          = {https://www.dowaytech.com/},
-  urldate      = {2026-08-08},
+  url          = {https://www.dowaytech.com/TMR8607-TMR8637-TMR-Low-Noise-Linear-Sensor.html},
+  urldate      = {2026-10-23},
   langid       = {chinese},
-  note         = {TMR8637 模组参数与 TMR8607 单轴敏感单元详细电气参数需分层引用},
+  % audit-note: 本地官方 9 页 PDF 封面 Version 1.0、末页 ©2024；PDF 创建于 2024-11-12。
+  % audit-note: 同一 PDF 第 8 页列 TMR8637 三轴模组；第 4 页详细噪声与电气参数针对 TMR8607 单轴敏感单元。
+  % audit-note: url 为厂家产品页面，不是 Version 1.0 PDF 的版本固定直链；原始 PDF 应在项目资料内归档。
 }
 
-% [38] §1.2.2 — 海底管道及海底电缆检测技术规范（团体标准，中文）
-%      ⚠ 待核对：完整标准号（T/CSGPC ×××—××××）与发布年
-@online{tcsgpc_cable,
-  title    = {海底管道及海底电缆检测技术规范: T/CSGPC},
-  author   = {{中国海洋工程咨询协会}},
-  year     = {2025},
-  langid   = {chinese},
-  note     = {团体标准 [S]；待核对完整标准号与发布日期},
+% [38] §1.2.2 — T/CIN 100—2026 正式团体标准，取代未发布的 T/CSGPC 征求意见稿
+@standard{tcin100_2026,
+  title     = {海上风电场通航安全技术参数测量要求: T/CIN 100—2026},
+  author    = {{中国航海学会}},
+  year      = {2026},
+  url       = {https://www.cinnet.cn/zh-hans/notes/10383-guan-yu-fa-bu-wen-shi-qi-ti-chan-pin-tan-zu-ji-liang-hua-fang-fa-yu-yao-qiu-gang-kou-qi-chong-ji-jie-deng-ba-xiang-tuan-ti-biao-zhun-de-gong-gao.htm},
+  urldate   = {2026-10-23},
+  langid    = {chinese},
+  % audit-note: 官方发布公告：2026-01-27；2026-04-26实施；本条取代未发布的 T/CSGPC 征求意见稿。
+  % audit-note: 标准文本 7.2 埋深误差限值为 ±0.4 m；附录 B.5 磁力仪灵敏度优于 0.05 nT。
+  % audit-note: 论文的 0.2 m 为更严格的自主研究目标，不得写成标准要求；DL/T 1278—2025 适用于交流海缆。
 }
 
-% [4] §1.2.1 — 浅地层剖面系统高分辨率地震数据集（行业网页）
-@online{geomatching2022sbp,
-  title    = {Sub-bottom profiling system helps produce high-resolution seismic datasets},
-  author   = {{Geo-matching}},
-  year     = {2022},
-  url      = {https://geo-matching.com/articles/sub-bottom-profiling-system-helps-produce-high-resolution-seismic-datasets},
-  urldate  = {2026-07-28},
-  note     = {2022-01-25 发布 [EB/OL]},
-}
+
 
 % [39] A2 §1.1.2 — 海上风电 80% 保险索赔与海缆故障相关（行业网页，损失锚点）
 @online{dnv2024cablefailure,
@@ -1186,38 +1178,39 @@
   author   = {{DNV}},
   url      = {https://www.dnv.com/article/80-percent-of-insurance-claims-in-offshore-wind-are-related-to-subsea-cable-failures-how-can-the-industry-manage-these-risks/},
   urldate  = {2026-07-28},
-  note     = {[EB/OL]；待核对发布日期},
+  % audit-note: [EB/OL]；待核对发布日期
 }
 
 % [G4-1] §1.2.4 — HydroPACT 350 有源音频海缆跟踪与埋深测量产品规格｜Teledyne Marine 官方
 @manual{teledyne2021hydropact350,
-  title        = {HydroPACT 350 Subsea Cable Tracking System: Product Datasheet},
-  author       = {{Teledyne Marine}},
-  organization = {Teledyne Marine},
-  year         = {2021},
-  url          = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf},
-  urldate      = {2026-08-09},
-  note         = {产品规格书；给出探测范围、测量精度、线圈阵列及耐压等级 [EB/OL]},
+  title   = {{HydroPACT} 350 Subsea Cable Tracking System: Product Datasheet},
+  author  = {{Teledyne Marine}},
+  url     = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf},
+  urldate = {2026-10-23},
+  % audit-note: 现存官方产品 PDF 末页标 ©2026 Teledyne UK Ltd.，没有独立确认的发布年；故不将版权年臆作出版年。
+  % audit-note: 标称精度及探测范围仅对厂商给定测试条件成立；历史 citekey 中的 2021 只为兼容源码。
 }
 
 % [G4-2] §1.2.4 — HydroPACT 350/440/660E/Dualtrack 产品谱系｜Teledyne Marine 官方
 @online{teledyne2026hydropactline,
-  title    = {Subsea Pipe and Cable Detection Systems},
-  author   = {{Teledyne Marine}},
-  year     = {2026},
-  url      = {https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/},
-  urldate  = {2026-08-09},
-  note     = {HydroPACT 产品线官方页面；说明 350 有源音频、440 脉冲感应、660E 小型化及 Dualtrack 组合方案 [EB/OL]},
+  title   = {Pipe \& Cable Detection Systems},
+  author  = {{Teledyne Marine}},
+  url     = {https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/},
+  urldate = {2026-10-23},
+  % audit-note: 持续维护的官方产品线网页；没有独立证据确定发布年，故省略 year；citekey 2026 仅用于向后兼容。
 }
 
 % [G4-3] §1.2.4 — HydroPACT 350 琼州海峡 500 kV 带电海缆路由与埋深试验｜Teledyne Marine 官方案例
-@online{teledyne2017hainan350,
-  title    = {HydroPACT 350 Cable Tracker Works on Fully Operational Live Sub-Sea Power Cables},
-  author   = {{Teledyne TSS} and {China ORE}},
-  year     = {2017},
-  url      = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/HydroPACT%20350%20-%20China%20ORE%20powered%20cable%20root%20survey.pdf},
-  urldate  = {2026-08-09},
-  note     = {产品应用案例；琼州海峡福康线 500 kV 带电海缆路由和埋深测量 [EB/OL]},
+@report{teledyne2017hainan350,
+  title       = {Submarine Root Survey of Powered Cables Supplying Former ‘Power Isolated Island’},
+  author      = {{Teledyne TSS}},
+  institution = {{Teledyne Marine}},
+  year        = {2017},
+  month       = {10},
+  url         = {https://www.teledynemarine.com/en-us/news/Documents/China%20ORE-350%20powered%20cable%20root%20survey%202017.pdf},
+  urldate     = {2026-10-23},
+  % audit-note: 原始四页 Product Case Study 第一页标明 October 2017；China ORE 等为案例参与单位，不等于论文作者。
+  % audit-note: 2017 海南琼州海峡带电海缆案例为厂商报告，不能等同第三方精度基准。
 }
 
 % [G4-4] §1.2.4 — SMARTRAK 被动磁/有源 AC/有源 DC 多模式管缆跟踪工具｜Innovatum 官方
@@ -1227,28 +1220,28 @@
   organization = {Innovatum International Ltd.},
   url          = {https://www.innovatum.co.uk/media/1051/smartrak-datasheet.pdf},
   urldate      = {2026-08-09},
-  note         = {未标注发布日期的产品规格书；支持 ROV、AUV、拖体和水面平台 [EB/OL]},
+  % audit-note: 未标注发布日期的产品规格书；支持 ROV、AUV、拖体和水面平台 [EB/OL]
 }
 
 % [G4-5] §1.2.4 — 国产 T180 有源电磁海缆路由、埋深和故障测量系统｜海鹰企业官方
 @online{haiying_t180,
   title    = {海鹰 T180 海缆探测系统},
-  author   = {{无锡海鹰电子医疗系统有限公司}},
+  author   = {{无锡市海鹰加科海洋技术有限责任公司}},
   url      = {https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {国产有源电磁探测产品页面；给出 25/50/133 Hz 工作频率、路由和埋深误差指标 [EB/OL]},
+  % audit-note: 国产有源电磁探测产品页面；给出 25/50/133 Hz 工作频率、路由和埋深误差指标 [EB/OL]
 }
 
 % [G4-6] §1.2.4 — 国内海缆专用无缆自主探测巡检样机｜华中科技大学深圳研究院
 @online{hust2023cableauv,
   title    = {成果推介：海缆智能探测巡检水下机器人},
-  author   = {{华中科技大学深圳研究院}},
+  author   = {{深圳华中科技大学研究院}},
   year     = {2023},
-  url      = {http://shenzhen.hust.edu.cn/info/1026/1834.htm},
+  url      = {https://shenzhen.hust.edu.cn/info/1026/1834.htm},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {飞行式长艏翼无缆自主样机；搭载双三轴正交电磁探测设备 [EB/OL]},
+  % audit-note: 飞行式长艏翼无缆自主样机；搭载双三轴正交电磁探测设备 [EB/OL]
 }
 
 % [G4-7] §1.2.4 — 国产便携式 P200 AUV 海底电缆巡检平台｜企业官方
@@ -1258,7 +1251,7 @@
   url      = {https://www.f-sea.com/productinfo/105514.html},
   urldate  = {2026-08-09},
   langid   = {chinese},
-  note     = {产品页面；标称潜深 300 m、3 kn 航速下续航 12 h，可用于海底电缆巡检 [EB/OL]},
+  % audit-note: 产品页面；标称潜深 300 m、3 kn 航速下续航 12 h，可用于海底电缆巡检 [EB/OL]
 }
 
 % [G4-8] §1.2.4 — HUGIN AUV 海底管缆自主跟踪与长航程巡检｜Kongsberg 官方
@@ -1266,19 +1259,22 @@
   title    = {{HUGIN}: Safeguarding Our Critical Undersea Infrastructure},
   author   = {{Kongsberg Discovery}},
   year     = {2025},
-  url      = {https://www.kongsberg.com/discovery/news/our-stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/},
+  url      = {https://www.kongsberg.com/news/stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/},
   urldate  = {2026-08-09},
-  note     = {HUGIN 系列 AUV 官方说明；包含海底电缆/管道自主跟踪、长航程和多传感载荷能力 [EB/OL]},
+  % audit-note: HUGIN 系列 AUV 官方说明；包含海底电缆/管道自主跟踪、长航程和多传感载荷能力 [EB/OL]
 }
 
-% [G4-9] §1.2.4 — DIVE-LD 岸基布放海缆全自主巡检示范｜美国海上风电研发联盟
-@online{nowrdc2024diveld,
-  title    = {Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV},
-  author   = {{National Offshore Wind Research and Development Consortium}},
-  year     = {2024},
-  url      = {https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/},
-  urldate  = {2026-08-09},
-  note     = {Anduril DIVE-LD 在 Point Judith--Block Island 海缆开展侧扫声呐、测深与异常复核示范 [EB/OL]},
+% [G4-9] §1.2.4 — DIVE-LD 海缆巡检 Project 129 最终报告｜Anduril / NOWRDC
+@report{nowrdc2024diveld,
+  title       = {Project 129: Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV: Final Report},
+  author      = {{Anduril Industries, Inc.}},
+  institution = {{National Offshore Wind Research and Development Consortium}},
+  year        = {2024},
+  month       = {4},
+  url         = {https://nationaloffshorewind.org/wp-content/uploads/D5.2-Final-Report.pdf},
+  urldate     = {2026-10-23},
+  % audit-note: PDF 封面 Prepared by Anduril Industries, Inc.；列 Mary Coyne、Eden Desta；项目编号 NOWRDC #129。
+  % audit-note: 报告含实际完成结果及限制；不得将岸边人工操作部分描述为零人工干预。
 }
 
 % ---------------------------------------------------------------------------

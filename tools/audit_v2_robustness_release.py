@@ -26,6 +26,19 @@ def read(path: Path):
     return json.loads(path.read_text())
 
 
+def frozen_thesis_file(path: str, expected_sha256: str) -> Path:
+    """Resolve a frozen thesis artifact by content rather than its retired path."""
+    original = ROOT / path
+    if path in ('thuthesis/auv-thesis.pdf', 'thuthesis/auv-thesis.log'):
+        backup = ROOT / 'thuthesis/backups/20261017_before_build_relocation'
+        candidates = [original, backup / Path(path).name,
+                      backup / f'auv-thesis_20260929_release{Path(path).suffix}']
+        for candidate in candidates:
+            if candidate.is_file() and sha(candidate) == expected_sha256:
+                return candidate
+    return original
+
+
 def main() -> None:
     errors = []
     checked = {}
@@ -125,21 +138,25 @@ def main() -> None:
     verify('docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf',
            assets['77_defense_robustness_thesis_summary.pdf'], 'thesis_figure_copy')
     sync = read(RESULT / 'thesis_source_sync.json')
-    verify(sync['current_pdf']['path'], sync['current_pdf']['sha256'], 'current_thesis_pdf')
+    frozen_pdf = frozen_thesis_file(sync['current_pdf']['path'], sync['current_pdf']['sha256'])
+    verify(frozen_pdf, sync['current_pdf']['sha256'], 'frozen_thesis_pdf')
     pages = int(re.search(r'^Pages:\s+(\d+)', subprocess.check_output(
-        ['pdfinfo', str(ROOT / sync['current_pdf']['path'])], text=True), re.M)[1])
+        ['pdfinfo', str(frozen_pdf)], text=True), re.M)[1])
     if pages != 170:
         errors.append({'reason': 'thesis page budget failed', 'pages': pages})
     for path, change in sync['changes'].items():
         verify(path, change['after_sha256'], 'current_thesis_sources')
     verify(sync['patch_validation']['path'], sync['patch_validation']['sha256'], 'new_thesis_patch')
-    log = (ROOT / 'thuthesis/auv-thesis.log').read_text(errors='replace')
+    release_log = frozen_thesis_file(
+        'thuthesis/auv-thesis.log',
+        read(ROOT / 'docs/middle-defense/baseline/input-sha256.json')['thuthesis/auv-thesis.log'])
+    log = release_log.read_text(errors='replace')
     if re.search(r'Overfull|There were undefined|(?:Reference|Citation).*undefined', log):
         errors.append({'reason': 'LaTeX overflow or unresolved reference'})
     for item in sync['key_figures'].values():
         n = str(item['pdf_page'])
         text = subprocess.check_output(['pdftotext', '-f', n, '-l', n, '-layout',
-                                        str(ROOT / sync['current_pdf']['path']), '-'], text=True)
+                                        str(frozen_pdf), '-'], text=True)
         if not re.search(r'图\s*' + re.escape(item['figure']) + r'\s', text):
             errors.append({'reason': 'figure/PDF page mismatch', 'figure': item})
     test = read(RESULT / 'verification/tests.json')

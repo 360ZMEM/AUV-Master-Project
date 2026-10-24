@@ -1,0 +1,9 @@
+{
+  "completed": true,
+  "measurements": "PASS",
+  "visual_review": "Requires current hash-bound final_visual_review.json",
+  "native_pages": 34,
+  "pdf_audits": 57,
+  "protected_files": 327,
+  "retained_assets": 11
+}

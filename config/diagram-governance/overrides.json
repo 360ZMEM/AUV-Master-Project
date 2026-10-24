@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "object_specific_exceptions": [],
+  "illustrative_strokes": [
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.drawio",
+      "page_index": 0,
+      "cell_ids": ["truth", "estimate", "trajectory"],
+      "relation": "curves_and_observation_markers",
+      "reason": "These three strokes depict cable truth, estimated centerline, and the AUV trace; crossing small peak markers is the subject of the illustration, not connector routing.",
+      "evidence": ".diagram-governance/runs/20261018_governance/baseline/AUV-Master-Mag/docs/figure/fig_zigzag_probe_p0.png"
+    }
+  ]
+}

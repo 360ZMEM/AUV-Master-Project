@@ -19,7 +19,7 @@
 
 采用完整锁版本 vendor，不将上游合并进课题工作树。官方 [v7.7.1 发布](https://github.com/tuna/thuthesis/releases/tag/v7.7.1)标签对象为 `7ebfb7c11bb32477e00b37c18f45028524048cc5`，提交为 `8b4d9443f39275d0492236ae4bfcd4532b799972`。完整 267 个上游受控源文件、许可及 2 个 docstrip 生成文件保存在 `thuthesis/vendor/v7.7.1/`；实际编译目录激活 17 个运行文件。原论文/示例内容不被整目录覆盖。上游分支为 `master`；本任务的 `main` 表示不含学院额外差分的格式口径。
 
-根目录和 `thuthesis/` 都可调用 `make auv-middle-defense`，默认生成 school 版；另有 `-main` 与 `-school`。两个包装入口仅决定是否加载 `middle/school-format.tex`，正文只有一套，输出分开存放。正常 make 只验证模板来源和哈希，不联网更新。`make auv-thesis` 仍构建原论文。
+根目录和 `thuthesis/` 都可调用 `make auv-middle-defense`，默认生成 school 版；另有 `-main` 与 `-school`。两个包装入口仅决定是否加载 `middle/school-format.tex`，正文只有一套，输出分开存放。正常 make 只验证模板来源和哈希，不联网更新。`make auv-thesis` 构建原论文，自 2026-10-17 起产物和缓存位于 `thuthesis/build/auv-thesis/`；迁移记录见 [构建目录治理](../thesis/AUV_THESIS_BUILD_RELOCATION_20261017.md)。
 
 报告使用上游 proposal 封面布局，共享适配仅把身份改为“中期报告”，不加入终稿声明、授权、致谢、委员会或虚构签名。学院资料是最终学位论文示例，已完成 56 份 Word 的文本/样式抽取及 12 个相关页面查看。实际差分为章标题段前/后从上游 27/27 bp 调整为 24/18 bp；其余明确一致的参数保持。Word 的专门中期表单未提供，Microsoft Word 原生渲染未执行；详见 [核对记录](word-audit/findings.md)。
 

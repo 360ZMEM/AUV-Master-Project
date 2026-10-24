@@ -3,7 +3,11 @@
 PACKAGE = thuthesis
 THESIS  = thuthesis-example
 AUV_THESIS = auv-thesis
-AUV_THESIS_AUX = $(addprefix $(AUV_THESIS).,aux bbl bcf blg fdb_latexmk fls lof log lot out run.xml synctex.gz toc xdv)
+AUV_THESIS_OUTDIR = build/auv-thesis
+AUV_THESIS_PDF = $(AUV_THESIS_OUTDIR)/$(AUV_THESIS).pdf
+AUV_THESIS_LOG = $(AUV_THESIS_OUTDIR)/$(AUV_THESIS).log
+AUV_THESIS_AUX = $(addprefix $(AUV_THESIS_OUTDIR)/$(AUV_THESIS).,aux bbl bcf blg fdb_latexmk fls lof log lot out run.xml synctex.gz toc xdv)
+AUV_THESIS_RECORDER = $(AUV_THESIS_OUTDIR)/xelatex*.fls
 
 SOURCES = $(PACKAGE).ins $(PACKAGE).dtx
 CLSFILE = dtx-style.sty $(PACKAGE).cls
@@ -15,11 +19,11 @@ LATEXMK = latexmk
 ifdef SystemRoot
 	SHELL := C:/cygwin64/bin/bash.exe
 	AWK = awk
-	THESIS_LOG_CHECK = powershell.exe -NoProfile -Command "if (Select-String -Path '$(AUV_THESIS).log' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber' -Quiet) { Select-String -Path '$(AUV_THESIS).log' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber'; exit 1 }"
+	THESIS_LOG_CHECK = powershell.exe -NoProfile -Command "if (Select-String -Path '$(AUV_THESIS_LOG)' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber' -Quiet) { Select-String -Path '$(AUV_THESIS_LOG)' -Pattern 'Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber'; exit 1 }"
 else
 	SHELL := /usr/bin/env bash
 	AWK = awk
-	THESIS_LOG_CHECK = $(AWK) 'BEGIN { failed = 0 } /Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber/ { print; failed = 1 } END { exit failed }' $(AUV_THESIS).log
+	THESIS_LOG_CHECK = $(AWK) 'BEGIN { failed = 0 } /Undefined control sequence|Citation .* undefined|Reference .* undefined|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber/ { print; failed = 1 } END { exit failed }' $(AUV_THESIS_LOG)
 endif
 
 # make deletion work on Windows
@@ -33,7 +37,7 @@ endif
 
 thesis: $(THESIS).pdf
 
-auv-thesis: $(AUV_THESIS).pdf
+auv-thesis: $(AUV_THESIS_PDF)
 
 # Both report variants share auv-middle-defense.tex and middle/*.tex.
 # Template updates are explicit: python3 ../tools/manage_thuthesis.py fetch/activate.
@@ -74,9 +78,9 @@ $(THESIS).pdf: cls FORCE_MAKE
 # The maintained AUV thesis sources are the TeX files under thuthesis/data/
 # and ref/auv-references.bib.  Legacy Markdown migration/sync tools must never
 # run implicitly here because they can overwrite newer thesis edits.
-$(AUV_THESIS).pdf: cls FORCE_MAKE
-	$(LATEXMK) $(AUV_THESIS)
-	@test -s $(AUV_THESIS).pdf
+$(AUV_THESIS_PDF): cls FORCE_MAKE
+	$(LATEXMK) -recorder -outdir=$(AUV_THESIS_OUTDIR) $(AUV_THESIS)
+	@test -s $(AUV_THESIS_PDF)
 	@$(THESIS_LOG_CHECK)
 
 viewdoc: doc
@@ -86,7 +90,7 @@ viewthesis: thesis
 	$(LATEXMK) -pv $(THESIS)
 
 viewauvthesis: auv-thesis
-	$(LATEXMK) -pv $(AUV_THESIS)
+	$(LATEXMK) -pv -outdir=$(AUV_THESIS_OUTDIR) $(AUV_THESIS)
 
 save:
 ifeq ($(target),)
@@ -103,19 +107,20 @@ else
 endif
 
 clean:
-	$(LATEXMK) -c $(PACKAGE).dtx $(THESIS) $(AUV_THESIS)
+	$(LATEXMK) -c $(PACKAGE).dtx $(THESIS)
+	$(MAKE) clean-auv-thesis
 	-@$(RM) -rf *~ main-survey.* main-translation.* _markdown_thuthesis* thuthesis.markdown.*
 
 clean-auv-thesis:
-	$(LATEXMK) -c $(AUV_THESIS)
-	-@$(RM) $(AUV_THESIS_AUX)
+	$(LATEXMK) -c -outdir=$(AUV_THESIS_OUTDIR) $(AUV_THESIS)
+	-@$(RM) $(AUV_THESIS_AUX) $(AUV_THESIS_RECORDER)
 
 distclean-auv-thesis:
-	$(LATEXMK) -C $(AUV_THESIS)
-	-@$(RM) $(AUV_THESIS_AUX) $(AUV_THESIS).pdf
+	$(LATEXMK) -C -outdir=$(AUV_THESIS_OUTDIR) $(AUV_THESIS)
+	-@$(RM) $(AUV_THESIS_AUX) $(AUV_THESIS_RECORDER) $(AUV_THESIS_PDF)
 
 cleanall: clean
-	-@$(RM) $(PACKAGE).pdf $(THESIS).pdf $(AUV_THESIS).pdf
+	-@$(RM) $(PACKAGE).pdf $(THESIS).pdf $(AUV_THESIS_PDF)
 
 distclean: cleanall
 	-@$(RM) $(CLSFILE)

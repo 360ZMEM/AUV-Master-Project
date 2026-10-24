@@ -1,0 +1,2350 @@
+{
+  "date": "2026-10-23",
+  "status": "COMPLETE_WITH_RETAINED_ASSETS",
+  "strict_all_figures_pass": false,
+  "issues": [],
+  "native_sources": 32,
+  "native_pages": 34,
+  "paper_pages": 180,
+  "figure_groups": 48,
+  "assets": 53,
+  "placements": 54,
+  "paper_sha256": "45a342a5c1312fe35616509320b366b77c2b8af4522aa812609d8a2e6959d830",
+  "retained_assets": 11,
+  "retained_policy": "用户确认输入已丢失，接受原图保留；旧缺陷不冒充修复通过。",
+  "backup_files": 318,
+  "protected_files": 327,
+  "native": [
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_arch_onion.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 30,
+        "mapped_labels": 30,
+        "measured_labels": 30
+      },
+      "source_sha256": "4c53adedc46a6fb3e79d58456ccb7e5a3f5544759b2555ed1bd5461e458d7e6f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/docs/figure/fig_arch_onion_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_mission_fsm.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 12,
+        "mapped_labels": 12,
+        "measured_labels": 12
+      },
+      "source_sha256": "04d67550cb883ef8376e94323896bc6767f556f96079d7fd552b628e164a4484",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/docs/figure/fig_mission_fsm_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 18,
+        "mapped_labels": 18,
+        "measured_labels": 18
+      },
+      "source_sha256": "1187b1faa28ceff0c09e33003699c561d135a4cda3127963b0de1af19be76123",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/docs/figure/fig_perception_pipeline_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 9,
+        "mapped_labels": 9,
+        "measured_labels": 9
+      },
+      "source_sha256": "f7ded57b181922ddc7035be026f06e55744c5010229d2b38338f413e045f428b",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 8,
+        "mapped_labels": 8,
+        "measured_labels": 8
+      },
+      "source_sha256": "7f48704cf6f8c8b823a0574e04516e48c577f8f80ae16461f9d3fe6e003e45c3",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/docs/figure/fig_zigzag_probe_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_code_layer_architecture.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 27,
+        "mapped_labels": 27,
+        "measured_labels": 27
+      },
+      "source_sha256": "54205142e0e611b944a64a56e769995b6084732405adcc33cfa93b987a51d4e8",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_code_layer_architecture_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_ros2_node_topology.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 19,
+        "mapped_labels": 19,
+        "measured_labels": 19
+      },
+      "source_sha256": "9e66494f49952b9e4a2b341b34de1089ef37113e0f44be9f5377776acdf36fe9",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_ros2_node_topology_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_runtime_dataflow.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 34,
+        "mapped_labels": 34,
+        "measured_labels": 34
+      },
+      "source_sha256": "e96abe670821fb90ae75c90a6cd5dcdd737722a2a6001d96f4695bae58c7bfb5",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_runtime_dataflow_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_safety_arbiter_deployment.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 29,
+        "mapped_labels": 29,
+        "measured_labels": 29
+      },
+      "source_sha256": "fa89d2aa8b69a4cf4c136519d2771c0b0a40634a41b79d79f49157e311795b98",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_safety_arbiter_deployment_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 17,
+        "mapped_labels": 17,
+        "measured_labels": 17
+      },
+      "source_sha256": "db350465347468aba38c19510f92b481553dedf84df121b94ac93210819fb785",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_system_autonomy_functional_loop_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_system_capability_map.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 15,
+        "mapped_labels": 15,
+        "measured_labels": 15
+      },
+      "source_sha256": "9c145af81ff8b00cc498e4fec7b1fd358af302ac6a47c4be5681acfb3989481f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_system_capability_map_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_system_subsystem_organization.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 23,
+        "mapped_labels": 23,
+        "measured_labels": 23
+      },
+      "source_sha256": "8264562c07d0402242e521f15c6f5a4df2c4b62886fec3cc9ce81fed246efab7",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_system_subsystem_organization_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 19,
+        "mapped_labels": 19,
+        "measured_labels": 19
+      },
+      "source_sha256": "c62f140bae0391beffd377956ec10ac69eb2519498f6d35c3ffec2b36c23fddf",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_system_verification_deployment_ladder_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 16,
+        "mapped_labels": 16,
+        "measured_labels": 16
+      },
+      "source_sha256": "2bf5608d972bab170cf44d8d5e6544fd5948830b46c7b8560618e1b5d977f068",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_v2_dual_brain_async_hardware_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 8,
+        "mapped_labels": 8,
+        "measured_labels": 8
+      },
+      "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p0.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 1,
+      "coverage": {
+        "expected_labels": 14,
+        "mapped_labels": 14,
+        "measured_labels": 14
+      },
+      "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p1.png"
+    },
+    {
+      "file": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 11,
+        "mapped_labels": 11,
+        "measured_labels": 11
+      },
+      "source_sha256": "1f65c3a0b2e3bddfed4c4ee6245d15e305f426c9a5afc8b5e725cb1a0bf96b93",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/AUV-Master-Mag/thesis/figures/architecture/auv_v2_uncertainty_highway_p0.png"
+    },
+    {
+      "file": "docs/internals/figures/architecture/auv_code_layer_architecture.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 27,
+        "mapped_labels": 27,
+        "measured_labels": 27
+      },
+      "source_sha256": "54205142e0e611b944a64a56e769995b6084732405adcc33cfa93b987a51d4e8",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/internals/figures/architecture/auv_code_layer_architecture_p0.png"
+    },
+    {
+      "file": "docs/internals/figures/architecture/auv_ros2_node_topology.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 19,
+        "mapped_labels": 19,
+        "measured_labels": 19
+      },
+      "source_sha256": "9e66494f49952b9e4a2b341b34de1089ef37113e0f44be9f5377776acdf36fe9",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/internals/figures/architecture/auv_ros2_node_topology_p0.png"
+    },
+    {
+      "file": "docs/internals/figures/architecture/auv_safety_arbiter_deployment.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 29,
+        "mapped_labels": 29,
+        "measured_labels": 29
+      },
+      "source_sha256": "fa89d2aa8b69a4cf4c136519d2771c0b0a40634a41b79d79f49157e311795b98",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/internals/figures/architecture/auv_safety_arbiter_deployment_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_runtime_dataflow.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 34,
+        "mapped_labels": 34,
+        "measured_labels": 34
+      },
+      "source_sha256": "e96abe670821fb90ae75c90a6cd5dcdd737722a2a6001d96f4695bae58c7bfb5",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_runtime_dataflow_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 17,
+        "mapped_labels": 17,
+        "measured_labels": 17
+      },
+      "source_sha256": "db350465347468aba38c19510f92b481553dedf84df121b94ac93210819fb785",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_system_autonomy_functional_loop_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_system_capability_map.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 15,
+        "mapped_labels": 15,
+        "measured_labels": 15
+      },
+      "source_sha256": "9c145af81ff8b00cc498e4fec7b1fd358af302ac6a47c4be5681acfb3989481f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_system_capability_map_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_system_subsystem_organization.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 23,
+        "mapped_labels": 23,
+        "measured_labels": 23
+      },
+      "source_sha256": "8264562c07d0402242e521f15c6f5a4df2c4b62886fec3cc9ce81fed246efab7",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_system_subsystem_organization_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 19,
+        "mapped_labels": 19,
+        "measured_labels": 19
+      },
+      "source_sha256": "c62f140bae0391beffd377956ec10ac69eb2519498f6d35c3ffec2b36c23fddf",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_system_verification_deployment_ladder_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 17,
+        "mapped_labels": 17,
+        "measured_labels": 17
+      },
+      "source_sha256": "c3b9be3dfc492c10ab2a3bea2f909be34ff0eaf8a324bbaace34b02472e7796d",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_thesis_technical_route_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 27,
+        "mapped_labels": 27,
+        "measured_labels": 27
+      },
+      "source_sha256": "163a683d6ab0e03bef8d47b3f6f59003ce3be7405c2d21c539d1aee5b01da59a",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 16,
+        "mapped_labels": 16,
+        "measured_labels": 16
+      },
+      "source_sha256": "2bf5608d972bab170cf44d8d5e6544fd5948830b46c7b8560618e1b5d977f068",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_emergency_transition.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 23,
+        "mapped_labels": 23,
+        "measured_labels": 23
+      },
+      "source_sha256": "647aa5b6bf7995ca57fb46b0543b2b0a761f57f6ba10cb312d9f18542d684fea",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_emergency_transition_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 8,
+        "mapped_labels": 8,
+        "measured_labels": 8
+      },
+      "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "page_index": 1,
+      "coverage": {
+        "expected_labels": 14,
+        "mapped_labels": 14,
+        "measured_labels": 14
+      },
+      "source_sha256": "77aa3214fa09dd340217fe23b7a635d63cd2f23dac80febdaa2a7259de6a608f",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture_p1.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 24,
+        "mapped_labels": 24,
+        "measured_labels": 24
+      },
+      "source_sha256": "c1132808cf8d85160b07675223c2e16f863911475b56fca9907aecab30c420bd",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 17,
+        "mapped_labels": 17,
+        "measured_labels": 17
+      },
+      "source_sha256": "65c79be5c31201544bdc1afa409c4fedee795f9dcf3203efe9f49ab9cce4ebc5",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_mission_state_machine_p0.png"
+    },
+    {
+      "file": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio",
+      "page_index": 0,
+      "coverage": {
+        "expected_labels": 11,
+        "mapped_labels": 11,
+        "measured_labels": 11
+      },
+      "source_sha256": "1f65c3a0b2e3bddfed4c4ee6245d15e305f426c9a5afc8b5e725cb1a0bf96b93",
+      "errors": [],
+      "png": ".diagram-governance/runs/20261023_compact_thesis/fresh/docs/thesis/figures/architecture/auv_v2_uncertainty_highway_p0.png"
+    }
+  ],
+  "placements_detail": [
+    {
+      "figure": "1.1",
+      "asset": "docs/thesis/figures/literature/prior_work_equipment/hydropact350_coils.png",
+      "source_sha256": "1f53df7875dc6c6169db0026a6bb4a73fee9ad4aa709658400609b85401490fd",
+      "inclusion_index": 0,
+      "width_mm": 46.4983784145779,
+      "height_mm": 39.47547590467664,
+      "native_pixels": [
+        821,
+        697
+      ],
+      "image": "Im0",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 29,
+      "printed_page": "7",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "1.1",
+      "asset": "docs/thesis/figures/literature/prior_work_equipment/haiying_t180.jpg",
+      "source_sha256": "d521adbca03cdfbaf658de158bacbaad571444d5f1504b1d1fc6e1b05b8168a9",
+      "inclusion_index": 1,
+      "width_mm": 46.49895977444119,
+      "height_mm": 46.49897054036458,
+      "native_pixels": [
+        474,
+        474
+      ],
+      "image": "Im1",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 29,
+      "printed_page": "7",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "1.1",
+      "asset": "docs/thesis/figures/literature/prior_work_equipment/fsea_p200.png",
+      "source_sha256": "ec853549f8d57491047e31762d00ada57f4c4f89722479af109634c24f231f78",
+      "inclusion_index": 2,
+      "width_mm": 46.49667739868164,
+      "height_mm": 46.49667739868164,
+      "native_pixels": [
+        750,
+        750
+      ],
+      "image": "Im2",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 29,
+      "printed_page": "7",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "1.2",
+      "asset": "docs/thesis/figures/architecture/auv_thesis_technical_route.pdf",
+      "source_sha256": "17b66e299e4267138b823e6232053aec0e81e89cc6473245b5f75bac694f7fd1",
+      "inclusion_index": 3,
+      "source_page": 1,
+      "form": "Fm3",
+      "actual_scale": 0.57877,
+      "width_mm": 142.4993440573103,
+      "height_mm": 136.8150454807027,
+      "extracted_text_min_final_pt": 9.584229978160858,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 34,
+      "printed_page": "12",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.1",
+      "asset": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.pdf",
+      "source_sha256": "999d7dae2ba09dea2bb735ae5cc26a61e9124227fcc8adc1a90645b7ab7237a9",
+      "inclusion_index": 4,
+      "source_page": 1,
+      "form": "Fm4",
+      "actual_scale": 0.34853,
+      "width_mm": 142.49834452379014,
+      "height_mm": 66.394965,
+      "extracted_text_min_final_pt": 6.022467679977417,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 39,
+      "printed_page": "17",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.2",
+      "asset": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.pdf",
+      "source_sha256": "58b6eefe1c556725dd40f03e2ae8d222c51777154feac4d927633d8bb162f134",
+      "inclusion_index": 5,
+      "source_page": 1,
+      "form": "Fm5",
+      "actual_scale": 0.38951,
+      "width_mm": 142.50014470719063,
+      "height_mm": 89.04198600000001,
+      "extracted_text_min_final_pt": 6.730610483779907,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 42,
+      "printed_page": "20",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.3",
+      "asset": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+      "source_sha256": "a3f24a16263b31a9d7224a425dff4c051433f975dfdaed4364e5b095b8cf23c6",
+      "inclusion_index": 6,
+      "source_page": 1,
+      "form": "Fm6",
+      "actual_scale": 0.44669,
+      "width_mm": 124.80518599999999,
+      "height_mm": 42.5472225,
+      "extracted_text_min_final_pt": 8.362036493282318,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 43,
+      "printed_page": "21",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.3",
+      "asset": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+      "source_sha256": "a3f24a16263b31a9d7224a425dff4c051433f975dfdaed4364e5b095b8cf23c6",
+      "inclusion_index": 7,
+      "source_page": 2,
+      "form": "Fm7",
+      "actual_scale": 0.40295,
+      "width_mm": 124.79791070398119,
+      "height_mm": 76.76197499999999,
+      "extracted_text_min_final_pt": 7.543060018730163,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 43,
+      "printed_page": "21",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.4",
+      "asset": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.pdf",
+      "source_sha256": "d329a6c9ede0684d2d1847db8dd5952184723566823653b50ad75d75875b56c2",
+      "inclusion_index": 8,
+      "source_page": 1,
+      "form": "Fm8",
+      "actual_scale": 0.6802,
+      "width_mm": 117.59932131122166,
+      "height_mm": 138.21663999999998,
+      "extracted_text_min_final_pt": 8.619318558502197,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 45,
+      "printed_page": "23",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.5",
+      "asset": "docs/thesis/figures/system/foxglove_cable_tracking_console.png",
+      "source_sha256": "a7f157a6a8203f4a9b0d2ddcad54c3cc210100747257b058adedd50bf020cb17",
+      "inclusion_index": 9,
+      "width_mm": 131.99743128882514,
+      "height_mm": 92.73666288587782,
+      "native_pixels": [
+        3120,
+        2192
+      ],
+      "image": "Im9",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 46,
+      "printed_page": "24",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.6",
+      "asset": "docs/thesis/figures/magnetics/single_phase_field_direction.pdf",
+      "source_sha256": "0a6df359e50615eea37185917b0dd0976e075b4ee63a3bb54a9b840dbf484e95",
+      "inclusion_index": 10,
+      "source_page": 1,
+      "form": "Fm10",
+      "actual_scale": 0.83499,
+      "width_mm": 144.0013548651606,
+      "height_mm": 103.81666855814107,
+      "extracted_text_min_final_pt": 5.260437159261704,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.097415,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "504c0ca39fbc704db4a3e70ae8b6cfc46dee6e1fffc607d7d2f28343b28def36",
+      "physical_page": 48,
+      "printed_page": "26",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.7",
+      "asset": "docs/thesis/figures/magnetics/three_phase_helical_field.pdf",
+      "source_sha256": "9e4f287f7f59ea41ed73ae4c06f8196f2b19740df7f9e2ac44349250704464bc",
+      "inclusion_index": 11,
+      "source_page": 1,
+      "form": "Fm11",
+      "actual_scale": 0.8336,
+      "width_mm": 143.9994696926541,
+      "height_mm": 124.18417270182292,
+      "extracted_text_min_final_pt": 5.2516801589965825,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.0856,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "9df03db89578c34155f86e431837d34d9702c64bb2db90676b79a3d209ac27fc",
+      "physical_page": 50,
+      "printed_page": "28",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.8",
+      "asset": "docs/thesis/figures/magnetics/fwhm_depth_principle.pdf",
+      "source_sha256": "83b4b89963585065bb46cda162f15169fd681b78d7dd1a32e594d500df3a96f0",
+      "inclusion_index": 12,
+      "source_page": 1,
+      "form": "Fm12",
+      "actual_scale": 0.83563,
+      "width_mm": 144.00265699541305,
+      "height_mm": 89.14946877970293,
+      "extracted_text_min_final_pt": 4.679527920308113,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.68504,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "b91dd26c2156b72817a52c509b6df8df7044952fdd3f505f71c54b4d90ecde88",
+      "physical_page": 54,
+      "printed_page": "32",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.9",
+      "asset": "docs/thesis/figures/architecture/cable_active_crossing_observability.pdf",
+      "source_sha256": "cc8b6ba22652c39b97b85676ca1388c26c9d2dfcb400f187b1985c05e12d02c4",
+      "inclusion_index": 13,
+      "source_page": 1,
+      "form": "Fm13",
+      "actual_scale": 0.89157,
+      "width_mm": 132.00660101442972,
+      "height_mm": 105.681512688797,
+      "extracted_text_min_final_pt": 4.9927919149732585,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.13256,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "9d64dd3256b0746c1a16e583b523c64f0e85a235fddacd1c4d5ab4dc48c6966b",
+      "physical_page": 55,
+      "printed_page": "33",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.10",
+      "asset": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_axis_calibration_report.jpg",
+      "source_sha256": "34a405fcdbe7ce8aba71c928eac5d1029209c8d8708de1c4cb6195670f615c1f",
+      "inclusion_index": 14,
+      "width_mm": 116.99866710238987,
+      "height_mm": 76.76102841695149,
+      "native_pixels": [
+        945,
+        620
+      ],
+      "image": "Im14",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 62,
+      "printed_page": "40",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.11",
+      "asset": "docs/thesis/figures/hardware/tmr8637_test_report/tmr8637_noise_psd_report.jpg",
+      "source_sha256": "ca5695fe2e20dc02255fc6b390ce5f2fbf1ace321818acf71084b60d025e5e59",
+      "inclusion_index": 15,
+      "width_mm": 142.50010363260904,
+      "height_mm": 53.795209079318575,
+      "native_pixels": [
+        1245,
+        470
+      ],
+      "image": "Im15",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 62,
+      "printed_page": "40",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.12",
+      "asset": "docs/thesis/figures/system/auv_console_operator_interface.png",
+      "source_sha256": "9afbfd1aa6914bdcea437f73a76356ef2c71203ae81fa65d1cf3276bb1ac6fe3",
+      "inclusion_index": 16,
+      "width_mm": 146.99633543226454,
+      "height_mm": 96.84969779120551,
+      "native_pixels": [
+        1366,
+        900
+      ],
+      "image": "Im16",
+      "text_measurement": "Original photo/report/screenshot, no editable font model",
+      "physical_page": 65,
+      "printed_page": "43",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.13",
+      "asset": "docs/thesis/figures/architecture/auv_v2_emergency_transition.pdf",
+      "source_sha256": "c539338cff4067d9f81af13d911d0a18c72f55a7d07bfff2636ae1ffafe93b67",
+      "inclusion_index": 17,
+      "source_page": 1,
+      "form": "Fm17",
+      "actual_scale": 0.41339,
+      "width_mm": 147.001484,
+      "height_mm": 131.25132499999998,
+      "extracted_text_min_final_pt": 5.952815842304229,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 66,
+      "printed_page": "44",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "2.14",
+      "asset": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.pdf",
+      "source_sha256": "cc993a698971b993ed2ce3611276ae44fc13187e9b9f73aeca6f00956a6bccb8",
+      "inclusion_index": 18,
+      "source_page": 1,
+      "form": "Fm18",
+      "actual_scale": 0.35075,
+      "width_mm": 146.999325,
+      "height_mm": 130.9036316663954,
+      "extracted_text_min_final_pt": 5.555768999099731,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 67,
+      "printed_page": "45",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "3.1",
+      "asset": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.pdf",
+      "source_sha256": "4fa3b65507b47692ec1cc915b0844e5e4e60f2b5ede2959e9ced31c47f131467",
+      "inclusion_index": 19,
+      "source_page": 1,
+      "form": "Fm19",
+      "actual_scale": 0.43155,
+      "width_mm": 142.49780999999996,
+      "height_mm": 106.25221059822083,
+      "extracted_text_min_final_pt": 6.729954458141327,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 71,
+      "printed_page": "49",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "3.2",
+      "asset": "docs/thesis/figures/architecture/cable_acoustic_magnetic_perception_pipeline.pdf",
+      "source_sha256": "8e6161081c1dd0b80b8fc3f310f3dfe0e2a5799654c31affe7e4696eeb889a82",
+      "inclusion_index": 20,
+      "source_page": 1,
+      "form": "Fm20",
+      "actual_scale": 1.01556,
+      "width_mm": 138.00445277337644,
+      "height_mm": 124.45651969305419,
+      "extracted_text_min_final_pt": 8.12448,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 8.12448,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "7a6806900029f116667e4a8a5fd89751669490ec2b40caec63d693a363d221a0",
+      "physical_page": 82,
+      "printed_page": "60",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.1",
+      "asset": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.pdf",
+      "source_sha256": "139220c9ab26c40541796d97e9ea6fb9b7a1819034145b6857548512c17cbe0d",
+      "inclusion_index": 21,
+      "source_page": 1,
+      "form": "Fm21",
+      "actual_scale": 0.3736,
+      "width_mm": 149.9964091414388,
+      "height_mm": 54.56428,
+      "extracted_text_min_final_pt": 4.841718841552734,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 90,
+      "printed_page": "68",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.2",
+      "asset": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.pdf",
+      "source_sha256": "61b38ddee958b071023b43e49cd0259c5433c9cc9c27a06cd94f9ea7b704d3e1",
+      "inclusion_index": 22,
+      "source_page": 1,
+      "form": "Fm22",
+      "actual_scale": 0.40776,
+      "width_mm": 147.00182698164878,
+      "height_mm": 154.7696462018229,
+      "extracted_text_min_final_pt": 5.871629127731324,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 91,
+      "printed_page": "69",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.3",
+      "asset": "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.pdf",
+      "source_sha256": "f09792119e8df9cc09351b5327a1a4a9999fa35a428df702f286b0f13ac904d4",
+      "inclusion_index": 23,
+      "source_page": 1,
+      "form": "Fm23",
+      "actual_scale": 0.8243,
+      "width_mm": 142.50678986746894,
+      "height_mm": 82.76789153003268,
+      "extracted_text_min_final_pt": 6.18225,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 94,
+      "printed_page": "72",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.4",
+      "asset": "docs/thesis/figures/experiments/decision_bt_vs_fsm/04_expansion_cost.pdf",
+      "source_sha256": "be4e79b1bd418b34ff58df9b11b9e954b41f1dc1b3bc01f92ab77d0c7f4dbf1f",
+      "inclusion_index": 24,
+      "source_page": 1,
+      "form": "Fm24",
+      "actual_scale": 0.82455,
+      "width_mm": 142.50249160861966,
+      "height_mm": 76.73633019259134,
+      "extracted_text_min_final_pt": 6.5964,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.5964,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "b6d8a8cc8b6e52f096f916a36097fef538871083c43390d0ba1dc16a2e404927",
+      "physical_page": 95,
+      "printed_page": "73",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.5",
+      "asset": "docs/thesis/figures/experiments/coverage/normalized_coverage_time_tradeoff.pdf",
+      "source_sha256": "73de99a5ad963beaf002705c34eb5df34c2d00c8e579d20096cf735b73e8c325",
+      "inclusion_index": 25,
+      "source_page": 1,
+      "form": "Fm25",
+      "actual_scale": 1.0102,
+      "width_mm": 108.0070519891866,
+      "height_mm": 77.00357559427049,
+      "extracted_text_min_final_pt": 8.0816,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 8.0816,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "3a8ffe88fcd705ccc48116d024903e61f646648f9057df94f652b626970a8863",
+      "physical_page": 97,
+      "printed_page": "75",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "4.6",
+      "asset": "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.pdf",
+      "source_sha256": "4b995db0f87115d579c5b9064c1ce83379ef9d0063c7e6f74ce7614672cd36a9",
+      "inclusion_index": 26,
+      "source_page": 1,
+      "form": "Fm26",
+      "actual_scale": 0.69511,
+      "width_mm": 120.00043070873767,
+      "height_mm": 82.92326031533729,
+      "extracted_text_min_final_pt": 6.25599,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 102,
+      "printed_page": "80",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.1",
+      "asset": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "source_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+      "inclusion_index": 27,
+      "source_page": 1,
+      "form": "Fm27",
+      "actual_scale": 0.87782,
+      "width_mm": 73.50440401226298,
+      "height_mm": 50.89817150244564,
+      "extracted_text_min_final_pt": 7.02256,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 114,
+      "printed_page": "92",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.1",
+      "asset": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf",
+      "source_sha256": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390",
+      "inclusion_index": 28,
+      "source_page": 1,
+      "form": "Fm28",
+      "actual_scale": 0.87776,
+      "width_mm": 73.50099583463542,
+      "height_mm": 50.89469255426703,
+      "extracted_text_min_final_pt": 5.529888167419434,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 114,
+      "printed_page": "92",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.2",
+      "asset": "docs/thesis/figures/experiments/mag_chain_noise_ros/mag_chain_noise_ros_comparison.pdf",
+      "source_sha256": "8c099a34299c94b6f9f2836d1044f4e7e4a3c23fbe914bd57dbf66b5d08c8b88",
+      "inclusion_index": 29,
+      "source_page": 1,
+      "form": "Fm29",
+      "actual_scale": 0.79851,
+      "width_mm": 137.99896786398315,
+      "height_mm": 54.949501478598286,
+      "extracted_text_min_final_pt": 7.186590000000001,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.186590000000001,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "30f4efdbba978dfa1875958d92b7c569d13183b70f25602e824b0ff25bf67be9",
+      "physical_page": 116,
+      "printed_page": "94",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.3",
+      "asset": "docs/thesis/figures/experiments/mag_lever_arm_fullflow_20260705_2145/01_mag_extrinsics_residual.pdf",
+      "source_sha256": "99843058473b55af0800b3bfc248d972e006fc5131804792824a10ae2bc6b704",
+      "inclusion_index": 30,
+      "source_page": 1,
+      "form": "Fm30",
+      "actual_scale": 0.8247,
+      "width_mm": 142.5029601830546,
+      "height_mm": 62.974374278373716,
+      "extracted_text_min_final_pt": 7.4223,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.4223,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "a3f004729365f896c7719bf83a53c158725729142b290d225feeaac86cd32dd9",
+      "physical_page": 117,
+      "printed_page": "95",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.4",
+      "asset": "docs/thesis/figures/experiments/magnetic_joint/trajectory_colored_by_b.pdf",
+      "source_sha256": "dca81cfc0d7418f6829bc1317d7c0d4cff43b61ff08414fdd4568cf61345e9ec",
+      "inclusion_index": 31,
+      "source_page": 1,
+      "form": "Fm31",
+      "actual_scale": 0.89427,
+      "width_mm": 75.00069593463769,
+      "height_mm": 68.11295546411006,
+      "extracted_text_min_final_pt": 8.04843,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 8.04843,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "c98820eb58bb51a8f422f4ba803f49c14cea5c47e04d4d3f3481c59b20dc98c1",
+      "physical_page": 118,
+      "printed_page": "96",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.5",
+      "asset": "docs/thesis/figures/experiments/magnetic_joint/complex_iq_fit.pdf",
+      "source_sha256": "3f76011ba7deb34994ac41662bcbf70c1bb7c9e2ed405f3f9159fe19c2f237cb",
+      "inclusion_index": 32,
+      "source_page": 1,
+      "form": "Fm32",
+      "actual_scale": 0.90154,
+      "width_mm": 144.0051296342146,
+      "height_mm": 123.56862638347032,
+      "extracted_text_min_final_pt": 8.11386,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 8.11386,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "b87eca588359cf661f5f3b17a862cc6767381fb20ca5bb9d8956247f356d408f",
+      "physical_page": 119,
+      "printed_page": "97",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.6",
+      "asset": "docs/thesis/figures/experiments/state_estimation/eskf_param_sensitivity.pdf",
+      "source_sha256": "87d39d3adc9cedfc7cccaf066384ab815aa5e20d6546b3ea88b9c21d10019d75",
+      "inclusion_index": 33,
+      "source_page": 1,
+      "form": "Fm33",
+      "actual_scale": 0.86955,
+      "width_mm": 150.00045537863414,
+      "height_mm": 90.70413510855357,
+      "extracted_text_min_final_pt": 4.86947991707325,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.9564,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "c5978709946d9f315aee45db3f77c854c6205fb6b5640e8d674681449733c49f",
+      "physical_page": 122,
+      "printed_page": "100",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.7",
+      "asset": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+      "source_sha256": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133",
+      "inclusion_index": 34,
+      "source_page": 1,
+      "form": "Fm34",
+      "actual_scale": 0.84216,
+      "width_mm": 142.50593640319823,
+      "height_mm": 98.23494188517252,
+      "extracted_text_min_final_pt": 5.305608160629273,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 126,
+      "printed_page": "104",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.8",
+      "asset": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+      "source_sha256": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d",
+      "inclusion_index": 35,
+      "source_page": 1,
+      "form": "Fm35",
+      "actual_scale": 0.92036,
+      "width_mm": 135.00325034972127,
+      "height_mm": 96.36058645824517,
+      "extracted_text_min_final_pt": 8.28324,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 127,
+      "printed_page": "105",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.9",
+      "asset": "docs/thesis/figures/experiments/control/r13_v2_control_rate_paired.pdf",
+      "source_sha256": "3145a70bc8c3978b16853f930b4c3cc7f999aff446a693e37d649ffd6da3892f",
+      "inclusion_index": 36,
+      "source_page": 1,
+      "form": "Fm36",
+      "actual_scale": 0.6214,
+      "width_mm": 107.34852001039292,
+      "height_mm": 49.77238649698893,
+      "extracted_text_min_final_pt": 4.9712,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 4.9712,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "d47b29614a0b9c097a4667c967eb84437753e7ebcf978ec63a4aa5d517789f8e",
+      "physical_page": 135,
+      "printed_page": "113",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.9",
+      "asset": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+      "source_sha256": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+      "inclusion_index": 37,
+      "source_page": 1,
+      "form": "Fm37",
+      "actual_scale": 0.6256,
+      "width_mm": 108.00056027303062,
+      "height_mm": 49.20610449890136,
+      "extracted_text_min_final_pt": 5.630400000000001,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 135,
+      "printed_page": "113",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.9",
+      "asset": "docs/thesis/figures/experiments/control/r13_v2_p_track_boxplot_ua.pdf",
+      "source_sha256": "3e5d017f08c8664daa40da6f610e5f1e3a09e46975b65bb6f656920795101c4d",
+      "inclusion_index": 38,
+      "source_page": 1,
+      "form": "Fm38",
+      "actual_scale": 0.62144,
+      "width_mm": 107.35035881331379,
+      "height_mm": 49.77189060649957,
+      "extracted_text_min_final_pt": 4.35008,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 5.59296,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "a5ff32360405d64e4b80af5c83d77acd1d2c8c13c341a741fe8fe6be63f15ce9",
+      "physical_page": 135,
+      "printed_page": "113",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.10",
+      "asset": "docs/thesis/figures/cable_acceptance/cable_dlt1278_scorecard_fresh1.pdf",
+      "source_sha256": "0ace69542d615cff881b362497f799e1399cdd9be1d46ca58e3909378f63fc57",
+      "inclusion_index": 39,
+      "source_page": 1,
+      "form": "Fm39",
+      "actual_scale": 0.82544,
+      "width_mm": 142.49997198173014,
+      "height_mm": 99.73097101022677,
+      "extracted_text_min_final_pt": 7.42896,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.42896,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "7df5644b8abc508e398d9805b0066de0a4caf3debb5c5193670fed67427dcc3a",
+      "physical_page": 139,
+      "printed_page": "117",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.11",
+      "asset": "docs/thesis/figures/cable_acceptance/pvs_closedloop_recovery_prior_alignment.pdf",
+      "source_sha256": "faf7ff7b6e03409bf16ca195a822b05b70f5f313580ef59c091315bca2a0c7c8",
+      "inclusion_index": 40,
+      "source_page": 1,
+      "form": "Fm40",
+      "actual_scale": 0.82402,
+      "width_mm": 142.49832160959878,
+      "height_mm": 117.49704210224915,
+      "extracted_text_min_final_pt": 6.59216,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.59216,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "30f676c9270a77d26a2a0cf3c143307bdd5410985c17bae89f94650b65dc521a",
+      "physical_page": 140,
+      "printed_page": "118",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.12",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/11_fwhm_stability_comparison.pdf",
+      "source_sha256": "2ac627aee23c4a85a343bb3b3bfde15d53b3b775eb0f76f323a895c218cd7e52",
+      "inclusion_index": 41,
+      "source_page": 1,
+      "form": "Fm41",
+      "actual_scale": 0.85974,
+      "width_mm": 144.00438957947284,
+      "height_mm": 128.69501895783486,
+      "extracted_text_min_final_pt": 7.73766,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.73766,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "44e8b2d17df7ae8a42a343bc16944c08274b310008ed1a535a01bb5ceb323d3e",
+      "physical_page": 142,
+      "printed_page": "120",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.13",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/12_fwhm_stability_sensitivity.pdf",
+      "source_sha256": "0b27a2e83ccefa66f5e57dd341cc754568a77be5b802ee7a5312fb19bbd99e49",
+      "inclusion_index": 42,
+      "source_page": 1,
+      "form": "Fm42",
+      "actual_scale": 0.82771,
+      "width_mm": 144.0031613196038,
+      "height_mm": 76.12091532185701,
+      "extracted_text_min_final_pt": 6.62168,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.62168,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "5a2d0c861cc0e78261a1b2a6d0c9cf17161db2f54f5feaa958fd7dca2d204c61",
+      "physical_page": 143,
+      "printed_page": "121",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.14",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/13_shape_guard_held_out_validation.pdf",
+      "source_sha256": "5281f0217acb42e89bee469fd1c88a36b4ab07c40a13fe5155490e6233c4628f",
+      "inclusion_index": 43,
+      "source_page": 1,
+      "form": "Fm43",
+      "actual_scale": 0.86014,
+      "width_mm": 144.00912302698262,
+      "height_mm": 119.83141330153401,
+      "extracted_text_min_final_pt": 6.88112,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.88112,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "ff79fd180211bd9d52fb920f3acb14ef273343a4e0e894df2c51ca3f20630e1c",
+      "physical_page": 144,
+      "printed_page": "122",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.15",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/71_current_magnetic_simulation_closure.pdf",
+      "source_sha256": "8aed9984ddfac8d9fbee36259446dabba7f3de75a4ba06104dda38b52e2e51ab",
+      "inclusion_index": 44,
+      "source_page": 1,
+      "form": "Fm44",
+      "actual_scale": 0.85603,
+      "width_mm": 144.00718842661453,
+      "height_mm": 98.1679577951889,
+      "extracted_text_min_final_pt": 5.735400836725234,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 5.7354009999999995,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "2056f203e0349018cde4dc0a012c1bf6bd0d41c6a1b4eba65d9bf6edf400bd50",
+      "physical_page": 146,
+      "printed_page": "124",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.16",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/77_defense_robustness_thesis_summary.pdf",
+      "source_sha256": "e9120916a9ec6eddbaf0023b831a8492ed59191149a6bd7322fe81844611a537",
+      "inclusion_index": 45,
+      "source_page": 1,
+      "form": "Fm45",
+      "actual_scale": 0.8335,
+      "width_mm": 144.00461083017984,
+      "height_mm": 69.76227179809148,
+      "extracted_text_min_final_pt": 5.8345,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 5.8345,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "a748c7f88ca71b8039fce846452a18b21ebed9f90a536dbf4d2f4fdb609b62a1",
+      "physical_page": 147,
+      "printed_page": "125",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.17",
+      "asset": "docs/thesis/figures/experiments/fwhm_v2/51_shallow_survey_ros_pvs_chain.pdf",
+      "source_sha256": "3c54f528ce10af694376d1d1089b7a99f2eaa1814ef17e95d21cb57c6294c6b7",
+      "inclusion_index": 46,
+      "source_page": 1,
+      "form": "Fm46",
+      "actual_scale": 0.8334,
+      "width_mm": 144.00277509597777,
+      "height_mm": 122.99413137420655,
+      "extracted_text_min_final_pt": 6.833879841041565,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.83388,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "f77e8a85f139b18ac19768a881ae87eab6b31c77717e3851411555abd1a708fe",
+      "physical_page": 148,
+      "printed_page": "126",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.18",
+      "asset": "docs/thesis/figures/magnetics/round2_20261020/r2_reference_lifecycle.pdf",
+      "source_sha256": "8116c76abe3d5d9d919b627b78dadd1480b17b18a9f1ed4f7b488519df6ff898",
+      "inclusion_index": 47,
+      "source_page": 1,
+      "form": "Fm47",
+      "actual_scale": 0.81915,
+      "width_mm": 134.4961058553187,
+      "height_mm": 139.83375762046816,
+      "extracted_text_min_final_pt": 5.73405,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 6.5532,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "c11d827ad299546ba613c7958df2c48a201ee5c235ed1b932fcd1383f8da21ba",
+      "physical_page": 150,
+      "printed_page": "128",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.19",
+      "asset": "docs/thesis/figures/magnetics/round2_20261020/r2_trajectory_pressure.pdf",
+      "source_sha256": "09350a4c2cbbcb24018e475afb6eb8c28c8236863e9eb117f9b325c21568ce96",
+      "inclusion_index": 48,
+      "source_page": 1,
+      "form": "Fm48",
+      "actual_scale": 0.8164,
+      "width_mm": 137.61818128377277,
+      "height_mm": 73.46873356745402,
+      "extracted_text_min_final_pt": 5.7148,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.3476,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "cc2a4f1a98b07ebc385c229605916393de60e4f47638e7fd60b19b0a484c5d35",
+      "physical_page": 151,
+      "printed_page": "129",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.20",
+      "asset": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+      "source_sha256": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f",
+      "inclusion_index": 49,
+      "source_page": 1,
+      "form": "Fm49",
+      "actual_scale": 0.83414,
+      "width_mm": 144.00189793181863,
+      "height_mm": 99.5088667397037,
+      "extracted_text_min_final_pt": 7.50726,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 152,
+      "printed_page": "130",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.21",
+      "asset": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+      "source_sha256": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0",
+      "inclusion_index": 50,
+      "source_page": 1,
+      "form": "Fm50",
+      "actual_scale": 0.82684,
+      "width_mm": 147.00503954481675,
+      "height_mm": 100.30072426197984,
+      "extracted_text_min_final_pt": 7.44156,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 154,
+      "printed_page": "132",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.22",
+      "asset": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "source_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+      "inclusion_index": 51,
+      "source_page": 1,
+      "form": "Fm51",
+      "actual_scale": 0.8515,
+      "width_mm": 146.99884442532857,
+      "height_mm": 103.29213234613206,
+      "extracted_text_min_final_pt": 7.6635,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 155,
+      "printed_page": "133",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.23",
+      "asset": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+      "source_sha256": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685",
+      "inclusion_index": 52,
+      "source_page": 1,
+      "form": "Fm52",
+      "actual_scale": 0.8515,
+      "width_mm": 146.99884442532857,
+      "height_mm": 101.57983075845507,
+      "extracted_text_min_final_pt": 7.6635,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "physical_page": 156,
+      "printed_page": "134",
+      "visual_review": "PENDING"
+    },
+    {
+      "figure": "5.24",
+      "asset": "real_experiments/jetson_realtime/figures/jetson_mpc_latency_and_success.pdf",
+      "source_sha256": "1eabdf0eecc98a1dea20ae9b83238568c0578ec43c44422591cfe5c023af75b7",
+      "inclusion_index": 53,
+      "source_page": 1,
+      "form": "Fm53",
+      "actual_scale": 0.86053,
+      "width_mm": 144.00208242454104,
+      "height_mm": 63.82102065197458,
+      "extracted_text_min_final_pt": 7.74477,
+      "extracted_text_note": "Extracted glyph subset only; Type3 Chinese outlines and formulas are not a complete font measurement",
+      "renderer_label_base_min_final_pt": 7.74477,
+      "renderer_font_note": "Actual Agg label base sizes × actual PDF insertion scale; formula subscripts can be smaller",
+      "renderer_audit_sha256": "346177d202fdd20c474ff25c116b3836ca50dd2020bc78b382841e1a32563210",
+      "physical_page": 157,
+      "printed_page": "135",
+      "visual_review": "PENDING"
+    }
+  ],
+  "float_sweep": [
+    {
+      "physical_page": 29,
+      "figures": [
+        "1.1"
+      ],
+      "body_han_estimate": 446,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 34,
+      "figures": [
+        "1.2"
+      ],
+      "body_han_estimate": 0,
+      "classification": "FIGURE_ONLY_CANDIDATE",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 39,
+      "figures": [
+        "2.1"
+      ],
+      "body_han_estimate": 341,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 42,
+      "figures": [
+        "2.2"
+      ],
+      "body_han_estimate": 353,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 43,
+      "figures": [
+        "2.3"
+      ],
+      "body_han_estimate": 285,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 45,
+      "figures": [
+        "2.4"
+      ],
+      "body_han_estimate": 262,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 46,
+      "figures": [
+        "2.5"
+      ],
+      "body_han_estimate": 336,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 48,
+      "figures": [
+        "2.6"
+      ],
+      "body_han_estimate": 295,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 50,
+      "figures": [
+        "2.7"
+      ],
+      "body_han_estimate": 249,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 54,
+      "figures": [
+        "2.8"
+      ],
+      "body_han_estimate": 514,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 55,
+      "figures": [
+        "2.9"
+      ],
+      "body_han_estimate": 327,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 62,
+      "figures": [
+        "2.10",
+        "2.11"
+      ],
+      "body_han_estimate": 172,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 65,
+      "figures": [
+        "2.12"
+      ],
+      "body_han_estimate": 209,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 66,
+      "figures": [
+        "2.13"
+      ],
+      "body_han_estimate": 341,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 67,
+      "figures": [
+        "2.14"
+      ],
+      "body_han_estimate": 311,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 71,
+      "figures": [
+        "3.1"
+      ],
+      "body_han_estimate": 404,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 82,
+      "figures": [
+        "3.2"
+      ],
+      "body_han_estimate": 360,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 90,
+      "figures": [
+        "4.1"
+      ],
+      "body_han_estimate": 436,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 91,
+      "figures": [
+        "4.2"
+      ],
+      "body_han_estimate": 164,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 94,
+      "figures": [
+        "4.3"
+      ],
+      "body_han_estimate": 187,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 95,
+      "figures": [
+        "4.4"
+      ],
+      "body_han_estimate": 427,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 97,
+      "figures": [
+        "4.5"
+      ],
+      "body_han_estimate": 564,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 102,
+      "figures": [
+        "4.6"
+      ],
+      "body_han_estimate": 409,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 114,
+      "figures": [
+        "5.1"
+      ],
+      "body_han_estimate": 434,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 116,
+      "figures": [
+        "5.2"
+      ],
+      "body_han_estimate": 471,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 117,
+      "figures": [
+        "5.3"
+      ],
+      "body_han_estimate": 246,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 118,
+      "figures": [
+        "5.4"
+      ],
+      "body_han_estimate": 346,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 119,
+      "figures": [
+        "5.5"
+      ],
+      "body_han_estimate": 316,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 122,
+      "figures": [
+        "5.6"
+      ],
+      "body_han_estimate": 398,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 126,
+      "figures": [
+        "5.7"
+      ],
+      "body_han_estimate": 408,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 127,
+      "figures": [
+        "5.8"
+      ],
+      "body_han_estimate": 264,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 135,
+      "figures": [
+        "5.9"
+      ],
+      "body_han_estimate": 65,
+      "classification": "SPARSE_TEXT",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 139,
+      "figures": [
+        "5.10"
+      ],
+      "body_han_estimate": 388,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 140,
+      "figures": [
+        "5.11"
+      ],
+      "body_han_estimate": 317,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 142,
+      "figures": [
+        "5.12"
+      ],
+      "body_han_estimate": 48,
+      "classification": "SPARSE_TEXT",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 143,
+      "figures": [
+        "5.13"
+      ],
+      "body_han_estimate": 393,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 144,
+      "figures": [
+        "5.14"
+      ],
+      "body_han_estimate": 392,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 146,
+      "figures": [
+        "5.15"
+      ],
+      "body_han_estimate": 341,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 147,
+      "figures": [
+        "5.16"
+      ],
+      "body_han_estimate": 499,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 148,
+      "figures": [
+        "5.17"
+      ],
+      "body_han_estimate": 317,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 150,
+      "figures": [
+        "5.18"
+      ],
+      "body_han_estimate": 272,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 151,
+      "figures": [
+        "5.19"
+      ],
+      "body_han_estimate": 468,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 152,
+      "figures": [
+        "5.20"
+      ],
+      "body_han_estimate": 326,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 154,
+      "figures": [
+        "5.21"
+      ],
+      "body_han_estimate": 447,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 155,
+      "figures": [
+        "5.22"
+      ],
+      "body_han_estimate": 302,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 156,
+      "figures": [
+        "5.23"
+      ],
+      "body_han_estimate": 357,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    },
+    {
+      "physical_page": 157,
+      "figures": [
+        "5.24"
+      ],
+      "body_han_estimate": 285,
+      "classification": "WITH_BODY",
+      "note": "只用于筛选；图形抽字不全、标题/公式分组会影响估计，最终由实际页面查看确认"
+    }
+  ],
+  "text_edits": [
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "其顶部状态块来自 \\texttt{/auv/cable/industrial\\_ready}、\\texttt{/auv/cable/industrial\\_acceptance\\_pass} 与 \\texttt{/auv/cable/dlt1278\\_state} 等布尔/字符串话题",
+      "after": "其顶部状态块分别显示工业就绪、验收通过标志与规程评分状态，由对应的运行状态消息驱动",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "\\texttt{Xvfb + xdotool + ImageMagick}",
+      "after": "虚拟显示与自动截屏工具",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "\\texttt{rt/pc/cmd\\_raw}",
+      "after": "原始遥控指令通道",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "\\texttt{work\\_cmd}",
+      "after": "工作指令字段",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "\\texttt{EmergencySurface}",
+      "after": "紧急上浮行动",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "实际实现中的根节点是 \\texttt{memory=False} 的选择器，每个 tick 均从左到右重新检查三个分支",
+      "after": "根节点采用无记忆选择器，每个决策周期均按优先级从左到右重新检查三个分支",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{DebugLevel}\\newline\\texttt{Condition}",
+      "after": "调试等级判定",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{ConfidenceAbove}\\newline\\texttt{Threshold}",
+      "after": "置信度迟滞判定",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{SeabedSafety}\\newline\\texttt{Limiter}",
+      "after": "海底安全约束",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{AnomalySpeed}\\newline\\texttt{Limiter}",
+      "after": "异常限速",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{EmergencyCondition}",
+      "after": "紧急条件判定",
+      "count": 2,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{EmergencySurface}",
+      "after": "紧急上浮行动",
+      "count": 2,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{StandbyCheck}",
+      "after": "待命检查",
+      "count": 2,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{DiveToDepth}",
+      "after": "定深下潜行动",
+      "count": 2,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{SeabedSafetyLimiter}",
+      "after": "海底安全约束",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{PreciseInspectionSequence}",
+      "after": "精准巡检分支",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{AnomalySpeedLimiter}",
+      "after": "异常限速机制",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "\\texttt{ZigZagSearch}",
+      "after": "之字形搜索",
+      "count": 2,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "逐 tick 检查",
+      "after": "逐周期检查",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "每个 tick 都重新判定",
+      "after": "每个决策周期都重新判定",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "下一次 tick 抢占路线任务",
+      "after": "下一决策周期抢占路线任务",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "先由 Biot--Savart 模型生成清洁 \\texttt{/auv/sensors/magnetic}",
+      "after": "先由 Biot--Savart 模型生成无噪磁观测",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "通过 \\texttt{/auv/sensors/magnetic\\_noise\\_metadata} 记录",
+      "after": "通过独立的噪声元数据消息记录",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "车辆深度取 \\texttt{/auv/sensors/ground\\_truth}，下发命令取 \\texttt{/auv/control/mpc\\_cmd}",
+      "after": "车辆深度取仿真真值流，下发命令取控制输出记录",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "由于本次 rosbag 中 \\texttt{/auv/diagnostics} 无有效消息",
+      "after": "由于本次录包中诊断通道无有效消息",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "\\texttt{kinematic\\_setpoint}",
+      "after": "运动学设定点",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "Telnet 读回 \\texttt{work\\_cmd=0x11/0x02}",
+      "after": "板端工作指令分别读回为 \\texttt{0x11} 与 \\texttt{0x02}",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "与 \\texttt{Net\\_Recv\\_Task\\_Period=3} 和 0.1 s 基准周期一致",
+      "after": "与固件接收任务每 3 个基础周期调度一次、基础周期为 0.1 s 的设置一致",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "零输出 \\texttt{SAFETY\\_FALLBACK}",
+      "after": "零输出的安全回退",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "PC104 \\texttt{Sys\\_Abnorm\\_Inf} 接入生产 bridge、CommandArbiter 与行为树：bridge 将原始故障字及 Bit5/Bit13/Bit14 写入 ArbiterStatus，decision node 再",
+      "after": "PC104 系统故障字接入部署桥接节点、命令仲裁器与行为树：桥接节点将原始故障字及 Bit5/Bit13/Bit14 写入仲裁状态消息，决策节点再",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "ControlGoal/Setpoint、行为树状态、shadow command",
+      "after": "控制目标与设定点、行为树状态、影子执行命令",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "\\texttt{ZIGZAG\\_SEARCH}",
+      "after": "之字形搜索",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "1800 s \\texttt{active\\_soak} 子区间",
+      "after": "1800 s 稳态保持子区间",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "仍保留 \\texttt{failed\\_acceptance}",
+      "after": "仍判为整包验收未通过",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "旧 runner 对启动根进程的采样，bridge/decision",
+      "after": "旧版记录程序对启动根进程的采样，桥接与决策节点",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "后续 runner 已改为递归聚合进程树",
+      "after": "后续记录程序已改为递归聚合进程树",
+      "count": 1,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "\\texttt{Solve\\_Succeeded}",
+      "after": "求解成功",
+      "count": 4,
+      "purpose": "以功能或物理含义替代实现标识，原字段映射保留在本记录；不改实验数据和结论"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "未记录 Jetson \\texttt{tegrastats} 温度、频率和功耗",
+      "after": "未记录 Jetson 的温度、频率和功耗遥测",
+      "count": 1,
+      "purpose": "用实际缺失的物理量替代工具程序名，保持未验证边界"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "到 原始遥控指令通道",
+      "after": "到原始遥控指令通道",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "的 工作指令字段",
+      "after": "的工作指令字段",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "工作指令字段 变",
+      "after": "工作指令字段变",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "的 紧急上浮行动",
+      "after": "的紧急上浮行动",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "紧急上浮行动 只",
+      "after": "紧急上浮行动只",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "由 虚拟显示与自动截屏工具",
+      "after": "由虚拟显示与自动截屏工具",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "before": "虚拟显示与自动截屏工具 在",
+      "after": "虚拟显示与自动截屏工具在",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "到 之字形搜索",
+      "after": "到之字形搜索",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "行 定深下潜行动",
+      "after": "行定深下潜行动",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "由 异常限速",
+      "after": "由异常限速",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "异常限速机制 把",
+      "after": "异常限速机制把",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "支 待命检查",
+      "after": "支待命检查",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "待命检查 处",
+      "after": "待命检查处",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "由 海底安全约束",
+      "after": "由海底安全约束",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "海底安全约束 包",
+      "after": "海底安全约束包",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "精准巡检分支 进",
+      "after": "精准巡检分支进",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "入 紧急上浮行动",
+      "after": "入紧急上浮行动",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "before": "紧急条件判定 返",
+      "after": "紧急条件判定返",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "为 之字形搜索",
+      "after": "为之字形搜索",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "用 运动学设定点",
+      "after": "用运动学设定点",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "before": "运动学设定点 后",
+      "after": "运动学设定点后",
+      "count": 1,
+      "purpose": "去除实现标识改中文后遗留的中文间空格"
+    }
+  ],
+  "retained_images": [
+    {
+      "asset": "docs/thesis/figures/experiments/control/r13_v2_authority_modes_ua.pdf",
+      "asset_sha256": "bfa8f5f0b9a637ebba0517830f78c542a063bd5dc2a13d5b6ca26c7662f1bc89",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/r13_v2_authority_modes_ua.png",
+      "preview_sha256": "789a7546d77954f04a4fa633363290b0235ddf943b52cd6ce2c7c1311b3e8270",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；缺 r13_v2_authority_policy_summary_by_scenario_mode.csv；旧图字体/图例仍待修复",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/experiments/control_mpc/05_mpc_combined_summary.pdf",
+      "asset_sha256": "4b995db0f87115d579c5b9064c1ce83379ef9d0063c7e6f74ce7614672cd36a9",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/05_mpc_combined_summary.png",
+      "preview_sha256": "f7c352da368b0da9691a8890b8139718b517cee6338d783aa78d6391a229ccdf",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户确认这些输入稍后从旧电脑迁移；历史 MPC 四时序绘图输入未定位；不能通过重跑仿真冒充旧试验的纯排版重绘",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/experiments/decision_bt_vs_fsm/03_complexity_comparison.pdf",
+      "asset_sha256": "f09792119e8df9cc09351b5327a1a4a9999fa35a428df702f286b0f13ac904d4",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/03_complexity_comparison.png",
+      "preview_sha256": "6737b9758ccd4726d7b2153e03b96296eb4fe2044861739ce45f32bc85b2341e",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户确认这些输入稍后从旧电脑迁移；历史函数级复杂度输入包 results/decision/bt_vs_fsm/20260608_173806 未定位；静态成图已看，未以当前算法重算替代",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/adc_enob/ch4_enob_vs_osr.pdf",
+      "asset_sha256": "84fee39a02e21a17cff8514a5122b6cf70d31d8fa477a966fada5b4e905ef760",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/ch4_enob_vs_osr.png",
+      "preview_sha256": "9c5af9321b3a07edc2ad293db0b1da21976b14872f03f4f752aaaff84e3b0a88",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户确认这些输入稍后从旧电脑迁移；缺 hardware_wrappers/fangkong_adc/raw_data/enob/20260809T161036/ch4_enob_results.json 与原绘图生成器",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/adc_enob/ch4_noise_spectral_density.pdf",
+      "asset_sha256": "29f075119c51c37b66653ed5a84729b4967c6700a67dbfb2b9b68cc285598390",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/ch4_noise_spectral_density.png",
+      "preview_sha256": "b6cdc093d821a91df37a2db760cb40e22718fa41b38ab41da10b340b680225a7",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户确认这些输入稍后从旧电脑迁移；缺同一 ADC 原始短接噪声序列/频谱缓存及原绘图生成器；不从图片猜造数值",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_fault_timeline.pdf",
+      "asset_sha256": "e8c3e13e8fbe5e15b2b53d99617ba5a9018e2cb26406ae8a94437ce387a10de4",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/pc104_cross_layer_fault_timeline.png",
+      "preview_sha256": "b5b8f599745918390cd4d2310e114adda0c33f0dcffdb8f47fffe9f0edf55f7f",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；缺 pc104_cross_layer_fault_sync_20260822_222112；现有图例/时间线仍需原输入复核",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/pc104_cross_layer/pc104_cross_layer_soak_30min.pdf",
+      "asset_sha256": "8fe3930b072e2a1026ed85b9bb9ac59416b87a295e084ef5d3f9f7136e8c5685",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/pc104_cross_layer_soak_30min.png",
+      "preview_sha256": "7f83c55f3444c7f1911584a3f98f684fde5c486f02da77ab49348ac857fbdc3e",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；缺 pc104_cross_layer_fault_sync_20260822_225436；柱图、RSS 图例和底部说明仍遮挡数据",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/pc104_fault_injection/pc104_fault_timeline.pdf",
+      "asset_sha256": "04db81a9258c85be4a18abcfa419a95719c879de5ec4eb934c4adf91914cc9a0",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/pc104_fault_timeline.png",
+      "preview_sha256": "610947314df7def436f5f59062f2faaa78ceaba455d545aca5ae5df1feea7263",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；缺 pc104_fault_injection_formal_v2_20260822/fault_timeline.csv；故障位和 watchdog 图例遮住曲线",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/hardware/pc104_timing/pc104_firmware_echo_timing.pdf",
+      "asset_sha256": "5adbcdeedba66d8b31adb12dbd93ec3a98391e1d0a044f3e89399a4cabb5d38f",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/pc104_firmware_echo_timing.png",
+      "preview_sha256": "b3fffbc2daa8ef112ee40cd6608eecf4e6b6c8f59b97e34cf3260fa090d1ceb3",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓四组 PC104；缺 pc104_udp_timing_echo_300s_20260822/udp_timing_samples.csv",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/terrain_following/terrain_3d_pid_terrain_trajectory.pdf",
+      "asset_sha256": "4728e580ed93e0083a20762b5af8c6ebb0e626680986c33251a5ba3b72c7319d",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/terrain_3d_pid_terrain_trajectory.png",
+      "preview_sha256": "94c8a33f1d023678b1d4a2fa18c4a1273aeeda7084a51496f19d4753d769aee3",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；同一地形原始包缺失，旧图仍含非目标中文字体",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    },
+    {
+      "asset": "docs/thesis/figures/terrain_following/terrain_tz_tracking_pid_mpc.pdf",
+      "asset_sha256": "f51e0a6a0ea58f28e81651b9114fe6e04b41ed1287da5818fa391be9e24e5133",
+      "preview": "docs/thesis/figure-polish/20261023/retained_samples/terrain_tz_tracking_pid_mpc.png",
+      "preview_sha256": "58ac860c8928e75dc1fb4219a960b23efadd2a21e23c6e7b576fa62deb48ae3c",
+      "status": "RETAINED_USER_ACCEPTED",
+      "decision": "用户确认原始输入丢失，接受旧图作为不可重绘的保留资产；不侵入修改图片，仅必要时调整论文引用尺寸。",
+      "known_limit": "用户暂缓；缺 results/control/terrain_following_20260823_215036/ 原始 bag/PVS trace；保留现有字体和产物",
+      "visual_review": "VIEWED",
+      "review_date": "2026-10-23",
+      "review_method": "逐一打开从现有 PDF 渲染的整幅预览；保留已知图例遮挡/字体限制，不记作重绘通过"
+    }
+  ]
+}

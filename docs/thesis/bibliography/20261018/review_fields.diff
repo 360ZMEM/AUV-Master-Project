@@ -1,0 +1,46 @@
+# Field-level review only; not an applyable BibTeX patch.
+--- thuthesis/ref/auv-references.bib#choset1998boustrophedon:publisher (current)
++++ external suggestion (requires review)
+@@
+-"Springer"
++"Springer London"
+--- thuthesis/ref/auv-references.bib#yan2026digitaltwin:publisher (current)
++++ external suggestion (requires review)
+@@
+-"Springer Nature"
++"Springer Science and Business Media LLC"
+--- thuthesis/ref/auv-references.bib#li2025cooplocalization:publisher (current)
++++ external suggestion (requires review)
+@@
+-"IEEE"
++"Institute of Electrical and Electronics Engineers (IEEE)"
+--- thuthesis/ref/auv-references.bib#nea2026shenlan:author (current)
++++ external suggestion (requires review)
+@@
+-[{"family": "{国家能源局}", "given": ""}]
++[{"family": "王轶辰", "given": ""}]
+--- thuthesis/ref/auv-references.bib#multidimension2024tmr8607:title (current)
++++ external suggestion (requires review)
+@@
+-"TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组）"
++"TMR8607/TMR8637 高精度、低噪声线性磁传感器"
+--- thuthesis/ref/auv-references.bib#tcsgpc_cable:title (current)
++++ external suggestion (requires review)
+@@
+-"海底管道及海底电缆检测技术规范: T/CSGPC"
++"海底管道及海底电缆检测技术规范（征求意见稿）"
+--- thuthesis/ref/auv-references.bib#tcsgpc_cable:author (current)
++++ external suggestion (requires review)
+@@
+-[{"family": "{中国海洋工程咨询协会}", "given": ""}]
++[{"family": "中国测绘学会", "given": ""}]
+--- thuthesis/ref/auv-references.bib#teledyne2026hydropactline:title (current)
++++ external suggestion (requires review)
+@@
+-"Subsea Pipe and Cable Detection Systems"
++"Pipe & Cable Detection Systems"
+--- thuthesis/ref/auv-references.bib#haiying_t180:author (current)
++++ external suggestion (requires review)
+@@
+-[{"family": "{无锡海鹰电子医疗系统有限公司}", "given": ""}]
++[{"family": "无锡市海鹰加科海洋技术有限责任公司", "given": ""}]

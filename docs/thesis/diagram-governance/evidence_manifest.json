@@ -1,0 +1,546 @@
+{
+  "schema_version": 1,
+  "policy_sha256": "0a76afe3bddd96fda6103d9664a35bea3bd3096ebd60143c51f326b84be606a6",
+  "fontconfig_sha256": "24b456a18d6287bd7a6167810fd528bc78aa7573d8281174f71a548984113c74",
+  "drawio_version": "24.7.17",
+  "chromium_version": "153.0.8010.12",
+  "files": [
+    {
+      "path": "AUV-Master-Mag/docs/figure/fig_arch_onion.drawio",
+      "sha256": "fbcd568c20e78dd62c026a4d53931025b0466d35479bb5b720ec1dd09fa1e17d",
+      "baseline_sha256": "2de2fd2da75c3486fdaa43187e33794a505fe6d244cda30acc8500be91adb1d7",
+      "outputs": [
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_arch_onion.pdf",
+          "sha256": "f76c23ee989ebd8d2fb6ccf36f0f2e42ee6cfd5a49475d97c069640aa8de779f"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_arch_onion.png",
+          "sha256": "2f0142da39d04ba03912424d3dcdff0706b9cd2d055acd7586c2b7a7ca9ef435"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_arch_onion.svg",
+          "sha256": "15f7ca7eb465f3aaac7c4541bc0255b065e837e5a2cca5c81301a947e5ea65b4"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_arch_onion.drawio.png",
+          "sha256": "417b8ee03ee4187af902ffa04dfad718e393a1e299d77714e89a2c19c6eac556"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/figure/fig_mission_fsm.drawio",
+      "sha256": "60196216aafc7d928c46c6cda4fa8c07a08ad4641c056264b92ac99a01f9dea8",
+      "baseline_sha256": "590b628f90a12003c76114ff1585f1e79863de25b2fab1780e90bf1b7d80f2c7",
+      "outputs": [
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_mission_fsm.pdf",
+          "sha256": "cffa3b944e01f4fc25eb6560762425a303bd4382f6e5aaf7148b927f8afe31bf"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_mission_fsm.png",
+          "sha256": "5301ac72f11dbf74013d4514fc28c50b54ecfc45d065105e35623bf4927ff318"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_mission_fsm.svg",
+          "sha256": "c41c4c89dd0fcbc7b0c1f28bce222d9127e8bc01696e2e1a1ad371f1be686afc"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_mission_fsm.drawio.png",
+          "sha256": "337120ad5bd3030cccd6b748b9dec629ed20f0f4eb3809d9b84a71fb52e060b3"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.drawio",
+      "sha256": "7cef8896bd892afc37d2ac08a33d2cf0a11bc586e0ef625a16d13041e87dd5c7",
+      "baseline_sha256": "7cef8896bd892afc37d2ac08a33d2cf0a11bc586e0ef625a16d13041e87dd5c7",
+      "outputs": [
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.pdf",
+          "sha256": "fd17a6dcfe41dbae6d0f3f10d59bfc31d3e68dafcbc484a92030aa3a801f022b"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.png",
+          "sha256": "2c5ed4cef305341108110acbe65fb485beee0a07f271004c0da3bc53665a87f6"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.svg",
+          "sha256": "16868eec2d62737a99b49f2eab2996d0d5a029f32e897eed60d87a76a8c22faa"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_perception_pipeline.drawio.png",
+          "sha256": "1a0548128cb0e1c9e6cc5e30af8ddcc2e8f1fd2b38b4d5e33fb780c15c634cf0"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.drawio",
+      "sha256": "f7ded57b181922ddc7035be026f06e55744c5010229d2b38338f413e045f428b",
+      "baseline_sha256": "2b3d170c225ca53749b85463f5762934f1d8ffa2d19071bc5beca9d865698a37",
+      "outputs": [
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.pdf",
+          "sha256": "15ac1258775eae282ef9ee832cf76593843740b3d7a44a4e782a0cec046b6d90"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.png",
+          "sha256": "45d3966173e94c04c4bfd0eca7c91d57ea644c1b3390e69a970606f870457980"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.svg",
+          "sha256": "3534f5b3def6cc60cefb04a3d55e6797e3955a89b7e7834f339af45247d2e05b"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_statemachine_hierarchy.drawio.png",
+          "sha256": "a2c517d438faffbef93cd98ca182b02e2978b7222b5c74dd9e6966fe33029809"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.drawio",
+      "sha256": "67d223c5bcd42e7f0aaac420ca68094510da1e21278eaff39669dfd21c467bbe",
+      "baseline_sha256": "67d223c5bcd42e7f0aaac420ca68094510da1e21278eaff39669dfd21c467bbe",
+      "outputs": [
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.pdf",
+          "sha256": "492dc1298903407e0cf2d51709789b8c2254a6afcecd49d68367d36dc088d58f"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.png",
+          "sha256": "62e1fdb12e51141e0598ad83ac85f5b2388edb4d26736767ce5bbc5edf662800"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.svg",
+          "sha256": "2389f73fd0cbba0e5ed3c4a195634e93a84b5816cb3abf07f1b076e9dd81da05"
+        },
+        {
+          "path": "AUV-Master-Mag/docs/figure/fig_zigzag_probe.drawio.png",
+          "sha256": "449e919e9a5272d2e2857eba2f791d8c9f419d66b142855a3e113d834c213aba"
+        }
+      ]
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_code_layer_architecture.drawio",
+      "sha256": "1b2fdd6cd160ce06484d11f0727a336599d402849ab705cc27bac4bf805fe074",
+      "baseline_sha256": "1b2fdd6cd160ce06484d11f0727a336599d402849ab705cc27bac4bf805fe074",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_ros2_node_topology.drawio",
+      "sha256": "f9b1e1cb5cf70e33fce2f8bb711b6aaade5e9019e521292bf7929396f56c6f1c",
+      "baseline_sha256": "f9b1e1cb5cf70e33fce2f8bb711b6aaade5e9019e521292bf7929396f56c6f1c",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_runtime_dataflow.drawio",
+      "sha256": "16a1e7a4ba8c9b18ea29278633b758174d4b46c8b818cc53225585cd83b1f731",
+      "baseline_sha256": "16a1e7a4ba8c9b18ea29278633b758174d4b46c8b818cc53225585cd83b1f731",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_safety_arbiter_deployment.drawio",
+      "sha256": "15ef0239eee639cbaabb90801b19dd0a5ab146b738c91748260b9fc67b0452c2",
+      "baseline_sha256": "15ef0239eee639cbaabb90801b19dd0a5ab146b738c91748260b9fc67b0452c2",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio",
+      "sha256": "3996316d6aeaf1905354d280a642f69bb5d54f0b4cbf0ecc0db768cdff6fe6cc",
+      "baseline_sha256": "3996316d6aeaf1905354d280a642f69bb5d54f0b4cbf0ecc0db768cdff6fe6cc",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_system_capability_map.drawio",
+      "sha256": "eabf322f7200205141bfbcc12608b64550a44f1e160ddd9bfd1908bcda792600",
+      "baseline_sha256": "d2a9fd839e951d92ceebcad38121acd009a94849cae52df5fe107b06a1c3d7ef",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_system_subsystem_organization.drawio",
+      "sha256": "2747bf37bd48edaac821c2098a79bf7376946ac7703d8b3e68d958e066c54c6f",
+      "baseline_sha256": "2747bf37bd48edaac821c2098a79bf7376946ac7703d8b3e68d958e066c54c6f",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio",
+      "sha256": "28245fd9520ced59cbe3b044970b0a5fd551d624e0582afb3d9853b8083d7ef7",
+      "baseline_sha256": "ddf1182da57010e4cf10d28f35480df9e53a2a7160d51dbe3dc015a36ef4cc22",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio",
+      "sha256": "0562a552def800b94307c72b1201fd448f2ccd22a93006a7501db53f7d4ee2f1",
+      "baseline_sha256": "0562a552def800b94307c72b1201fd448f2ccd22a93006a7501db53f7d4ee2f1",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "sha256": "2b105f1ced82376bebdde29ef4ce721ae23b5b507d8019fa80017d4136c394b3",
+      "baseline_sha256": "00dd2cdc99e44d2a58d0b1b42ed46b632a17ffe5a01f3fc726fdaff7cfea13f4",
+      "outputs": []
+    },
+    {
+      "path": "AUV-Master-Mag/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio",
+      "sha256": "97e88795e0ea06afc9f1af5c2f311cf057adac72e181b58b89328aa79c4738bb",
+      "baseline_sha256": "74383b377fcf78d70e6c8898748d4da27277407a1f26255086e6b801c9806f0b",
+      "outputs": []
+    },
+    {
+      "path": "docs/internals/figures/architecture/auv_code_layer_architecture.drawio",
+      "sha256": "1b2fdd6cd160ce06484d11f0727a336599d402849ab705cc27bac4bf805fe074",
+      "baseline_sha256": "1b2fdd6cd160ce06484d11f0727a336599d402849ab705cc27bac4bf805fe074",
+      "outputs": [
+        {
+          "path": "docs/internals/figures/architecture/auv_code_layer_architecture.png",
+          "sha256": "977e4019b84aa0c329a7509624be5f5fce05e58cd7c31ccbaf50bea7f4192ccd"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_code_layer_architecture.svg",
+          "sha256": "1f1dd7920ec639f4dd662f4cfdc5981d6e587c92747de989e783465bae538938"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_code_layer_architecture.drawio.png",
+          "sha256": "7c587c7621346d8ae724e5b408f24605e4c3348dc6c8d3762a2d177daf10af41"
+        }
+      ]
+    },
+    {
+      "path": "docs/internals/figures/architecture/auv_ros2_node_topology.drawio",
+      "sha256": "f9b1e1cb5cf70e33fce2f8bb711b6aaade5e9019e521292bf7929396f56c6f1c",
+      "baseline_sha256": "f9b1e1cb5cf70e33fce2f8bb711b6aaade5e9019e521292bf7929396f56c6f1c",
+      "outputs": [
+        {
+          "path": "docs/internals/figures/architecture/auv_ros2_node_topology.png",
+          "sha256": "3ca5d395cbb26ca040fa735e861aad1df4417f9caf7f6bdfb8c15b4fafa6b6ab"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_ros2_node_topology.svg",
+          "sha256": "ae45bd0216a319c87dc906c1832da9df1741e89decc4349484fe31a4b2fdca6e"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_ros2_node_topology.drawio.png",
+          "sha256": "02a9070f4f766a18ad55b1efd3b10c338abc0e2beb4b391ad3af60a84c4dfd66"
+        }
+      ]
+    },
+    {
+      "path": "docs/internals/figures/architecture/auv_safety_arbiter_deployment.drawio",
+      "sha256": "15ef0239eee639cbaabb90801b19dd0a5ab146b738c91748260b9fc67b0452c2",
+      "baseline_sha256": "15ef0239eee639cbaabb90801b19dd0a5ab146b738c91748260b9fc67b0452c2",
+      "outputs": [
+        {
+          "path": "docs/internals/figures/architecture/auv_safety_arbiter_deployment.png",
+          "sha256": "3d8b20e13ebdf7a4b95afc3cb3169d983cbdbefede9b900dfebbee04b77a1893"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_safety_arbiter_deployment.svg",
+          "sha256": "aaafdf6713b681d015e22dfe04008dc9c2ad6e676944df883ddc71e1b554f8c2"
+        },
+        {
+          "path": "docs/internals/figures/architecture/auv_safety_arbiter_deployment.drawio.png",
+          "sha256": "1d3dd5a03af5d178bb4541818826d650ffa2c90233000df4fddd93ab75a81ebd"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_runtime_dataflow.drawio",
+      "sha256": "16a1e7a4ba8c9b18ea29278633b758174d4b46c8b818cc53225585cd83b1f731",
+      "baseline_sha256": "16a1e7a4ba8c9b18ea29278633b758174d4b46c8b818cc53225585cd83b1f731",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_runtime_dataflow.pdf",
+          "sha256": "c5fcef2e1cd1b10565a2dd59aa267edd806e4dbc6b46a48015a13e622138614b"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_runtime_dataflow.png",
+          "sha256": "2e7f4b885e0327abfcf80d9c2e3afb1371ab5f09628d0531ca6f8bf4172a954a"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_runtime_dataflow.svg",
+          "sha256": "b48563e5101bb59bbac685912d89da83d1edf7d94703e425f99d8c7557b25b38"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_runtime_dataflow.drawio.png",
+          "sha256": "1b95a9032c83ce7c87a3186fcfc0510d75d234345036e4bd9c46d764d361d4c3"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio",
+      "sha256": "3996316d6aeaf1905354d280a642f69bb5d54f0b4cbf0ecc0db768cdff6fe6cc",
+      "baseline_sha256": "3996316d6aeaf1905354d280a642f69bb5d54f0b4cbf0ecc0db768cdff6fe6cc",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.pdf",
+          "sha256": "841377db58e7f4747e492478ad0bba2c5bb207fbdcb240faff14ae0817194a56"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.png",
+          "sha256": "777dcd55d69602f7d93a69f1be27b30dbf3514f9b66f018349e5fefb12ceffd5"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.svg",
+          "sha256": "fe9a406619d8565740e0f67bb0dd28306a88791c0e2b5ffa90f1b8c33b7b4b14"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_autonomy_functional_loop.drawio.png",
+          "sha256": "9b567002ce40e3f8145ff2d4e5d2062decd6a8dec618b6240460ec215e3d1525"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_system_capability_map.drawio",
+      "sha256": "eabf322f7200205141bfbcc12608b64550a44f1e160ddd9bfd1908bcda792600",
+      "baseline_sha256": "d2a9fd839e951d92ceebcad38121acd009a94849cae52df5fe107b06a1c3d7ef",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_capability_map.pdf",
+          "sha256": "c49e0c3944ed0925f952b12309e8ea364acaf6d379196655572308fce2c792d1"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_capability_map.png",
+          "sha256": "475d64f3577b7caf7224d52b767f4bfd98eff30a0e6aa4bb871e7c836d730085"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_capability_map.svg",
+          "sha256": "0ece5e76de1f2c94c2eede0a15e71db0975d5309695fdf761f33b995d2bc7189"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_capability_map.drawio.png",
+          "sha256": "98adc86b0cd2a70844617784c25bae4630bb42e9bd9dcb769c6123949183e54f"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_system_subsystem_organization.drawio",
+      "sha256": "2747bf37bd48edaac821c2098a79bf7376946ac7703d8b3e68d958e066c54c6f",
+      "baseline_sha256": "2747bf37bd48edaac821c2098a79bf7376946ac7703d8b3e68d958e066c54c6f",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_subsystem_organization.pdf",
+          "sha256": "baf0e883202379ca8685c9e1ed8ca393f7b244c5258a442629417082ec18ad41"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_subsystem_organization.png",
+          "sha256": "5eee59985d92200371e3fae35301a48d331277620f55119f040ce90055b43330"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_subsystem_organization.svg",
+          "sha256": "4669a444d61d7ed31866e8086939ba0b2b7e3a7a035d1309c5d9cf9bab66b6af"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_subsystem_organization.drawio.png",
+          "sha256": "bf32794168ea6948b83c567639767e7659917834cb90d4e3e9e157b0187fed30"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio",
+      "sha256": "28245fd9520ced59cbe3b044970b0a5fd551d624e0582afb3d9853b8083d7ef7",
+      "baseline_sha256": "ddf1182da57010e4cf10d28f35480df9e53a2a7160d51dbe3dc015a36ef4cc22",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.pdf",
+          "sha256": "47e299b7044393177ace05847a395985934972f78e1b9cfbb3f332ece91897a3"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.png",
+          "sha256": "ce9ae0418a89e428b7f71de8557992560e448bc1caf0149cc687ccc782f11e16"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.svg",
+          "sha256": "2c7713ebd35089814753462bf9406f2dbc9aa46295d9921d6e074dc7b01432d2"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_system_verification_deployment_ladder.drawio.png",
+          "sha256": "4d6a39066695e4f215d84f877cb4d5862e80ca75fb54c587cb3a1039ad04141f"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio",
+      "sha256": "04cf8f535e777ca9510195be3f3597a8c358d27e2be02ad5953929ca751e2447",
+      "baseline_sha256": "a604772e5811c29d17b6508d962847e8b80a8c50f85545722ea8cb7066bac59a",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.pdf",
+          "sha256": "528a10ef1511b6d5393882615415371223f17f851fca1316529ccc294ac57e2f"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.png",
+          "sha256": "62e59af3b255cbcf90c227fd28bad80c27415b9ac4bb20437a0ef212ed319b45"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.svg",
+          "sha256": "cdda012288befe10fa6b49f99afeb303260b6a1249c596b6bb928792c066d9e2"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio.png",
+          "sha256": "6d95e9ae485dd1540ab68be45e399fa85394f241b6829b3896db7005fe4629e8"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.drawio",
+      "sha256": "3f5eb8aab899e251cd39d9e84cf611697ce9207f1d0fcd4df1a949365d8d4d9d",
+      "baseline_sha256": "3f5eb8aab899e251cd39d9e84cf611697ce9207f1d0fcd4df1a949365d8d4d9d",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.pdf",
+          "sha256": "c8ef811110ad0555272b549d98f1b362d6f7cc5d5d9c62ebbc52f8ffdeb99af3"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.png",
+          "sha256": "c63509288624d310c90cb2203bdbb22897b719c584ddab9aec94d52ad631fcab"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.svg",
+          "sha256": "b9eb09d300b6a0da3fdfdbc8cbeb58b61e436530e153786e4437e444a8781af7"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_behavior_tree_illustration.drawio.png",
+          "sha256": "221530ea3c7d81b9342ebb860dad034d7b1cbd563c6113fee4782cb4b73dd9b7"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio",
+      "sha256": "0562a552def800b94307c72b1201fd448f2ccd22a93006a7501db53f7d4ee2f1",
+      "baseline_sha256": "0562a552def800b94307c72b1201fd448f2ccd22a93006a7501db53f7d4ee2f1",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.pdf",
+          "sha256": "c53cae0316672be915ca1898600fb5a594d19473b52d1585b6ef7103f46cf3a1"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.png",
+          "sha256": "3d4f4018a613bf2967e9dfeb6ff6f613207e6803327f288579b3875af05f260b"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.svg",
+          "sha256": "8594290ae4955458f8b6da51fea6e288681a5315af5f864d5ff5e91528362e26"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_dual_brain_async_hardware.drawio.png",
+          "sha256": "4e12ba17da0be8dfb1053dfa006515e68f96b6cd1a364f2c63feeb1ee3b283ae"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.drawio",
+      "sha256": "f84fdfacb28b9b7f19fa8c30e0efbfb2d8c3b4a943dd4f158d44ad5fffefc044",
+      "baseline_sha256": "f84fdfacb28b9b7f19fa8c30e0efbfb2d8c3b4a943dd4f158d44ad5fffefc044",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.pdf",
+          "sha256": "acdcd62fc65053d7c99369bb4f2d3ad226e04645cdf27a9b9654b881f24d89cd"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.png",
+          "sha256": "ef057fda3000e11faff6c86f02b9ba4e0628cf37ec6c8d7dfe918ced71e6b9bc"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.svg",
+          "sha256": "ff38fe56c9814ea41d1a92e14f608788dcb44a6a58c01f1de84e356d8fe11402"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_emergency_transition.drawio.png",
+          "sha256": "832b3297adfd793d856b519986f092199b8faa7cbfeeb00f7abf01070bc4c3ed"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio",
+      "sha256": "2b105f1ced82376bebdde29ef4ce721ae23b5b507d8019fa80017d4136c394b3",
+      "baseline_sha256": "00dd2cdc99e44d2a58d0b1b42ed46b632a17ffe5a01f3fc726fdaff7cfea13f4",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.pdf",
+          "sha256": "19843d9af2a6e75eb46a1d5ae6d85059ae2c2f6e8725db5274cd2f38a9a10f3b"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.png",
+          "sha256": "da5745883ee789a53b62c699e0cdbb845bb267845b4fa53994b79199d9a2c95b"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.svg",
+          "sha256": "da575830976ab7806d18d418884d29ff3def01f399fee02e90bd69e87bf567af"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_five_layer_functional_architecture.drawio.png",
+          "sha256": "da5745883ee789a53b62c699e0cdbb845bb267845b4fa53994b79199d9a2c95b"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.drawio",
+      "sha256": "10e9a7b3549e078700563a8386616fe90b59dfeff80814e364218c4c510eea08",
+      "baseline_sha256": "10e9a7b3549e078700563a8386616fe90b59dfeff80814e364218c4c510eea08",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.pdf",
+          "sha256": "1e8c000520214c20c3b95e0011c75623b19e25ab299f87df9b01863809943957"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.png",
+          "sha256": "43932d6924c022827cef3ce52ad4aa292052e5cd49a91a138224dd733bbcd882"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.svg",
+          "sha256": "56239e68457024b9f7f21c55363a851065f4eb6ffa93b1bbd72326ddbef50136"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_lifecycle_flow.drawio.png",
+          "sha256": "a53da0117b5194aba05d68c9afd474203891ad007011c9d7cf4ff52624bf6c57"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.drawio",
+      "sha256": "65c79be5c31201544bdc1afa409c4fedee795f9dcf3203efe9f49ab9cce4ebc5",
+      "baseline_sha256": "65c79be5c31201544bdc1afa409c4fedee795f9dcf3203efe9f49ab9cce4ebc5",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.pdf",
+          "sha256": "e440cd4513971ffd6f9071e5082d18d1ba41894c733109262e171b73ccc20e8a"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.png",
+          "sha256": "9f40604cedb13fc700590a912a3a1e145c034f26bc62d7552ca44e27b806ba5d"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.svg",
+          "sha256": "806c0176c61ecfc1c9567d8ed006144dda9bd1a43c2e2b85780be2929bbc6bee"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_mission_state_machine.drawio.png",
+          "sha256": "faf487d602d5212d1325e13f71e92096157c8ff599baea2234ff409eefde0fb8"
+        }
+      ]
+    },
+    {
+      "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio",
+      "sha256": "97e88795e0ea06afc9f1af5c2f311cf057adac72e181b58b89328aa79c4738bb",
+      "baseline_sha256": "74383b377fcf78d70e6c8898748d4da27277407a1f26255086e6b801c9806f0b",
+      "outputs": [
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.pdf",
+          "sha256": "7b0bbb434c0a6752bdc341449a3edbaa1975baf6d252fcb86505ab3e1fd09aec"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.png",
+          "sha256": "3cf42acdd8bf520e11b44b54d153702888066d79f59242ef7a3a5d47bd4016cb"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.svg",
+          "sha256": "3a21faa224f4ea82701970ff270ccb6254b8d74987d9560efc84076afbebe81c"
+        },
+        {
+          "path": "docs/thesis/figures/architecture/auv_v2_uncertainty_highway.drawio.png",
+          "sha256": "7a6bd8394833c81a53294f2f359a86effd26c3882f0fc08bcc16bb829f2b4f70"
+        }
+      ]
+    }
+  ]
+}

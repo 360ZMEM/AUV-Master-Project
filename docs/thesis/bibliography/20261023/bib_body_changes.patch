@@ -1,0 +1,445 @@
+--- a/thuthesis/ref/auv-references.bib
++++ b/thuthesis/ref/auv-references.bib
+@@ -3,6 +3,8 @@
+ % ---------------------------------------------------------------------------
+ %  编码       ：UTF-8（务必以 UTF-8 保存/打开，勿转 GBK）
+ %  真实性审计 ：2026-10-18 字段级证据与残余例外见 docs/thesis/bibliography/README.md（仓库根目录相对路径）
++% 2026-10-23 收口：删除 tcsgpc_cable、geomatching2022sbp；增加 tcin100_2026。
++%              全部正文及中期报告旧键需按随附 Codex 指令替换，再重编译。
+ %              下列历史“已验证”注释不作为现行放行依据；以可重跑审计结果为准。
+ %              不明数字定位符已省略，有明确 article-number / paper ID 证据者使用 eid；不推测页码。
+ %  目标引擎   ：xelatex + biblatex + biblatex-gb7714-2015 + biber
+@@ -13,7 +15,7 @@
+ %  索引对照   ：见同目录 00_引用点总索引.md（C*/D*/E*/G* 编号）及各主题 .md
+ %  provenance ：每条上方注释给出 [索引号] 引用点 章节 + 来源核验状态
+ %  中文条目   ：已加 langid={chinese}，使 gb7714 正确切换中英文著录格式
+-%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 7 条（官网核实，DOI 非 Crossref 体系）｜C 区 22 条（政策/报告/标准/网页/产品资料），合计 99 条
++%  统计       ：A 区 70 条（Crossref/DataCite 已验证）｜B 区 7 条（官网核实，DOI 非 Crossref 体系）｜C 区 21 条（政策/报告/标准/网页/产品资料），合计 98 条
+ %              └ A 区含"展望/未来趋势"子区 F1–F8（8 条，第 6 章结论与展望引用）
+ %              └ A.5：01 章现状综述正文编号 [1]–[36]（[4] 归 C 区）+ A6 教材 + A10 DLIA
+ %  维护       ：谢冠文 xgw24@mails.tsinghua.edu.cn  2026-08
+@@ -305,7 +307,7 @@
+ @book{barshalom2001estimation,
+   title     = {Estimation with Applications to Tracking and Navigation: Theory, Algorithms and Software},
+   author    = {Bar-Shalom, Yaakov and Li, X. Rong and Kirubarajan, Thiagalingam},
+-  year      = {2001},
++  year      = {2002},
+   publisher = {John Wiley \& Sons},
+   address   = {New York},
+   doi       = {10.1002/0471221279},
+@@ -1053,31 +1055,33 @@
+ 
+ % [G1-4] §1.1.1 — “十四五”能源高质量发展官方发布会（海上风电新增装机）｜国新办一手实录
+ @online{scio2025energyachievement,
+-  title    = {介绍“十四五”时期能源高质量发展成就},
++  title    = {高质量完成“十四五”规划系列主题新闻发布会|介绍“十四五”时期能源高质量发展成就},
+   author   = {{国务院新闻办公室}},
+   year     = {2025},
+-  url      = {http://www.scio.gov.cn/live/2025/37113/},
++  url      = {https://www.nea.gov.cn/20250826/81a62ca2aedb4f18ac107efd85c4b650/c.html},
+   urldate  = {2026-08-09},
+   langid   = {chinese},
+   % audit-note: “高质量完成‘十四五’规划”系列主题新闻发布会实录；2025-08-26 [EB/OL]
+ }
+ 
+ % [G1-5] §1.1.1 — 全球海上风电装机与市场展望（行业报告）｜GWEC 官方
+-@online{gwec2025offshore,
++@report{gwec2025offshore,
+   title    = {Global Offshore Wind Report 2025},
+   author   = {{Global Wind Energy Council}},
++  institution = {Global Wind Energy Council},
+   year     = {2025},
+-  url      = {https://www.gwec.net/news/offshore-wind-installed-capacity-reaches-83-gw-as-new-report-finds-2024-a-record-year-for-construction-and-auctions},
++  url      = {https://www.gwec.net/reports/globaloffshorewindreport/2025},
+   urldate  = {2026-08-09},
+-  % audit-note: GWEC 官方报告发布说明；报告统计 2024 年全球海上风电累计装机 83 GW [R/OL]
++  % audit-note: GWEC 2025 版报告专属页面；2024 年全球海上风电累计装机约 83 GW [R/OL]
+ }
+ 
+ % [G3-1] §1.1.3 — 海上风电运维中的机器人与自主系统（行业报告）｜ORE Catapult/RenewableUK 官方
+-@online{orecatapult2025ras,
+-  title    = {Robotics \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind},
+-  author   = {{Offshore Renewable Energy Catapult and RenewableUK}},
++@report{orecatapult2025ras,
++  title    = {Robotic \& Autonomous Systems for Operations and Maintenance in UK Offshore Wind},
++  author   = {Hatchett, Paul and Esson, Andrew and Holt, Charlotte},
++  institution = {Offshore Renewable Energy Catapult},
+   year     = {2025},
+-  url      = {https://ore.catapult.org.uk/resource-hub/analysis-reports/robotics-autonomous-systems-for-operations-and-maintenance-in-uk-offshore-wind},
++  url      = {https://cms.ore.catapult.org.uk/wp-content/uploads/2025/07/Catapult-Foresighting-RAS-Report-Feb-25-v8-SPREADS.pdf},
+   urldate  = {2026-08-09},
+   % audit-note: 行业分析报告；2025-07-01 发布，讨论 RAS 对海上风电运维成本与安全性的作用 [R/OL]
+ }
+@@ -1095,32 +1099,32 @@
+ 
+ % [G1-1] A1 §1.1.1 — 深远海风电国家战略（一手，中文）
+ @online{nea2026shenlan,
+-  title    = {海上风电转向"深蓝"},
+-  author   = {{国家能源局}},
++  title    = {海上风电转向“深蓝”},
++  author   = {王轶辰},
+   year     = {2026},
+-  url      = {http://www.nea.gov.cn/},
++  url      = {https://www.nea.gov.cn/20260710/2706be51a7f1446a90658328d1c245d4/c.html},
+   urldate  = {2026-08-06},
+   langid   = {chinese},
+-  % audit-note: 2026-07-10 发布；待核对正式规划文件名（如"十五五"可再生能源发展规划）与发布号
++  % audit-note: 经济日报记者王轶辰文章，2026-07-10 国家能源局转载；非正式规划文件 [EB/OL]
+ }
+ 
+ % [G1-2] A1 §1.1.1 — 深远海风电装机进展（一手，中文）
+ @online{nea2025shenlan,
+-  title    = {海上风电加速挺进深蓝},
+-  author   = {{国家能源局}},
+-  year     = {2025},
+-  url      = {http://www.nea.gov.cn/},
+-  urldate  = {2026-08-06},
+-  langid   = {chinese},
+-  % audit-note: 2025-11-21 发布；截至 2025-09 累计装机 4461 万千瓦
++  title   = {“链”上聚力 融合创新 海上风电加速挺进深蓝},
++  author  = {王璐},
++  date    = {2025-11-17},
++  url     = {https://www.news.cn/fortune/20251117/4109cddb61694778a08d633b48fed45b/c.html},
++  urldate = {2026-10-23},
++  langid  = {chinese},
++  % audit-note: 《经济参考报》记者王璐原稿，经新华网发布；2025-09 海上风电累计装机 4461 万千瓦。
+ }
+ 
+ % [G1-3] A1 §1.1.1 — 中国海上风电扩容（英文一手，对外可核对副本）
+ @online{scio2026offshore,
+-  title    = {China scales up offshore wind capacity},
+-  author   = {{State Council Information Office}},
++  title    = {China scales up offshore wind capacity to accelerate low-carbon transition},
++  author   = {{Xinhua}},
+   year     = {2026},
+-  url      = {http://english.scio.gov.cn/},
++  url      = {https://english.scio.gov.cn/in-depth/2026-04/23/content_118458638.html},
+   urldate  = {2026-08-06},
+   % audit-note: 2026-04-23 发布；15th Five-Year Plan (2026–2030) 目标 2030 年海上风电累计容量超 1 亿 kW
+ }
+@@ -1131,45 +1135,42 @@
+   title    = {海底电力电缆运行规程: DL/T 1278—2025},
+   author   = {{国家能源局}},
+   year     = {2025},
+-  url      = {http://www.nea.gov.cn/},
++  publisher = {中国电力出版社},
++  url      = {https://www.nea.gov.cn/20251022/965401f0cf034cb7a070e3698edafc49/c.html},
+   urldate  = {2026-08-06},
+   langid   = {chinese},
+-  % audit-note: 电力行业标准 [S]；待核对正式发布日期与出版社（中国电力出版社）
+-}
+-
+-% [41] §2.2/§2.5/§3.2 — TMR8637 三轴模组及其 TMR8607 单轴敏感单元规格
+-%      型号边界：TMR8637 为三轴模组；详细电气参数表对应 TMR8607 单轴敏感单元
++  % audit-note: 国家能源局公告2025年第5号目录第130项；2025-09-28批准，2026-03-28实施，中国电力出版社 [S]
++}
++
++% [41] §2.2/§2.5/§3.2 — 多维科技官方 TMR8607/TMR8637 规格书 Version 1.0，©2024
++%      型号边界：TMR8637 三轴模组；第4页详细性能表对应 TMR8607 单轴敏感单元
+ @manual{multidimension2024tmr8607,
+-  title        = {TMR8607 高精度、低噪声线性磁传感器产品规格书（含 TMR8637 三轴模组）},
++  title        = {TMR8607 高精度、低噪声线性磁传感器},
+   author       = {{江苏多维科技有限公司}},
+-  organization = {江苏多维科技有限公司},
+   year         = {2024},
+   edition      = {Version 1.0},
+-  url          = {https://www.dowaytech.com/},
+-  urldate      = {2026-08-08},
++  url          = {https://www.dowaytech.com/TMR8607-TMR8637-TMR-Low-Noise-Linear-Sensor.html},
++  urldate      = {2026-10-23},
+   langid       = {chinese},
+-  % audit-note: TMR8637 模组参数与 TMR8607 单轴敏感单元详细电气参数需分层引用
+-}
+-
+-% [38] §1.2.2 — 海底管道及海底电缆检测技术规范（团体标准，中文）
+-%      ⚠ 待核对：完整标准号（T/CSGPC ×××—××××）与发布年
+-@online{tcsgpc_cable,
+-  title    = {海底管道及海底电缆检测技术规范: T/CSGPC},
+-  author   = {{中国海洋工程咨询协会}},
+-  year     = {2025},
+-  langid   = {chinese},
+-  % audit-note: 团体标准 [S]；待核对完整标准号与发布日期
+-}
+-
+-% [4] §1.2.1 — 浅地层剖面系统高分辨率地震数据集（行业网页）
+-@online{geomatching2022sbp,
+-  title    = {Sub-bottom profiling system helps produce high-resolution seismic datasets},
+-  author   = {{Geo-matching}},
+-  year     = {2022},
+-  url      = {https://geo-matching.com/articles/sub-bottom-profiling-system-helps-produce-high-resolution-seismic-datasets},
+-  urldate  = {2026-07-28},
+-  % audit-note: 2022-01-25 发布 [EB/OL]
+-}
++  % audit-note: 本地官方 9 页 PDF 封面 Version 1.0、末页 ©2024；PDF 创建于 2024-11-12。
++  % audit-note: 同一 PDF 第 8 页列 TMR8637 三轴模组；第 4 页详细噪声与电气参数针对 TMR8607 单轴敏感单元。
++  % audit-note: url 为厂家产品页面，不是 Version 1.0 PDF 的版本固定直链；原始 PDF 应在项目资料内归档。
++}
++
++% [38] §1.2.2 — T/CIN 100—2026 正式团体标准，取代未发布的 T/CSGPC 征求意见稿
++@standard{tcin100_2026,
++  title     = {海上风电场通航安全技术参数测量要求: T/CIN 100—2026},
++  author    = {{中国航海学会}},
++  year      = {2026},
++  url       = {https://www.cinnet.cn/zh-hans/notes/10383-guan-yu-fa-bu-wen-shi-qi-ti-chan-pin-tan-zu-ji-liang-hua-fang-fa-yu-yao-qiu-gang-kou-qi-chong-ji-jie-deng-ba-xiang-tuan-ti-biao-zhun-de-gong-gao.htm},
++  urldate   = {2026-10-23},
++  langid    = {chinese},
++  % audit-note: 官方发布公告：2026-01-27；2026-04-26实施；本条取代未发布的 T/CSGPC 征求意见稿。
++  % audit-note: 标准文本 7.2 埋深误差限值为 ±0.4 m；附录 B.5 磁力仪灵敏度优于 0.05 nT。
++  % audit-note: 论文的 0.2 m 为更严格的自主研究目标，不得写成标准要求；DL/T 1278—2025 适用于交流海缆。
++}
++
++
+ 
+ % [39] A2 §1.1.2 — 海上风电 80% 保险索赔与海缆故障相关（行业网页，损失锚点）
+ @online{dnv2024cablefailure,
+@@ -1182,33 +1183,34 @@
+ 
+ % [G4-1] §1.2.4 — HydroPACT 350 有源音频海缆跟踪与埋深测量产品规格｜Teledyne Marine 官方
+ @manual{teledyne2021hydropact350,
+-  title        = {HydroPACT 350 Subsea Cable Tracking System: Product Datasheet},
+-  author       = {{Teledyne Marine}},
+-  organization = {Teledyne Marine},
+-  year         = {2021},
+-  url          = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf},
+-  urldate      = {2026-08-09},
+-  % audit-note: 产品规格书；给出探测范围、测量精度、线圈阵列及耐压等级 [EB/OL]
++  title   = {{HydroPACT} 350 Subsea Cable Tracking System: Product Datasheet},
++  author  = {{Teledyne Marine}},
++  url     = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/TSS%20HydroPACT%20350%20product%20leaflet.pdf},
++  urldate = {2026-10-23},
++  % audit-note: 现存官方产品 PDF 末页标 ©2026 Teledyne UK Ltd.，没有独立确认的发布年；故不将版权年臆作出版年。
++  % audit-note: 标称精度及探测范围仅对厂商给定测试条件成立；历史 citekey 中的 2021 只为兼容源码。
+ }
+ 
+ % [G4-2] §1.2.4 — HydroPACT 350/440/660E/Dualtrack 产品谱系｜Teledyne Marine 官方
+ @online{teledyne2026hydropactline,
+-  title    = {Subsea Pipe and Cable Detection Systems},
+-  author   = {{Teledyne Marine}},
+-  year     = {2026},
+-  url      = {https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/},
+-  urldate  = {2026-08-09},
+-  % audit-note: HydroPACT 产品线官方页面；说明 350 有源音频、440 脉冲感应、660E 小型化及 Dualtrack 组合方案 [EB/OL]
++  title   = {Pipe \& Cable Detection Systems},
++  author  = {{Teledyne Marine}},
++  url     = {https://www.teledynemarine.com/products/product-line/pipe-and-cable-detection-systems/},
++  urldate = {2026-10-23},
++  % audit-note: 持续维护的官方产品线网页；没有独立证据确定发布年，故省略 year；citekey 2026 仅用于向后兼容。
+ }
+ 
+ % [G4-3] §1.2.4 — HydroPACT 350 琼州海峡 500 kV 带电海缆路由与埋深试验｜Teledyne Marine 官方案例
+-@online{teledyne2017hainan350,
+-  title    = {HydroPACT 350 Cable Tracker Works on Fully Operational Live Sub-Sea Power Cables},
+-  author   = {{Teledyne TSS} and {China ORE}},
+-  year     = {2017},
+-  url      = {https://www.teledynemarine.com/en-us/products/SiteAssets/TSS/HydroPACT%20350%20-%20China%20ORE%20powered%20cable%20root%20survey.pdf},
+-  urldate  = {2026-08-09},
+-  % audit-note: 产品应用案例；琼州海峡福康线 500 kV 带电海缆路由和埋深测量 [EB/OL]
++@report{teledyne2017hainan350,
++  title       = {Submarine Root Survey of Powered Cables Supplying Former ‘Power Isolated Island’},
++  author      = {{Teledyne TSS}},
++  institution = {{Teledyne Marine}},
++  year        = {2017},
++  month       = {10},
++  url         = {https://www.teledynemarine.com/en-us/news/Documents/China%20ORE-350%20powered%20cable%20root%20survey%202017.pdf},
++  urldate     = {2026-10-23},
++  % audit-note: 原始四页 Product Case Study 第一页标明 October 2017；China ORE 等为案例参与单位，不等于论文作者。
++  % audit-note: 2017 海南琼州海峡带电海缆案例为厂商报告，不能等同第三方精度基准。
+ }
+ 
+ % [G4-4] §1.2.4 — SMARTRAK 被动磁/有源 AC/有源 DC 多模式管缆跟踪工具｜Innovatum 官方
+@@ -1224,7 +1226,7 @@
+ % [G4-5] §1.2.4 — 国产 T180 有源电磁海缆路由、埋深和故障测量系统｜海鹰企业官方
+ @online{haiying_t180,
+   title    = {海鹰 T180 海缆探测系统},
+-  author   = {{无锡海鹰电子医疗系统有限公司}},
++  author   = {{无锡市海鹰加科海洋技术有限责任公司}},
+   url      = {https://haiyingmarine.cn/index.php?a=shows&catid=141&id=304},
+   urldate  = {2026-08-09},
+   langid   = {chinese},
+@@ -1234,9 +1236,9 @@
+ % [G4-6] §1.2.4 — 国内海缆专用无缆自主探测巡检样机｜华中科技大学深圳研究院
+ @online{hust2023cableauv,
+   title    = {成果推介：海缆智能探测巡检水下机器人},
+-  author   = {{华中科技大学深圳研究院}},
++  author   = {{深圳华中科技大学研究院}},
+   year     = {2023},
+-  url      = {http://shenzhen.hust.edu.cn/info/1026/1834.htm},
++  url      = {https://shenzhen.hust.edu.cn/info/1026/1834.htm},
+   urldate  = {2026-08-09},
+   langid   = {chinese},
+   % audit-note: 飞行式长艏翼无缆自主样机；搭载双三轴正交电磁探测设备 [EB/OL]
+@@ -1257,19 +1259,22 @@
+   title    = {{HUGIN}: Safeguarding Our Critical Undersea Infrastructure},
+   author   = {{Kongsberg Discovery}},
+   year     = {2025},
+-  url      = {https://www.kongsberg.com/discovery/news/our-stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/},
++  url      = {https://www.kongsberg.com/news/stories/2025/10/hugin-safeguarding-our-critical-undersea-infrastructure/},
+   urldate  = {2026-08-09},
+   % audit-note: HUGIN 系列 AUV 官方说明；包含海底电缆/管道自主跟踪、长航程和多传感载荷能力 [EB/OL]
+ }
+ 
+-% [G4-9] §1.2.4 — DIVE-LD 岸基布放海缆全自主巡检示范｜美国海上风电研发联盟
+-@online{nowrdc2024diveld,
+-  title    = {Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV},
+-  author   = {{National Offshore Wind Research and Development Consortium}},
+-  year     = {2024},
+-  url      = {https://nationaloffshorewind.org/projects/fully-autonomous-subsea-asset-inspection-by-a-shore-launched-auv/},
+-  urldate  = {2026-08-09},
+-  % audit-note: Anduril DIVE-LD 在 Point Judith--Block Island 海缆开展侧扫声呐、测深与异常复核示范 [EB/OL]
++% [G4-9] §1.2.4 — DIVE-LD 海缆巡检 Project 129 最终报告｜Anduril / NOWRDC
++@report{nowrdc2024diveld,
++  title       = {Project 129: Fully Autonomous Subsea Asset Inspection by a Shore-Launched AUV: Final Report},
++  author      = {{Anduril Industries, Inc.}},
++  institution = {{National Offshore Wind Research and Development Consortium}},
++  year        = {2024},
++  month       = {4},
++  url         = {https://nationaloffshorewind.org/wp-content/uploads/D5.2-Final-Report.pdf},
++  urldate     = {2026-10-23},
++  % audit-note: PDF 封面 Prepared by Anduril Industries, Inc.；列 Mary Coyne、Eden Desta；项目编号 NOWRDC #129。
++  % audit-note: 报告含实际完成结果及限制；不得将岸边人工操作部分描述为零人工干预。
+ }
+ 
+ % ---------------------------------------------------------------------------
+--- a/thuthesis/data/auv-chap01.tex
++++ b/thuthesis/data/auv-chap01.tex
+@@ -48,7 +48,7 @@
+ 
+ 正因为存在这些局限，声学探测虽然是必不可少的``看得到几何形状''的工具，但单独使用难以应对掩埋、屏蔽、底质突变等复杂工况。这些局限本身，就是本文后续引入``声磁多源融合''的最直接动机：当声学信号不稳定时，系统需要另一个互补的物理通道来维持对电缆位置和状态的估计能力。
+ 
+-侧扫声呐用于 AUV 海缆/管线自主跟踪已有系统性研究\cite{bagnitsky2011sidescan,feng2023automatic}，多平台声学建图也被用于海缆路由勘测\cite{jung2022multimodal}；针对掩埋目标，浅地层剖面仪凭借低频穿透在管线与海缆探测中发挥作用\cite{geomatching2022sbp,zheng2021zeroshot}，三维声学成像更被用于完全掩埋风电海缆的探测\cite{ha2022buried}。
++侧扫声呐用于 AUV 海缆/管线自主跟踪已有系统性研究\cite{bagnitsky2011sidescan,feng2023automatic}，多平台声学建图也被用于海缆路由勘测\cite{jung2022multimodal}。针对掩埋目标，浅地层剖面仪（Sub-Bottom Profiler，SBP）利用声波对海底沉积层的穿透能力，已被用于海底电缆埋深调查与掩埋管线目标检测\cite{wunderlich2016burial,zheng2021zeroshot}。三维声学成像更被用于完全掩埋风电海缆的探测\cite{ha2022buried}。
+ 
+ \subsection{电磁感应探测技术}\label{sec:ch01-1-2-2}
+ 
+@@ -58,11 +58,11 @@
+ 
+ 然而，三相交流海缆引入了一个明显的难点。三相电流的相位差为 120°，使得三相电流在某些方向上的磁场会相互抵消，从而显著降低有效漏磁信号的强度；铠装层（金属护套）会通过涡流屏蔽进一步衰减外部可测磁场；导线的螺旋绞合则使漏磁特征在空间上呈现周期性而非单调变化。这三种效应叠加，意味着即使在电缆正下方，磁场强度也可能比单芯直流电缆弱出一两个数量级。这就要求完整测量链具备 0.05 nT 量级的系统磁异常分辨能力，并配套更精细的标定流程。
+ 
+-电力行业对此提出了明确要求。例如《DL/T 1278-2025 海底电力电缆运行规程》对磁探测灵敏度、埋深反演误差和路由精度都有具体条款，本项目以 0.05 nT 级系统磁异常分辨能力和 0.2 m 级埋深反演误差为设计目标。这些数值不是任意选定的，而是来源于行业规程对探测精度的硬性约束；前者需由传感器、采集链和窄带处理联合验证，而不是单个器件的手册指标。
++在指标设置上，需要区分运行维护规程、测量标准的限值和本文自主设定的研究目标。本文所用的 0.05 nT 级系统磁异常分辨目标需由传感器、采集链和窄带处理联合验证，不能由单个器件的手册指标推定；0.2 m 级埋深反演误差也是待验证的研究目标，具体标准参照与适用边界如下所述。
+ 
+ 总结来说，电磁感应方法的优势在于``看得到电流''，劣势在于``信号弱、易受干扰、三相抵消''，而其与声学方法的互补特性，正是后续多源融合方案得以成立的物理基础。
+ 
+-在磁探测传感与算法层面，已有工作涵盖高灵敏度隧道磁阻（tunnel magnetoresistance, TMR）传感器的结构优化\cite{bi2025tmr}、AUV 磁导引海缆跟踪\cite{xiang2016subsea,zhang2023adaptive}、基于标量磁强计的姿态无关路由跟踪\cite{li2024attitude}，以及水下矢量磁数据处理\cite{seidel2023uxo,oehler2024processing}与地表磁场探测输电电缆\cite{sun2014underground}等。近期研究又分别从弱磁交流建模\cite{su2025precise}和近岸工频磁特征航磁定位\cite{sun2026magnetic}两个方向推进了运行海缆的路由识别。本项目的 0.05 nT 灵敏度与 0.2 m 埋深误差指标则以《DL/T 1278---2025 海底电力电缆运行规程》\cite{dlt1278_2025}和《海底管道及海底电缆检测技术规范》\cite{tcsgpc_cable}为直接依据，三相海缆漏磁的定量分析可进一步参照三芯海缆损耗解析模型\cite{hatlo2015accurate}。
++在磁探测传感与算法层面，已有工作涵盖高灵敏度隧道磁阻（tunnel magnetoresistance, TMR）传感器的结构优化\cite{bi2025tmr}、AUV 磁导引海缆跟踪\cite{xiang2016subsea,zhang2023adaptive}、基于标量磁强计的姿态无关路由跟踪\cite{li2024attitude}，以及水下矢量磁数据处理\cite{seidel2023uxo,oehler2024processing}与地表磁场探测输电电缆\cite{sun2014underground}等。近期研究又分别从弱磁交流建模\cite{su2025precise}和近岸工频磁特征航磁定位\cite{sun2026magnetic}两个方向推进了运行海缆的路由识别。在技术指标设置方面，本文参考《DL/T 1278---2025 海底电力电缆运行规程》所述运行维护要求，其适用范围为 10 kV 及以上交流海底电力电缆\cite{dlt1278_2025}，并结合《T/CIN 100---2026 海上风电场通航安全技术参数测量要求》中海缆探测设备与测量误差的规定\cite{tcin100_2026}。后者在附录 B.5 提出磁力仪灵敏度应优于 0.05 nT，第 7.2 条提出海缆埋深测量极限误差不超过 $\pm0.4~\mathrm{m}$。本文以 0.05 nT 作为磁测量灵敏度的设计参考，并将 0.2 m 设定为更严格的自主埋深估计研究目标，而非标准的规定限值或已通过实物验收的性能。三相海缆漏磁的定量分析可进一步参照三芯海缆损耗解析模型\cite{hatlo2015accurate}。
+ 
+ \subsection{多源感知融合技术}\label{sec:ch01-1-2-3}
+ 
+@@ -80,9 +80,9 @@
+ 
+ 在专用探测载荷方面，Teledyne TSS 的产品谱系体现了从单一电缆跟踪向多模式管缆探测的发展。HydroPACT 350 面向带有源音频信号的海缆，通过两组三轴线圈给出相对位置、埋深、载体偏航角和前视信息；其产品规格给出的低噪声条件探测范围为垂向 10 m、以线圈阵列为中心的水平总宽度 20 m，测量精度取 5 cm 与斜距 5\% 中的较大值\cite{teledyne2021hydropact350}。HydroPACT 440 采用脉冲感应探测导电目标，660E 进一步面向小型观察级 ROV 减小尺寸和载荷重量，Dualtrack 则把 350 与 440 组合以覆盖有源音频和脉冲感应两类工况\cite{teledyne2026hydropactline}。Innovatum SMARTRAK 则在单套设备中集成被动磁、有源交流和有源直流三种模式，可安装于 ROV、AUV、拖体或水面船\cite{innovatum_smartrak}。这些系统说明，商用探测仪的核心竞争力首先是稳定输出可测量的横向偏移和埋深，而其自主程度取决于搭载平台是否把观测接入在线制导闭环。
+ 
+-国内装备已形成专用探测仪和自主载体两条并行路线。海鹰 T180 采用有源电磁原理，提供 25 Hz、50 Hz 和 133 Hz 工作频率以及路由、埋深和故障测量模式，其公开指标包括 200 m 最大使用水深、路由误差为水深的 \(\pm 5\%\)、埋深误差为埋深的 \(\pm 10\%\)\cite{haiying_t180}。在工程应用侧，HydroPACT 350 已在琼州海峡福康线 500 kV 带电海缆上完成路由与埋深试验，说明运行海缆可利用自身工频特征开展不停电测量，但现场仍需处理风机等外部工频干扰\cite{teledyne2017hainan350}。在自主平台侧，华中科技大学深圳研究院公开的飞行式长艏翼样机面向海缆配置双三轴正交电磁探测设备，标称深度等级为 300 m\cite{hust2023cableauv}；精灵 P200 则以模块化 AUV 集成导航、多波束和成像声呐，公开指标为 300 m 潜深、3 kn 下续航 12 h，并明确包含海底电缆巡检应用\cite{fsea_p200}。这些资料反映出国产装备已从``可搭载探测载荷''推进到``面向海缆场景的专用样机''，但公开的长期海试里程、复杂底质检出率和自主故障处置证据仍有限。
+-
+-国外自主化路线则从通用 AUV 测绘逐步走向资产级跟踪与岸基长航程作业。REMUS 系列早期工作奠定了小型 AUV 模块化任务载荷与自主航行的工程基础\cite{purcell2000remus}；HUGIN 系列进一步把合成孔径声呐、多波束和自主管缆跟踪集成到长航程平台，形成从近海到 6000 m 级深水的多型号体系\cite{kongsberg2025hugin}。面向海上风电海缆，Anduril DIVE-LD 项目已开展岸基布放的全自主示范，任务包括 Point Judith-\/-Block Island 海缆路由的侧扫声呐与测深广域扫描，以及对冲刷防护和异常目标的近距离复核\cite{nowrdc2024diveld}。这条路线的实质不是简单取消脐带缆，而是把覆盖路径规划\cite{choset2001coverage}、目标重捕获、质量控制和异常复核一并下沉到载体侧。
++国内装备已形成专用探测仪和自主载体两条并行路线。海鹰 T180 采用有源电磁原理，提供 25 Hz、50 Hz 和 133 Hz 工作频率以及路由、埋深和故障测量模式，其公开指标包括 200 m 最大使用水深、路由误差为水深的 \(\pm 5\%\)、埋深误差为埋深的 \(\pm 10\%\)\cite{haiying_t180}。在工程应用侧，厂商案例报告记载 HydroPACT 350 在琼州海峡福康线 500 kV 带电海缆上的路由与埋深试验，展示了利用运行海缆自身工频特征开展不停电测量的应用，但现场仍需处理风机等外部工频干扰，该案例不作为独立第三方精度基准\cite{teledyne2017hainan350}。在自主平台侧，华中科技大学深圳研究院公开的飞行式长艏翼样机面向海缆配置双三轴正交电磁探测设备，标称深度等级为 300 m\cite{hust2023cableauv}；精灵 P200 则以模块化 AUV 集成导航、多波束和成像声呐，公开指标为 300 m 潜深、3 kn 下续航 12 h，并明确包含海底电缆巡检应用\cite{fsea_p200}。这些资料反映出国产装备已从``可搭载探测载荷''推进到``面向海缆场景的专用样机''，但公开的长期海试里程、复杂底质检出率和自主故障处置证据仍有限。
++
++国外自主化路线则从通用 AUV 测绘逐步走向资产级跟踪与岸基长航程作业。REMUS 系列早期工作奠定了小型 AUV 模块化任务载荷与自主航行的工程基础\cite{purcell2000remus}；HUGIN 系列进一步把合成孔径声呐、多波束和自主管缆跟踪集成到长航程平台，形成从近海到 6000 m 级深水的多型号体系\cite{kongsberg2025hugin}。面向海上风电海缆，Anduril DIVE-LD 项目已开展岸基布放的海缆自主巡检示范，任务包括 Point Judith-\/-Block Island 海缆路由的侧扫声呐与测深广域扫描，以及对冲刷防护和异常目标的近距离复核；项目最终报告同时记载岸边人工操作环节，不能将该示范理解为全流程零人工干预的验证\cite{nowrdc2024diveld}。这条路线的实质不是简单取消脐带缆，而是把覆盖路径规划\cite{choset2001coverage}、目标重捕获、质量控制和异常复核一并下沉到载体侧。
+ 
+ 图~\ref{fig:ch01-prior-equipment} 从实物角度对照了上述装备演进的三个代表：专用有源电磁探测载荷通过多组感应线圈直接测量海缆漏磁（图~\ref{fig:ch01-hydropact350}、图~\ref{fig:ch01-t180}），自主载体则把此类载荷与导航、声呐一并集成到可长航程巡检的 AUV 平台上（图~\ref{fig:ch01-p200}）。这也说明本文关注的重点不在复刻单一载荷，而在把观测接入可自主决策的巡检闭环。
+ 
+--- a/thuthesis/data/auv-chap02.tex
++++ b/thuthesis/data/auv-chap02.tex
+@@ -10,7 +10,7 @@
+ 
+ \subsection{探测精度约束}\label{sec:ch02-2-1-1}
+ 
+-探测精度的来源不应是设计者的主观选择，而应来自电力行业对海缆运行的规程要求。行业标准《DL/T 1278-2025 海底电力电缆运行规程》\cite{dlt1278_2025}对磁探测灵敏度、埋深反演误差、路由水平精度等关键指标都有明确条款。本项目据此把 0.05 nT 级系统磁异常分辨目标和 0.2 m 级埋深反演误差作为最关键的两项硬性指标，其他指标（如近底安全距离 3--5 m）则由 AUV 作业本身的物理约束给出。
++探测精度的设置需要结合运行维护需求与测量标准，并明确自主研究目标的边界。《DL/T 1278---2025 海底电力电缆运行规程》适用于 10 kV 及以上交流海底电力电缆，本文以其作为运行维护背景\cite{dlt1278_2025}；测量指标参考正式团体标准《T/CIN 100---2026 海上风电场通航安全技术参数测量要求》\cite{tcin100_2026}，其附录 B.5 要求磁力仪灵敏度优于 0.05 nT，第 7.2 条规定海缆埋深测量极限误差不超过 $\pm0.4~\mathrm{m}$。本文据此设置 0.05 nT 级系统磁异常分辨目标，并将 0.2 m 级埋深反演误差作为更严格的自主研究目标，而非标准规定限值。其他指标（如近底安全距离 3--5 m）由 AUV 作业本身的物理约束给出。
+ 
+ \begin{longtable}[]{@{}
+   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+@@ -28,12 +28,12 @@
+ \endhead
+ \bottomrule\noalign{}
+ \endlastfoot
+-系统磁异常分辨目标 & 0.05 nT & DL/T 1278---2025 附录 D & 模组本底噪声已核验；完整测量链待验证 \\
+-埋深反演误差 & 0.2 m & 行业要求 & 待硬件实验验证 \\
++系统磁异常分辨目标 & 0.05 nT & T/CIN 100---2026 附录 B.5 参照 & 模组本底噪声已核验；完整测量链待验证 \\
++埋深反演误差 & 0.2 m & 自主研究目标 & 待硬件实验验证 \\
+ 近底安全距离 & 3--5 m & AUV 作业约束 & 已在 terrain benchmark 中验证 \\
+ \end{longtable}
+ 
+-为什么把 0.05 nT 作为系统级目标？这并不是凭空选取，而是由``三相抵消 + 铠装屏蔽 + 螺旋绞合''这三重物理削弱共同决定的。需要特别区分的是，系统级分辨目标不等于传感器手册中的单频噪声谱密度。本文选用的 TMR8637 三轴模组在 1 Hz 处标称磁场噪声谱密度为 150--300 pT/\(\sqrt{\text{Hz}}\)\cite{multidimension2024tmr8607}；随实物模组提供的编号 6\# 三轴测试报告进一步给出各轴 1 Hz 噪声均为 200 pT/\(\sqrt{\text{Hz}}\)，并显示 50 Hz 附近三轴曲线约为 20--30 pT/\(\sqrt{\text{Hz}}\)。后者表明模组本体在目标工频附近具备窄带检测所需的噪声量级，但 0.05 nT 仍是待完整测量链验证的系统指标，不能由模组曲线或 ADC 位数单独宣称满足。相应的信噪比（signal-to-noise ratio, SNR）还必须纳入 SK2301 输入噪声、隔离供电、地环路与数字锁相处理的等效噪声带宽。同理，0.2 m 的埋深误差来自规程对维护决策和后续工程定位的共同要求。把两项指标写入设计目标，是为了约束硬件选型、标定方案和评价口径，而不是预先宣布实物验收已经完成。
++为什么把 0.05 nT 作为系统级目标？这并不是凭空选取，而是由``三相抵消 + 铠装屏蔽 + 螺旋绞合''这三重物理削弱共同决定的。需要特别区分的是，系统级分辨目标不等于传感器手册中的单频噪声谱密度。规格书 Version 1.0 第 4 页对 TMR8607 单轴敏感单元给出的 1 Hz 磁场噪声谱密度为 150--300 pT/\(\sqrt{\text{Hz}}\)，第 8 页则给出 TMR8637 三轴模组的接口与结构\cite{multidimension2024tmr8607}；随实物模组提供的编号 6\# 三轴测试报告进一步给出各轴 1 Hz 噪声均为 200 pT/\(\sqrt{\text{Hz}}\)，并显示 50 Hz 附近三轴曲线约为 20--30 pT/\(\sqrt{\text{Hz}}\)。后者表明模组本体在目标工频附近具备窄带检测所需的噪声量级，但 0.05 nT 仍是待完整测量链验证的系统指标，不能由模组曲线或 ADC 位数单独宣称满足。相应的信噪比（signal-to-noise ratio, SNR）还必须纳入 SK2301 输入噪声、隔离供电、地环路与数字锁相处理的等效噪声带宽。0.2 m 的埋深误差是面向维护决策和后续工程定位自主设定的研究目标，不是规程的原始限值。把两项指标写入设计目标，是为了约束硬件选型、标定方案和评价口径，而不是预先宣布实物验收已经完成。
+ 
+ \subsection{作业环境约束}\label{sec:ch02-2-1-2}
+ 
+@@ -178,7 +178,7 @@
+ 
+ \begin{figure}[t]
+ \centering
+-\includegraphics[width=0.98\linewidth,alt={两行三列的算法仿真至全自主试验验证阶梯，每级列出准入门和对应证据，末级为目标而非已完成状态}]{architecture/auv_system_verification_deployment_ladder.pdf}
++\includegraphics[width=0.784\linewidth,alt={两行三列的算法仿真至全自主试验验证阶梯，每级列出准入门和对应证据，末级为目标而非已完成状态}]{architecture/auv_system_verification_deployment_ladder.pdf}
+ \caption{算法仿真至全自主试验的验证部署阶梯：逐级能力释放、准入门与对应证据；右端为准入目标，不表示各阶段均已完成}\label{fig:ch02-verification-ladder}
+ \end{figure}
+ 
+@@ -208,7 +208,7 @@
+ \caption{Foxglove 电缆巡检运行界面：同一话题契约下的工业验收状态、三维场景、横向误差、埋深、置信度与跟踪输出}\label{fig:ch02-foxglove-cable-console}
+ \end{figure}
+ 
+-图~\ref{fig:ch02-foxglove-cable-console}所示界面并非后处理展示图，而是部署侧运行面板。其顶部状态块来自 \texttt{/auv/cable/industrial\_ready}、\texttt{/auv/cable/industrial\_acceptance\_pass} 与 \texttt{/auv/cable/dlt1278\_state} 等布尔/字符串话题，右侧 3D 视图来自海床、海缆标记和 AUV 位姿话题，底部曲线来自横偏、埋深、埋深不确定度、置信度和磁信噪比等连续量。换言之，论文中的数字孪生验证不是脱离系统运行栈的离线图表，而是已经被组织成可观察、可录包、可复跑的巡检操作界面；这也是后续 Jetson、PC104 和真实载荷接入时能够沿用同一验收口径的工程基础。
++图~\ref{fig:ch02-foxglove-cable-console}所示界面并非后处理展示图，而是部署侧运行面板。其顶部状态块分别显示工业就绪、验收通过标志与规程评分状态，由对应的运行状态消息驱动，右侧 3D 视图来自海床、海缆标记和 AUV 位姿话题，底部曲线来自横偏、埋深、埋深不确定度、置信度和磁信噪比等连续量。换言之，论文中的数字孪生验证不是脱离系统运行栈的离线图表，而是已经被组织成可观察、可录包、可复跑的巡检操作界面；这也是后续 Jetson、PC104 和真实载荷接入时能够沿用同一验收口径的工程基础。
+ 
+ 因此，PVS/HoloOcean 与真实 AUV 之间的迁移应以质量、浮力中心和水动力系数的同口径辨识为基础，并在真机数据回灌后重新核查闭环稳定裕度；本文仿真实验使用统一冻结的数字孪生参数，以保证算法对照的内部一致性。
+ 
+@@ -670,7 +670,7 @@
+ ESTOP & 零执行器 \texttt{\$CKTH}；UDP 下发并可镜像至 Zenoh & 立即切回遥控、取消任务并锁存，解除前保持零输出 \\
+ \end{longtable}
+ 
+-图~\ref{fig:ch02-operator-console} 给出最终上位机主界面。界面从上到下依次组织实时遥测、地图与控制面板、航点/任务/消息/诊断页签，以及始终可见的 ESTOP、MANUAL/AUTONOMY 和任务参数区；Zenoh、传感器置信度与电缆监控被收纳到诊断页，从而避免低优先级信息挤压底部安全操作。该图由 \texttt{Xvfb + xdotool + ImageMagick} 在 \(1366\times900\) 虚拟屏幕下生成，采用本机 dummy UDP 回环且关闭 Zenoh，故它证明的是界面可无头复现、中文渲染正确且该分辨率下无明显裁切，不证明图中状态栏文字对应真实 PC104 在线或整艇闭环。
++图~\ref{fig:ch02-operator-console} 给出最终上位机主界面。界面从上到下依次组织实时遥测、地图与控制面板、航点/任务/消息/诊断页签，以及始终可见的 ESTOP、MANUAL/AUTONOMY 和任务参数区；Zenoh、传感器置信度与电缆监控被收纳到诊断页，从而避免低优先级信息挤压底部安全操作。该图由 虚拟显示与自动截屏工具 在 \(1366\times900\) 虚拟屏幕下生成，采用本机 dummy UDP 回环且关闭 Zenoh，故它证明的是界面可无头复现、中文渲染正确且该分辨率下无明显裁切，不证明图中状态栏文字对应真实 PC104 在线或整艇闭环。
+ 
+ \begin{figure}[htbp]
+ \centering
+@@ -678,9 +678,9 @@
+ \caption{PySide6 操作员上位机的最终布局（Xvfb、dummy UDP 回环、Zenoh 关闭）：遥测、地图、任务控制和诊断分区围绕底部常驻的急停与模式授权组织}\label{fig:ch02-operator-console}
+ \end{figure}
+ 
+-ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到 \texttt{rt/pc/cmd\_raw}，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第 5 章的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的 \texttt{work\_cmd} 变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
+-
+-VxWorks 失联保护则是这套安全闭环的最后一层冗余，当 PC104 在 Jetson 控制模式下约 1 秒未收到有效指令时，会自发切回遥控模式、清零推进并置通信超时告警。这一机制不依赖上位机的主动指令，而是 AMD 端自己的``看门狗式''保护，覆盖了``上位机断电、Jetson 死机、网络全部中断''等极端情形。零推力回退与主动上浮属于不同动作：前者对应控制权或命令链失效；生产行为树中的 \texttt{EmergencySurface} 只由漏水、低电和穿底触发，PC104 对深度或 DVL 风险的本地航行保护也不扩展这一行为树触发集合。把这四道防线（行为树 failsafe、安全仲裁器、上位机 ESTOP 分层下发、VxWorks 失联保护）合在一起看，它们构成一条``由内向外、由软到硬''的安全梯度；各层降低了单点故障直接穿透至执行器的风险，但其联合有效性仍须按各自证据层级而非抽象冗余数量判断。四类守卫的触发优先级及其到安全目标态的仲裁关系如图~\ref{fig:ch02-emergency-arbitration}所示；任务执行期间由操作员、仲裁器、决策脑和执行脑共同参与的完整生命周期如图~\ref{fig:ch02-mission-lifecycle}所示。
++ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到 原始遥控指令通道，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第 5 章的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的 工作指令字段 变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
++
++VxWorks 失联保护则是这套安全闭环的最后一层冗余，当 PC104 在 Jetson 控制模式下约 1 秒未收到有效指令时，会自发切回遥控模式、清零推进并置通信超时告警。这一机制不依赖上位机的主动指令，而是 AMD 端自己的``看门狗式''保护，覆盖了``上位机断电、Jetson 死机、网络全部中断''等极端情形。零推力回退与主动上浮属于不同动作：前者对应控制权或命令链失效；生产行为树中的 紧急上浮行动 只由漏水、低电和穿底触发，PC104 对深度或 DVL 风险的本地航行保护也不扩展这一行为树触发集合。把这四道防线（行为树 failsafe、安全仲裁器、上位机 ESTOP 分层下发、VxWorks 失联保护）合在一起看，它们构成一条``由内向外、由软到硬''的安全梯度；各层降低了单点故障直接穿透至执行器的风险，但其联合有效性仍须按各自证据层级而非抽象冗余数量判断。四类守卫的触发优先级及其到安全目标态的仲裁关系如图~\ref{fig:ch02-emergency-arbitration}所示；任务执行期间由操作员、仲裁器、决策脑和执行脑共同参与的完整生命周期如图~\ref{fig:ch02-mission-lifecycle}所示。
+ 
+ \begin{figure}[tbp]
+ \centering
+--- a/thuthesis/middle/chap01-background.tex
++++ b/thuthesis/middle/chap01-background.tex
+@@ -11,7 +11,7 @@
+ 
+ \section{相关研究与本课题问题}
+ 
+-声学与磁学为目标提供不同类型的观测。侧扫声呐关注海床表面纹理、目标形态及声影，可为裸露或具有可识别表面特征的管缆提供方向和横向线索；浅地层剖面仪利用沉积层内部反射结构探查浅埋目标。二者的频段、成像几何与适用条件不同，不能仅以“声呐探测”合并其能力。已有 AUV 侧扫跟踪研究说明，声学目标提取能够进入自主制导流程\cite{bagnitsky2011sidescan,feng2023automatic}；本课题复用这种声学线索的接口思想，重点研究其与磁观测、导航状态及安全决策的关系。
++声学与磁学为目标提供不同类型的观测。侧扫声呐关注海床表面纹理、目标形态及声影，可为裸露或具有可识别表面特征的管缆提供方向和横向线索；浅地层剖面仪（Sub-Bottom Profiler，SBP）利用声波对海底沉积层的穿透能力，已被用于海底电缆埋深调查与掩埋管线目标检测\cite{wunderlich2016burial,zheng2021zeroshot}。二者的频段、成像几何与适用条件不同，不能仅以“声呐探测”合并其能力。已有 AUV 侧扫跟踪研究说明，声学目标提取能够进入自主制导流程\cite{bagnitsky2011sidescan,feng2023automatic}；本课题复用这种声学线索的接口思想，重点研究其与磁观测、导航状态及安全决策的关系。
+ 
+ 磁观测与载流导体的电流和几何关系直接相关，能够补充依赖表面可见性的声学信息。已有磁导引及标量磁测跟踪研究分别探讨了利用磁场线索完成路由跟随以及降低姿态影响的途径\cite{xiang2016subsea,li2024attitude}。实际海缆中的多芯结构、相位抵消、铠装影响与邻近磁源，使磁场幅度同时依赖多个未知量。即使单条测线具有清晰峰值，也不能直接认定其对应指定电缆，更不能把某一理想场形下的宽度系数无条件换算为埋深。
+ 
+@@ -23,6 +23,6 @@
+ 
+ \section{研究目标与中期工作范围}
+ 
+-本课题旨在原 AUV 平台上构建多源异构感知与安全自主巡检方法。阶段目标包括获得物理含义明确的观测、向运动决策传递状态及质量，以及建立可记录、可撤回、可逐层检查的执行接口。
++本课题旨在原 AUV 平台上构建多源异构感知与安全自主巡检方法。阶段目标包括获得物理含义明确的观测、向运动决策传递状态及质量，以及建立可记录、可撤回、可逐层检查的执行接口。运行维护背景参考适用于 10 kV 及以上交流海底电力电缆的《DL/T 1278---2025 海底电力电缆运行规程》\cite{dlt1278_2025}。测量指标参照《T/CIN 100---2026 海上风电场通航安全技术参数测量要求》\cite{tcin100_2026}：附录 B.5 要求磁力仪灵敏度优于 0.05 nT，第 7.2 条规定海缆埋深测量极限误差不超过 $\pm0.4~\mathrm{m}$。本文将 0.05 nT 用作磁测量灵敏度的设计参考，将 0.2 m 用作更严格的自主埋深估计研究目标；两者均不表示完整艇载系统已经通过实物验收。
+ 
+ 截至\ReportCutoff，已形成的工作包括磁搜索与主动横切反演、场形失配处理、有限巡检仿真、融合估计与控制对照，以及磁测量链、艇载计算和执行脑通信等实物子链验证。它们分别回答算法是否能够形成有效信息、策略是否具有可解释的性能变化，以及关键接口是否能够实际运行。后文将方法与代表结果相邻组织，以便把每项结论与其证据直接对应。
+--- a/docs/thesis/bibliography/README.md
++++ b/docs/thesis/bibliography/README.md
+@@ -1,8 +1,8 @@
+ # 参考文献真实性审计
+ 
+-主论文与两个中期报告共用唯一的研究文献源：[auv-references.bib](../../../thuthesis/ref/auv-references.bib)，共 99 条，可直接打开人工检查。`auvsetup.tex` 与 `middle/setup.tex` 都加载该文件，三个实际 BCF 的数据源也已核对一致。
++主论文与两个中期报告共用唯一的研究文献源：[auv-references.bib](../../../thuthesis/ref/auv-references.bib)，现为 **98 条**。2026-10-23 按作者已完成人工核对的 [权威 Bib 输入](../../../auv-references-final-20261023.bib)原样覆盖；同步正式标准、SBP 论述及必要的手册/项目报告适用边界。更改前后正文、引用键检查与三份文档编译结果见 [Bib—正文工程收口记录](20261023/README.md)。
+ 
+-当前审计：[2026-10-22 续核记录](20261022/README.md)、[全量报告](20261022/audit_summary.md)、[验收记录](20261022/acceptance.json)、[必要字段复核](20261022/manual_review.md)、[次要字段/页码](20261022/secondary_review.md)。全部条目的状态在 [JSON](20261022/audit_results.json) 和 [CSV](20261022/field_differences.csv) 中。必要字段通过 78/99，待复核从 23 条降为 21 条；本轮 Bib 内容不变。原 [2026-10-18 完整交付](20261018/DELIVERY.md) 与原始证据保留。不能用文献库内历史“已验证”注释代替外部证据。
++历史机器审计：[2026-10-22 续核记录](20261022/README.md)、[全量报告](20261022/audit_summary.md)、[验收记录](20261022/acceptance.json)、[必要字段复核](20261022/manual_review.md)、[次要字段/页码](20261022/secondary_review.md)。当时 99 条库的状态在 [JSON](20261022/audit_results.json) 和 [CSV](20261022/field_differences.csv) 中，必要字段通过 78/99，21 条待复核；这些数字不代表已经换入的 98 条库。原 [2026-10-18 完整交付](20261018/DELIVERY.md) 与原始证据保留。本次依作者确认与执行指令做本地工程收口，不联网、不重跑旧审计，也不将作者确认改写为旧工具的字段级 VERIFIED。
+ 
+ 审计完成与文献真实性全部放行是两件事。`audit_acceptance_passed` 检查覆盖、证据完整性、编译和实际引用；`release_ready` 要求研究文献所有必要字段解决。后者为 false 时，终稿不得宣称参考文献全量核验通过。模板示例/上游测试数据单独列账，不要求作者修订上游示例来释放自己的论文。
+ 
+@@ -65,4 +65,4 @@
+ make bib-audit-acceptance
+ ```
+ 
+-最后状态和 PDF 检查见 [当前续核记录](20261022/README.md)；首次安全修改见 [2026-10-18 交付记录](20261018/DELIVERY.md)。本审计处理 L1 文献身份、L2 书目字段；正文论断是否由原文支持（L3）没有验证。
++当前 Bib—正文同步和 PDF 检查见 [2026-10-23 工程收口](20261023/README.md)；历史机器审计见 [2026-10-22 续核记录](20261022/README.md)，首次安全修改见 [2026-10-18 交付记录](20261018/DELIVERY.md)。历史审计处理 L1 文献身份、L2 书目字段；本次工程收口不代表整个学位论文的 L3 逐句文献真实性审查已经完成。需要重新审计时应显式指定新的输出目录，保留上述历史证据。

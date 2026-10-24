@@ -311,16 +311,16 @@ def _plot_summary(rows: list[dict[str, Any]], figure_dir: Path) -> list[Path]:
 
     apply_thesis_style(layout="full")
     mode_labels = {
-        "none": "无附加噪声",
-        "covariance_gaussian": "协方差高斯噪声",
-        "measured_replay": "实测噪声回放",
+        "none": "无附加\n噪声",
+        "covariance_gaussian": "协方差\n高斯噪声",
+        "measured_replay": "实测噪声\n回放",
     }
     labels = [mode_labels.get(str(row["mode"]), str(row["mode"])) for row in rows]
     x = np.arange(len(labels), dtype=float)
     fig, axes = plt.subplots(
         1,
         3,
-        figsize=figure_size("full", height=2.35),
+        figsize=figure_size("full", height=2.7),
         constrained_layout=True,
     )
 
@@ -334,7 +334,7 @@ def _plot_summary(rows: list[dict[str, Any]], figure_dir: Path) -> list[Path]:
         for index, value in enumerate(values):
             ax.bar(x[index], value if math.isfinite(value) else 0.0, 0.65, **series_style(index))
         ax.set_xticks(x)
-        ax.set_xticklabels(labels, rotation=12, ha="right")
+        ax.set_xticklabels(labels, rotation=0, ha="center")
         ax.set_ylabel(ylabel)
         ax.grid(True, axis="y", alpha=0.3)
     axes[0].set_title("(a) 闭环横偏", loc="left")

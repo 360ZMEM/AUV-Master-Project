@@ -294,15 +294,15 @@ def plot_solver_distributions(fig_dir: Path, sources: dict[str, Path], budgets: 
 
     tps.apply_thesis_style(layout="full")
     groups = [
-        ("稳态冷启动", load_wall(sources["steady"], "cold"), tps.BASELINE_1),
-        ("稳态热启动", load_wall(sources["steady"], "warm"), tps.PROPOSED),
-        ("约束压力冷启动", load_wall(sources["stress"], "cold"), tps.BASELINE_2),
-        ("约束压力热启动", load_wall(sources["stress"], "warm"), tps.BASELINE_3),
+        ("稳态\n冷启动", load_wall(sources["steady"], "cold"), tps.BASELINE_1),
+        ("稳态\n热启动", load_wall(sources["steady"], "warm"), tps.PROPOSED),
+        ("约束压力\n冷启动", load_wall(sources["stress"], "cold"), tps.BASELINE_2),
+        ("约束压力\n热启动", load_wall(sources["stress"], "warm"), tps.BASELINE_3),
     ]
     fig, axes = plt.subplots(
         1,
         2,
-        figsize=tps.figure_size("full", height=2.85),
+        figsize=tps.figure_size("full", height=3.15),
         gridspec_kw={"width_ratios": [1.08, 0.92]},
         constrained_layout=True,
     )
@@ -332,10 +332,11 @@ def plot_solver_distributions(fig_dir: Path, sources: dict[str, Path], budgets: 
         label="MPC 离散周期 (200 ms)",
     )
     ax.set_yscale("log")
+    ax.set_yticks([30, 50, 100, 200])
+    ax.set_ylim(25, 240)
     ax.set_ylabel("求解时延 (ms，对数轴)")
-    ax.tick_params(axis="x", rotation=18)
+    ax.tick_params(axis="x", rotation=0)
     ax.grid(True, axis="y", alpha=0.28)
-    ax.legend(fontsize=8, loc="upper left")
     ax.set_title("(a) 目标平台 MPC 求解时延", loc="left")
 
     ax = axes[1]
@@ -350,9 +351,14 @@ def plot_solver_distributions(fig_dir: Path, sources: dict[str, Path], budgets: 
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2, f"{100.0 * float(value or 0.0):.0f}%", ha="center", fontsize=9)
     ax.set_ylim(0, 112)
     ax.set_ylabel("求解成功率 (%)")
-    ax.tick_params(axis="x", rotation=18)
+    ax.tick_params(axis="x", rotation=0)
     ax.grid(True, axis="y", alpha=0.28)
     ax.set_title("(b) 稳态与约束压力下的可行性", loc="left")
+    # Keep the reference-line legend above the two data panels.
+    fig.set_layout_engine(None)
+    fig.subplots_adjust(left=.10, right=.985, bottom=.20, top=.73, wspace=.35)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="upper center",
+               bbox_to_anchor=(.54, 1.005), ncol=2, frameon=False)
     save_figure(fig, fig_dir / "jetson_mpc_latency_and_success")
     plt.close(fig)
 

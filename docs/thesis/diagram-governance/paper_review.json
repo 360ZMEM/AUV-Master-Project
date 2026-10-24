@@ -1,0 +1,26 @@
+[
+  {
+    "stem": "auv_v2_five_layer_functional_architecture",
+    "physical_page": 41,
+    "paper_min_size": 9.33,
+    "method": "pdftohtml -zoom 4 -xml, 1785/595=3x page scale, minimum Noto Serif CJK SC fontspec 28/3 pt; see thesis_five_layer_final_page41.png"
+  },
+  {
+    "stem": "auv_system_verification_deployment_ladder",
+    "physical_page": 43,
+    "paper_min_size": 10.67,
+    "method": "pdftohtml -zoom 4 -xml on physical page 43; 1785/595=3x page scale; minimum Noto Serif CJK SC fontspec 32/3 pt; actual page image opened"
+  },
+  {
+    "stem": "auv_v2_uncertainty_highway",
+    "physical_page": 67,
+    "paper_min_size": 9.67,
+    "method": "pdftohtml -zoom 4 -xml, page scale 3x; minimum Noto Serif CJK SC fontspec 29/3 pt; full page opened"
+  },
+  {
+    "stem": "auv_thesis_technical_route",
+    "physical_page": 33,
+    "paper_min_size": 9.33,
+    "method": "pdftohtml -zoom 4 -xml, page scale 3x; minimum subscript/problem-label fontspec 28/3 pt; full physical page and link crop opened"
+  }
+]

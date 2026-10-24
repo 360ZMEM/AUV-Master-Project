@@ -1,0 +1,12 @@
+{
+  "name": "auv-diagram-governance",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local, read-only-first draw.io governance entry point",
+  "type": "module",
+  "scripts": {
+    "doctor": "node cli.mjs doctor",
+    "selftest": "node cli.mjs selftest",
+    "verify": "node cli.mjs verify --all --strict --fresh"
+  }
+}

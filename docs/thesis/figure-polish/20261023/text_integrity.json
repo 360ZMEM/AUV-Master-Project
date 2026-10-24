@@ -1,0 +1,52 @@
+{
+  "status": "PASS_WITH_RECORDED_EXTERNAL_EDITS",
+  "chapters": [
+    {
+      "file": "thuthesis/data/auv-chap01.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": false,
+      "chapter_sha256": "08a018af41e1f3d0ae081b015ca4ac89242f4c5e056ee6c9b59b13e14ead0e5a"
+    },
+    {
+      "file": "thuthesis/data/auv-chap02.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": false,
+      "chapter_sha256": "6fbf7669d6866730ca0bb938271cf430179ac872dc12c68b07596f8dcb23cf0c"
+    },
+    {
+      "file": "thuthesis/data/auv-chap03.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": true,
+      "chapter_sha256": "4a364a7836af9ed9a378dafc82a28015993b6788afbecc9e43dbf4c161208784"
+    },
+    {
+      "file": "thuthesis/data/auv-chap04.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": true,
+      "chapter_sha256": "c857ba1f78c8a4b297e89bb8ffe1e01338b2f2422c953b0011e91841ce6e65df"
+    },
+    {
+      "file": "thuthesis/data/auv-chap05.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": true,
+      "chapter_sha256": "9f4551f6bd61df52edbbc6c32c0cba3248088322ff6a948604619b84145eadc7"
+    },
+    {
+      "file": "thuthesis/data/auv-chap06.tex",
+      "figure_labels_unchanged": true,
+      "figure_assets_unchanged": true,
+      "math_multiset_unchanged": true,
+      "chapter_sha256": "5ac2e43440cd5725c7ef9ef9049cb173c20c54a7ceac7dc11cbe526e3eee81c2"
+    }
+  ],
+  "own_prose_replacement_preserves_math_and_citations": true,
+  "prose_replacement_occurrences": 46,
+  "spacing_replacement_occurrences": 21,
+  "external_edits": "第1/2章同期文献与标准编辑保留于运行目录 external_auv-chap01.diff / external_auv-chap02.diff；不将其记为本轮图像/正文替换。",
+  "limitations": "检查结构标识、图资产和数学表达多重集合；不以机器相同度替代研究论断的人工审校。"
+}

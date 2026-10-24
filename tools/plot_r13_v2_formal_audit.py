@@ -252,10 +252,11 @@ def plot_control_rate(paired_rows: list[dict[str, str]], output_dir: Path) -> No
         label="分源不确定性感知",
     )
     axis.set_yscale("log")
+    axis.set_ylim(top=max(max(baseline), max(ua)) * 3.0)
     axis.set_ylabel("控制变化率 RMS (对数轴)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    opaque_legend(axis)
+    opaque_legend(axis, loc="lower center", bbox_to_anchor=(0.5, 1.03), ncol=2)
     for idx, value in enumerate(delta):
         axis.text(
             idx,
@@ -301,7 +302,7 @@ def plot_authority(summary_rows: list[dict[str, str]], output_dir: Path) -> None
     axis.set_ylabel("授权模式占比 (%)")
     axis.set_xticks(x)
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    opaque_legend(axis, ncol=3, loc="upper right")
+    opaque_legend(axis, ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.18))
     for idx, row in enumerate(rows):
         if row["scenario"] == "combined_cable_extreme_proxy":
             axis.text(idx, 103.0, "跟踪 0%", ha="center", va="bottom")
@@ -351,7 +352,7 @@ def plot_p_track(samples: list[dict[str, object]], output_dir: Path) -> None:
     axis.set_ylim(0.0, 1.02)
     axis.set_ylabel(r"声呐跟踪概率 $p_{\mathrm{track}}$")
     axis.set_xticklabels(labels, rotation=20, ha="right")
-    opaque_legend(axis, ncol=2, loc="lower right")
+    opaque_legend(axis, ncol=2, loc="lower center", bbox_to_anchor=(0.5, 1.03))
     save_figure(fig, output_dir, "r13_v2_p_track_boxplot_ua")
 
 

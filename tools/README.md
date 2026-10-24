@@ -1,5 +1,7 @@
 # tools/ 脚本索引
 
+> 参考文献治理：[bib_audit.py](bib_audit.py) 收集/重放外部证据并逐字段核验；[bib_audit_sources.py](bib_audit_sources.py) 保留 HTTP、限速和原始响应；[check_bib_audit.py](check_bib_audit.py) 核对证据哈希、实际引用、GB/T 7714 输出。命令与边界见[说明](../docs/thesis/bibliography/README.md)。
+
 本目录收录论文实验、数据分析、可视化、实机部署配套等一次性/半自动脚本。**文件一律保持在 `tools/` 顶层**（不按子目录物理拆分）——因为它们被 25 处 shell 脚本按 `tools/<name>.py` 路径调用、被 700+ 处文档链接引用，且每个脚本内以 `PROJECT_ROOT = Path(__file__).resolve().parents[1]` 定位仓库根，物理移动会一次性破坏所有引用。本文件即"逻辑分组索引"，用途分组仅在此文档维护，磁盘上不生成子目录。
 
 已废弃/被取代的一次性调试脚本见 [archive/](file:///home/auv_user/auv_ws/AUV-Master-Project/tools/archive/README.md)。

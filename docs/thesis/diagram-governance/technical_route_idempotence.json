@@ -1,0 +1,12 @@
+{
+  "stem": "docs/thesis/figures/architecture/auv_thesis_technical_route",
+  "fontconfig_file": "config/diagram-governance/fonts.conf",
+  "source_and_non_pdf_outputs_byte_identical": true,
+  "per_file": {
+    "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio": true,
+    "docs/thesis/figures/architecture/auv_thesis_technical_route.png": true,
+    "docs/thesis/figures/architecture/auv_thesis_technical_route.svg": true,
+    "docs/thesis/figures/architecture/auv_thesis_technical_route.drawio.png": true
+  },
+  "pdf_72dpi_raster_identical": true
+}

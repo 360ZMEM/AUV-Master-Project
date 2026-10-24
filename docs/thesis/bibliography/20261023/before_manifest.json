@@ -1,0 +1,82 @@
+{
+  "thuthesis/ref/auv-references.bib": {
+    "sha256": "c0a8d99027cd596da5ccc4974f7d85c80addc8717a3cc0c1734e174b226c1271",
+    "bytes": 59388
+  },
+  "thuthesis/data/auv-chap01.tex": {
+    "sha256": "2523d8269ba6e46e870fe918e6b7f0439ec32a63a6fb8b403d52249376a8ee12",
+    "bytes": 37027
+  },
+  "thuthesis/data/auv-chap02.tex": {
+    "sha256": "c726e2d8aab3e972a403f36289fb06b44b8b0e0d2dcf68194fd243c25841d54d",
+    "bytes": 76302
+  },
+  "thuthesis/middle/chap01-background.tex": {
+    "sha256": "7e71fd9096d327f9120df263e1b5277f184d334f4c70cb462c1e1e554a5e0084",
+    "bytes": 5629
+  },
+  "docs/thesis/bibliography/README.md": {
+    "sha256": "0d638381ffbc984580acf9d9b815c88a3321101b5c3551eeecfbc0fd6e3a2b36",
+    "bytes": 7853
+  },
+  "thuthesis/build/auv-thesis/auv-thesis.pdf": {
+    "sha256": "89420001e60a3d4d589e41fe0ee19f2889fe815957daafea054d7ac45ded9148",
+    "bytes": 8973432
+  },
+  "thuthesis/build/auv-thesis/auv-thesis.bcf": {
+    "sha256": "9da40fd4b932b3276c1dafa27154f426e8b8ebb326457c5b0549f143d0e6df07",
+    "bytes": 147169
+  },
+  "thuthesis/build/auv-thesis/auv-thesis.bbl": {
+    "sha256": "b0300e7d7423ae41ddc372497470add8e925acb0bb91406687447c231d2757df",
+    "bytes": 251680
+  },
+  "thuthesis/build/auv-thesis/auv-thesis.log": {
+    "sha256": "aac2918c80e12209c9b747465df00f296cfb494b0a9b94bede9eadd4bd026f86",
+    "bytes": 88708
+  },
+  "thuthesis/build/auv-thesis/auv-thesis.blg": {
+    "sha256": "63b4cd343c6c06163fa2a8ffe4da2ec6e98e187e8ea40e8378c45cb5e6bc9a70",
+    "bytes": 1843
+  },
+  "thuthesis/build/middle-main/auv-middle-defense-main.pdf": {
+    "sha256": "d8d1a036b9e4536a0a590fcdf8181e9ef273d15eb45cb686b5373672f614bec8",
+    "bytes": 872258
+  },
+  "thuthesis/build/middle-main/auv-middle-defense-main.bcf": {
+    "sha256": "cdcfdc3acb92195f8c1361f59e01ef6d6ef9b6a6b47b708ff56558b5fefc9c2d",
+    "bytes": 136038
+  },
+  "thuthesis/build/middle-main/auv-middle-defense-main.bbl": {
+    "sha256": "91543f050e04ff2fec4f9d832cd7df87748797b4f80f81f83c617abf29d3689c",
+    "bytes": 36965
+  },
+  "thuthesis/build/middle-main/auv-middle-defense-main.log": {
+    "sha256": "6abfbc8b6f5f7279dadefefec3ab3f688a8e82fb00168bae3b587f563f27adfa",
+    "bytes": 78534
+  },
+  "thuthesis/build/middle-main/auv-middle-defense-main.blg": {
+    "sha256": "c03aa0e955a0d89701af9932833b6dc7d34de1b4d70f14737706384a7b550aae",
+    "bytes": 1693
+  },
+  "thuthesis/build/middle-school/auv-middle-defense-school.pdf": {
+    "sha256": "c11d978e78c9f939b0a0f5031378d16db523d427e2656697e7ca181c89675167",
+    "bytes": 872189
+  },
+  "thuthesis/build/middle-school/auv-middle-defense-school.bcf": {
+    "sha256": "cdcfdc3acb92195f8c1361f59e01ef6d6ef9b6a6b47b708ff56558b5fefc9c2d",
+    "bytes": 136038
+  },
+  "thuthesis/build/middle-school/auv-middle-defense-school.bbl": {
+    "sha256": "91543f050e04ff2fec4f9d832cd7df87748797b4f80f81f83c617abf29d3689c",
+    "bytes": 36965
+  },
+  "thuthesis/build/middle-school/auv-middle-defense-school.log": {
+    "sha256": "ea20352e1c89f8c180adf8ea0b4a8482e292e487745ea29d2babe9fb9b979c51",
+    "bytes": 78611
+  },
+  "thuthesis/build/middle-school/auv-middle-defense-school.blg": {
+    "sha256": "d27d78e1f8bc5f1974f51d17adcda9871c7fe42321ac44564294c42237d38766",
+    "bytes": 1710
+  }
+}

@@ -1,0 +1,3489 @@
+{
+  "stage": "G3",
+  "sources": [
+    {
+      "path": "/home/zmem063/auv_console_python/AUV-Master-Project/patent/round2/20261020T015226Z/evidence/runs/research_holdout_T01_T02_frozen_v1/metrics.csv",
+      "sha256": "24e9dc37faa7d0c211359cbc2a76d19e343755ef62f451f4a9791dad937a3c5f",
+      "rows": 22000,
+      "stage": "G3_AUTHORIZED_EXECUTION",
+      "source_manifest_sha256": "37a7fec11f1ea72199e39bef2fdc30a3c4ded984ae735db2f54e9a44a1de6247"
+    },
+    {
+      "path": "/home/zmem063/auv_console_python/AUV-Master-Project/patent/round2/20261020T015226Z/evidence/runs/research_holdout_T03_T04_frozen_v1/metrics.csv",
+      "sha256": "0afdf2f4871813a924c7c9278aa4896fc4e48ad175f23af84fd94d419e7c1f29",
+      "rows": 22000,
+      "stage": "G3_AUTHORIZED_EXECUTION",
+      "source_manifest_sha256": "4fc467f9a9e76080b914d7a53df79c8b0bc40967d1b42ee46a8904d6e02b052c"
+    },
+    {
+      "path": "/home/zmem063/auv_console_python/AUV-Master-Project/patent/round2/20261020T015226Z/evidence/runs/research_holdout_T05_T06_frozen_v1/metrics.csv",
+      "sha256": "2f708747c5858a0d75ab13e9e244792670087aec9aec631daacc251998bce9a2",
+      "rows": 22000,
+      "stage": "G3_AUTHORIZED_EXECUTION",
+      "source_manifest_sha256": "3c5041271f3a0ded627fce32b70c529d96f8b01b24216441bf8cd344d6f58925"
+    }
+  ],
+  "source_csv_rows": 66000,
+  "figures": {
+    "reference": {
+      "example": {
+        "group": "T01",
+        "seed": 5000,
+        "case": "complete"
+      },
+      "event_order": [
+        "reference_missing",
+        "reference_attached",
+        "reference_expired",
+        "reference_updated",
+        "reference_withdrawn",
+        "reference_only_calibration_update",
+        "shared_trajectory_calibration_update",
+        "magnetic_model_update",
+        "magnetic_expired"
+      ],
+      "independent_example_count": 1,
+      "hidden_bias_episodes": "Separate same-profile counterexamples, not lifecycle continuations",
+      "selected_rows": [
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_missing",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "0.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "1",
+          "additional_inversions_event": "1",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_attached",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "10.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_expired",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "131.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_updated",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "140.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_withdrawn",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "150.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_only_calibration_update",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "-0.349319230534449",
+          "released": "1",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "160.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "shared_trajectory_calibration_update",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "",
+          "released": "0",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_DEPENDENCY_CHANGED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "170.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_model_update",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "",
+          "released": "0",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_DEPENDENCY_CHANGED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "180.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_expired",
+          "method": "H1_R2",
+          "parameter": "c",
+          "candidate": "-0.349319230534449",
+          "published": "",
+          "released": "0",
+          "truth": "-0.35",
+          "error_m": "0.0006807694655509566",
+          "abs_error_m": "0.0006807694655509566",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025000000000000022",
+          "interval_components": "1",
+          "intervals_json": "[[-0.36198942290083674, -0.3369894229008367]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_SOLUTION_EXPIRED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "310.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_missing",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "0.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "1",
+          "additional_inversions_event": "1",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_attached",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "10.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_expired",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "131.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_updated",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "140.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_withdrawn",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "150.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_only_calibration_update",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "2.3014358747075074",
+          "released": "1",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "160.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "shared_trajectory_calibration_update",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "",
+          "released": "0",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_DEPENDENCY_CHANGED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "170.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_model_update",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "",
+          "released": "0",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_DEPENDENCY_CHANGED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "180.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_expired",
+          "method": "H1_R2",
+          "parameter": "z_star",
+          "candidate": "2.3014358747075074",
+          "published": "",
+          "released": "0",
+          "truth": "2.3",
+          "error_m": "0.0014358747075076117",
+          "abs_error_m": "0.0014358747075076117",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.025269226507657727",
+          "interval_components": "1",
+          "intervals_json": "[[2.288576906030631, 2.3138461325382886]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_SOLUTION_EXPIRED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "310.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_missing",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "",
+          "abs_error_m": "",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "0",
+          "interval_width_m": "",
+          "interval_components": "0",
+          "intervals_json": "[]",
+          "status": "REFERENCE_MISSING",
+          "reasons": "REFERENCE_MISSING",
+          "event_time_s": "0.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "1",
+          "additional_inversions_event": "1",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_attached",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5444759291854786",
+          "published": "0.5444759291854786",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "-0.005524070814521442",
+          "abs_error_m": "0.005524070814521442",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.4916169605086021, 0.5968861870162598]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "10.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_expired",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "",
+          "abs_error_m": "",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "0",
+          "interval_width_m": "",
+          "interval_components": "0",
+          "intervals_json": "[]",
+          "status": "REFERENCE_EXPIRED",
+          "reasons": "REFERENCE_EXPIRED",
+          "event_time_s": "131.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_updated",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5344759291854786",
+          "published": "0.5344759291854786",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "-0.015524070814521451",
+          "abs_error_m": "0.015524070814521451",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.4816169605086021, 0.5868861870162598]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "140.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_withdrawn",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "",
+          "abs_error_m": "",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "0",
+          "interval_width_m": "",
+          "interval_components": "0",
+          "intervals_json": "[]",
+          "status": "REFERENCE_MISSING",
+          "reasons": "REFERENCE_MISSING",
+          "event_time_s": "150.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "0",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_only_calibration_update",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5544759291854786",
+          "published": "0.5544759291854786",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "0.0044759291854785666",
+          "abs_error_m": "0.0044759291854785666",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.1052692265076578",
+          "interval_components": "1",
+          "intervals_json": "[[0.501616960508602, 0.6068861870162598]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "160.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "shared_trajectory_calibration_update",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "",
+          "abs_error_m": "",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "0",
+          "interval_width_m": "",
+          "interval_components": "0",
+          "intervals_json": "[]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "CORRELATED_REFERENCE_MODEL_NOT_IMPLEMENTED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "170.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_model_update",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5444759291854786",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "-0.005524070814521442",
+          "abs_error_m": "0.005524070814521442",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.4916169605086021, 0.5968861870162598]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_DEPENDENCY_CHANGED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "180.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "magnetic_expired",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5444759291854786",
+          "published": "",
+          "released": "0",
+          "truth": "0.55",
+          "error_m": "-0.005524070814521442",
+          "abs_error_m": "0.005524070814521442",
+          "correct": "0",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.4916169605086021, 0.5968861870162598]]",
+          "status": "CACHE_DEPENDENCY_INVALIDATED",
+          "reasons": "MAGNETIC_SOLUTION_EXPIRED|CACHE_DEPENDENCY_INVALIDATED",
+          "event_time_s": "310.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "reference_attached",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.5444759291854786",
+          "published": "0.5444759291854786",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "-0.005524070814521442",
+          "abs_error_m": "0.005524070814521442",
+          "correct": "1",
+          "wrong": "0",
+          "interval_coverage": "1",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.4916169605086021, 0.5968861870162598]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "10.0",
+          "stale_depth_release": "0",
+          "episode_id": "reference_lifecycle",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "hidden_independent_reference_bias",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.2944759291854786",
+          "published": "0.2944759291854786",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "-0.25552407081452144",
+          "abs_error_m": "0.25552407081452144",
+          "correct": "0",
+          "wrong": "1",
+          "interval_coverage": "0",
+          "interval_width_m": "0.10526922650765771",
+          "interval_components": "1",
+          "intervals_json": "[[0.24161696050860207, 0.3468861870162598]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "20.0",
+          "stale_depth_release": "0",
+          "episode_id": "hidden_independent_reference_bias",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        },
+        {
+          "group_id": "T01",
+          "seed": "5000",
+          "case_id": "complete",
+          "event_id": "unreported_common_height_reference_bias",
+          "method": "H1_R2",
+          "parameter": "d_axis",
+          "candidate": "0.1944759291854785",
+          "published": "0.1944759291854785",
+          "released": "1",
+          "truth": "0.55",
+          "error_m": "-0.35552407081452153",
+          "abs_error_m": "0.35552407081452153",
+          "correct": "0",
+          "wrong": "1",
+          "interval_coverage": "0",
+          "interval_width_m": "0.10526922650765774",
+          "interval_components": "1",
+          "intervals_json": "[[0.14161696050860198, 0.24688618701625972]]",
+          "status": "VALID",
+          "reasons": "",
+          "event_time_s": "20.0",
+          "stale_depth_release": "0",
+          "episode_id": "unreported_common_height_reference_bias",
+          "logical_inversion_calls": "1",
+          "cumulative_magnetic_scans": "1",
+          "additional_magnetic_scans_event": "0",
+          "additional_inversions_event": "0",
+          "reference_measurements_event": "1",
+          "compute_s": "9.936232965000272",
+          "physical_depth_release_authorized": "0",
+          "execution_authorized": "0",
+          "route_complete": "0"
+        }
+      ],
+      "strong_equivalence": {
+        "compared_parameter_event_rows": 44,
+        "fields": [
+          "candidate",
+          "published",
+          "released",
+          "intervals_json",
+          "status",
+          "reasons",
+          "correct",
+          "wrong"
+        ],
+        "all_equal": true,
+        "mismatch_count": 0
+      },
+      "files": [
+        {
+          "path": "patent/round2/20261020T015226Z/delivery/figures/experiments/G3_frozen/r2_reference_lifecycle.png",
+          "sha256": "292933f7e77dde07b548438396e1a9cae9400869a66b791c4b8dde136f4f183b"
+        },
+        {
+          "path": "patent/round2/20261020T015226Z/delivery/figures/experiments/G3_frozen/r2_reference_lifecycle.pdf",
+          "sha256": "a5f2a9e32ad273f8cc9019b2285ebf4c5dbd42ee81615d11748010394fad1fbf"
+        }
+      ],
+      "registered_check": "All visible text bounding boxes within pre-save figure canvas",
+      "text_outside_canvas": [],
+      "visual_review": "REQUIRES_ACTUAL_VIEW"
+    },
+    "pressure": {
+      "summary": [
+        {
+          "case": "complete",
+          "parameter": "c",
+          "n": 60,
+          "correct": 60,
+          "wrong": 0,
+          "rejected": 0,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "complete",
+          "parameter": "z_star",
+          "n": 60,
+          "correct": 60,
+          "wrong": 0,
+          "rejected": 0,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "complete",
+          "parameter": "d_axis",
+          "n": 60,
+          "correct": 60,
+          "wrong": 0,
+          "rejected": 0,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "within_scan_height_drift_hidden",
+          "parameter": "c",
+          "n": 60,
+          "correct": 50,
+          "wrong": 0,
+          "rejected": 10,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "within_scan_height_drift_hidden",
+          "parameter": "z_star",
+          "n": 60,
+          "correct": 15,
+          "wrong": 35,
+          "rejected": 10,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "within_scan_height_drift_hidden",
+          "parameter": "d_axis",
+          "n": 60,
+          "correct": 17,
+          "wrong": 33,
+          "rejected": 10,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "attitude_dependent_lever_error_hidden",
+          "parameter": "c",
+          "n": 60,
+          "correct": 0,
+          "wrong": 10,
+          "rejected": 50,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "attitude_dependent_lever_error_hidden",
+          "parameter": "z_star",
+          "n": 60,
+          "correct": 0,
+          "wrong": 10,
+          "rejected": 50,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        },
+        {
+          "case": "attitude_dependent_lever_error_hidden",
+          "parameter": "d_axis",
+          "n": 60,
+          "correct": 0,
+          "wrong": 10,
+          "rejected": 50,
+          "physical_groups": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06"
+          ],
+          "units": [
+            [
+              "T01",
+              "5000"
+            ],
+            [
+              "T01",
+              "5001"
+            ],
+            [
+              "T01",
+              "5002"
+            ],
+            [
+              "T01",
+              "5003"
+            ],
+            [
+              "T01",
+              "5004"
+            ],
+            [
+              "T01",
+              "5005"
+            ],
+            [
+              "T01",
+              "5006"
+            ],
+            [
+              "T01",
+              "5007"
+            ],
+            [
+              "T01",
+              "5008"
+            ],
+            [
+              "T01",
+              "5009"
+            ],
+            [
+              "T02",
+              "5000"
+            ],
+            [
+              "T02",
+              "5001"
+            ],
+            [
+              "T02",
+              "5002"
+            ],
+            [
+              "T02",
+              "5003"
+            ],
+            [
+              "T02",
+              "5004"
+            ],
+            [
+              "T02",
+              "5005"
+            ],
+            [
+              "T02",
+              "5006"
+            ],
+            [
+              "T02",
+              "5007"
+            ],
+            [
+              "T02",
+              "5008"
+            ],
+            [
+              "T02",
+              "5009"
+            ],
+            [
+              "T03",
+              "5000"
+            ],
+            [
+              "T03",
+              "5001"
+            ],
+            [
+              "T03",
+              "5002"
+            ],
+            [
+              "T03",
+              "5003"
+            ],
+            [
+              "T03",
+              "5004"
+            ],
+            [
+              "T03",
+              "5005"
+            ],
+            [
+              "T03",
+              "5006"
+            ],
+            [
+              "T03",
+              "5007"
+            ],
+            [
+              "T03",
+              "5008"
+            ],
+            [
+              "T03",
+              "5009"
+            ],
+            [
+              "T04",
+              "5000"
+            ],
+            [
+              "T04",
+              "5001"
+            ],
+            [
+              "T04",
+              "5002"
+            ],
+            [
+              "T04",
+              "5003"
+            ],
+            [
+              "T04",
+              "5004"
+            ],
+            [
+              "T04",
+              "5005"
+            ],
+            [
+              "T04",
+              "5006"
+            ],
+            [
+              "T04",
+              "5007"
+            ],
+            [
+              "T04",
+              "5008"
+            ],
+            [
+              "T04",
+              "5009"
+            ],
+            [
+              "T05",
+              "5000"
+            ],
+            [
+              "T05",
+              "5001"
+            ],
+            [
+              "T05",
+              "5002"
+            ],
+            [
+              "T05",
+              "5003"
+            ],
+            [
+              "T05",
+              "5004"
+            ],
+            [
+              "T05",
+              "5005"
+            ],
+            [
+              "T05",
+              "5006"
+            ],
+            [
+              "T05",
+              "5007"
+            ],
+            [
+              "T05",
+              "5008"
+            ],
+            [
+              "T05",
+              "5009"
+            ],
+            [
+              "T06",
+              "5000"
+            ],
+            [
+              "T06",
+              "5001"
+            ],
+            [
+              "T06",
+              "5002"
+            ],
+            [
+              "T06",
+              "5003"
+            ],
+            [
+              "T06",
+              "5004"
+            ],
+            [
+              "T06",
+              "5005"
+            ],
+            [
+              "T06",
+              "5006"
+            ],
+            [
+              "T06",
+              "5007"
+            ],
+            [
+              "T06",
+              "5008"
+            ],
+            [
+              "T06",
+              "5009"
+            ]
+          ]
+        }
+      ],
+      "independent_physical_seed_units": 60,
+      "paired_across_cases": true,
+      "outcome_event": "reference_attached",
+      "tolerance_m": 0.2,
+      "strong_equivalence": {
+        "compared_parameter_event_rows": 540,
+        "fields": [
+          "candidate",
+          "published",
+          "released",
+          "intervals_json",
+          "status",
+          "reasons",
+          "correct",
+          "wrong"
+        ],
+        "all_equal": true,
+        "mismatch_count": 0
+      },
+      "files": [
+        {
+          "path": "patent/round2/20261020T015226Z/delivery/figures/experiments/G3_frozen/r2_trajectory_pressure.png",
+          "sha256": "ff7165f5e4c9c733c9c5f21d88a097a661025a66dd464b7b332ec8d8fd470aa4"
+        },
+        {
+          "path": "patent/round2/20261020T015226Z/delivery/figures/experiments/G3_frozen/r2_trajectory_pressure.pdf",
+          "sha256": "dfd98f629dce0e90cf56162b3d9b99ea51e29f7cc6ffb5996d709df5a6420b8b"
+        }
+      ],
+      "registered_check": "All visible text bounding boxes within pre-save figure canvas",
+      "text_outside_canvas": [],
+      "visual_review": "REQUIRES_ACTUAL_VIEW"
+    }
+  },
+  "truth_use": "Plot/evaluation only; this script never imports inverse inference",
+  "command": {
+    "argv": [
+      "/home/zmem063/miniconda3/envs/py310/bin/python3",
+      "patent/round2/20261020T015226Z/delivery/figures/experiments/plot_round2_evidence.py",
+      "--metrics",
+      "patent/round2/20261020T015226Z/evidence/runs/research_holdout_T01_T02_frozen_v1/metrics.csv",
+      "patent/round2/20261020T015226Z/evidence/runs/research_holdout_T03_T04_frozen_v1/metrics.csv",
+      "patent/round2/20261020T015226Z/evidence/runs/research_holdout_T05_T06_frozen_v1/metrics.csv",
+      "--stage",
+      "G3",
+      "--example-group",
+      "T01",
+      "--example-seed",
+      "5000",
+      "--out",
+      "patent/round2/20261020T015226Z/delivery/figures/experiments/G3_frozen"
+    ],
+    "cwd": "/home/zmem063/auv_console_python/AUV-Master-Project",
+    "exit_code": 0,
+    "start_utc": "2026-10-20T03:08:45Z",
+    "elapsed_s": 6.958850860595703
+  },
+  "versions": {
+    "python": "3.10.19",
+    "numpy": "1.24.4",
+    "matplotlib": "3.10.9"
+  },
+  "code_sha256": "ac851cf0e79eb44ea9988105ff7324044abb306d46c7187ebc56e3a55584a8bb",
+  "thesis_style_sha256": "bbaef5aa64a29647046295d59c14053aaeb0a3d090c683ad5478d27c51a383f0",
+  "font_path_used": "/usr/share/texlive/texmf-dist/fonts/opentype/public/fandol/FandolSong-Regular.otf",
+  "font_file_included": false
+}

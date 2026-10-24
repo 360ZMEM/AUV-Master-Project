@@ -10,7 +10,7 @@
 
 \subsection{探测精度约束}\label{sec:ch02-2-1-1}
 
-探测精度的来源不应是设计者的主观选择，而应来自电力行业对海缆运行的规程要求。行业标准《DL/T 1278-2025 海底电力电缆运行规程》\cite{dlt1278_2025}对磁探测灵敏度、埋深反演误差、路由水平精度等关键指标都有明确条款。本项目据此把 0.05 nT 级系统磁异常分辨目标和 0.2 m 级埋深反演误差作为最关键的两项硬性指标，其他指标（如近底安全距离 3--5 m）则由 AUV 作业本身的物理约束给出。
+探测精度的设置需要结合运行维护需求与测量标准，并明确自主研究目标的边界。《DL/T 1278---2025 海底电力电缆运行规程》适用于 10 kV 及以上交流海底电力电缆，本文以其作为运行维护背景\cite{dlt1278_2025}；测量指标参考正式团体标准《T/CIN 100---2026 海上风电场通航安全技术参数测量要求》\cite{tcin100_2026}，其附录 B.5 要求磁力仪灵敏度优于 0.05 nT，第 7.2 条规定海缆埋深测量极限误差不超过 $\pm0.4~\mathrm{m}$。本文据此设置 0.05 nT 级系统磁异常分辨目标，并将 0.2 m 级埋深反演误差作为更严格的自主研究目标，而非标准规定限值。其他指标（如近底安全距离 3--5 m）由 AUV 作业本身的物理约束给出。
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
@@ -28,12 +28,12 @@
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-系统磁异常分辨目标 & 0.05 nT & DL/T 1278---2025 附录 D & 模组本底噪声已核验；完整测量链待验证 \\
-埋深反演误差 & 0.2 m & 行业要求 & 待硬件实验验证 \\
+系统磁异常分辨目标 & 0.05 nT & T/CIN 100---2026 附录 B.5 参照 & 模组本底噪声已核验；完整测量链待验证 \\
+埋深反演误差 & 0.2 m & 自主研究目标 & 待硬件实验验证 \\
 近底安全距离 & 3--5 m & AUV 作业约束 & 已在 terrain benchmark 中验证 \\
 \end{longtable}
 
-为什么把 0.05 nT 作为系统级目标？这并不是凭空选取，而是由``三相抵消 + 铠装屏蔽 + 螺旋绞合''这三重物理削弱共同决定的。需要特别区分的是，系统级分辨目标不等于传感器手册中的单频噪声谱密度。本文选用的 TMR8637 三轴模组在 1 Hz 处标称磁场噪声谱密度为 150--300 pT/\(\sqrt{\text{Hz}}\)\cite{multidimension2024tmr8607}；随实物模组提供的编号 6\# 三轴测试报告进一步给出各轴 1 Hz 噪声均为 200 pT/\(\sqrt{\text{Hz}}\)，并显示 50 Hz 附近三轴曲线约为 20--30 pT/\(\sqrt{\text{Hz}}\)。后者表明模组本体在目标工频附近具备窄带检测所需的噪声量级，但 0.05 nT 仍是待完整测量链验证的系统指标，不能由模组曲线或 ADC 位数单独宣称满足。相应的信噪比（signal-to-noise ratio, SNR）还必须纳入 SK2301 输入噪声、隔离供电、地环路与数字锁相处理的等效噪声带宽。同理，0.2 m 的埋深误差来自规程对维护决策和后续工程定位的共同要求。把两项指标写入设计目标，是为了约束硬件选型、标定方案和评价口径，而不是预先宣布实物验收已经完成。
+为什么把 0.05 nT 作为系统级目标？这并不是凭空选取，而是由``三相抵消 + 铠装屏蔽 + 螺旋绞合''这三重物理削弱共同决定的。需要特别区分的是，系统级分辨目标不等于传感器手册中的单频噪声谱密度。规格书 Version 1.0 第 4 页对 TMR8607 单轴敏感单元给出的 1 Hz 磁场噪声谱密度为 150--300 pT/\(\sqrt{\text{Hz}}\)，第 8 页则给出 TMR8637 三轴模组的接口与结构\cite{multidimension2024tmr8607}；随实物模组提供的编号 6\# 三轴测试报告进一步给出各轴 1 Hz 噪声均为 200 pT/\(\sqrt{\text{Hz}}\)，并显示 50 Hz 附近三轴曲线约为 20--30 pT/\(\sqrt{\text{Hz}}\)。后者表明模组本体在目标工频附近具备窄带检测所需的噪声量级，但 0.05 nT 仍是待完整测量链验证的系统指标，不能由模组曲线或 ADC 位数单独宣称满足。相应的信噪比（signal-to-noise ratio, SNR）还必须纳入 SK2301 输入噪声、隔离供电、地环路与数字锁相处理的等效噪声带宽。0.2 m 的埋深误差是面向维护决策和后续工程定位自主设定的研究目标，不是规程的原始限值。把两项指标写入设计目标，是为了约束硬件选型、标定方案和评价口径，而不是预先宣布实物验收已经完成。
 
 \subsection{作业环境约束}\label{sec:ch02-2-1-2}
 
@@ -137,8 +137,10 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.86\linewidth,height=0.28\textheight,keepaspectratio,alt={入口配置、虚实适配、自治安全、数学算法、协议与物理约束五层及其接口传递}]{architecture/auv_v2_five_layer_functional_architecture.pdf}
-\caption{AUV 五层软件功能架构：入口配置、虚实适配、自治安全、数学算法、协议与物理约束及其接口传递}\label{fig:ch02-five-layer-architecture}
+\makebox[\linewidth][c]{\includegraphics[page=1,width=0.832\linewidth,alt={五层架构上半图：系统入口与硬件仿真双工适配}]{architecture/auv_v2_five_layer_functional_architecture.pdf}}
+\par\smallskip
+\makebox[\linewidth][c]{\includegraphics[page=2,width=0.832\linewidth,alt={五层架构下半图：自治行为、数学算法、协议与物理约束}]{architecture/auv_v2_five_layer_functional_architecture.pdf}}
+\caption{AUV 五层软件功能架构（上：入口配置与虚实适配；下：自治安全、数学算法与协议约束）。下图重复显示“坐标与时间对齐”节点，以承接跨图的接口传递关系。}\label{fig:ch02-five-layer-architecture}
 \end{figure}
 
 行为层的存在则是为了把``安全约束''与``算法逻辑''进一步解耦。算法层负责回答``按当前最优应当怎样动作''，行为层负责把这一建议钳制在安全包络内、过滤掉异常指令、并在感知不可信时主动切换到保守模式。这样的``算法 + 行为''双层结构，让算法可以专注于性能优化、行为可以专注于安全保障，两者互不掺杂；任何一方需要修改时，也不会牵动另一方的逻辑。五层之间的功能职责、相邻接口和约束传递关系如图~\ref{fig:ch02-five-layer-architecture}所示：
@@ -176,7 +178,7 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\linewidth,height=0.42\textheight,keepaspectratio,alt={算法仿真至全自主试验的逐级能力释放与对应证据，右端为准入目标而非已完成状态}]{architecture/auv_system_verification_deployment_ladder.pdf}
+\includegraphics[width=0.784\linewidth,alt={两行三列的算法仿真至全自主试验验证阶梯，每级列出准入门和对应证据，末级为目标而非已完成状态}]{architecture/auv_system_verification_deployment_ladder.pdf}
 \caption{算法仿真至全自主试验的验证部署阶梯：逐级能力释放、准入门与对应证据；右端为准入目标，不表示各阶段均已完成}\label{fig:ch02-verification-ladder}
 \end{figure}
 
@@ -206,7 +208,7 @@ PVS 基于 Thor I. Fossen 的船舶动力学模型\cite{fossen2011handbook}，�
 \caption{Foxglove 电缆巡检运行界面：同一话题契约下的工业验收状态、三维场景、横向误差、埋深、置信度与跟踪输出}\label{fig:ch02-foxglove-cable-console}
 \end{figure}
 
-图~\ref{fig:ch02-foxglove-cable-console}所示界面并非后处理展示图，而是部署侧运行面板。其顶部状态块来自 \texttt{/auv/cable/industrial\_ready}、\texttt{/auv/cable/industrial\_acceptance\_pass} 与 \texttt{/auv/cable/dlt1278\_state} 等布尔/字符串话题，右侧 3D 视图来自海床、海缆标记和 AUV 位姿话题，底部曲线来自横偏、埋深、埋深不确定度、置信度和磁信噪比等连续量。换言之，论文中的数字孪生验证不是脱离系统运行栈的离线图表，而是已经被组织成可观察、可录包、可复跑的巡检操作界面；这也是后续 Jetson、PC104 和真实载荷接入时能够沿用同一验收口径的工程基础。
+图~\ref{fig:ch02-foxglove-cable-console}所示界面并非后处理展示图，而是部署侧运行面板。其顶部状态块分别显示工业就绪、验收通过标志与规程评分状态，由对应的运行状态消息驱动，右侧 3D 视图来自海床、海缆标记和 AUV 位姿话题，底部曲线来自横偏、埋深、埋深不确定度、置信度和磁信噪比等连续量。换言之，论文中的数字孪生验证不是脱离系统运行栈的离线图表，而是已经被组织成可观察、可录包、可复跑的巡检操作界面；这也是后续 Jetson、PC104 和真实载荷接入时能够沿用同一验收口径的工程基础。
 
 因此，PVS/HoloOcean 与真实 AUV 之间的迁移应以质量、浮力中心和水动力系数的同口径辨识为基础，并在真机数据回灌后重新核查闭环稳定裕度；本文仿真实验使用统一冻结的数字孪生参数，以保证算法对照的内部一致性。
 
@@ -351,7 +353,7 @@ I_{lab} = \sqrt{3}\, I_{3p}\, \frac{r_c}{d_{lab}}
 
 \subsection{基于单三轴磁力计与之字形测线的半高全宽深度反演}\label{sec:ch02-2-3-5}
 
-针对传统双磁力计算法基线安装误差大、增加载体阻力的缺陷，本文提出一种\textbf{单三轴磁力计配合之字形（Zig-zag）航线的幅值尺度无关深度反演算法}，作为本章的核心创新之一。
+为减少双探头基线安装与载体布置负担，本文将\textbf{单三轴磁力计与之字形（Zig-zag）主动测线}结合，利用半高全宽构造幅值尺度无关的空间特征，并在声明场形和标定范围内换算垂距。方法贡献在于主动观测及其条件性几何输出的组织，半高宽公式本身不作为普适场形反演或独立新原理。
 
 当 AUV 以航速 \(v\)、跨切角 \(\alpha\) 横切电缆时，其相对电缆的横向距离随时间线性变化 \(x(t) = v\sin\alpha \cdot (t - t_0)\)。由 2.3.4 节的偶极子模量模型，设电缆垂直距离为 \(z\)，则单磁力计测得的模量包络呈洛伦兹型响应：
 
@@ -405,6 +407,13 @@ z=\kappa_p W_x,\qquad
 \end{figure}
 
 直导线联合台架采用可控同频电流、三轴 TMR 与外部位姿复核上述几何模型。该实验用于检查移动单传感器形成合成空间阵列的可行性，不代表多芯铠装海缆的绝对埋深标定；样本、拟合指标与负边界集中见第~\ref{sec:ch05-5-4}节。
+
+进一步应区分参考探头的相对磁几何与海床绝对基准。设首个实际探头位置至缆轴的垂距为 \(z_*\)，其到指定局部海床的高度为 \(h_*\)，则同一直线缆段及已校准相对轨迹下有
+\begin{equation}
+z_i=z_*+\Delta h_i,\qquad d_{\mathrm{axis}}=z_*-h_*,\qquad d_{\mathrm{cover}}=d_{\mathrm{axis}}-r_{\mathrm{outer}}.
+\label{eq:ch02-relative-absolute-cable-geometry}
+\end{equation}
+其中 \(h_*\) 须经姿态、杆臂与时延改正后对应磁探头，不能直接使用艇体高度或压力水深；覆盖厚度还需要已知外半径。若相对轨迹可信，磁全剖面可在限定模型中约束 \(c,z_*\)，但没有独立海床参考时不能自行生成绝对埋深。对两个参数分别计算允许区间，并在参考变化时更新受影响输出，是后续离线验证的对象（第~\ref{sec:ch05-round2-relative-reference}节）。这些区间仍以模型、轨迹和安装成立为条件，不覆盖未建模的逐点位置误差。
 
 \section{声呐成像几何模型与视觉标定}\label{sec:ch02-2-4}
 
@@ -661,31 +670,37 @@ AUTONOMY & Zenoh 语义命令 + Jetson bridge & 下发任务与自主请求，�
 ESTOP & 零执行器 \texttt{\$CKTH}；UDP 下发并可镜像至 Zenoh & 立即切回遥控、取消任务并锁存，解除前保持零输出 \\
 \end{longtable}
 
-图~\ref{fig:ch02-operator-console} 给出最终上位机主界面。界面从上到下依次组织实时遥测、地图与控制面板、航点/任务/消息/诊断页签，以及始终可见的 ESTOP、MANUAL/AUTONOMY 和任务参数区；Zenoh、传感器置信度与电缆监控被收纳到诊断页，从而避免低优先级信息挤压底部安全操作。该图由 \texttt{Xvfb + xdotool + ImageMagick} 在 \(1366\times900\) 虚拟屏幕下生成，采用本机 dummy UDP 回环且关闭 Zenoh，故它证明的是界面可无头复现、中文渲染正确且该分辨率下无明显裁切，不证明图中状态栏文字对应真实 PC104 在线或整艇闭环。
+图~\ref{fig:ch02-operator-console} 给出最终上位机主界面。界面从上到下依次组织实时遥测、地图与控制面板、航点/任务/消息/诊断页签，以及始终可见的 ESTOP、MANUAL/AUTONOMY 和任务参数区；Zenoh、传感器置信度与电缆监控被收纳到诊断页，从而避免低优先级信息挤压底部安全操作。该图由虚拟显示与自动截屏工具在 \(1366\times900\) 虚拟屏幕下生成，采用本机 dummy UDP 回环且关闭 Zenoh，故它证明的是界面可无头复现、中文渲染正确且该分辨率下无明显裁切，不证明图中状态栏文字对应真实 PC104 在线或整艇闭环。
 
-\begin{figure}[htbp]
+\FloatBarrier
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth,height=0.56\textheight,keepaspectratio,alt={PySide6 AUV 上位机主界面，顶部为实时遥测，中部为地图和通信任务控制，下部为航点页签、急停、手动自主授权及任务参数}]{system/auv_console_operator_interface.png}
 \caption{PySide6 操作员上位机的最终布局（Xvfb、dummy UDP 回环、Zenoh 关闭）：遥测、地图、任务控制和诊断分区围绕底部常驻的急停与模式授权组织}\label{fig:ch02-operator-console}
 \end{figure}
 
-ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到 \texttt{rt/pc/cmd\_raw}，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第 5 章的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的 \texttt{work\_cmd} 变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
+ESTOP 的实现进一步体现了``一条安全意图、分层到达''：按钮点击后，上位机立即构造控制模式 \texttt{0x01}、工作指令 \texttt{0x02}、主/侧推与四舵全零的 72 B \texttt{\$CKTH}，并在锁存期间由 600 ms 发送定时器重复该帧。WiFi 通信管理器先把原始帧发往 UDP 目标；若 Zenoh side channel 已连接，再把同一帧镜像到原始遥控指令通道，由 Jetson bridge 解码并触发 Remote/ESTOP 锁定。因此这两条传输路径形成了实现层冗余，但并非两套彼此独立生成的急停语义。第 5 章的实物记录已经证明 GUI ESTOP 点击可使真实 PC104 的工作指令字段变为 \texttt{0x02} 且执行量保持为零，并另行证明通用原始帧可以到达 Zenoh probe；GUI ESTOP 经生产 bridge/arbiter 消费的同次端到端语义闭环仍作为边界保留。
 
-VxWorks 失联保护则是这套安全闭环的最后一层冗余，当 PC104 在 Jetson 控制模式下约 1 秒未收到有效指令时，会自发切回遥控模式、清零推进并置通信超时告警。这一机制不依赖上位机的主动指令，而是 AMD 端自己的``看门狗式''保护，覆盖了``上位机断电、Jetson 死机、网络全部中断''等极端情形。零推力回退与主动上浮属于不同动作：前者对应控制权或命令链失效；生产行为树中的 \texttt{EmergencySurface} 只由漏水、低电和穿底触发，PC104 对深度或 DVL 风险的本地航行保护也不扩展这一行为树触发集合。把这四道防线（行为树 failsafe、安全仲裁器、上位机 ESTOP 分层下发、VxWorks 失联保护）合在一起看，它们构成一条``由内向外、由软到硬''的安全梯度；各层降低了单点故障直接穿透至执行器的风险，但其联合有效性仍须按各自证据层级而非抽象冗余数量判断。四类守卫的触发优先级及其到安全目标态的仲裁关系如图~\ref{fig:ch02-emergency-arbitration}所示；任务执行期间由操作员、仲裁器、决策脑和执行脑共同参与的完整生命周期如图~\ref{fig:ch02-mission-lifecycle}所示。
-
-\begin{figure}[tbp]
+\FloatBarrier
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth,height=0.46\textheight,keepaspectratio,alt={通信、遥测、置信度、漏水和人工急停的分层仲裁，ROS2回零锁定与PC104本地上浮防触底属于不同层级动作}]{architecture/auv_v2_emergency_transition.pdf}
+\includegraphics[width=0.98\linewidth,height=0.70\textheight,keepaspectratio,alt={通信、遥测、置信度、漏水和人工急停的分层仲裁，ROS2回零锁定与PC104本地上浮防触底属于不同层级动作}]{architecture/auv_v2_emergency_transition.pdf}
 \caption{触发条件、处置层级与目标动作的分层关系：低置信度经行为树回落搜索，链路或授权异常经 ROS2 仲裁回零，漏水、低电和穿底等独立条件进入紧急保护}\label{fig:ch02-emergency-arbitration}
 \end{figure}
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.95\linewidth,height=0.46\textheight,keepaspectratio,alt={操作员、安全守卫、决策控制脑和执行反馈端协同完成配置、授权、执行、回退、报告与人工回收}]{architecture/auv_v2_mission_lifecycle_flow.pdf}
-\caption{AUV 任务完整生命周期：操作员、安全守卫、决策控制脑和执行反馈端协同完成配置、授权、执行、回退、报告与人工回收}\label{fig:ch02-mission-lifecycle}
-\end{figure}
+VxWorks 失联保护则是这套安全闭环的最后一层冗余，当 PC104 在 Jetson 控制模式下约 1 秒未收到有效指令时，会自发切回遥控模式、清零推进并置通信超时告警。这一机制不依赖上位机的主动指令，而是 AMD 端自己的``看门狗式''保护，覆盖了``上位机断电、Jetson 死机、网络全部中断''等极端情形。零推力回退与主动上浮属于不同动作：前者对应控制权或命令链失效；生产行为树中的紧急上浮行动只由漏水、低电和穿底触发，PC104 对深度或 DVL 风险的本地航行保护也不扩展这一行为树触发集合。把这四道防线（行为树 failsafe、安全仲裁器、上位机 ESTOP 分层下发、VxWorks 失联保护）合在一起看，它们构成一条``由内向外、由软到硬''的安全梯度；各层降低了单点故障直接穿透至执行器的风险，但其联合有效性仍须按各自证据层级而非抽象冗余数量判断。四类守卫的触发优先级及其到安全目标态的仲裁关系如图~\ref{fig:ch02-emergency-arbitration}所示；任务执行期间由操作员、仲裁器、决策脑和执行脑共同参与的完整生命周期如图~\ref{fig:ch02-mission-lifecycle}所示。
+
+
+
+
 
 \section{本章小结}\label{sec:ch02-2-6}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth,height=0.70\textheight,keepaspectratio,alt={操作员、安全守卫、决策控制脑和执行反馈端协同完成配置、授权、执行、回退、报告与人工回收}]{architecture/auv_v2_mission_lifecycle_flow.pdf}
+\caption{AUV 任务完整生命周期：操作员、安全守卫、决策控制脑和执行反馈端协同完成配置、授权、执行、回退、报告与人工回收}\label{fig:ch02-mission-lifecycle}
+\end{figure}
 
 本章按``约束 → 架构 → 建模 → 通信''的逻辑顺序，把第 1 章提出的研究目标落实为一套可工程化的系统设计。具体而言：2.1 节首先把行业标准、作业环境和系统安全三类硬性约束写清楚，使后续每一个设计选择都能追溯到一个具体输入条件；2.2 节据此提出``执行层 + 感知决策层''的异步双脑架构，在软件层面分解为五层结构，并通过桥接后端、仿真工厂、配置脚本和 Foxglove 话题契约说明仿真、半实物和真机共享同一套决策/控制栈；同时从空间布局、无磁材料管控和坡莫合金局部屏蔽三个层面给出磁卫生舾装方案；2.3 节深入到探测对象本身的物理建模，先用毕奥-萨伐尔定律建立单芯/单相的 \(1/r\) 静磁场模型，再依次引入三相螺旋漏磁与双相偶极子等效映射、钢丝铠装的坡莫合金等效屏蔽、以及三维螺旋场的模量旋转不变性，最终给出基于单三轴磁力计与之字形测线的半高全宽深度反演关系；2.4 节补充了声呐成像几何和磁传感器空间标定两件``几何观测可用''的前置工作；2.5 节最后回到通信和安全两个底层问题，用 UDP 二进制协议、千兆以太网、1PPS/外触发同步预留、三级隔离电源与四道安全防线把整个系统闭合成一个可控的工程整体。
 

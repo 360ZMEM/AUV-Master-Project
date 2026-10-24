@@ -146,8 +146,11 @@ def apply_thesis_style(
             "axes.unicode_minus": False,
             "mathtext.fontset": "stix",
             "font.serif": ["FandolSong", "STIXGeneral", "Times New Roman", "Times"],
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
+            # FandolSong is CFF/OpenType. Type 3 embeds its vector outlines
+            # portably; treating CFF as CIDFontType2 produced reader-specific
+            # glyph substitution despite correct Agg PNG output.
+            "pdf.fonttype": 3,
+            "ps.fonttype": 3,
             "figure.dpi": 150,
             "savefig.dpi": THESIS_DPI,
             "savefig.bbox": "tight",
@@ -244,6 +247,27 @@ def save_figure(
     """Export a vector PDF and a high-resolution PNG."""
     out_base = Path(out_base)
     out_base.parent.mkdir(parents=True, exist_ok=True)
+    # LogFormatterMathtext wraps its minus in mathdefault, which can request a
+    # glyph absent from FandolSong even when normal minus fallback is available.
+    # Keep explicit user formatters; use plain, readable numbers for defaults.
+    from matplotlib.ticker import FuncFormatter, LogFormatter, NullFormatter
+    for axis in fig.axes:
+        for coordinate in (axis.xaxis, axis.yaxis):
+            if isinstance(coordinate.get_major_formatter(), LogFormatter):
+                coordinate.set_major_formatter(FuncFormatter(lambda value, position: f"{value:g}"))
+            if isinstance(coordinate.get_minor_formatter(), LogFormatter):
+                coordinate.set_minor_formatter(NullFormatter())
+    audit_dir = os.environ.get("THESIS_FIGURE_AUDIT_DIR")
+    if audit_dir:
+        from figure_polish_audit import inspect_figure
+        inspect_figure(fig, Path(audit_dir) / (out_base.name + ".json"))
+        # Keep the measured arrangement identical in PDF and the 600 dpi PNG.
+        # A second constrained-layout solve can move 3D labels during savefig.
+        if fig.get_constrained_layout():
+            if hasattr(fig, "set_layout_engine"):
+                fig.set_layout_engine(None)
+            else:
+                fig.set_constrained_layout(False)
     written: list[Path] = []
     for ext in formats:
         path = out_base.with_suffix(f".{ext}")
